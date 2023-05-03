@@ -8,5 +8,6 @@ module.exports = {
     "comma-dangle": "off",
     semi: "off",
     "@typescript-eslint/no-unused-vars": "warn",
+    "vue/no-multiple-template-root": 0,
   },
 };

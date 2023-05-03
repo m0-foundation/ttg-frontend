@@ -2335,7 +2335,21 @@
     buffer "6.0.3"
     valtio "1.10.4"
 
-"@web3modal/standalone@^2.3.0":
+"@web3modal/ethereum@^2.3.7":
+  version "2.3.7"
+  resolved "https://registry.yarnpkg.com/@web3modal/ethereum/-/ethereum-2.3.7.tgz#4e5447ea1a86366580e89241e36e4b6fca5f6b30"
+  integrity sha512-CuqgWEMtCWS8tKDT2VpnzeaEfrlNYRQxyrFs8fTtrD6/NYIlinqv/sc9W/PcIMETrhReBwcrpjf+jG6He3261g==
+
+"@web3modal/html@^2.3.7":
+  version "2.3.7"
+  resolved "https://registry.yarnpkg.com/@web3modal/html/-/html-2.3.7.tgz#50a36394c6a7523259c47ac2ba42aa0fcaca4a2c"
+  integrity sha512-LNMp9SGy9QWasGiEBaCmzCbOFYzcoojYxNLzysaIiShM1HzhccLB14d2krxgHZ4/oRh3IWQr9ccqNyRM0smyVg==
+  dependencies:
+    "@web3modal/core" "2.3.7"
+    "@web3modal/standalone" "2.3.7"
+    "@web3modal/ui" "2.3.7"
+
+"@web3modal/standalone@2.3.7", "@web3modal/standalone@^2.3.0":
   version "2.3.7"
   resolved "https://registry.yarnpkg.com/@web3modal/standalone/-/standalone-2.3.7.tgz#2536effb3a7c4b9384fa51c43dc67ff3caed0314"
   integrity sha512-zgavWcimRVXnLdup2WQ0fFEnBnH+Wwn+k1/XzhwVpdJ//mrExWNYQaXt139RijxGUcux68ExRCyMqm1jkXTq3g==
