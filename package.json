@@ -6,12 +6,16 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint ."
   },
   "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@types/node": "^18",
     "@wagmi/cli": "^0.1.15",
-    "nuxt": "^3.4.3"
+    "eslint": "^8.39.0",
+    "nuxt": "^3.4.3",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@wagmi/core": "^0.10.10",
