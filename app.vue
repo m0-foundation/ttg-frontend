@@ -1,5 +1,5 @@
 <template>
-  <div>Balance: {{ data }}</div>
+  <div class="bg-primary text-white">Balance: {{ data }}</div>
 </template>
 
 <script lang="ts" setup>
