@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+      "Vue.volar",
+      "Vue.vscode-typescript-vue-plugin",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss", // Tailwind auto completer
+      "hollowtree.vue-snippets", // Vue 3 Snippets
+      "faisalhakim47.vue-inline-template", // Template highlight (mainly used in spec tests files)
+      "ChakrounAnas.turbo-console-log", // Fast console log stuff
+    ]
+  }
