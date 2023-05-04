@@ -1,9 +1,4 @@
 export default defineNuxtConfig({
-  runtimeConfig: {
-    public: {
-      WALLET_CONNECT_PROJECT_ID: process.env.WALLET_CONNECT_PROJECT_ID,
-    },
-  },
   // https://tailwindcss.nuxtjs.org/getting-started/setup
   modules: ["@nuxtjs/tailwindcss"],
   tailwindcss: {

@@ -20,8 +20,6 @@
   },
   "dependencies": {
     "@wagmi/core": "^0.10.10",
-    "@web3modal/ethereum": "^2.3.7",
-    "@web3modal/html": "^2.3.7",
     "ethers": "^5.7.2"
   }
 }
