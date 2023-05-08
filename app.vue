@@ -23,7 +23,10 @@
 </template>
 
 <script lang="ts" setup>
-import { configureChains } from "@wagmi/core";
+import {
+  configureChains,
+  createClient as createClientWagmi,
+} from "@wagmi/core";
 
 // chains
 import { mainnet, goerli, sepolia } from "@wagmi/core/chains";
@@ -82,4 +85,12 @@ const client = createClient({
 
 const nuxtApp = useNuxtApp();
 nuxtApp.vueApp.use(client);
+
+const wagmiCoreClient = createClientWagmi({
+  autoConnect: true,
+  provider,
+  webSocketProvider,
+});
+
+nuxtApp.provide("wagmiCore", wagmiCoreClient);
 </script>
