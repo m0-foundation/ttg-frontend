@@ -1,4 +1,6 @@
 export default defineNuxtConfig({
+  ssr: false,
+  buildModules: ["@nuxtjs/pwa"],
   components: [
     "~/components/design-system",
     "~/components/layout",
