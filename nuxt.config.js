@@ -1,4 +1,9 @@
 export default defineNuxtConfig({
+  publicRuntimeConfig: {
+    WALLET_CONNECT_PROJECT_ID: process.env.WALLET_CONNECT_PROJECT_ID,
+    ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
+    INFURA_API_KEY: process.env.INFURA_API_KEY,
+  },
   ssr: false,
   buildModules: ["@nuxtjs/pwa"],
   components: [
