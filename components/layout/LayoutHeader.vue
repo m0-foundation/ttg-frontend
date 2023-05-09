@@ -14,7 +14,8 @@
       <div v-if="address" class="flex md:order-2">
         <div class="mr-4">{{ address }}</div>
         <div class="text-white mr-4">
-          Balance: {{ abcBalance?.formatted }} $ABC
+          Balance: {{ abcBalance?.formatted }} $ABC <br />
+          cash: {{ cashBalance }} $ABC
         </div>
 
         <button @click="() => disconnect()">Disconnect</button>
@@ -39,7 +40,7 @@ const { address } = useAccount({
     cashBalance.value = await readErc20Mock({
       address: "0x8335Af67C928Ff9D4f9BE905de767cf252A83fe1",
       functionName: "balanceOf",
-      args: ["0x31DCb7AE01fFfD9B6468814bA2A6A0ab9c58d8e5"],
+      args: [address.value!],
     });
   },
   onDisconnect: () => console.log("disconnected"),
@@ -50,7 +51,7 @@ const {
   isError,
   isLoading,
 } = useBalance({
-  address: "0x31DCb7AE01fFfD9B6468814bA2A6A0ab9c58d8e5",
+  address,
   token: "0x8335Af67C928Ff9D4f9BE905de767cf252A83fe1",
   watch: true,
 });

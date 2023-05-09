@@ -23,13 +23,9 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  configureChains,
-  createClient as createClientWagmi,
-} from "@wagmi/core";
-
 // chains
 import { mainnet, goerli, sepolia } from "@wagmi/core/chains";
+import { configureChains } from "@wagmi/core";
 // connectors
 import { CoinbaseWalletConnector } from "use-wagmi/connectors/coinbaseWallet";
 import { LedgerConnector } from "use-wagmi/connectors/ledger";
@@ -39,7 +35,7 @@ import { WalletConnectLegacyConnector } from "use-wagmi/connectors/walletConnect
 import { publicProvider } from "@wagmi/core/providers/public";
 import { alchemyProvider } from "@wagmi/core/providers/alchemy";
 import { infuraProvider } from "@wagmi/core/providers/infura";
-
+// client
 import { createClient } from "use-wagmi";
 
 const config = useRuntimeConfig();
@@ -85,12 +81,4 @@ const client = createClient({
 
 const nuxtApp = useNuxtApp();
 nuxtApp.vueApp.use(client);
-
-const wagmiCoreClient = createClientWagmi({
-  autoConnect: true,
-  provider,
-  webSocketProvider,
-});
-
-nuxtApp.provide("wagmiCore", wagmiCoreClient);
 </script>
