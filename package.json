@@ -26,6 +26,7 @@
   "dependencies": {
     "@wagmi/core": "^0.10.10",
     "ethers": "^5.7.2",
-    "use-wagmi": "^0.0.2-alpha.5"
+    "use-wagmi": "^0.0.2-alpha.5",
+    "viem": "^0.3.19"
   }
 }
