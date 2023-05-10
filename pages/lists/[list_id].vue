@@ -4,4 +4,8 @@
   </LayoutPage>
 </template>
 
-<script setup></script>
+<script setup>
+definePageMeta({
+  layout: "with-navbar",
+});
+</script>

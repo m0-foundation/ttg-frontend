@@ -10,15 +10,10 @@
       <Link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
       <Link href="/favicon.jpg" rel="apple-touch-icon" />
     </Head>
-    <LayoutHeader />
-    <!-- out content -->
-    <div class="mx-auto w-full md:w-3/4 xl:w-1/2">
-      <!-- innter content -->
-      <LayoutNavbar />
 
+    <NuxtLayout>
       <NuxtPage />
-    </div>
-    <LayoutFooter />
+    </NuxtLayout>
   </div>
 </template>
 
@@ -38,10 +33,13 @@ import { infuraProvider } from "@wagmi/core/providers/infura";
 // client
 import { createClient } from "use-wagmi";
 
+import { createPublicClient, http, parseAbiItem } from "viem";
+// import { sepolia as viemSepolia } from "viem/chains";
+
 const config = useRuntimeConfig();
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, goerli, sepolia],
+  [sepolia], // mainnet, goerli
   [
     // alchemyProvider({ apiKey: config.ALCHEMY_API_KEY! }), => alchemy does not support sepolia
     infuraProvider({ apiKey: config.INFURA_API_KEY! }),
@@ -81,4 +79,18 @@ const client = createClient({
 
 const nuxtApp = useNuxtApp();
 nuxtApp.vueApp.use(client);
+
+const viemClient = createPublicClient({
+  chain: mainnet,
+  transport: http(),
+});
+
+const filter = await viemClient.getLogs({
+  address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+  fromBlock: 17230000n,
+  toBlock: 17230799n,
+});
+console.log({ filter2: filter });
+
+nuxtApp.provide("viemClient", viemClient);
 </script>
