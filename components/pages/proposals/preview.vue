@@ -1,19 +1,30 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
     <Head>
       <Link rel="stylesheet" href="/github-markdown.css"></Link>
     </Head>
     <div>
-      <button class="text-primary-dark" @click="onBack">back</button>
+      <button class="text-primary-dark uppercase mb-4" @click="onBack">
+        &#60; back
+      </button>
     </div>
     <h1>Preview your proposal</h1>
 
-    <div class="text-black bg-primary-dark">PREVIEW</div>
+    <MTextLoop class="text-primary-darker bg-primary text-sm" text="PREVIEW" />
 
-    <div class="bg-white px-16 py-8">
+    <div class="bg-white px-16 py-8 mb-4">
       <h2>proposal.title</h2>
-      <div class="text-primary">Proposed by 0x....</div>
+      <div class="text-primary-darker">Proposed by 0x....</div>
       <div class="markdown-body" v-html="descriptionHtml"></div>
+    </div>
+    <div class="flex justify-end">
+      <div>
+        <button class="text-primary-dark uppercase mx-4" @click="onBack">
+          &#60; back
+        </button>
+        <MButton type="submit">Submit proposal</MButton>
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +54,10 @@ function onBack() {
 </script>
 
 <style scoped>
+h1 {
+  @apply text-3xl font-light mb-12;
+}
+
 .markdown-body {
   box-sizing: border-box;
   min-width: 200px;

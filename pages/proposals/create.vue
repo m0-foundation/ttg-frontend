@@ -47,7 +47,7 @@
         </div>
 
         <div class="flex justify-end mt-12">
-          <MButton type="submit">Preview and Create</MButton>
+          <MButton type="submit">Preview proposal</MButton>
         </div>
 
         <hr class="my-12" />
