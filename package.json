@@ -1,6 +1,9 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -26,7 +29,9 @@
   "dependencies": {
     "@wagmi/core": "^0.10.10",
     "ethers": "^5.7.2",
+    "marked": "^5.0.1",
     "use-wagmi": "^0.0.2-alpha.5",
-    "viem": "^0.3.19"
+    "viem": "^0.3.19",
+    "xss": "^1.0.14"
   }
 }
