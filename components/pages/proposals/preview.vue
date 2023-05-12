@@ -18,14 +18,6 @@
       <div class="text-primary-darker">Proposed by 0x....</div>
       <div class="markdown-body" v-html="descriptionHtml"></div>
     </div>
-    <div class="flex justify-end">
-      <div>
-        <button class="text-primary-dark uppercase mx-4" @click="onBack">
-          &#60; back
-        </button>
-        <MButton type="submit">Submit proposal</MButton>
-      </div>
-    </div>
   </div>
 </template>
 
