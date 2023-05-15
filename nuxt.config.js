@@ -1,8 +1,25 @@
 export default defineNuxtConfig({
-  publicRuntimeConfig: {
-    WALLET_CONNECT_PROJECT_ID: process.env.WALLET_CONNECT_PROJECT_ID,
-    ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
-    INFURA_API_KEY: process.env.INFURA_API_KEY,
+  runtimeConfig: {
+    public: {
+      WALLET_CONNECT_PROJECT_ID: process.env.WALLET_CONNECT_PROJECT_ID,
+      ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
+      INFURA_API_KEY: process.env.INFURA_API_KEY,
+      contracts: {
+        deployedBlock: process.env.CONTRACT_DEPLOYED_BLOCK,
+        spog: process.env.CONTRACT_ADDRESS_SPOG,
+        governor: {
+          vote: process.env.CONTRACT_ADDRESS_SPOG_GOVERNOR_VOTE,
+          value: process.env.CONTRACT_ADDRESS_SPOG_GOVERNOR_VALUE,
+        },
+        tokens: {
+          cash: process.env.CONTRACT_ADDRESS_CASH,
+          vault: process.env.CONTRACT_ADDRESS_VAULT,
+          vote: process.env.CONTRACT_ADDRESS_SPOG_VOTE,
+          value: process.env.CONTRACT_ADDRESS_SPOG_VALUE,
+          // abc,
+        },
+      },
+    },
   },
   ssr: false,
   buildModules: ["@nuxtjs/pwa"],
