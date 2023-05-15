@@ -5,7 +5,7 @@
     <div class="flex">
       <span class="text-sm text-gray-500 sm:text-center"
         >© 2023
-        <a href="https://flowbite.com/" class="hover:underline">MˆZERO Labs_</a>
+        <a href="/" class="hover:underline">MˆZERO Labs_</a>
         <span class="mx-8">/</span>
       </span>
 

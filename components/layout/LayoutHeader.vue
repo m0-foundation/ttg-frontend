@@ -3,7 +3,7 @@
     <div
       class="w-full flex flex-wrap items-center justify-between mx-auto px-16 py-8"
     >
-      <a href="https://flowbite.com/" class="flex items-center">
+      <a href="/" class="flex items-center">
         <span
           class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
         >
