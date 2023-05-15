@@ -29,7 +29,7 @@ export default defineNuxtConfig({
     "~/components",
   ],
   // https://tailwindcss.nuxtjs.org/getting-started/setup
-  modules: ["@nuxtjs/tailwindcss"],
+  modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt"],
   tailwindcss: {
     config: {
       theme: {
