@@ -100,7 +100,6 @@
 import { ref } from "vue";
 import { encodeFunctionData } from "viem";
 import { useAccount } from "use-wagmi";
-import ProposalPreview from "@/components/pages/proposals/preview.vue";
 import { spogABI, writeSpog, writeErc20 } from "@/lib/generated";
 
 const isPreview = ref(false);
