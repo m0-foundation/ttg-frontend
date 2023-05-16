@@ -5,50 +5,66 @@
         <h1>Create a proposal</h1>
 
         <div class="mb-6">
-          <label for="vote-tyep">Vote type</label>
-          <select>
-            <option>Change parameters</option>
-            <option>Append</option>
-            <option>Change tax</option>
-            <option>Remove</option>
-            <option>Remove list</option>
-            <option>Add list</option>
-            <option>Emergency remove</option>
-            <option>Add Yield Box</option>
-          </select>
+          <label for="proposal-type">Proposal type</label>
+          <MInputMultiSelect
+            :options="proposalTypes"
+            @on-change="onChangeProposalType"
+          />
         </div>
 
-        <div class="mb-6">
-          <label for="vote-tyep">Value</label>
-          <input type="text" name="value" />
+        <div v-show="formData.proposalType" class="mb-6">
+          <label for="type-value">{{ selectedProposalType?.label }}</label>
+
+          <div
+            v-if="
+              [
+                'cash',
+                'taxRange',
+                'inflator',
+                'reward',
+                'inflatorTime',
+                'time',
+                'voteQuorum',
+                'valueQuorum',
+              ].includes(formData.proposalType?.value)
+            "
+            class="w-full flex justify-between items-center space-x-4"
+          >
+            <input v-model="formData.proposalValue" type="number" />
+            <div class="w-1/2">current: X.XX</div>
+          </div>
+          <input v-else v-model="formData.proposalValue" type="text" />
         </div>
 
         <div class="mb-6">
           <div class="flex justify-between mb-2">
-            <label for="Description"> Description </label>
+            <label for="description"> Description </label>
             <div class="text-sm text-gray-400 flex">
               <img src="/img/icon-markdown.svg" class="h-6 mx-2" />
               Markdown supported
             </div>
           </div>
 
-          <textarea v-model="description" name="description" />
+          <textarea v-model="formData.description" name="description" />
         </div>
 
         <div class="mb-6">
-          <label for="vote-tyep">IPFS</label>
-          <input type="url" name="ipfs" />
+          <label for="url-ipfs">IPFS</label>
+          <input v-model="formData.ipfs" type="url" />
         </div>
 
         <div class="mb-6">
-          <label for="Discussion"> Discussion </label>
+          <label for="url-discussion">Discussion</label>
 
-          <input type="url" name="discussion" />
+          <input v-model="formData.discussion" type="url" />
         </div>
       </div>
 
       <div v-else>
-        <ProposalPreview :description="description" @on-back="onBack" />
+        <ProposalPreview
+          :description="formData.description"
+          @on-back="onBack"
+        />
       </div>
 
       <div v-if="isPreview" class="flex justify-end mt-12">
@@ -100,13 +116,99 @@
 import { ref } from "vue";
 import { encodeFunctionData } from "viem";
 import { useAccount } from "use-wagmi";
-import { spogABI, writeSpog, writeErc20 } from "@/lib/generated";
+import {
+  spogABI,
+  spogGovernorABI,
+  writeSpog,
+  writeErc20,
+} from "@/lib/generated";
 
 const isPreview = ref(false);
+const selectedProposalType = ref();
 
-const { address } = useAccount();
+const formData = reactive({
+  proposalType: null,
+  proposalValue: null,
+  description: null,
+  discussion: null,
+  ipfs: null,
+});
+
+const { address: userAccount } = useAccount();
 
 const config = useRuntimeConfig();
+
+const proposalTypes = [
+  {
+    value: "Change parameters",
+    label: "Change parameters",
+    children: [
+      {
+        value: "cash",
+        label: "cash",
+      },
+      {
+        value: "taxRange",
+        label: "taxRange",
+      },
+      {
+        value: "inflator",
+        label: "inflator",
+      },
+
+      {
+        value: "reward",
+        label: "reward",
+      },
+      {
+        value: "inflatorTime",
+        label: "inflatorTime",
+      },
+      {
+        value: "time",
+        label: "time",
+      },
+      {
+        value: "voteQuorum",
+        label: "voteQuorum",
+      },
+      {
+        value: "valueQuorum",
+        label: "valueQuorum",
+      },
+    ],
+  },
+  {
+    value: "changeTax",
+    label: "Change tax",
+  },
+
+  {
+    value: "addNewList",
+    label: "Create a new List",
+  },
+
+  {
+    value: "append",
+    label: "Append an address to a list",
+  },
+
+  {
+    value: "remove",
+    label: "Remove an address from a list",
+  },
+
+  {
+    value: "emergencyRemove",
+    label: "Emergency Remove",
+  },
+];
+
+function onChangeProposalType(option) {
+  console.log({ option });
+  formData.proposalType = option.value;
+  selectedProposalType.value = option;
+}
 
 function onPreview() {
   isPreview.value = true;
@@ -115,6 +217,7 @@ function onPreview() {
 async function onSubmit() {
   console.log("submit");
 
+  // it needs to approve to pay for tax
   // const allowance = await writeErc20({
   //   address: config.cash,
   //   functionName: "approve",
@@ -123,23 +226,23 @@ async function onSubmit() {
   // });
   // console.log({ allowance });
 
-  const newAddress = "0xB609BD6dA626F6bb2096DFdd99E0DA060f76C40D";
+  console.log({ formData });
+
+  const description = formData.description;
   const targets = [config.contracts.spog];
-  const values = [0];
-  const calldatas = [
-    encodeFunctionData({
-      abi: spogABI,
-      functionName: "changeTax",
-      args: [0],
-    }),
-  ];
-  const description = "Change tax variable in spog";
+  const values = [formData.proposalValue];
+
+  const functionName = formData.proposalType;
+  const args = [formData.proposalValue];
+  const abi = spogABI;
+
+  const calldatas = [encodeFunctionData({ abi, functionName, args })];
 
   const { hash } = await writeSpog({
     address: config.contracts.spog,
     functionName: "propose",
     args: [targets, values, calldatas, description],
-    account: address.value,
+    account: userAccount.value,
     chainId: 11155111,
     overrides: {
       gasLimit: 2100000n,
