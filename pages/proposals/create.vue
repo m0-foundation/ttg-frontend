@@ -1,71 +1,115 @@
 <template>
   <div>
     <form @submit.prevent="onSubmit">
-      <div v-if="!isPreview">
-        <h1>Create a proposal</h1>
+      <div v-if="isWritting">Writting transaction on blockchain...</div>
+      <div v-else>
+        <div v-if="!isPreview">
+          <h1>Create a proposal</h1>
 
-        <div class="mb-6">
-          <label for="proposal-type">Proposal type</label>
-          <MInputMultiSelect
-            :options="proposalTypes"
-            @on-change="onChangeProposalType"
+          <div class="mb-6">
+            <label for="proposal-type">Proposal type</label>
+            <MInputMultiSelect
+              :options="proposalTypes"
+              @on-change="onChangeProposalType"
+            />
+          </div>
+
+          <div v-show="formData.proposalType" class="mb-6">
+            <label for="type-value">{{ selectedProposalType?.label }}</label>
+
+            <!-- number input value -->
+            <div
+              v-if="
+                [
+                  'inflator',
+                  'time',
+                  'voteQuorum',
+                  'valueQuorum',
+                  'changeTax',
+                ].includes(formData.proposalType)
+              "
+              class="w-full flex justify-between items-center space-x-4"
+            >
+              <input v-model="formData.proposalValue" type="number" />
+              <div class="w-1/2">current: X.XX</div>
+            </div>
+
+            <div
+              v-else-if="['taxRange'].includes(formData.proposalType)"
+              class="w-full flex justify-between items-center space-x-4"
+            >
+              <input
+                v-model="formData.proposalValue"
+                type="number"
+                placeholder="From"
+              />
+              <input
+                v-model="formData.proposalValue2"
+                type="number"
+                placeholder="To"
+              />
+              <div class="w-1/2">current: X.XX</div>
+            </div>
+
+            <div
+              v-else-if="
+                ['append', 'remove', 'emergencyRemove'].includes(
+                  formData.proposalType
+                )
+              "
+              class="w-full flex justify-between items-center space-x-4"
+            >
+              <input
+                v-model="formData.proposalValue"
+                type="text"
+                placeholder="Address"
+              />
+              <input
+                v-model="formData.proposalValue2"
+                type="text"
+                placeholder="List Address"
+              />
+              <div class="w-1/2">TAX: X.XX $CASH</div>
+            </div>
+
+            <input
+              v-else
+              v-model="formData.proposalValue"
+              type="text"
+              placeholder="Address"
+            />
+          </div>
+
+          <div class="mb-6">
+            <div class="flex justify-between mb-2">
+              <label for="description"> Description </label>
+              <div class="text-sm text-gray-400 flex">
+                <img src="/img/icon-markdown.svg" class="h-6 mx-2" />
+                Markdown supported
+              </div>
+            </div>
+
+            <textarea v-model="formData.description" name="description" />
+          </div>
+
+          <div class="mb-6">
+            <label for="url-ipfs">IPFS</label>
+            <input v-model="formData.ipfs" type="url" />
+          </div>
+
+          <div class="mb-6">
+            <label for="url-discussion">Discussion</label>
+
+            <input v-model="formData.discussion" type="url" />
+          </div>
+        </div>
+
+        <div v-else>
+          <ProposalPreview
+            :description="formData.description"
+            @on-back="onBack"
           />
         </div>
-
-        <div v-show="formData.proposalType" class="mb-6">
-          <label for="type-value">{{ selectedProposalType?.label }}</label>
-
-          <div
-            v-if="
-              [
-                'cash',
-                'taxRange',
-                'inflator',
-                'reward',
-                'inflatorTime',
-                'time',
-                'voteQuorum',
-                'valueQuorum',
-                'changeTax',
-              ].includes(formData.proposalType)
-            "
-            class="w-full flex justify-between items-center space-x-4"
-          >
-            <input v-model="formData.proposalValue" type="number" />
-            <div class="w-1/2">current: X.XX</div>
-          </div>
-          <input v-else v-model="formData.proposalValue" type="text" />
-        </div>
-
-        <div class="mb-6">
-          <div class="flex justify-between mb-2">
-            <label for="description"> Description </label>
-            <div class="text-sm text-gray-400 flex">
-              <img src="/img/icon-markdown.svg" class="h-6 mx-2" />
-              Markdown supported
-            </div>
-          </div>
-
-          <textarea v-model="formData.description" name="description" />
-        </div>
-
-        <div class="mb-6">
-          <label for="url-ipfs">IPFS</label>
-          <input v-model="formData.ipfs" type="url" />
-        </div>
-
-        <div class="mb-6">
-          <label for="url-discussion">Discussion</label>
-
-          <input v-model="formData.discussion" type="url" />
-        </div>
-      </div>
-
-      <div v-else>
-        <ProposalPreview
-          :description="formData.description"
-          @on-back="onBack"
-        />
       </div>
 
       <div v-if="isPreview" class="flex justify-end mt-12">
@@ -115,19 +159,13 @@
 
 <script setup>
 import { ref } from "vue";
-import { encodeFunctionData, toBytes, encodeAbiParameters } from "viem";
+import { encodeFunctionData, toBytes, toHex, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
-import { ethers } from "ethers";
-import {
-  spogABI,
-  spogGovernorABI,
-  writeSpog,
-  writeSpogGovernor,
-  writeErc20,
-} from "@/lib/generated";
+import { spogABI, writeSpog, writeErc20 } from "@/lib/generated";
 
 const isPreview = ref(false);
 const selectedProposalType = ref();
+const isWritting = ref(false);
 
 const formData = reactive({
   proposalType: null,
@@ -206,13 +244,13 @@ function onChangeProposalType(option) {
 }
 
 function onPreview() {
-  // isPreview.value = true;
-  onSubmit();
+  isPreview.value = true;
 }
 
 async function onSubmit() {
   console.log("submit");
 
+  // TODO: add this process somewhere else
   // it needs to approve to pay for tax
   // const allowance = await writeErc20({
   //   address: config.cash,
@@ -221,85 +259,87 @@ async function onSubmit() {
   //   account: address.value,
   // });
   // console.log({ allowance });
-  if (
-    [
-      "cash",
-      "taxRange",
-      "inflator",
-      "time",
-      "voteQuorum",
-      "valueQuorum",
-    ].includes(formData.proposalType)
-  ) {
-    return onSubmitProposalTypeChange();
-  }
 
-  console.log({ formData });
-
-  const description = formData.description;
-  const targets = [config.contracts.spog];
-  const values = [formData.proposalValue];
-  console.log({ values, targets, description });
-
-  const functionName = formData.proposalType;
-  const args = [formData.proposalValue];
-  const abi = spogABI;
-  console.log({ functionName, args });
-
-  const calldatas = [encodeFunctionData({ abi, functionName, args })];
+  const calldatas = buildCalldatas(formData);
   console.log({ calldatas });
 
-  const { hash } = await writeSpogGovernor({
-    address: config.contracts.spog,
-    functionName: "propose",
-    args: [targets, values, calldatas, description],
-    account: userAccount.value,
-    chainId: 11155111,
-    overrides: {
-      gasLimit: 2100000n,
-    },
+  isWritting.value = true;
+  const { hash } = await onWriteSpogGovernor({
+    calldatas,
+    description: formData.description,
   });
-  console.log({ hash });
+  isWritting.value = false;
 }
 
-async function onSubmitProposalTypeChange() {
-  console.log("onSubmitProposalTypeChange");
+function buildCalldatas(data) {
+  const type = data.proposalType;
 
-  const description = formData.description;
-  const targets = [config.contracts.spog];
-  const values = [formData.proposalValue];
-  const abi = spogABI;
+  if (
+    ["changeTax", "inflator", "time", "voteQuorum", "valueQuorum"].includes(
+      type
+    )
+  ) {
+    return buildCalldatasChange(data, "uint256");
+  }
 
-  /* build calldata to propose method */
+  if (["cash"].includes(type)) {
+    return buildCalldatasChange(data, "address");
+  }
 
+  if (["taxRange"].includes(type)) {
+    return buildCalldatasChangeDoubleValues(data, "uint256[2]");
+  }
+
+  if (["append", "remove", "emergencyRemove"].includes(type)) {
+    return buildCalldatasForList(data);
+  }
+}
+
+function buildCalldatasForList(data) {
+  const functionName = data.proposalType;
+  const args = [data.proposalValue, data.proposalValue2];
+  return [encodeFunctionData({ abi: spogABI, functionName, args })];
+}
+
+function buildCalldatasChange(data, inputType) {
+  console.log("buildCalldatasChange", { data, inputType });
+
+  const what = toBytes(data.proposalType, { size: 32 });
   const valueEncoded = encodeAbiParameters(
-    [{ type: "uint256" }],
-    [formData.proposalValue.toString()]
+    [{ type: inputType }],
+    [data.proposalValue]
   );
-  console.log({ valueEncoded });
 
-  const abiCoder = ethers.utils.defaultAbiCoder;
-  const valueEncoded2 = abiCoder.encode(["uint"], [11]);
-  console.log({ valueEncoded2 });
-
-  const what = encodeAbiParameters([{ type: "bytes8" }], ["inflator"]);
-
-  const type = encodeAbiParameters(
-    [{ type: "uint256" }],
-    [formData.proposalValue.toString()]
-  );
-  console.log({ what, type });
-  // abi.encodeWithSignature("change(bytes32,bytes)", inflator, elevenAsCalldataValue); // 0x00000
-  const calldatas = [
+  return [
     encodeFunctionData({
-      abi,
-      functionName: "change",
-      // change(bytes32 what, bytes calldata value)
-      args: [what, type],
+      abi: spogABI,
+      functionName: "change", // change(bytes32 what, bytes calldata value)
+      args: [toHex(what), valueEncoded],
     }),
   ];
-  // 0x000000000000000000000000000000000000000000000000000000000000000b
-  console.log({ calldatas });
+}
+
+function buildCalldatasChangeDoubleValues(data, inputType) {
+  console.log("buildCalldatasChangeDoubleValues", { data, inputType });
+
+  const what = toBytes(data.proposalType, { size: 32 });
+  const value2Encoded = encodeAbiParameters(
+    [{ type: inputType }],
+    [[data.proposalValue, data.proposalValue2]]
+  );
+
+  return [
+    encodeFunctionData({
+      abi: spogABI,
+      functionName: "change", // change(bytes32 what, bytes calldata value)
+      args: [toHex(what), value2Encoded],
+    }),
+  ];
+}
+
+async function onWriteSpogGovernor({ calldatas, description }) {
+  const targets = [config.contracts.spog]; // do not change
+  const values = [0]; // do not change
 
   const { hash } = await writeSpog({
     address: config.contracts.spog,
@@ -311,7 +351,6 @@ async function onSubmitProposalTypeChange() {
       gasLimit: 2100000n,
     },
   });
-  console.log({ hash });
 }
 
 function onBack() {
