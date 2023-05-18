@@ -26,7 +26,8 @@
                 'time',
                 'voteQuorum',
                 'valueQuorum',
-              ].includes(formData.proposalType?.value)
+                'changeTax',
+              ].includes(formData.proposalType)
             "
             class="w-full flex justify-between items-center space-x-4"
           >
@@ -114,12 +115,14 @@
 
 <script setup>
 import { ref } from "vue";
-import { encodeFunctionData } from "viem";
+import { encodeFunctionData, toBytes, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
+import { ethers } from "ethers";
 import {
   spogABI,
   spogGovernorABI,
   writeSpog,
+  writeSpogGovernor,
   writeErc20,
 } from "@/lib/generated";
 
@@ -156,14 +159,6 @@ const proposalTypes = [
         label: "inflator",
       },
 
-      {
-        value: "reward",
-        label: "reward",
-      },
-      {
-        value: "inflatorTime",
-        label: "inflatorTime",
-      },
       {
         value: "time",
         label: "time",
@@ -211,7 +206,8 @@ function onChangeProposalType(option) {
 }
 
 function onPreview() {
-  isPreview.value = true;
+  // isPreview.value = true;
+  onSubmit();
 }
 
 async function onSubmit() {
@@ -225,18 +221,85 @@ async function onSubmit() {
   //   account: address.value,
   // });
   // console.log({ allowance });
+  if (
+    [
+      "cash",
+      "taxRange",
+      "inflator",
+      "time",
+      "voteQuorum",
+      "valueQuorum",
+    ].includes(formData.proposalType)
+  ) {
+    return onSubmitProposalTypeChange();
+  }
 
   console.log({ formData });
 
   const description = formData.description;
   const targets = [config.contracts.spog];
   const values = [formData.proposalValue];
+  console.log({ values, targets, description });
 
   const functionName = formData.proposalType;
   const args = [formData.proposalValue];
   const abi = spogABI;
+  console.log({ functionName, args });
 
   const calldatas = [encodeFunctionData({ abi, functionName, args })];
+  console.log({ calldatas });
+
+  const { hash } = await writeSpogGovernor({
+    address: config.contracts.spog,
+    functionName: "propose",
+    args: [targets, values, calldatas, description],
+    account: userAccount.value,
+    chainId: 11155111,
+    overrides: {
+      gasLimit: 2100000n,
+    },
+  });
+  console.log({ hash });
+}
+
+async function onSubmitProposalTypeChange() {
+  console.log("onSubmitProposalTypeChange");
+
+  const description = formData.description;
+  const targets = [config.contracts.spog];
+  const values = [formData.proposalValue];
+  const abi = spogABI;
+
+  /* build calldata to propose method */
+
+  const valueEncoded = encodeAbiParameters(
+    [{ type: "uint256" }],
+    [formData.proposalValue.toString()]
+  );
+  console.log({ valueEncoded });
+
+  const abiCoder = ethers.utils.defaultAbiCoder;
+  const valueEncoded2 = abiCoder.encode(["uint"], [11]);
+  console.log({ valueEncoded2 });
+
+  const what = encodeAbiParameters([{ type: "bytes8" }], ["inflator"]);
+
+  const type = encodeAbiParameters(
+    [{ type: "uint256" }],
+    [formData.proposalValue.toString()]
+  );
+  console.log({ what, type });
+  // abi.encodeWithSignature("change(bytes32,bytes)", inflator, elevenAsCalldataValue); // 0x00000
+  const calldatas = [
+    encodeFunctionData({
+      abi,
+      functionName: "change",
+      // change(bytes32 what, bytes calldata value)
+      args: [what, type],
+    }),
+  ];
+  // 0x000000000000000000000000000000000000000000000000000000000000000b
+  console.log({ calldatas });
 
   const { hash } = await writeSpog({
     address: config.contracts.spog,
