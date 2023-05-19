@@ -19,67 +19,24 @@
 
 <script lang="ts" setup>
 // chains
-import { mainnet, goerli, sepolia } from "@wagmi/core/chains";
-import { configureChains } from "@wagmi/core";
-// connectors
-import { CoinbaseWalletConnector } from "use-wagmi/connectors/coinbaseWallet";
-import { LedgerConnector } from "use-wagmi/connectors/ledger";
-import { MetaMaskConnector } from "use-wagmi/connectors/metaMask";
-import { WalletConnectLegacyConnector } from "use-wagmi/connectors/walletConnectLegacy";
-// RPCs providers
-import { publicProvider } from "@wagmi/core/providers/public";
-import { alchemyProvider } from "@wagmi/core/providers/alchemy";
-import { infuraProvider } from "@wagmi/core/providers/infura";
-// client
-import { createClient } from "use-wagmi";
-
+import { mainnet, sepolia } from "@wagmi/core/chains";
 import { SPOG, ConfigVars } from "@/lib/sdk";
 
 const config = useRuntimeConfig();
-
-const { chains, provider, webSocketProvider } = configureChains(
-  [sepolia], // mainnet, goerli
-  [
-    // alchemyProvider({ apiKey: config.ALCHEMY_API_KEY! }),
-    infuraProvider({ apiKey: config.INFURA_API_KEY! }),
-    publicProvider(),
-  ],
-  { targetQuorum: 1 }
-);
-
-const client = createClient({
-  autoConnect: true,
-  connectors: [
-    new MetaMaskConnector({
-      chains,
-      options: {
-        UNSTABLE_shimOnConnectSelectAccount: true,
-      },
-    }),
-    new CoinbaseWalletConnector({
-      chains,
-      options: {
-        appName: "wagmi",
-      },
-    }),
-    new WalletConnectLegacyConnector({
-      chains,
-      options: {
-        qrcode: true,
-      },
-    }),
-    new LedgerConnector({
-      chains,
-    }),
-  ],
-  provider,
-  webSocketProvider,
-});
-
 const nuxtApp = useNuxtApp();
-nuxtApp.vueApp.use(client);
 
-const configVars = <ConfigVars>config.contracts;
-const spogClient = new SPOG(config.ALCHEMY_URL, sepolia, configVars);
-nuxtApp.provide("spogClient", spogClient);
+// for every page reload must initialize without the need go to setup again
+const hasRPC = localStorage.getItem("m0:rpc");
+console.log("app", { hasRPC });
+if (hasRPC) {
+  console.log("init app");
+  const { client } = useEthereum(hasRPC); // TODO? support mainnet
+  nuxtApp.vueApp.use(client);
+
+  const configVars = config.contracts as ConfigVars;
+  const spogClient = new SPOG(config.ALCHEMY_URL, sepolia, configVars);
+  nuxtApp.provide("spogClient", spogClient);
+} else {
+  await navigateTo("/setup/1");
+}
 </script>
