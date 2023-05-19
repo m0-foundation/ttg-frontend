@@ -4,7 +4,8 @@
     <div class="text-primary-darker text-sm mb-6">
       Proposed by <u>{{ proposer }}</u>
     </div>
-    <div class="mb-6">{{ description }}</div>
+    <!-- <div class="mb-6">{{ description }}</div> -->
+    <div class="markdown-body mb-6" v-html="descriptionHtml"></div>
     <div class="flex justify-between uppercase">
       <button class="uppercase">Show Details</button>
       <div class="flex justify-between items-center">
@@ -21,6 +22,9 @@
 </template>
 
 <script setup lang="ts">
+import { marked } from "marked";
+import xss from "xss";
+
 const props = defineProps({
   description: {
     type: String,
@@ -37,4 +41,10 @@ const props = defineProps({
 });
 
 const title = props.description.split("\n")[0];
+
+const descriptionHtml = computed(() => {
+  return xss(marked.parse(props.description));
+});
 </script>
+
+<style scoped></style>
