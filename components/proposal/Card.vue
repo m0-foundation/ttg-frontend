@@ -1,5 +1,5 @@
 <template>
-  <article class="bg-white text-black p-8">
+  <article class="bg-white text-black p-8 mb-2">
     <h2 class="text-2xl">{{ title }}</h2>
     <div class="text-primary-darker text-sm mb-6">
       Proposed by <u>{{ proposer }}</u>
