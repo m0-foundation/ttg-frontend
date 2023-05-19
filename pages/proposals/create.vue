@@ -100,17 +100,13 @@
 import { ref } from "vue";
 import { encodeFunctionData } from "viem";
 import { useAccount } from "use-wagmi";
-import ProposalPreview from "@/components/pages/proposals/preview.vue";
 import { spogABI, writeSpog, writeErc20 } from "@/lib/generated";
 
 const isPreview = ref(false);
 
 const { address } = useAccount();
 
-const config = {
-  spog: "0x680dBfa52bf6CA633dF837f961f50EA6456e9E00",
-  cash: "0x7b7E36A667F0Dd96B617343a12fB04e52C80BC2D",
-};
+const config = useRuntimeConfig();
 
 function onPreview() {
   isPreview.value = true;
@@ -128,7 +124,7 @@ async function onSubmit() {
   // console.log({ allowance });
 
   const newAddress = "0xB609BD6dA626F6bb2096DFdd99E0DA060f76C40D";
-  const targets = [config.spog];
+  const targets = [config.contracts.spog];
   const values = [0];
   const calldatas = [
     encodeFunctionData({
@@ -140,7 +136,7 @@ async function onSubmit() {
   const description = "Change tax variable in spog";
 
   const { hash } = await writeSpog({
-    address: config.spog,
+    address: config.contracts.spog,
     functionName: "propose",
     args: [targets, values, calldatas, description],
     account: address.value,
