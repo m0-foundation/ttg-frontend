@@ -337,11 +337,11 @@ function buildCalldatasChangeDoubleValues(data, inputType) {
   ];
 }
 
-async function onWriteSpogGovernor({ calldatas, description }) {
+function onWriteSpogGovernor({ calldatas, description }) {
   const targets = [config.contracts.spog]; // do not change
   const values = [0]; // do not change
 
-  const { hash } = await writeSpog({
+  return writeSpog({
     address: config.contracts.spog,
     functionName: "propose",
     args: [targets, values, calldatas, description],
