@@ -30,10 +30,11 @@
 <script lang="ts" setup>
 import { ref, toRefs } from "vue";
 import { useAccount, useDisconnect, useBalance } from "use-wagmi";
+import { parseAbiItem } from "viem";
 import { readErc20Mock } from "~/lib/generated";
 
 const cashBalance = ref();
-
+const nuxtApp = useNuxtApp();
 const { disconnect } = useDisconnect();
 const { address } = useAccount({
   onConnect: async () => {
@@ -42,6 +43,14 @@ const { address } = useAccount({
       functionName: "balanceOf",
       args: [address.value!],
     });
+
+    const filter = await nuxtApp.$viemClient.getLogs({
+      address: "0x8335Af67C928Ff9D4f9BE905de767cf252A83fe1",
+      event: parseAbiItem(
+        "event Transfer(address indexed from, address indexed to, uint256 value)"
+      ),
+    });
+    console.log({ filter });
   },
   onDisconnect: () => console.log("disconnected"),
 });
