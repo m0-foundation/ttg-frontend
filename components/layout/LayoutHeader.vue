@@ -7,7 +7,7 @@
         <span
           class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
         >
-          Mˆ0 <span class="text-sm text-gray-400">Governance</span>
+          M&#94;ZERO <span class="text-sm text-gray-400">Governance</span>
         </span>
       </a>
 
