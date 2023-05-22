@@ -2,9 +2,9 @@
   <LayoutPage>
     <div>
       <div class="text-center text-xl text-grey-primary tracking-widest mb-4">
-        [1/3]
+        [1/2]
       </div>
-      <!-- step 1 -->
+
       <form @submit.prevent="onSubmit">
         <h1 class="text-center text-2xl">Connect to M&#94;ZERO network</h1>
         <p class="text-center text-grey-primary mb-8">
@@ -72,7 +72,7 @@
   </LayoutPage>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { mainnet, sepolia } from "@wagmi/core/chains";
 import { configureChains, InjectedConnector } from "@wagmi/core";
 // connectors
@@ -86,6 +86,8 @@ import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
 
 // client
 import { createClient } from "use-wagmi";
+
+import { SPOG, ConfigVars } from "@/lib/sdk";
 
 definePageMeta({
   layout: "with-only-logo",
@@ -101,64 +103,23 @@ const rpcs = config.network.rpcs.split(",");
 const chainId = config.network.chainId;
 
 async function onSubmit() {
-  console.log("onSubmitStep1", { selectedRPC });
+  console.log({ selectedRPC });
   const rpc = selectedRPC.value.toString();
-  localStorage.setItem("m0:rpc", rpc);
+  localStorage.setItem("m0.rpc", rpc);
 
   /* setup wagmi client */
-
-  const { chains, provider, webSocketProvider } = configureChains(
-    [sepolia], // mainnet, goerli
-    [
-      jsonRpcProvider({
-        rpc: (chain) => ({
-          http: rpc,
-          // webSocket: TODO?
-        }),
-      }),
-      publicProvider(),
-    ],
-    { targetQuorum: 1 }
-  );
-
-  const connectors = [
-    // new InjectedConnector(), // browsers that inject ethereum such as mobile app and metamask
-    new MetaMaskConnector({
-      chains,
-      options: {
-        UNSTABLE_shimOnConnectSelectAccount: true,
-      },
-    }),
-    // new CoinbaseWalletConnector({
-    //   chains,
-    //   options: {
-    //     appName: "wagmi",
-    //   },
-    // }),
-    // new WalletConnectLegacyConnector({
-    //   chains,
-    //   options: {
-    //     qrcode: true,
-    //   },
-    // }),
-    // new LedgerConnector({
-    //   chains,
-    // }),
-  ];
-
-  const client = createClient({
-    autoConnect: true,
-    connectors,
-    provider,
-    // webSocketProvider, TODO?
-  });
+  const { client } = useEthereum(rpc); // TODO? support mainnet
   // install wagmi client as vue plugin using wrapper from 'use-wagmi'
   nuxtApp.vueApp.use(client);
+
+  const configVars = config.contracts as ConfigVars;
+  const spogClient = new SPOG(config.ALCHEMY_URL, sepolia, configVars);
+  nuxtApp.provide("spogClient", spogClient);
 
   await navigateTo("/setup/2");
 }
 
-function onSwitchInput(version) {
+function onSwitchInput(version: boolean) {
   isWithCustomRPC.value = version;
   selectedRPC.value = null; // clear the input
 }
