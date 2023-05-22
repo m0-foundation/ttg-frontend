@@ -11,49 +11,127 @@
         </span>
       </a>
 
-      <div v-if="address" class="flex md:order-2">
-        <div class="mr-4">{{ address }}</div>
+      <div class="flex items-center md:order-2">
+        <NuxtLink to="/proposals/create">
+          <MButton>Create Proposal</MButton>
+        </NuxtLink>
         <div class="text-white mr-4">
-          Balance: {{ abcBalance?.formatted }} $ABC <br />
-          cash: {{ cashBalance }} $ABC
+          <span class="bg-white text-black rounded-full p-1 mx-4 text-sm"
+            >VT</span
+          >
+          {{ voteBalance?.formatted }}
         </div>
 
-        <button @click="() => disconnect()">Disconnect</button>
-      </div>
-      <div v-else class="flex md:order-2">
-        <MModalWeb3Connect />
+        <div class="text-white mr-4">
+          <span
+            class="border border-1-white bg-transparent p-1 text-white rounded-full mx-4 text-sm"
+            >$V</span
+          >
+          {{ valueBalance?.formatted }}
+        </div>
+
+        <div
+          class="border border-1 border-gray-500 rounded pl-4 py-1 flex items-center"
+        >
+          <div class="truncate w-28">
+            {{ address }}
+          </div>
+          <button
+            class="text-white font-medium text-sm px-4 py-2.5 text-center inline-flex items-center"
+            type="button"
+            @click="isMenuOpen = !isMenuOpen"
+          >
+            <svg
+              class="w-4 h-4"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <!-- Dropdown menu -->
+        <div
+          v-show="isMenuOpen"
+          class="absolute right-16 top-20 z-10 bg-gray-800 divide-y divide-gray-100 rounded-lg shadow w-44"
+        >
+          <ul
+            class="py-2 text-sm text-gray-700 dark:text-gray-200"
+            aria-labelledby="dropdownDefaultButton"
+          >
+            <li>
+              <a
+                href="#"
+                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              >
+                My Profile
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              >
+                Settings
+              </a>
+            </li>
+
+            <li>
+              <hr class="border-gray-500" />
+              <a
+                href="#"
+                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                @click="() => disconnect()"
+              >
+                Disconnect
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </header>
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs } from "vue";
+import { ref } from "vue";
 import { useAccount, useDisconnect, useBalance } from "use-wagmi";
-import { parseAbiItem } from "viem";
-import { readErc20Mock } from "~/lib/generated";
 
-const cashBalance = ref();
-const nuxtApp = useNuxtApp();
-const { disconnect } = useDisconnect();
-const { address } = useAccount({
-  onConnect: async () => {
-    cashBalance.value = await readErc20Mock({
-      address: "0x8335Af67C928Ff9D4f9BE905de767cf252A83fe1",
-      functionName: "balanceOf",
-      args: [address.value!],
-    });
-  },
-  onDisconnect: () => console.log("disconnected"),
+const isMenuOpen = ref(false);
+const config = useRuntimeConfig();
+const { address, isConnected } = useAccount();
+
+console.log({ address, isConnected });
+
+const { disconnect } = useDisconnect({
+  onSuccess: () => navigateTo("/setup/2"),
 });
 
 const {
-  data: abcBalance,
-  isError,
-  isLoading,
+  data: voteBalance,
+  isError: voteIsError,
+  isLoading: voteIsLoading,
 } = useBalance({
   address,
-  token: "0x8335Af67C928Ff9D4f9BE905de767cf252A83fe1",
+  token: config.public.contracts.tokens.vote,
+  watch: true,
+});
+
+const {
+  data: valueBalance,
+  isError: valueIsError,
+  isLoading: valueIsLoading,
+} = useBalance({
+  address,
+  token: config.public.contracts.tokens.value,
   watch: true,
 });
 </script>
