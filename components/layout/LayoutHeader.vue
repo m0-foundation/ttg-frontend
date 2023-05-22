@@ -43,14 +43,6 @@ const { address } = useAccount({
       functionName: "balanceOf",
       args: [address.value!],
     });
-
-    const filter = await nuxtApp.$viemClient.getLogs({
-      address: "0x8335Af67C928Ff9D4f9BE905de767cf252A83fe1",
-      event: parseAbiItem(
-        "event Transfer(address indexed from, address indexed to, uint256 value)"
-      ),
-    });
-    console.log({ filter });
   },
   onDisconnect: () => console.log("disconnected"),
 });
