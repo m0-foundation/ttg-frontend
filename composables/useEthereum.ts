@@ -27,8 +27,14 @@ export const useEthereum = (rpc: string, chain = sepolia) => {
   );
 
   const connectors = [
+    new MetaMaskConnector({
+      chains,
+      options: {
+        UNSTABLE_shimOnConnectSelectAccount: true,
+      },
+    }),
     // browsers that inject ethereum such as mobile app and metamask
-    new InjectedConnector(),
+    // new InjectedConnector(),
   ];
 
   const client = createClient({
