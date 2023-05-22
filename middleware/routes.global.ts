@@ -1,16 +1,14 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  const hasRpc = localStorage.getItem("m0:rpc");
-  console.log({ to, from });
+  console.log("routes.global");
 
+  if (to.path === "/") {
+    return navigateTo("/proposals/active");
+  }
   if (to.path === "/lists") {
     return navigateTo("/lists/merchants");
   }
 
   if (to.path === "/setup") {
-    if (hasRpc) {
-      return navigateTo("/setup/2");
-    } else {
-      return navigateTo("/setup/1");
-    }
+    return navigateTo("/setup/1");
   }
 });
