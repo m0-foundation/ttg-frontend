@@ -21,22 +21,21 @@
 // chains
 import { mainnet, sepolia } from "@wagmi/core/chains";
 import { SPOG, ConfigVars } from "@/lib/sdk";
+console.log("app.vue");
 
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
 
 // for every page reload must initialize without the need go to setup again
-const hasRPC = localStorage.getItem("m0:rpc");
-console.log("app", { hasRPC });
-if (hasRPC) {
-  console.log("init app");
-  const { client } = useEthereum(hasRPC); // TODO? support mainnet
+const rpc = localStorage.getItem("m0.rpc");
+
+if (rpc) {
+  console.log("init app with rpc");
+  const { client } = useEthereum(rpc); // TODO? support mainnet
   nuxtApp.vueApp.use(client);
 
   const configVars = config.contracts as ConfigVars;
   const spogClient = new SPOG(config.ALCHEMY_URL, sepolia, configVars);
   nuxtApp.provide("spogClient", spogClient);
-} else {
-  await navigateTo("/setup/1");
 }
 </script>
