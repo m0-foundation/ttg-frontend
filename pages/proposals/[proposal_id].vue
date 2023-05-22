@@ -17,9 +17,11 @@
 <script setup>
 definePageMeta({
   layout: "with-navbar",
+  middleware: ["auth"],
 });
 // const pageId = $route.params.proposal_id;
 const { client } = useSpog();
+console.log({ client });
 const {
   state: proposals,
   isReady,
