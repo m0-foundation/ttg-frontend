@@ -1,9 +1,6 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
-    <Head>
-      <Link rel="stylesheet" href="/github-markdown.css"></Link>
-    </Head>
     <div>
       <button class="text-primary-dark uppercase mb-4" @click="onBack">
         &#60; back

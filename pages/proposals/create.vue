@@ -163,6 +163,10 @@ import { encodeFunctionData, toBytes, toHex, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
 import { spogABI, writeSpog, writeErc20 } from "@/lib/generated";
 
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const isPreview = ref(false);
 const selectedProposalType = ref();
 const isWritting = ref(false);

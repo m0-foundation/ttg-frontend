@@ -4,6 +4,10 @@ export default defineNuxtConfig({
       WALLET_CONNECT_PROJECT_ID: process.env.WALLET_CONNECT_PROJECT_ID,
       ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
       INFURA_API_KEY: process.env.INFURA_API_KEY,
+      network: {
+        rpcs: process.env.NETWORK_RPC_LIST,
+        chainId: process.env.NETWORK_CHAIN_ID,
+      },
       contracts: {
         deployedBlock: process.env.CONTRACT_DEPLOYED_BLOCK,
         spog: process.env.CONTRACT_ADDRESS_SPOG,
@@ -33,6 +37,9 @@ export default defineNuxtConfig({
   tailwindcss: {
     config: {
       theme: {
+        letterSpacing: {
+          widest: "1.0em",
+        },
         extend: {
           colors: {
             primary: "#00CC9B",

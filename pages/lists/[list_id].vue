@@ -7,5 +7,6 @@
 <script setup>
 definePageMeta({
   layout: "with-navbar",
+  middleware: ["auth"],
 });
 </script>
