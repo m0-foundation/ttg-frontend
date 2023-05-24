@@ -74,19 +74,6 @@
 
 <script setup lang="ts">
 import { mainnet, sepolia } from "@wagmi/core/chains";
-import { configureChains, InjectedConnector } from "@wagmi/core";
-// connectors
-import { CoinbaseWalletConnector } from "use-wagmi/connectors/coinbaseWallet";
-import { LedgerConnector } from "use-wagmi/connectors/ledger";
-import { MetaMaskConnector } from "use-wagmi/connectors/metaMask";
-import { WalletConnectLegacyConnector } from "use-wagmi/connectors/walletConnectLegacy";
-// RPCs providers
-import { publicProvider } from "@wagmi/core/providers/public";
-import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
-
-// client
-import { createClient } from "use-wagmi";
-
 import { SPOG, ConfigVars } from "@/lib/sdk";
 
 definePageMeta({
