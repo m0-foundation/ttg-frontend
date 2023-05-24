@@ -33,7 +33,7 @@ export default defineNuxtConfig({
     "~/components",
   ],
   // https://tailwindcss.nuxtjs.org/getting-started/setup
-  modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt", "@pinia/nuxt"],
   tailwindcss: {
     config: {
       theme: {
@@ -55,5 +55,12 @@ export default defineNuxtConfig({
         },
       },
     },
+  },
+  imports: {
+    dirs: ["./stores"],
+  },
+
+  pinia: {
+    autoImports: ["defineStore"],
   },
 });
