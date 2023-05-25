@@ -9,17 +9,23 @@ import {
   PublicClient,
 } from "viem";
 import { BigNumber } from "ethers";
-import type { Abi, AbiParameter, ExtractAbiEventNames, Narrow } from "abitype";
-import { spogABI, ispogGovernorABI, readGovernor } from "./generated";
+import type { Abi } from "abitype";
+import {
+  spogABI,
+  ispogGovernorABI,
+  readGovernor,
+  readSpogGovernor,
+} from "./generated";
 
 export interface EventLog {
   eventName: string;
   calldatas: Array<string>;
-  endBlock: BigInt;
-  startBlock: BigInt;
+  endBlock: number;
+  startBlock: number;
   signatures: Array<string>;
   targets: Array<string>;
-  values: Array<any>;
+  blockNumber: number;
+  transactionHash: string;
 }
 
 enum ProposalState {
@@ -35,9 +41,10 @@ enum ProposalState {
 
 export interface MProposal extends EventLog {
   proposer: string;
-  proposalId: BigInt;
+  proposalId: string;
   description: string;
-  state?: ProposalState;
+  state?: keyof typeof ProposalState;
+  timestamp: number;
 }
 
 export interface ConfigVars {
@@ -56,6 +63,20 @@ export interface ConfigVars {
   };
 }
 
+export interface VotesResult {
+  total: number;
+  yes: {
+    count: number;
+    ratio: number;
+    percentage: number;
+  };
+  no: {
+    count: number;
+    ratio: number;
+    percentage: number;
+  };
+}
+
 export class SPOG {
   client: PublicClient;
   config: ConfigVars;
@@ -66,17 +87,34 @@ export class SPOG {
   }
 
   decodeProposalLog(log: Log, abi: object): MProposal {
-    const { eventName, args } = decodeEventLog({
+    const { eventName, args: event } = decodeEventLog({
       abi,
       data: log?.data,
       topics: log?.topics,
     });
 
-    const proposal: MProposal = {
-      eventName,
-      ...args,
-    };
-    return proposal;
+    const toString = (array: Array<any>) =>
+      array.length > 0 ? array.map((v) => v.toString()) : [];
+
+    if (event) {
+      const proposal: MProposal = {
+        ...event,
+        eventName,
+        blockNumber: Number(log.blockNumber),
+        transactionHash: String(log.transactionHash),
+        values: toString(event.values),
+        signatures: toString(event.signatures),
+        calldatas: toString(event.calldatas),
+        targets: toString(event.targets),
+        endBlock: Number(event.endBlock),
+        startBlock: Number(event.startBlock),
+        proposalId: String(event.proposalId),
+      };
+
+      return proposal;
+    }
+
+    return {} as MProposal;
   }
 
   async getGovernorVoteProposals(): Promise<MProposal> {
@@ -87,9 +125,27 @@ export class SPOG {
       fromBlock: deployedBlock,
     });
 
-    return rawLogs.map((log: Log) =>
+    const proposals = rawLogs.map((log: Log) =>
       this.decodeProposalLog(log, ispogGovernorABI)
     );
+
+    const proposalsWithState = await Promise.all(
+      proposals.map(async (proposal) => {
+        const state = await this.getProposalState(
+          proposal.proposalId.toString()
+        );
+
+        const block = await this.client.getBlock({
+          blockNumber: BigInt(proposal.blockNumber),
+        });
+
+        proposal.state = state;
+        proposal.timestamp = Number(block.timestamp);
+        return proposal;
+      })
+    );
+
+    return proposalsWithState;
   }
 
   async getSpogProposals(): Promise<MProposal[]> {
@@ -116,5 +172,35 @@ export class SPOG {
     });
 
     return ProposalState[proposalStateNumber] as keyof typeof ProposalState;
+  }
+
+  async getProposalVotes(proposalId: string): Promise<VotesResult> {
+    const votes = await readSpogGovernor({
+      address: this.config.governor.vote as Hash,
+      functionName: "proposalVotes",
+      args: [BigNumber.from(proposalId)],
+    });
+
+    const yes = Number(votes.yesVotes);
+    const no = Number(votes.noVotes);
+    const total = yes + no;
+    const yesRatio = yes / total;
+    const noRatio = yes / total;
+    const yesPercentage = yesRatio * 100;
+    const noPercentage = noRatio * 100;
+
+    return {
+      total,
+      yes: {
+        count: yes,
+        ratio: yesRatio || 0,
+        percentage: yesPercentage || 0,
+      },
+      no: {
+        count: no,
+        ratio: noRatio || 0,
+        percentage: noPercentage || 0,
+      },
+    };
   }
 }
