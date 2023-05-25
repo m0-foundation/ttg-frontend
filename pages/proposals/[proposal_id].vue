@@ -3,6 +3,7 @@
     <div class="flex w-full space-x-4">
       <div class="w-3/4 bg-white">
         <article class="bg-white text-black p-8 mb-2">
+          <div>{{ proposalState }}</div>
           <div class="text-primary-darker text-sm mb-6">
             Proposed by <u>{{ proposal.proposer }}</u>
           </div>
@@ -26,20 +27,24 @@
 
           <div class="flex">
             <div class="w-1/2 flex flex-col">
-              <span class="text-gray-500">YES</span>
-              <span class="text-primary text-3xl">70%</span>
+              <span class="text-gray-500">YES {{ votes?.yes?.count }}</span>
+              <span class="text-primary text-3xl"
+                >{{ votes?.yes?.percentage }}%</span
+              >
             </div>
             <div class="w-1/2 flex flex-col">
-              <span class="text-gray-500">NO</span>
-              <span class="text-red text-3xl">30%</span>
+              <span class="text-gray-500">NO {{ votes?.no?.count }}</span>
+              <span class="text-red text-3xl"
+                >{{ votes?.no?.percentage }}%</span
+              >
             </div>
           </div>
 
           <MProgressBar width="70%" class="mb-2" />
 
           <p class="text-xs mb-7">
-            <span class="text-white mr-2">60%</span>
-            <span class="text-gray-500">OF TOKENS VOTED</span>
+            <span class="text-white mr-2">{{ votes?.total }}</span>
+            <span class="text-gray-500">TOTAL VOTES</span>
           </p>
 
           <p class="text-gray-500">RECENT VOTES</p>
@@ -75,7 +80,17 @@ const proposalId = route.params.proposal_id;
 const proposal = store.getProposalById(proposalId);
 const { html } = useParsedDescription(proposal.description);
 
-// const { client } = useSpog();
+const { client } = useSpog();
+const {
+  state: votes,
+  isReady,
+  isLoading,
+} = useAsyncState(client.getProposalVotes(proposalId));
+console.log({ votes, isReady, isLoading });
+
+const { state: proposalState } = useAsyncState(
+  client.getProposalState(proposalId)
+);
 
 // mock
 const recentVotesList = [
