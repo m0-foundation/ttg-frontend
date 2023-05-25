@@ -40,7 +40,7 @@
             </div>
           </div>
 
-          <MProgressBar width="70%" class="mb-2" />
+          <MProgressBar :width="votes?.yes?.percentage" class="mb-2" />
 
           <p class="text-xs mb-7">
             <span class="text-white mr-2">{{ votes?.total }}</span>
