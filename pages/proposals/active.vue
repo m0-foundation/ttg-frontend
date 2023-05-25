@@ -8,31 +8,28 @@
         <div>12 days left</div>
       </div>
       <div v-for="p in proposals" :key="p.proposalId">
-        <ProposalCard
-          :proposal-id="p.proposalId"
-          :description="p.description"
-          :proposer="p.proposer"
-        />
+        <ProposalCard :proposal="p" />
       </div>
     </div>
   </LayoutPage>
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
+
 definePageMeta({
   layout: "with-navbar",
   middleware: ["auth"],
 });
-// const pageId = $route.params.proposal_id;
-const { client } = useSpog();
-console.log({ client });
-const {
-  state: proposals,
-  isReady,
-  isLoading,
-} = useAsyncState(client.getGovernorVoteProposals());
-console.log({ proposals, isReady, isLoading });
 
+const { client } = useSpog();
 const store = useProposalsStore();
-store.setProposals(proposals);
+const { getProposals } = storeToRefs(store);
+const proposals = getProposals;
+
+const { isLoading } = useAsyncState(client.getGovernorVoteProposals(), 0, {
+  onSuccess: (data) => {
+    store.setProposals(data);
+  },
+});
 </script>
