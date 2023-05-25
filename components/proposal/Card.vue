@@ -49,6 +49,7 @@ const title = computed(() => {
   if (titleHtml) {
     return titleHtml.innerHTML;
   }
+  return "";
 });
 
 const descriptionShort = computed(() => {
@@ -57,6 +58,7 @@ const descriptionShort = computed(() => {
   if (descriptionHtml) {
     return descriptionHtml.innerHTML;
   }
+  return "";
 });
 </script>
 
