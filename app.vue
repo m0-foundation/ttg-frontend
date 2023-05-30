@@ -22,7 +22,7 @@
 // chains
 import { mainnet, sepolia } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
-import { SPOG, ConfigVars } from "@/lib/sdk";
+import { SPOG, ConfigVars } from "@/lib/api";
 
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
