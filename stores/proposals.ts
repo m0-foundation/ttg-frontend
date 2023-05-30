@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import _ from "lodash";
-import { MProposal } from "@/lib/sdk";
+import { MProposal, ProposalState } from "@/lib/sdk";
 
 export const useProposalsStore = defineStore("proposals", {
   state: () => ({
@@ -13,6 +13,14 @@ export const useProposalsStore = defineStore("proposals", {
     getProposalById: (state) => {
       return (pId: string) =>
         state.data.find((p) => p.proposalId.toString() === pId);
+    },
+    getProposalsByState: (state) => {
+      return (pState: keyof typeof ProposalState) =>
+        state.data.filter((p) => p.state === pState);
+    },
+    getProposalsByExcludedState: (state) => {
+      return (pState: keyof typeof ProposalState) =>
+        state.data.filter((p) => p.state !== pState);
     },
   },
 
