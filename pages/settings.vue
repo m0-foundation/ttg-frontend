@@ -1,27 +1,98 @@
 <template>
   <LayoutPage>
     <div>
-      <div class="text-center text-xl text-grey-primary tracking-widest mb-4">
-        <MButton version="secondary-dark" @click="selectedTab = 0">
-          RPC
-        </MButton>
-        <MButton version="secondary-dark" @click="selectedTab = 1">
-          Wallet
-        </MButton>
-      </div>
+      <form @submit.prevent="onSubmit">
+        <h1 class="text-center text-2xl">Connect to M&#94;ZERO network</h1>
+        <p class="text-center text-grey-primary mb-8">
+          Add from a list of popular networks or add a network manually. Only
+          interact with the entities you trust.
+        </p>
+        <div>
+          <div class="mb-8">
+            <!-- with custom RPC -->
+            <div v-if="isWithCustomRPC">
+              <label class="text-grey-primary text-sm block mb-2">
+                Custom RPC URL:
+              </label>
+              <input
+                v-model="selectedRPC"
+                type="text"
+                placeholder="http://..."
+              />
 
-      <div>
-        <SettingsRpc v-show="selectedTab === 0" />
-        <SettingsWallet v-show="selectedTab === 1" />
-      </div>
+              <p class="text-grey-primary">
+                <button
+                  class="border-b border-white border-dashed"
+                  @click="onSwitchInput(false)"
+                >
+                  return to list
+                </button>
+              </p>
+            </div>
+
+            <!-- with predefined RPC -->
+            <div v-else>
+              <label
+                class="text-grey-primary text-sm block mb-4 flex justify-between"
+              >
+                Select RPC:
+                <span class="text-xs border-b border-dashed">
+                  Chain Id: {{ chainId }}
+                </span>
+              </label>
+
+              <select v-model="selectedRPC">
+                <option v-for="rpc in rpcs" :key="rpc">
+                  {{ rpc }}
+                </option>
+              </select>
+
+              <p class="text-grey-primary">
+                or enter
+                <button
+                  class="border-b border-white border-dashed"
+                  @click="onSwitchInput(true)"
+                >
+                  your Custom RPC
+                </button>
+              </p>
+            </div>
+          </div>
+
+          <div class="flex justify-center">
+            <MButton type="submit" version="secondary-dark">Connect</MButton>
+          </div>
+        </div>
+      </form>
     </div>
   </LayoutPage>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: "with-navbar",
-});
+const config = useRuntimeConfig();
 
-const selectedTab = ref(0);
+const selectedRPC = ref();
+const isWithCustomRPC = ref(false);
+
+const rpcs = config.network.rpcs.split(",");
+const chainId = config.network.chainId;
+
+function onSubmit() {
+  const newRpc = selectedRPC.value.toString();
+  const spogStore = useSpogStore();
+  spogStore.setRpc(newRpc);
+  return navigateTo("/");
+}
+
+function onSwitchInput(version: boolean) {
+  isWithCustomRPC.value = version;
+  selectedRPC.value = null; // clear the input
+}
 </script>
+
+<style scoped>
+select,
+input {
+  @apply p-4 bg-transparent border border-white mb-2 block w-full;
+}
+</style>
