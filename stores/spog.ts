@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { SPOG } from "@/lib/sdk";
+import { SPOG } from "@/lib/api";
 
 const defaultRpc = import.meta.env.VITE_NETWORK_DEFAULT_RPC as string;
 

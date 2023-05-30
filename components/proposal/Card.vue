@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { MProposal } from "~/lib/sdk";
+import { MProposal } from "@/lib/api";
 
 export interface ProposalCardProps {
   proposal: MProposal;
