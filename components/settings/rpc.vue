@@ -1,10 +1,6 @@
 <template>
   <LayoutPage>
     <div>
-      <div class="text-center text-xl text-grey-primary tracking-widest mb-4">
-        [1/2]
-      </div>
-
       <form @submit.prevent="onSubmit">
         <h1 class="text-center text-2xl">Connect to M&#94;ZERO network</h1>
         <p class="text-center text-grey-primary mb-8">
@@ -76,10 +72,6 @@
 import { mainnet, sepolia } from "@wagmi/core/chains";
 import { SPOG, ConfigVars } from "@/lib/sdk";
 
-definePageMeta({
-  layout: "with-only-logo",
-});
-
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
 
@@ -91,19 +83,29 @@ const chainId = config.network.chainId;
 
 async function onSubmit() {
   console.log({ selectedRPC });
-  const rpc = selectedRPC.value.toString();
-  localStorage.setItem("m0.rpc", rpc);
+  const newRpc = selectedRPC.value.toString();
+  const rpc = useLocalStorage("m0.rpc", newRpc);
 
-  /* setup wagmi client */
-  const { client } = useEthereum(rpc); // TODO? support mainnet
-  // install wagmi client as vue plugin using wrapper from 'use-wagmi'
-  nuxtApp.vueApp.use(client);
+  const { client: wagmiClient } = useEthereum(rpc.value); // TODO? support mainnet
+  nuxtApp.vueApp.use(wagmiClient);
+  nuxtApp.provide("wagmiClient", wagmiClient);
 
+  // * setup spog client */
   const configVars = config.contracts as ConfigVars;
-  const spogClient = new SPOG(config.ALCHEMY_URL, sepolia, configVars);
+  const spogClient = new SPOG(rpc.value, sepolia, configVars);
   nuxtApp.provide("spogClient", spogClient);
 
-  await navigateTo("/setup/2");
+  /* setup wagmi client */
+  const { client: wagmiClient } = useWagmi();
+  wagmiClient.providers = jsonRpcProvider({
+    rpc: () => ({
+      http: rpc,
+    }),
+  });
+
+  const { client: spogClient } = useSpog();
+  const spog = spogClient as SPOG;
+  spog.setRpc(rpc);
 }
 
 function onSwitchInput(version: boolean) {

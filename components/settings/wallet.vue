@@ -1,10 +1,6 @@
 <template>
   <LayoutPage>
     <div>
-      <div class="text-center text-xl text-grey-primary tracking-widest mb-4">
-        [2/2]
-      </div>
-
       <form @submit.prevent="onSubmit">
         <h1 class="text-center text-2xl">Connect wallet</h1>
         <p class="text-center text-grey-primary mb-8">
@@ -28,10 +24,6 @@
 
 <script setup>
 import { useAccount, useConnect } from "use-wagmi";
-
-definePageMeta({
-  layout: "with-only-logo",
-});
 
 const { isConnected } = useAccount();
 
