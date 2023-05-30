@@ -1,9 +1,6 @@
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      WALLET_CONNECT_PROJECT_ID: process.env.WALLET_CONNECT_PROJECT_ID,
-      ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
-      INFURA_API_KEY: process.env.INFURA_API_KEY,
       network: {
         defaultRpc: process.env.NETWORK_DEFAULT_RPC,
         rpcs: process.env.NETWORK_RPC_LIST,
