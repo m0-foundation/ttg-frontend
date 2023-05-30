@@ -94,18 +94,6 @@ async function onSubmit() {
   const configVars = config.contracts as ConfigVars;
   const spogClient = new SPOG(rpc.value, sepolia, configVars);
   nuxtApp.provide("spogClient", spogClient);
-
-  /* setup wagmi client */
-  const { client: wagmiClient } = useWagmi();
-  wagmiClient.providers = jsonRpcProvider({
-    rpc: () => ({
-      http: rpc,
-    }),
-  });
-
-  const { client: spogClient } = useSpog();
-  const spog = spogClient as SPOG;
-  spog.setRpc(rpc);
 }
 
 function onSwitchInput(version: boolean) {
