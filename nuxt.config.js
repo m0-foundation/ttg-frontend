@@ -5,6 +5,7 @@ export default defineNuxtConfig({
       ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
       INFURA_API_KEY: process.env.INFURA_API_KEY,
       network: {
+        defaultRpc: process.env.NETWORK_DEFAULT_RPC,
         rpcs: process.env.NETWORK_RPC_LIST,
         chainId: process.env.NETWORK_CHAIN_ID,
       },
