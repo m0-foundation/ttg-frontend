@@ -28,8 +28,7 @@ const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
 const spogStore = useSpogStore();
 
-// const defaultRpc = config.public.network.defaultRpc as string;
-const { client: spogClient, rpc } = storeToRefs(spogStore);
+const { rpc } = storeToRefs(spogStore);
 
 function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
@@ -41,22 +40,18 @@ function onSetup(rpc: string) {
   const configVars = config.contracts as ConfigVars;
   const spogClient = new SPOG(rpc, sepolia, configVars);
   spogStore.setClient(spogClient);
-  // return spogClient;
+  return spogClient;
 }
 
-onSetup(rpc.value);
+const spogClient = onSetup(rpc.value);
 
 /* download all proposals */
-const { isLoading } = useAsyncState(
-  spogClient.value.getGovernorVoteProposals(),
-  0,
-  {
-    onSuccess: (data) => {
-      const proposalStore = useProposalsStore();
-      proposalStore.setProposals(data);
-    },
-  }
-);
+const { isLoading } = useAsyncState(spogClient.getGovernorVoteProposals(), 0, {
+  onSuccess: (data) => {
+    const proposalStore = useProposalsStore();
+    proposalStore.setProposals(data);
+  },
+});
 
 /* user has updated the rpc */
 watch(
