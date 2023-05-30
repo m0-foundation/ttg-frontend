@@ -3,9 +3,9 @@
     <div class="flex w-full space-x-4">
       <div class="w-3/4 bg-white">
         <article class="bg-white text-black p-8 mb-2">
-          <div>{{ proposalState }}</div>
+          <div>{{ proposal?.state }}</div>
           <div class="text-primary-darker text-sm mb-6">
-            Proposed by <u>{{ proposal.proposer }}</u>
+            Proposed by <u>{{ proposal?.proposer }}</u>
           </div>
           <div class="markdown-body mb-6" v-html="html"></div>
 
@@ -79,17 +79,13 @@ const proposalId = route.params.proposal_id;
 const proposal = store.getProposalById(proposalId);
 const { html } = useParsedDescription(proposal.description);
 
-const { client } = useSpog();
+const { client } = useSpogStore();
 const {
   state: votes,
   isReady,
   isLoading,
 } = useAsyncState(client.getProposalVotes(proposalId));
 console.log({ votes, isReady, isLoading });
-
-const { state: proposalState } = useAsyncState(
-  client.getProposalState(proposalId)
-);
 
 // mock
 const recentVotesList = [
