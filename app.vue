@@ -12,7 +12,8 @@
     </Head>
 
     <NuxtLayout>
-      <NuxtPage />
+      <div v-if="isLoading">Loading...</div>
+      <NuxtPage v-else />
     </NuxtLayout>
   </div>
 </template>
@@ -20,22 +21,45 @@
 <script lang="ts" setup>
 // chains
 import { mainnet, sepolia } from "@wagmi/core/chains";
-import { SPOG, ConfigVars } from "@/lib/sdk";
-console.log("app.vue");
+import { storeToRefs } from "pinia";
+import { SPOG, ConfigVars } from "@/lib/api";
 
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
+const spogStore = useSpogStore();
 
-// for every page reload must initialize without the need go to setup again
-const rpc = localStorage.getItem("m0.rpc");
+const { rpc } = storeToRefs(spogStore);
 
-if (rpc) {
-  console.log("init app with rpc");
-  const { client } = useEthereum(rpc); // TODO? support mainnet
-  nuxtApp.vueApp.use(client);
+function onSetup(rpc: string) {
+  console.log("onSetup with rpc", rpc);
+  /* setup wagmi client as vue plugin */
+  const { client: wagmiClient } = useWagmi(rpc); // TODO? support mainnet
+  nuxtApp.vueApp.use(wagmiClient);
 
+  /* setup spog client */
   const configVars = config.contracts as ConfigVars;
-  const spogClient = new SPOG(config.ALCHEMY_URL, sepolia, configVars);
-  nuxtApp.provide("spogClient", spogClient);
+  const spogClient = new SPOG(rpc, sepolia, configVars);
+  spogStore.setClient(spogClient);
+  return spogClient;
 }
+
+const spogClient = onSetup(rpc.value);
+
+/* download all proposals */
+const { isLoading } = useAsyncState(spogClient.getGovernorVoteProposals(), 0, {
+  onSuccess: (data) => {
+    const proposalStore = useProposalsStore();
+    proposalStore.setProposals(data);
+  },
+});
+
+/* user has updated the rpc */
+watch(
+  rpc,
+  (newRpc) => {
+    console.log("rpc has changed", { newRpc });
+    onSetup(newRpc);
+  },
+  { deep: true }
+);
 </script>

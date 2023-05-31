@@ -28,7 +28,7 @@ export interface EventLog {
   transactionHash: string;
 }
 
-enum ProposalState {
+export enum ProposalState {
   Pending = 0,
   Active = 1,
   Canceled = 2,
@@ -38,6 +38,8 @@ enum ProposalState {
   Expired = 6,
   Executed = 7,
 }
+
+export type MProposalState = keyof typeof ProposalState;
 
 export interface MProposal extends EventLog {
   proposer: string;
@@ -80,10 +82,21 @@ export interface VotesResult {
 export class SPOG {
   client: PublicClient;
   config: ConfigVars;
+  chain: Chain;
+  rpcUrl: string;
 
   constructor(rpcUrl: string, chain: Chain, config: ConfigVars) {
     this.client = createPublicClient({ chain, transport: http(rpcUrl) });
     this.config = config;
+    this.chain = chain;
+    this.rpcUrl = rpcUrl;
+  }
+
+  setRpc(rpcUrl: string) {
+    this.client = createPublicClient({
+      chain: this.chain,
+      transport: http(rpcUrl),
+    });
   }
 
   decodeProposalLog(log: Log, abi: object): MProposal {
@@ -117,7 +130,7 @@ export class SPOG {
     return {} as MProposal;
   }
 
-  async getGovernorVoteProposals(): Promise<MProposal> {
+  async getGovernorVoteProposals(): Promise<Array<MProposal>> {
     const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
 
     const rawLogs = await this.client.getLogs({

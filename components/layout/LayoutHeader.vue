@@ -11,7 +11,7 @@
         </span>
       </a>
 
-      <div class="flex items-center md:order-2">
+      <div v-if="isConnected" class="flex items-center md:order-2">
         <NuxtLink to="/proposals/create">
           <MButton>Create Proposal</MButton>
         </NuxtLink>
@@ -64,38 +64,39 @@
           class="absolute right-16 top-20 z-10 bg-gray-800 divide-y divide-gray-100 rounded-lg shadow w-44"
         >
           <ul
-            class="py-2 text-sm text-gray-700 dark:text-gray-200"
+            class="py-2 text-sm text-gray-200"
             aria-labelledby="dropdownDefaultButton"
           >
             <li>
-              <a
-                href="#"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
+              <a href="#" class="block px-4 py-2 hover:bg-gray-600">
                 My Profile
               </a>
             </li>
             <li>
-              <a
-                href="#"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              <NuxtLink
+                to="/settings"
+                class="block px-4 py-2 hover:bg-gray-600"
               >
                 Settings
-              </a>
+              </NuxtLink>
             </li>
 
             <li>
               <hr class="border-gray-500" />
-              <a
-                href="#"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              <button
+                type="button"
+                class="block w-full px-4 py-2 hover:bg-gray-600 text-left"
                 @click="() => disconnect()"
               >
                 Disconnect
-              </a>
+              </button>
             </li>
           </ul>
         </div>
+      </div>
+
+      <div v-else>
+        <MModalWeb3Connect />
       </div>
     </div>
   </header>
@@ -111,9 +112,7 @@ const { address, isConnected } = useAccount();
 
 console.log({ address, isConnected });
 
-const { disconnect } = useDisconnect({
-  onSuccess: () => navigateTo("/setup/2"),
-});
+const { disconnect } = useDisconnect();
 
 const {
   data: voteBalance,

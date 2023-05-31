@@ -11,7 +11,7 @@ import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
 // use wagmi
 import { createClient } from "use-wagmi";
 
-export const useEthereum = (rpc: string, chain = sepolia) => {
+export const useWagmi = (rpc: string, chain = sepolia) => {
   const { chains, provider, webSocketProvider } = configureChains(
     [chain], // mainnet, goerli
     [
@@ -21,7 +21,7 @@ export const useEthereum = (rpc: string, chain = sepolia) => {
           // webSocket: TODO?
         }),
       }),
-      publicProvider(),
+      // publicProvider(),
     ],
     { targetQuorum: 1 }
   );

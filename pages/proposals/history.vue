@@ -4,10 +4,9 @@
 
     <div v-else>
       <div class="flex justify-between uppercase text-xs mb-6">
-        <div class="text-grey-primary">Voting cycle: 1 Apr - 30 Apr</div>
-        <div>12 days left</div>
+        <div class="text-grey-primary">Past Proposals</div>
       </div>
-      <div v-if="!proposals || !proposals.length">No Active proposals.</div>
+      <div v-if="!proposals || !proposals.length">No proposals to show.</div>
       <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
         <ProposalCard :proposal="proposal" />
       </div>
@@ -23,6 +22,6 @@ definePageMeta({
 });
 
 const store = useProposalsStore();
-const { getProposalsByState } = storeToRefs(store);
-const proposals = getProposalsByState.value("Active");
+const { getProposalsByExcludedState } = storeToRefs(store);
+const proposals = getProposalsByExcludedState.value("Active");
 </script>
