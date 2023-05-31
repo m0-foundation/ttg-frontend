@@ -161,7 +161,7 @@
 import { ref } from "vue";
 import { encodeFunctionData, toBytes, toHex, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
-import { spogABI, writeSpog, writeErc20 } from "@/lib/generated";
+import { spogABI, writeSpog, writeErc20, readErc20 } from "@/lib/generated";
 
 const isPreview = ref(false);
 const selectedProposalType = ref();
@@ -252,16 +252,28 @@ async function onSubmit() {
 
   // TODO: add this process somewhere else
   // it needs to approve to pay for tax
-  // const allowance = await writeErc20({
-  //   address: config.cash,
-  //   functionName: "approve",
-  //   args: [config.spog, 100],
-  //   account: address.value,
-  // });
-  // console.log({ allowance });
+
+  const allowance = await readErc20({
+    address: config.public.contracts.tokens.cash,
+    functionName: "allowance",
+    args: [userAccount.value, config.public.contracts.spog], // address owner, address spender
+    account: userAccount.value,
+  }).then((bigNumber) => bigNumber.toBigInt());
+
+  console.log({ allowance });
+
+  // TODO: allowance > tax  : check againts tax for create proposal
+  const tax = 0n;
+  if (allowance <= tax) {
+    await writeErc20({
+      address: config.public.contracts.tokens.cash,
+      functionName: "approve",
+      args: [config.public.contracts.spog, 100], // address spender, uint256 amount
+      account: userAccount.value,
+    });
+  }
 
   const calldatas = buildCalldatas(formData);
-  console.log({ calldatas });
 
   isWritting.value = true;
   const { hash } = await onWriteSpogGovernor({
