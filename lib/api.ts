@@ -12,7 +12,7 @@ import { BigNumber } from "ethers";
 import type { Abi } from "abitype";
 import {
   spogABI,
-  ispogGovernorABI,
+  spogGovernorABI,
   readGovernor,
   readSpogGovernor,
 } from "./generated";
@@ -65,7 +65,7 @@ export interface ConfigVars {
   };
 }
 
-export interface VotesResult {
+export interface ProposalVotesState {
   total: number;
   yes: {
     count: number;
@@ -77,6 +77,28 @@ export interface VotesResult {
     ratio: number;
     percentage: number;
   };
+}
+
+export interface EpochState {
+  current: {
+    asNumber: number;
+    asBlockNumber: BigInt;
+    asTimestamp: BigInt;
+  };
+  next: {
+    asNumber: number;
+    asBlockNumber: BigInt;
+    asTimestamp: BigInt;
+  };
+}
+
+export interface VoteCast {
+  proposalId: string;
+  reason: string;
+  support: boolean;
+  voter: string;
+  weight: BigInt;
+  transactionHash: string;
 }
 
 export class SPOG {
@@ -130,16 +152,19 @@ export class SPOG {
     return {} as MProposal;
   }
 
-  async getGovernorVoteProposals(): Promise<Array<MProposal>> {
+  async getGovernorProposals(): Promise<Array<MProposal>> {
     const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
 
     const rawLogs = await this.client.getLogs({
       address: this.config.governor.vote as Hash,
       fromBlock: deployedBlock,
+      event: parseAbiItem(
+        "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 voteStart, uint256 voteEnd, string description)"
+      ),
     });
 
     const proposals = rawLogs.map((log: Log) =>
-      this.decodeProposalLog(log, ispogGovernorABI)
+      this.decodeProposalLog(log, spogGovernorABI)
     );
 
     const proposalsWithState = await Promise.all(
@@ -161,20 +186,6 @@ export class SPOG {
     return proposalsWithState;
   }
 
-  async getSpogProposals(): Promise<MProposal[]> {
-    const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
-
-    const rawLogs = await this.client.getLogs({
-      address: this.config.spog as Hash,
-      fromBlock: deployedBlock,
-      event: parseAbiItem(
-        "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 voteStart, uint256 voteEnd, string description)"
-      ),
-    });
-
-    return rawLogs.map((log: Log) => this.decodeProposalLog(log, spogABI));
-  }
-
   async getProposalState(
     proposalId: string
   ): Promise<keyof typeof ProposalState> {
@@ -187,12 +198,13 @@ export class SPOG {
     return ProposalState[proposalStateNumber] as keyof typeof ProposalState;
   }
 
-  async getProposalVotes(proposalId: string): Promise<VotesResult> {
+  async getProposalVotes(proposalId: string): Promise<ProposalVotesState> {
     const votes = await readSpogGovernor({
       address: this.config.governor.vote as Hash,
       functionName: "proposalVotes",
       args: [BigNumber.from(proposalId)],
     });
+    console.log({ votes });
 
     const yes = Number(votes.yesVotes);
     const no = Number(votes.noVotes);
@@ -213,6 +225,72 @@ export class SPOG {
         count: no,
         ratio: noRatio || 0,
         percentage: noPercentage || 0,
+      },
+    };
+  }
+
+  async getProposalVoters(proposalId: string): Promise<VoteCast[]> {
+    const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
+
+    const rawLogs = await this.client.getLogs({
+      address: this.config.governor.vote as Hash,
+      fromBlock: deployedBlock,
+      event: parseAbiItem(
+        "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
+      ),
+    });
+    // TODO filter by proposalId on query logs directly
+    const voters: Array<VoteCast> = rawLogs.map((log) => ({
+      proposalId: log?.args?.proposalId?.toString(),
+      reason: log?.args?.reason,
+      support: Boolean(log?.args?.support),
+      voter: log?.args?.voter.toString(),
+      weight: log?.args?.weight,
+      transactionHash: log.transactionHash.toString(),
+    }));
+
+    return voters.filter((v) => v.proposalId === proposalId);
+  }
+
+  async getEpochState(): Promise<EpochState> {
+    const contractAddress = this.config.governor.vote as Hash;
+    const currentEpoch = await readSpogGovernor({
+      address: contractAddress,
+      functionName: "currentEpoch",
+    });
+
+    const currentEpochAsBlockNumber = await readSpogGovernor({
+      address: contractAddress,
+      functionName: "startOfEpoch",
+      args: [currentEpoch],
+    }).then((bigNumber) => bigNumber.toBigInt());
+
+    const nextEpochAsBlockNumber = await readSpogGovernor({
+      address: contractAddress,
+      functionName: "startOfNextEpoch",
+    }).then((bigNumber) => bigNumber.toBigInt());
+
+    const currentEpochAsBlock = await this.client.getBlock({
+      blockNumber: currentEpochAsBlockNumber,
+    });
+
+    const currentBlock = await this.client.getBlock();
+
+    const avgBlockTimeInSeconds = 15n; // upperlimit for safety reasons
+    const blockDiff = nextEpochAsBlockNumber - currentBlock.number!;
+    const nextEpochAsTimestamp =
+      currentBlock.timestamp + blockDiff * avgBlockTimeInSeconds;
+
+    return {
+      current: {
+        asNumber: Number(currentEpoch.toBigInt()),
+        asBlockNumber: currentEpochAsBlockNumber,
+        asTimestamp: currentEpochAsBlock.timestamp,
+      },
+      next: {
+        asNumber: Number(currentEpoch.toBigInt() + 1n),
+        asBlockNumber: nextEpochAsBlockNumber,
+        asTimestamp: nextEpochAsTimestamp,
       },
     };
   }
