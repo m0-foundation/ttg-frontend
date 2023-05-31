@@ -8,21 +8,24 @@
             Proposed by <u>{{ proposal?.proposer }}</u>
           </div>
           <div class="markdown-body mb-6" v-html="html"></div>
-
-          <div class="flex justify-between items-center bg-gray-200 p-8">
+          <!--  -->
+          <div
+            v-if="proposal?.state === 'Active'"
+            class="flex justify-between items-center bg-gray-200 p-8"
+          >
             <div class="text-body-dark text-3xl mr-4">Approve?</div>
             <div class="space-x-1">
-              <MButton>YES</MButton>
-              <MButton>NO</MButton>
+              <MButton @click="castVote(1)">YES</MButton>
+              <MButton @click="castVote(0)">NO</MButton>
             </div>
           </div>
         </article>
       </div>
-      <div class="w-1/4">
+
+      <div v-if="proposal?.state !== 'Pending'" class="w-1/4">
         <div class="bg-black p-4">
           <div class="flex justify-between mb-7">
-            <div class="text-gray-500 text-xs">VOTES</div>
-            <div class="text-white text-xs">12 DAYS LEFT</div>
+            <div class="text-white text-xs">{{ timeLeft }}</div>
           </div>
 
           <div class="flex">
@@ -47,18 +50,23 @@
             <span class="text-gray-500">TOTAL VOTES</span>
           </p>
 
-          <p class="text-gray-500">RECENT VOTES</p>
+          <p class="text-gray-500">VOTES</p>
 
           <div class="flex flex-col">
             <div
-              v-for="vote in recentVotesList"
+              v-for="vote in voters"
               :key="vote.voter"
               class="flex justify-between space-x-2"
             >
-              <div class="text-white truncate w-2/3 overflow-hidden">
+              <a
+                :href="`https://sepolia.etherscan.io/tx/${vote.transactionHash}`"
+                class="text-white truncate w-2/3 overflow-hidden underline"
+              >
                 {{ vote.voter }}
+              </a>
+              <div :class="vote.support ? 'text-primary' : 'text-red'">
+                {{ vote.support ? "YES" : "NO" }}
               </div>
-              <div class="text-primary">{{ vote.amount }}</div>
             </div>
           </div>
         </div>
@@ -67,7 +75,11 @@
   </LayoutPage>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { storeToRefs } from "pinia";
+import { useAccount } from "use-wagmi";
+import { writeGovernor } from "@/lib/generated";
+
 definePageMeta({
   layout: "with-navbar",
 });
@@ -79,13 +91,38 @@ const proposalId = route.params.proposal_id;
 const proposal = store.getProposalById(proposalId);
 const { html } = useParsedDescription(proposal.description);
 
-const { client } = useSpogStore();
+const config = useRuntimeConfig();
+const { address: userAccount } = useAccount();
+const { client } = useSpogClientStore();
+const spogStateStore = useSpogStateStore();
+const { epoch } = storeToRefs(spogStateStore);
+
 const {
   state: votes,
   isReady,
   isLoading,
 } = useAsyncState(client.getProposalVotes(proposalId));
 console.log({ votes, isReady, isLoading });
+
+const { state: voters } = useAsyncState(client.getProposalVoters(proposalId));
+
+const timeLeft = computed(() => {
+  const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
+  return timeAgo;
+});
+
+function castVote(vote) {
+  return writeGovernor({
+    address: config.contracts.governor.vote,
+    functionName: "castVote",
+    args: [proposalId, vote], // uint256 proposalId, uint8 support
+    account: userAccount.value,
+    chainId: 11155111,
+    overrides: {
+      gasLimit: 2100000n,
+    },
+  });
+}
 
 // mock
 const recentVotesList = [
