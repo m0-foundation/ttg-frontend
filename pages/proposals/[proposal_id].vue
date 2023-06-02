@@ -113,7 +113,7 @@ const timeLeft = computed(() => {
 
 function castVote(vote) {
   return writeGovernor({
-    address: config.contracts.governor.vote,
+    address: config.contracts.governor,
     functionName: "castVote",
     args: [proposalId, vote], // uint256 proposalId, uint8 support
     account: userAccount.value,

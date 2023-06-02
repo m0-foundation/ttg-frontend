@@ -161,7 +161,12 @@
 import { ref } from "vue";
 import { encodeFunctionData, toBytes, toHex, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
-import { spogABI, writeSpog, writeErc20, readErc20 } from "@/lib/generated";
+import {
+  spogABI,
+  writeIGovernor,
+  writeErc20,
+  readErc20,
+} from "@/lib/generated";
 
 const isPreview = ref(false);
 const selectedProposalType = ref();
@@ -217,7 +222,7 @@ const proposalTypes = [
   },
 
   {
-    value: "addNewList",
+    value: "addList",
     label: "Create a new List",
   },
 
@@ -294,7 +299,7 @@ function buildCalldatas(data) {
     return buildCalldatasChange(data, "uint256");
   }
 
-  if (["cash"].includes(type)) {
+  if (["addList"].includes(type)) {
     return buildCalldatasChange(data, "address");
   }
 
@@ -353,8 +358,8 @@ function onWriteSpogGovernor({ calldatas, description }) {
   const targets = [config.contracts.spog]; // do not change
   const values = [0]; // do not change
 
-  return writeSpog({
-    address: config.contracts.spog,
+  return writeIGovernor({
+    address: config.contracts.governor,
     functionName: "propose",
     args: [targets, values, calldatas, description],
     account: userAccount.value,
