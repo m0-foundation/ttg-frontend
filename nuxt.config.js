@@ -9,9 +9,10 @@ export default defineNuxtConfig({
       contracts: {
         deployedBlock: process.env.CONTRACT_DEPLOYED_BLOCK,
         spog: process.env.CONTRACT_ADDRESS_SPOG,
-        governor: {
-          vote: process.env.CONTRACT_ADDRESS_SPOG_GOVERNOR_VOTE,
-          value: process.env.CONTRACT_ADDRESS_SPOG_GOVERNOR_VALUE,
+        governor: process.env.CONTRACT_ADDRESS_SPOG_GOVERNOR,
+        vault: {
+          vote: process.env.CONTRACT_ADDRESS_VAULT_VOTE,
+          value: process.env.CONTRACT_ADDRESS_VAULT_VALUE,
         },
         tokens: {
           cash: process.env.CONTRACT_ADDRESS_CASH,
