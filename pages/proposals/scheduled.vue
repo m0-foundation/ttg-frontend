@@ -4,8 +4,8 @@
 
     <div v-else>
       <div class="flex justify-between uppercase text-xs mb-6">
-        <div class="text-grey-primary">Voting cycle: 1 Apr - 30 Apr</div>
-        <div>In the nex 12 days</div>
+        <div class="text-grey-primary">Voting cycle: {{ nextEpochAsDate }}</div>
+        <div>STARTS {{ timeLeft }}</div>
       </div>
 
       <div v-if="!proposals || !proposals.length">No Scheduled proposals.</div>
@@ -23,7 +23,21 @@ definePageMeta({
   layout: "with-navbar",
 });
 
-const store = useProposalsStore();
-const { getProposalsByState } = storeToRefs(store);
+const proposalsStore = useProposalsStore();
+const spogStateStore = useSpogStateStore();
+
+const { getProposalsByState } = storeToRefs(proposalsStore);
+const { epoch } = storeToRefs(spogStateStore);
+
 const proposals = getProposalsByState.value("Pending");
+
+const nextEpochAsDate = computed(() => {
+  const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
+  return toFormat("LLL");
+});
+
+const timeLeft = computed(() => {
+  const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
+  return timeAgo;
+});
 </script>

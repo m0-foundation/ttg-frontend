@@ -79,7 +79,7 @@ const chainId = config.network.chainId;
 
 function onSubmit() {
   const newRpc = selectedRPC.value.toString();
-  const spogStore = useSpogStore();
+  const spogStore = useSpogClientStore();
   spogStore.setRpc(newRpc);
   return navigateTo("/");
 }

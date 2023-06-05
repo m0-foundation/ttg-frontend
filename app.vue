@@ -23,10 +23,11 @@
 import { mainnet, sepolia } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
 import { SPOG, ConfigVars } from "@/lib/api";
+console.log("app");
 
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
-const spogStore = useSpogStore();
+const spogStore = useSpogClientStore();
 
 const { rpc } = storeToRefs(spogStore);
 
@@ -44,14 +45,33 @@ function onSetup(rpc: string) {
 }
 
 const spogClient = onSetup(rpc.value);
-
+console.log({ spogClient });
 /* download all proposals */
-const { isLoading } = useAsyncState(spogClient.getGovernorVoteProposals(), 0, {
+const { isLoading } = useAsyncState(spogClient.getGovernorProposals(), 0, {
   onSuccess: (data) => {
+    console.log("getGovernorVoteProposals", { data });
     const proposalStore = useProposalsStore();
     proposalStore.setProposals(data);
   },
+  onError: (e) => {
+    console.error({ e });
+  },
 });
+
+const { isLoading: epochStateIsLoading } = useAsyncState(
+  spogClient.getEpochState(),
+  0,
+  {
+    onSuccess: (data) => {
+      console.log("getEpochState", { data });
+      const store = useSpogStateStore();
+      store.setEpoch(data);
+    },
+    onError: (e) => {
+      console.error({ e });
+    },
+  }
+);
 
 /* user has updated the rpc */
 watch(

@@ -36,9 +36,9 @@ export interface ProposalCardProps {
 
 const props = defineProps<ProposalCardProps>();
 
-const { format, timeAgo } = useDate(props.proposal.timestamp);
+const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 
-const formatedDate = computed(() => format("LL"));
+const formatedDate = computed(() => toFormat("LL"));
 
 const { html } = useParsedDescription(props.proposal.description);
 const domParser = new DOMParser();

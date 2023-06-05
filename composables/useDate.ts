@@ -16,7 +16,7 @@ export const useDate = (timestampSeconds: number) => {
 
   const timeAgo = dayjs(now).to(dayjs(date));
 
-  const format = (dateFormat: string) => {
+  const toFormat = (dateFormat: string) => {
     return date.format(dateFormat);
   };
 
@@ -24,11 +24,11 @@ export const useDate = (timestampSeconds: number) => {
     return date.get(unit);
   };
 
-  const utc = (format: string) => {
+  const toUtc = (format: string) => {
     return date.utc().format(format);
   };
 
-  const timezone = (local: string, format: string) => {
+  const toTimezone = (local: string, format: string) => {
     return date.tz(local).format(format);
   };
 
@@ -37,12 +37,12 @@ export const useDate = (timestampSeconds: number) => {
   };
 
   return {
-    format,
-    timeAgo,
-    getDate,
-    utc,
-    timezone,
     difference,
+    getDate,
+    timeAgo,
+    toFormat,
+    toTimezone,
+    toUtc,
   };
 };
 

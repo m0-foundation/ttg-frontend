@@ -1,20 +1,22 @@
 import { defineStore } from "pinia";
-import { SPOG } from "@/lib/api";
+import _ from "lodash";
+import { EpochState } from "@/lib/api";
 
-const defaultRpc = import.meta.env.VITE_NETWORK_DEFAULT_RPC as string;
-
-export const useSpogStore = defineStore("spog", {
+export const useSpogStateStore = defineStore("spog", {
   state: () => ({
-    client: {} as SPOG,
-    rpc: useLocalStorage("m0.rpc", defaultRpc),
+    epoch: {} as EpochState,
+    // tax
+    // cash address
+    // inflator rate
   }),
 
+  getters: {
+    getEpoch: (state) => state.epoch,
+  },
+
   actions: {
-    setClient(newClient: SPOG) {
-      this.client = newClient;
-    },
-    setRpc(newRpc: string) {
-      this.rpc = newRpc;
+    setEpoch(epoch: EpochState) {
+      this.epoch = epoch;
     },
   },
 });

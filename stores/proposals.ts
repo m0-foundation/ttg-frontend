@@ -26,11 +26,14 @@ export const useProposalsStore = defineStore("proposals", {
 
   actions: {
     setProposals(proposals: Array<MProposal>) {
-      this.data = _.orderBy(
-        _.uniqBy([...this.data, ...proposals], "proposalId"),
-        "blockNumber",
-        "desc"
-      );
+      this.data = [];
+      this.data = [
+        ..._.orderBy(
+          _.uniqBy([...this.data, ...proposals], "proposalId"),
+          "blockNumber",
+          "desc"
+        ),
+      ];
     },
   },
 });
