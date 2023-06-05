@@ -19,15 +19,7 @@
 
             <!-- number input value -->
             <div
-              v-if="
-                [
-                  'inflator',
-                  'time',
-                  'voteQuorum',
-                  'valueQuorum',
-                  'changeTax',
-                ].includes(formData.proposalType)
-              "
+              v-if="['changeTax'].includes(formData.proposalType)"
               class="w-full flex justify-between items-center space-x-4"
             >
               <input v-model="formData.proposalValue" type="number" />
@@ -90,17 +82,6 @@
             </div>
 
             <textarea v-model="formData.description" name="description" />
-          </div>
-
-          <div class="mb-6">
-            <label for="url-ipfs">IPFS</label>
-            <input v-model="formData.ipfs" type="url" />
-          </div>
-
-          <div class="mb-6">
-            <label for="url-discussion">Discussion</label>
-
-            <input v-model="formData.discussion" type="url" />
           </div>
         </div>
 
@@ -171,8 +152,6 @@ const formData = reactive({
   proposalType: null,
   proposalValue: null,
   description: null,
-  discussion: null,
-  ipfs: null,
 });
 
 const { address: userAccount } = useAccount();
