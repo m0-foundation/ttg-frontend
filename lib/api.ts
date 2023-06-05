@@ -10,7 +10,12 @@ import {
 } from "viem";
 import { BigNumber } from "ethers";
 import type { Abi } from "abitype";
-import { iGovernorABI, readIGovernor, readIspogGovernor } from "./sdk";
+import {
+  iGovernorABI,
+  readIGovernor,
+  readIspogGovernor,
+  readIVoteToken,
+} from "./sdk";
 
 export interface EventLog {
   eventName: string;
@@ -62,14 +67,14 @@ export interface ConfigVars {
 }
 
 export interface ProposalVotesState {
-  total: number;
+  total: bigint;
   yes: {
-    count: number;
+    count: bigint;
     ratio: number;
     percentage: number;
   };
   no: {
-    count: number;
+    count: bigint;
     ratio: number;
     percentage: number;
   };
@@ -200,19 +205,13 @@ export class SPOG {
       functionName: "proposalVotes",
       args: [BigNumber.from(proposalId)],
     });
-    console.log({ votes });
-    // const votes2 = await readIspogGovernor({
-    //   address: this.config.governor as Hash,
-    //   functionName: "proposalValueVotes",
-    //   args: [BigNumber.from(proposalId)],
-    // });
-    // console.log({ votes2 });
 
-    const no = Number(votes[0]);
-    const yes = Number(votes[1]);
+    const no = votes[0].toBigInt();
+    const yes = votes[1].toBigInt();
+
     const total = yes + no;
-    const yesRatio = yes / total;
-    const noRatio = yes / total;
+    const yesRatio = Number(yes / total);
+    const noRatio = Number(no / total);
     const yesPercentage = yesRatio * 100;
     const noPercentage = noRatio * 100;
 
@@ -296,5 +295,13 @@ export class SPOG {
         asTimestamp: nextEpochAsTimestamp,
       },
     };
+  }
+
+  getVoteDelegatorFrom(account: Hash): Promise<Hash> {
+    return readIVoteToken({
+      address: this.config.tokens.vote as Hash,
+      functionName: "delegates",
+      args: [account],
+    });
   }
 }
