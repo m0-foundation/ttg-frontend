@@ -24,7 +24,8 @@
     "eslint-plugin-prettier": "^4.2.1",
     "nuxt": "^3.4.3",
     "prettier": "^2.8.8",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "vite-plugin-node-polyfills": "^0.8.2"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",

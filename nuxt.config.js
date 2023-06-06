@@ -1,3 +1,5 @@
+import { nodePolyfills } from "vite-plugin-node-polyfills";
+
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
@@ -62,5 +64,17 @@ export default defineNuxtConfig({
 
   pinia: {
     autoImports: ["defineStore"],
+  },
+  vite: {
+    plugins: [
+      nodePolyfills({
+        // To exclude specific polyfills, add them to this list.
+        exclude: [
+          "fs", // Excludes the polyfill for `fs` and `node:fs`.
+        ],
+        // Whether to polyfill `node:` protocol imports.
+        protocolImports: true,
+      }),
+    ],
   },
 });
