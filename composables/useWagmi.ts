@@ -1,10 +1,9 @@
 import { mainnet, sepolia } from "@wagmi/core/chains";
 import { configureChains, InjectedConnector } from "@wagmi/core";
 // connectors
-import { CoinbaseWalletConnector } from "use-wagmi/connectors/coinbaseWallet";
-import { LedgerConnector } from "use-wagmi/connectors/ledger";
-import { MetaMaskConnector } from "use-wagmi/connectors/metaMask";
-import { WalletConnectLegacyConnector } from "use-wagmi/connectors/walletConnectLegacy";
+import { CoinbaseWalletConnector } from "@wagmi/core/connectors/coinbaseWallet";
+import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
+
 // RPCs providers
 import { publicProvider } from "@wagmi/core/providers/public";
 import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
@@ -12,6 +11,8 @@ import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
 import { createClient } from "use-wagmi";
 
 export const useWagmi = (rpc: string, chain = sepolia) => {
+  const config = useRuntimeConfig();
+
   const { chains, provider, webSocketProvider } = configureChains(
     [chain], // mainnet, goerli
     [
@@ -21,20 +22,27 @@ export const useWagmi = (rpc: string, chain = sepolia) => {
           // webSocket: TODO?
         }),
       }),
-      // publicProvider(),
+      publicProvider(), // fallback
     ],
     { targetQuorum: 1 }
   );
 
   const connectors = [
-    new MetaMaskConnector({
+    // browsers that inject ethereum such as mobile app and metamask
+    new InjectedConnector(),
+    new CoinbaseWalletConnector({
       chains,
       options: {
-        UNSTABLE_shimOnConnectSelectAccount: true,
+        appName: "spog",
+        jsonRpcUrl: config.public.network.defaultRpc,
       },
     }),
-    // browsers that inject ethereum such as mobile app and metamask
-    // new InjectedConnector(),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        projectId: config.public.walletConnectProjectId,
+      },
+    }),
   ];
 
   const client = createClient({
