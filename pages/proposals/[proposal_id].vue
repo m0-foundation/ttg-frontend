@@ -10,6 +10,15 @@
           <div class="markdown-body mb-6" v-html="html"></div>
           <!--  -->
           <div
+            v-if="hasDelegator === '0x0000000000000000000000000000000000000000'"
+            class="flex justify-between items-center bg-gray-200 p-8 mb-2"
+          >
+            <div class="text-body-dark text-xl mr-4">Delegate vote tokens</div>
+            <div class="space-x-1">
+              <MButton @click="delegate()">Delegate to me</MButton>
+            </div>
+          </div>
+          <div
             v-if="proposal?.state === 'Active'"
             class="flex justify-between items-center bg-gray-200 p-8"
           >
@@ -30,13 +39,13 @@
 
           <div class="flex">
             <div class="w-1/2 flex flex-col">
-              <span class="text-gray-500">YES {{ votes?.yes?.count }}</span>
+              <span class="text-gray-500">YES </span>
               <span class="text-primary text-3xl"
                 >{{ votes?.yes?.percentage }}%</span
               >
             </div>
             <div class="w-1/2 flex flex-col">
-              <span class="text-gray-500">NO {{ votes?.no?.count }}</span>
+              <span class="text-gray-500">NO </span>
               <span class="text-red text-3xl"
                 >{{ votes?.no?.percentage }}%</span
               >
@@ -45,10 +54,10 @@
 
           <MProgressBar :width="votes?.yes?.percentage" class="mb-2" />
 
-          <p class="text-xs mb-7">
+          <!-- <p class="text-xs mb-7">
             <span class="text-white mr-2">{{ votes?.total }}</span>
             <span class="text-gray-500">TOTAL VOTES</span>
-          </p>
+          </p> -->
 
           <p class="text-gray-500">VOTES</p>
 
@@ -75,10 +84,10 @@
   </LayoutPage>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
-import { writeGovernor } from "@/lib/generated";
+import { writeIGovernor, writeIVoteToken } from "@/lib/sdk";
 
 definePageMeta({
   layout: "with-navbar",
@@ -102,18 +111,31 @@ const {
   isReady,
   isLoading,
 } = useAsyncState(client.getProposalVotes(proposalId));
-console.log({ votes, isReady, isLoading });
 
 const { state: voters } = useAsyncState(client.getProposalVoters(proposalId));
+const { state: hasDelegator } = useAsyncState(
+  client.getVoteDelegatorFrom(userAccount.value)
+);
 
 const timeLeft = computed(() => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
   return timeAgo;
 });
 
+function delegate() {
+  console.log({ hasDelegator });
+  // no delegate
+
+  return writeIVoteToken({
+    address: config.public.contracts.tokens.vote,
+    functionName: "delegate",
+    args: [userAccount.value], // self delegate
+  });
+}
+
 function castVote(vote) {
-  return writeGovernor({
-    address: config.contracts.governor.vote,
+  return writeIGovernor({
+    address: config.contracts.governor,
     functionName: "castVote",
     args: [proposalId, vote], // uint256 proposalId, uint8 support
     account: userAccount.value,
@@ -123,20 +145,4 @@ function castVote(vote) {
     },
   });
 }
-
-// mock
-const recentVotesList = [
-  {
-    voter: "0x123456789098765432",
-    amount: "1.56%",
-  },
-  {
-    voter: "0x23456789098765432",
-    amount: "1.56%",
-  },
-  {
-    voter: "0x3456789098765432",
-    amount: "0.56%",
-  },
-];
 </script>

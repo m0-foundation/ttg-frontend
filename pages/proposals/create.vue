@@ -19,15 +19,7 @@
 
             <!-- number input value -->
             <div
-              v-if="
-                [
-                  'inflator',
-                  'time',
-                  'voteQuorum',
-                  'valueQuorum',
-                  'changeTax',
-                ].includes(formData.proposalType)
-              "
+              v-if="['changeTax'].includes(formData.proposalType)"
               class="w-full flex justify-between items-center space-x-4"
             >
               <input v-model="formData.proposalValue" type="number" />
@@ -91,17 +83,6 @@
 
             <textarea v-model="formData.description" name="description" />
           </div>
-
-          <div class="mb-6">
-            <label for="url-ipfs">IPFS</label>
-            <input v-model="formData.ipfs" type="url" />
-          </div>
-
-          <div class="mb-6">
-            <label for="url-discussion">Discussion</label>
-
-            <input v-model="formData.discussion" type="url" />
-          </div>
         </div>
 
         <div v-else>
@@ -159,9 +140,9 @@
 
 <script setup>
 import { ref } from "vue";
-import { encodeFunctionData, toBytes, toHex, encodeAbiParameters } from "viem";
+import { encodeFunctionData, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
-import { spogABI, writeSpog, writeErc20, readErc20 } from "@/lib/generated";
+import { ispogABI, writeIGovernor, writeIerc20, readIerc20 } from "@/lib/sdk";
 
 const isPreview = ref(false);
 const selectedProposalType = ref();
@@ -171,8 +152,6 @@ const formData = reactive({
   proposalType: null,
   proposalValue: null,
   description: null,
-  discussion: null,
-  ipfs: null,
 });
 
 const { address: userAccount } = useAccount();
@@ -181,43 +160,7 @@ const config = useRuntimeConfig();
 
 const proposalTypes = [
   {
-    value: "Change parameters",
-    label: "Change parameters",
-    children: [
-      {
-        value: "cash",
-        label: "cash",
-      },
-      {
-        value: "taxRange",
-        label: "taxRange",
-      },
-      {
-        value: "inflator",
-        label: "inflator",
-      },
-
-      {
-        value: "time",
-        label: "time",
-      },
-      {
-        value: "voteQuorum",
-        label: "voteQuorum",
-      },
-      {
-        value: "valueQuorum",
-        label: "valueQuorum",
-      },
-    ],
-  },
-  {
-    value: "changeTax",
-    label: "Change tax",
-  },
-
-  {
-    value: "addNewList",
+    value: "addList",
     label: "Create a new List",
   },
 
@@ -232,13 +175,17 @@ const proposalTypes = [
   },
 
   {
-    value: "emergencyRemove",
-    label: "Emergency Remove",
+    value: "reset",
+    label: "New Governance",
+  },
+
+  {
+    value: "changeTax",
+    label: "Change tax",
   },
 ];
 
 function onChangeProposalType(option) {
-  console.log({ option });
   formData.proposalType = option.value;
   selectedProposalType.value = option;
 }
@@ -248,12 +195,9 @@ function onPreview() {
 }
 
 async function onSubmit() {
-  console.log("submit");
+  // It needs approval to pay for taxes
 
-  // TODO: add this process somewhere else
-  // it needs to approve to pay for tax
-
-  const allowance = await readErc20({
+  const allowance = await readIerc20({
     address: config.public.contracts.tokens.cash,
     functionName: "allowance",
     args: [userAccount.value, config.public.contracts.spog], // address owner, address spender
@@ -265,7 +209,7 @@ async function onSubmit() {
   // TODO: allowance > tax  : check againts tax for create proposal
   const tax = 0n;
   if (allowance <= tax) {
-    await writeErc20({
+    await writeIerc20({
       address: config.public.contracts.tokens.cash,
       functionName: "approve",
       args: [config.public.contracts.spog, 100], // address spender, uint256 amount
@@ -277,7 +221,7 @@ async function onSubmit() {
 
   isWritting.value = true;
   const { hash } = await onWriteSpogGovernor({
-    calldatas,
+    calldatas: [calldatas],
     description: formData.description,
   });
   isWritting.value = false;
@@ -286,75 +230,42 @@ async function onSubmit() {
 function buildCalldatas(data) {
   const type = data.proposalType;
 
-  if (
-    ["changeTax", "inflator", "time", "voteQuorum", "valueQuorum"].includes(
-      type
-    )
-  ) {
-    return buildCalldatasChange(data, "uint256");
+  if (["addList"].includes(type)) {
+    return buildCalldatasBase("addList", [data.proposalValue]);
   }
 
-  if (["cash"].includes(type)) {
-    return buildCalldatasChange(data, "address");
+  if (["append", "remove"].includes(type)) {
+    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ILIST
+    return buildCalldatasBase(type, [data.proposalValue, data.proposalValue2]);
   }
 
-  if (["taxRange"].includes(type)) {
-    return buildCalldatasChangeDoubleValues(data, "uint256[2]");
+  if (["reset"].includes(type)) {
+    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
+    return buildCalldatasBase(type, [
+      data.proposalValue,
+      config.public.contracts.vault.vote,
+    ]);
   }
 
-  if (["append", "remove", "emergencyRemove"].includes(type)) {
-    return buildCalldatasForList(data);
+  if (["changeTax"].includes(type)) {
+    const valueEncoded = encodeAbiParameters(
+      [{ type: "uint256" }],
+      [BigInt(data.proposalValue * 10e18)] // tax is using 18 decimals precision
+    );
+    return buildCalldatasBase("changeTax", [valueEncoded]);
   }
 }
 
-function buildCalldatasForList(data) {
-  const functionName = data.proposalType;
-  const args = [data.proposalValue, data.proposalValue2];
-  return [encodeFunctionData({ abi: spogABI, functionName, args })];
-}
-
-function buildCalldatasChange(data, inputType) {
-  console.log("buildCalldatasChange", { data, inputType });
-
-  const what = toBytes(data.proposalType, { size: 32 });
-  const valueEncoded = encodeAbiParameters(
-    [{ type: inputType }],
-    [data.proposalValue]
-  );
-
-  return [
-    encodeFunctionData({
-      abi: spogABI,
-      functionName: "change", // change(bytes32 what, bytes calldata value)
-      args: [toHex(what), valueEncoded],
-    }),
-  ];
-}
-
-function buildCalldatasChangeDoubleValues(data, inputType) {
-  console.log("buildCalldatasChangeDoubleValues", { data, inputType });
-
-  const what = toBytes(data.proposalType, { size: 32 });
-  const value2Encoded = encodeAbiParameters(
-    [{ type: inputType }],
-    [[data.proposalValue, data.proposalValue2]]
-  );
-
-  return [
-    encodeFunctionData({
-      abi: spogABI,
-      functionName: "change", // change(bytes32 what, bytes calldata value)
-      args: [toHex(what), value2Encoded],
-    }),
-  ];
+function buildCalldatasBase(functionName, args) {
+  return encodeFunctionData({ abi: ispogABI, functionName, args });
 }
 
 function onWriteSpogGovernor({ calldatas, description }) {
-  const targets = [config.contracts.spog]; // do not change
+  const targets = [config.public.contracts.spog]; // do not change
   const values = [0]; // do not change
 
-  return writeSpog({
-    address: config.contracts.spog,
+  return writeIGovernor({
+    address: config.contracts.governor,
     functionName: "propose",
     args: [targets, values, calldatas, description],
     account: userAccount.value,

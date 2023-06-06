@@ -47,7 +47,7 @@ function onSetup(rpc: string) {
 const spogClient = onSetup(rpc.value);
 console.log({ spogClient });
 /* download all proposals */
-const { isLoading } = useAsyncState(spogClient.getGovernorProposals(), 0, {
+const { isLoading } = useAsyncState(spogClient.getProposals(), 0, {
   onSuccess: (data) => {
     console.log("getGovernorVoteProposals", { data });
     const proposalStore = useProposalsStore();

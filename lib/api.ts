@@ -8,14 +8,13 @@ import {
   parseAbiItem,
   PublicClient,
 } from "viem";
-import { BigNumber } from "ethers";
 import type { Abi } from "abitype";
 import {
-  spogABI,
-  spogGovernorABI,
-  readGovernor,
-  readSpogGovernor,
-} from "./generated";
+  iGovernorABI,
+  readIGovernor,
+  readIspogGovernor,
+  readIVoteToken,
+} from "./sdk";
 
 export interface EventLog {
   eventName: string;
@@ -52,9 +51,10 @@ export interface MProposal extends EventLog {
 export interface ConfigVars {
   deployedBlock: BigInt;
   spog: string;
-  governor: {
-    vote: string;
-    value?: string;
+  governor: string;
+  vault: {
+    cash?: string;
+    vault?: string;
   };
   tokens: {
     cash?: string;
@@ -66,16 +66,16 @@ export interface ConfigVars {
 }
 
 export interface ProposalVotesState {
-  total: number;
+  total: bigint;
   yes: {
-    count: number;
-    ratio: number;
-    percentage: number;
+    count: bigint;
+    ratio: bigint;
+    percentage: bigint;
   };
   no: {
-    count: number;
-    ratio: number;
-    percentage: number;
+    count: bigint;
+    ratio: bigint;
+    percentage: bigint;
   };
 }
 
@@ -98,7 +98,7 @@ export interface VoteCast {
   support: boolean;
   voter: string;
   weight: BigInt;
-  transactionHash: string;
+  transactionHash?: string;
 }
 
 export class SPOG {
@@ -152,19 +152,19 @@ export class SPOG {
     return {} as MProposal;
   }
 
-  async getGovernorProposals(): Promise<Array<MProposal>> {
+  async getProposals(): Promise<Array<MProposal>> {
     const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
 
     const rawLogs = await this.client.getLogs({
-      address: this.config.governor.vote as Hash,
+      address: this.config.governor as Hash,
       fromBlock: deployedBlock,
       event: parseAbiItem(
-        "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 voteStart, uint256 voteEnd, string description)"
+        "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 startBlock, uint256 endBlock, string description)"
       ),
     });
 
     const proposals = rawLogs.map((log: Log) =>
-      this.decodeProposalLog(log, spogGovernorABI)
+      this.decodeProposalLog(log, iGovernorABI)
     );
 
     const proposalsWithState = await Promise.all(
@@ -189,42 +189,43 @@ export class SPOG {
   async getProposalState(
     proposalId: string
   ): Promise<keyof typeof ProposalState> {
-    const proposalStateNumber = await readGovernor({
-      address: this.config.governor.vote as Hash,
+    const proposalStateNumber = await readIGovernor({
+      address: this.config.governor as Hash,
       functionName: "state",
-      args: [BigNumber.from(proposalId)],
+      args: [BigInt(proposalId)],
     });
 
     return ProposalState[proposalStateNumber] as keyof typeof ProposalState;
   }
 
   async getProposalVotes(proposalId: string): Promise<ProposalVotesState> {
-    const votes = await readSpogGovernor({
-      address: this.config.governor.vote as Hash,
+    const votes = await readIspogGovernor({
+      address: this.config.governor as Hash,
       functionName: "proposalVotes",
-      args: [BigNumber.from(proposalId)],
+      args: [BigInt(proposalId)],
     });
-    console.log({ votes });
 
-    const yes = Number(votes.yesVotes);
-    const no = Number(votes.noVotes);
-    const total = yes + no;
+    const no = votes[0].toBigInt();
+    const yes = votes[1].toBigInt();
+
+    const total = yes + no || 1n;
+
     const yesRatio = yes / total;
-    const noRatio = yes / total;
-    const yesPercentage = yesRatio * 100;
-    const noPercentage = noRatio * 100;
+    const noRatio = no / total;
+    const yesPercentage = yesRatio * 100n;
+    const noPercentage = noRatio * 100n;
 
     return {
       total,
       yes: {
         count: yes,
-        ratio: yesRatio || 0,
-        percentage: yesPercentage || 0,
+        ratio: yesRatio,
+        percentage: yesPercentage,
       },
       no: {
         count: no,
-        ratio: noRatio || 0,
-        percentage: noPercentage || 0,
+        ratio: noRatio,
+        percentage: noPercentage,
       },
     };
   }
@@ -233,7 +234,7 @@ export class SPOG {
     const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
 
     const rawLogs = await this.client.getLogs({
-      address: this.config.governor.vote as Hash,
+      address: this.config.governor as Hash,
       fromBlock: deployedBlock,
       event: parseAbiItem(
         "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
@@ -246,28 +247,29 @@ export class SPOG {
       support: Boolean(log?.args?.support),
       voter: log?.args?.voter.toString(),
       weight: log?.args?.weight,
-      transactionHash: log.transactionHash.toString(),
+      transactionHash: log.transactionHash?.toString(),
     }));
 
     return voters.filter((v) => v.proposalId === proposalId);
   }
 
   async getEpochState(): Promise<EpochState> {
-    const contractAddress = this.config.governor.vote as Hash;
-    const currentEpoch = await readSpogGovernor({
+    const contractAddress = this.config.governor as Hash;
+    const currentEpoch = await readIspogGovernor({
       address: contractAddress,
       functionName: "currentEpoch",
     });
 
-    const currentEpochAsBlockNumber = await readSpogGovernor({
+    const currentEpochAsBlockNumber = await readIspogGovernor({
       address: contractAddress,
-      functionName: "startOfEpoch",
+      functionName: "startOf",
       args: [currentEpoch],
     }).then((bigNumber) => bigNumber.toBigInt());
 
-    const nextEpochAsBlockNumber = await readSpogGovernor({
+    const nextEpochAsBlockNumber = await readIspogGovernor({
       address: contractAddress,
-      functionName: "startOfNextEpoch",
+      functionName: "startOf",
+      args: [currentEpoch.add(1)],
     }).then((bigNumber) => bigNumber.toBigInt());
 
     const currentEpochAsBlock = await this.client.getBlock({
@@ -293,5 +295,13 @@ export class SPOG {
         asTimestamp: nextEpochAsTimestamp,
       },
     };
+  }
+
+  getVoteDelegatorFrom(account: Hash): Promise<Hash> {
+    return readIVoteToken({
+      address: this.config.tokens.vote as Hash,
+      functionName: "delegates",
+      args: [account],
+    });
   }
 }
