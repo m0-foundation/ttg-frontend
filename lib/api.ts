@@ -8,7 +8,6 @@ import {
   parseAbiItem,
   PublicClient,
 } from "viem";
-import { BigNumber } from "ethers";
 import type { Abi } from "abitype";
 import {
   iGovernorABI,
@@ -70,13 +69,13 @@ export interface ProposalVotesState {
   total: bigint;
   yes: {
     count: bigint;
-    ratio: number;
-    percentage: number;
+    ratio: bigint;
+    percentage: bigint;
   };
   no: {
     count: bigint;
-    ratio: number;
-    percentage: number;
+    ratio: bigint;
+    percentage: bigint;
   };
 }
 
@@ -193,7 +192,7 @@ export class SPOG {
     const proposalStateNumber = await readIGovernor({
       address: this.config.governor as Hash,
       functionName: "state",
-      args: [BigNumber.from(proposalId)],
+      args: [BigInt(proposalId)],
     });
 
     return ProposalState[proposalStateNumber] as keyof typeof ProposalState;
@@ -203,29 +202,30 @@ export class SPOG {
     const votes = await readIspogGovernor({
       address: this.config.governor as Hash,
       functionName: "proposalVotes",
-      args: [BigNumber.from(proposalId)],
+      args: [BigInt(proposalId)],
     });
 
     const no = votes[0].toBigInt();
     const yes = votes[1].toBigInt();
 
-    const total = yes + no;
-    const yesRatio = Number(yes / total);
-    const noRatio = Number(no / total);
-    const yesPercentage = yesRatio * 100;
-    const noPercentage = noRatio * 100;
+    const total = yes + no || 1n;
+
+    const yesRatio = yes / total;
+    const noRatio = no / total;
+    const yesPercentage = yesRatio * 100n;
+    const noPercentage = noRatio * 100n;
 
     return {
       total,
       yes: {
         count: yes,
-        ratio: yesRatio || 0,
-        percentage: yesPercentage || 0,
+        ratio: yesRatio,
+        percentage: yesPercentage,
       },
       no: {
         count: no,
-        ratio: noRatio || 0,
-        percentage: noPercentage || 0,
+        ratio: noRatio,
+        percentage: noPercentage,
       },
     };
   }
