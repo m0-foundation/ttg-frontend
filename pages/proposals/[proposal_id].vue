@@ -10,7 +10,7 @@
           <div class="markdown-body mb-6" v-html="html"></div>
           <!--  -->
           <div
-            v-if="hasDelegator === '0x0000000000000000000000000000000000000000'"
+            v-if="proposal?.state === 'Active' && hasDelegator"
             class="flex justify-between items-center bg-gray-200 p-8 mb-2"
           >
             <div class="text-body-dark text-xl mr-4">Delegate vote tokens</div>
@@ -26,6 +26,16 @@
             <div class="space-x-1">
               <MButton @click="castVote(1)">YES</MButton>
               <MButton @click="castVote(0)">NO</MButton>
+            </div>
+          </div>
+
+          <div
+            v-if="proposal?.state === 'Succeeded'"
+            class="flex justify-between items-center bg-gray-200 p-8"
+          >
+            <div class="text-body-dark text-3xl mr-4">Execute?</div>
+            <div class="space-x-1 uppercase">
+              <MButton @click="execute()">Yes</MButton>
             </div>
           </div>
         </article>
@@ -87,6 +97,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
+import { keccak256, toHex } from "viem";
 import { writeIGovernor, writeIVoteToken } from "@/lib/sdk";
 
 definePageMeta({
@@ -114,7 +125,11 @@ const {
 
 const { state: voters } = useAsyncState(client.getProposalVoters(proposalId));
 const { state: hasDelegator } = useAsyncState(
-  client.getVoteDelegatorFrom(userAccount.value)
+  client
+    .getVoteDelegatorFrom(userAccount.value)
+    .then(
+      (delegator) => delegator === "0x0000000000000000000000000000000000000000"
+    )
 );
 
 const timeLeft = computed(() => {
@@ -138,6 +153,25 @@ function castVote(vote) {
     address: config.contracts.governor,
     functionName: "castVote",
     args: [proposalId, vote], // uint256 proposalId, uint8 support
+    account: userAccount.value,
+    chainId: 11155111,
+    overrides: {
+      gasLimit: 2100000n,
+    },
+  });
+}
+
+function execute() {
+  const { description, calldatas } = proposal;
+  console.log({ description, calldatas });
+  const hashedDescription = keccak256(toHex(description));
+  const targets = [config.public.contracts.spog]; // do not change
+  const values = [0]; // do not change
+
+  return writeIGovernor({
+    address: config.contracts.governor,
+    functionName: "execute",
+    args: [targets, values, calldatas, hashedDescription], // (targets, values, calldatas, hashedDescription
     account: userAccount.value,
     chainId: 11155111,
     overrides: {

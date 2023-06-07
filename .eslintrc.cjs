@@ -13,4 +13,5 @@ module.exports = {
     semi: "off",
     "@typescript-eslint/no-unused-vars": "warn",
   },
+  ignorePatterns: ["node_modules*/", "e2e/", "dist/"],
 };
