@@ -1,6 +1,9 @@
+import { nodePolyfills } from "vite-plugin-node-polyfills";
+
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
+      walletConnectProjectId: process.env.WALLET_CONNECT_PROJECT_ID,
       network: {
         defaultRpc: process.env.NETWORK_DEFAULT_RPC,
         rpcs: process.env.NETWORK_RPC_LIST,
@@ -61,5 +64,17 @@ export default defineNuxtConfig({
 
   pinia: {
     autoImports: ["defineStore"],
+  },
+  vite: {
+    plugins: [
+      nodePolyfills({
+        // To exclude specific polyfills, add them to this list.
+        exclude: [
+          "fs", // Excludes the polyfill for `fs` and `node:fs`.
+        ],
+        // Whether to polyfill `node:` protocol imports.
+        protocolImports: true,
+      }),
+    ],
   },
 });
