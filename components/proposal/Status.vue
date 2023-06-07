@@ -1,0 +1,55 @@
+<template>
+  <div :class="version?.toLowerCase()">
+    {{ version?.toLowerCase() }}
+  </div>
+</template>
+
+<script lang="ts" setup>
+export interface ProposalStatusProps {
+  version:
+    | "Pending"
+    | "Active"
+    | "Canceled"
+    | "Defeated"
+    | "Succeeded"
+    | "Queued"
+    | "Expired"
+    | "Executed";
+}
+
+const props = withDefaults(defineProps<ProposalStatusProps>(), {
+  version: "Pending",
+});
+</script>
+<style scoped>
+div {
+  @apply uppercase w-fit font-medium text-sm px-4 py-2 text-center;
+}
+
+.pending {
+  @apply border border-grey-primary text-grey-primary;
+}
+.active {
+  @apply border border-primary text-primary-dark;
+}
+.canceled {
+  @apply border border-red text-red;
+}
+
+.defeated {
+  @apply bg-red text-white;
+}
+
+.succeeded,
+.queued {
+  @apply bg-primary text-primary-darker;
+}
+
+.expired {
+  @apply bg-[#EEEEEE] text-[#929492];
+}
+
+.executed {
+  @apply bg-[#003B2C] text-[#E9FFFA];
+}
+</style>
