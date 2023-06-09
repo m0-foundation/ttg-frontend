@@ -34,7 +34,7 @@ const { rpc } = storeToRefs(spogStore);
 function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
-  const { client: wagmiClient } = useWagmi(rpc); // TODO? support mainnet
+  const { client: wagmiClient } = useWagmi(rpc);
   nuxtApp.vueApp.use(wagmiClient);
 
   /* setup spog client */
