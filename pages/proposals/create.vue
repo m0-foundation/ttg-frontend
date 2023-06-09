@@ -140,6 +140,7 @@
 
 <script setup>
 import get from "lodash/get";
+import random from "lodash/random";
 import { ref } from "vue";
 import { waitForTransaction } from "@wagmi/core";
 import { encodeFunctionData, encodeAbiParameters } from "viem";
@@ -254,11 +255,12 @@ async function buildCalldatas(data) {
   if (["addList"].includes(type)) {
     const listName = data.proposalValue;
     const listItems = [];
+    const listSalt = random(1e10); // generate a integer from 0 to 1e10 to be used as salt since it can be repated
     const { hash } = await writeListFactory({
       address: config.public.contracts.listFactory,
       functionName: "deploy",
       // address _spog, string  _name, address[] memory addresses, uint256 _salt
-      args: [config.public.contracts.spog, listName, listItems, 1],
+      args: [config.public.contracts.spog, listName, listItems, listSalt],
       account: userAccount.value,
       chainId: 11155111,
       overrides: {
