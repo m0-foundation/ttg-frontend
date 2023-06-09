@@ -13,6 +13,7 @@ export default defineNuxtConfig({
         deployedBlock: process.env.CONTRACT_DEPLOYED_BLOCK,
         spog: process.env.CONTRACT_ADDRESS_SPOG,
         governor: process.env.CONTRACT_ADDRESS_SPOG_GOVERNOR,
+        listFactory: process.env.CONTRACT_ADDRESS_LIST_FACTORY,
         vault: {
           vote: process.env.CONTRACT_ADDRESS_VAULT_VOTE,
           value: process.env.CONTRACT_ADDRESS_VAULT_VALUE,
