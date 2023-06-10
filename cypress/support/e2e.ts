@@ -24,6 +24,12 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
 import { Eip1193 } from "../lib/eip1193";
 
+import redeploy from "../lib/redeploy";
+
+before(async () => {
+  await redeploy();
+});
+
 Cypress.on("window:before:load", (win) => {
   // win.ethereum = createWalletClient({
   //   chain: hardhat,
@@ -37,3 +43,14 @@ Cypress.on("window:before:load", (win) => {
   const signer = new Wallet(pk, provider);
   win.ethereum = new Eip1193(signer);
 });
+
+const cypressLogOriginal = Cypress.log;
+const cypressLogDomainsHidden = ["http://localhost:8545"];
+Cypress.log = function (opts: any, ...other) {
+  const logFetchIs = ["fetch"].includes(opts.displayName);
+  const logFetchDomainMatch =
+    logFetchIs && cypressLogDomainsHidden.find((d) => opts.url.includes(d));
+  if (logFetchDomainMatch) return;
+
+  return cypressLogOriginal(opts, ...other);
+};
