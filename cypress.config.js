@@ -15,7 +15,7 @@ export async function setupHardhatEvents(on, config) {
     }),
     "hardhat:reset": () => env.reset(),
   });
-  on("before:spec", () => env.reset());
+  // on("before:spec", () => env.reset());
   on("after:run", () => env.close());
 }
 

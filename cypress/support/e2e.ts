@@ -22,7 +22,6 @@ import "./commands";
 // import { createWalletClient, http } from "viem";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
-import { Eip1193Bridge } from "@ethersproject/experimental/lib/eip1193-bridge";
 import { Eip1193 } from "../lib/eip1193";
 
 Cypress.on("window:before:load", (win) => {
@@ -30,6 +29,7 @@ Cypress.on("window:before:load", (win) => {
   //   chain: hardhat,
   //   transport: http(),
   // });
+  // private key of first hardhat user
   const pk =
     "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
