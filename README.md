@@ -44,20 +44,19 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 ## Generate SDK from SPOG smart contracts
 
 1. install `foundry` https://getfoundry.sh/
-2. `git clone https://github.com/MZero-Labs/SPOG.git`
-3. go to /SPOG directory and type `yarn link`
-4. go to /spog-frontend and type `yarn link "@mzero-labs/spog"` 
-5. then run `yarn wagmi generate`
-6. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
-
+2. `cd contracts/`
+3. `forge build`
+4. `cd ..`
+5. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
 
 ## Deploy SPOG to testnet use on the Dapp
-1. go to /SPOG and udpate `.env` file with `MNEMONIC=".....insert your mnemonic from your metamask...."`
-2. Start the local anvil node ```anvil ```
-3. In another terminal, run the deployment script for Anvil ```make deploy-spog-qa-sepolia```
+
+1. go to /contracts and udpate `.env` file with `MNEMONIC=".....insert your mnemonic from your metamask...."`
+2. Start the local anvil node `anvil `
+3. In another terminal, run the deployment script for Anvil `make deploy-spog-qa-sepolia`
 4. from the logs results of deployed contracts you must copy to the `.env` following this order:
+
 ```
-  deployer: 0x31DCb7AE01fFfD9B6468814bA2A6A0ab9c58d8e5
   deployer: 0x31DCb7AE01fFfD9B6468814bA2A6A0ab9c58d8e5
   SPOG address:  0x48E82c3d2022bc15390f9faC2ebd4770604104b6
   SPOGVote token address:  0xF6b56E5C7fcDaeca68D8FEe374331357a48B2f90
@@ -66,11 +65,12 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
   Cash address:  0xc50C3d2d69aC52490882a8A43a05396987369687
   Vote holders vault address:  0x136D0388d9619C3c07bd316033Ce8cf1C631ca7e
   Value holders vault address:  0x05872592c3F8653C1291E46574b99cc7e69939a5
-````
+```
+
 ### `.env` file example:
 
 ```
-CONTRACT_DEPLOYED_BLOCK={BLOCK_NUMBER} // block number where the SPOG was deployed   
+CONTRACT_DEPLOYED_BLOCK={BLOCK_NUMBER} // block number where the SPOG was deployed
 CONTRACT_ADDRESS_SPOG={SPOG address}
 CONTRACT_ADDRESS_SPOG_VOTE={SPOGVote token address}
 CONTRACT_ADDRESS_SPOG_VALUE={SPOGValue token address}
