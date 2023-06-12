@@ -95,11 +95,37 @@ export default async function redeploy() {
     "VALUE"
   );
 
+  await valueTokenContract.grantRole(
+    "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6",
+    network.accounts[0].address
+  );
+
   const voteTokenContract = await voteTokenFactory.deploy(
     "SPOG Vote",
     "VOTE",
     valueTokenContract.address
   );
+
+  await voteTokenContract.grantRole(
+    "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6",
+    network.accounts[0].address
+  );
+
+  for (const account of network.accounts) {
+    console.log("Minting tokens for account: ", account.address);
+    await cashContract.mint(
+      account.address,
+      BigNumber.from("1000000000000000000000") // 1000
+    );
+    await valueTokenContract.mint(
+      account.address,
+      BigNumber.from("1000000000000000000000") // 1000
+    );
+    await voteTokenContract.mint(
+      account.address,
+      BigNumber.from("1000000000000000000000") // 1000
+    );
+  }
 
   const governorContract = await dualGovernorFactory.deploy(
     "SPOG Governor",
