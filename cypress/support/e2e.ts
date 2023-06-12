@@ -31,10 +31,6 @@ before(async () => {
 });
 
 Cypress.on("window:before:load", (win) => {
-  // win.ethereum = createWalletClient({
-  //   chain: hardhat,
-  //   transport: http(),
-  // });
   // private key of first hardhat user
   const pk =
     "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";

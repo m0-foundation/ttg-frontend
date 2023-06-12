@@ -11,7 +11,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "cypress run"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
@@ -37,7 +37,6 @@
     "@types/lodash": "^4.14.194",
     "@vueuse/core": "^10.1.2",
     "@vueuse/nuxt": "^10.1.2",
-    "@wagmi/chains": "^1.1.0",
     "@wagmi/core": "^0.10.10",
     "dayjs": "^1.11.7",
     "ethers": "^5.7.2",
