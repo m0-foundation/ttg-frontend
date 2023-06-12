@@ -10,6 +10,7 @@ jobs:
   build:
     env:
       CI: true
+      TERM: xterm-256color
     strategy:
       matrix:
         node-version: [18.x]
