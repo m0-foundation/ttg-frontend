@@ -21,6 +21,19 @@ jobs:
           repository: MZero-Labs/SPOG
           token: ${{ secrets.SPOG_ACTION_ACCESS }}
           submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      - name: Run Forge build
+        run: |
+          cd contracts/
+          forge --version
+          forge build --sizes
+        id: build
+
       - name: Use Node.js version ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
