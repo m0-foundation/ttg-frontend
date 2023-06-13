@@ -139,10 +139,19 @@
 </template>
 
 <script setup>
+import get from "lodash/get";
+import random from "lodash/random";
 import { ref } from "vue";
+import { waitForTransaction } from "@wagmi/core";
 import { encodeFunctionData, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
-import { ispogABI, writeIGovernor, writeIerc20, readIerc20 } from "@/lib/sdk";
+import {
+  ispogABI,
+  writeIGovernor,
+  writeIerc20,
+  readIerc20,
+  writeListFactory,
+} from "@/lib/sdk";
 
 const isPreview = ref(false);
 const selectedProposalType = ref();
@@ -195,43 +204,89 @@ function onPreview() {
 }
 
 async function onSubmit() {
-  // It needs approval to pay for taxes
-
-  const allowance = await readIerc20({
-    address: config.public.contracts.tokens.cash,
-    functionName: "allowance",
-    args: [userAccount.value, config.public.contracts.spog], // address owner, address spender
-    account: userAccount.value,
-  }).then((bigNumber) => bigNumber.toBigInt());
-
-  console.log({ allowance });
-
-  // TODO: allowance > tax  : check againts tax for create proposal
-  const tax = 0n;
-  if (allowance <= tax) {
-    await writeIerc20({
+  try {
+    // It needs approval to pay for taxes
+    const allowance = await readIerc20({
       address: config.public.contracts.tokens.cash,
-      functionName: "approve",
-      args: [config.public.contracts.spog, 100], // address spender, uint256 amount
+      functionName: "allowance",
+      args: [userAccount.value, config.public.contracts.spog], // address owner, address spender
       account: userAccount.value,
+    }).then((bigNumber) => bigNumber.toBigInt());
+
+    console.log({ allowance });
+
+    // TODO: allowance > tax  : check againts tax for create proposal
+    const tax = 0n;
+    if (allowance <= tax) {
+      await writeIerc20({
+        address: config.public.contracts.tokens.cash,
+        functionName: "approve",
+        args: [config.public.contracts.spog, 100], // address spender, uint256 amount
+        account: userAccount.value,
+      });
+    }
+
+    const calldatas = buildCalldatas(formData);
+
+    isWritting.value = true;
+    const { hash } = await onWriteSpogGovernor({
+      calldatas: [calldatas],
+      description: formData.description,
     });
+
+    const txReceipt = await waitForTransaction({
+      confirmations: 1,
+      hash,
+    });
+    // Fail tx
+    if (txReceipt.status === 0) {
+      throw new Error("Transaction was rejected");
+    }
+
+    isWritting.value = false;
+  } catch (error) {
+    console.error({ error });
   }
-
-  const calldatas = buildCalldatas(formData);
-
-  isWritting.value = true;
-  const { hash } = await onWriteSpogGovernor({
-    calldatas: [calldatas],
-    description: formData.description,
-  });
-  isWritting.value = false;
 }
 
-function buildCalldatas(data) {
+async function buildCalldatas(data) {
   const type = data.proposalType;
 
   if (["addList"].includes(type)) {
-    return buildCalldatasBase("addList", [data.proposalValue]);
+    const listName = data.proposalValue;
+    const listItems = [];
+    const listSalt = random(1e10); // generate a integer from 0 to 1e10 to be used as salt since it can be repated
+    const { hash } = await writeListFactory({
+      address: config.public.contracts.listFactory,
+      functionName: "deploy",
+      // address _spog, string  _name, address[] memory addresses, uint256 _salt
+      args: [config.public.contracts.spog, listName, listItems, listSalt],
+      account: userAccount.value,
+      chainId: 11155111,
+      overrides: {
+        gasLimit: 2100000n,
+      },
+    });
+
+    if (!hash) {
+      throw new Error("Faild on create new list");
+    }
+
+    const txReceipt = await waitForTransaction({
+      confirmations: 1,
+      hash,
+    });
+
+    console.log({ txReceipt });
+
+    const newListAddress = get(txReceipt, "logs[0].address");
+
+    if (!newListAddress) {
+      throw new Error("Faild on create new list");
+    }
+    console.log({ newListAddress });
+
+    return buildCalldatasBase("addList", [newListAddress]);
   }
 
   if (["append", "remove"].includes(type)) {
