@@ -6,6 +6,16 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 
 Make sure to install the dependencies:
 
+### Contracts are git submodules
+
+This will install the SPOG contracts and all of it's deps recursively
+
+```bash
+git submodule update --init --recursive
+```
+
+### Install Node modules
+
 ```bash
 # yarn
 yarn install
@@ -53,7 +63,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 1. go to /contracts and udpate `.env` file with `MNEMONIC=".....insert your mnemonic from your metamask...."`
 2. Start the local anvil node `anvil `
-3. In another terminal, run the deployment script for Anvil `make deploy-spog-qa-sepolia`
+3. In another terminal, run the deployment script for Anvil `make deploy-spog-local`
 4. from the logs results of deployed contracts you must copy to the `.env` following this order:
 
 ```
