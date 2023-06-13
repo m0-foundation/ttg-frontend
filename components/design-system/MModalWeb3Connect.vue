@@ -5,6 +5,7 @@
     <Teleport to="body">
       <div
         v-if="open"
+        id="modal-backdrop"
         ref="modal-backdrop"
         class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-80"
       >
