@@ -39,7 +39,7 @@
 
             <!-- numbers range input type -->
             <div
-              v-else-if="['taxRange'].includes(formData.proposalType)"
+              v-else-if="['changeTaxRange'].includes(formData.proposalType)"
               class="w-full flex justify-between items-center space-x-4"
             >
               <input
@@ -220,6 +220,20 @@ const proposalTypes = [
     ],
   },
   {
+    value: "Tax",
+    label: "Tax",
+    children: [
+      {
+        value: "changeTax",
+        label: "Change Tax",
+      },
+      {
+        value: "changeTaxRange",
+        label: "Change Tax range",
+      },
+    ],
+  },
+  {
     value: "addList",
     label: "Create a new List",
   },
@@ -236,11 +250,6 @@ const proposalTypes = [
   {
     value: "reset",
     label: "New Governance",
-  },
-
-  {
-    value: "changeTax",
-    label: "Change tax",
   },
 ];
 
@@ -464,6 +473,18 @@ function buildCalldatas(formData) {
       [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
     );
     return buildCalldatasSpog(type, [valueEncoded]);
+  }
+
+  if (["changeTaxRange"].includes(type)) {
+    const value1Encoded = encodeAbiParameters(
+      [{ type: "uint256" }],
+      [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
+    );
+    const value2Encoded = encodeAbiParameters(
+      [{ type: "uint256" }],
+      [BigInt(input2 * 10e18)] // tax is using 18 decimals precision
+    );
+    return buildCalldatasSpog(type, [value1Encoded, value2Encoded]);
   }
 
   if (
