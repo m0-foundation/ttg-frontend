@@ -38,4 +38,4 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn install
-      - run: yarn dev & yarn test
+      - run: yarn dev & sleep 5 && yarn test
