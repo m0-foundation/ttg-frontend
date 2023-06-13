@@ -1,7 +1,5 @@
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-console.log("Process env", process.env);
-
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {

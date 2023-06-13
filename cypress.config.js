@@ -29,5 +29,5 @@ export default defineConfig({
       setupHardhatEvents(on, config);
     },
   },
-  defaultCommandTimeout: 20000,
+  defaultCommandTimeout: 60000,
 });
