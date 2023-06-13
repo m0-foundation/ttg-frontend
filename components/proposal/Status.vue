@@ -9,10 +9,8 @@ export interface ProposalStatusProps {
   version:
     | "Pending"
     | "Active"
-    | "Canceled"
     | "Defeated"
     | "Succeeded"
-    | "Queued"
     | "Expired"
     | "Executed";
 }
@@ -32,16 +30,11 @@ div {
 .active {
   @apply border border-primary text-primary-dark;
 }
-.canceled {
-  @apply border border-red text-red;
-}
-
 .defeated {
   @apply bg-red text-white;
 }
 
-.succeeded,
-.queued {
+.succeeded {
   @apply bg-primary text-primary-darker;
 }
 
