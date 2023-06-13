@@ -7,7 +7,11 @@ export default defineConfig({
   plugins: [
     foundry({
       artifacts: "node_modules/@mzero-labs/spog/out",
-      include: ["I**.sol/*.json", "ListFactory.sol/*.json"],
+      include: [
+        "I**.sol/*.json",
+        "ListFactory.sol/*.json",
+        "DualGovernor.sol/*.json",
+      ],
     }),
     actions(),
   ],
