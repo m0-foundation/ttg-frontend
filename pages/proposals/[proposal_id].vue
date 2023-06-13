@@ -3,7 +3,8 @@
     <div class="flex w-full space-x-4">
       <div class="w-3/4 bg-white">
         <article class="bg-white text-black p-8 mb-2">
-          <div>{{ proposal?.state }}</div>
+          <ProposalStatus :version="proposal?.state" />
+
           <div class="text-primary-darker text-sm mb-6">
             Proposed by <u>{{ proposal?.proposer }}</u>
           </div>

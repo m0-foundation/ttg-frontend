@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     foundry({
       artifacts: "contracts/out",
-      include: ["I**.sol/*.json"],
+      include: ["I**.sol/*.json", "ListFactory.sol/*.json"],
     }),
     actions(),
   ],

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <MModal ref="modal" @on-closed="onCloseModal">
+      <MTransactionsStepper ref="stepper" :steps="steps" />
+    </MModal>
     <form @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
       <div v-else>
@@ -63,6 +66,13 @@
               />
               <div class="w-1/2">TAX: X.XX $CASH</div>
             </div>
+
+            <input
+              v-else-if="'addList' === formData.proposalType"
+              v-model="formData.proposalValue"
+              type="text"
+              placeholder="List Name"
+            />
 
             <input
               v-else
@@ -139,10 +149,32 @@
 </template>
 
 <script setup>
+import get from "lodash/get";
+import random from "lodash/random";
 import { ref } from "vue";
+import { waitForTransaction } from "@wagmi/core";
 import { encodeFunctionData, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
-import { ispogABI, writeIGovernor, writeIerc20, readIerc20 } from "@/lib/sdk";
+import {
+  ispogABI,
+  writeIGovernor,
+  writeIerc20,
+  readIerc20,
+  writeListFactory,
+} from "@/lib/sdk";
+
+/* control stepper */
+let steps = reactive([]);
+
+const stepper = ref(null);
+const modal = ref(null);
+
+function onCloseModal() {
+  stepper.value.reset();
+  throw new Error("rejected by user");
+}
+
+/* control Form */
 
 const isPreview = ref(false);
 const selectedProposalType = ref();
@@ -155,6 +187,7 @@ const formData = reactive({
 });
 
 const { address: userAccount } = useAccount();
+const account = userAccount.value;
 
 const config = useRuntimeConfig();
 
@@ -194,14 +227,14 @@ function onPreview() {
   isPreview.value = true;
 }
 
-async function onSubmit() {
+async function writeAllowance() {
+  console.log({ account });
   // It needs approval to pay for taxes
-
   const allowance = await readIerc20({
     address: config.public.contracts.tokens.cash,
     functionName: "allowance",
-    args: [userAccount.value, config.public.contracts.spog], // address owner, address spender
-    account: userAccount.value,
+    args: [account, config.public.contracts.spog], // address owner, address spender
+    account,
   }).then((bigNumber) => bigNumber.toBigInt());
 
   console.log({ allowance });
@@ -209,40 +242,185 @@ async function onSubmit() {
   // TODO: allowance > tax  : check againts tax for create proposal
   const tax = 0n;
   if (allowance <= tax) {
-    await writeIerc20({
+    const { hash } = await writeIerc20({
       address: config.public.contracts.tokens.cash,
       functionName: "approve",
       args: [config.public.contracts.spog, 100], // address spender, uint256 amount
-      account: userAccount.value,
+      account,
     });
+
+    stepper.value.changeCurrentStep("pending");
+
+    const txReceipt = await waitForTransaction({
+      confirmations: 1,
+      hash,
+    });
+    // Fail tx
+    if (txReceipt.status === 0) {
+      throw new Error("Transaction was not successful");
+    }
   }
-
-  const calldatas = buildCalldatas(formData);
-
-  isWritting.value = true;
-  const { hash } = await onWriteSpogGovernor({
-    calldatas: [calldatas],
-    description: formData.description,
-  });
-  isWritting.value = false;
 }
 
-function buildCalldatas(data) {
-  const type = data.proposalType;
+async function writeDeployList(listName) {
+  const listItems = [];
+  const listSalt = random(1e10); // generate a integer from 0 to 1e10 to be used as salt since it can be repated
+
+  const { hash } = await writeListFactory({
+    address: config.public.contracts.listFactory,
+    functionName: "deploy",
+    // address _spog, string  _name, address[] memory addresses, uint256 _salt
+    args: [config.public.contracts.spog, listName, listItems, listSalt],
+    account,
+    chainId: 11155111,
+    overrides: {
+      gasLimit: 2100000n,
+    },
+  });
+
+  if (!hash) {
+    throw new Error("Faild on create new list");
+  }
+
+  stepper.value.changeCurrentStep("pending");
+
+  const txReceipt = await waitForTransaction({
+    confirmations: 1,
+    hash,
+  });
+
+  console.log({ txReceipt });
+
+  const newListAddress = get(txReceipt, "logs[0].address");
+
+  if (!newListAddress) {
+    throw new Error("Faild on create new list");
+  }
+  console.log({ newListAddress });
+
+  return newListAddress;
+}
+
+async function writeProposal(calldatas, description) {
+  const targets = [config.public.contracts.spog]; // do not change
+  const values = [0]; // do not change
+
+  const { hash } = await writeIGovernor({
+    address: config.contracts.governor,
+    functionName: "propose",
+    args: [targets, values, [calldatas], description],
+    account,
+    chainId: 11155111,
+    overrides: {
+      gasLimit: 2100000n,
+    },
+  });
+
+  stepper.value.changeCurrentStep("pending");
+
+  const txReceipt = await waitForTransaction({
+    confirmations: 1,
+    hash,
+  });
+  // Fail tx
+  if (txReceipt.status === 0) {
+    throw new Error("Transaction was rejected");
+  }
+
+  return txReceipt;
+}
+
+async function onSubmit() {
+  try {
+    const catchErrorStep = (error) => {
+      console.error({ error });
+      stepper.value.changeCurrentStep("error");
+      throw error;
+    };
+
+    steps = reactive(
+      formData.proposalType === "addList"
+        ? [
+            {
+              title: "Deploy new List",
+              status: "current",
+            },
+            {
+              title: "Allowance",
+              status: "incomplete",
+            },
+            {
+              title: "Create Proposal",
+              status: "incomplete",
+            },
+            {
+              title: "Confirmation",
+              status: "incomplete",
+            },
+          ]
+        : [
+            {
+              title: "Allowance",
+              status: "current",
+            },
+            {
+              title: "Create Proposal",
+              status: "incomplete",
+            },
+            {
+              title: "Confirmation",
+              status: "incomplete",
+            },
+          ]
+    );
+
+    modal.value.open();
+
+    if (formData.proposalType === "addList") {
+      const addListAddress = await writeDeployList(
+        formData.proposalValue
+      ).catch(catchErrorStep);
+
+      formData.proposalValue = addListAddress;
+
+      stepper.value.nextStep();
+    }
+
+    await writeAllowance().catch(catchErrorStep);
+
+    stepper.value.nextStep();
+
+    const calldatas = buildCalldatas(formData);
+    await writeProposal(calldatas, formData.description).catch(catchErrorStep);
+
+    stepper.value.nextStep();
+    stepper.value.changeCurrentStep("complete");
+  } catch (error) {
+    console.error({ error });
+  }
+}
+
+function buildCalldatas(formData) {
+  const {
+    proposalType: type,
+    proposalValue: input1,
+    proposalValue2: input2,
+  } = formData;
+  console.log({ type, input1, input2 });
 
   if (["addList"].includes(type)) {
-    return buildCalldatasBase("addList", [data.proposalValue]);
+    return buildCalldatasBase(type, [input1]);
   }
 
   if (["append", "remove"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ILIST
-    return buildCalldatasBase(type, [data.proposalValue, data.proposalValue2]);
+    return buildCalldatasBase(type, [input1, input2]);
   }
 
   if (["reset"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
     return buildCalldatasBase(type, [
-      data.proposalValue,
+      input1,
       config.public.contracts.vault.vote,
     ]);
   }
@@ -250,7 +428,7 @@ function buildCalldatas(data) {
   if (["changeTax"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(data.proposalValue * 10e18)] // tax is using 18 decimals precision
+      [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
     );
     return buildCalldatasBase("changeTax", [valueEncoded]);
   }
@@ -258,22 +436,6 @@ function buildCalldatas(data) {
 
 function buildCalldatasBase(functionName, args) {
   return encodeFunctionData({ abi: ispogABI, functionName, args });
-}
-
-function onWriteSpogGovernor({ calldatas, description }) {
-  const targets = [config.public.contracts.spog]; // do not change
-  const values = [0]; // do not change
-
-  return writeIGovernor({
-    address: config.contracts.governor,
-    functionName: "propose",
-    args: [targets, values, calldatas, description],
-    account: userAccount.value,
-    chainId: 11155111,
-    overrides: {
-      gasLimit: 2100000n,
-    },
-  });
 }
 
 function onBack() {
