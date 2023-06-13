@@ -70,7 +70,6 @@ function onSelect(option: OptionItem) {
 }
 
 function onOpen() {
-  console.log("onseect", isShow.value);
   isShow.value = !isShow.value;
 }
 
