@@ -6,7 +6,7 @@ export default defineConfig({
   contracts: [],
   plugins: [
     foundry({
-      artifacts: "node_modules/@mzero-labs/spog/out",
+      artifacts: "contracts/out",
       include: [
         "I**.sol/*.json",
         "ListFactory.sol/*.json",

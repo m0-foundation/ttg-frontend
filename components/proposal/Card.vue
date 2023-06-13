@@ -12,16 +12,14 @@
     <div class="markdown-body mb-6" v-html="descriptionShort"></div>
     <div class="flex justify-between uppercase">
       <NuxtLink
-        class="uppercase border-b border-black border-dashed"
+        class="uppercase border-b border-black border-dashed hover:border-0"
         :to="`/proposals/${proposal.proposalId}`"
       >
         Show Details
       </NuxtLink>
 
       <div class="flex justify-between items-center">
-        <div class="text-primary-darker text-sm mr-4">
-          {{ proposal.state }}
-        </div>
+        <ProposalStatus :version="proposal?.state" />
       </div>
     </div>
   </article>
