@@ -57,7 +57,8 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 2. `cd contracts/`
 3. `forge build`
 4. `cd ..`
-5. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
+5. then run `yarn wagmi generate`
+6. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
 
 ## Deploy SPOG to testnet use on the Dapp
 
