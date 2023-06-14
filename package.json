@@ -12,7 +12,9 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "test": "cypress run",
-    "ci": "concurrently -s last -k \"nuxt dev\" \"sleep 6 && yarn test\""
+    "ci": "concurrently -s last -k \"nuxt dev\" \"sleep 6 && yarn test\"",
+    "cypress:open": "cypress open",
+    "hardhat": "ts-node run-hardhat.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
@@ -30,6 +32,7 @@
     "hardhat": "^2.15.0",
     "nuxt": "^3.4.3",
     "prettier": "^2.8.8",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
     "vite-plugin-node-polyfills": "^0.8.2"
   },
