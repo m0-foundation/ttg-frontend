@@ -14,7 +14,7 @@ export const useWagmi = (rpc: string) => {
   const config = useRuntimeConfig();
 
   const { chains, provider } = configureChains(
-    [mainnet, sepolia, hardhat], // mainnet, goerli
+    [hardhat], // mainnet, sepolia,
     [
       jsonRpcProvider({
         rpc: () => ({
