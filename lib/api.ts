@@ -9,12 +9,7 @@ import {
   PublicClient,
 } from "viem";
 import type { Abi } from "abitype";
-import {
-  iGovernorABI,
-  readIGovernor,
-  readIspogGovernor,
-  readIVoteToken,
-} from "./sdk";
+import { iGovernorABI, readIspogGovernor, readIVoteToken } from "./sdk";
 
 export interface EventLog {
   eventName: string;
@@ -189,7 +184,7 @@ export class SPOG {
   async getProposalState(
     proposalId: string
   ): Promise<keyof typeof ProposalState> {
-    const proposalStateNumber = await readIGovernor({
+    const proposalStateNumber = await readIspogGovernor({
       address: this.config.governor as Hash,
       functionName: "state",
       args: [BigInt(proposalId)],
