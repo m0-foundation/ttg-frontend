@@ -25,7 +25,11 @@
               v-if="['changeTax'].includes(formData.proposalType)"
               class="w-full flex justify-between items-center space-x-4"
             >
-              <input v-model="formData.proposalValue" type="number" />
+              <input
+                v-model="formData.proposalValue"
+                data-test="proposalValue"
+                type="number"
+              />
               <div class="w-1/2">current: X.XX</div>
             </div>
 
@@ -35,11 +39,13 @@
             >
               <input
                 v-model="formData.proposalValue"
+                data-test="proposalValue"
                 type="number"
                 placeholder="From"
               />
               <input
                 v-model="formData.proposalValue2"
+                name="proposalValue2"
                 type="number"
                 placeholder="To"
               />
@@ -56,11 +62,13 @@
             >
               <input
                 v-model="formData.proposalValue"
+                data-test="proposalValue"
                 type="text"
                 placeholder="Address"
               />
               <input
                 v-model="formData.proposalValue2"
+                name="proposalValue2"
                 type="text"
                 placeholder="List Address"
               />
@@ -70,6 +78,7 @@
             <input
               v-else-if="'addList' === formData.proposalType"
               v-model="formData.proposalValue"
+              data-test="proposalValue"
               type="text"
               placeholder="List Name"
             />
@@ -77,6 +86,7 @@
             <input
               v-else
               v-model="formData.proposalValue"
+              data-test="proposalValue"
               type="text"
               placeholder="Address"
             />
@@ -187,7 +197,7 @@ const formData = reactive({
 });
 
 const { address: userAccount } = useAccount();
-const account = userAccount.value;
+console.log({ userAccount });
 
 const config = useRuntimeConfig();
 
@@ -228,6 +238,7 @@ function onPreview() {
 }
 
 async function writeAllowance() {
+  const account = userAccount.value;
   console.log({ account });
   // It needs approval to pay for taxes
   const allowance = await readIerc20({
@@ -263,6 +274,7 @@ async function writeAllowance() {
 }
 
 async function writeDeployList(listName) {
+  const account = userAccount.value;
   const listItems = [];
   const listSalt = random(1e10); // generate a integer from 0 to 1e10 to be used as salt since it can be repated
 
@@ -302,6 +314,7 @@ async function writeDeployList(listName) {
 }
 
 async function writeProposal(calldatas, description) {
+  const account = userAccount.value;
   const targets = [config.public.contracts.spog]; // do not change
   const values = [0]; // do not change
 
