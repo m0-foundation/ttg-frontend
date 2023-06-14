@@ -13,6 +13,7 @@ module.exports = {
     semi: "off",
     "@typescript-eslint/no-unused-vars": "warn",
     "vue/multi-word-component-names": "off",
+    "no-console": "off",
   },
-  ignorePatterns: ["node_modules*/", "e2e/", "dist/"],
+  ignorePatterns: ["node_modules*/", "dist/"],
 };
