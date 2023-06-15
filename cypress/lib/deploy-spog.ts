@@ -14,7 +14,7 @@ import valueToken from "../../contracts/out/ValueToken.sol/ValueToken.json";
 import spog from "../../contracts/out/SPOG.sol/SPOG.json";
 import { Network } from "./setup";
 
-export default async function deploy(network: Network) {
+export default async function deploySpog(network: Network) {
   console.log(network);
   const provider = new JsonRpcProvider(network.url);
   const wallet = new Wallet(network.accounts[0].privateKey, provider);
