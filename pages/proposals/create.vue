@@ -54,6 +54,7 @@
               />
               <input
                 v-model="formData.proposalValue2"
+                data-test="proposalValue2"
                 name="proposalValue2"
                 type="number"
                 placeholder="To"
