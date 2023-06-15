@@ -8,13 +8,13 @@ import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { publicProvider } from "@wagmi/core/providers/public";
 import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
 // use wagmi
-import { createClient } from "use-wagmi";
+import { createConfig } from "use-wagmi";
 
 export const useWagmi = (rpc: string) => {
   const config = useRuntimeConfig();
 
-  const { chains, provider } = configureChains(
-    [mainnet, sepolia, hardhat], // mainnet, goerli
+  const { chains, publicClient, webSocketPublicClient } = configureChains(
+    [hardhat], // mainnet, sepolia,
     [
       jsonRpcProvider({
         rpc: () => ({
@@ -22,8 +22,7 @@ export const useWagmi = (rpc: string) => {
         }),
       }),
       publicProvider(), // fallback
-    ],
-    { targetQuorum: 1 }
+    ]
   );
 
   const connectors = [
@@ -46,11 +45,13 @@ export const useWagmi = (rpc: string) => {
     }),
   ];
 
-  const client = createClient({
+  const wagmiConfig = createConfig({
     autoConnect: true,
     connectors,
-    provider,
+    publicClient,
+    webSocketPublicClient,
   });
+
   // install wagmi client as vue plugin using wrapper from 'use-wagmi'
-  return { client };
+  return { client: wagmiConfig };
 };

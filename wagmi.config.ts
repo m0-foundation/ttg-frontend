@@ -6,8 +6,12 @@ export default defineConfig({
   contracts: [],
   plugins: [
     foundry({
-      artifacts: "contracts/out",
-      include: ["I**.sol/*.json", "ListFactory.sol/*.json"],
+      project: "contracts",
+      include: [
+        "I**.sol/*.json",
+        "ListFactory.sol/*.json",
+        "DualGovernor.sol/*.json",
+      ],
     }),
     actions(),
   ],

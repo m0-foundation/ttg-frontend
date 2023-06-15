@@ -25,7 +25,11 @@
               v-if="['changeTax'].includes(formData.proposalType)"
               class="w-full flex justify-between items-center space-x-4"
             >
-              <input v-model="formData.proposalValue" type="number" />
+              <input
+                v-model="formData.proposalValue"
+                data-test="proposalValue"
+                type="number"
+              />
               <div class="w-1/2">current: X.XX</div>
             </div>
 
@@ -35,11 +39,13 @@
             >
               <input
                 v-model="formData.proposalValue"
+                data-test="proposalValue"
                 type="number"
                 placeholder="From"
               />
               <input
                 v-model="formData.proposalValue2"
+                name="proposalValue2"
                 type="number"
                 placeholder="To"
               />
@@ -56,11 +62,13 @@
             >
               <input
                 v-model="formData.proposalValue"
+                data-test="proposalValue"
                 type="text"
                 placeholder="Address"
               />
               <input
                 v-model="formData.proposalValue2"
+                name="proposalValue2"
                 type="text"
                 placeholder="List Address"
               />
@@ -70,6 +78,7 @@
             <input
               v-else-if="'addList' === formData.proposalType"
               v-model="formData.proposalValue"
+              data-test="proposalValue"
               type="text"
               placeholder="List Name"
             />
@@ -77,6 +86,7 @@
             <input
               v-else
               v-model="formData.proposalValue"
+              data-test="proposalValue"
               type="text"
               placeholder="Address"
             />
@@ -155,6 +165,7 @@ import { ref } from "vue";
 import { waitForTransaction } from "@wagmi/core";
 import { encodeFunctionData, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
+import { hardhat } from "viem/chains";
 import {
   ispogABI,
   writeIGovernor,
@@ -187,7 +198,7 @@ const formData = reactive({
 });
 
 const { address: userAccount } = useAccount();
-const account = userAccount.value;
+console.log({ userAccount });
 
 const config = useRuntimeConfig();
 
@@ -228,6 +239,7 @@ function onPreview() {
 }
 
 async function writeAllowance() {
+  const account = userAccount.value;
   console.log({ account });
   // It needs approval to pay for taxes
   const allowance = await readIerc20({
@@ -235,17 +247,17 @@ async function writeAllowance() {
     functionName: "allowance",
     args: [account, config.public.contracts.spog], // address owner, address spender
     account,
-  }).then((bigNumber) => bigNumber.toBigInt());
+  });
 
   console.log({ allowance });
 
   // TODO: allowance > tax  : check againts tax for create proposal
-  const tax = 0n;
+  const tax = 1n;
   if (allowance <= tax) {
     const { hash } = await writeIerc20({
       address: config.public.contracts.tokens.cash,
       functionName: "approve",
-      args: [config.public.contracts.spog, 100], // address spender, uint256 amount
+      args: [config.public.contracts.spog, tax * BigInt(10e18)], // address spender, uint256 amount
       account,
     });
 
@@ -256,13 +268,18 @@ async function writeAllowance() {
       hash,
     });
     // Fail tx
-    if (txReceipt.status === 0) {
+    if (txReceipt.status !== "success") {
       throw new Error("Transaction was not successful");
     }
+
+    console.log({ txReceipt });
+
+    return txReceipt;
   }
 }
 
 async function writeDeployList(listName) {
+  const account = userAccount.value;
   const listItems = [];
   const listSalt = random(1e10); // generate a integer from 0 to 1e10 to be used as salt since it can be repated
 
@@ -272,7 +289,6 @@ async function writeDeployList(listName) {
     // address _spog, string  _name, address[] memory addresses, uint256 _salt
     args: [config.public.contracts.spog, listName, listItems, listSalt],
     account,
-    chainId: 11155111,
     overrides: {
       gasLimit: 2100000n,
     },
@@ -302,6 +318,7 @@ async function writeDeployList(listName) {
 }
 
 async function writeProposal(calldatas, description) {
+  const account = userAccount.value;
   const targets = [config.public.contracts.spog]; // do not change
   const values = [0]; // do not change
 
@@ -310,7 +327,6 @@ async function writeProposal(calldatas, description) {
     functionName: "propose",
     args: [targets, values, [calldatas], description],
     account,
-    chainId: 11155111,
     overrides: {
       gasLimit: 2100000n,
     },
@@ -323,7 +339,7 @@ async function writeProposal(calldatas, description) {
     hash,
   });
   // Fail tx
-  if (txReceipt.status === 0) {
+  if (txReceipt.status !== "success") {
     throw new Error("Transaction was rejected");
   }
 

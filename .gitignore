@@ -11,3 +11,4 @@ sw.*
 cache/
 cypress/screenshots/
 cypress/videos/
+contracts/

@@ -10,7 +10,12 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
+Cypress.Commands.add("connectWallet", () => {
+  cy.contains("Connect Wallet").click();
+  cy.get("div#modal-backdrop").within(() => {
+    return cy.get("button").eq(1).click(); // injected provider wallet is the first one
+  });
+});
 //
 //
 // -- This is a child command --
