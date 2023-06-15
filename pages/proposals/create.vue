@@ -307,8 +307,6 @@ async function writeAllowance() {
       throw new Error("Transaction was not successful");
     }
 
-    console.log({ txReceipt });
-
     return txReceipt;
   }
 }
