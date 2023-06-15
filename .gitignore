@@ -8,3 +8,7 @@ node_modules
 dist
 .DS_Store
 sw.*
+cache/
+cypress/screenshots/
+cypress/videos/
+contracts/

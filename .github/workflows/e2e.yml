@@ -1,0 +1,42 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    env:
+      CI: true
+      TERM: xterm-256color
+    strategy:
+      matrix:
+        node-version: [18.x]
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.SPOG_ACTION_ACCESS }}
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      - name: Run Forge build
+        run: |
+          cd contracts/
+          forge --version
+          forge build --sizes
+        id: build
+
+      - name: Use Node.js version ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install
+      - run: cp .env.cypress .env
+      - run: yarn dev & sleep 5 && yarn test

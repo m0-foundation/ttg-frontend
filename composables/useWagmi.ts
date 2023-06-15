@@ -1,4 +1,4 @@
-import { mainnet, sepolia } from "@wagmi/core/chains";
+import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { configureChains, InjectedConnector } from "@wagmi/core";
 // connectors
 import { CoinbaseWalletConnector } from "@wagmi/core/connectors/coinbaseWallet";
@@ -8,28 +8,28 @@ import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { publicProvider } from "@wagmi/core/providers/public";
 import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
 // use wagmi
-import { createClient } from "use-wagmi";
+import { createConfig } from "use-wagmi";
 
-export const useWagmi = (rpc: string, chain = sepolia) => {
+export const useWagmi = (rpc: string) => {
   const config = useRuntimeConfig();
 
-  const { chains, provider, webSocketProvider } = configureChains(
-    [chain], // mainnet, goerli
+  const { chains, publicClient, webSocketPublicClient } = configureChains(
+    [hardhat], // mainnet, sepolia,
     [
       jsonRpcProvider({
         rpc: () => ({
           http: rpc,
-          // webSocket: TODO?
         }),
       }),
       publicProvider(), // fallback
-    ],
-    { targetQuorum: 1 }
+    ]
   );
 
   const connectors = [
     // browsers that inject ethereum such as mobile app and metamask
-    new InjectedConnector(),
+    new InjectedConnector({
+      chains,
+    }),
     new CoinbaseWalletConnector({
       chains,
       options: {
@@ -45,12 +45,13 @@ export const useWagmi = (rpc: string, chain = sepolia) => {
     }),
   ];
 
-  const client = createClient({
+  const wagmiConfig = createConfig({
     autoConnect: true,
     connectors,
-    provider,
-    // webSocketProvider, TODO?
+    publicClient,
+    webSocketPublicClient,
   });
+
   // install wagmi client as vue plugin using wrapper from 'use-wagmi'
-  return { client };
+  return { client: wagmiConfig };
 };

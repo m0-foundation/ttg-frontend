@@ -1,4 +1,15 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "types": ["cypress", "node"]
+  },
+  
+  "ts-node": {
+      "compilerOptions": {
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+      }
+  },
 }

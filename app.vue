@@ -19,8 +19,9 @@
 </template>
 
 <script lang="ts" setup>
+import { UseWagmiPlugin } from "use-wagmi";
 // chains
-import { mainnet, sepolia } from "@wagmi/core/chains";
+import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
 import { SPOG, ConfigVars } from "@/lib/api";
 console.log("app");
@@ -34,12 +35,12 @@ const { rpc } = storeToRefs(spogStore);
 function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
-  const { client: wagmiClient } = useWagmi(rpc); // TODO? support mainnet
-  nuxtApp.vueApp.use(wagmiClient);
+  const { client: wagmiClient } = useWagmi(rpc);
+  nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
 
   /* setup spog client */
   const configVars = config.contracts as ConfigVars;
-  const spogClient = new SPOG(rpc, sepolia, configVars);
+  const spogClient = new SPOG(rpc, hardhat, configVars);
   spogStore.setClient(spogClient);
   return spogClient;
 }
