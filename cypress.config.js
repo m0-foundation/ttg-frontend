@@ -8,11 +8,7 @@ export async function setupHardhatEvents(on, config) {
   const env = await setup();
 
   on("task", {
-    hardhat: () => ({
-      url: env.url,
-      chainId: env.chainId,
-      accounts: env.accounts,
-    }),
+    hardhat: () => env,
     "hardhat:reset": () => env.reset(),
   });
   // on("before:spec", () => env.reset());

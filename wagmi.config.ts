@@ -6,7 +6,7 @@ export default defineConfig({
   contracts: [],
   plugins: [
     foundry({
-      artifacts: "contracts/out",
+      project: "contracts",
       include: [
         "I**.sol/*.json",
         "ListFactory.sol/*.json",
