@@ -8,7 +8,6 @@ import {
   parseAbiItem,
   PublicClient,
 } from "viem";
-import type { Abi } from "abitype";
 import { iGovernorABI, readIspogGovernor, readIVoteToken } from "./sdk";
 
 export interface EventLog {
@@ -200,8 +199,8 @@ export class SPOG {
       args: [BigInt(proposalId)],
     });
 
-    const no = votes[0].toBigInt();
-    const yes = votes[1].toBigInt();
+    const no = votes[0];
+    const yes = votes[1];
 
     const total = yes + no || 1n;
 
@@ -259,13 +258,13 @@ export class SPOG {
       address: contractAddress,
       functionName: "startOf",
       args: [currentEpoch],
-    }).then((bigNumber) => bigNumber.toBigInt());
+    });
 
     const nextEpochAsBlockNumber = await readIspogGovernor({
       address: contractAddress,
       functionName: "startOf",
-      args: [currentEpoch.add(1)],
-    }).then((bigNumber) => bigNumber.toBigInt());
+      args: [currentEpoch + 1n],
+    });
 
     const currentEpochAsBlock = await this.client.getBlock({
       blockNumber: currentEpochAsBlockNumber,
@@ -280,12 +279,12 @@ export class SPOG {
 
     return {
       current: {
-        asNumber: Number(currentEpoch.toBigInt()),
+        asNumber: Number(currentEpoch),
         asBlockNumber: currentEpochAsBlockNumber,
         asTimestamp: currentEpochAsBlock.timestamp,
       },
       next: {
-        asNumber: Number(currentEpoch.toBigInt() + 1n),
+        asNumber: Number(currentEpoch + 1n),
         asBlockNumber: nextEpochAsBlockNumber,
         asTimestamp: nextEpochAsTimestamp,
       },
