@@ -23,14 +23,15 @@ import { UseWagmiPlugin } from "use-wagmi";
 // chains
 import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
-import { SPOG, ConfigVars } from "@/lib/api";
-console.log("app");
+import { SPOG, Config, EpochState, SpogUnmutableValues } from "@/lib/api";
 
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
 const spogStore = useSpogClientStore();
 
 const { rpc } = storeToRefs(spogStore);
+const canLoadProposals = ref(false);
+const isLoading = ref(false);
 
 function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
@@ -39,7 +40,7 @@ function onSetup(rpc: string) {
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
 
   /* setup spog client */
-  const configVars = config.contracts as ConfigVars;
+  const configVars = config.contracts as Config;
   const spogClient = new SPOG(rpc, hardhat, configVars);
   spogStore.setClient(spogClient);
   return spogClient;
@@ -47,32 +48,58 @@ function onSetup(rpc: string) {
 
 const spogClient = onSetup(rpc.value);
 console.log({ spogClient });
-/* download all proposals */
-const { isLoading } = useAsyncState(spogClient.getProposals(), 0, {
-  onSuccess: (data) => {
-    console.log("getGovernorVoteProposals", { data });
-    const proposalStore = useProposalsStore();
-    proposalStore.setProposals(data);
-  },
-  onError: (e) => {
-    console.error({ e });
-  },
-});
 
-const { isLoading: epochStateIsLoading } = useAsyncState(
-  spogClient.getEpochState(),
-  0,
+const { isLoading: spogParametersIsLoading } = useAsyncState(
+  spogClient.getContracts(),
+  {} as SpogUnmutableValues,
   {
     onSuccess: (data) => {
-      console.log("getEpochState", { data });
-      const store = useSpogStateStore();
-      store.setEpoch(data);
+      console.log("getContracts", { data });
+      const store = useSpogStore();
+      store.setContracts(data);
+      const newConfig = { contracts: data };
+      spogClient.addConfig(newConfig);
+      canLoadProposals.value = true;
     },
     onError: (e) => {
       console.error({ e });
     },
   }
 );
+
+watch(canLoadProposals, () => {
+  console.log("canLoadProposals");
+  const { isLoading: proposalsIsLoading } = useAsyncState(
+    spogClient.getProposals(),
+    [],
+    {
+      onSuccess: (data) => {
+        console.log("getGovernorVoteProposals", { data });
+        const proposalStore = useProposalsStore();
+        proposalStore.setProposals(data);
+        isLoading.value = false;
+      },
+      onError: (e) => {
+        console.error({ e });
+      },
+    }
+  );
+
+  const { isLoading: epochStateIsLoading } = useAsyncState(
+    spogClient.getEpochState(),
+    {} as EpochState,
+    {
+      onSuccess: (data) => {
+        console.log("getEpochState", { data });
+        const store = useSpogStore();
+        store.setEpoch(data);
+      },
+      onError: (e) => {
+        console.error({ e });
+      },
+    }
+  );
+});
 
 /* user has updated the rpc */
 watch(
