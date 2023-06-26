@@ -109,7 +109,7 @@ import { useAccount, useDisconnect, useBalance } from "use-wagmi";
 const isMenuOpen = ref(false);
 const config = useRuntimeConfig();
 const { address, isConnected } = useAccount();
-
+const spog = useSpogStore();
 console.log({ address, isConnected });
 
 const { disconnect } = useDisconnect();
@@ -120,7 +120,7 @@ const {
   isLoading: voteIsLoading,
 } = useBalance({
   address,
-  token: config.public.contracts.tokens.vote,
+  token: spog.contracts.vote,
   watch: true,
 });
 
@@ -130,7 +130,7 @@ const {
   isLoading: valueIsLoading,
 } = useBalance({
   address,
-  token: config.public.contracts.tokens.value,
+  token: spog.contracts.value,
   watch: true,
 });
 </script>
