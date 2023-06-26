@@ -21,8 +21,16 @@
             <label for="type-value">{{ selectedProposalType?.label }}</label>
 
             <!-- number input value -->
+
+            <!-- number input type -->
             <div
-              v-if="['changeTax'].includes(formData.proposalType)"
+              v-if="
+                [
+                  'changeTax',
+                  'updateVoteQuorumNumerator',
+                  'updateValueQuorumNumerator',
+                ].includes(formData.proposalType)
+              "
               class="w-full flex justify-between items-center space-x-4"
             >
               <input
@@ -33,8 +41,9 @@
               <div class="w-1/2">current: X.XX</div>
             </div>
 
+            <!-- numbers range input type -->
             <div
-              v-else-if="['taxRange'].includes(formData.proposalType)"
+              v-else-if="['changeTaxRange'].includes(formData.proposalType)"
               class="w-full flex justify-between items-center space-x-4"
             >
               <input
@@ -45,6 +54,7 @@
               />
               <input
                 v-model="formData.proposalValue2"
+                data-test="proposalValue2"
                 name="proposalValue2"
                 type="number"
                 placeholder="To"
@@ -52,6 +62,7 @@
               <div class="w-1/2">current: X.XX</div>
             </div>
 
+            <!-- list operations input type -->
             <div
               v-else-if="
                 ['append', 'remove', 'emergencyRemove'].includes(
@@ -75,6 +86,7 @@
               <div class="w-1/2">TAX: X.XX $CASH</div>
             </div>
 
+            <!-- text input type -->
             <input
               v-else-if="'addList' === formData.proposalType"
               v-model="formData.proposalValue"
@@ -83,6 +95,7 @@
               placeholder="List Name"
             />
 
+            <!-- address text input type -->
             <input
               v-else
               v-model="formData.proposalValue"
@@ -167,11 +180,12 @@ import { encodeFunctionData, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
 import { hardhat } from "viem/chains";
 import {
-  ispogABI,
+  dualGovernorABI,
   writeIGovernor,
   writeIerc20,
   readIerc20,
   writeListFactory,
+  ispogABI,
 } from "@/lib/sdk";
 
 /* control stepper */
@@ -204,10 +218,37 @@ const config = useRuntimeConfig();
 
 const proposalTypes = [
   {
+    value: "Change Quorums",
+    label: "Change Quorums",
+    children: [
+      {
+        value: "updateVoteQuorumNumerator",
+        label: "Vote Quorum",
+      },
+      {
+        value: "updateValueQuorumNumerator",
+        label: "Value Quorum",
+      },
+    ],
+  },
+  {
+    value: "Tax",
+    label: "Tax",
+    children: [
+      {
+        value: "changeTax",
+        label: "Change Tax",
+      },
+      {
+        value: "changeTaxRange",
+        label: "Change Tax range",
+      },
+    ],
+  },
+  {
     value: "addList",
     label: "Create a new List",
   },
-
   {
     value: "append",
     label: "Append an address to a list",
@@ -221,11 +262,6 @@ const proposalTypes = [
   {
     value: "reset",
     label: "New Governance",
-  },
-
-  {
-    value: "changeTax",
-    label: "Change tax",
   },
 ];
 
@@ -272,8 +308,6 @@ async function writeAllowance() {
       throw new Error("Transaction was not successful");
     }
 
-    console.log({ txReceipt });
-
     return txReceipt;
   }
 }
@@ -317,9 +351,16 @@ async function writeDeployList(listName) {
   return newListAddress;
 }
 
-async function writeProposal(calldatas, description) {
+async function writeProposal(calldatas, formData) {
   const account = userAccount.value;
-  const targets = [config.public.contracts.spog]; // do not change
+  const targets = [
+    "updateValueQuorumNumerator",
+    "updateVoteQuorumNumerator",
+  ].includes(formData.proposalType)
+    ? [config.public.contracts.governor] // dual governor contract as target for dual governance proposals
+    : [config.public.contracts.spog];
+
+  const description = formData.description;
   const values = [0]; // do not change
 
   const { hash } = await writeIGovernor({
@@ -407,7 +448,7 @@ async function onSubmit() {
     stepper.value.nextStep();
 
     const calldatas = buildCalldatas(formData);
-    await writeProposal(calldatas, formData.description).catch(catchErrorStep);
+    await writeProposal(calldatas, formData).catch(catchErrorStep);
 
     stepper.value.nextStep();
     stepper.value.changeCurrentStep("complete");
@@ -425,17 +466,17 @@ function buildCalldatas(formData) {
   console.log({ type, input1, input2 });
 
   if (["addList"].includes(type)) {
-    return buildCalldatasBase(type, [input1]);
+    return buildCalldatasSpog(type, [input1]);
   }
 
   if (["append", "remove"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ILIST
-    return buildCalldatasBase(type, [input1, input2]);
+    return buildCalldatasSpog(type, [input1, input2]);
   }
 
   if (["reset"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
-    return buildCalldatasBase(type, [
+    return buildCalldatasSpog(type, [
       input1,
       config.public.contracts.vault.vote,
     ]);
@@ -446,12 +487,38 @@ function buildCalldatas(formData) {
       [{ type: "uint256" }],
       [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
     );
-    return buildCalldatasBase("changeTax", [valueEncoded]);
+    return buildCalldatasSpog(type, [valueEncoded]);
+  }
+
+  if (["changeTaxRange"].includes(type)) {
+    const value1Encoded = encodeAbiParameters(
+      [{ type: "uint256" }],
+      [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
+    );
+    const value2Encoded = encodeAbiParameters(
+      [{ type: "uint256" }],
+      [BigInt(input2 * 10e18)] // tax is using 18 decimals precision
+    );
+    return buildCalldatasSpog(type, [value1Encoded, value2Encoded]);
+  }
+
+  if (
+    ["updateValueQuorumNumerator", "updateVoteQuorumNumerator"].includes(type)
+  ) {
+    const valueEncoded = encodeAbiParameters(
+      [{ type: "uint256" }],
+      [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
+    );
+    return buildCalldatasGovernor(type, [valueEncoded]);
   }
 }
 
-function buildCalldatasBase(functionName, args) {
+function buildCalldatasSpog(functionName, args) {
   return encodeFunctionData({ abi: ispogABI, functionName, args });
+}
+
+function buildCalldatasGovernor(functionName, args) {
+  return encodeFunctionData({ abi: dualGovernorABI, functionName, args });
 }
 
 function onBack() {
