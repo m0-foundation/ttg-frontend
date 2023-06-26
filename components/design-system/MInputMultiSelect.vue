@@ -8,13 +8,13 @@
       {{ selected?.label || "Select a proposal type" }}
       <span class="text-xs text-[#5d605d]">change</span>
     </button>
-    <ul v-show="isShow" class="absolute text-white pt-1 bg-grey-secondary">
+    <ul v-show="isMenuOpen" class="absolute text-white pt-1 bg-grey-secondary">
       <li v-for="opt in options" :key="opt.value">
         <button
           v-if="opt.children"
           type="button"
           class="button"
-          @click="isShowSubmenu = true"
+          @click="onShowSubmenu(opt)"
         >
           {{ opt.label }} &rsaquo;
         </button>
@@ -23,7 +23,7 @@
           {{ opt.label }}
         </button>
 
-        <ul v-show="isShowSubmenu" class="sub-menu">
+        <ul v-show="isSubmenuOpen(opt)" class="sub-menu">
           <li v-for="child in opt.children" :key="child.value">
             <button
               type="button"
@@ -58,24 +58,32 @@ const emit = defineEmits<{
 }>();
 
 const target = ref(null);
-const isShow = ref(false);
-const isShowSubmenu = ref(false);
+const isMenuOpen = ref(false);
+const selectedSubmenu = ref<object>({});
 const selected = ref();
 
 function onSelect(option: OptionItem) {
-  console.log("onSelect", { option });
   selected.value = option;
   emit("on-change", option);
   onOut();
 }
 
 function onOpen() {
-  isShow.value = !isShow.value;
+  isMenuOpen.value = !isMenuOpen.value;
 }
 
 function onOut() {
-  isShow.value = false;
-  isShowSubmenu.value = false;
+  isMenuOpen.value = false;
+  selectedSubmenu.value = {};
+}
+
+function onShowSubmenu(opt: OptionItem) {
+  selectedSubmenu.value = {}; // only one submenu can be open at a time
+  selectedSubmenu.value = { ...selectedSubmenu.value, [opt.value]: true };
+}
+
+function isSubmenuOpen(opt: OptionItem) {
+  return selectedSubmenu.value[opt.value as keyof typeof selectedSubmenu.value];
 }
 
 onClickOutside(target, onOut);
