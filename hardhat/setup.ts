@@ -9,7 +9,7 @@ import {
 import { HardhatNetworkAccountsConfig, JsonRpcServer } from "hardhat/types";
 import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
 
-import { toExternallyOwnedAccounts } from "../cypress/lib/accounts";
+import { toExternallyOwnedAccounts } from "./accounts";
 
 export interface Network {
   /** The network's JSON-RPC address. */
