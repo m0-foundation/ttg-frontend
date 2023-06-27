@@ -96,3 +96,30 @@ NETWORK_CHAIN_ID=11155111
 ```
 
 5. Finally, just start the app with `yarn dev`
+
+# Local development with hardhat
+
+In one terminal, run `ts-node run-hardhat.ts`
+
+In another terminal, run `yarn dev`
+
+Now you can run everything locally with pre-funded accounts.
+
+In metamask, import a wallet using the seed phrase
+
+```
+1. test
+2. test
+3. test
+4. test
+5. test
+6. test
+7. test
+8. test
+9. test
+10. test
+11. test
+12. junk
+```
+
+Afterward, in metamask, each time you create a new account, for up to 5 accounts, they will all have ETH, CASH, VOTE, VALUE and can participate in governance. You can switch between accounts and vote on proposals to achive a quorum
