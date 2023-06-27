@@ -123,3 +123,11 @@ In metamask, import a wallet using the seed phrase
 ```
 
 Afterward, in metamask, each time you create a new account, for up to 5 accounts, they will all have ETH, CASH, VOTE, VALUE and can participate in governance. You can switch between accounts and vote on proposals to achive a quorum
+
+### Note
+
+Each time hardhat is restarted, metamask will need to be reset
+
+Settings > Advanced > Clear activity
+
+This resets the nonce and state for the wallet
