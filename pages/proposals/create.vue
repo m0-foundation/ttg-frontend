@@ -180,8 +180,8 @@ import { encodeFunctionData, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
 import { hardhat } from "viem/chains";
 import {
-  iDualGovernorABI,
-  writeIDualGovernor,
+  ispogGovernorABI,
+  writeIspogGovernor,
   writeIerc20,
   readIerc20,
   writeListFactory,
@@ -363,7 +363,7 @@ async function writeProposal(calldatas, formData) {
   const description = formData.description;
   const values = [0]; // do not change
 
-  const { hash } = await writeIDualGovernor({
+  const { hash } = await writeIspogGovernor({
     address: config.contracts.governor,
     functionName: "propose",
     args: [targets, values, [calldatas], description],
@@ -518,7 +518,7 @@ function buildCalldatasSpog(functionName, args) {
 }
 
 function buildCalldatasGovernor(functionName, args) {
-  return encodeFunctionData({ abi: iDualGovernorABI, functionName, args });
+  return encodeFunctionData({ abi: ispogGovernorABI, functionName, args });
 }
 
 function onBack() {
