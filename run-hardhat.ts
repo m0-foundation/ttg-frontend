@@ -1,5 +1,5 @@
-import setup from "./cypress/lib/setup";
-import deploySpog from "./cypress/lib/deploy-spog";
+import setup from "./hardhat/setup";
+import deploySpog from "./hardhat/deploy-spog";
 
 async function run() {
   const env = await setup();
