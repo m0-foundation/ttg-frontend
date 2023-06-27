@@ -8,7 +8,7 @@ import {
   parseAbiItem,
   PublicClient,
 } from "viem";
-import { iGovernorABI, readIspogGovernor, readIVoteToken } from "./sdk";
+import { ispogGovernorABI, readIspogGovernor, readIVoteToken } from "./sdk";
 
 export interface EventLog {
   eventName: string;
@@ -158,7 +158,7 @@ export class SPOG {
     });
 
     const proposals = rawLogs.map((log: Log) =>
-      this.decodeProposalLog(log, iGovernorABI)
+      this.decodeProposalLog(log, ispogGovernorABI)
     );
 
     const proposalsWithState = await Promise.all(

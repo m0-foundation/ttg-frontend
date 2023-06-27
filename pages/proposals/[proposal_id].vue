@@ -155,7 +155,7 @@ function castVote(vote) {
     functionName: "castVote",
     args: [proposalId, vote], // uint256 proposalId, uint8 support
     account: userAccount.value,
-    chainId: 11155111,
+    chainId: 31337,
     overrides: {
       gasLimit: 2100000n,
     },

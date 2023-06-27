@@ -1,5 +1,5 @@
-import { Network } from "./setup";
-import deploySpog from "./deploy-spog";
+import { Network } from "../../hardhat/setup";
+import deploySpog from "../../hardhat/deploy-spog";
 
 export default async function redeploy() {
   cy.task("hardhat:reset");

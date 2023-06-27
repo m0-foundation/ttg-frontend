@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import setup from "./cypress/lib/setup";
+import setup from "./hardhat/setup";
 
 export async function setupHardhatEvents(on, config) {
   // This is necessary to reset the hardhat environment between specs.

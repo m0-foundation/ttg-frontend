@@ -8,9 +8,15 @@ export default defineConfig({
     foundry({
       project: "contracts",
       include: [
-        "I**.sol/*.json",
+        "IERC20.sol/*.json",
+        "IERC20PricelessAuction.sol/*.json",
+        "IList.sol/*.json",
+        "ISPOG.sol/*.json",
+        "ISPOGGovernor.sol/*.json",
+        "IValueToken.sol/*.json",
+        "IVault.sol/*.json",
+        "IVoteToken.sol/*.json",
         "ListFactory.sol/*.json",
-        "DualGovernor.sol/*.json",
       ],
     }),
     actions(),
