@@ -1,7 +1,11 @@
 import {
+  bytesToHex,
   Chain,
   createPublicClient,
+  decodeAbiParameters,
   decodeEventLog,
+  getFunctionSelector,
+  fromHex,
   Hash,
   http,
   Log,
@@ -35,8 +39,11 @@ export enum ProposalState {
 export type MProposalState = keyof typeof ProposalState;
 
 export interface MProposal extends EventLog {
+  [x: string]: any;
   proposer: string;
   proposalId: string;
+  proposalType: string;
+  proposalParams: any[];
   description: string;
   state?: keyof typeof ProposalState;
   timestamp: number;
@@ -95,6 +102,10 @@ export interface VoteCast {
   transactionHash?: string;
 }
 
+const functionSelectors = {
+  addList: getFunctionSelector("addList(address)"),
+};
+
 export class SPOG {
   client: PublicClient;
   config: ConfigVars;
@@ -126,6 +137,22 @@ export class SPOG {
       array.length > 0 ? array.map((v) => v.toString()) : [];
 
     if (event) {
+      const selector = bytesToHex(
+        fromHex(event.calldatas[0], "bytes").slice(0, 4)
+      );
+
+      let params: any[] = [];
+
+      let proposalType = "";
+
+      if (selector === functionSelectors.addList) {
+        proposalType = "addList";
+        params = decodeAbiParameters(
+          [{ name: "list", type: "address" }],
+          bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+        );
+      }
+
       const proposal: MProposal = {
         ...event,
         eventName,
@@ -138,6 +165,8 @@ export class SPOG {
         endBlock: Number(event.endBlock),
         startBlock: Number(event.startBlock),
         proposalId: String(event.proposalId),
+        proposalType: String(proposalType),
+        proposalParams: params,
       };
 
       return proposal;
