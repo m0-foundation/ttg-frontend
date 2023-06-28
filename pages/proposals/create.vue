@@ -247,7 +247,7 @@ const proposalTypes = [
   },
   {
     value: "addList",
-    label: "Create a new List",
+    label: "Create a new list",
   },
   {
     value: "append",
