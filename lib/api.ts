@@ -40,9 +40,11 @@ export type MProposalState = keyof typeof ProposalState;
 
 export interface MProposal extends EventLog {
   [x: string]: any;
+  isEmergency: boolean;
   proposer: string;
   proposalId: string;
   proposalType: string;
+  proposalLabel: string;
   proposalParams: any[];
   description: string;
   state?: keyof typeof ProposalState;
@@ -104,6 +106,19 @@ export interface VoteCast {
 
 const functionSelectors = {
   addList: getFunctionSelector("addList(address)"),
+  append: getFunctionSelector("append(address,address)"),
+  remove: getFunctionSelector("remove(address,address)"),
+  changeConfig: getFunctionSelector("changeConfig(bytes32,address,bytes4)"),
+  emergency: getFunctionSelector("emergency(uint8,bytes)"),
+  reset: getFunctionSelector("reset(address,address)"),
+  changeTax: getFunctionSelector("changeTax(uint256)"),
+  changeTaxRange: getFunctionSelector("changeTaxRange(uint256,uint256)"),
+  updateVoteQuorumNumerator: getFunctionSelector(
+    "updateVoteQuorumNumerator(uint256)"
+  ),
+  updateValueQuorumNumerator: getFunctionSelector(
+    "updateValueQuorumNumerator(uint256)"
+  ),
 };
 
 export class SPOG {
@@ -145,16 +160,166 @@ export class SPOG {
 
       let proposalType = "";
 
-      if (selector === functionSelectors.addList) {
-        proposalType = "addList";
-        params = decodeAbiParameters(
-          [{ name: "list", type: "address" }],
-          bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
-        );
+      let isEmergency: bool = false;
+
+      function parseEmergency(emergencyType: number, callData: bytes) {
+        if (emergencyType === 0) {
+          proposalType = "remove";
+          params = decodeAbiParameters(
+            [
+              { name: "list", type: "address" },
+              { name: "account", type: "address" },
+            ],
+            bytesToHex(fromHex(callData, "bytes").slice(4))
+          );
+        } else if (emergencyType === 1) {
+          proposalType = "append";
+          params = decodeAbiParameters(
+            [
+              { name: "list", type: "address" },
+              { name: "account", type: "address" },
+            ],
+            bytesToHex(fromHex(callData, "bytes").slice(4))
+          );
+        } else if (emergencyType === 2) {
+          proposalType = "changeConfig";
+          params = decodeAbiParameters(
+            [
+              { name: "configName", type: "bytes32" },
+              { name: "configAddress", type: "address" },
+              { name: "interfaceId", type: "bytes4" },
+            ],
+            bytesToHex(fromHex(callData, "bytes").slice(4))
+          );
+        }
+
+        return [proposalType, params];
       }
+
+      switch (selector) {
+        case functionSelectors.addList:
+          proposalType = "addList";
+          params = decodeAbiParameters(
+            [{ name: "list", type: "address" }],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.append:
+          proposalType = "append";
+          params = decodeAbiParameters(
+            [
+              { name: "list", type: "address" },
+              { name: "account", type: "address" },
+            ],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.remove:
+          proposalType = "remove";
+          params = decodeAbiParameters(
+            [
+              { name: "list", type: "address" },
+              { name: "account", type: "address" },
+            ],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.changeConfig:
+          proposalType = "changeConfig";
+          params = decodeAbiParameters(
+            [
+              { name: "configName", type: "bytes32" },
+              { name: "configAddress", type: "address" },
+              { name: "interfaceId", type: "bytes4" },
+            ],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.reset:
+          proposalType = "reset";
+          params = decodeAbiParameters(
+            [
+              { name: "newGovernor", type: "address" },
+              { name: "newVoteVault", type: "address" },
+            ],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.changeTax:
+          proposalType = "changeTax";
+          params = decodeAbiParameters(
+            [{ name: "newTax", type: "uint256" }],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.changeTaxRange:
+          proposalType = "changeTax";
+          params = decodeAbiParameters(
+            [
+              { name: "newTaxLowerBound", type: "uint256" },
+              { name: "newTaxUpperBound", type: "uint256" },
+            ],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.updateVoteQuorumNumerator:
+          proposalType = "updateVoteQuorumNumerator";
+          params = decodeAbiParameters(
+            [{ name: "newVoteQuorumNumerator", type: "uint256" }],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.updateValueQuorumNumerator:
+          proposalType = "updateValueQuorumNumerator";
+          params = decodeAbiParameters(
+            [{ name: "newValueQuorumNumerator", type: "uint256" }],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+          break;
+        case functionSelectors.emergency:
+          isEmergency = true;
+
+          params = decodeAbiParameters(
+            [
+              { name: "emergencyType", type: "uint8" },
+              { name: "callData", type: "bytes" },
+            ],
+            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+          );
+
+          [proposalType, params] = parseEmergency(params[0], params[1]);
+
+          break;
+        default:
+          break;
+      }
+
+      let proposalLabel = "";
+      if (proposalType === "addList") {
+        proposalLabel = "Add List";
+      } else if (proposalType === "changeTax") {
+        proposalLabel = "Change Tax";
+      } else if (proposalType === "changeTaxRange") {
+        proposalLabel = "Change Tax Range";
+      } else if (proposalType === "append") {
+        proposalLabel = "Append to list";
+      } else if (proposalType === "remove") {
+        proposalLabel = "Remove from list";
+      } else if (proposalType === "changeConfig") {
+        proposalLabel = "Change Config";
+      } else if (proposalType === "reset") {
+        proposalLabel = "Reset Vote Holders";
+      } else if (proposalType === "updateVoteQuorumNumerator") {
+        proposalLabel = "Update Vote Quorum";
+      } else if (proposalType === "updateValueQuorumNumerator") {
+        proposalLabel = "Update Value Quorum";
+      }
+
+      console.log(proposalType, params);
 
       const proposal: MProposal = {
         ...event,
+        isEmergency,
         eventName,
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
@@ -166,6 +331,7 @@ export class SPOG {
         startBlock: Number(event.startBlock),
         proposalId: String(event.proposalId),
         proposalType: String(proposalType),
+        proposalLabel,
         proposalParams: params,
       };
 

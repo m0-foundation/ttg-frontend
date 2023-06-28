@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-[#00664E] text-lg">
-      Technical Proposal: {{ proposalTypeText }}
+      Technical Proposal: {{ proposal.proposalLabel || proposal.proposalType }}
     </h1>
     <h2 class="text-sm pt-2 pb-6">
       Agree or deny the following incoming change
@@ -28,9 +28,4 @@ export interface ProposalProps {
 
 const props = defineProps<ProposalProps>();
 console.log(props.proposal);
-
-let proposalTypeText = "";
-if (props.proposal.proposalType === "addList") {
-  proposalTypeText = "Add List";
-}
 </script>
