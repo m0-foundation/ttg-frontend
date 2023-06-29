@@ -99,7 +99,7 @@
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
 import { keccak256, toHex } from "viem";
-import { writeIGovernor, writeIVoteToken } from "@/lib/sdk";
+import { writeIspogGovernor, writeIVoteToken } from "@/lib/sdk";
 
 definePageMeta({
   layout: "with-navbar",
@@ -150,15 +150,11 @@ function delegate() {
 }
 
 function castVote(vote) {
-  return writeIGovernor({
+  return writeIspogGovernor({
     address: spog.contracts.governor,
     functionName: "castVote",
     args: [proposalId, vote], // uint256 proposalId, uint8 support
     account: userAccount.value,
-    chainId: 11155111,
-    overrides: {
-      gasLimit: 2100000n,
-    },
   });
 }
 
@@ -169,15 +165,11 @@ function execute() {
   const targets = [config.public.contracts.spog]; // do not change
   const values = [0]; // do not change
 
-  return writeIGovernor({
+  return writeIspogGovernor({
     address: spog.contracts.governor,
     functionName: "execute",
     args: [targets, values, calldatas, hashedDescription], // (targets, values, calldatas, hashedDescription
     account: userAccount.value,
-    chainId: 11155111,
-    overrides: {
-      gasLimit: 2100000n,
-    },
   });
 }
 </script>

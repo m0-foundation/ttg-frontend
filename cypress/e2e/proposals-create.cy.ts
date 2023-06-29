@@ -1,12 +1,12 @@
 /* eslint-disable require-await */
 
-describe("Governance", async () => {
-  beforeEach(() => {
-    cy.visit("http://localhost:3000/proposals/create");
-  });
+describe("Proposals", async () => {
+  describe("As a user with $TAX", () => {
+    beforeEach(() => {
+      cy.visit("http://localhost:3000/proposals/create");
+    });
 
-  it("create proposal for type action: changeTax", () => {
-    cy.task("hardhat").then(() => {
+    it("I should be able to a create proposal for type action: changeTax", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
@@ -33,10 +33,8 @@ describe("Governance", async () => {
         cy.get(".complete").should("have.length", 3);
       });
     });
-  });
 
-  it("create proposal for type action: changeTaxRange", () => {
-    cy.task("hardhat").then(() => {
+    it("I should be able to a create proposal for type action: changeTaxRange", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
@@ -61,10 +59,8 @@ describe("Governance", async () => {
         cy.get(".complete").should("have.length", 3);
       });
     });
-  });
 
-  it("create proposal for type action: updateVoteQuorumNumerator", () => {
-    cy.task("hardhat").then(() => {
+    it("I should be able to a create proposal for type action: updateVoteQuorumNumerator", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
@@ -96,10 +92,8 @@ describe("Governance", async () => {
         cy.get(".complete").should("have.length", 3);
       });
     });
-  });
 
-  it("create proposal for type action: updateValueQuorumNumerator", () => {
-    cy.task("hardhat").then(() => {
+    it("I should be able to a create proposal for type action: updateValueQuorumNumerator", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
@@ -129,6 +123,37 @@ describe("Governance", async () => {
       cy.contains("Submit proposal").then(($el) => {
         $el.click();
         cy.get(".complete").should("have.length", 3);
+      });
+    });
+
+    it("I should be able to a create proposal for type action: addList", () => {
+      cy.contains("Select a proposal type").should("exist");
+      cy.contains("Select a proposal type").click();
+
+      cy.contains("Create a new list").should("exist");
+      cy.contains("Create a new list").click();
+
+      cy.get("input[data-test='proposalValue']").should(
+        "have.attr",
+        "type",
+        "text"
+      );
+
+      cy.get("input[data-test='proposalValue']").type("Collateral Managers");
+
+      cy.get("textarea[name='description']").type(
+        "Add the Collateral Managers list"
+      );
+
+      cy.contains("Preview proposal").should("exist");
+      cy.contains("Preview proposal").click();
+
+      cy.connectWallet();
+
+      cy.contains("Submit proposal").should("exist");
+      cy.contains("Submit proposal").then(($el) => {
+        $el.click();
+        cy.get(".complete").should("have.length", 4);
       });
     });
   });

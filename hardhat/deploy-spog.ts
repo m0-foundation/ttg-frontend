@@ -2,16 +2,16 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
 import { ContractFactory, BigNumber } from "ethers";
 
-import dualGovernor from "../../contracts/out/DualGovernor.sol/DualGovernor.json";
-import erc20Mock from "../../contracts/out/ERC20Mock.sol/ERC20Mock.json";
-import erc20PricelessAuction from "../../contracts/out/ERC20PricelessAuction.sol/ERC20PricelessAuction.json";
-import listFactory from "../../contracts/out/ListFactory.sol/ListFactory.json";
-import valueVault from "../../contracts/out/ValueVault.sol/ValueVault.json";
-import voteVault from "../../contracts/out/VoteVault.sol/VoteVault.json";
-import voteToken from "../../contracts/out/VoteToken.sol/VoteToken.json";
-import valueToken from "../../contracts/out/ValueToken.sol/ValueToken.json";
+import dualGovernor from "../contracts/out/DualGovernor.sol/DualGovernor.json";
+import erc20Mock from "../contracts/out/ERC20Mock.sol/ERC20Mock.json";
+import erc20PricelessAuction from "../contracts/out/ERC20PricelessAuction.sol/ERC20PricelessAuction.json";
+import listFactory from "../contracts/out/ListFactory.sol/ListFactory.json";
+import valueVault from "../contracts/out/ValueVault.sol/ValueVault.json";
+import voteVault from "../contracts/out/VoteVault.sol/VoteVault.json";
+import voteToken from "../contracts/out/VoteToken.sol/VoteToken.json";
+import valueToken from "../contracts/out/ValueToken.sol/ValueToken.json";
 
-import spog from "../../contracts/out/SPOG.sol/SPOG.json";
+import spog from "../contracts/out/SPOG.sol/SPOG.json";
 import { Network } from "./setup";
 import multicall from "./multicall/out/Multicall3.sol/Multicall3.json";
 

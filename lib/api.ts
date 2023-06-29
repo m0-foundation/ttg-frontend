@@ -9,12 +9,11 @@ import {
   parseAbiItem,
   PublicClient,
 } from "viem";
+
 import {
-  iGovernorABI,
-  iDualGovernorABI,
+  ispogGovernorABI,
   readIspogGovernor,
   readIVoteToken,
-  readIspog,
   ispogABI,
 } from "./sdk";
 
@@ -180,7 +179,7 @@ export class SPOG {
     });
 
     const proposals = rawLogs.map((log: Log) =>
-      this.decodeProposalLog(log, iGovernorABI)
+      this.decodeProposalLog(log, ispogGovernorABI)
     );
 
     const proposalsWithState = await Promise.all(
@@ -372,7 +371,7 @@ export class SPOG {
       ["value", "vote"],
       {
         address: spogContracts.governor as Hash,
-        abi: iDualGovernorABI,
+        abi: ispogGovernorABI,
       }
     );
     return { ...spogContracts, ...governorContracts };
@@ -391,7 +390,7 @@ export class SPOG {
   getGovernorParameters<T>(parameters: string[]): Promise<T> {
     const contract = {
       address: this.config.contracts!.governor as Hash,
-      abi: iDualGovernorABI,
+      abi: ispogGovernorABI,
     };
 
     return this.getParameters<T>(parameters, contract);

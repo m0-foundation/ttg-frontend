@@ -178,10 +178,9 @@ import { ref } from "vue";
 import { waitForTransaction } from "@wagmi/core";
 import { encodeFunctionData, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
-import { hardhat } from "viem/chains";
 import {
-  dualGovernorABI,
-  writeIGovernor,
+  ispogGovernorABI,
+  writeIspogGovernor,
   writeIerc20,
   readIerc20,
   writeListFactory,
@@ -248,7 +247,7 @@ const proposalTypes = [
   },
   {
     value: "addList",
-    label: "Create a new List",
+    label: "Create a new list",
   },
   {
     value: "append",
@@ -364,7 +363,7 @@ async function writeProposal(calldatas, formData) {
   const description = formData.description;
   const values = [0]; // do not change
 
-  const { hash } = await writeIGovernor({
+  const { hash } = await writeIspogGovernor({
     address: spog.contracts.governor,
     functionName: "propose",
     args: [targets, values, [calldatas], description],
@@ -516,7 +515,7 @@ function buildCalldatasSpog(functionName, args) {
 }
 
 function buildCalldatasGovernor(functionName, args) {
-  return encodeFunctionData({ abi: dualGovernorABI, functionName, args });
+  return encodeFunctionData({ abi: ispogGovernorABI, functionName, args });
 }
 
 function onBack() {
