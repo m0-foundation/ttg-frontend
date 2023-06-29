@@ -85,6 +85,7 @@
               />
 
               <input
+                v-show="['Change Config'].includes(selectedProposalType.label)"
                 v-model="formData.proposalValue3"
                 name="proposalValue3"
                 type="text"
