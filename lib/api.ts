@@ -295,25 +295,19 @@ export class SPOG {
       }
 
       let proposalLabel = "";
-      if (proposalType === "addList") {
-        proposalLabel = "Add List";
-      } else if (proposalType === "changeTax") {
-        proposalLabel = "Change Tax";
-      } else if (proposalType === "changeTaxRange") {
-        proposalLabel = "Change Tax Range";
-      } else if (proposalType === "append") {
-        proposalLabel = "Append to list";
-      } else if (proposalType === "remove") {
-        proposalLabel = "Remove from list";
-      } else if (proposalType === "changeConfig") {
-        proposalLabel = "Change Config";
-      } else if (proposalType === "reset") {
-        proposalLabel = "Reset Vote Holders";
-      } else if (proposalType === "updateVoteQuorumNumerator") {
-        proposalLabel = "Update Vote Quorum";
-      } else if (proposalType === "updateValueQuorumNumerator") {
-        proposalLabel = "Update Value Quorum";
+      const proposalLabels ={
+        "addList": "Add List",
+        "changeTax": "Change Tax",
+        "changeTaxRange": "Change Tax Range",
+        "append": "Append to list",
+        "remove": "Remove from list",
+        "changeConfig": "Change Config",
+        "reset": "Reset Vote Holders",
+        "updateVoteQuorumNumerator": "Update Vote Quorum",
+        "updateValueQuorumNumerator": "Update Value Quorum",
       }
+
+      const proposalLabel = proposalLabels[proposalType];
 
       console.log(proposalType, params);
 
