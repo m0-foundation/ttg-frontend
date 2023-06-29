@@ -10,6 +10,8 @@ import {
   PublicClient,
 } from "viem";
 
+import { readContract } from "@wagmi/core";
+
 import {
   ispogGovernorABI,
   readIspogGovernor,
@@ -106,7 +108,6 @@ export interface SpogUnmutableValues {
 export type SpogValues = SpogUnmutableValues | SpogMutableValues;
 
 export interface Config {
-  multicall: string;
   deployedBlock: BigInt | string;
   spog: string;
   contracts?: SpogUnmutableValues;
@@ -324,15 +325,19 @@ export class SPOG {
     parameters: string[],
     contract: { address: Hash; abi: Abi }
   ): Promise<T> {
-    const contractCalls = parameters.map((name) => ({
-      ...contract,
-      functionName: name,
-    }));
+    const contractCalls = parameters.map((functionName) => {
+      return readContract({
+        abi: contract.abi as Abi,
+        address: contract.address as Hash,
+        functionName,
+      });
+    });
 
     const decodeResults = (results: any[]): T => {
+      console.log(results);
       const keys = results.map((r, i) => {
         const key = parameters[i];
-        return { [key]: r.result };
+        return { [key]: r };
       });
 
       const params = keys.reduce((acc, cur) => {
@@ -342,12 +347,7 @@ export class SPOG {
       return params as T;
     };
 
-    return this.client
-      .multicall({
-        multicallAddress: this.config.multicall as Hash,
-        contracts: contractCalls,
-      })
-      .then(decodeResults);
+    return Promise.all(contractCalls).then(decodeResults);
   }
 
   getSpogParameters<T>(parameters: string[]): Promise<T> {
