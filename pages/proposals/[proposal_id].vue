@@ -9,6 +9,8 @@
             Proposed by <u>{{ proposal?.proposer }}</u>
           </div>
           <div class="markdown-body mb-6" v-html="html"></div>
+
+          <ProposalTechnical :proposal="proposal" />
           <!--  -->
           <div
             v-if="proposal?.state === 'Active' && hasDelegator"
