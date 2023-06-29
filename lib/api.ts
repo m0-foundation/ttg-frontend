@@ -39,7 +39,6 @@ export enum ProposalState {
 export type MProposalState = keyof typeof ProposalState;
 
 export interface MProposal extends EventLog {
-  [x: string]: any;
   isEmergency: boolean;
   proposer: string;
   proposalId: string;
