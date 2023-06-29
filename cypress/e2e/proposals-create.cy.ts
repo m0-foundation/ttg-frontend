@@ -126,6 +126,44 @@ describe("Proposals", async () => {
       });
     });
 
+    it("I should be able to a create an Emergency proposal for type action: Append", () => {
+      cy.contains("Select a proposal type").should("exist");
+      cy.contains("Select a proposal type").click();
+
+      cy.contains("Emergency").should("exist");
+      cy.contains("Emergency").click();
+
+      cy.contains("Append").should("exist");
+      cy.contains("Append").click();
+
+      cy.get("input[data-test='proposalValue']").should(
+        "have.attr",
+        "type",
+        "text"
+      );
+
+      cy.get("input[data-test='proposalValue']").type("configName");
+      cy.get("input[data-test='proposalValue2']").type(
+        "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      );
+      cy.get("input[data-test='proposalValue3']").type("0x01ffc9a7");
+
+      cy.get("textarea[name='description']").type(
+        "Emergency change configName to 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0 0x01ffc9a7"
+      );
+
+      cy.contains("Preview proposal").should("exist");
+      cy.contains("Preview proposal").click();
+
+      cy.connectWallet();
+
+      cy.contains("Submit proposal").should("exist");
+      cy.contains("Submit proposal").then(($el) => {
+        $el.click();
+        cy.get(".complete").should("have.length", 3);
+      });
+    });
+
     it("I should be able to a create proposal for type action: addList", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
