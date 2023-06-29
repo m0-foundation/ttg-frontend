@@ -220,7 +220,6 @@ const formData = reactive({
 });
 
 const { address: userAccount } = useAccount();
-console.log({ userAccount });
 
 const config = useRuntimeConfig();
 const spog = useSpogStore();
@@ -485,6 +484,8 @@ async function onSubmit() {
 
     stepper.value.nextStep();
     stepper.value.changeCurrentStep("complete");
+
+    return navigateTo("/proposals/active");
   } catch (error) {
     console.error({ error });
   }
