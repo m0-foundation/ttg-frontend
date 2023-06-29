@@ -346,7 +346,7 @@ export class SPOG {
         proposalId: String(event.proposalId),
         proposalType: String(proposalType),
         proposalLabel,
-        proposalParams: params,
+        proposalParams: toString(params),
       };
 
       return proposal;
