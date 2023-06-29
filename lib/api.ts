@@ -103,7 +103,7 @@ export interface SpogMutableValues {
   inflator: BigInt;
 }
 
-export interface SpogUnmutableValues {
+export interface SpogImmutableValues {
   cash?: string;
   governor?: string;
   valueVault?: string;
@@ -112,12 +112,12 @@ export interface SpogUnmutableValues {
   value?: string;
 }
 
-export type SpogValues = SpogUnmutableValues | SpogMutableValues;
+export type SpogValues = SpogImmutableValues | SpogMutableValues;
 
 export interface Config {
   deployedBlock: BigInt | string;
   spog: string;
-  contracts?: SpogUnmutableValues;
+  contracts?: SpogImmutableValues;
 }
 
 const functionSelectors = {
@@ -546,15 +546,15 @@ export class SPOG {
     return this.getParameters<T>(parameters, contract);
   }
 
-  async getContracts(): Promise<SpogUnmutableValues> {
-    const spogContracts = await this.getSpogParameters<SpogUnmutableValues>([
+  async getContracts(): Promise<SpogImmutableValues> {
+    const spogContracts = await this.getSpogParameters<SpogImmutableValues>([
       "cash",
       "governor",
       "valueVault",
       "voteVault",
     ]);
 
-    const governorContracts = await this.getParameters<SpogUnmutableValues>(
+    const governorContracts = await this.getParameters<SpogImmutableValues>(
       ["value", "vote"],
       {
         address: spogContracts.governor as Hash,
@@ -583,7 +583,7 @@ export class SPOG {
     return this.getParameters<T>(parameters, contract);
   }
 
-  getGovernorContracts(): Promise<Partial<SpogUnmutableValues>> {
-    return this.getGovernorParameters<SpogUnmutableValues>(["value", "vote"]);
+  getGovernorContracts(): Promise<Partial<SpogImmutableValues>> {
+    return this.getGovernorParameters<SpogImmutableValues>(["value", "vote"]);
   }
 }
