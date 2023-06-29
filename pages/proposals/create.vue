@@ -89,7 +89,7 @@
                 v-model="formData.proposalValue3"
                 name="proposalValue3"
                 type="text"
-                placeholder="interfaceId"
+                placeholder="Interface ID"
               />
               <div class="w-1/2">TAX: X.XX $CASH</div>
             </div>
