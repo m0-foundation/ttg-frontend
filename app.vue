@@ -23,7 +23,7 @@ import { UseWagmiPlugin } from "use-wagmi";
 // chains
 import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
-import { SPOG, Config, EpochState, SpogUnmutableValues } from "@/lib/api";
+import { SPOG, Config, EpochState, SpogImmutableValues } from "@/lib/api";
 
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
@@ -51,7 +51,7 @@ console.log({ spogClient });
 
 const { isLoading: spogParametersIsLoading } = useAsyncState(
   spogClient.getContracts(),
-  {} as SpogUnmutableValues,
+  {} as SpogImmutableValues,
   {
     onSuccess: (data) => {
       console.log("getContracts", { data });

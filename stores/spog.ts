@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
-import { EpochState, SpogUnmutableValues, SpogMutableValues } from "@/lib/api";
+import { EpochState, SpogImmutableValues, SpogMutableValues } from "@/lib/api";
 
 export const useSpogStore = defineStore("spog", {
   state: () => ({
     epoch: {} as EpochState,
-    contracts: {} as SpogUnmutableValues,
+    contracts: {} as SpogImmutableValues,
     values: {} as SpogMutableValues,
   }),
 
@@ -16,7 +16,7 @@ export const useSpogStore = defineStore("spog", {
     setEpoch(epoch: EpochState) {
       this.epoch = epoch;
     },
-    setContracts(params: SpogUnmutableValues) {
+    setContracts(params: SpogImmutableValues) {
       this.contracts = params;
     },
     setValues(params: SpogMutableValues) {
