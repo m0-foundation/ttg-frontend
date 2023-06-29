@@ -1,4 +1,5 @@
 import {
+  Abi,
   bytesToHex,
   Chain,
   createPublicClient,
@@ -12,7 +13,15 @@ import {
   parseAbiItem,
   PublicClient,
 } from "viem";
-import { ispogGovernorABI, readIspogGovernor, readIVoteToken } from "./sdk";
+
+import { readContract } from "@wagmi/core";
+
+import {
+  ispogGovernorABI,
+  readIspogGovernor,
+  readIVoteToken,
+  ispogABI,
+} from "./sdk";
 
 export interface EventLog {
   eventName: string;
@@ -48,23 +57,6 @@ export interface MProposal extends EventLog {
   description: string;
   state?: keyof typeof ProposalState;
   timestamp: number;
-}
-
-export interface ConfigVars {
-  deployedBlock: BigInt;
-  spog: string;
-  governor: string;
-  vault: {
-    cash?: string;
-    vault?: string;
-  };
-  tokens: {
-    cash?: string;
-    vault?: string;
-    vote?: string;
-    value?: string;
-    abc?: string;
-  };
 }
 
 export interface ProposalVotesState {
@@ -103,6 +95,31 @@ export interface VoteCast {
   transactionHash?: string;
 }
 
+export interface SpogMutableValues {
+  valueFixedInflation: BigInt;
+  tax: BigInt;
+  taxLowerBound: BigInt;
+  taxUpperBound: BigInt;
+  inflator: BigInt;
+}
+
+export interface SpogImmutableValues {
+  cash?: string;
+  governor?: string;
+  valueVault?: string;
+  voteVault?: string;
+  vote?: string;
+  value?: string;
+}
+
+export type SpogValues = SpogImmutableValues | SpogMutableValues;
+
+export interface Config {
+  deployedBlock: BigInt | string;
+  spog: string;
+  contracts?: SpogImmutableValues;
+}
+
 const functionSelectors = {
   addList: getFunctionSelector("addList(address)"),
   append: getFunctionSelector("append(address,address)"),
@@ -122,11 +139,11 @@ const functionSelectors = {
 
 export class SPOG {
   client: PublicClient;
-  config: ConfigVars;
+  config: Config;
   chain: Chain;
   rpcUrl: string;
 
-  constructor(rpcUrl: string, chain: Chain, config: ConfigVars) {
+  constructor(rpcUrl: string, chain: Chain, config: Config) {
     this.client = createPublicClient({ chain, transport: http(rpcUrl) });
     this.config = config;
     this.chain = chain;
@@ -138,6 +155,10 @@ export class SPOG {
       chain: this.chain,
       transport: http(rpcUrl),
     });
+  }
+
+  addConfig(config: Partial<Config>): void {
+    this.config = { ...this.config, ...config };
   }
 
   decodeProposalLog(log: Log, abi: object): MProposal {
@@ -159,9 +180,9 @@ export class SPOG {
 
       let proposalType = "";
 
-      let isEmergency: bool = false;
+      let isEmergency = false;
 
-      function parseEmergency(emergencyType: number, callData: bytes) {
+      function parseEmergency(emergencyType: number, callData: Hash) {
         if (emergencyType === 0) {
           proposalType = "remove";
           params = decodeAbiParameters(
@@ -293,19 +314,20 @@ export class SPOG {
           break;
       }
 
-      const proposalLabels ={
-        "addList": "Add List",
-        "changeTax": "Change Tax",
-        "changeTaxRange": "Change Tax Range",
-        "append": "Append to list",
-        "remove": "Remove from list",
-        "changeConfig": "Change Config",
-        "reset": "Reset Vote Holders",
-        "updateVoteQuorumNumerator": "Update Vote Quorum",
-        "updateValueQuorumNumerator": "Update Value Quorum",
-      }
+      const proposalLabels = {
+        addList: "Add List",
+        changeTax: "Change Tax",
+        changeTaxRange: "Change Tax Range",
+        append: "Append to list",
+        remove: "Remove from list",
+        changeConfig: "Change Config",
+        reset: "Reset Vote Holders",
+        updateVoteQuorumNumerator: "Update Vote Quorum",
+        updateValueQuorumNumerator: "Update Value Quorum",
+      };
 
-      const proposalLabel = proposalLabels[proposalType];
+      const proposalLabel =
+        proposalLabels[proposalType as keyof typeof proposalLabels];
 
       console.log(proposalType, params);
 
@@ -337,7 +359,7 @@ export class SPOG {
     const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
 
     const rawLogs = await this.client.getLogs({
-      address: this.config.governor as Hash,
+      address: this.config.contracts!.governor as Hash,
       fromBlock: deployedBlock,
       event: parseAbiItem(
         "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 startBlock, uint256 endBlock, string description)"
@@ -371,7 +393,7 @@ export class SPOG {
     proposalId: string
   ): Promise<keyof typeof ProposalState> {
     const proposalStateNumber = await readIspogGovernor({
-      address: this.config.governor as Hash,
+      address: this.config.contracts!.governor as Hash,
       functionName: "state",
       args: [BigInt(proposalId)],
     });
@@ -381,7 +403,7 @@ export class SPOG {
 
   async getProposalVotes(proposalId: string): Promise<ProposalVotesState> {
     const votes = await readIspogGovernor({
-      address: this.config.governor as Hash,
+      address: this.config.contracts!.governor as Hash,
       functionName: "proposalVotes",
       args: [BigInt(proposalId)],
     });
@@ -415,7 +437,7 @@ export class SPOG {
     const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
 
     const rawLogs = await this.client.getLogs({
-      address: this.config.governor as Hash,
+      address: this.config.contracts!.governor as Hash,
       fromBlock: deployedBlock,
       event: parseAbiItem(
         "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
@@ -435,7 +457,7 @@ export class SPOG {
   }
 
   async getEpochState(): Promise<EpochState> {
-    const contractAddress = this.config.governor as Hash;
+    const contractAddress = this.config.contracts!.governor as Hash;
     const currentEpoch = await readIspogGovernor({
       address: contractAddress,
       functionName: "currentEpoch",
@@ -480,9 +502,88 @@ export class SPOG {
 
   getVoteDelegatorFrom(account: Hash): Promise<Hash> {
     return readIVoteToken({
-      address: this.config.tokens.vote as Hash,
+      address: this.config.contracts!.vote as Hash,
       functionName: "delegates",
       args: [account],
     });
+  }
+
+  getParameters<T>(
+    parameters: string[],
+    contract: { address: Hash; abi: Abi }
+  ): Promise<T> {
+    const contractCalls = parameters.map((functionName) => {
+      return readContract({
+        abi: contract.abi as Abi,
+        address: contract.address as Hash,
+        functionName,
+      });
+    });
+
+    const decodeResults = (results: any[]): T => {
+      console.log(results);
+      const keys = results.map((r, i) => {
+        const key = parameters[i];
+        return { [key]: r };
+      });
+
+      const params = keys.reduce((acc, cur) => {
+        return { ...acc, ...cur };
+      }, {});
+
+      return params as T;
+    };
+
+    return Promise.all(contractCalls).then(decodeResults);
+  }
+
+  getSpogParameters<T>(parameters: string[]): Promise<T> {
+    const contract = {
+      address: this.config.spog as Hash,
+      abi: ispogABI,
+    };
+
+    return this.getParameters<T>(parameters, contract);
+  }
+
+  async getContracts(): Promise<SpogImmutableValues> {
+    const spogContracts = await this.getSpogParameters<SpogImmutableValues>([
+      "cash",
+      "governor",
+      "valueVault",
+      "voteVault",
+    ]);
+
+    const governorContracts = await this.getParameters<SpogImmutableValues>(
+      ["value", "vote"],
+      {
+        address: spogContracts.governor as Hash,
+        abi: ispogGovernorABI,
+      }
+    );
+    return { ...spogContracts, ...governorContracts };
+  }
+
+  getSpogValues(): Promise<SpogMutableValues> {
+    return this.getSpogParameters<SpogMutableValues>([
+      "valueFixedInflation",
+      "tax",
+      "inflator",
+      "taxLowerBound",
+      "taxUpperBound",
+    ]);
+  }
+
+  getGovernorParameters<T>(parameters: string[]): Promise<T> {
+    const contract = {
+      address: this.config.contracts!.governor as Hash,
+      abi: ispogGovernorABI,
+    };
+
+    return this.getParameters<T>(parameters, contract);
+  }
+
+  getGovernorContracts(): Promise<Partial<SpogImmutableValues>> {
+    return this.getGovernorParameters<SpogImmutableValues>(["value", "vote"]);
   }
 }

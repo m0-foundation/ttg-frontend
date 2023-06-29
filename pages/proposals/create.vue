@@ -178,7 +178,6 @@ import { ref } from "vue";
 import { waitForTransaction } from "@wagmi/core";
 import { encodeFunctionData, encodeAbiParameters } from "viem";
 import { useAccount } from "use-wagmi";
-import { hardhat } from "viem/chains";
 import {
   ispogGovernorABI,
   writeIspogGovernor,
@@ -215,6 +214,7 @@ const { address: userAccount } = useAccount();
 console.log({ userAccount });
 
 const config = useRuntimeConfig();
+const spog = useSpogStore();
 
 const proposalTypes = [
   {
@@ -279,7 +279,7 @@ async function writeAllowance() {
   console.log({ account });
   // It needs approval to pay for taxes
   const allowance = await readIerc20({
-    address: config.public.contracts.tokens.cash,
+    address: spog.contracts.cash,
     functionName: "allowance",
     args: [account, config.public.contracts.spog], // address owner, address spender
     account,
@@ -291,7 +291,7 @@ async function writeAllowance() {
   const tax = 1n;
   if (allowance <= tax) {
     const { hash } = await writeIerc20({
-      address: config.public.contracts.tokens.cash,
+      address: spog.contracts.cash,
       functionName: "approve",
       args: [config.public.contracts.spog, tax * BigInt(10e18)], // address spender, uint256 amount
       account,
@@ -357,14 +357,14 @@ async function writeProposal(calldatas, formData) {
     "updateValueQuorumNumerator",
     "updateVoteQuorumNumerator",
   ].includes(formData.proposalType)
-    ? [config.public.contracts.governor] // dual governor contract as target for dual governance proposals
+    ? [spog.contracts.governor] // dual governor contract as target for dual governance proposals
     : [config.public.contracts.spog];
 
   const description = formData.description;
   const values = [0]; // do not change
 
   const { hash } = await writeIspogGovernor({
-    address: config.contracts.governor,
+    address: spog.contracts.governor,
     functionName: "propose",
     args: [targets, values, [calldatas], description],
     account,
@@ -476,10 +476,7 @@ function buildCalldatas(formData) {
 
   if (["reset"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
-    return buildCalldatasSpog(type, [
-      input1,
-      config.public.contracts.vault.vote,
-    ]);
+    return buildCalldatasSpog(type, [input1, spog.contracts.voteVault]);
   }
 
   if (["changeTax"].includes(type)) {

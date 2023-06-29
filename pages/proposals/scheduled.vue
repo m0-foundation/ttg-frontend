@@ -24,7 +24,7 @@ definePageMeta({
 });
 
 const proposalsStore = useProposalsStore();
-const spogStateStore = useSpogStateStore();
+const spogStateStore = useSpogStore();
 
 const { getProposalsByState } = storeToRefs(proposalsStore);
 const { epoch } = storeToRefs(spogStateStore);

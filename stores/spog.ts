@@ -1,13 +1,11 @@
 import { defineStore } from "pinia";
-import _ from "lodash";
-import { EpochState } from "@/lib/api";
+import { EpochState, SpogImmutableValues, SpogMutableValues } from "@/lib/api";
 
-export const useSpogStateStore = defineStore("spog", {
+export const useSpogStore = defineStore("spog", {
   state: () => ({
     epoch: {} as EpochState,
-    // tax
-    // cash address
-    // inflator rate
+    contracts: {} as SpogImmutableValues,
+    values: {} as SpogMutableValues,
   }),
 
   getters: {
@@ -17,6 +15,12 @@ export const useSpogStateStore = defineStore("spog", {
   actions: {
     setEpoch(epoch: EpochState) {
       this.epoch = epoch;
+    },
+    setContracts(params: SpogImmutableValues) {
+      this.contracts = params;
+    },
+    setValues(params: SpogMutableValues) {
+      this.values = params;
     },
   },
 });

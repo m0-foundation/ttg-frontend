@@ -117,8 +117,8 @@ const { html } = useParsedDescription(proposal.description);
 const config = useRuntimeConfig();
 const { address: userAccount } = useAccount();
 const { client } = useSpogClientStore();
-const spogStateStore = useSpogStateStore();
-const { epoch } = storeToRefs(spogStateStore);
+const spog = useSpogStore();
+const { epoch } = storeToRefs(spog);
 
 const {
   state: votes,
@@ -145,7 +145,7 @@ function delegate() {
   // no delegate
 
   return writeIVoteToken({
-    address: config.public.contracts.tokens.vote,
+    address: spog.contracts.vote,
     functionName: "delegate",
     args: [userAccount.value], // self delegate
   });
@@ -153,7 +153,7 @@ function delegate() {
 
 function castVote(vote) {
   return writeIspogGovernor({
-    address: config.contracts.governor,
+    address: spog.contracts.governor,
     functionName: "castVote",
     args: [proposalId, vote], // uint256 proposalId, uint8 support
     account: userAccount.value,
@@ -168,7 +168,7 @@ function execute() {
   const values = [0]; // do not change
 
   return writeIspogGovernor({
-    address: config.contracts.governor,
+    address: spog.contracts.governor,
     functionName: "execute",
     args: [targets, values, calldatas, hashedDescription], // (targets, values, calldatas, hashedDescription
     account: userAccount.value,
