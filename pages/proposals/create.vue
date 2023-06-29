@@ -65,7 +65,7 @@
             <!-- list operations input type -->
             <div
               v-else-if="
-                ['append', 'remove', 'emergencyRemove'].includes(
+                ['append', 'remove', 'emergency'].includes(
                   formData.proposalType
                 )
               "
@@ -82,6 +82,13 @@
                 name="proposalValue2"
                 type="text"
                 placeholder="List Address"
+              />
+
+              <input
+                v-model="formData.proposalValue3"
+                name="proposalValue3"
+                type="text"
+                placeholder="interfaceId"
               />
               <div class="w-1/2">TAX: X.XX $CASH</div>
             </div>
@@ -207,6 +214,8 @@ const isWritting = ref(false);
 const formData = reactive({
   proposalType: null,
   proposalValue: null,
+  proposalValue2: null,
+  proposalValu3: null,
   description: null,
 });
 
@@ -232,7 +241,7 @@ const proposalTypes = [
     ],
   },
   {
-    value: "Tax",
+    value: "tax",
     label: "Tax",
     children: [
       {
@@ -245,23 +254,47 @@ const proposalTypes = [
       },
     ],
   },
+
   {
-    value: "addList",
-    label: "Create a new list",
-  },
-  {
-    value: "append",
-    label: "Append an address to a list",
+    value: "list",
+    label: "List",
+    children: [
+      {
+        value: "addList",
+        label: "Create a new list",
+      },
+      {
+        value: "append",
+        label: "Append to a list",
+      },
+      {
+        value: "remove",
+        label: "Remove from a list",
+      },
+    ],
   },
 
   {
-    value: "remove",
-    label: "Remove an address from a list",
-  },
-
-  {
-    value: "reset",
-    label: "New Governance",
+    value: "emergency",
+    label: "Emergency",
+    children: [
+      {
+        value: "emergency",
+        label: "Append",
+      },
+      {
+        value: "emergency",
+        label: "Remove",
+      },
+      {
+        value: "emergency",
+        label: "Change Config",
+      },
+      {
+        value: "reset",
+        label: "New Governance",
+      },
+    ],
   },
 ];
 
@@ -462,8 +495,9 @@ function buildCalldatas(formData) {
     proposalType: type,
     proposalValue: input1,
     proposalValue2: input2,
+    proposalValue3: input3,
   } = formData;
-  console.log({ type, input1, input2 });
+  console.log({ type, input1, input2, input3 });
 
   if (["addList"].includes(type)) {
     return buildCalldatasSpog(type, [input1]);
@@ -507,6 +541,34 @@ function buildCalldatas(formData) {
       [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
     );
     return buildCalldatasGovernor(type, [valueEncoded]);
+  }
+
+  if (["emergency"].includes(type)) {
+    const emergencyTypesMap = {
+      Append: 0,
+      Remove: 1,
+      "Change Config": 2,
+    };
+
+    const emergencyType = emergencyTypesMap[selectedProposalType.value.label];
+
+    const valueEncoded = encodeAbiParameters(
+      [{ type: "uint8" }],
+      [BigInt(emergencyType)]
+    );
+
+    const valueEncoded2 =
+      emergencyType === emergencyTypesMap.ChangeConfig
+        ? encodeAbiParameters(
+            [{ type: "string" }, { type: "string" }, { type: "string" }],
+            [input1, input2, input3] // configName, configAddress, interfaceId
+          )
+        : encodeAbiParameters(
+            [{ type: "string" }, { type: "string" }],
+            [input1, input2] // list address, value
+          );
+
+    return buildCalldatasSpog(type, [valueEncoded, valueEncoded2]);
   }
 }
 
