@@ -1,20 +1,39 @@
 <template>
-  <LayoutPage>
-    <div v-if="isLoading">Loading...</div>
+  <div v-if="isLoading">
+    <LayoutPage>Loading... </LayoutPage>
+  </div>
 
-    <div v-else>
+  <div v-else>
+    <div v-show="emergencyProposals" class="p-8 bg-[#2A2D2A] mb-6">
+      <MTextLoop
+        class="text-white bg-[#CC0000] text-xs"
+        text="EMERGENCY_VOTING"
+      />
+      <div class="flex justify-between uppercase text-xs mb-6">
+        <div v-for="ep in emergencyProposals" :key="ep.proposalId">
+          <ProposalCard :proposal="ep" />
+        </div>
+      </div>
+    </div>
+
+    <LayoutPage>
       <div class="flex justify-between uppercase text-xs mb-6">
         <div class="text-grey-primary">
           Voting cycle: {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
         </div>
         <div>ENDS {{ timeLeft }}</div>
       </div>
+
       <div v-if="!proposals || !proposals.length">No Active proposals.</div>
-      <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
+      <div
+        v-for="proposal in nonEmergencyProposals"
+        v-else
+        :key="proposal.proposalId"
+      >
         <ProposalCard :proposal="proposal" />
       </div>
-    </div>
-  </LayoutPage>
+    </LayoutPage>
+  </div>
 </template>
 
 <script setup>
@@ -31,6 +50,14 @@ const { getProposalsByState } = storeToRefs(proposalsStore);
 const { epoch } = storeToRefs(spogStateStore);
 
 const proposals = getProposalsByState.value("Active");
+
+const nonEmergencyProposals = computed(() => {
+  return proposals.filter((p) => !p.isEmergency);
+});
+
+const emergencyProposals = computed(() => {
+  return proposals.filter((p) => p.isEmergency);
+});
 
 const currentEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.current?.asTimestamp));
