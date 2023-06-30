@@ -5,7 +5,7 @@ module.exports = {
     hardhat: {
       mining: {
         auto: true,
-        interval: 1000,
+        interval: 15000,
       },
       accounts: {
         mnemonic: "test test test test test test test test test test test junk",

@@ -20,88 +20,13 @@
           <div v-show="formData.proposalType" class="mb-6">
             <label for="type-value">{{ selectedProposalType?.label }}</label>
 
-            <!-- number input value -->
-
-            <!-- number input type -->
-            <div
-              v-if="
-                [
-                  'changeTax',
-                  'updateVoteQuorumNumerator',
-                  'updateValueQuorumNumerator',
-                ].includes(formData.proposalType)
-              "
-              class="w-full flex justify-between items-center space-x-4"
-            >
-              <input
-                v-model="formData.proposalValue"
-                data-test="proposalValue"
-                type="number"
-              />
-              <div class="w-1/2">current: X.XX</div>
-            </div>
-
-            <!-- numbers range input type -->
-            <div
-              v-else-if="['changeTaxRange'].includes(formData.proposalType)"
-              class="w-full flex justify-between items-center space-x-4"
-            >
-              <input
-                v-model="formData.proposalValue"
-                data-test="proposalValue"
-                type="number"
-                placeholder="From"
-              />
-              <input
-                v-model="formData.proposalValue2"
-                data-test="proposalValue2"
-                name="proposalValue2"
-                type="number"
-                placeholder="To"
-              />
-              <div class="w-1/2">current: X.XX</div>
-            </div>
-
-            <!-- list operations input type -->
-            <div
-              v-else-if="
-                ['append', 'remove', 'emergencyRemove'].includes(
-                  formData.proposalType
-                )
-              "
-              class="w-full flex justify-between items-center space-x-4"
-            >
-              <input
-                v-model="formData.proposalValue"
-                data-test="proposalValue"
-                type="text"
-                placeholder="Address"
-              />
-              <input
-                v-model="formData.proposalValue2"
-                name="proposalValue2"
-                type="text"
-                placeholder="List Address"
-              />
-              <div class="w-1/2">TAX: X.XX $CASH</div>
-            </div>
-
-            <!-- text input type -->
-            <input
-              v-else-if="'addList' === formData.proposalType"
+            <component
+              :is="selectedProposalType.component"
+              v-if="selectedProposalType"
               v-model="formData.proposalValue"
-              data-test="proposalValue"
-              type="text"
-              placeholder="List Name"
-            />
-
-            <!-- address text input type -->
-            <input
-              v-else
-              v-model="formData.proposalValue"
-              data-test="proposalValue"
-              type="text"
-              placeholder="Address"
+              v-model:modelValue2="formData.proposalValue2"
+              v-model:modelValue3="formData.proposalValue3"
+              :placeholder="selectedProposalType.placeholder"
             />
           </div>
 
@@ -176,7 +101,12 @@ import get from "lodash/get";
 import random from "lodash/random";
 import { ref } from "vue";
 import { waitForTransaction } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters } from "viem";
+import {
+  encodeFunctionData,
+  encodeAbiParameters,
+  keccak256,
+  toHex,
+} from "viem";
 import { useAccount } from "use-wagmi";
 import {
   ispogGovernorABI,
@@ -186,6 +116,11 @@ import {
   writeListFactory,
   ispogABI,
 } from "@/lib/sdk";
+import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber";
+import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber";
+import ProposalInputListOperation from "@/components/proposal/InputListOperation";
+import ProposalInputSingleText from "@/components/proposal/InputSingleText";
+import ProposalInputChangeConfig from "@/components/proposal/InputChangeConfig";
 
 /* control stepper */
 let steps = reactive([]);
@@ -207,11 +142,12 @@ const isWritting = ref(false);
 const formData = reactive({
   proposalType: null,
   proposalValue: null,
+  proposalValue2: null,
+  proposalValue3: null,
   description: null,
 });
 
 const { address: userAccount } = useAccount();
-console.log({ userAccount });
 
 const config = useRuntimeConfig();
 const spog = useSpogStore();
@@ -224,48 +160,101 @@ const proposalTypes = [
       {
         value: "updateVoteQuorumNumerator",
         label: "Vote Quorum",
+        component: ProposalInputSingleNumber,
+        modelValue: formData.proposalValue,
       },
       {
         value: "updateValueQuorumNumerator",
         label: "Value Quorum",
+        component: ProposalInputSingleNumber,
       },
     ],
   },
   {
-    value: "Tax",
+    value: "tax",
     label: "Tax",
     children: [
       {
         value: "changeTax",
         label: "Change Tax",
+        component: ProposalInputSingleNumber,
       },
       {
         value: "changeTaxRange",
         label: "Change Tax range",
+        component: ProposalInputRangeNumber,
       },
     ],
   },
+
   {
-    value: "addList",
-    label: "Create a new list",
-  },
-  {
-    value: "append",
-    label: "Append an address to a list",
+    value: "list",
+    label: "List",
+    children: [
+      {
+        value: "addList",
+        label: "Create a new list",
+        placeholder: "List name",
+        component: ProposalInputSingleText,
+      },
+      {
+        value: "append",
+        label: "Append to a list",
+        component: ProposalInputListOperation,
+      },
+      {
+        value: "remove",
+        label: "Remove from a list",
+        component: ProposalInputListOperation,
+      },
+    ],
   },
 
   {
-    value: "remove",
-    label: "Remove an address from a list",
+    value: "changeConfig",
+    label: "Change Config",
+    component: ProposalInputChangeConfig,
   },
 
   {
     value: "reset",
-    label: "New Governance",
+    label: "Reset",
+    placeholder: "Governance Address",
+    component: ProposalInputSingleText,
+  },
+
+  {
+    value: "emergency",
+    label: "Emergency",
+    children: [
+      {
+        value: "append",
+        label: "Append to a list",
+        isEmergency: true,
+        component: ProposalInputListOperation,
+      },
+      {
+        value: "remove",
+        label: "Remove from a list",
+        isEmergency: true,
+        component: ProposalInputListOperation,
+      },
+      {
+        value: "changeConfig",
+        label: "Change Config",
+        isEmergency: true,
+        component: ProposalInputChangeConfig,
+      },
+    ],
   },
 ];
 
+const isEmergency = computed(
+  () => selectedProposalType.value.isEmergency || false
+);
+
 function onChangeProposalType(option) {
+  console.log("onChangeProposalType", { option });
   formData.proposalType = option.value;
   selectedProposalType.value = option;
 }
@@ -388,13 +377,13 @@ async function writeProposal(calldatas, formData) {
 }
 
 async function onSubmit() {
-  try {
-    const catchErrorStep = (error) => {
-      console.error({ error });
-      stepper.value.changeCurrentStep("error");
-      throw error;
-    };
+  const catchErrorStep = (error) => {
+    console.error({ error });
+    stepper.value.changeCurrentStep("error");
+    throw error;
+  };
 
+  try {
     steps = reactive(
       formData.proposalType === "addList"
         ? [
@@ -452,9 +441,40 @@ async function onSubmit() {
 
     stepper.value.nextStep();
     stepper.value.changeCurrentStep("complete");
+
+    return navigateTo("/proposals/active");
   } catch (error) {
     console.error({ error });
+    catchErrorStep(error);
   }
+}
+
+function buildCalldatasEmergency({ input1, input2, input3, type }) {
+  const emergencyTypesMap = {
+    append: 0,
+    remove: 1,
+    changeConfig: 2,
+  };
+
+  const emergencyType = emergencyTypesMap[type];
+  console.log({ type, emergencyType });
+  const valueEncoded = encodeAbiParameters(
+    [{ type: "uint8" }],
+    [BigInt(emergencyType)]
+  );
+
+  const valueEncoded2 =
+    emergencyType === emergencyTypesMap.changeConfig
+      ? encodeAbiParameters(
+          [{ type: "string" }, { type: "string" }, { type: "string" }],
+          [keccak256(toHex(input1)), input2, input3] // configName, configAddress, interfaceId
+        )
+      : encodeAbiParameters(
+          [{ type: "string" }, { type: "string" }],
+          [input1, input2] // list address, value
+        );
+
+  return buildCalldatasSpog("emergency", [valueEncoded, valueEncoded2]);
 }
 
 function buildCalldatas(formData) {
@@ -462,16 +482,46 @@ function buildCalldatas(formData) {
     proposalType: type,
     proposalValue: input1,
     proposalValue2: input2,
+    proposalValue3: input3,
   } = formData;
-  console.log({ type, input1, input2 });
+  console.log({
+    type,
+    input1,
+    input2,
+    input3,
+    isEmergency: isEmergency.value,
+    selectedProposalType,
+  });
 
   if (["addList"].includes(type)) {
     return buildCalldatasSpog(type, [input1]);
   }
 
   if (["append", "remove"].includes(type)) {
+    if (isEmergency.value) {
+      return buildCalldatasEmergency({
+        type,
+        input1,
+        input2,
+        input3,
+      });
+    }
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ILIST
     return buildCalldatasSpog(type, [input1, input2]);
+  }
+
+  if (["changeConfig"].includes(type)) {
+    if (isEmergency.value) {
+      return buildCalldatasEmergency({
+        type,
+        input1,
+        input2,
+        input3,
+      });
+    }
+
+    const valueEnconded = keccak256(toHex(input1));
+    return buildCalldatasSpog(type, [valueEnconded, input2, input3]);
   }
 
   if (["reset"].includes(type)) {
@@ -530,12 +580,6 @@ h1 {
 
 label {
   @apply text-grey-primary block mb-2 text-sm font-medium;
-}
-
-input,
-select,
-textarea {
-  @apply bg-secondary-dark border border-grey-secondary text-gray-100 text-sm focus:ring-green-500 focus:border-green-100 block w-full p-2.5;
 }
 
 textarea {

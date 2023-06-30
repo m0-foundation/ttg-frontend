@@ -45,7 +45,13 @@ import { onClickOutside } from "@vueuse/core";
 export interface OptionItem {
   value: string;
   label: string;
-  children?: Array<{ value: string; label: string }>;
+  component: any;
+  children?: Array<{
+    value: string;
+    label: string;
+    isEmergency: boolean;
+    component: any;
+  }>;
 }
 
 export interface Props {
