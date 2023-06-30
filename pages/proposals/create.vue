@@ -250,10 +250,11 @@ const proposalTypes = [
 ];
 
 const isEmergency = computed(
-  () => selectedProposalType.value?.isEmergency || false
+  () => selectedProposalType.value.isEmergency || false
 );
 
 function onChangeProposalType(option) {
+  console.log("onChangeProposalType", { option });
   formData.proposalType = option.value;
   selectedProposalType.value = option;
 }
@@ -463,7 +464,7 @@ function buildCalldatasEmergency({ input1, input2, input3, type }) {
   );
 
   const valueEncoded2 =
-    emergencyType === emergencyTypesMap["Change Config"]
+    emergencyType === emergencyTypesMap.changeConfig
       ? encodeAbiParameters(
           [{ type: "string" }, { type: "string" }, { type: "string" }],
           [keccak256(toHex(input1)), input2, input3] // configName, configAddress, interfaceId
@@ -483,7 +484,14 @@ function buildCalldatas(formData) {
     proposalValue2: input2,
     proposalValue3: input3,
   } = formData;
-  console.log({ type, input1, input2, input3, isEmergency });
+  console.log({
+    type,
+    input1,
+    input2,
+    input3,
+    isEmergency: isEmergency.value,
+    selectedProposalType,
+  });
 
   if (["addList"].includes(type)) {
     return buildCalldatasSpog(type, [input1]);
