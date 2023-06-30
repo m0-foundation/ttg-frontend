@@ -2,6 +2,12 @@
   <LayoutPage>
     <div class="flex w-full space-x-4">
       <div class="w-3/4 bg-white">
+        <MTextLoop
+          v-show="proposal?.isEmergency"
+          class="text-white bg-[#CC0000] text-xs"
+          text="EMERGENCY_VOTING"
+        />
+
         <article class="bg-white text-black p-8 mb-2">
           <ProposalStatus :version="proposal?.state" />
 
