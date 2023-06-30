@@ -29,7 +29,11 @@ const spogStateStore = useSpogStore();
 const { getProposalsByState } = storeToRefs(proposalsStore);
 const { epoch } = storeToRefs(spogStateStore);
 
-const proposals = getProposalsByState.value("Pending");
+const pendingProposals = getProposalsByState.value("Pending");
+
+const proposals = computed(() => {
+  return pendingProposals.filter((p) => !p.isEmergency);
+});
 
 const nextEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
