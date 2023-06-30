@@ -4,7 +4,7 @@
   </div>
 
   <div v-else>
-    <div v-show="emergencyProposals" class="p-8 bg-[#2A2D2A] mb-6">
+    <div v-show="hasEmergencyProposals" class="p-8 bg-[#2A2D2A] mb-6">
       <MTextLoop
         class="text-white bg-[#CC0000] text-xs"
         text="EMERGENCY_VOTING"
@@ -57,6 +57,10 @@ const nonEmergencyProposals = computed(() => {
 
 const emergencyProposals = computed(() => {
   return proposals.filter((p) => p.isEmergency);
+});
+
+const hasEmergencyProposals = computed(() => {
+  return emergencyProposals.value.length > 0;
 });
 
 const currentEpochAsDate = computed(() => {
