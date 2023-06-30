@@ -10,7 +10,10 @@
           </div>
           <div class="markdown-body mb-6" v-html="html"></div>
 
-          <ProposalTechnical :proposal="proposal" />
+          <ProposalTechnical
+            :proposal="proposal"
+            :current-values="currentValues"
+          />
           <!--  -->
           <div
             v-if="proposal?.state === 'Active' && hasDelegator"
@@ -125,6 +128,8 @@ const {
   isReady,
   isLoading,
 } = useAsyncState(client.getProposalVotes(proposalId));
+
+const { state: currentValues } = useAsyncState(client.getCurrentValues());
 
 const { state: voters } = useAsyncState(client.getProposalVoters(proposalId));
 const { state: hasDelegator } = useAsyncState(

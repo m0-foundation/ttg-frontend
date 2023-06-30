@@ -5,6 +5,7 @@ import {
   createPublicClient,
   decodeAbiParameters,
   decodeEventLog,
+  formatEther,
   getFunctionSelector,
   fromHex,
   Hash,
@@ -96,11 +97,9 @@ export interface VoteCast {
 }
 
 export interface SpogMutableValues {
-  valueFixedInflation: BigInt;
-  tax: BigInt;
-  taxLowerBound: BigInt;
-  taxUpperBound: BigInt;
-  inflator: BigInt;
+  tax: bigint;
+  taxLowerBound: bigint;
+  taxUpperBound: bigint;
 }
 
 export interface SpogImmutableValues {
@@ -112,7 +111,19 @@ export interface SpogImmutableValues {
   value?: string;
 }
 
-export type SpogValues = SpogImmutableValues | SpogMutableValues;
+export interface GovernorValues {
+  voteQuorumNumerator: bigint;
+  valueQuorumNumerator: bigint;
+}
+
+export interface CurrentValues {
+  changeTax: string;
+  changeTaxRange: string[];
+  updateVoteQuorumNumerator: string;
+  updateValueQuorumNumerator: string;
+}
+
+export type SpogValues = SpogImmutableValues & SpogMutableValues;
 
 export interface Config {
   deployedBlock: BigInt | string;
@@ -583,7 +594,33 @@ export class SPOG {
     return this.getParameters<T>(parameters, contract);
   }
 
+  getGovernorValues(): Promise<GovernorValues> {
+    return this.getGovernorParameters<GovernorValues>([
+      "voteQuorumNumerator",
+      "valueQuorumNumerator",
+    ]);
+  }
+
   getGovernorContracts(): Promise<Partial<SpogImmutableValues>> {
     return this.getGovernorParameters<SpogImmutableValues>(["value", "vote"]);
+  }
+
+  async getCurrentValues(): Promise<CurrentValues> {
+    const spogValues = await this.getSpogValues();
+    const governorValues = await this.getGovernorValues();
+    const values = {
+      changeTax: formatEther(spogValues?.tax || 0n),
+      changeTaxRange: [
+        formatEther(spogValues?.taxLowerBound || 0n),
+        formatEther(spogValues?.taxUpperBound || 0n),
+      ],
+
+      updateVoteQuorumNumerator: governorValues?.voteQuorumNumerator.toString(),
+
+      updateValueQuorumNumerator:
+        governorValues?.valueQuorumNumerator.toString(),
+    };
+
+    return values;
   }
 }
