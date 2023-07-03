@@ -70,14 +70,6 @@
                 My Profile
               </a>
             </li>
-            <li>
-              <NuxtLink
-                to="/settings"
-                class="block px-4 py-2 hover:bg-gray-600"
-              >
-                Settings
-              </NuxtLink>
-            </li>
 
             <li>
               <hr class="border-gray-500" />
