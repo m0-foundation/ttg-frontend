@@ -109,10 +109,6 @@ import { useAccount } from "use-wagmi";
 import { keccak256, toHex } from "viem";
 import { writeIspogGovernor, writeIVoteToken } from "@/lib/sdk";
 
-definePageMeta({
-  layout: "with-navbar",
-});
-
 const store = useProposalsStore();
 const route = useRoute();
 

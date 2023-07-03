@@ -17,10 +17,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
 
-definePageMeta({
-  layout: "with-navbar",
-});
-
 const store = useProposalsStore();
 const { getProposalsByExcludedState } = storeToRefs(store);
 const proposals = getProposalsByExcludedState.value("Active");

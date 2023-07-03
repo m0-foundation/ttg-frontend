@@ -19,10 +19,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
 
-definePageMeta({
-  layout: "with-navbar",
-});
-
 const proposalsStore = useProposalsStore();
 const spogStateStore = useSpogStore();
 
