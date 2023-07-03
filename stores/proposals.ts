@@ -22,6 +22,10 @@ export const useProposalsStore = defineStore("proposals", {
       return (pState: keyof typeof ProposalState) =>
         state.data.filter((p) => p.state !== pState);
     },
+
+    getProposalsTypeEmergency: (state) => {
+      return state.data.filter((p) => p.isEmergency);
+    },
   },
 
   actions: {
