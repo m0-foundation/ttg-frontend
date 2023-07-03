@@ -1,8 +1,7 @@
 <template>
-  <LayoutPage>
-    <div v-if="isLoading">Loading...</div>
-
-    <div v-else>
+  <div>
+    <ProposalNavbar />
+    <LayoutPage>
       <div class="flex justify-between uppercase text-xs mb-6">
         <div class="text-grey-primary">Voting cycle: {{ nextEpochAsDate }}</div>
         <div>STARTS {{ timeLeft }}</div>
@@ -12,8 +11,8 @@
       <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
         <ProposalCard :proposal="proposal" />
       </div>
-    </div>
-  </LayoutPage>
+    </LayoutPage>
+  </div>
 </template>
 
 <script setup>
