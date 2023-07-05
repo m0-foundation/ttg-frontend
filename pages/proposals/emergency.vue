@@ -9,12 +9,8 @@
         <div>ENDS {{ timeLeft }}</div>
       </div>
 
-      <div v-if="!proposals || !proposals.length">No Active proposals.</div>
-      <div
-        v-for="proposal in nonEmergencyProposals"
-        v-else
-        :key="proposal.proposalId"
-      >
+      <div v-if="!hasProposals">No Emergency proposals.</div>
+      <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
         <ProposalCard :proposal="proposal" />
       </div>
     </LayoutPage>
@@ -27,13 +23,13 @@ import { storeToRefs } from "pinia";
 const proposalsStore = useProposalsStore();
 const spogStateStore = useSpogStore();
 
-const { getProposalsByState } = storeToRefs(proposalsStore);
+const { getProposalsTypeEmergency } = storeToRefs(proposalsStore);
 const { epoch } = storeToRefs(spogStateStore);
 
-const proposals = getProposalsByState.value("Active");
+const proposals = getProposalsTypeEmergency.value;
 
-const nonEmergencyProposals = computed(() => {
-  return proposals.filter((p) => !p.isEmergency);
+const hasProposals = computed(() => {
+  return proposals.value && proposals.value.length > 0;
 });
 
 const currentEpochAsDate = computed(() => {
