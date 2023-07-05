@@ -22,11 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { MProposal, CurrentValues } from "@/lib/api";
+import { MProposal, CurrentProposalValues } from "@/lib/api";
 
 export interface ProposalProps {
   proposal: MProposal;
-  currentValues: CurrentValues;
+  currentValues: CurrentProposalValues;
 }
 
 const props = defineProps<ProposalProps>();
