@@ -12,7 +12,7 @@
 
           <ProposalTechnical
             :proposal="proposal"
-            :current-values="currentProposalValues"
+            :current-proposal-values="currentProposalValues"
           />
           <!--  -->
           <div
@@ -115,7 +115,7 @@ const route = useRoute();
 
 const proposalId = route.params.proposal_id;
 const proposal = store.getProposalById(proposalId);
-const { html } = useParsedDescription(proposal.description);
+const { html } = useParsedDescription(proposal?.description || "");
 
 const config = useRuntimeConfig();
 const { address: userAccount } = useAccount();

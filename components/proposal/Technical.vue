@@ -15,13 +15,18 @@
     </div>
     <div class="bg-[#003327] text-[#00CC9B] py-2 pl-6">
       <div v-for="param in proposal?.proposalParams" :key="param.name">
-        {{ param }}
+        {{
+          ["changeTax", "changeTaxRange"].includes(proposal?.proposalType)
+            ? formatEther(param)
+            : param
+        }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { formatEther } from "viem";
 import { MProposal, CurrentProposalValues } from "@/lib/api";
 
 export interface ProposalProps {

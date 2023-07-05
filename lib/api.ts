@@ -340,8 +340,6 @@ export class SPOG {
       const proposalLabel =
         proposalLabels[proposalType as keyof typeof proposalLabels];
 
-      console.log(proposalType, params);
-
       const proposal: MProposal = {
         ...event,
         isEmergency,
@@ -577,9 +575,9 @@ export class SPOG {
 
   getSpogValues(): Promise<SpogMutableValues> {
     return this.getSpogParameters<SpogMutableValues>([
+      "inflator",
       "valueFixedInflation",
       "tax",
-      "inflator",
       "taxLowerBound",
       "taxUpperBound",
     ]);
