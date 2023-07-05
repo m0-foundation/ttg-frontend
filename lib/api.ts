@@ -116,7 +116,7 @@ export interface GovernorValues {
   valueQuorumNumerator: bigint;
 }
 
-export interface CurrentValues {
+export interface CurrentProposalValues {
   changeTax: string;
   changeTaxRange: string[];
   updateVoteQuorumNumerator: string;
@@ -605,7 +605,7 @@ export class SPOG {
     return this.getGovernorParameters<SpogImmutableValues>(["value", "vote"]);
   }
 
-  async getCurrentValues(): Promise<CurrentValues> {
+  async getCurrentProposalValues(): Promise<CurrentProposalValues> {
     const spogValues = await this.getSpogValues();
     const governorValues = await this.getGovernorValues();
     const values = {

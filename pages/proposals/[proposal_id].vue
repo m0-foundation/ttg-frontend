@@ -12,7 +12,7 @@
 
           <ProposalTechnical
             :proposal="proposal"
-            :current-values="currentValues"
+            :current-values="currentProposalValues"
           />
           <!--  -->
           <div
@@ -129,7 +129,9 @@ const {
   isLoading,
 } = useAsyncState(client.getProposalVotes(proposalId));
 
-const { state: currentValues } = useAsyncState(client.getCurrentValues());
+const { state: currentProposalValues } = useAsyncState(
+  client.getCurrentProposalValues()
+);
 
 const { state: voters } = useAsyncState(client.getProposalVoters(proposalId));
 const { state: hasDelegator } = useAsyncState(
