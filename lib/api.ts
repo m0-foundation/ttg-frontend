@@ -115,6 +115,7 @@ export interface SpogImmutableValues {
 export type SpogValues = SpogImmutableValues | SpogMutableValues;
 
 export interface Config {
+  multicall: `0x${string}`;
   deployedBlock: BigInt | string;
   spog: string;
   contracts?: SpogImmutableValues;
@@ -512,21 +513,31 @@ export class SPOG {
     parameters: string[],
     contract: { address: Hash; abi: Abi }
   ): Promise<T> {
-    const contractCalls = parameters.map((functionName) => {
-      return readContract({
-        abi: contract.abi as Abi,
-        address: contract.address as Hash,
-        functionName,
+    console.log("Get Params", parameters, contract);
+    const contractCalls = parameters.map((name) => ({
+      ...contract,
+      functionName: name,
+    }));
+
+    const decodeResults = (results: any[]): T => {
+      const keys = results.map((r, i) => {
+        const key = parameters[i];
+        return { [key]: r.result };
       });
-    });
 
-    const decodeResults = (results: any[]): T =>
-      results.reduce(
-        (acc, cur, i) => ({ ...acc, [parameters[i]]: cur }),
-        {}
-      ) as T;
+      const params = keys.reduce((acc, cur) => {
+        return { ...acc, ...cur };
+      }, {});
 
-    return Promise.all(contractCalls).then(decodeResults);
+      return params as T;
+    };
+
+    return this.client
+      .multicall({
+        multicallAddress: this.config.multicall as Hash,
+        contracts: contractCalls,
+      })
+      .then(decodeResults);
   }
 
   getSpogParameters<T>(parameters: string[]): Promise<T> {
