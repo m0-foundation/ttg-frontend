@@ -1,10 +1,15 @@
 <template>
   <div>
-    <LayoutHeader />
-    <!-- out content -->
-    <div class="mx-auto w-full md:w-3/4 xl:w-1/2 mb-20">
-      <NuxtPage />
+    <div class="flex">
+      <aside class="w-64 fixed left-0 top-0 h-screen p-10">
+        <LayoutSidebar />
+      </aside>
+      <main class="flex-1 ml-64 mr-10">
+        <LayoutHeader />
+        <NuxtPage />
+      </main>
     </div>
+
     <LayoutFooter />
   </div>
 </template>

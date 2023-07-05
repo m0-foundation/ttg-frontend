@@ -1,8 +1,6 @@
 <template>
   <header class="">
-    <div
-      class="w-full flex flex-wrap items-center justify-between mx-auto px-16 py-8"
-    >
+    <div class="w-full flex flex-wrap items-center justify-between mx-auto p-8">
       <a href="/" class="flex items-center">
         <span
           class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
@@ -71,14 +69,6 @@
               <a href="#" class="block px-4 py-2 hover:bg-gray-600">
                 My Profile
               </a>
-            </li>
-            <li>
-              <NuxtLink
-                to="/settings"
-                class="block px-4 py-2 hover:bg-gray-600"
-              >
-                Settings
-              </NuxtLink>
             </li>
 
             <li>

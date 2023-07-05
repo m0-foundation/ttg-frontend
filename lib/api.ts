@@ -355,7 +355,7 @@ export class SPOG {
         proposalId: String(event.proposalId),
         proposalType: String(proposalType),
         proposalLabel,
-        proposalParams: params,
+        proposalParams: toString(params),
       };
 
       return proposal;
@@ -529,19 +529,11 @@ export class SPOG {
       });
     });
 
-    const decodeResults = (results: any[]): T => {
-      console.log(results);
-      const keys = results.map((r, i) => {
-        const key = parameters[i];
-        return { [key]: r };
-      });
-
-      const params = keys.reduce((acc, cur) => {
-        return { ...acc, ...cur };
-      }, {});
-
-      return params as T;
-    };
+    const decodeResults = (results: any[]): T =>
+      results.reduce(
+        (acc, cur, i) => ({ ...acc, [parameters[i]]: cur }),
+        {}
+      ) as T;
 
     return Promise.all(contractCalls).then(decodeResults);
   }

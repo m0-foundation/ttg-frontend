@@ -9,7 +9,6 @@
       </div>
       <div>{{ timeAgo }} | {{ formatedDate }}</div>
     </div>
-    <div class="markdown-body mb-6" v-html="descriptionShort"></div>
     <div class="flex justify-between uppercase">
       <NuxtLink
         class="uppercase border-b border-black border-dashed hover:border-0"
@@ -44,15 +43,10 @@ const domParser = new DOMParser();
 const title = computed(() => {
   const dom = domParser.parseFromString(html, "text/html");
   const titleHtml = dom.getElementsByTagName("h1")[0];
+  const descriptionHtml = dom.getElementsByTagName("p")[0];
   if (titleHtml) {
     return titleHtml.innerHTML;
   }
-  return "";
-});
-
-const descriptionShort = computed(() => {
-  const dom = domParser.parseFromString(html, "text/html");
-  const descriptionHtml = dom.getElementsByTagName("p")[0];
   if (descriptionHtml) {
     return descriptionHtml.innerHTML;
   }
