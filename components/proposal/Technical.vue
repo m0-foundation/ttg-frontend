@@ -8,7 +8,7 @@
     </h2>
     <div class="uppercase bg-[#353835] text-[#AEAFAE] py-2 pl-6">Current</div>
     <div class="bg-[#0B0B0B] text-white py-2 pl-6">
-      {{ currentValues?.[proposal?.proposalType] }}
+      {{ currentProposalValues?.[proposal?.proposalType] }}
     </div>
     <div class="uppercase bg-[#00CC9B] text-[#0B0B0B] py-2 pl-6">
       Incoming Change
@@ -26,7 +26,7 @@ import { MProposal, CurrentProposalValues } from "@/lib/api";
 
 export interface ProposalProps {
   proposal: MProposal;
-  currentValues: CurrentProposalValues;
+  currentProposalValues: CurrentProposalValues;
 }
 
 const props = defineProps<ProposalProps>();
