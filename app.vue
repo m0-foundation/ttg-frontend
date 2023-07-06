@@ -25,6 +25,9 @@ import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
 import { SPOG, Config, EpochState, SpogImmutableValues } from "@/lib/api";
 
+console.log("Mainet", mainnet);
+console.log("hardhat", hardhat);
+
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
 const spogStore = useSpogClientStore();
@@ -32,6 +35,12 @@ const spogStore = useSpogClientStore();
 const { rpc } = storeToRefs(spogStore);
 const canLoadProposals = ref(false);
 const isLoading = ref(false);
+
+// force hardhat network to allow multicall3
+// @ts-ignore
+hardhat.contracts = {
+  multicall3: { address: config.contracts.multicall3, blockCreated: 3 },
+};
 
 function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
@@ -50,7 +59,6 @@ function onSetup(rpc: string) {
 }
 
 const spogClient = onSetup(rpc.value);
-console.log({ spogClient });
 
 const { isLoading: spogParametersIsLoading } = useAsyncState(
   spogClient.getContracts(),
