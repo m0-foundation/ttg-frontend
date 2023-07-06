@@ -68,13 +68,11 @@ const { isLoading: spogParametersIsLoading } = useAsyncState(
 );
 
 watch(canLoadProposals, () => {
-  console.log("canLoadProposals");
   const { isLoading: proposalsIsLoading } = useAsyncState(
     spogClient.getProposals(),
     [],
     {
       onSuccess: (data) => {
-        console.log("getGovernorVoteProposals", { data });
         const proposalStore = useProposalsStore();
         proposalStore.setProposals(data);
         isLoading.value = false;
@@ -90,7 +88,6 @@ watch(canLoadProposals, () => {
     {} as EpochState,
     {
       onSuccess: (data) => {
-        console.log("getEpochState", { data });
         const store = useSpogStore();
         store.setEpoch(data);
       },

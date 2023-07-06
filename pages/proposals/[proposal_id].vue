@@ -16,7 +16,10 @@
           </div>
           <div class="markdown-body mb-6" v-html="html"></div>
 
-          <ProposalTechnical :proposal="proposal" />
+          <ProposalTechnical
+            :proposal="proposal"
+            :current-proposal-values="currentProposalValues"
+          />
           <!--  -->
           <div
             v-if="proposal?.state === 'Active' && hasDelegator"
@@ -114,7 +117,7 @@ const route = useRoute();
 
 const proposalId = route.params.proposal_id;
 const proposal = store.getProposalById(proposalId);
-const { html } = useParsedDescription(proposal.description);
+const { html } = useParsedDescription(proposal?.description || "");
 
 const config = useRuntimeConfig();
 const { address: userAccount } = useAccount();
@@ -127,6 +130,10 @@ const {
   isReady,
   isLoading,
 } = useAsyncState(client.getProposalVotes(proposalId));
+
+const { state: currentProposalValues } = useAsyncState(
+  client.getCurrentProposalValues()
+);
 
 const { state: voters } = useAsyncState(client.getProposalVoters(proposalId));
 const { state: hasDelegator } = useAsyncState(
