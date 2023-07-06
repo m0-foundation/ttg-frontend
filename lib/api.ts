@@ -15,8 +15,6 @@ import {
   PublicClient,
 } from "viem";
 
-import { readContract } from "@wagmi/core";
-
 import {
   ispogGovernorABI,
   readIspogGovernor,
@@ -126,7 +124,7 @@ export interface CurrentProposalValues {
 export type SpogValues = SpogImmutableValues & SpogMutableValues;
 
 export interface Config {
-  multicall: `0x${string}`;
+  multicall3: `0x${string}`;
   deployedBlock: BigInt | string;
   spog: string;
   contracts?: SpogImmutableValues;
@@ -543,7 +541,7 @@ export class SPOG {
 
     return this.client
       .multicall({
-        multicallAddress: this.config.multicall as Hash,
+        multicallAddress: this.config.multicall3 as Hash,
         contracts: contractCalls,
       })
       .then(decodeResults);
