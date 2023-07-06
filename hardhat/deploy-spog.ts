@@ -12,6 +12,8 @@ import voteToken from "../contracts/out/VoteToken.sol/VoteToken.json";
 import valueToken from "../contracts/out/ValueToken.sol/ValueToken.json";
 
 import spog from "../contracts/out/SPOG.sol/SPOG.json";
+import multicall3 from "./contracts/Multicall3.json";
+
 import { Network } from "./setup";
 
 export default async function deploySpog(network: Network) {
@@ -58,6 +60,12 @@ export default async function deploySpog(network: Network) {
   const valueTokenFactory = new ContractFactory(
     valueToken.abi,
     valueToken.bytecode,
+    wallet
+  );
+
+  const multicallFactory = new ContractFactory(
+    multicall3.abi,
+    multicall3.bytecode,
     wallet
   );
 
@@ -151,6 +159,8 @@ export default async function deploySpog(network: Network) {
     valueFixedInflation,
   ]);
 
+  const multicall3Contract = await multicallFactory.deploy();
+
   console.log("SPOG address: ", spogContract.address);
   console.log("SPOGVote token address: ", voteTokenContract.address);
   console.log("SPOGValue token address: ", valueTokenContract.address);
@@ -159,4 +169,5 @@ export default async function deploySpog(network: Network) {
   console.log("Vote holders vault address: ", voteVaultContract.address);
   console.log("Value holders vault address: ", valueVaultContract.address);
   console.log("List factory address: ", listFactoryContract.address);
+  console.log("Multicall3 address: ", multicall3Contract.address);
 }

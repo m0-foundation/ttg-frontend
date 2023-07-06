@@ -5,6 +5,7 @@ import {
   createPublicClient,
   decodeAbiParameters,
   decodeEventLog,
+  formatEther,
   getFunctionSelector,
   fromHex,
   Hash,
@@ -96,11 +97,9 @@ export interface VoteCast {
 }
 
 export interface SpogMutableValues {
-  valueFixedInflation: BigInt;
-  tax: BigInt;
-  taxLowerBound: BigInt;
-  taxUpperBound: BigInt;
-  inflator: BigInt;
+  tax: bigint;
+  taxLowerBound: bigint;
+  taxUpperBound: bigint;
 }
 
 export interface SpogImmutableValues {
@@ -112,9 +111,22 @@ export interface SpogImmutableValues {
   value?: string;
 }
 
-export type SpogValues = SpogImmutableValues | SpogMutableValues;
+export interface GovernorValues {
+  voteQuorumNumerator: bigint;
+  valueQuorumNumerator: bigint;
+}
+
+export interface CurrentProposalValues {
+  changeTax: string;
+  changeTaxRange: string[];
+  updateVoteQuorumNumerator: string;
+  updateValueQuorumNumerator: string;
+}
+
+export type SpogValues = SpogImmutableValues & SpogMutableValues;
 
 export interface Config {
+  multicall: `0x${string}`;
   deployedBlock: BigInt | string;
   spog: string;
   contracts?: SpogImmutableValues;
@@ -329,8 +341,6 @@ export class SPOG {
       const proposalLabel =
         proposalLabels[proposalType as keyof typeof proposalLabels];
 
-      console.log(proposalType, params);
-
       const proposal: MProposal = {
         ...event,
         isEmergency,
@@ -512,21 +522,31 @@ export class SPOG {
     parameters: string[],
     contract: { address: Hash; abi: Abi }
   ): Promise<T> {
-    const contractCalls = parameters.map((functionName) => {
-      return readContract({
-        abi: contract.abi as Abi,
-        address: contract.address as Hash,
-        functionName,
+    console.log("Get Params", parameters, contract);
+    const contractCalls = parameters.map((name) => ({
+      ...contract,
+      functionName: name,
+    }));
+
+    const decodeResults = (results: any[]): T => {
+      const keys = results.map((r, i) => {
+        const key = parameters[i];
+        return { [key]: r.result };
       });
-    });
 
-    const decodeResults = (results: any[]): T =>
-      results.reduce(
-        (acc, cur, i) => ({ ...acc, [parameters[i]]: cur }),
-        {}
-      ) as T;
+      const params = keys.reduce((acc, cur) => {
+        return { ...acc, ...cur };
+      }, {});
 
-    return Promise.all(contractCalls).then(decodeResults);
+      return params as T;
+    };
+
+    return this.client
+      .multicall({
+        multicallAddress: this.config.multicall as Hash,
+        contracts: contractCalls,
+      })
+      .then(decodeResults);
   }
 
   getSpogParameters<T>(parameters: string[]): Promise<T> {
@@ -558,9 +578,9 @@ export class SPOG {
 
   getSpogValues(): Promise<SpogMutableValues> {
     return this.getSpogParameters<SpogMutableValues>([
+      "inflator",
       "valueFixedInflation",
       "tax",
-      "inflator",
       "taxLowerBound",
       "taxUpperBound",
     ]);
@@ -575,7 +595,33 @@ export class SPOG {
     return this.getParameters<T>(parameters, contract);
   }
 
+  getGovernorValues(): Promise<GovernorValues> {
+    return this.getGovernorParameters<GovernorValues>([
+      "voteQuorumNumerator",
+      "valueQuorumNumerator",
+    ]);
+  }
+
   getGovernorContracts(): Promise<Partial<SpogImmutableValues>> {
     return this.getGovernorParameters<SpogImmutableValues>(["value", "vote"]);
+  }
+
+  async getCurrentProposalValues(): Promise<CurrentProposalValues> {
+    const spogValues = await this.getSpogValues();
+    const governorValues = await this.getGovernorValues();
+    const values = {
+      changeTax: formatEther(spogValues?.tax || 0n),
+      changeTaxRange: [
+        formatEther(spogValues?.taxLowerBound || 0n),
+        formatEther(spogValues?.taxUpperBound || 0n),
+      ],
+
+      updateVoteQuorumNumerator: governorValues?.voteQuorumNumerator.toString(),
+
+      updateValueQuorumNumerator:
+        governorValues?.valueQuorumNumerator.toString(),
+    };
+
+    return values;
   }
 }

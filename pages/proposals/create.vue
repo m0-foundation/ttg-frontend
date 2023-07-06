@@ -274,15 +274,13 @@ async function writeAllowance() {
     account,
   });
 
-  console.log({ allowance });
-
   // TODO: allowance > tax  : check againts tax for create proposal
   const tax = 1n;
   if (allowance <= tax) {
     const { hash } = await writeIerc20({
       address: spog.contracts.cash,
       functionName: "approve",
-      args: [config.public.contracts.spog, tax * BigInt(10e18)], // address spender, uint256 amount
+      args: [config.public.contracts.spog, tax * BigInt(1e18)], // address spender, uint256 amount
       account,
     });
 
@@ -327,8 +325,6 @@ async function writeDeployList(listName) {
     confirmations: 1,
     hash,
   });
-
-  console.log({ txReceipt });
 
   const newListAddress = get(txReceipt, "logs[0].address");
 
@@ -484,14 +480,6 @@ function buildCalldatas(formData) {
     proposalValue2: input2,
     proposalValue3: input3,
   } = formData;
-  console.log({
-    type,
-    input1,
-    input2,
-    input3,
-    isEmergency: isEmergency.value,
-    selectedProposalType,
-  });
 
   if (["addList"].includes(type)) {
     return buildCalldatasSpog(type, [input1]);
@@ -532,7 +520,7 @@ function buildCalldatas(formData) {
   if (["changeTax"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
+      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
@@ -540,11 +528,11 @@ function buildCalldatas(formData) {
   if (["changeTaxRange"].includes(type)) {
     const value1Encoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
+      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
     );
     const value2Encoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input2 * 10e18)] // tax is using 18 decimals precision
+      [BigInt(input2 * 1e18)] // tax is using 18 decimals precision
     );
     return buildCalldatasSpog(type, [value1Encoded, value2Encoded]);
   }
@@ -554,7 +542,7 @@ function buildCalldatas(formData) {
   ) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1 * 10e18)] // tax is using 18 decimals precision
+      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
     );
     return buildCalldatasGovernor(type, [valueEncoded]);
   }

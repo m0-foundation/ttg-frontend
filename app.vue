@@ -25,6 +25,9 @@ import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
 import { SPOG, Config, EpochState, SpogImmutableValues } from "@/lib/api";
 
+console.log("Mainet", mainnet);
+console.log("hardhat", hardhat);
+
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
 const spogStore = useSpogClientStore();
@@ -33,6 +36,12 @@ const { rpc } = storeToRefs(spogStore);
 const canLoadProposals = ref(false);
 const isLoading = ref(false);
 
+// force hardhat network to allow multicall3
+// @ts-ignore
+hardhat.contracts = {
+  multicall3: { address: config.contracts.multicall3, blockCreated: 3 },
+};
+
 function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
@@ -40,14 +49,16 @@ function onSetup(rpc: string) {
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
 
   /* setup spog client */
+  const network = [mainnet, sepolia, hardhat].find(
+    (chain) => chain.id === config.network.chainId
+  );
   const configVars = config.contracts as Config;
-  const spogClient = new SPOG(rpc, hardhat, configVars);
+  const spogClient = new SPOG(rpc, network!, configVars);
   spogStore.setClient(spogClient);
   return spogClient;
 }
 
 const spogClient = onSetup(rpc.value);
-console.log({ spogClient });
 
 const { isLoading: spogParametersIsLoading } = useAsyncState(
   spogClient.getContracts(),
@@ -68,13 +79,11 @@ const { isLoading: spogParametersIsLoading } = useAsyncState(
 );
 
 watch(canLoadProposals, () => {
-  console.log("canLoadProposals");
   const { isLoading: proposalsIsLoading } = useAsyncState(
     spogClient.getProposals(),
     [],
     {
       onSuccess: (data) => {
-        console.log("getGovernorVoteProposals", { data });
         const proposalStore = useProposalsStore();
         proposalStore.setProposals(data);
         isLoading.value = false;
@@ -90,7 +99,6 @@ watch(canLoadProposals, () => {
     {} as EpochState,
     {
       onSuccess: (data) => {
-        console.log("getEpochState", { data });
         const store = useSpogStore();
         store.setEpoch(data);
       },
