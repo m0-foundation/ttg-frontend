@@ -37,21 +37,7 @@ const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 
 const formatedDate = computed(() => toFormat("LL"));
 
-const { html } = useParsedDescription(props.proposal.description);
-const domParser = new DOMParser();
-
-const title = computed(() => {
-  const dom = domParser.parseFromString(html, "text/html");
-  const titleHtml = dom.getElementsByTagName("h1")[0];
-  const descriptionHtml = dom.getElementsByTagName("p")[0];
-  if (titleHtml) {
-    return titleHtml.innerHTML;
-  }
-  if (descriptionHtml) {
-    return descriptionHtml.innerHTML;
-  }
-  return "";
-});
+const { title } = useParsedDescriptionTitle(props.proposal.description);
 </script>
 
 <style scoped></style>
