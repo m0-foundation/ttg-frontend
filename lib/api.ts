@@ -15,8 +15,6 @@ import {
   PublicClient,
 } from "viem";
 
-import { readContract } from "@wagmi/core";
-
 import {
   ispogGovernorABI,
   readIspogGovernor,

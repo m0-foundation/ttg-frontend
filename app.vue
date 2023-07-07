@@ -23,26 +23,57 @@ import { UseWagmiPlugin } from "use-wagmi";
 // chains
 import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
-import { SPOG, Config, EpochState, SpogImmutableValues } from "@/lib/api";
-
-console.log("Mainet", mainnet);
-console.log("hardhat", hardhat);
+import { SPOG, Config } from "@/lib/api";
 
 const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
 const spogStore = useSpogClientStore();
 
 const { rpc } = storeToRefs(spogStore);
-const canLoadProposals = ref(false);
 const isLoading = ref(false);
 
 // force hardhat network to allow multicall3
 // @ts-ignore
 hardhat.contracts = {
-  multicall3: { address: config.contracts.multicall3, blockCreated: 3 },
+  multicall3: { address: config.public.contracts.multicall3, blockCreated: 3 },
 };
 
-function onSetup(rpc: string) {
+const fetchSpogContracts = async (spog: SPOG) => {
+  try {
+    const data = await spog.getContracts();
+    const store = useSpogStore();
+    store.setContracts(data);
+
+    const newConfig = { contracts: data };
+    spog.addConfig(newConfig);
+  } catch (error) {
+    console.error({ error });
+  }
+};
+
+const fetchProposals = async (spog: SPOG) => {
+  try {
+    console.log("fetchProposals");
+    const data = await spog.getProposals();
+    const proposalStore = useProposalsStore();
+    proposalStore.setProposals(data);
+  } catch (error) {
+    console.error({ error });
+  }
+};
+
+const fetchEpoch = async (spog: SPOG) => {
+  try {
+    console.log("fetchEpoch");
+    const data = await spog.getEpochState();
+    const store = useSpogStore();
+    store.setEpoch(data);
+  } catch (error) {
+    console.error({ error });
+  }
+};
+
+async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
   const { client: wagmiClient } = useWagmi(rpc);
@@ -50,63 +81,20 @@ function onSetup(rpc: string) {
 
   /* setup spog client */
   const network = [mainnet, sepolia, hardhat].find(
-    (chain) => chain.id === config.network.chainId
+    (chain) => chain.id === Number(config.public.network.chainId)
   );
-  const configVars = config.contracts as Config;
+
+  const configVars = config.public.contracts as Config;
   const spogClient = new SPOG(rpc, network!, configVars);
   spogStore.setClient(spogClient);
+
+  await fetchSpogContracts(spogClient);
   return spogClient;
 }
 
-const spogClient = onSetup(rpc.value);
-
-const { isLoading: spogParametersIsLoading } = useAsyncState(
-  spogClient.getContracts(),
-  {} as SpogImmutableValues,
-  {
-    onSuccess: (data) => {
-      console.log("getContracts", { data });
-      const store = useSpogStore();
-      store.setContracts(data);
-      const newConfig = { contracts: data };
-      spogClient.addConfig(newConfig);
-      canLoadProposals.value = true;
-    },
-    onError: (e) => {
-      console.error({ e });
-    },
-  }
-);
-
-watch(canLoadProposals, () => {
-  const { isLoading: proposalsIsLoading } = useAsyncState(
-    spogClient.getProposals(),
-    [],
-    {
-      onSuccess: (data) => {
-        const proposalStore = useProposalsStore();
-        proposalStore.setProposals(data);
-        isLoading.value = false;
-      },
-      onError: (e) => {
-        console.error({ e });
-      },
-    }
-  );
-
-  const { isLoading: epochStateIsLoading } = useAsyncState(
-    spogClient.getEpochState(),
-    {} as EpochState,
-    {
-      onSuccess: (data) => {
-        const store = useSpogStore();
-        store.setEpoch(data);
-      },
-      onError: (e) => {
-        console.error({ e });
-      },
-    }
-  );
+onSetup(rpc.value).then(async (client) => {
+  await Promise.all([fetchProposals(client), fetchEpoch(client)]);
+  isLoading.value = false;
 });
 
 /* user has updated the rpc */

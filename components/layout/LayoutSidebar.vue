@@ -39,8 +39,6 @@ const menu = [
     href: "/settings",
   },
 ];
-const route = useRoute();
-console.log({ route });
 </script>
 
 <style scoped>
