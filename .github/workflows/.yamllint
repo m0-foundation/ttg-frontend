@@ -1,0 +1,12 @@
+---
+
+extends: relaxed
+
+#
+rules:
+  trailing-spaces: disable
+  empty-lines: disable
+  line-length:
+    max: 8000
+    level: warning
+
