@@ -520,7 +520,6 @@ export class SPOG {
     parameters: string[],
     contract: { address: Hash; abi: Abi }
   ): Promise<T> {
-    console.log("Get Params", parameters, contract);
     const contractCalls = parameters.map((name) => ({
       ...contract,
       functionName: name,
@@ -536,6 +535,7 @@ export class SPOG {
         return { ...acc, ...cur };
       }, {});
 
+      console.log("Get Params", params);
       return params as T;
     };
 
