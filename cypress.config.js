@@ -6,13 +6,16 @@ export async function setupHardhatEvents(on, config) {
   config.experimentalInteractiveRunEvents = true;
 
   const env = await setup();
-
   on("task", {
     hardhat: () => env,
     "hardhat:reset": () => env.reset(),
   });
   // on("before:spec", () => env.reset());
   on("after:run", () => env.close());
+
+  on("task", {
+    mine: (blocks) => env.mine(blocks),
+  });
 }
 
 export default defineConfig({
