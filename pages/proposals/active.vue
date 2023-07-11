@@ -30,10 +30,10 @@ const spogStateStore = useSpogStore();
 const { getProposalsByState } = storeToRefs(proposalsStore);
 const { epoch } = storeToRefs(spogStateStore);
 
-const proposals = getProposalsByState.value("Active");
+const proposals = computed(() => getProposalsByState.value("Active"));
 
 const nonEmergencyProposals = computed(() => {
-  return proposals.filter((p) => !p.isEmergency);
+  return proposals.value.filter((p) => !p.isEmergency);
 });
 
 const currentEpochAsDate = computed(() => {
