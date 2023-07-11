@@ -16,6 +16,20 @@ Cypress.Commands.add("connectWallet", () => {
     return cy.get("button").eq(1).click(); // injected provider wallet is the first one
   });
 });
+
+Cypress.Commands.add("delegateToMe", (testId) => {
+  // check if delegate button exists
+  cy.contains("button", "Delegate to me").then(($el) => {
+    cy.wrap($el).click();
+
+    cy.task("mine", 5).then((obj) => {
+      console.log("mined", { obj });
+    });
+    cy.wait(500);
+    cy.reload();
+  });
+});
+
 //
 //
 // -- This is a child command --
