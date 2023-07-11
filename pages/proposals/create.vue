@@ -495,6 +495,7 @@ function buildCalldatas(formData) {
       });
     }
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ILIST
+    // list, address
     return buildCalldatasSpog(type, [input1, input2]);
   }
 

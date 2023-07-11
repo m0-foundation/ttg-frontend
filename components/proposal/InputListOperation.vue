@@ -1,18 +1,18 @@
 <template>
   <div class="w-full flex justify-between items-center space-x-4">
     <input
-      v-model="address"
-      class="input"
-      type="text"
-      placeholder="Address"
-      data-test="proposalValue"
-    />
-
-    <input
       v-model="list"
       class="input"
       type="text"
       placeholder="List"
+      data-test="proposalValue"
+    />
+
+    <input
+      v-model="address"
+      class="input"
+      type="text"
+      placeholder="Address"
       data-test="proposalValue2"
     />
   </div>
