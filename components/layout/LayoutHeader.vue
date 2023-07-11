@@ -9,7 +9,11 @@
         </span>
       </a>
 
-      <div v-if="isConnected" class="flex items-center md:order-2">
+      <div v-if="isConnected" class="flex items-center md:order-2 gap-2">
+        <MButton v-show="!hasDelegator" @click="delegate()">
+          Delegate to me
+        </MButton>
+
         <NuxtLink to="/proposals/create">
           <MButton>Create Proposal</MButton>
         </NuxtLink>
@@ -32,7 +36,7 @@
           class="border border-1 border-gray-500 rounded pl-4 py-1 flex items-center"
         >
           <div class="truncate w-28">
-            {{ address }}
+            {{ userAccount }}
           </div>
           <button
             class="text-white font-medium text-sm px-4 py-2.5 text-center inline-flex items-center"
@@ -93,34 +97,75 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from "pinia";
+import { Hash } from "viem";
 import { ref } from "vue";
-import { useAccount, useDisconnect, useBalance } from "use-wagmi";
+import {
+  useAccount,
+  useDisconnect,
+  useBalance,
+  useContractRead,
+} from "use-wagmi";
+import { writeIVoteToken, iVoteTokenABI } from "@/lib/sdk";
 
 const isMenuOpen = ref(false);
-const config = useRuntimeConfig();
-const { address, isConnected } = useAccount();
-const spog = useSpogStore();
-console.log({ address, isConnected });
+const hasDelegator = ref(false);
+const store = useSpogStore();
+const spog = storeToRefs(store);
 
+const { address: userAccount, isConnected } = useAccount();
 const { disconnect } = useDisconnect();
 
-const {
-  data: voteBalance,
-  isError: voteIsError,
-  isLoading: voteIsLoading,
-} = useBalance({
-  address,
-  token: spog.contracts.vote,
-  watch: true,
-});
+function delegate() {
+  return writeIVoteToken({
+    address: spog.contracts.value.vote as Hash,
+    functionName: "delegate",
+    args: [userAccount.value!], // self delegate
+  }).then(() => {
+    hasDelegator.value = true;
+  });
+}
 
-const {
-  data: valueBalance,
-  isError: valueIsError,
-  isLoading: valueIsLoading,
-} = useBalance({
-  address,
-  token: spog.contracts.value,
-  watch: true,
+const valueBalance = ref();
+const voteBalance = ref();
+/* since LayoutHeader is set inside layout it has same mount cycle as app.vue, thus need to do sideEffect on pinia store */
+watch(store.contracts, () => {
+  console.log("watching contracts", spog.contracts.value);
+  const {
+    data: resVoteBalance,
+    isError: voteIsError,
+    isLoading: voteIsLoading,
+  } = useBalance({
+    address: userAccount.value,
+    token: spog.contracts.value.vote as Hash,
+    watch: true,
+  });
+  voteBalance.value = resVoteBalance;
+
+  const {
+    data: resValueBalance,
+    isError: valueIsError,
+    isLoading: valueIsLoading,
+  } = useBalance({
+    address: userAccount.value,
+    token: spog.contracts.value.value as Hash,
+    watch: true,
+  });
+  valueBalance.value = resValueBalance;
+
+  useContractRead({
+    address: spog.contracts.value.vote as Hash,
+    abi: iVoteTokenABI,
+    functionName: "delegates",
+    args: [userAccount.value!],
+    onSuccess: (delegator) => {
+      console.log({ delegator });
+      hasDelegator.value =
+        delegator !== "0x0000000000000000000000000000000000000000";
+    },
+    onError: (err) => {
+      console.log({ err });
+    },
+  });
 });
 </script>
