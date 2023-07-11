@@ -21,16 +21,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { storeToRefs } from "pinia";
 
 const proposalsStore = useProposalsStore();
 const spogStateStore = useSpogStore();
 
-const { getProposalsByState } = storeToRefs(proposalsStore);
 const { epoch } = storeToRefs(spogStateStore);
-
-const proposals = computed(() => getProposalsByState.value("Active"));
+const proposals = computed(() => proposalsStore.getProposalsByState("Active"));
 
 const nonEmergencyProposals = computed(() => {
   return proposals.value.filter((p) => !p.isEmergency);

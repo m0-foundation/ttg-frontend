@@ -14,10 +14,8 @@ export const useProposalsStore = defineStore("proposals", {
       return (pId: string) =>
         state.data.find((p) => p.proposalId.toString() === pId);
     },
-    getProposalsByState: (state) => {
-      return (pState: keyof typeof ProposalState) =>
-        state.data.filter((p) => p.state === pState);
-    },
+    getProposalsByState: (state) => (status: keyof typeof ProposalState) =>
+      state.data.filter((p) => p.state === status),
     getProposalsByExcludedState: (state) => {
       return (pState: keyof typeof ProposalState) =>
         state.data.filter((p) => p.state !== pState);

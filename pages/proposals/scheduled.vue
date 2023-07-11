@@ -21,10 +21,9 @@ import { storeToRefs } from "pinia";
 const proposalsStore = useProposalsStore();
 const spogStateStore = useSpogStore();
 
-const { getProposalsByState } = storeToRefs(proposalsStore);
 const { epoch } = storeToRefs(spogStateStore);
 
-const proposals = getProposalsByState.value("Pending");
+const proposals = computed(() => proposalsStore.getProposalsByState("Pending"));
 
 const nextEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
