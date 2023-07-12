@@ -282,7 +282,7 @@ export class SPOG {
           );
           break;
         case functionSelectors.changeTaxRange:
-          proposalType = "changeTax";
+          proposalType = "changeTaxRange";
           params = decodeAbiParameters(
             [
               { name: "newTaxLowerBound", type: "uint256" },
