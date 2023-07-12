@@ -20,6 +20,7 @@ import {
   ispogGovernorABI,
   readIspogGovernor,
   readIVoteToken,
+  readIValueToken,
   ispogABI,
 } from "./sdk";
 
@@ -506,9 +507,17 @@ export class SPOG {
     };
   }
 
-  getVoteDelegatorFrom(account: Hash): Promise<Hash> {
+  getVoteDelegates(account: Hash): Promise<Hash> {
     return readIVoteToken({
       address: this.config.contracts!.vote as Hash,
+      functionName: "delegates",
+      args: [account],
+    });
+  }
+
+  getValueDelegates(account: Hash): Promise<Hash> {
+    return readIValueToken({
+      address: this.config.contracts!.value as Hash,
       functionName: "delegates",
       args: [account],
     });

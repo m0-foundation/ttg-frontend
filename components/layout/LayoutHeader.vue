@@ -112,13 +112,9 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { ref } from "vue";
-import {
-  useAccount,
-  useDisconnect,
-  useBalance,
-  useContractRead,
-} from "use-wagmi";
-import { writeIVoteToken, iVoteTokenABI } from "@/lib/sdk";
+import { useAccount, useDisconnect, useBalance } from "use-wagmi";
+import { whenever } from "@vueuse/core";
+import { writeIVoteToken } from "@/lib/sdk";
 
 const isMenuOpen = ref(false);
 const hasVoteDelegator = ref(false);
@@ -126,6 +122,7 @@ const hasValueDelegator = ref(false);
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 const store = useSpogStore();
+const spogClient = useSpogClientStore();
 const spog = storeToRefs(store);
 
 const { address: userAccount, isConnected } = useAccount();
@@ -171,31 +168,22 @@ const {
   watch: true,
 });
 
-useContractRead({
-  address: spog.contracts.value.vote as Hash,
-  abi: iVoteTokenABI,
-  functionName: "delegates",
-  args: [userAccount.value!],
-  onSuccess: (delegator) => {
-    console.log("hasVoteDelegator", { delegator });
-    hasVoteDelegator.value = delegator !== NULL_ADDRESS;
-  },
-  onError: (err) => {
-    console.log("hasVoteDelegator", { err });
-  },
-});
+whenever(
+  isConnected,
+  () => {
+    console.log("whenever", { isConnected });
+    spogClient.client.getVoteDelegates(userAccount.value!).then((delegator) => {
+      console.log("hasVoteDelegator", { delegator });
+      hasVoteDelegator.value = delegator !== NULL_ADDRESS;
+    });
 
-useContractRead({
-  address: spog.contracts.value.value as Hash,
-  abi: iVoteTokenABI,
-  functionName: "delegates",
-  args: [userAccount.value!],
-  onSuccess: (delegator) => {
-    console.log("hasValueDelegator", { delegator });
-    hasValueDelegator.value = delegator !== NULL_ADDRESS;
+    spogClient.client
+      .getValueDelegates(userAccount.value!)
+      .then((delegator) => {
+        console.log("hasValueDelegator", { delegator });
+        hasValueDelegator.value = delegator !== NULL_ADDRESS;
+      });
   },
-  onError: (err) => {
-    console.log("hasValueDelegator", { err });
-  },
-});
+  { immediate: true }
+);
 </script>
