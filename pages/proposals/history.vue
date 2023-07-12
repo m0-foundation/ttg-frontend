@@ -60,7 +60,7 @@ const tableConfig = {
         html(useComponentToHtml(ProposalStatus, { version: cell }).html),
     },
   ],
-  data: proposals.map((p) => ({
+  data: proposals.value.map((p) => ({
     proposalId: p.proposalId,
     proposal: p.description,
     action: p.proposalLabel,
