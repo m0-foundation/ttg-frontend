@@ -17,17 +17,32 @@ Cypress.Commands.add("connectWallet", () => {
   });
 });
 
-Cypress.Commands.add("delegateToMe", (testId) => {
+Cypress.Commands.add("delegateVote", () => {
   // check if delegate button exists
-  cy.contains("button", "Delegate to me").then(($el) => {
-    cy.wrap($el).click();
+  cy.get("#button-delegate-vote").click({ force: true });
+  cy.task("mine", 5);
+  cy.wait(500);
+  cy.reload();
+});
 
-    cy.task("mine", 5).then((obj) => {
-      console.log("mined", { obj });
-    });
-    cy.wait(500);
-    cy.reload();
-  });
+Cypress.Commands.add("delegateValue", () => {
+  // check if delegate button exists
+  cy.get("#button-delegate-value").click({ force: true });
+  cy.task("mine", 5);
+  cy.wait(500);
+  cy.reload();
+});
+
+Cypress.Commands.add("executeProposal", (proposalUrl: string) => {
+  cy.visit(proposalUrl);
+  cy.get("#proposal-state").should("contain", "succeeded");
+  cy.contains("article", "Execute?").should("exist");
+  cy.get("#button-proposal-execute").click();
+  cy.wait(500);
+
+  cy.task("mine", 10);
+  cy.wait(500);
+  cy.reload();
 });
 
 //

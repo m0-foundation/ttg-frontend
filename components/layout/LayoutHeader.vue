@@ -10,8 +10,20 @@
       </a>
 
       <div v-if="isConnected" class="flex items-center md:order-2 gap-2">
-        <MButton v-show="!hasDelegator" @click="delegate()">
-          Delegate to me
+        <MButton
+          v-show="!hasVoteDelegator"
+          id="button-delegate-vote"
+          @click="delegateVote()"
+        >
+          Delegate Vote
+        </MButton>
+
+        <MButton
+          v-show="!hasValueDelegator"
+          id="button-delegate-value"
+          @click="delegateValue()"
+        >
+          Delegate Value
         </MButton>
 
         <NuxtLink to="/proposals/create">
@@ -109,63 +121,81 @@ import {
 import { writeIVoteToken, iVoteTokenABI } from "@/lib/sdk";
 
 const isMenuOpen = ref(false);
-const hasDelegator = ref(false);
+const hasVoteDelegator = ref(false);
+const hasValueDelegator = ref(false);
+const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
+
 const store = useSpogStore();
 const spog = storeToRefs(store);
 
 const { address: userAccount, isConnected } = useAccount();
 const { disconnect } = useDisconnect();
 
-function delegate() {
+function delegateVote() {
   return writeIVoteToken({
     address: spog.contracts.value.vote as Hash,
     functionName: "delegate",
     args: [userAccount.value!], // self delegate
   }).then(() => {
-    hasDelegator.value = true;
+    hasVoteDelegator.value = true;
   });
 }
 
-const valueBalance = ref();
-const voteBalance = ref();
-/* since LayoutHeader is set inside layout it has same mount cycle as app.vue, thus need to do sideEffect on pinia store */
-watch(store.contracts, () => {
-  console.log("watching contracts", spog.contracts.value);
-  const {
-    data: resVoteBalance,
-    isError: voteIsError,
-    isLoading: voteIsLoading,
-  } = useBalance({
-    address: userAccount.value,
-    token: spog.contracts.value.vote as Hash,
-    watch: true,
+function delegateValue() {
+  return writeIVoteToken({
+    address: spog.contracts.value.value as Hash,
+    functionName: "delegate",
+    args: [userAccount.value!], // self delegate
+  }).then(() => {
+    hasValueDelegator.value = true;
   });
-  voteBalance.value = resVoteBalance;
+}
 
-  const {
-    data: resValueBalance,
-    isError: valueIsError,
-    isLoading: valueIsLoading,
-  } = useBalance({
-    address: userAccount.value,
-    token: spog.contracts.value.value as Hash,
-    watch: true,
-  });
-  valueBalance.value = resValueBalance;
+const {
+  data: voteBalance,
+  isError: voteIsError,
+  isLoading: voteIsLoading,
+} = useBalance({
+  address: userAccount.value,
+  token: spog.contracts.value.vote as Hash,
+  watch: true,
+});
 
-  useContractRead({
-    address: spog.contracts.value.vote as Hash,
-    abi: iVoteTokenABI,
-    functionName: "delegates",
-    args: [userAccount.value!],
-    onSuccess: (delegator) => {
-      console.log({ delegator });
-      hasDelegator.value =
-        delegator !== "0x0000000000000000000000000000000000000000";
-    },
-    onError: (err) => {
-      console.log({ err });
-    },
-  });
+const {
+  data: valueBalance,
+  isError: valueIsError,
+  isLoading: valueIsLoading,
+} = useBalance({
+  address: userAccount.value,
+  token: spog.contracts.value.value as Hash,
+  watch: true,
+});
+
+useContractRead({
+  address: spog.contracts.value.vote as Hash,
+  abi: iVoteTokenABI,
+  functionName: "delegates",
+  args: [userAccount.value!],
+  onSuccess: (delegator) => {
+    console.log("hasVoteDelegator", { delegator });
+    hasVoteDelegator.value = delegator !== NULL_ADDRESS;
+  },
+  onError: (err) => {
+    console.log("hasVoteDelegator", { err });
+  },
+});
+
+useContractRead({
+  address: spog.contracts.value.value as Hash,
+  abi: iVoteTokenABI,
+  functionName: "delegates",
+  args: [userAccount.value!],
+  onSuccess: (delegator) => {
+    console.log("hasValueDelegator", { delegator });
+    hasValueDelegator.value = delegator !== NULL_ADDRESS;
+  },
+  onError: (err) => {
+    console.log("hasValueDelegator", { err });
+  },
 });
 </script>

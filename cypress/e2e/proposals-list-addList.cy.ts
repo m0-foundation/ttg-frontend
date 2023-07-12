@@ -48,7 +48,7 @@ describe("Proposals", () => {
       cy.connectWallet();
       cy.reload();
       // delegate to self account before voting to have vote power
-      cy.delegateToMe();
+      cy.delegateVote();
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {

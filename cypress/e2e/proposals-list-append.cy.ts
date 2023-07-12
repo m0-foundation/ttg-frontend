@@ -2,7 +2,7 @@ let proposalUrl = "";
 let listAddress = "";
 
 describe("Proposals", () => {
-  describe("type action List Operation: append", () => {
+  describe("type action List Operation: remove", () => {
     describe("Create the list", () => {
       const input = "Collateral Managers";
       const description = "Create the Collateral Managers list";
@@ -43,7 +43,7 @@ describe("Proposals", () => {
         cy.connectWallet();
         cy.reload();
         // delegate to self account before voting to have vote power
-        cy.delegateToMe();
+        cy.delegateVote();
       });
 
       it("I should be able to ACCESS the ACTIVE proposal", () => {
