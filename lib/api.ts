@@ -4,6 +4,7 @@ import {
   Chain,
   createPublicClient,
   decodeAbiParameters,
+  parseAbiParameters,
   decodeEventLog,
   formatEther,
   getFunctionSelector,
@@ -195,22 +196,19 @@ export class SPOG {
       function parseEmergency(emergencyType: number, callData: Hash) {
         if (emergencyType === 0) {
           proposalType = "remove";
-          params = decodeAbiParameters(
-            [
-              { name: "list", type: "address" },
-              { name: "account", type: "address" },
-            ],
-            bytesToHex(fromHex(callData, "bytes").slice(4))
+          const values = decodeAbiParameters(
+            parseAbiParameters("address list, address account"),
+            callData
           );
+          params = [values[0], values[1]];
         } else if (emergencyType === 1) {
           proposalType = "append";
-          params = decodeAbiParameters(
-            [
-              { name: "list", type: "address" },
-              { name: "account", type: "address" },
-            ],
-            bytesToHex(fromHex(callData, "bytes").slice(4))
+
+          const values = decodeAbiParameters(
+            parseAbiParameters("address list, address account"),
+            callData
           );
+          params = [values[0], values[1]];
         } else if (emergencyType === 2) {
           proposalType = "changeConfig";
           params = decodeAbiParameters(
