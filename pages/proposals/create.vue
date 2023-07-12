@@ -546,7 +546,7 @@ function buildCalldatas(formData) {
   ) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
+      [BigInt(input1)] // tax is using 18 decimals precision
     );
     return buildCalldatasGovernor(type, [valueEncoded]);
   }

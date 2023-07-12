@@ -153,10 +153,14 @@ function castVote(vote) {
 }
 
 function execute() {
-  const { description, calldatas } = proposal;
-  console.log({ description, calldatas });
+  const { description, calldatas, proposalType } = proposal;
   const hashedDescription = keccak256(toHex(description));
-  const targets = [config.public.contracts.spog]; // do not change
+  const targets = [
+    "updateValueQuorumNumerator",
+    "updateVoteQuorumNumerator",
+  ].includes(proposalType)
+    ? [spog.contracts.governor] // dual governor contract as target for dual governance proposals
+    : [config.public.contracts.spog];
   const values = [0]; // do not change
 
   return writeIspogGovernor({
