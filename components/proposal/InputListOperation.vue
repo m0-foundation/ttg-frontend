@@ -27,6 +27,6 @@ export interface InputProps {
 const props = defineProps<InputProps>();
 const emit = defineEmits(["update:modelValue", "update:modelValue2"]);
 
-const address = useVModelWrapper<InputProps>(props, emit, "modelValue");
-const list = useVModelWrapper<InputProps>(props, emit, "modelValue2");
+const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
+const address = useVModelWrapper<InputProps>(props, emit, "modelValue2");
 </script>
