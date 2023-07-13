@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-    runs-on: [macos-latest-xl]
+    runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v3
         with:

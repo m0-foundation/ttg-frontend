@@ -28,5 +28,6 @@ export default defineConfig({
       setupHardhatEvents(on, config);
     },
   },
-  defaultCommandTimeout: 60000,
+  defaultCommandTimeout: 120000,
+  video: false,
 });
