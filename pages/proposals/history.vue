@@ -10,12 +10,10 @@
 
 <script setup lang="ts">
 import { html } from "gridjs";
-import { storeToRefs } from "pinia";
 import ProposalStatus from "@/components/proposal/Status.vue";
 
 const store = useProposalsStore();
-const { getProposalsByExcludedState } = storeToRefs(store);
-const proposals = getProposalsByExcludedState.value("Active");
+const proposals = computed(() => store.getProposalsByExcludedState("Active"));
 
 const tableConfig = {
   columns: [
@@ -62,7 +60,7 @@ const tableConfig = {
         html(useComponentToHtml(ProposalStatus, { version: cell }).html),
     },
   ],
-  data: proposals.map((p) => ({
+  data: proposals.value.map((p) => ({
     proposalId: p.proposalId,
     proposal: p.description,
     action: p.proposalLabel,

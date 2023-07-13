@@ -229,19 +229,19 @@ const proposalTypes = [
     children: [
       {
         value: "append",
-        label: "Append to a list",
+        label: "Emergency Append to a list",
         isEmergency: true,
         component: ProposalInputListOperation,
       },
       {
         value: "remove",
-        label: "Remove from a list",
+        label: "Emergency Remove from a list",
         isEmergency: true,
         component: ProposalInputListOperation,
       },
       {
         value: "changeConfig",
-        label: "Change Config",
+        label: "Emergency Change Config",
         isEmergency: true,
         component: ProposalInputChangeConfig,
       },
@@ -447,8 +447,8 @@ async function onSubmit() {
 
 function buildCalldatasEmergency({ input1, input2, input3, type }) {
   const emergencyTypesMap = {
-    append: 0,
-    remove: 1,
+    remove: 0,
+    append: 1,
     changeConfig: 2,
   };
 
@@ -466,8 +466,11 @@ function buildCalldatasEmergency({ input1, input2, input3, type }) {
           [keccak256(toHex(input1)), input2, input3] // configName, configAddress, interfaceId
         )
       : encodeAbiParameters(
-          [{ type: "string" }, { type: "string" }],
-          [input1, input2] // list address, value
+          [
+            { name: "list", type: "address" },
+            { name: "account", type: "address" },
+          ],
+          [input1, input2] // list, address
         );
 
   return buildCalldatasSpog("emergency", [valueEncoded, valueEncoded2]);
@@ -495,6 +498,7 @@ function buildCalldatas(formData) {
       });
     }
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ILIST
+    // list, address
     return buildCalldatasSpog(type, [input1, input2]);
   }
 
@@ -542,7 +546,7 @@ function buildCalldatas(formData) {
   ) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
+      [BigInt(input1)] // tax is using 18 decimals precision
     );
     return buildCalldatasGovernor(type, [valueEncoded]);
   }

@@ -6,7 +6,11 @@ import {
   TASK_NODE_GET_PROVIDER,
   TASK_NODE_SERVER_READY,
 } from "hardhat/builtin-tasks/task-names";
-import { HardhatNetworkAccountsConfig, JsonRpcServer } from "hardhat/types";
+import {
+  EthereumProvider,
+  HardhatNetworkAccountsConfig,
+  JsonRpcServer,
+} from "hardhat/types";
 import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
 
 import { toExternallyOwnedAccounts } from "./accounts";
@@ -18,6 +22,8 @@ export interface Network {
   chainId: number;
   /** Accounts configured via hardhat's {@link https://hardhat.org/hardhat-network/reference/#accounts}. */
   accounts: ExternallyOwnedAccount[];
+
+  mine: (blocks: number) => Promise<void>;
 }
 
 /** Sets up the hardhat environment for use with cypress. */
@@ -68,6 +74,12 @@ export default async function setup(): Promise<
   return {
     url,
     chainId: hre.config.networks.hardhat.chainId,
+    mine: (blocks = 100) => {
+      console.log("mine", { blocks });
+      return hre.network.provider.send("hardhat_mine", [
+        "0x" + blocks.toString(16),
+      ]);
+    },
     accounts,
     reset: () =>
       hre.network.provider.send("hardhat_reset", [

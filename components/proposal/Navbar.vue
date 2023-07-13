@@ -37,13 +37,12 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-const proposalsStore = useProposalsStore();
-const { getProposalsByState, getProposalsTypeEmergency } =
-  storeToRefs(proposalsStore);
+const store = useProposalsStore();
 
-const active = getProposalsByState.value("Active").length;
-const scheduled = getProposalsByState.value("Pending").length;
-const pendingExecution = getProposalsByState.value("Succeeded").length;
-const emergency = getProposalsTypeEmergency.value.length;
+const active = computed(() => store.getProposalsByState("Active").length);
+const scheduled = computed(() => store.getProposalsByState("Pending").length);
+const pendingExecution = computed(
+  () => store.getProposalsByState("Succeeded").length
+);
+const emergency = computed(() => store.getProposalsTypeEmergency.length);
 </script>
