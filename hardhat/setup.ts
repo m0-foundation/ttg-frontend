@@ -40,7 +40,6 @@ export default async function setup(): Promise<
       hre.tasks[TASK_NODE_SERVER_READY].setAction(
         async ({ address, port, server }) => {
           const url = "http://" + address + ":" + port;
-          console.log({ url });
           resolve({ url, server });
         }
       )

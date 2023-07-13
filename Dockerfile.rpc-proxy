@@ -1,0 +1,27 @@
+FROM node:20-alpine
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# OpenSSH client and Git are required dependencies to clone the repository
+RUN apk add --no-cache openssh-client git
+
+# Add the SSH public keys of the Git server to the known hosts (here, github.com)
+RUN mkdir -p -m 0700 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+# Clone the repository, notice the "--mount=type=ssh" option, which allow this instruction to use SSH forwarding
+RUN --mount=type=ssh git clone --depth=1 'git@github.com:MZero-Labs/rpc-proxy' /usr/src/app
+# Cache busting
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+RUN --mount=type=ssh git fetch
+RUN --mount=type=ssh git checkout 5b74e03814f422fe345bbb3334647e929d6afe84
+
+RUN npm install
+
+RUN npm run build
+
+ENV NODE_ENV production
+USER node
+
+EXPOSE 3001
+CMD [ "node", "dist/server.js" ]

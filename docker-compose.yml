@@ -1,0 +1,64 @@
+version: "3.8"
+services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ~/.rpc-proxy-redis:/data
+
+  hardhat:
+    container_name: hardhat
+    image: mzero/hardhat
+    ports:
+      - "8545:8545"
+    build:
+      context: .
+      dockerfile: Dockerfile.hardhat
+
+  rpc-proxy:
+    container_name: rpc-proxy
+    image: mzero/rpc-proxy
+    build:
+      dockerfile: Dockerfile.rpc-proxy
+      ssh:
+        - default
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+      - HTTP_RPC_URL=http://hardhat:8545/
+      - REDIS_CONN_STRING=redis://redis:6379
+      - TTL_SECONDS=10
+      - NETWORK=hardhat
+      - LOG_CACHE_STATUS=true
+    depends_on:
+      - redis
+      - hardhat
+
+  nuxt-dev:
+    build:
+      context: .
+    image: mzero/nuxt-dev
+    container_name: nuxt-dev
+    command: npm run dev
+    environment:
+      - CONTRACT_DEPLOYED_BLOCK=1
+      - CONTRACT_ADDRESS_SPOG=0x4A679253410272dd5232B3Ff7cF5dbB88f295319
+      - CONTRACT_ADDRESS_LIST_FACTORY=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+      - CONTRACT_ADDRESS_MULTICALL3=0x7a2088a1bFc9d81c55368AE168C2C02570cB814F
+      - VITE_NETWORK_DEFAULT_RPC=http://localhost:3005/
+      - NETWORK_RPC_LIST=http://localhost:3005/
+      - NETWORK_CHAIN_ID=31337
+      - WALLET_CONNECT_PROJECT_ID=4b34af2e9148b5a50056cf1894e88bf3
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+      - "24678:24678"
+    depends_on:
+      - redis
+      - hardhat
+      - rpc-proxy
