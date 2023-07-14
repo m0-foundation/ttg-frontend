@@ -13,11 +13,8 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
-
 const proposalsStore = useProposalsStore();
-
-const { getProposalsByState } = storeToRefs(proposalsStore);
-
-const proposals = getProposalsByState.value("Succeeded");
+const proposals = computed(() =>
+  proposalsStore.getProposalsByState("Succeeded")
+);
 </script>

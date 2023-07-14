@@ -14,7 +14,7 @@
         class="uppercase border-b border-black border-dashed hover:border-0"
         :to="`/proposals/${proposal.proposalId}`"
       >
-        Show Details
+        show details
       </NuxtLink>
 
       <div class="flex justify-between items-center">

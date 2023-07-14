@@ -9,7 +9,7 @@
         />
 
         <article class="bg-white text-black p-8 mb-2">
-          <ProposalStatus :version="proposal?.state" />
+          <ProposalStatus id="proposal-state" :version="proposal?.state" />
 
           <div class="text-primary-darker text-sm mb-6">
             Proposed by <u>{{ proposal?.proposer }}</u>
@@ -22,22 +22,13 @@
           />
           <!--  -->
           <div
-            v-if="proposal?.state === 'Active' && hasDelegator"
-            class="flex justify-between items-center bg-gray-200 p-8 mb-2"
-          >
-            <div class="text-body-dark text-xl mr-4">Delegate vote tokens</div>
-            <div class="space-x-1">
-              <MButton @click="delegate()">Delegate to me</MButton>
-            </div>
-          </div>
-          <div
             v-if="proposal?.state === 'Active'"
-            class="flex justify-between items-center bg-gray-200 p-8"
+            class="flex justify-between items-center bg-gray-200 p-8 my-4"
           >
             <div class="text-body-dark text-3xl mr-4">Approve?</div>
             <div class="space-x-1">
-              <MButton @click="castVote(1)">YES</MButton>
-              <MButton @click="castVote(0)">NO</MButton>
+              <MButton id="button-cast-yes" @click="castVote(1)">YES</MButton>
+              <MButton id="button-cast-no" @click="castVote(0)">NO</MButton>
             </div>
           </div>
 
@@ -47,7 +38,9 @@
           >
             <div class="text-body-dark text-3xl mr-4">Execute?</div>
             <div class="space-x-1 uppercase">
-              <MButton @click="execute()">Yes</MButton>
+              <MButton id="button-proposal-execute" @click="execute()"
+                >Yes</MButton
+              >
             </div>
           </div>
         </article>
@@ -61,16 +54,16 @@
 
           <div class="flex">
             <div class="w-1/2 flex flex-col">
-              <span class="text-gray-500">YES </span>
-              <span class="text-primary text-3xl"
-                >{{ votes?.yes?.percentage }}%</span
-              >
+              <span class="text-gray-500">YES</span>
+              <span id="vote-yes-percentage" class="text-primary text-3xl">
+                {{ votes?.yes?.percentage }}%
+              </span>
             </div>
             <div class="w-1/2 flex flex-col">
-              <span class="text-gray-500">NO </span>
-              <span class="text-red text-3xl"
-                >{{ votes?.no?.percentage }}%</span
-              >
+              <span class="text-gray-500">NO</span>
+              <span id="vote-no-percentage" class="text-red text-3xl">
+                {{ votes?.no?.percentage }}%
+              </span>
             </div>
           </div>
 
@@ -110,13 +103,14 @@
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
 import { keccak256, toHex } from "viem";
-import { writeIspogGovernor, writeIVoteToken } from "@/lib/sdk";
+import { writeIspogGovernor } from "@/lib/sdk";
 
 const store = useProposalsStore();
 const route = useRoute();
 
 const proposalId = route.params.proposal_id;
 const proposal = store.getProposalById(proposalId);
+console.log({ proposal });
 const { html } = useParsedDescription(proposal?.description || "");
 
 const config = useRuntimeConfig();
@@ -129,36 +123,25 @@ const {
   state: votes,
   isReady,
   isLoading,
-} = useAsyncState(client.getProposalVotes(proposalId));
+} = useAsyncState(client.getProposalVotes(proposalId), null);
+console.log({ votes });
 
 const { state: currentProposalValues } = useAsyncState(
-  client.getCurrentProposalValues()
+  client.getCurrentProposalValues(),
+  null
 );
+console.log({ currentProposalValues });
 
-const { state: voters } = useAsyncState(client.getProposalVoters(proposalId));
-const { state: hasDelegator } = useAsyncState(
-  client
-    .getVoteDelegatorFrom(userAccount.value)
-    .then(
-      (delegator) => delegator === "0x0000000000000000000000000000000000000000"
-    )
+const { state: voters } = useAsyncState(
+  client.getProposalVoters(proposalId),
+  null
 );
+console.log({ voters });
 
 const timeLeft = computed(() => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
   return timeAgo;
 });
-
-function delegate() {
-  console.log({ hasDelegator });
-  // no delegate
-
-  return writeIVoteToken({
-    address: spog.contracts.vote,
-    functionName: "delegate",
-    args: [userAccount.value], // self delegate
-  });
-}
 
 function castVote(vote) {
   return writeIspogGovernor({
@@ -170,10 +153,14 @@ function castVote(vote) {
 }
 
 function execute() {
-  const { description, calldatas } = proposal;
-  console.log({ description, calldatas });
+  const { description, calldatas, proposalType } = proposal;
   const hashedDescription = keccak256(toHex(description));
-  const targets = [config.public.contracts.spog]; // do not change
+  const targets = [
+    "updateValueQuorumNumerator",
+    "updateVoteQuorumNumerator",
+  ].includes(proposalType)
+    ? [spog.contracts.governor] // dual governor contract as target for dual governance proposals
+    : [config.public.contracts.spog];
   const values = [0]; // do not change
 
   return writeIspogGovernor({

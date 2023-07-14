@@ -9,7 +9,23 @@
         </span>
       </a>
 
-      <div v-if="isConnected" class="flex items-center md:order-2">
+      <div v-if="isConnected" class="flex items-center md:order-2 gap-2">
+        <MButton
+          v-show="!hasVoteDelegator"
+          id="button-delegate-vote"
+          @click="delegateVote()"
+        >
+          Delegate Vote
+        </MButton>
+
+        <MButton
+          v-show="!hasValueDelegator"
+          id="button-delegate-value"
+          @click="delegateValue()"
+        >
+          Delegate Value
+        </MButton>
+
         <NuxtLink to="/proposals/create">
           <MButton>Create Proposal</MButton>
         </NuxtLink>
@@ -32,7 +48,7 @@
           class="border border-1 border-gray-500 rounded pl-4 py-1 flex items-center"
         >
           <div class="truncate w-28">
-            {{ address }}
+            {{ userAccount }}
           </div>
           <button
             class="text-white font-medium text-sm px-4 py-2.5 text-center inline-flex items-center"
@@ -93,24 +109,52 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from "pinia";
+import { Hash } from "viem";
 import { ref } from "vue";
 import { useAccount, useDisconnect, useBalance } from "use-wagmi";
+import { whenever } from "@vueuse/core";
+import { writeIVoteToken } from "@/lib/sdk";
 
 const isMenuOpen = ref(false);
-const config = useRuntimeConfig();
-const { address, isConnected } = useAccount();
-const spog = useSpogStore();
-console.log({ address, isConnected });
+const hasVoteDelegator = ref(false);
+const hasValueDelegator = ref(false);
+const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 
+const store = useSpogStore();
+const spogClient = useSpogClientStore();
+const spog = storeToRefs(store);
+
+const { address: userAccount, isConnected } = useAccount();
 const { disconnect } = useDisconnect();
+
+function delegateVote() {
+  return writeIVoteToken({
+    address: spog.contracts.value.vote as Hash,
+    functionName: "delegate",
+    args: [userAccount.value!], // self delegate
+  }).then(() => {
+    hasVoteDelegator.value = true;
+  });
+}
+
+function delegateValue() {
+  return writeIVoteToken({
+    address: spog.contracts.value.value as Hash,
+    functionName: "delegate",
+    args: [userAccount.value!], // self delegate
+  }).then(() => {
+    hasValueDelegator.value = true;
+  });
+}
 
 const {
   data: voteBalance,
   isError: voteIsError,
   isLoading: voteIsLoading,
 } = useBalance({
-  address,
-  token: spog.contracts.vote,
+  address: userAccount.value,
+  token: spog.contracts.value.vote as Hash,
   watch: true,
 });
 
@@ -119,8 +163,27 @@ const {
   isError: valueIsError,
   isLoading: valueIsLoading,
 } = useBalance({
-  address,
-  token: spog.contracts.value,
+  address: userAccount.value,
+  token: spog.contracts.value.value as Hash,
   watch: true,
 });
+
+whenever(
+  isConnected,
+  () => {
+    console.log("whenever", { isConnected });
+    spogClient.client.getVoteDelegates(userAccount.value!).then((delegator) => {
+      console.log("hasVoteDelegator", { delegator });
+      hasVoteDelegator.value = delegator !== NULL_ADDRESS;
+    });
+
+    spogClient.client
+      .getValueDelegates(userAccount.value!)
+      .then((delegator) => {
+        console.log("hasValueDelegator", { delegator });
+        hasValueDelegator.value = delegator !== NULL_ADDRESS;
+      });
+  },
+  { immediate: true }
+);
 </script>

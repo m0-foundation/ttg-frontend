@@ -4,6 +4,7 @@ import {
   Chain,
   createPublicClient,
   decodeAbiParameters,
+  parseAbiParameters,
   decodeEventLog,
   formatEther,
   getFunctionSelector,
@@ -19,6 +20,7 @@ import {
   ispogGovernorABI,
   readIspogGovernor,
   readIVoteToken,
+  readIValueToken,
   ispogABI,
 } from "./sdk";
 
@@ -195,22 +197,19 @@ export class SPOG {
       function parseEmergency(emergencyType: number, callData: Hash) {
         if (emergencyType === 0) {
           proposalType = "remove";
-          params = decodeAbiParameters(
-            [
-              { name: "list", type: "address" },
-              { name: "account", type: "address" },
-            ],
-            bytesToHex(fromHex(callData, "bytes").slice(4))
+          const values = decodeAbiParameters(
+            parseAbiParameters("address list, address account"),
+            callData
           );
+          params = [values[0], values[1]];
         } else if (emergencyType === 1) {
           proposalType = "append";
-          params = decodeAbiParameters(
-            [
-              { name: "list", type: "address" },
-              { name: "account", type: "address" },
-            ],
-            bytesToHex(fromHex(callData, "bytes").slice(4))
+
+          const values = decodeAbiParameters(
+            parseAbiParameters("address list, address account"),
+            callData
           );
+          params = [values[0], values[1]];
         } else if (emergencyType === 2) {
           proposalType = "changeConfig";
           params = decodeAbiParameters(
@@ -283,7 +282,7 @@ export class SPOG {
           );
           break;
         case functionSelectors.changeTaxRange:
-          proposalType = "changeTax";
+          proposalType = "changeTaxRange";
           params = decodeAbiParameters(
             [
               { name: "newTaxLowerBound", type: "uint256" },
@@ -508,9 +507,17 @@ export class SPOG {
     };
   }
 
-  getVoteDelegatorFrom(account: Hash): Promise<Hash> {
+  getVoteDelegates(account: Hash): Promise<Hash> {
     return readIVoteToken({
       address: this.config.contracts!.vote as Hash,
+      functionName: "delegates",
+      args: [account],
+    });
+  }
+
+  getValueDelegates(account: Hash): Promise<Hash> {
+    return readIValueToken({
+      address: this.config.contracts!.value as Hash,
       functionName: "delegates",
       args: [account],
     });
@@ -520,7 +527,6 @@ export class SPOG {
     parameters: string[],
     contract: { address: Hash; abi: Abi }
   ): Promise<T> {
-    console.log("Get Params", parameters, contract);
     const contractCalls = parameters.map((name) => ({
       ...contract,
       functionName: name,
@@ -536,6 +542,7 @@ export class SPOG {
         return { ...acc, ...cur };
       }, {});
 
+      console.log("Get Params", params);
       return params as T;
     };
 

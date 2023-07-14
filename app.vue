@@ -12,8 +12,14 @@
     </Head>
 
     <NuxtLayout>
-      <div v-if="isLoading">Loading...</div>
-      <NuxtPage v-else />
+      <Suspense>
+        <template #default>
+          <NuxtPage />
+        </template>
+        <template #fallback>
+          <div>Loading...</div>
+        </template>
+      </Suspense>
     </NuxtLayout>
   </div>
 </template>
@@ -30,7 +36,7 @@ const nuxtApp = useNuxtApp();
 const spogStore = useSpogClientStore();
 
 const { rpc } = storeToRefs(spogStore);
-const isLoading = ref(false);
+const isLoading = ref(true);
 
 // force hardhat network to allow multicall3
 // @ts-ignore
@@ -53,10 +59,10 @@ const fetchSpogContracts = async (spog: SPOG) => {
 
 const fetchProposals = async (spog: SPOG) => {
   try {
-    console.log("fetchProposals");
     const data = await spog.getProposals();
     const proposalStore = useProposalsStore();
     proposalStore.setProposals(data);
+    console.log("fetched Proposals", { data });
   } catch (error) {
     console.error({ error });
   }
@@ -64,10 +70,10 @@ const fetchProposals = async (spog: SPOG) => {
 
 const fetchEpoch = async (spog: SPOG) => {
   try {
-    console.log("fetchEpoch");
     const data = await spog.getEpochState();
     const store = useSpogStore();
     store.setEpoch(data);
+    console.log("fetched Epoch", { data });
   } catch (error) {
     console.error({ error });
   }
@@ -92,7 +98,8 @@ async function onSetup(rpc: string) {
   return spogClient;
 }
 
-onSetup(rpc.value).then(async (client) => {
+await onSetup(rpc.value).then(async (client) => {
+  isLoading.value = true;
   await Promise.all([fetchProposals(client), fetchEpoch(client)]);
   isLoading.value = false;
 });
