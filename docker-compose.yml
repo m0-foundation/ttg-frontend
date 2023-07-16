@@ -15,7 +15,10 @@ services:
       - "8545:8545"
     build:
       context: .
-      dockerfile: Dockerfile.hardhat
+    command: yarn hardhat
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
 
   rpc-proxy:
     container_name: rpc-proxy
@@ -29,8 +32,9 @@ services:
     environment:
       - PORT=3005
       - HTTP_RPC_URL=http://hardhat:8545/
+      - WS_RPC_URL=ws://hardhat:8545/
       - REDIS_CONN_STRING=redis://redis:6379
-      - TTL_SECONDS=10
+      - TTL_SECONDS=30
       - NETWORK=hardhat
       - LOG_CACHE_STATUS=true
     depends_on:
@@ -40,18 +44,11 @@ services:
   nuxt-dev:
     build:
       context: .
-    image: mzero/nuxt-dev
-    container_name: nuxt-dev
-    command: npm run dev
-    environment:
-      - CONTRACT_DEPLOYED_BLOCK=1
-      - CONTRACT_ADDRESS_SPOG=0x4A679253410272dd5232B3Ff7cF5dbB88f295319
-      - CONTRACT_ADDRESS_LIST_FACTORY=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
-      - CONTRACT_ADDRESS_MULTICALL3=0x7a2088a1bFc9d81c55368AE168C2C02570cB814F
-      - VITE_NETWORK_DEFAULT_RPC=http://localhost:3005/
-      - NETWORK_RPC_LIST=http://localhost:3005/
-      - NETWORK_CHAIN_ID=31337
-      - WALLET_CONNECT_PROJECT_ID=4b34af2e9148b5a50056cf1894e88bf3
+    image: mzero/spog
+    container_name: spog
+    command: yarn dev
+    env_file:
+      - .env.development
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

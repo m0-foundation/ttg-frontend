@@ -1,6 +1,6 @@
 # M^ZERO Governance dApp
 
-This app is based on Nuxt v3
+This app is based on Nuxt v3, Vue, and Wagmi
 
 ## Contracts are git submodules
 
@@ -9,6 +9,12 @@ This will install the SPOG contracts and all of their submodules recursively
 ```bash
 git submodule update --init --recursive
 ```
+
+## Compile contracts
+
+1. install `foundry` https://getfoundry.sh/
+2. `cd contracts/`
+3. `forge build`
 
 ## Running with docker-compose
 
@@ -101,7 +107,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ## Update SDK from SPOG smart contracts (only when contracts change)
 
-1. install `foundry` https://getfoundry.sh/
+1. `git submodule update --init --recursive`
 2. `cd contracts/`
 3. `forge build`
 4. `cd ..`
@@ -110,6 +116,6 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ### `.env` file:
 
-This app uses an .env file to set environment variables locally. For local development, copy `.env.development` to `.env`
+This app uses an .env file to set environment variables locally (not in docker-compose). For local development, copy `.env.development` to `.env`
 
 For production or public testnets, please deploy the contracts using the script provided in the SPOG contracts repo, and create an .env file with appropriate values.

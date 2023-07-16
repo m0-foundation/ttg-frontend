@@ -1,13 +1,18 @@
-FROM node:18
+FROM node:20-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
 
-COPY . .
+# Cache busting
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+
+# Install app dependencies
+COPY package*.json ./
 
 RUN yarn install
 
-RUN yarn build
-
 EXPOSE 3000
+EXPOSE 8545
+
 CMD [ "yarn", "dev" ]
+# CMD [ "yarn", "hardhat" ]
