@@ -17,7 +17,6 @@ import multicall3 from "./contracts/Multicall3.json";
 import { Network } from "./setup";
 
 export default async function deploySpog(network: Network) {
-  console.log(network);
   const provider = new JsonRpcProvider(network.url);
   const wallet = new Wallet(network.accounts[0].privateKey, provider);
 

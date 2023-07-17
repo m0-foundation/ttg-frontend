@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  hardhat:
+    container_name: hardhat
+    image: mzero/hardhat
+    ports:
+      - "8545:8545"
+    build:
+      context: .
+    command: yarn hardhat
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  rpc-proxy:
+    container_name: rpc-proxy
+    image: mzero/rpc-proxy
+    build:
+      dockerfile: Dockerfile.rpc-proxy
+      ssh:
+        - default
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+      - HTTP_RPC_URL=http://hardhat:8545/
+      - WS_RPC_URL=ws://hardhat:8545/
+      - TTL_SECONDS=30
+      - NETWORK=hardhat
+      - LOG_CACHE_STATUS=true
+    depends_on:
+      - hardhat
+
+  nuxt-dev:
+    build:
+      context: .
+    image: mzero/spog
+    container_name: spog
+    command: yarn dev
+    env_file:
+      - .env.development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+      - "24678:24678"
+    depends_on:
+      - hardhat
+      - rpc-proxy

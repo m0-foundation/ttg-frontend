@@ -1,35 +1,92 @@
-# Nuxt 3 Minimal Starter
+# M^ZERO Governance dApp
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This app is based on Nuxt v3, Vue, and Wagmi
 
-## Setup
+## Contracts are git submodules
 
-Make sure to install the dependencies:
-
-### Contracts are git submodules
-
-This will install the SPOG contracts and all of it's deps recursively
+This will install the SPOG contracts and all of their submodules recursively
 
 ```bash
 git submodule update --init --recursive
 ```
 
+## Compile contracts
+
+1. install `foundry` https://getfoundry.sh/
+2. `cd contracts/`
+3. `forge build`
+
+## Running with docker-compose
+
+The easiest way to run everything for development is with docker-compose. Make sure you have SSH access to the `rpc-proxy` repo as well.
+
+```bash
+ssh-add
+docker-compose up
+```
+
+To force a rebuild, use
+
+```bash
+docker-compose up --build
+```
+
+This will start:
+
+- a test blockchain on port 8545
+- an rpc-proxy on port 3005
+- the app on port 3000 with live reloading when files change
+
+## Setup without docker-compose
+
+Make sure to install the dependencies:
+
 ### Install Node modules
 
 ```bash
-# yarn
 yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install
 ```
 
-## Development Server
+### Local development with hardhat
 
-Start the development server on `http://localhost:3000`
+In one terminal, run `yarn hardhat`. This starts a test blockchain on port 8545.
+
+To test with the [rpc-proxy](https://github.com/MZero-Labs/rpc-proxy) on port 3005, clone it and run it in another terminal. It will connect to hardhat.
+
+To test without the rpc-proxy, verify your .env connects to hardhat port 8545 instead of 3005 for RPC
+
+In another terminal, run `yarn dev`. This starts the development server on `http://localhost:3000`
+
+## Testing with Metamask
+
+You can test everything locally with 5 pre-funded accounts.
+
+In metamask, import a wallet using the seed phrase
+
+```
+1. test
+2. test
+3. test
+4. test
+5. test
+6. test
+7. test
+8. test
+9. test
+10. test
+11. test
+12. junk
+```
+
+Afterward, in metamask, each time you create a new account, for up to 5 accounts, they will all have ETH, CASH, VOTE, VALUE and can participate in governance. You can switch between accounts and vote on proposals to achieve a quorum.
+
+### Note
+
+Each time hardhat is restarted, metamask will need to be reset
+
+Settings > Advanced > Clear activity
+
+This resets the nonce and state for the wallet
 
 ```bash
 npm run dev
@@ -51,83 +108,17 @@ npm run preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
-## Generate SDK from SPOG smart contracts
+## Update SDK from SPOG smart contracts (only when contracts change)
 
-1. install `foundry` https://getfoundry.sh/
+1. `git submodule update --init --recursive`
 2. `cd contracts/`
 3. `forge build`
 4. `cd ..`
 5. then run `yarn wagmi generate`
 6. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
 
-## Deploy SPOG to testnet use on the Dapp
+### `.env` file:
 
-1. go to /contracts and udpate `.env` file with `MNEMONIC=".....insert your mnemonic from your metamask...."`
-2. Start the local anvil node `anvil `
-3. In another terminal, run the deployment script for Anvil `make deploy-spog-local`
-4. from the logs results of deployed contracts you must copy to the `.env` following this order:
+This app uses an .env file to set environment variables locally (not in docker-compose). For local development, copy `.env.development` to `.env`
 
-```
-  deployer: 0x31DCb7AE01fFfD9B6468814bA2A6A0ab9c58d8e5
-  SPOG address:  0x48E82c3d2022bc15390f9faC2ebd4770604104b6
-  SPOGVote token address:  0xF6b56E5C7fcDaeca68D8FEe374331357a48B2f90
-  SPOGValue token address:  0x7b7E36A667F0Dd96B617343a12fB04e52C80BC2D
-  DualGovernor address:  0x7C474027d8873a7bc50A791a4A96aD181108B877
-  Cash address:  0xc50C3d2d69aC52490882a8A43a05396987369687
-  Vote holders vault address:  0x136D0388d9619C3c07bd316033Ce8cf1C631ca7e
-  Value holders vault address:  0x05872592c3F8653C1291E46574b99cc7e69939a5
-```
-
-### `.env` file example:
-
-```
-CONTRACT_DEPLOYED_BLOCK={BLOCK_NUMBER} // block number where the SPOG was deployed
-CONTRACT_ADDRESS_SPOG={SPOG address}
-CONTRACT_ADDRESS_SPOG_VOTE={SPOGVote token address}
-CONTRACT_ADDRESS_SPOG_VALUE={SPOGValue token address}
-CONTRACT_ADDRESS_SPOG_GOVERNOR={DualGovernor address}
-CONTRACT_ADDRESS_CASH={Cash address}
-CONTRACT_ADDRESS_VAULT_VOTE={Vote holders vault address}
-CONTRACT_ADDRESS_VAULT_VALUE={Value holders vault address}
-# network deployed
-VITE_NETWORK_DEFAULT_RPC=https://rpc.sepolia.org/
-NETWORK_RPC_LIST=https://rpc.sepolia.org/,https://rpc2.sepolia.org/,https://rpc.sepolia.online/,https://www.sepoliarpc.space/,https://rpc-sepolia.rockx.com/
-NETWORK_CHAIN_ID=11155111
-```
-
-5. Finally, just start the app with `yarn dev`
-
-# Local development with hardhat
-
-In one terminal, run `ts-node run-hardhat.ts`
-
-In another terminal, run `yarn dev`
-
-Now you can run everything locally with pre-funded accounts.
-
-In metamask, import a wallet using the seed phrase
-
-```
-1. test
-2. test
-3. test
-4. test
-5. test
-6. test
-7. test
-8. test
-9. test
-10. test
-11. test
-12. junk
-```
-
-Afterward, in metamask, each time you create a new account, for up to 5 accounts, they will all have ETH, CASH, VOTE, VALUE and can participate in governance. You can switch between accounts and vote on proposals to achive a quorum
-
-### Note
-
-Each time hardhat is restarted, metamask will need to be reset
-
-Settings > Advanced > Clear activity
-
-This resets the nonce and state for the wallet
+For production or public testnets, please deploy the contracts using the script provided in the SPOG contracts repo, and create an .env file with appropriate values.
