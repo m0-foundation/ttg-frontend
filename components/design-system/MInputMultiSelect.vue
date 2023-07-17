@@ -2,38 +2,67 @@
   <div ref="target" class="dropdown inline-block relative w-full">
     <button
       type="button"
-      class="bg-transparent border border-1-white text-white py-2 px-4 inline-flex justify-between w-full"
+      class="bg-transparent border border-1-white text-white py-2 px-4 inline-flex justify-between w-full items-center"
       @click="onOpen"
     >
       {{ selected?.label || "Select a proposal type" }}
-      <span class="text-xs text-[#5d605d]">change</span>
+
+      <span
+        v-if="selected?.isEmergency"
+        class="text-xs text-[#5d605d] bg-red text-white p-2"
+      >
+        emergency
+      </span>
+
+      <span v-else class="text-xs text-[#5d605d]">change</span>
     </button>
-    <ul v-show="isMenuOpen" class="absolute text-white pt-1 bg-grey-secondary">
-      <li v-for="opt in options" :key="opt.value">
-        <button
-          v-if="opt.children"
-          type="button"
-          class="button"
-          @click="onShowSubmenu(opt)"
+    <ul v-show="isMenuOpen" class="absolute text-white pt-4 bg-grey-secondary">
+      <li v-for="opt in options" :key="opt.value" class="">
+        <div
+          v-show="opt.header"
+          class="uppercase text-xs text-grey-primary px-4 py-2"
         >
-          {{ opt.label }} &rsaquo;
-        </button>
+          {{ opt.header }}
+        </div>
 
-        <button v-else type="button" class="button" @click="onSelect(opt)">
-          {{ opt.label }}
-        </button>
+        <div v-show="!opt.header" :class="[{ emergency: opt.isEmergency }]">
+          <button
+            v-if="opt.children"
+            type="button"
+            :class="[{ '!pt-8 !pb-4': opt.isEmergency }, 'button']"
+            @click="onShowSubmenu(opt)"
+          >
+            {{ opt.label }} &rsaquo;
 
-        <ul v-show="isSubmenuOpen(opt)" class="sub-menu">
-          <li v-for="child in opt.children" :key="child.value">
-            <button
-              type="button"
-              class="button sub-button"
-              @click="onSelect(child)"
+            <div
+              v-show="opt.isEmergency"
+              class="text-grey-primary text-xs w-72 py-2"
             >
-              {{ child.label }}
-            </button>
-          </li>
-        </ul>
+              The emergency proposal will be executed immediately when the
+              quorum is reached.
+            </div>
+          </button>
+
+          <button v-else type="button" class="button" @click="onSelect(opt)">
+            {{ opt.label }}
+          </button>
+
+          <ul
+            v-show="isSubmenuOpen(opt)"
+            class="sub-menu"
+            :class="{ 'fix-when-emergency': opt.isEmergency }"
+          >
+            <li v-for="child in opt.children" :key="child.value">
+              <button
+                type="button"
+                class="button sub-button"
+                @click="onSelect(child)"
+              >
+                {{ child.label }}
+              </button>
+            </li>
+          </ul>
+        </div>
       </li>
     </ul>
   </div>
@@ -46,6 +75,8 @@ export interface OptionItem {
   value: string;
   label: string;
   component: any;
+  header?: string;
+  isEmergency?: boolean;
   children?: Array<{
     value: string;
     label: string;
@@ -96,14 +127,22 @@ onClickOutside(target, onOut);
 </script>
 <style scoped>
 .button {
-  @apply text-left w-full hover:bg-[#202220] py-2 px-4 block whitespace-nowrap;
+  @apply text-left  block w-full py-2 px-4 hover:bg-[#202220];
 }
 
 .sub-button {
-  @apply hover:bg-[#202220];
+  @apply hover:bg-[#202220] px-4 py-2;
 }
 
 .sub-menu {
-  @apply bg-[#2a2d2a] absolute block text-white left-full -mt-10;
+  @apply bg-[#2a2d2a] absolute block text-white left-full -mt-10 w-max;
+}
+
+.fix-when-emergency {
+  margin-top: -6rem !important;
+}
+
+.emergency {
+  @apply border-t-2 border-[#202220];
 }
 </style>
