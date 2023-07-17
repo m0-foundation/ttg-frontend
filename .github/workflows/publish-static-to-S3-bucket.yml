@@ -54,5 +54,5 @@ jobs:
         with:
           args: --follow-symlinks --delete --exclude '.git/*' --exclude '.github/*'
         env:
-          AWS_S3_BUCKET: "thething-publish-spog-frontend-dev-p14y"
+          AWS_S3_BUCKET: "thething-publish-spog-frontend-dev-p14y/main"
           SOURCE_DIR: './.output/public'
