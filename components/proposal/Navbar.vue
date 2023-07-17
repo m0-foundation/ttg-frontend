@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="text-white text-xl p-8">
+    <nav class="text-white text-xl px-8">
       <MNavButton>Proposals<span class="text-primary">_</span></MNavButton>
     </nav>
 
