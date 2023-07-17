@@ -9,8 +9,8 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Change Quorums").should("exist");
-      cy.contains("Change Quorums").click();
+      cy.contains("Quorums").should("exist");
+      cy.contains("Quorums").click();
 
       cy.contains("Value Quorum").should("exist");
       cy.contains("Value Quorum").click();
