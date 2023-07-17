@@ -33,9 +33,8 @@ docker-compose up --build
 
 This will start:
 
-- Redis
 - a test blockchain on port 8545
-- an rpc-proxy on port 3001
+- an rpc-proxy on port 3005
 - the app on port 3000 with live reloading when files change
 
 ## Setup without docker-compose
@@ -51,6 +50,10 @@ yarn install
 ### Local development with hardhat
 
 In one terminal, run `yarn hardhat`. This starts a test blockchain on port 8545.
+
+To test with the [rpc-proxy](https://github.com/MZero-Labs/rpc-proxy) on port 3005, clone it and run it in another terminal. It will connect to hardhat.
+
+To test without the rpc-proxy, verify your .env connects to hardhat port 8545 instead of 3005 for RPC
 
 In another terminal, run `yarn dev`. This starts the development server on `http://localhost:3000`
 
