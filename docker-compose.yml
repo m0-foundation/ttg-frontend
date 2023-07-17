@@ -1,13 +1,5 @@
 version: "3.8"
 services:
-  redis:
-    container_name: redis
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - ~/.rpc-proxy-redis:/data
-
   hardhat:
     container_name: hardhat
     image: mzero/hardhat
@@ -33,12 +25,10 @@ services:
       - PORT=3005
       - HTTP_RPC_URL=http://hardhat:8545/
       - WS_RPC_URL=ws://hardhat:8545/
-      - REDIS_CONN_STRING=redis://redis:6379
       - TTL_SECONDS=30
       - NETWORK=hardhat
       - LOG_CACHE_STATUS=true
     depends_on:
-      - redis
       - hardhat
 
   nuxt-dev:
@@ -56,6 +46,5 @@ services:
       - "3000:3000"
       - "24678:24678"
     depends_on:
-      - redis
       - hardhat
       - rpc-proxy
