@@ -408,13 +408,8 @@ export class SPOG {
     return ProposalState[proposalStateNumber] as keyof typeof ProposalState;
   }
 
-  async getProposalVotes(proposalId: string): Promise<ProposalVotesState> {
-    const votes = await readIspogGovernor({
-      address: this.config.contracts!.governor as Hash,
-      functionName: "proposalVotes",
-      args: [BigInt(proposalId)],
-    });
-
+  parseProposalVotes(votes: readonly [bigint, bigint]): ProposalVotesState {
+    console.log("parse votes", votes);
     const no = votes[0];
     const yes = votes[1];
 

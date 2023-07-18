@@ -101,9 +101,9 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useAccount } from "use-wagmi";
+import { useAccount, useContractRead } from "use-wagmi";
 import { keccak256, toHex } from "viem";
-import { writeIspogGovernor } from "@/lib/sdk";
+import { writeIspogGovernor, ispogGovernorABI } from "@/lib/sdk";
 
 const store = useProposalsStore();
 const route = useRoute();
@@ -120,11 +120,20 @@ const spog = useSpogStore();
 const { epoch } = storeToRefs(spog);
 
 const {
-  state: votes,
-  isReady,
+  data: votes = [0n, 0n],
+  isError,
   isLoading,
-} = useAsyncState(client.getProposalVotes(proposalId), null);
-console.log({ votes });
+} = useContractRead({
+  address: spog.contracts.governor,
+  abi: ispogGovernorABI,
+  functionName: "proposalVotes",
+  args: [BigInt(proposalId)],
+  watch: true,
+  select: (data) => client.parseProposalVotes(data),
+  onSuccess(data) {
+    console.log("Fetched votes for proposal", proposalId, data);
+  },
+});
 
 const { state: currentProposalValues } = useAsyncState(
   client.getCurrentProposalValues(),
