@@ -1,73 +1,50 @@
 <template>
-  <div class="bg-white">
-    <div class="p-4 border border-b-2">
-      <h2 class="text-black text-xl">Creating Proposal</h2>
+  <div class="bg-body-dark">
+    <div class="p-4">
+      <h2 class="text-white text-2xl text-center">{{ title }}</h2>
     </div>
     <ol class="space-y-4 m-8">
       <li v-for="(step, index) in currentSteps" :key="index">
         <div :class="['step', step.status]" role="alert">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="font-medium">{{ index + 1 }}. {{ step.title }}</h3>
+              <h3 class="font-medium flex">
+                <span v-if="step.status === 'complete'">[⎷]</span>
+                <span v-else-if="step.status === 'error'">[x]</span>
+                <span v-else-if="step.status === 'pending'" class="flex"
+                  >[
+                  <svg
+                    v-show="['current', 'pending'].includes(step.status)"
+                    class="animate-spin mx-1 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  ]</span
+                >
+                <span v-else> [{{ index + 1 }}] </span>
 
-              <span class="text-sm text-gray-700">
+                {{ step.title }}
+              </h3>
+
+              <span class="text-sm text-grey-primary">
                 {{ messages[step.status] }}
               </span>
             </div>
-
-            <svg
-              v-show="['current', 'pending'].includes(step.status)"
-              class="animate-spin -ml-1 mr-3 h-5 w-5 text-black"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                stroke="currentColor"
-                stroke-width="4"
-                cx="12"
-                cy="12"
-                r="10"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-
-            <svg
-              v-show="step.status === 'complete'"
-              aria-hidden="true"
-              class="w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-
-            <svg
-              v-show="step.status === 'error'"
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
           </div>
         </div>
       </li>
@@ -82,6 +59,7 @@ interface Step {
   status: Status;
 }
 export interface Props {
+  title: string;
   steps: Array<Step>;
 }
 
@@ -120,26 +98,32 @@ onUnmounted(() => {
 });
 </script>
 <style scoped>
+h3 {
+  @apply text-xl;
+}
 .step {
-  @apply w-full p-4 rounded-lg;
+  @apply w-full p-4;
 }
 
 .complete {
-  @apply text-green-700 border border-green-700 bg-green-50;
+  @apply text-primary;
 }
 
 .incomplete {
-  @apply text-gray-900 bg-gray-100 border border-gray-300;
+  @apply text-grey-primary;
 }
 
 .current {
-  @apply text-blue-800 bg-blue-200 border border-primary-dark;
+  @apply text-white;
 }
 
 .pending {
-  @apply text-black bg-yellow-200 border border-primary-dark;
+  @apply text-white;
 }
 .error {
-  @apply text-red border border-red bg-rose-100;
+  @apply text-white bg-red;
+}
+.error span {
+  @apply !text-white;
 }
 </style>

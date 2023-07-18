@@ -1,7 +1,11 @@
 <template>
   <div>
     <MModal ref="modal" @on-closed="onCloseModal">
-      <MTransactionsStepper ref="stepper" :steps="steps" />
+      <MTransactionsStepper
+        ref="stepper"
+        title="Submitting your proposal"
+        :steps="steps"
+      />
     </MModal>
     <form @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
@@ -154,8 +158,45 @@ const spog = useSpogStore();
 
 const proposalTypes = [
   {
-    value: "Change Quorums",
-    label: "Change Quorums",
+    header: "protocol",
+  },
+  {
+    value: "addList",
+    label: "Create a new list",
+    placeholder: "List name",
+    component: ProposalInputSingleText,
+  },
+  {
+    value: "append",
+    label: "Append to a list",
+    component: ProposalInputListOperation,
+  },
+  {
+    value: "remove",
+    label: "Remove from a list",
+    component: ProposalInputListOperation,
+  },
+
+  {
+    value: "changeConfig",
+    label: "Change Config",
+    component: ProposalInputChangeConfig,
+  },
+
+  {
+    value: "reset",
+    label: "Reset",
+    placeholder: "Governance Address",
+    component: ProposalInputSingleText,
+  },
+
+  {
+    header: "governance",
+  },
+
+  {
+    value: "Quorums",
+    label: "Quorums",
     children: [
       {
         value: "updateVoteQuorumNumerator",
@@ -188,44 +229,9 @@ const proposalTypes = [
   },
 
   {
-    value: "list",
-    label: "List",
-    children: [
-      {
-        value: "addList",
-        label: "Create a new list",
-        placeholder: "List name",
-        component: ProposalInputSingleText,
-      },
-      {
-        value: "append",
-        label: "Append to a list",
-        component: ProposalInputListOperation,
-      },
-      {
-        value: "remove",
-        label: "Remove from a list",
-        component: ProposalInputListOperation,
-      },
-    ],
-  },
-
-  {
-    value: "changeConfig",
-    label: "Change Config",
-    component: ProposalInputChangeConfig,
-  },
-
-  {
-    value: "reset",
-    label: "Reset",
-    placeholder: "Governance Address",
-    component: ProposalInputSingleText,
-  },
-
-  {
     value: "emergency",
     label: "Emergency",
+    isEmergency: true,
     children: [
       {
         value: "append",
@@ -262,6 +268,8 @@ function onChangeProposalType(option) {
 function onPreview() {
   isPreview.value = true;
 }
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function writeAllowance() {
   const account = userAccount.value;
@@ -437,6 +445,8 @@ async function onSubmit() {
 
     stepper.value.nextStep();
     stepper.value.changeCurrentStep("complete");
+
+    await wait(1000);
 
     return navigateTo("/proposals/active");
   } catch (error) {

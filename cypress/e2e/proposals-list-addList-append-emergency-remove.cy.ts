@@ -12,7 +12,6 @@ describe("Proposals", () => {
         cy.contains("Select a proposal type").should("exist");
         cy.contains("Select a proposal type").click();
 
-        cy.contains("List").click();
         cy.contains("Create a new list").should("exist");
         cy.contains("Create a new list").click({ force: true });
 
@@ -126,7 +125,6 @@ describe("Proposals", () => {
         cy.contains("Select a proposal type").should("exist");
         cy.contains("Select a proposal type").click();
 
-        cy.contains("List").click();
         cy.contains("Append to a list").should("exist").click({ force: true });
 
         cy.get("input[data-test='proposalValue']").should(
