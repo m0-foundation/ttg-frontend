@@ -11,7 +11,6 @@ export default defineNuxtConfig({
       },
       contracts: {
         deployedBlock: process.env.CONTRACT_DEPLOYED_BLOCK,
-        listFactory: process.env.CONTRACT_ADDRESS_LIST_FACTORY,
         spog: process.env.CONTRACT_ADDRESS_SPOG,
         multicall3: process.env.CONTRACT_ADDRESS_MULTICALL3,
       },
