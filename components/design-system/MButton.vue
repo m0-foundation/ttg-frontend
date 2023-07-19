@@ -17,7 +17,9 @@ const props = withDefaults(defineProps<MButtonProps>(), {
 button {
   @apply uppercase font-medium text-sm px-4 py-2 text-center mr-3 md:mr-0;
 }
-
+button:disabled {
+  @apply opacity-50 cursor-not-allowed bg-primary-dark;
+}
 .primary {
   @apply text-black bg-primary hover:bg-primary-dark focus:ring-4 focus:outline-none focus:ring-green-300;
 }
