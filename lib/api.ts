@@ -200,7 +200,8 @@ export class SPOG {
             parseAbiParameters("bytes32 list, address account"),
             callData
           );
-          params = [values[0], values[1]];
+
+          params = [fromHex(values[0], "string"), values[1]];
         } else if (emergencyType === 1) {
           proposalType = "addToList";
 
@@ -208,7 +209,7 @@ export class SPOG {
             parseAbiParameters("bytes32 list, address account"),
             callData
           );
-          params = [values[0], values[1]];
+          params = [fromHex(values[0], "string"), values[1]];
         } else if (emergencyType === 2) {
           proposalType = "changeConfig";
           params = decodeAbiParameters(

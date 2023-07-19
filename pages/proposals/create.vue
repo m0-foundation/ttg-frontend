@@ -384,8 +384,8 @@ async function onSubmit() {
 
 function buildCalldatasEmergency({ input1, input2, input3, type }) {
   const emergencyTypesMap = {
-    remove: 0,
-    append: 1,
+    removeFromList: 0,
+    addToList: 1,
     changeConfig: 2,
   };
 
@@ -404,10 +404,10 @@ function buildCalldatasEmergency({ input1, input2, input3, type }) {
         )
       : encodeAbiParameters(
           [
-            { name: "list", type: "address" },
+            { name: "list", type: "bytes32" },
             { name: "account", type: "address" },
           ],
-          [input1, input2] // list, address
+          [toHex(stringToBytes(input1, { size: 32 })), input2] // list, address
         );
 
   return buildCalldatasSpog("emergency", [valueEncoded, valueEncoded2]);
