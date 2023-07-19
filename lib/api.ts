@@ -133,9 +133,8 @@ export interface Config {
 }
 
 const functionSelectors = {
-  addList: getFunctionSelector("addList(address)"),
-  append: getFunctionSelector("append(address,address)"),
-  remove: getFunctionSelector("remove(address,address)"),
+  addToList: getFunctionSelector("addToList(bytes32,address)"),
+  removeFromList: getFunctionSelector("removeFromList(bytes32,address)"),
   changeConfig: getFunctionSelector("changeConfig(bytes32,address,bytes4)"),
   emergency: getFunctionSelector("emergency(uint8,bytes)"),
   reset: getFunctionSelector("reset(address,address)"),
@@ -196,17 +195,17 @@ export class SPOG {
 
       function parseEmergency(emergencyType: number, callData: Hash) {
         if (emergencyType === 0) {
-          proposalType = "remove";
+          proposalType = "removeFromList";
           const values = decodeAbiParameters(
-            parseAbiParameters("address list, address account"),
+            parseAbiParameters("bytes32 list, address account"),
             callData
           );
           params = [values[0], values[1]];
         } else if (emergencyType === 1) {
-          proposalType = "append";
+          proposalType = "addToList";
 
           const values = decodeAbiParameters(
-            parseAbiParameters("address list, address account"),
+            parseAbiParameters("bytes32 list, address account"),
             callData
           );
           params = [values[0], values[1]];
@@ -225,33 +224,33 @@ export class SPOG {
         return [proposalType, params];
       }
 
+      function revemoSelectorFromCallData(callData: Hash) {
+        return bytesToHex(fromHex(callData, "bytes").slice(4));
+      }
+
       switch (selector) {
-        case functionSelectors.addList:
-          proposalType = "addList";
-          params = decodeAbiParameters(
-            [{ name: "list", type: "address" }],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
-          );
-          break;
-        case functionSelectors.append:
-          proposalType = "append";
+        case functionSelectors.addToList:
+          proposalType = "addToList";
           params = decodeAbiParameters(
             [
-              { name: "list", type: "address" },
+              { name: "list", type: "bytes32" },
               { name: "account", type: "address" },
             ],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
+
+          params[0] = fromHex(params[0], "string");
           break;
-        case functionSelectors.remove:
-          proposalType = "remove";
+        case functionSelectors.removeFromList:
+          proposalType = "removeFromList";
           params = decodeAbiParameters(
             [
-              { name: "list", type: "address" },
+              { name: "list", type: "bytes32" },
               { name: "account", type: "address" },
             ],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
+          params[0] = fromHex(params[0], "string");
           break;
         case functionSelectors.changeConfig:
           proposalType = "changeConfig";
@@ -261,7 +260,7 @@ export class SPOG {
               { name: "configAddress", type: "address" },
               { name: "interfaceId", type: "bytes4" },
             ],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.reset:
@@ -271,14 +270,14 @@ export class SPOG {
               { name: "newGovernor", type: "address" },
               { name: "newVoteVault", type: "address" },
             ],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.changeTax:
           proposalType = "changeTax";
           params = decodeAbiParameters(
             [{ name: "newTax", type: "uint256" }],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.changeTaxRange:
@@ -288,21 +287,21 @@ export class SPOG {
               { name: "newTaxLowerBound", type: "uint256" },
               { name: "newTaxUpperBound", type: "uint256" },
             ],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.updateVoteQuorumNumerator:
           proposalType = "updateVoteQuorumNumerator";
           params = decodeAbiParameters(
             [{ name: "newVoteQuorumNumerator", type: "uint256" }],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.updateValueQuorumNumerator:
           proposalType = "updateValueQuorumNumerator";
           params = decodeAbiParameters(
             [{ name: "newValueQuorumNumerator", type: "uint256" }],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.emergency:
@@ -313,7 +312,7 @@ export class SPOG {
               { name: "emergencyType", type: "uint8" },
               { name: "callData", type: "bytes" },
             ],
-            bytesToHex(fromHex(event.calldatas[0], "bytes").slice(4))
+            revemoSelectorFromCallData(event.calldatas[0])
           );
 
           [proposalType, params] = parseEmergency(params[0], params[1]);
@@ -324,11 +323,10 @@ export class SPOG {
       }
 
       const proposalLabels = {
-        addList: "Add List",
         changeTax: "Change Tax",
         changeTaxRange: "Change Tax Range",
-        append: "Append to list",
-        remove: "Remove from list",
+        addToList: "Add to list",
+        removeFromList: "Remove from list",
         changeConfig: "Change Config",
         reset: "Reset Vote Holders",
         updateVoteQuorumNumerator: "Update Vote Quorum",
