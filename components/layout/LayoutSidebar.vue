@@ -92,7 +92,7 @@ import { Hash } from "viem";
 import { ref } from "vue";
 import { useAccount, useDisconnect, useBalance } from "use-wagmi";
 import { whenever } from "@vueuse/core";
-import { writeIVoteToken } from "@/lib/sdk";
+import { writeIvote } from "@/lib/sdk";
 
 const menu = [
   {
@@ -137,7 +137,7 @@ const { address: userAccount, isConnected } = useAccount();
 const { disconnect } = useDisconnect();
 
 function delegateVote() {
-  return writeIVoteToken({
+  return writeIvote({
     address: spog.contracts.value.vote as Hash,
     functionName: "delegate",
     args: [userAccount.value!], // self delegate
@@ -147,7 +147,7 @@ function delegateVote() {
 }
 
 function delegateValue() {
-  return writeIVoteToken({
+  return writeIvote({
     address: spog.contracts.value.value as Hash,
     functionName: "delegate",
     args: [userAccount.value!], // self delegate
