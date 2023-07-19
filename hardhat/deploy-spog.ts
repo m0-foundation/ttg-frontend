@@ -4,12 +4,10 @@ import { ContractFactory, BigNumber } from "ethers";
 
 import dualGovernor from "../contracts/out/DualGovernor.sol/DualGovernor.json";
 import erc20Mock from "../contracts/out/ERC20Mock.sol/ERC20Mock.json";
-import erc20PricelessAuction from "../contracts/out/ERC20PricelessAuction.sol/ERC20PricelessAuction.json";
-import listFactory from "../contracts/out/ListFactory.sol/ListFactory.json";
-import valueVault from "../contracts/out/ValueVault.sol/ValueVault.json";
-import voteVault from "../contracts/out/VoteVault.sol/VoteVault.json";
-import voteToken from "../contracts/out/VoteToken.sol/VoteToken.json";
-import valueToken from "../contracts/out/ValueToken.sol/ValueToken.json";
+import voteAuction from "../contracts/out/VoteAuction.sol/VoteAuction.json";
+import spogVault from "../contracts/out/SPOGVault.sol/SPOGVault.json";
+import voteToken from "../contracts/out/VOTE.sol/VOTE.json";
+import valueToken from "../contracts/out/VALUE.sol/VALUE.json";
 
 import spog from "../contracts/out/SPOG.sol/SPOG.json";
 import multicall3 from "./contracts/Multicall3.json";
@@ -31,24 +29,14 @@ export default async function deploySpog(network: Network) {
     erc20Mock.bytecode,
     wallet
   );
-  const erc20PricelessAuctionFactory = new ContractFactory(
-    erc20PricelessAuction.abi,
-    erc20PricelessAuction.bytecode,
+  const voteAuctionFactory = new ContractFactory(
+    voteAuction.abi,
+    voteAuction.bytecode,
     wallet
   );
-  const listFactoryFactory = new ContractFactory(
-    listFactory.abi,
-    listFactory.bytecode,
-    wallet
-  );
-  const valueVaultFactory = new ContractFactory(
-    valueVault.abi,
-    valueVault.bytecode,
-    wallet
-  );
-  const voteVaultFactory = new ContractFactory(
-    voteVault.abi,
-    voteVault.bytecode,
+  const spogVaultFactory = new ContractFactory(
+    spogVault.abi,
+    spogVault.bytecode,
     wallet
   );
   const voteTokenFactory = new ContractFactory(
@@ -89,9 +77,7 @@ export default async function deploySpog(network: Network) {
     BigNumber.from(100).mul(BigNumber.from("1000000000000000000"))
   );
 
-  const auctionContract = await erc20PricelessAuctionFactory.deploy();
-
-  const listFactoryContract = await listFactoryFactory.deploy();
+  const auctionContract = await voteAuctionFactory.deploy();
 
   const valueTokenContract = await valueTokenFactory.deploy(
     "SPOG Value",
@@ -138,18 +124,12 @@ export default async function deploySpog(network: Network) {
     valueQuorum,
     time
   );
-  const voteVaultContract = await voteVaultFactory.deploy(
-    governorContract.address,
-    auctionContract.address
-  );
-  const valueVaultContract = await valueVaultFactory.deploy(
-    governorContract.address
-  );
+
+  const vaultContract = await spogVaultFactory.deploy(governorContract.address);
 
   const spogContract = await spogFactory.deploy([
     governorContract.address,
-    voteVaultContract.address,
-    valueVaultContract.address,
+    vaultContract.address,
     cashContract.address,
     tax,
     taxLowerBound,
@@ -165,8 +145,7 @@ export default async function deploySpog(network: Network) {
   console.log("SPOGValue token address: ", valueTokenContract.address);
   console.log("DualGovernor address: ", governorContract.address);
   console.log("Cash address: ", cashContract.address);
-  console.log("Vote holders vault address: ", voteVaultContract.address);
-  console.log("Value holders vault address: ", valueVaultContract.address);
-  console.log("List factory address: ", listFactoryContract.address);
+  console.log("Vault address: ", vaultContract.address);
+  console.log("Auction address: ", auctionContract.address);
   console.log("Multicall3 address: ", multicall3Contract.address);
 }
