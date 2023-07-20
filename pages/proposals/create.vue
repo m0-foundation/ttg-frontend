@@ -110,6 +110,8 @@ import {
   encodeAbiParameters,
   keccak256,
   toHex,
+  toBytes,
+  stringToBytes,
 } from "viem";
 import { useAccount } from "use-wagmi";
 import {
@@ -117,7 +119,6 @@ import {
   writeIspogGovernor,
   writeIerc20,
   readIerc20,
-  writeListFactory,
   ispogABI,
 } from "@/lib/sdk";
 import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber";
@@ -161,18 +162,12 @@ const proposalTypes = [
     header: "protocol",
   },
   {
-    value: "addList",
-    label: "Create a new list",
-    placeholder: "List name",
-    component: ProposalInputSingleText,
-  },
-  {
-    value: "append",
-    label: "Append to a list",
+    value: "addToList",
+    label: "Add to a list",
     component: ProposalInputListOperation,
   },
   {
-    value: "remove",
+    value: "removeFromList",
     label: "Remove from a list",
     component: ProposalInputListOperation,
   },
@@ -234,13 +229,13 @@ const proposalTypes = [
     isEmergency: true,
     children: [
       {
-        value: "append",
-        label: "Emergency Append to a list",
+        value: "addToList",
+        label: "Emergency Add to a list",
         isEmergency: true,
         component: ProposalInputListOperation,
       },
       {
-        value: "remove",
+        value: "removeFromList",
         label: "Emergency Remove from a list",
         isEmergency: true,
         component: ProposalInputListOperation,
@@ -307,43 +302,6 @@ async function writeAllowance() {
   }
 }
 
-async function writeDeployList(listName) {
-  const account = userAccount.value;
-  const listItems = [];
-  const listSalt = random(1e10); // generate a integer from 0 to 1e10 to be used as salt since it can be repated
-
-  const { hash } = await writeListFactory({
-    address: config.public.contracts.listFactory,
-    functionName: "deploy",
-    // address _spog, string  _name, address[] memory addresses, uint256 _salt
-    args: [config.public.contracts.spog, listName, listItems, listSalt],
-    account,
-    overrides: {
-      gasLimit: 2100000n,
-    },
-  });
-
-  if (!hash) {
-    throw new Error("Faild on create new list");
-  }
-
-  stepper.value.changeCurrentStep("pending");
-
-  const txReceipt = await waitForTransaction({
-    confirmations: 1,
-    hash,
-  });
-
-  const newListAddress = get(txReceipt, "logs[0].address");
-
-  if (!newListAddress) {
-    throw new Error("Faild on create new list");
-  }
-  console.log({ newListAddress });
-
-  return newListAddress;
-}
-
 async function writeProposal(calldatas, formData) {
   const account = userAccount.value;
   const targets = [
@@ -388,53 +346,22 @@ async function onSubmit() {
   };
 
   try {
-    steps = reactive(
-      formData.proposalType === "addList"
-        ? [
-            {
-              title: "Deploy new List",
-              status: "current",
-            },
-            {
-              title: "Allowance",
-              status: "incomplete",
-            },
-            {
-              title: "Create Proposal",
-              status: "incomplete",
-            },
-            {
-              title: "Confirmation",
-              status: "incomplete",
-            },
-          ]
-        : [
-            {
-              title: "Allowance",
-              status: "current",
-            },
-            {
-              title: "Create Proposal",
-              status: "incomplete",
-            },
-            {
-              title: "Confirmation",
-              status: "incomplete",
-            },
-          ]
-    );
+    steps = reactive([
+      {
+        title: "Allowance",
+        status: "current",
+      },
+      {
+        title: "Create Proposal",
+        status: "incomplete",
+      },
+      {
+        title: "Confirmation",
+        status: "incomplete",
+      },
+    ]);
 
     modal.value.open();
-
-    if (formData.proposalType === "addList") {
-      const addListAddress = await writeDeployList(
-        formData.proposalValue
-      ).catch(catchErrorStep);
-
-      formData.proposalValue = addListAddress;
-
-      stepper.value.nextStep();
-    }
 
     await writeAllowance().catch(catchErrorStep);
 
@@ -457,8 +384,8 @@ async function onSubmit() {
 
 function buildCalldatasEmergency({ input1, input2, input3, type }) {
   const emergencyTypesMap = {
-    remove: 0,
-    append: 1,
+    removeFromList: 0,
+    addToList: 1,
     changeConfig: 2,
   };
 
@@ -477,10 +404,10 @@ function buildCalldatasEmergency({ input1, input2, input3, type }) {
         )
       : encodeAbiParameters(
           [
-            { name: "list", type: "address" },
+            { name: "list", type: "bytes32" },
             { name: "account", type: "address" },
           ],
-          [input1, input2] // list, address
+          [toHex(stringToBytes(input1, { size: 32 })), input2] // list, address
         );
 
   return buildCalldatasSpog("emergency", [valueEncoded, valueEncoded2]);
@@ -494,11 +421,7 @@ function buildCalldatas(formData) {
     proposalValue3: input3,
   } = formData;
 
-  if (["addList"].includes(type)) {
-    return buildCalldatasSpog(type, [input1]);
-  }
-
-  if (["append", "remove"].includes(type)) {
+  if (["addToList", "removeFromList"].includes(type)) {
     if (isEmergency.value) {
       return buildCalldatasEmergency({
         type,
@@ -507,9 +430,11 @@ function buildCalldatas(formData) {
         input3,
       });
     }
+
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ILIST
     // list, address
-    return buildCalldatasSpog(type, [input1, input2]);
+    const input1Enconded = toHex(stringToBytes(input1, { size: 32 }));
+    return buildCalldatasSpog(type, [input1Enconded, input2]);
   }
 
   if (["changeConfig"].includes(type)) {
