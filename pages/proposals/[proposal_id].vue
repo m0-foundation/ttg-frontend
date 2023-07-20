@@ -27,8 +27,20 @@
           >
             <div class="text-body-dark text-3xl mr-4">Approve?</div>
             <div class="space-x-1">
-              <MButton id="button-cast-yes" @click="castVote(1)">YES</MButton>
-              <MButton id="button-cast-no" @click="castVote(0)">NO</MButton>
+              <MButton
+                id="button-cast-yes"
+                :disabled="hasVoted"
+                @click="castVote(1)"
+              >
+                YES
+              </MButton>
+              <MButton
+                id="button-cast-no"
+                :disabled="hasVoted"
+                @click="castVote(0)"
+              >
+                NO
+              </MButton>
             </div>
           </div>
 
@@ -38,9 +50,9 @@
           >
             <div class="text-body-dark text-3xl mr-4">Execute?</div>
             <div class="space-x-1 uppercase">
-              <MButton id="button-proposal-execute" @click="execute()"
-                >Yes</MButton
-              >
+              <MButton id="button-proposal-execute" @click="execute()">
+                Yes
+              </MButton>
             </div>
           </div>
         </article>
@@ -99,16 +111,16 @@
   </LayoutPage>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useAccount, useContractRead } from "use-wagmi";
-import { keccak256, toHex } from "viem";
+import { keccak256, toHex, Hash } from "viem";
 import { writeIspogGovernor, ispogGovernorABI } from "@/lib/sdk";
 
 const store = useProposalsStore();
 const route = useRoute();
 
-const proposalId = route.params.proposal_id;
+const proposalId = route.params.proposal_id as string;
 const proposal = store.getProposalById(proposalId);
 console.log({ proposal });
 const { html } = useParsedDescription(proposal?.description || "");
@@ -132,6 +144,21 @@ const {
   select: (data) => client.parseProposalVotes(data),
   onSuccess(data) {
     console.log("Fetched votes for proposal", proposalId, data);
+  },
+});
+
+const {
+  data: hasVoted,
+  isError: hasVotedError,
+  isLoading: hasVotedLoading,
+} = useContractRead({
+  address: spog.contracts.governor as Hash,
+  abi: ispogGovernorABI,
+  functionName: "hasVoted",
+  args: [BigInt(proposalId), userAccount.value as Hash],
+  watch: true,
+  onSuccess(hasVoted) {
+    console.log({ hasVoted });
   },
 });
 
