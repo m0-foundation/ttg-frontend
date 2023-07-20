@@ -3,13 +3,18 @@
     <ProposalNavbar />
     <LayoutPage>
       <div class="flex justify-between uppercase text-xs mb-6">
-        <div class="text-grey-primary">
-          Voting cycle: {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
+        <div>
+          <span class="text-white text-lg mr-2">
+            EPOCH #{{ epoch.current.asNumber }}
+          </span>
+          <span class="text-grey-primary text-xs">
+            {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
+          </span>
         </div>
         <div>ENDS {{ timeLeft }}</div>
       </div>
 
-      <div v-if="!proposals || !proposals.length">No Active proposals.</div>
+      <div v-if="!hasProposals">No Active proposals.</div>
       <div
         v-for="proposal in nonEmergencyProposals"
         v-else
@@ -22,10 +27,13 @@
         />
       </div>
 
-      <div class="flex justify-between mt-8">
-        <p>To submit your vote, please vote on the proposal.</p>
+      <div v-show="hasProposals" class="flex justify-between mt-8">
+        <p v-if="!hasFinishedVoting">
+          To submit your vote, please vote on the proposal.
+        </p>
+        <p v-else class="text-grey-primary">Your votes has been submitted</p>
         <MButton
-          :disabled="isSelectedCastProposalsEmpty"
+          :disabled="!isSelectedCastProposalsFull || hasFinishedVoting"
           @click="onCastBatchVotes"
         >
           submit votes
@@ -37,9 +45,9 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useAccount } from "use-wagmi";
 import { Hash } from "viem";
-import { writeIspogGovernor } from "@/lib/sdk";
+import { useAccount, useContractRead } from "use-wagmi";
+import { writeIspogGovernor, ispogGovernorABI } from "@/lib/sdk";
 
 interface CastedProposal {
   vote: number;
@@ -48,15 +56,13 @@ interface CastedProposal {
 
 const selectedCastProposals = ref<Array<CastedProposal>>([]);
 
-const isSelectedCastProposalsEmpty = computed(() => {
-  return selectedCastProposals.value.length === 0;
-});
-
 const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 
 const { epoch } = storeToRefs(spog);
 const proposals = computed(() => proposalsStore.getProposalsByState("Active"));
+
+const hasProposals = computed(() => proposals && proposals.value.length > 0);
 
 const nonEmergencyProposals = computed(() => {
   return proposals.value.filter((p) => !p.isEmergency);
@@ -75,6 +81,10 @@ const nextEpochAsDate = computed(() => {
 const timeLeft = computed(() => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
   return timeAgo;
+});
+
+const isSelectedCastProposalsFull = computed(() => {
+  return selectedCastProposals.value.length === proposals.value.length;
 });
 
 const { address: userAccount } = useAccount();
@@ -103,4 +113,12 @@ function onCastBatchVotes() {
     account: userAccount.value,
   });
 }
+
+const { data: hasFinishedVoting } = useContractRead({
+  address: spog.contracts.governor as Hash,
+  abi: ispogGovernorABI,
+  functionName: "hasFinishedVoting",
+  args: [BigInt(epoch.value.current?.asNumber), userAccount.value as Hash],
+  watch: true,
+});
 </script>
