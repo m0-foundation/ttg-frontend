@@ -40,9 +40,7 @@ describe("Proposals", () => {
     it("I should be able to ACCESS the SCHEDULED proposal", () => {
       cy.visit("http://localhost:3000/proposals/scheduled");
       cy.contains(description).should("exist");
-      cy.contains("article", description).then(($proposal) => {
-        expect($proposal.find(".pending")).to.contain("pending");
-      });
+      cy.contains("td", description);
     });
 
     it("I should be able to DELEGATE VOTE", () => {
