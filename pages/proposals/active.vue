@@ -33,7 +33,10 @@
         </p>
         <p v-else class="text-grey-primary">Your votes has been submitted</p>
         <MButton
-          :disabled="!isSelectedCastProposalsFull || hasFinishedVoting"
+          id="button-cast-submit"
+          :disabled="
+            !isSelectedCastProposalsFull || hasFinishedVoting || isDisconnected
+          "
           @click="onCastBatchVotes"
         >
           submit votes
@@ -87,7 +90,7 @@ const isSelectedCastProposalsFull = computed(() => {
   return selectedCastProposals.value.length === proposals.value.length;
 });
 
-const { address: userAccount } = useAccount();
+const { address: userAccount, isDisconnected } = useAccount();
 
 function onCast(vote: number, proposalId: string) {
   console.log("casted", { vote, proposalId });

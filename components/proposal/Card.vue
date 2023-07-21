@@ -39,12 +39,14 @@
 
         <div class="inline-flex gap-1 ml-4" role="group">
           <ProposalButtonCastVote
+            id="button-cast-yes"
             :disabled="isCastVoteYesDisabled || hasVoted"
             @click="onCastSelected(1)"
           >
             YES
           </ProposalButtonCastVote>
           <ProposalButtonCastVote
+            id="button-cast-no"
             :disabled="isCastVoteNoDisabled || hasVoted"
             @click="onCastSelected(0)"
           >
