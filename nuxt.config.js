@@ -24,7 +24,12 @@ export default defineNuxtConfig({
     "~/components",
   ],
   // https://tailwindcss.nuxtjs.org/getting-started/setup
-  modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt", "@pinia/nuxt"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "@vueuse/nuxt",
+    "@pinia/nuxt",
+    "@vueuse/nuxt",
+  ],
   tailwindcss: {
     config: {
       theme: {

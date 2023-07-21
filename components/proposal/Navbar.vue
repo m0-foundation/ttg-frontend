@@ -46,3 +46,9 @@ const pendingExecution = computed(
 );
 const emergency = computed(() => store.getProposalsTypeEmergency.length);
 </script>
+
+<style scoped>
+.router-link-active button {
+  @apply text-white;
+}
+</style>
