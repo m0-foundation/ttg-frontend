@@ -78,6 +78,7 @@ const spog = useSpogStore();
 const { address: userAccount } = useAccount();
 const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
+const config = useRuntimeConfig();
 
 const isVoteSelected = ref(false);
 const selectedVote = ref<null | number>(null);
@@ -105,7 +106,10 @@ const {
   address: spog.contracts.governor as Hash,
   abi: ispogGovernorABI,
   functionName: "hasVoted",
-  args: [BigInt(props.proposal.proposalId), userAccount.value as Hash],
+  args: [
+    BigInt(props.proposal.proposalId),
+    (userAccount.value || config.public.NULL_ADDRESS) as Hash,
+  ],
   watch: true,
 });
 </script>

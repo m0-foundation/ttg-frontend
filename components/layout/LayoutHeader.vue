@@ -119,8 +119,7 @@ import { writeIvote } from "@/lib/sdk";
 const isMenuOpen = ref(false);
 const hasVoteDelegator = ref(false);
 const hasValueDelegator = ref(false);
-const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
-
+const config = useRuntimeConfig();
 const store = useSpogStore();
 const spogClient = useSpogClientStore();
 const spog = storeToRefs(store);
@@ -174,14 +173,14 @@ whenever(
     console.log("whenever", { isConnected });
     spogClient.client.getVoteDelegates(userAccount.value!).then((delegator) => {
       console.log("hasVoteDelegator", { delegator });
-      hasVoteDelegator.value = delegator !== NULL_ADDRESS;
+      hasVoteDelegator.value = delegator !== config.public.NULL_ADDRESS;
     });
 
     spogClient.client
       .getValueDelegates(userAccount.value!)
       .then((delegator) => {
         console.log("hasValueDelegator", { delegator });
-        hasValueDelegator.value = delegator !== NULL_ADDRESS;
+        hasValueDelegator.value = delegator !== config.public.NULL_ADDRESS;
       });
   },
   { immediate: true }
