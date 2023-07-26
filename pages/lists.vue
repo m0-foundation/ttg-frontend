@@ -41,13 +41,15 @@ const tableConfig = computed(() => {
   return {
     columns: [
       {
+        id: "listName",
+        name: "List",
+        sort: true,
+      },
+
+      {
         id: "account",
         name: "Name or Address",
         sort: true,
-      },
-      {
-        id: "listName",
-        name: "List",
       },
 
       {
@@ -68,6 +70,7 @@ const tableConfig = computed(() => {
       listName: p.listName,
       timestamp: p.timestamp,
     })),
+    search: true,
   };
 });
 </script>
