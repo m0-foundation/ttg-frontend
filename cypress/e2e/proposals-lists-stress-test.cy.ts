@@ -276,10 +276,22 @@ describe("Proposals Lists", () => {
 
       cy.get("table > tbody > tr").should("have.length", 3);
 
-      cy.get("table > tbody > tr").should("contain", input2);
-      cy.get("table > tbody > tr").should("contain", input3);
-      cy.get("table > tbody > tr").should("contain", LIST1);
-      cy.get("table > tbody > tr").should("contain", LIST2);
+      const rowCells = (row) =>
+        Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
+
+      cy.get("table tbody tr").then((rows) => {
+        const mapped = Cypress._.map(rows, rowCells)
+          .map((row) => row.slice(0, 2))
+          .sort();
+
+        const should = [
+          [LIST1.toLowerCase(), input2.toLowerCase()],
+          [LIST1.toLowerCase(), input3.toLowerCase()],
+          [LIST2.toLowerCase(), input2.toLowerCase()],
+        ].sort();
+
+        expect(mapped).to.deep.equal(should);
+      });
     });
   });
 });
