@@ -17,6 +17,7 @@
     "hardhat": "ts-node run-hardhat.ts"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@nozomuikuta/h3-cors": "^0.2.2",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
