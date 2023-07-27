@@ -12,7 +12,7 @@
   </NuxtLink>
 
   <MButton
-    v-show="!hasVoteDelegator"
+    v-show="!hasVoteDelegate"
     id="button-delegate-vote"
     class="mb-4"
     @click="delegateVote()"
@@ -21,7 +21,7 @@
   </MButton>
 
   <MButton
-    v-show="!hasValueDelegator"
+    v-show="!hasValueDelegate"
     id="button-delegate-value"
     class="mb-4"
     @click="delegateValue()"
@@ -125,8 +125,8 @@ const menu = [
 ];
 
 const isMenuOpen = ref(false);
-const hasVoteDelegator = ref(false);
-const hasValueDelegator = ref(false);
+const hasVoteDelegate = ref(false);
+const hasValueDelegate = ref(false);
 
 const config = useRuntimeConfig();
 const store = useSpogStore();
@@ -142,7 +142,7 @@ function delegateVote() {
     functionName: "delegate",
     args: [userAccount.value!], // self delegate
   }).then(() => {
-    hasVoteDelegator.value = true;
+    hasVoteDelegate.value = true;
   });
 }
 
@@ -152,7 +152,7 @@ function delegateValue() {
     functionName: "delegate",
     args: [userAccount.value!], // self delegate
   }).then(() => {
-    hasValueDelegator.value = true;
+    hasValueDelegate.value = true;
   });
 }
 
@@ -180,17 +180,15 @@ whenever(
   isConnected,
   () => {
     console.log("whenever", { isConnected });
-    spogClient.client.getVoteDelegates(userAccount.value!).then((delegator) => {
-      console.log("hasVoteDelegator", { delegator });
-      hasVoteDelegator.value = delegator !== config.public.ZERO_ADDRESS;
+    spogClient.client.getVoteDelegates(userAccount.value!).then((delegate) => {
+      console.log("hasVoteDelegate", { delegate });
+      hasVoteDelegate.value = delegate !== config.public.ZERO_ADDRESS;
     });
 
-    spogClient.client
-      .getValueDelegates(userAccount.value!)
-      .then((delegator) => {
-        console.log("hasValueDelegator", { delegator });
-        hasValueDelegator.value = delegator !== config.public.ZERO_ADDRESS;
-      });
+    spogClient.client.getValueDelegates(userAccount.value!).then((delegate) => {
+      console.log("hasValueDelegate", { delegate });
+      hasValueDelegate.value = delegate !== config.public.ZERO_ADDRESS;
+    });
   },
   { immediate: true }
 );
