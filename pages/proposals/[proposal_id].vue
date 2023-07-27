@@ -157,7 +157,7 @@ const {
   functionName: "hasVoted",
   args: [
     BigInt(proposalId),
-    (userAccount.value || config.public.NULL_ADDRESS) as Hash,
+    (userAccount.value || config.public.ZERO_ADDRESS) as Hash,
   ],
   watch: true,
   onSuccess(hasVoted) {

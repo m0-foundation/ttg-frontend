@@ -182,14 +182,14 @@ whenever(
     console.log("whenever", { isConnected });
     spogClient.client.getVoteDelegates(userAccount.value!).then((delegator) => {
       console.log("hasVoteDelegator", { delegator });
-      hasVoteDelegator.value = delegator !== config.public.NULL_ADDRESS;
+      hasVoteDelegator.value = delegator !== config.public.ZERO_ADDRESS;
     });
 
     spogClient.client
       .getValueDelegates(userAccount.value!)
       .then((delegator) => {
         console.log("hasValueDelegator", { delegator });
-        hasValueDelegator.value = delegator !== config.public.NULL_ADDRESS;
+        hasValueDelegator.value = delegator !== config.public.ZERO_ADDRESS;
       });
   },
   { immediate: true }

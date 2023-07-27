@@ -108,7 +108,7 @@ const {
   functionName: "hasVoted",
   args: [
     BigInt(props.proposal.proposalId),
-    (userAccount.value || config.public.NULL_ADDRESS) as Hash,
+    (userAccount.value || config.public.ZERO_ADDRESS) as Hash,
   ],
   watch: true,
 });

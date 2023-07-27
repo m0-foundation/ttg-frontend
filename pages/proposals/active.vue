@@ -124,7 +124,7 @@ const { data: hasFinishedVoting } = useContractRead({
   functionName: "hasFinishedVoting",
   args: [
     BigInt(epoch.value.current?.asNumber),
-    (userAccount.value || config.public.NULL_ADDRESS) as Hash,
+    (userAccount.value || config.public.ZERO_ADDRESS) as Hash,
   ],
   watch: true,
 });
