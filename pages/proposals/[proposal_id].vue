@@ -155,7 +155,10 @@ const {
   address: spog.contracts.governor as Hash,
   abi: ispogGovernorABI,
   functionName: "hasVoted",
-  args: [BigInt(proposalId), userAccount.value as Hash],
+  args: [
+    BigInt(proposalId),
+    (userAccount.value || config.public.ZERO_ADDRESS) as Hash,
+  ],
   watch: true,
   onSuccess(hasVoted) {
     console.log({ hasVoted });

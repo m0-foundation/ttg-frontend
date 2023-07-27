@@ -11,7 +11,7 @@
 
       <div v-if="isConnected" class="flex items-center md:order-2 gap-2">
         <MButton
-          v-show="!hasVoteDelegator"
+          v-show="!hasVoteDelegate"
           id="button-delegate-vote"
           @click="delegateVote()"
         >
@@ -19,7 +19,7 @@
         </MButton>
 
         <MButton
-          v-show="!hasValueDelegator"
+          v-show="!hasValueDelegate"
           id="button-delegate-value"
           @click="delegateValue()"
         >
@@ -117,10 +117,9 @@ import { whenever } from "@vueuse/core";
 import { writeIvote } from "@/lib/sdk";
 
 const isMenuOpen = ref(false);
-const hasVoteDelegator = ref(false);
-const hasValueDelegator = ref(false);
-const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
-
+const hasVoteDelegate = ref(false);
+const hasValueDelegate = ref(false);
+const config = useRuntimeConfig();
 const store = useSpogStore();
 const spogClient = useSpogClientStore();
 const spog = storeToRefs(store);
@@ -134,7 +133,7 @@ function delegateVote() {
     functionName: "delegate",
     args: [userAccount.value!], // self delegate
   }).then(() => {
-    hasVoteDelegator.value = true;
+    hasVoteDelegate.value = true;
   });
 }
 
@@ -144,7 +143,7 @@ function delegateValue() {
     functionName: "delegate",
     args: [userAccount.value!], // self delegate
   }).then(() => {
-    hasValueDelegator.value = true;
+    hasValueDelegate.value = true;
   });
 }
 
@@ -172,17 +171,15 @@ whenever(
   isConnected,
   () => {
     console.log("whenever", { isConnected });
-    spogClient.client.getVoteDelegates(userAccount.value!).then((delegator) => {
-      console.log("hasVoteDelegator", { delegator });
-      hasVoteDelegator.value = delegator !== NULL_ADDRESS;
+    spogClient.client.getVoteDelegates(userAccount.value!).then((delegate) => {
+      console.log("hasVoteDelegate", { delegate });
+      hasVoteDelegate.value = delegate !== config.public.ZERO_ADDRESS;
     });
 
-    spogClient.client
-      .getValueDelegates(userAccount.value!)
-      .then((delegator) => {
-        console.log("hasValueDelegator", { delegator });
-        hasValueDelegator.value = delegator !== NULL_ADDRESS;
-      });
+    spogClient.client.getValueDelegates(userAccount.value!).then((delegate) => {
+      console.log("hasValueDelegate", { delegate });
+      hasValueDelegate.value = delegate !== config.public.ZERO_ADDRESS;
+    });
   },
   { immediate: true }
 );
