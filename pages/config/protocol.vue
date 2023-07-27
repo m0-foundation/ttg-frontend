@@ -1,0 +1,79 @@
+<template>
+  <div>
+    <nav class="text-white text-xl p-8">
+      <MNavButton>
+        M^0 Protocol Configurations
+        <span class="text-primary">_</span>
+      </MNavButton>
+    </nav>
+
+    <LayoutPage>
+      <div v-if="isLoading">Loading...</div>
+
+      <div v-else>
+        <div v-if="!data || !data.length">No data to show.</div>
+        <MTable v-else :config="tableConfig" />
+      </div>
+    </LayoutPage>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { html } from "gridjs";
+
+const spog = useSpogClientStore();
+
+const fetchProtocolConfigs = async () => {
+  try {
+    const data = await spog.client.getProtocolConfigs();
+    const store = useProtocolConfigsStore();
+    store.setProtocolConfigs(data);
+    console.log("fetched configs", { data });
+  } catch (error) {
+    console.error({ error });
+  }
+};
+
+const { isLoading } = useAsyncState(fetchProtocolConfigs(), null);
+
+const store = useProtocolConfigsStore();
+const { getConfigsAsArray: data } = storeToRefs(store);
+
+const tableConfig = computed(() => {
+  return {
+    columns: [
+      {
+        id: "valueName",
+        name: "Name",
+        sort: true,
+      },
+
+      {
+        id: "value",
+        name: "Value",
+        sort: true,
+      },
+
+      {
+        id: "timestamp",
+        name: "Updated",
+        sort: true,
+        formatter: (cell: string) => {
+          const { toFormat } = useDate(Number(cell));
+          const formatedDate = toFormat("LLL");
+          return html(
+            `<span class="text-xs text-grey-primary">${formatedDate}</span>`
+          );
+        },
+      },
+    ],
+    data: data.value.map((p) => ({
+      value: p.value,
+      valueName: p.valueName,
+      timestamp: p.timestamp,
+    })),
+    search: true,
+  };
+});
+</script>
