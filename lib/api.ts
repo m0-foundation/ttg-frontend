@@ -771,8 +771,14 @@ export class SPOG {
         eventName,
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
-        valueName: fromHex(trim(event.valueName, { dir: "right" }), "string"),
-        value: fromHex(event.value, "string"),
+        valueName: fromHex(event.valueName, {
+          size: 32,
+          to: "string",
+        }),
+        value: fromHex(event.value, {
+          size: 32,
+          to: "string",
+        }),
         timestamp: Number(block.timestamp),
       };
 
@@ -792,6 +798,8 @@ export class SPOG {
         "event ConfigUpdated(bytes32 valueName, bytes32 value)"
       ),
     });
+
+    console.log("rawLogs", { rawLogs });
 
     const decodedLogs = await Promise.all(
       rawLogs.map((log: Log) => this.decodeProtocolConfigLog(log, ispogABI))
