@@ -134,8 +134,7 @@ export interface SpogMutableValues {
 export interface SpogImmutableValues {
   cash?: string;
   governor?: string;
-  valueVault?: string;
-  voteVault?: string;
+  vault?: string;
   vote?: string;
   value?: string;
 }
@@ -589,8 +588,7 @@ export class SPOG {
     const spogContracts = await this.getSpogParameters<SpogImmutableValues>([
       "cash",
       "governor",
-      "valueVault",
-      "voteVault",
+      "vault",
     ]);
 
     const governorContracts = await this.getParameters<SpogImmutableValues>(
