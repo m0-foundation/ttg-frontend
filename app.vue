@@ -57,6 +57,16 @@ const fetchSpogContracts = async (spog: SPOG) => {
   }
 };
 
+const fetchSpogValues = async (spog: SPOG) => {
+  try {
+    const data = await spog.getSpogValues();
+    const store = useSpogStore();
+    store.setValues(data);
+  } catch (error) {
+    console.error({ error });
+  }
+};
+
 const fetchProposals = async (spog: SPOG) => {
   try {
     const data = await spog.getProposals();
@@ -94,7 +104,10 @@ async function onSetup(rpc: string) {
   const spogClient = new SPOG(rpc, network!, configVars);
   spogStore.setClient(spogClient);
 
-  await fetchSpogContracts(spogClient);
+  await Promise.all([
+    fetchSpogContracts(spogClient),
+    fetchSpogValues(spogClient),
+  ]);
   return spogClient;
 }
 
