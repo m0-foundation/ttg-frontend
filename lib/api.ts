@@ -772,7 +772,7 @@ export class SPOG {
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
         valueName: fromHex(trim(event.valueName, { dir: "right" }), "string"),
-        value: fromHex(trim(event.value, { dir: "right" }), "string"),
+        value: fromHex(event.value, "string"),
         timestamp: Number(block.timestamp),
       };
 
