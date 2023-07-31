@@ -176,7 +176,7 @@ describe("Proposals Update Config", () => {
 
         const should = [
           [KEY1.toLowerCase(), key1input2.toLowerCase()],
-          [KEY2.toLowerCase(), key1input2.toLowerCase()],
+          [KEY2.toLowerCase(), key2input2.toLowerCase()],
           [KEY3.toLowerCase(), key3input1.toLowerCase()],
         ].sort();
 
