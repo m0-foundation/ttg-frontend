@@ -3,8 +3,8 @@ describe("Proposals Update Config", () => {
   const KEY2 = "IPFS";
   const KEY3 = "PROTCOL";
 
-  const key1input1 = 2;
-  const key1input2 = 3;
+  const key1input1 = "2";
+  const key1input2 = "3";
   const key2input1 = "someValue";
   const key2input2 = "someOtherValue";
   const key3input1 = "10000";
