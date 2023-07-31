@@ -7,7 +7,7 @@ describe("Proposals Update Config", () => {
   const key1input2 = 3;
   const key2input1 = "someValue";
   const key2input2 = "someOtherValue";
-  const key3input1 = "1000000000000000000";
+  const key3input1 = "10000";
 
   const description1 = `Update config ${KEY1}: ${key1input1}`;
   const description2 = `Update config ${KEY2}: ${key2input1}`;
