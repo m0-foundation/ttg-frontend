@@ -1,61 +1,74 @@
 <template>
-  <article :class="hasVoted ? 'voted' : 'not-voted'">
-    <h2 class="text-4xl mb-4">
-      {{ title }}
-    </h2>
-    <div class="text-sm mb-6 flex justify-between">
-      <div id="proposer">
-        Proposed by <u>{{ proposal.proposer }}</u>
+  <div>
+    <MTextLoop
+      v-show="proposal?.isEmergency"
+      class="text-white bg-[#CC0000] text-xs"
+      text="EMERGENCY_VOTING"
+    />
+    <article :class="hasVoted ? 'voted' : 'not-voted'">
+      <h2 class="text-4xl mb-4 break-all">
+        {{ title }}
+      </h2>
+      <div class="text-sm mb-6 flex justify-between">
+        <div id="proposer" class="truncate w-52">
+          Proposed by <u>{{ proposal.proposer }}</u>
+        </div>
+        <div id="time">{{ timeAgo }} | {{ formatedDate }}</div>
       </div>
-      <div id="time">{{ timeAgo }} | {{ formatedDate }}</div>
-    </div>
-    <div class="flex justify-between uppercase">
-      <NuxtLink
-        id="show-details"
-        class="uppercase flex text-xs items-center hover:underline"
-        :to="`/proposals/${proposal.proposalId}`"
-      >
-        <svg
-          class="h-4 mr-2"
-          width="18"
-          height="15"
-          viewBox="0 0 18 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+      <div class="flex justify-between uppercase">
+        <NuxtLink
+          id="show-details"
+          class="uppercase flex text-xs items-center hover:underline"
+          :to="`/proposals/${proposal.proposalId}`"
         >
-          <rect x="0.5" y="0.5" width="17" height="14" stroke="currentColor" />
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M 14.767 3.938 L 14.767 3.108 L 13.936 3.108 L 8.767 3.108 L 8.767 4.108 L 12.935 4.108 L 8.767 8.274 L 9.602 9.108 L 13.767 4.939 L 13.767 9.108 L 14.767 9.108 L 14.767 3.938 Z"
-            fill="currentColor"
-          />
-        </svg>
-        show details
-      </NuxtLink>
-
-      <div class="flex justify-between items-center">
-        <ProposalStatus :version="proposal?.state" />
-
-        <div class="inline-flex gap-1 ml-4" role="group">
-          <ProposalButtonCastVote
-            id="button-cast-yes"
-            :disabled="isCastVoteYesDisabled || hasVoted"
-            @click="onCastSelected(1)"
+          <svg
+            class="h-4 mr-2"
+            width="18"
+            height="15"
+            viewBox="0 0 18 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            YES
-          </ProposalButtonCastVote>
-          <ProposalButtonCastVote
-            id="button-cast-no"
-            :disabled="isCastVoteNoDisabled || hasVoted"
-            @click="onCastSelected(0)"
-          >
-            NO
-          </ProposalButtonCastVote>
+            <rect
+              x="0.5"
+              y="0.5"
+              width="17"
+              height="14"
+              stroke="currentColor"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M 14.767 3.938 L 14.767 3.108 L 13.936 3.108 L 8.767 3.108 L 8.767 4.108 L 12.935 4.108 L 8.767 8.274 L 9.602 9.108 L 13.767 4.939 L 13.767 9.108 L 14.767 9.108 L 14.767 3.938 Z"
+              fill="currentColor"
+            />
+          </svg>
+          show details
+        </NuxtLink>
+
+        <div class="flex justify-between items-center">
+          <ProposalStatus :version="proposal?.state" />
+
+          <div class="inline-flex gap-1 ml-4" role="group">
+            <ProposalButtonCastVote
+              id="button-cast-yes"
+              :disabled="isCastVoteYesDisabled || hasVoted"
+              @click="onCastSelected(1)"
+            >
+              YES
+            </ProposalButtonCastVote>
+            <ProposalButtonCastVote
+              id="button-cast-no"
+              :disabled="isCastVoteNoDisabled || hasVoted"
+              @click="onCastSelected(0)"
+            >
+              NO
+            </ProposalButtonCastVote>
+          </div>
         </div>
       </div>
-    </div>
-  </article>
+    </article>
+  </div>
 </template>
 
 <script setup lang="ts">
