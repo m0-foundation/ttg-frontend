@@ -400,19 +400,27 @@ function buildCalldatasEmergency({ input1, input2, type }) {
     [BigInt(emergencyType)]
   );
 
+  const encodeUpdateConfig = ({ input1: valueName, input2: value }) => {
+    return encodeAbiParameters(
+      [{ type: "bytes32" }, { type: "bytes32" }],
+      [stringToHexWith32Bytes(valueName), stringToHexWith32Bytes(value)]
+    );
+  };
+
+  const encondeListOperation = ({ input1: list, input2: address }) => {
+    return encodeAbiParameters(
+      [
+        { name: "list", type: "bytes32" },
+        { name: "account", type: "address" },
+      ],
+      [stringToHexWith32Bytes(list), address]
+    );
+  };
+
   const valueEncoded2 =
     emergencyType === emergencyTypesMap.updateConfig
-      ? encodeAbiParameters(
-          [{ type: "bytes32" }, { type: "bytes32" }],
-          [stringToHexWith32Bytes(input1), stringToHexWith32Bytes(input2)] // valueName, value
-        )
-      : encodeAbiParameters(
-          [
-            { name: "list", type: "bytes32" },
-            { name: "account", type: "address" },
-          ],
-          [stringToHexWith32Bytes(input1), input2] // list, address
-        );
+      ? encodeUpdateConfig({ input1, input2 })
+      : encondeListOperation({ input1, input2 });
 
   return buildCalldatasSpog("emergency", [valueEncoded, valueEncoded2]);
 }
@@ -435,10 +443,14 @@ function buildCalldatas(formData) {
       });
     }
 
-    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ILIST
-    // list, address
-    const input1Enconded = stringToHexWith32Bytes(input1);
-    return buildCalldatasSpog(type, [input1Enconded, input2]);
+    const encondeInputsListOperation = ({ input1: list, input2: address }) => {
+      return [stringToHexWith32Bytes(list), address];
+    };
+
+    return buildCalldatasSpog(
+      type,
+      encondeInputsListOperation({ input1, input2 })
+    );
   }
 
   if (["updateConfig"].includes(type)) {
@@ -450,11 +462,14 @@ function buildCalldatas(formData) {
       });
     }
 
-    // const valueEnconded = keccak256(toHex(input1));
-    const input1Enconded = stringToHexWith32Bytes(input1);
-    const input2Enconded = stringToHexWith32Bytes(input2);
+    const encondeInputsUpdateConfig = ({ inpu1: valueName, input2: value }) => {
+      return [stringToHexWith32Bytes(valueName), stringToHexWith32Bytes(value)];
+    };
 
-    return buildCalldatasSpog(type, [input1Enconded, input2Enconded]);
+    return buildCalldatasSpog(
+      type,
+      encondeInputsUpdateConfig({ input1, input2 })
+    );
   }
 
   if (["reset"].includes(type)) {
@@ -471,15 +486,19 @@ function buildCalldatas(formData) {
   }
 
   if (["changeTaxRange"].includes(type)) {
-    const value1Encoded = encodeAbiParameters(
-      [{ type: "uint256" }],
-      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
+    // tax is using 18 decimals precision
+    const encodeBigInt = (value) =>
+      encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
+
+    const encondeInputsChangeTaxRange = ({
+      inpu1: lowerBound,
+      input2: upperBound,
+    }) => [encodeBigInt(lowerBound), encodeBigInt(upperBound)];
+
+    return buildCalldatasSpog(
+      type,
+      encondeInputsChangeTaxRange({ input1, input2 })
     );
-    const value2Encoded = encodeAbiParameters(
-      [{ type: "uint256" }],
-      [BigInt(input2 * 1e18)] // tax is using 18 decimals precision
-    );
-    return buildCalldatasSpog(type, [value1Encoded, value2Encoded]);
   }
 
   if (
