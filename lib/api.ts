@@ -76,6 +76,19 @@ export interface MLists {
   [listName: string]: Array<MListEvent>;
 }
 
+export interface MProtocolConfig {
+  [valueName: string]: {
+    value: string | number | bigint | Hash | object;
+    timestamp: number;
+  };
+}
+
+export interface MUpdateConfigEvent extends EventLog {
+  valueName: string;
+  value: string | number | bigint | Hash | object;
+  timestamp: number;
+}
+
 export interface ProposalVotesState {
   total: bigint;
   yes: {
@@ -151,7 +164,7 @@ export interface Config {
 const functionSelectors = {
   addToList: getFunctionSelector("addToList(bytes32,address)"),
   removeFromList: getFunctionSelector("removeFromList(bytes32,address)"),
-  changeConfig: getFunctionSelector("changeConfig(bytes32,address,bytes4)"),
+  updateConfig: getFunctionSelector("updateConfig(bytes32,bytes32)"),
   emergency: getFunctionSelector("emergency(uint8,bytes)"),
   reset: getFunctionSelector("reset(address,address)"),
   changeTax: getFunctionSelector("changeTax(uint256)"),
@@ -269,16 +282,15 @@ export class SPOG {
           );
           params[0] = fromHex(params[0], "string");
           break;
-        case functionSelectors.changeConfig:
-          proposalType = "changeConfig";
+        case functionSelectors.updateConfig:
+          proposalType = "updateConfig";
           params = decodeAbiParameters(
             [
-              { name: "configName", type: "bytes32" },
-              { name: "configAddress", type: "address" },
-              { name: "interfaceId", type: "bytes4" },
+              { name: "valueName", type: "bytes32" },
+              { name: "value", type: "bytes32" },
             ],
             revemoSelectorFromCallData(event.calldatas[0])
-          );
+          ).map((param) => fromHex(param, "string"));
           break;
         case functionSelectors.reset:
           proposalType = "reset";
@@ -732,5 +744,77 @@ export class SPOG {
     });
 
     return lists;
+  }
+
+  async decodeProtocolConfigLog(
+    log: Log,
+    abi: Abi
+  ): Promise<MUpdateConfigEvent> {
+    interface MProtocolConfigDecoded {
+      eventName: string;
+      args: { valueName: Hash; value: Hash };
+    }
+
+    const { eventName, args: event } = decodeEventLog({
+      abi,
+      data: log?.data,
+      topics: log?.topics,
+    }) as MProtocolConfigDecoded;
+
+    if (event) {
+      const block = await this.client.getBlock({
+        blockNumber: log.blockNumber!,
+      });
+
+      const updateConfigEvent: MUpdateConfigEvent = {
+        ...event,
+        eventName,
+        blockNumber: Number(log.blockNumber),
+        transactionHash: String(log.transactionHash),
+        valueName: fromHex(event.valueName, {
+          size: 32,
+          to: "string",
+        }),
+        value: fromHex(event.value, {
+          size: 32,
+          to: "string",
+        }),
+        timestamp: Number(block.timestamp),
+      };
+
+      return updateConfigEvent;
+    }
+
+    return {} as MUpdateConfigEvent;
+  }
+
+  async getProtocolConfigs(): Promise<MProtocolConfig> {
+    const deployedBlock = BigInt(this.config.deployedBlock.toString());
+
+    const rawLogs = await this.client.getLogs({
+      address: this.config.spog as Hash,
+      fromBlock: deployedBlock,
+      event: parseAbiItem(
+        "event ConfigUpdated(bytes32 valueName, bytes32 value)"
+      ),
+    });
+
+    const decodedLogs = await Promise.all(
+      rawLogs.map((log: Log) => this.decodeProtocolConfigLog(log, ispogABI))
+    );
+
+    const orderedLogs = orderBy([...decodedLogs], ["blockNumber"], ["asc"]);
+
+    const finalConfig = {} as MProtocolConfig;
+
+    // guaranteed order
+    for (const event of orderedLogs) {
+      finalConfig[event.valueName] = {
+        value: event.value,
+        timestamp: event.timestamp,
+      };
+    }
+
+    return finalConfig;
   }
 }
