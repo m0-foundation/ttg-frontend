@@ -462,7 +462,10 @@ function buildCalldatas(formData) {
       });
     }
 
-    const encondeInputsUpdateConfig = ({ inpu1: valueName, input2: value }) => {
+    const encondeInputsUpdateConfig = ({
+      input1: valueName,
+      input2: value,
+    }) => {
       return [stringToHexWith32Bytes(valueName), stringToHexWith32Bytes(value)];
     };
 
@@ -491,7 +494,7 @@ function buildCalldatas(formData) {
       encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
 
     const encondeInputsChangeTaxRange = ({
-      inpu1: lowerBound,
+      input1: lowerBound,
       input2: upperBound,
     }) => [encodeBigInt(lowerBound), encodeBigInt(upperBound)];
 
