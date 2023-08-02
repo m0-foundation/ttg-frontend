@@ -79,7 +79,7 @@ onMounted(() => {
 
 input.gridjs-input {
   outline: none;
-  background-color: #fff;
+  background-color: none;
   border: 1px solid #d2d6dc;
   padding: 10px 13px;
   font-size: 14px;
