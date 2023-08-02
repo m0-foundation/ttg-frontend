@@ -799,8 +799,6 @@ export class SPOG {
       ),
     });
 
-    console.log("rawLogs", { rawLogs });
-
     const decodedLogs = await Promise.all(
       rawLogs.map((log: Log) => this.decodeProtocolConfigLog(log, ispogABI))
     );
