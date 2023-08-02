@@ -11,7 +11,7 @@
         <article class="bg-white text-black p-8 mb-2">
           <ProposalStatus id="proposal-state" :version="proposal?.state" />
 
-          <div class="text-primary-darker text-sm mb-6">
+          <div class="text-primary-darker text-sm mb-6 truncate w-52 lg:w-full">
             Proposed by <u>{{ proposal?.proposer }}</u>
           </div>
           <div class="markdown-body mb-6" v-html="html"></div>
