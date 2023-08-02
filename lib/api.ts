@@ -134,7 +134,8 @@ export interface SpogMutableValues {
 export interface SpogImmutableValues {
   cash?: string;
   governor?: string;
-  vault?: string;
+  valueVault?: string;
+  voteVault?: string;
   vote?: string;
   value?: string;
 }
@@ -588,7 +589,8 @@ export class SPOG {
     const spogContracts = await this.getSpogParameters<SpogImmutableValues>([
       "cash",
       "governor",
-      "vault",
+      "valueVault",
+      "voteVault",
     ]);
 
     const governorContracts = await this.getParameters<SpogImmutableValues>(
@@ -769,8 +771,14 @@ export class SPOG {
         eventName,
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
-        valueName: fromHex(trim(event.valueName, { dir: "right" }), "string"),
-        value: fromHex(trim(event.value, { dir: "right" }), "string"),
+        valueName: fromHex(event.valueName, {
+          size: 32,
+          to: "string",
+        }),
+        value: fromHex(event.value, {
+          size: 32,
+          to: "string",
+        }),
         timestamp: Number(block.timestamp),
       };
 

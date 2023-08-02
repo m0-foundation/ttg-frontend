@@ -1,7 +1,7 @@
 describe("Proposals Update Config", () => {
   const KEY1 = "INFLATION_RATE";
   const KEY2 = "IPFS";
-  const KEY3 = "PROTCOL";
+  const KEY3 = "PROTOCOL";
 
   const key1input1 = "2";
   const key1input2 = "3";
@@ -176,7 +176,7 @@ describe("Proposals Update Config", () => {
 
         const should = [
           [KEY1.toLowerCase(), key1input2.toLowerCase()],
-          [KEY2.toLowerCase(), key1input2.toLowerCase()],
+          [KEY2.toLowerCase(), key2input2.toLowerCase()],
           [KEY3.toLowerCase(), key3input1.toLowerCase()],
         ].sort();
 
