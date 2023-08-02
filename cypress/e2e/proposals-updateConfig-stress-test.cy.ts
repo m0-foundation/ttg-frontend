@@ -1,7 +1,7 @@
 describe("Proposals Update Config", () => {
   const KEY1 = "INFLATION_RATE";
   const KEY2 = "IPFS";
-  const KEY3 = "PROTCOL";
+  const KEY3 = "PROTOCOL";
 
   const key1input1 = "2";
   const key1input2 = "3";
