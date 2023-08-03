@@ -1,25 +1,108 @@
 <template>
-  <div className="container">
-    <div className="tag-list">
-      <div className="loop-slider">
-        <div className="inner">
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-          <div className="tag">{{ text }}</div>
-        </div>
-      </div>
+  <div class="relative flex overflow-x-hidden">
+    <div class="py-2 whitespace-nowrap animate-slide">
+      <span>{{ text }}</span>
+      <span>{{ text }}</span>
+      <span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span>
+    </div>
+    <div class="absolute top-0 py-2 whitespace-nowrap animate-slide2">
+      <span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span
+      ><span>{{ text }}</span>
     </div>
   </div>
 </template>
@@ -32,41 +115,34 @@ const props = defineProps({
 });
 </script>
 <style scoped>
-.tag-list {
-  width: 100%;
-  /* max-width: 90vw; */
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  gap: 1rem 0;
-  position: relative;
-  padding: 1rem 0;
-  overflow: hidden;
+span {
+  @apply mx-2;
+}
+.animate-slide {
+  animation: slide 120s linear infinite;
 }
 
-.loop-slider .inner {
-  display: flex;
-  width: fit-content;
-  animation-name: loop;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: normal;
-  animation-duration: 5s;
+.animate-slide2 {
+  animation: slide2 120s linear infinite;
 }
 
-.tag {
-  display: flex;
-  align-items: center;
-  gap: 0 0.2rem;
-  margin-right: 1rem;
-}
-
-@keyframes loop {
+@keyframes slide {
   0% {
     transform: translateX(0);
   }
-  100% {
-    transform: translateX(-20%);
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide2 {
+  0% {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
   }
 }
 </style>
