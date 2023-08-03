@@ -24,8 +24,8 @@ import forEach from "lodash/forEach";
 import {
   ispogGovernorABI,
   readIspogGovernor,
-  readIvote,
-  readIvalue,
+  readVote,
+  readValue,
   ispogABI,
 } from "./sdk";
 
@@ -530,7 +530,7 @@ export class SPOG {
   }
 
   getVoteDelegates(account: Hash): Promise<Hash> {
-    return readIvote({
+    return readVote({
       address: this.config.contracts!.vote as Hash,
       functionName: "delegates",
       args: [account],
@@ -538,7 +538,7 @@ export class SPOG {
   }
 
   getValueDelegates(account: Hash): Promise<Hash> {
-    return readIvalue({
+    return readValue({
       address: this.config.contracts!.value as Hash,
       functionName: "delegates",
       args: [account],
