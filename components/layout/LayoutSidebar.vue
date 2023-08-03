@@ -56,7 +56,7 @@
           <span class="bg-white text-black rounded-full p-1 mr-4 text-sm">
             VT
           </span>
-          {{ voteBalance?.formatted }}
+          {{ formatEther(votePower as bigint) }}
         </div>
 
         <div class="text-gray-400 flex">
@@ -65,9 +65,10 @@
           >
             $V
           </span>
-          {{ valueBalance?.formatted }}
+          {{ formatEther(valuePower as bigint) }}
         </div>
       </div>
+
       <p class="uppercase text-primary text-xs">
         Delegated voting power will be available next epoch
       </p>
@@ -88,11 +89,11 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { Hash } from "viem";
+import { Hash, formatEther } from "viem";
 import { ref } from "vue";
-import { useAccount, useDisconnect, useBalance } from "use-wagmi";
+import { useAccount, useDisconnect, useContractRead } from "use-wagmi";
 import { whenever } from "@vueuse/core";
-import { writeIvote } from "@/lib/sdk";
+import { writeVote, voteABI, valueABI } from "@/lib/sdk";
 
 const menu = [
   {
@@ -124,7 +125,6 @@ const menu = [
   },
 ];
 
-const isMenuOpen = ref(false);
 const hasVoteDelegate = ref(false);
 const hasValueDelegate = ref(false);
 
@@ -155,24 +155,27 @@ function delegateValue() {
     hasValueDelegate.value = true;
   });
 }
-
 const {
-  data: voteBalance,
+  data: votePower,
   isError: voteIsError,
   isLoading: voteIsLoading,
-} = useBalance({
-  address: userAccount.value,
-  token: spog.contracts.value.vote as Hash,
+} = useContractRead({
+  address: spog.contracts.value.vote as Hash,
+  abi: voteABI,
+  functionName: "getVotes",
+  args: [(userAccount.value || config.public.ZERO_ADDRESS) as Hash],
   watch: true,
 });
 
 const {
-  data: valueBalance,
+  data: valuePower,
   isError: valueIsError,
   isLoading: valueIsLoading,
-} = useBalance({
-  address: userAccount.value,
-  token: spog.contracts.value.value as Hash,
+} = useContractRead({
+  address: spog.contracts.value.value as Hash,
+  abi: valueABI,
+  functionName: "getVotes",
+  args: [(userAccount.value || config.public.ZERO_ADDRESS) as Hash],
   watch: true,
 });
 
