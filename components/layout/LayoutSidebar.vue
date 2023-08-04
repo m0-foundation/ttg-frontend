@@ -56,7 +56,7 @@
           <span class="bg-white text-black rounded-full p-1 mr-4 text-sm">
             VT
           </span>
-          {{ formatEther(votePower as bigint) }}
+          {{ votePower && formatEther(votePower as bigint) }}
         </div>
 
         <div class="text-gray-400 flex">
@@ -65,7 +65,7 @@
           >
             $V
           </span>
-          {{ formatEther(valuePower as bigint) }}
+          {{ votePower && formatEther(valuePower as bigint) }}
         </div>
       </div>
 
