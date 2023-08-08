@@ -65,7 +65,7 @@
           >
             $V
           </span>
-          {{ votePower && formatEther(valuePower as bigint) }}
+          {{ valuePower && formatEther(valuePower as bigint) }}
         </div>
       </div>
 
@@ -93,7 +93,7 @@ import { Hash, formatEther } from "viem";
 import { ref } from "vue";
 import { useAccount, useDisconnect, useContractRead } from "use-wagmi";
 import { whenever } from "@vueuse/core";
-import { writeVote, voteABI, valueABI } from "@/lib/sdk";
+import { writeVote, writeValue, voteABI, valueABI } from "@/lib/sdk";
 
 const menu = [
   {
@@ -147,7 +147,7 @@ function delegateVote() {
 }
 
 function delegateValue() {
-  return writeVote({
+  return writeValue({
     address: spog.contracts.value.value as Hash,
     functionName: "delegate",
     args: [userAccount.value!], // self delegate
