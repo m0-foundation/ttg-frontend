@@ -19,7 +19,6 @@ const version = computed(() => {
 });
 
 function onClick() {
-  console.log("clicked");
   isActive.value = !isActive.value;
 }
 </script>
