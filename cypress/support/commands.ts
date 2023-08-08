@@ -20,7 +20,7 @@ Cypress.Commands.add("connectWallet", () => {
 Cypress.Commands.add("delegateVote", () => {
   // check if delegate button exists
   cy.get("#button-delegate-vote").click({ force: true });
-  cy.task("mine", 5);
+  cy.task("mine", 1);
   cy.wait(500);
   cy.reload();
 });
@@ -28,7 +28,7 @@ Cypress.Commands.add("delegateVote", () => {
 Cypress.Commands.add("delegateValue", () => {
   // check if delegate button exists
   cy.get("#button-delegate-value").click({ force: true });
-  cy.task("mine", 5);
+  cy.task("mine", 1);
   cy.wait(500);
   cy.reload();
 });
