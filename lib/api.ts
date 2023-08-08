@@ -14,7 +14,6 @@ import {
   Log,
   parseAbiItem,
   PublicClient,
-  trim,
 } from "viem";
 
 import orderBy from "lodash/orderBy";
@@ -177,6 +176,14 @@ const functionSelectors = {
   ),
 };
 
+function removeSelectorFromCallData(callData: Hash) {
+  return bytesToHex(fromHex(callData, "bytes").slice(4));
+}
+
+function hexToBytes32String(hex: string): string {
+  return fromHex(hex as Hash, { size: 32, to: "string" });
+}
+
 export class SPOG {
   client: PublicClient;
   config: Config;
@@ -230,7 +237,7 @@ export class SPOG {
             callData
           );
 
-          params = [fromHex(values[0], "string"), values[1]];
+          params = [hexToBytes32String(values[0]), values[1]];
         } else if (emergencyType === 1) {
           proposalType = "addToList";
 
@@ -238,24 +245,20 @@ export class SPOG {
             parseAbiParameters("bytes32 list, address account"),
             callData
           );
-          params = [fromHex(values[0], "string"), values[1]];
+          params = [hexToBytes32String(values[0]), values[1]];
         } else if (emergencyType === 2) {
-          proposalType = "changeConfig";
+          proposalType = "updateConfig";
+
           params = decodeAbiParameters(
             [
-              { name: "configName", type: "bytes32" },
-              { name: "configAddress", type: "address" },
-              { name: "interfaceId", type: "bytes4" },
+              { name: "valueName", type: "bytes32" },
+              { name: "value", type: "bytes32" },
             ],
-            bytesToHex(fromHex(callData, "bytes").slice(4))
-          );
+            callData
+          ).map(hexToBytes32String);
         }
 
         return [proposalType, params];
-      }
-
-      function revemoSelectorFromCallData(callData: Hash) {
-        return bytesToHex(fromHex(callData, "bytes").slice(4));
       }
 
       switch (selector) {
@@ -266,10 +269,10 @@ export class SPOG {
               { name: "list", type: "bytes32" },
               { name: "account", type: "address" },
             ],
-            revemoSelectorFromCallData(event.calldatas[0])
+            removeSelectorFromCallData(event.calldatas[0])
           );
 
-          params[0] = fromHex(params[0], "string");
+          params[0] = hexToBytes32String(params[0]);
           break;
         case functionSelectors.removeFromList:
           proposalType = "removeFromList";
@@ -278,9 +281,9 @@ export class SPOG {
               { name: "list", type: "bytes32" },
               { name: "account", type: "address" },
             ],
-            revemoSelectorFromCallData(event.calldatas[0])
+            removeSelectorFromCallData(event.calldatas[0])
           );
-          params[0] = fromHex(params[0], "string");
+          params[0] = hexToBytes32String(params[0]);
           break;
         case functionSelectors.updateConfig:
           proposalType = "updateConfig";
@@ -289,8 +292,9 @@ export class SPOG {
               { name: "valueName", type: "bytes32" },
               { name: "value", type: "bytes32" },
             ],
-            revemoSelectorFromCallData(event.calldatas[0])
-          ).map((param) => fromHex(param, "string"));
+            removeSelectorFromCallData(event.calldatas[0])
+          ).map(hexToBytes32String);
+
           break;
         case functionSelectors.reset:
           proposalType = "reset";
@@ -299,14 +303,14 @@ export class SPOG {
               { name: "newGovernor", type: "address" },
               { name: "newVoteVault", type: "address" },
             ],
-            revemoSelectorFromCallData(event.calldatas[0])
+            removeSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.changeTax:
           proposalType = "changeTax";
           params = decodeAbiParameters(
             [{ name: "newTax", type: "uint256" }],
-            revemoSelectorFromCallData(event.calldatas[0])
+            removeSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.changeTaxRange:
@@ -316,21 +320,21 @@ export class SPOG {
               { name: "newTaxLowerBound", type: "uint256" },
               { name: "newTaxUpperBound", type: "uint256" },
             ],
-            revemoSelectorFromCallData(event.calldatas[0])
+            removeSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.updateVoteQuorumNumerator:
           proposalType = "updateVoteQuorumNumerator";
           params = decodeAbiParameters(
             [{ name: "newVoteQuorumNumerator", type: "uint256" }],
-            revemoSelectorFromCallData(event.calldatas[0])
+            removeSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.updateValueQuorumNumerator:
           proposalType = "updateValueQuorumNumerator";
           params = decodeAbiParameters(
             [{ name: "newValueQuorumNumerator", type: "uint256" }],
-            revemoSelectorFromCallData(event.calldatas[0])
+            removeSelectorFromCallData(event.calldatas[0])
           );
           break;
         case functionSelectors.emergency:
@@ -341,7 +345,7 @@ export class SPOG {
               { name: "emergencyType", type: "uint8" },
               { name: "callData", type: "bytes" },
             ],
-            revemoSelectorFromCallData(event.calldatas[0])
+            removeSelectorFromCallData(event.calldatas[0])
           );
 
           [proposalType, params] = parseEmergency(params[0], params[1]);
@@ -356,7 +360,7 @@ export class SPOG {
         changeTaxRange: "Change Tax Range",
         addToList: "Add to list",
         removeFromList: "Remove from list",
-        changeConfig: "Change Config",
+        updateConfig: "Update Config",
         reset: "Reset Vote Holders",
         updateVoteQuorumNumerator: "Update Vote Quorum",
         updateValueQuorumNumerator: "Update Value Quorum",
@@ -678,7 +682,7 @@ export class SPOG {
         eventName: eventName as "AddressAddedToList" | "AddressRemovedFromList",
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
-        listName: fromHex(trim(event.listName, { dir: "right" }), "string"),
+        listName: hexToBytes32String(event.listName),
         account: event.account,
         timestamp: Number(block.timestamp),
       };
@@ -771,14 +775,8 @@ export class SPOG {
         eventName,
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
-        valueName: fromHex(event.valueName, {
-          size: 32,
-          to: "string",
-        }),
-        value: fromHex(event.value, {
-          size: 32,
-          to: "string",
-        }),
+        valueName: hexToBytes32String(event.valueName),
+        value: hexToBytes32String(event.value),
         timestamp: Number(block.timestamp),
       };
 
