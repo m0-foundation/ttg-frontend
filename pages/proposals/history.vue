@@ -67,5 +67,6 @@ const tableConfig = {
     status: p.state,
     created: p.timestamp,
   })),
+  search: true,
 };
 </script>

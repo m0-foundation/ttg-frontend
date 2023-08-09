@@ -2,21 +2,86 @@
 
 This app is based on Nuxt v3, Vue, and Wagmi
 
-## Contracts are git submodules
+
+
+
+## 1. Contracts
+
+The Dapp is based on the SPOG contracts in order to run the local testnet. Although it does not keep track of versioniong of SPOG yet. Meaning, the FE code base has to be updated to latest changes of SPOG otherwise it might break. 
+
+
 
 This will install the SPOG contracts and all of their submodules recursively
 
 ```bash
+git clone https://github.com/MZero-Labs/SPOG.git contracts
+
+cd contracts/
+
 git submodule update --init --recursive
 ```
 
-## Compile contracts
+Note: Run `git submodule status` on root / of this repo to find the commit hash of the code based placed in contracts/ folder.
+
+### 1.2 Compile contracts
 
 1. install `foundry` https://getfoundry.sh/
 2. `cd contracts/`
 3. `forge build`
 
-## Running with docker-compose
+### 1.3 Update SDK from SPOG smart contracts (only when contracts change) - (optional)
+
+1. Do steps on (1.2) item
+5. then run `yarn wagmi generate`
+6. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
+
+Depending on contract changes this file must be also updated with correct import dependencies of contracts:
+`/wagmi.config.ts`
+
+## 2. Setup
+
+### 2.1 Setup manully
+
+Make sure to install the dependencies:
+
+```bash
+yarn install
+```
+#### 2.1.2 Local development with hardhat
+
+In one terminal:
+
+```bash
+yarn hardhat
+```
+
+This starts a test blockchain on port 8545.
+
+To test with the [rpc-proxy](https://github.com/MZero-Labs/rpc-proxy) on port 3005, clone it and run it in another terminal. It will connect to hardhat.
+
+To test without the rpc-proxy, verify your .env connects to hardhat port 8545 instead of 3005 for RPC
+
+See file `/hardhat.config.js` for configs.
+
+
+
+#### 2.1.3 Env vars: `.env` file
+
+This app uses an .env file to set environment variables locally (not in docker-compose). For local development, copy `.env.example` to `.env`
+
+For production or public testnets, please deploy the contracts using the script provided in the SPOG contracts repo, and create an `.env` file with appropriate values.
+
+#### 2.1.4 RUN
+
+In another terminal, run:
+
+```bash
+yarn dev
+```
+
+This starts the development server on `http://localhost:3000`
+
+### 2.2 Running with docker-compose
 
 The easiest way to run everything for development is with docker-compose. Make sure you have SSH access to the `rpc-proxy` repo as well.
 
@@ -37,25 +102,8 @@ This will start:
 - an rpc-proxy on port 3005
 - the app on port 3000 with live reloading when files change
 
-## Setup without docker-compose
 
-Make sure to install the dependencies:
 
-### Install Node modules
-
-```bash
-yarn install
-```
-
-### Local development with hardhat
-
-In one terminal, run `yarn hardhat`. This starts a test blockchain on port 8545.
-
-To test with the [rpc-proxy](https://github.com/MZero-Labs/rpc-proxy) on port 3005, clone it and run it in another terminal. It will connect to hardhat.
-
-To test without the rpc-proxy, verify your .env connects to hardhat port 8545 instead of 3005 for RPC
-
-In another terminal, run `yarn dev`. This starts the development server on `http://localhost:3000`
 
 ## Testing with Metamask
 
@@ -88,8 +136,21 @@ Settings > Advanced > Clear activity
 
 This resets the nonce and state for the wallet
 
+
+## E2E Test
+
+We use cypress that on every .cy.ts file deploys the spog contract found on `hardhat/deploy-spog.ts`
+
+To Run specific test or debug:
+
 ```bash
-npm run dev
+yarn cy:open
+```
+
+To Run all tests:
+
+```bash
+yarn test
 ```
 
 ## Production
@@ -97,28 +158,17 @@ npm run dev
 Build the application for production:
 
 ```bash
-npm run build
+yarn generate
 ```
 
 Locally preview production build:
 
 ```bash
-npm run preview
+yarn preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
-## Update SDK from SPOG smart contracts (only when contracts change)
 
-1. `git submodule update --init --recursive`
-2. `cd contracts/`
-3. `forge build`
-4. `cd ..`
-5. then run `yarn wagmi generate`
-6. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
 
-### `.env` file:
 
-This app uses an .env file to set environment variables locally (not in docker-compose). For local development, copy `.env.development` to `.env`
-
-For production or public testnets, please deploy the contracts using the script provided in the SPOG contracts repo, and create an .env file with appropriate values.
