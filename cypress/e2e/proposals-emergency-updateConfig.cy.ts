@@ -89,7 +89,7 @@ describe("Proposals", () => {
         cy.wrap($proposal).find("#button-cast-yes").click();
       });
 
-      cy.task("mine", 1);
+      cy.task("mine", 5);
       cy.visit("http://localhost:3000/proposals/emergency");
       cy.get(".voted").should("have.length", 1);
     });
