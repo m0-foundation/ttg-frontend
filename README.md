@@ -7,17 +7,21 @@ This app is based on Nuxt v3, Vue, and Wagmi
 
 ## 1. Contracts
 
-The Dapp is based on the SPOG contracts in order to run the local testnet. Although it does not keep track of versioniong of SPOG yet. Meaning, the FE code base has to be updated to latest changes of SPOG otherwise it might break.
+The Dapp is based on the SPOG contracts in order to run the local testnet. Although it does not keep track of versioniong of SPOG yet. Meaning, the FE code base has to be updated to latest changes of SPOG otherwise it might break. 
+
+
 
 This will install the SPOG contracts and all of their submodules recursively
 
 ```bash
-git clone https://github.com/MZero-Labs/SPOG.git
-```
+git clone https://github.com/MZero-Labs/SPOG.git contracts
 
-```bash
+cd contracts/
+
 git submodule update --init --recursive
 ```
+
+Note: Run `git submodule status` on root / of this repo to find the commit hash of the code based placed in contracts/ folder.
 
 ### 1.2 Compile contracts
 
