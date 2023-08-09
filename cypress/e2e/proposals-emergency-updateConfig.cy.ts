@@ -90,7 +90,7 @@ describe("Proposals", () => {
       });
 
       cy.task("mine", 1);
-      cy.reload();
+      cy.visit("http://localhost:3000/proposals/emergency");
       cy.get(".voted").should("have.length", 1);
     });
 
@@ -105,7 +105,7 @@ describe("Proposals", () => {
 
       cy.task("mine", 1);
       cy.wait(500);
-      cy.reload();
+      cy.visit(proposalUrl);
 
       cy.get("#proposal-state").should("contain", "executed");
     });
