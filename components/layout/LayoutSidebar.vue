@@ -11,30 +11,34 @@
     <MButton class="mb-4">Create Proposal</MButton>
   </NuxtLink>
 
-  <MButton
-    v-show="!hasVoteDelegate"
-    id="button-delegate-vote"
-    class="mb-4"
-    @click="delegateVote()"
-  >
-    Delegate Vote
-  </MButton>
-
-  <MButton
-    v-show="!hasValueDelegate"
-    id="button-delegate-value"
-    class="mb-4"
-    @click="delegateValue()"
-  >
-    Delegate Value
-  </MButton>
-
   <nav class="text-white text-xl mb-8">
     <ul>
-      <li v-for="item in menu" :key="item.label">
-        <NuxtLink :to="item.href" active-class="active">
-          {{ item.label }}
+      <li>
+        <NuxtLink to="/proposals" active-class="active">proposals</NuxtLink>
+      </li>
+
+      <li>
+        <NuxtLink to="/lists" active-class="active">lists</NuxtLink>
+      </li>
+
+      <li v-show="isConnected">
+        <NuxtLink to="/delegate" active-class="active">delegate</NuxtLink>
+      </li>
+
+      <li>
+        <NuxtLink to="/config/governance" active-class="active">
+          governance config
         </NuxtLink>
+      </li>
+
+      <li>
+        <NuxtLink to="/config/protocol" active-class="active">
+          M0 Protocol config
+        </NuxtLink>
+      </li>
+
+      <li>
+        <NuxtLink to="/settings" active-class="active">settings</NuxtLink>
       </li>
     </ul>
   </nav>
@@ -90,71 +94,16 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { Hash, formatEther } from "viem";
-import { ref } from "vue";
 import { useAccount, useDisconnect, useContractRead } from "use-wagmi";
-import { whenever } from "@vueuse/core";
-import { writeVote, writeValue, voteABI, valueABI } from "@/lib/sdk";
-
-const menu = [
-  {
-    label: "proposals",
-    href: "/proposals",
-  },
-  {
-    label: "lists",
-    href: "/lists",
-  },
-  {
-    label: "delegates",
-    href: "/delegates",
-  },
-
-  {
-    label: "governance config",
-    href: "/config/governance",
-  },
-
-  {
-    label: "M0 Protocol config",
-    href: "/config/protocol",
-  },
-
-  {
-    label: "Settings",
-    href: "/settings",
-  },
-];
-
-const hasVoteDelegate = ref(false);
-const hasValueDelegate = ref(false);
+import { voteABI, valueABI } from "@/lib/sdk";
 
 const config = useRuntimeConfig();
 const store = useSpogStore();
-const spogClient = useSpogClientStore();
 const spog = storeToRefs(store);
 
 const { address: userAccount, isConnected } = useAccount();
 const { disconnect } = useDisconnect();
 
-function delegateVote() {
-  return writeVote({
-    address: spog.contracts.value.vote as Hash,
-    functionName: "delegate",
-    args: [userAccount.value!], // self delegate
-  }).then(() => {
-    hasVoteDelegate.value = true;
-  });
-}
-
-function delegateValue() {
-  return writeValue({
-    address: spog.contracts.value.value as Hash,
-    functionName: "delegate",
-    args: [userAccount.value!], // self delegate
-  }).then(() => {
-    hasValueDelegate.value = true;
-  });
-}
 const {
   data: votePower,
   isError: voteIsError,
@@ -178,23 +127,6 @@ const {
   args: [(userAccount.value || config.public.ZERO_ADDRESS) as Hash],
   watch: true,
 });
-
-whenever(
-  isConnected,
-  () => {
-    console.log("whenever", { isConnected });
-    spogClient.client.getVoteDelegates(userAccount.value!).then((delegate) => {
-      console.log("hasVoteDelegate", { delegate });
-      hasVoteDelegate.value = delegate !== config.public.ZERO_ADDRESS;
-    });
-
-    spogClient.client.getValueDelegates(userAccount.value!).then((delegate) => {
-      console.log("hasValueDelegate", { delegate });
-      hasValueDelegate.value = delegate !== config.public.ZERO_ADDRESS;
-    });
-  },
-  { immediate: true }
-);
 </script>
 
 <style scoped>

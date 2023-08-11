@@ -30,6 +30,7 @@
         />
         <div class="flex justify-between">
           <button
+            id="button-use-my-address-vote"
             type="button"
             class="underline text-grey-primary"
             @click="onUseMyAddressVote"
@@ -40,8 +41,13 @@
       </div>
 
       <div class="flex justify-end gap-2 my-4">
-        <MButton version="secondary-dark">cancel</MButton>
-        <MButton type="submit">delegate</MButton>
+        <MButton
+          id="button-delegate-vote"
+          type="submit"
+          :disabled="!isConnected"
+        >
+          delegate
+        </MButton>
       </div>
     </form>
 
@@ -69,6 +75,7 @@
         />
         <div class="flex justify-between">
           <button
+            id="button-use-my-address-value"
             type="button"
             class="underline text-grey-primary"
             @click="onUseMyAddressValue"
@@ -80,12 +87,16 @@
 
       <p class="text-primary my-4">
         /* The delegated tokens will be available for voting starting from the
-        next epoch. Next epoch starts in 12 days. */
+        next epoch. Next epoch starts {{ nextEpochAsDate }}. */
       </p>
 
       <div class="flex justify-end gap-2">
-        <MButton version="secondary-dark">cancel</MButton>
-        <MButton type="submit">delegate</MButton>
+        <MButton
+          id="button-delegate-value"
+          type="submit"
+          :disabled="!isConnected"
+          >delegate</MButton
+        >
       </div>
     </form>
   </div>
@@ -105,6 +116,11 @@ const spogClient = useSpogClientStore();
 const spog = storeToRefs(store);
 
 const { address: userAccount, isConnected } = useAccount();
+
+const nextEpochAsDate = computed(() => {
+  const { toFormat } = useDate(Number(spog.epoch.value.next?.asTimestamp));
+  return toFormat("LLL");
+});
 
 const voteDelegate = ref<string>();
 const valueDelegate = ref<string>();
