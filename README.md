@@ -11,13 +11,9 @@ The Dapp is based on the SPOG contracts in order to run the local testnet. Altho
 
 
 
-This will install the SPOG contracts and all of their submodules recursively
+This will download the SPOG contracts and all of their submodules recursively
 
 ```bash
-git clone https://github.com/MZero-Labs/SPOG.git contracts
-
-cd contracts/
-
 git submodule update --init --recursive
 ```
 
