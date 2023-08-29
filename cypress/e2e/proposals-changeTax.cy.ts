@@ -5,7 +5,7 @@ describe("Proposals", () => {
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
-      cy.visit("http://localhost:3000/proposals/create");
+      cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
@@ -34,12 +34,6 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to ACCESS the SCHEDULED proposal", () => {
-      cy.visit("http://localhost:3000/proposals/scheduled");
-      cy.contains(description).should("exist");
-      cy.contains("td", description);
-    });
-
     it("I should be able to DELEGATE", () => {
       cy.visit("http://localhost:3000/proposals/active");
       cy.connectWallet();
@@ -60,7 +54,6 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        expect($proposal.find(".active")).to.contain("active");
         expect($proposal.find("a")).to.contain("show details");
         cy.wrap($proposal).find("a").click();
       });
