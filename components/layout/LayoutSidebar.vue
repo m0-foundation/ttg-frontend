@@ -7,7 +7,7 @@
     </span>
   </a>
 
-  <NuxtLink to="/proposals/create">
+  <NuxtLink to="/proposal/create">
     <MButton class="mb-4">Create Proposal</MButton>
   </NuxtLink>
 

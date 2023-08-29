@@ -1,39 +1,21 @@
 <template>
   <div>
-    <ProposalNavbar />
+    <p class="text-xl text-white uppercase my-4">
+      All epochs <span class="text-primary">_</span>
+    </p>
     <LayoutPage>
-      <div class="flex justify-between uppercase text-xs mb-6">
-        <div class="text-grey-primary">Voting cycle: {{ nextEpochAsDate }}</div>
-        <div>STARTS {{ timeLeft }}</div>
-      </div>
-
-      <div v-if="!proposals || !proposals.length">No Scheduled proposals.</div>
+      <div v-if="!proposals || !proposals.length">No proposals to show.</div>
       <MTable v-else :config="tableConfig" />
     </LayoutPage>
   </div>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-
 import { html } from "gridjs";
+import ProposalStatus from "@/components/proposal/Status.vue";
 
-const proposalsStore = useProposalsStore();
-const spogStateStore = useSpogStore();
-
-const { epoch } = storeToRefs(spogStateStore);
-
-const proposals = computed(() => proposalsStore.getProposalsByState("Pending"));
-console.log({ epoch });
-const nextEpochAsDate = computed(() => {
-  const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
-  return toFormat("LLL");
-});
-
-const timeLeft = computed(() => {
-  const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
-  return timeAgo;
-});
+const store = useProposalsStore();
+const proposals = computed(() => store.getProposalsByExcludedState("Active"));
 
 const tableConfig = {
   columns: [
@@ -72,12 +54,21 @@ const tableConfig = {
         );
       },
     },
+    {
+      id: "status",
+      name: "Status",
+      sort: true,
+      formatter: (cell: string) =>
+        html(useComponentToHtml(ProposalStatus, { version: cell }).html),
+    },
   ],
   data: proposals.value.map((p) => ({
     proposalId: p.proposalId,
     proposal: p.description,
     action: p.proposalLabel,
+    status: p.state,
     created: p.timestamp,
   })),
+  search: true,
 };
 </script>

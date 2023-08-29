@@ -1,6 +1,5 @@
 <template>
   <div>
-    <ProposalNavbar />
     <LayoutPage>
       <div v-if="!proposals || !proposals.length">
         No Proposals to be executed.

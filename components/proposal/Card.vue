@@ -19,7 +19,7 @@
         <NuxtLink
           id="show-details"
           class="uppercase flex text-xs items-center hover:underline"
-          :to="`/proposals/${proposal.proposalId}`"
+          :to="`/proposal/${proposal.proposalId}`"
         >
           <svg
             class="h-4 mr-2"

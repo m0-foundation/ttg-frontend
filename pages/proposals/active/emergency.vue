@@ -1,14 +1,6 @@
 <template>
   <div>
-    <ProposalNavbar />
     <LayoutPage>
-      <div class="flex justify-between uppercase text-xs mb-6">
-        <div class="text-grey-primary">
-          Voting cycle: {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
-        </div>
-        <div>ENDS {{ timeLeft }}</div>
-      </div>
-
       <div v-if="!hasProposals">No Emergency proposals.</div>
       <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
         <ProposalCard :proposal="proposal" @on-cast="onCast" />
