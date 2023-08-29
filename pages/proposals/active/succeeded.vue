@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <LayoutPage>
-      <div v-if="!proposals || !proposals.length">
-        No Proposals to be executed.
-      </div>
-      <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
-        <ProposalCard :proposal="proposal" />
-      </div>
-    </LayoutPage>
+  <div class="mb-10">
+    <div v-if="!proposals || !proposals.length">
+      No Proposals to be executed.
+    </div>
+    <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
+      <ProposalCard :proposal="proposal" />
+    </div>
   </div>
 </template>
 

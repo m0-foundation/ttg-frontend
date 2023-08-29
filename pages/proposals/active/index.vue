@@ -1,35 +1,33 @@
 <template>
-  <div>
-    <LayoutPage>
-      <div v-if="!hasProposals">No Active proposals.</div>
-      <div
-        v-for="proposal in nonEmergencyProposals"
-        v-else
-        :key="proposal.proposalId"
-      >
-        <ProposalCard
-          :proposal="proposal"
-          @on-cast="onCast"
-          @on-uncast="onUncast"
-        />
-      </div>
+  <div class="mb-10">
+    <div v-if="!hasProposals">No Active proposals.</div>
+    <div
+      v-for="proposal in nonEmergencyProposals"
+      v-else
+      :key="proposal.proposalId"
+    >
+      <ProposalCard
+        :proposal="proposal"
+        @on-cast="onCast"
+        @on-uncast="onUncast"
+      />
+    </div>
 
-      <div v-show="hasProposals" class="flex justify-between mt-8">
-        <p v-if="!hasFinishedVoting">
-          To submit your vote, please vote on the proposal.
-        </p>
-        <p v-else class="text-grey-primary">Your votes has been submitted</p>
-        <MButton
-          id="button-cast-submit"
-          :disabled="
-            !isSelectedCastProposalsFull || hasFinishedVoting || isDisconnected
-          "
-          @click="onCastBatchVotes"
-        >
-          submit votes
-        </MButton>
-      </div>
-    </LayoutPage>
+    <div v-show="hasProposals" class="flex justify-between mt-8">
+      <p v-if="!hasFinishedVoting">
+        To submit your vote, please vote on the proposal.
+      </p>
+      <p v-else class="text-grey-primary">Your votes has been submitted</p>
+      <MButton
+        id="button-cast-submit"
+        :disabled="
+          !isSelectedCastProposalsFull || hasFinishedVoting || isDisconnected
+        "
+        @click="onCastBatchVotes"
+      >
+        submit votes
+      </MButton>
+    </div>
   </div>
 </template>
 

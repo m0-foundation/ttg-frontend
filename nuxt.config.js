@@ -48,6 +48,8 @@ export default defineNuxtConfig({
             red: "#FF3333",
             "grey-primary": "#868886",
             "grey-secondary": "#353835",
+            "grey-800": "#202220",
+            "grey-600": "#363835",
           },
         },
       },

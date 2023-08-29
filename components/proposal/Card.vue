@@ -5,66 +5,69 @@
       class="text-white bg-[#CC0000] text-xs"
       text="EMERGENCY_VOTING"
     />
-    <article :class="hasVoted ? 'voted' : 'not-voted'">
-      <h2 class="text-4xl mb-4 break-all">
+    <article class="text-white bg-grey-800 p-8 mb-4">
+      <h2 class="text-2xl mb-4 break-all">
         {{ title }}
       </h2>
-      <div class="text-sm mb-6 flex justify-between">
-        <div id="proposer" class="truncate w-52">
+      <div class="text-sm mb-6 flex justify-between text-grey-600">
+        <div class="truncate w-52">
           Proposed by <u>{{ proposal.proposer }}</u>
         </div>
-        <div id="time">{{ timeAgo }} | {{ formatedDate }}</div>
+        <div>{{ timeAgo }} | {{ formatedDate }}</div>
       </div>
-      <div class="flex justify-between uppercase">
-        <NuxtLink
-          id="show-details"
-          class="uppercase flex text-xs items-center hover:underline"
-          :to="`/proposal/${proposal.proposalId}`"
+
+      <div class="text-grey-primary text-sm">
+        {{
+          truncate(props.proposal.description, {
+            length: 300,
+          })
+        }}
+      </div>
+
+      <NuxtLink
+        id="show-details"
+        class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full py-2 px-4 my-4"
+        :to="`/proposal/${proposal.proposalId}`"
+      >
+        <span>show details </span>
+        <svg
+          class="h-4 mr-2"
+          width="18"
+          height="15"
+          viewBox="0 0 18 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <svg
-            class="h-4 mr-2"
-            width="18"
-            height="15"
-            viewBox="0 0 18 15"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+          <rect x="0.5" y="0.5" width="17" height="14" stroke="currentColor" />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M 14.767 3.938 L 14.767 3.108 L 13.936 3.108 L 8.767 3.108 L 8.767 4.108 L 12.935 4.108 L 8.767 8.274 L 9.602 9.108 L 13.767 4.939 L 13.767 9.108 L 14.767 9.108 L 14.767 3.938 Z"
+            fill="currentColor"
+          />
+        </svg>
+      </NuxtLink>
+
+      <div class="flex justify-between items-center">
+        <div class="inline-flex gap-1" role="group">
+          <ProposalButtonCastVote
+            id="button-cast-yes"
+            :disabled="isCastVoteYesDisabled || hasVoted"
+            @click="onCastSelected(1)"
           >
-            <rect
-              x="0.5"
-              y="0.5"
-              width="17"
-              height="14"
-              stroke="currentColor"
-            />
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M 14.767 3.938 L 14.767 3.108 L 13.936 3.108 L 8.767 3.108 L 8.767 4.108 L 12.935 4.108 L 8.767 8.274 L 9.602 9.108 L 13.767 4.939 L 13.767 9.108 L 14.767 9.108 L 14.767 3.938 Z"
-              fill="currentColor"
-            />
-          </svg>
-          show details
-        </NuxtLink>
+            YES
+          </ProposalButtonCastVote>
+          <ProposalButtonCastVote
+            id="button-cast-no"
+            :disabled="isCastVoteNoDisabled || hasVoted"
+            @click="onCastSelected(0)"
+          >
+            NO
+          </ProposalButtonCastVote>
+        </div>
 
-        <div class="flex justify-between items-center">
-          <ProposalStatus :version="proposal?.state" />
-
-          <div class="inline-flex gap-1 ml-4" role="group">
-            <ProposalButtonCastVote
-              id="button-cast-yes"
-              :disabled="isCastVoteYesDisabled || hasVoted"
-              @click="onCastSelected(1)"
-            >
-              YES
-            </ProposalButtonCastVote>
-            <ProposalButtonCastVote
-              id="button-cast-no"
-              :disabled="isCastVoteNoDisabled || hasVoted"
-              @click="onCastSelected(0)"
-            >
-              NO
-            </ProposalButtonCastVote>
-          </div>
+        <div class="uppercase text-xs text-grey-primary">
+          tokens needed to vote
         </div>
       </div>
     </article>
@@ -72,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
 import { ispogGovernorABI } from "@/lib/sdk";
@@ -126,35 +130,3 @@ const {
   watch: true,
 });
 </script>
-
-<style scoped>
-article {
-  @apply p-8 mb-2;
-}
-
-.not-voted {
-  @apply bg-white text-black;
-
-  #proposer,
-  #time {
-    @apply text-primary-darker;
-  }
-
-  #show-details {
-    @apply text-black;
-  }
-}
-
-.voted {
-  @apply text-white bg-[#363835];
-
-  #proposer,
-  #time {
-    @apply text-grey-primary;
-  }
-
-  #show-details {
-    @apply text-white;
-  }
-}
-</style>

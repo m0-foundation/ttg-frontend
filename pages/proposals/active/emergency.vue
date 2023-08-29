@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <LayoutPage>
-      <div v-if="!hasProposals">No Emergency proposals.</div>
-      <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
-        <ProposalCard :proposal="proposal" @on-cast="onCast" />
-      </div>
-    </LayoutPage>
+  <div class="mb-10">
+    <div v-if="!hasProposals">No Emergency proposals.</div>
+    <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
+      <ProposalCard :proposal="proposal" @on-cast="onCast" />
+    </div>
   </div>
 </template>
 
