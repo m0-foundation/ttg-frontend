@@ -19,6 +19,7 @@ Cypress.Commands.add("connectWallet", () => {
 
 Cypress.Commands.add("delegateVote", () => {
   cy.visit("http://localhost:3000/delegate");
+  cy.wait(500); // wait to load props values
   cy.get("#button-use-my-address-vote").click({ force: true });
   cy.get("#button-delegate-vote").click({ force: true });
   cy.wait(500);
@@ -27,6 +28,7 @@ Cypress.Commands.add("delegateVote", () => {
 
 Cypress.Commands.add("delegateValue", () => {
   cy.visit("http://localhost:3000/delegate");
+  cy.wait(500); // wait to load props values
   cy.get("#button-use-my-address-value").click({ force: true });
   cy.get("#button-delegate-value").click({ force: true });
   cy.wait(500);
