@@ -15,7 +15,7 @@ import { html } from "gridjs";
 import ProposalStatus from "@/components/proposal/Status.vue";
 
 const store = useProposalsStore();
-const proposals = computed(() => store.getProposalsByExcludedState("Active"));
+const proposals = computed(() => store.data);
 
 const tableConfig = {
   columns: [

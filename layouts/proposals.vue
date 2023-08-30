@@ -64,7 +64,10 @@ const active = computed(
 const pendingExecution = computed(
   () => store.getProposalsByState("Succeeded").length
 );
-const emergency = computed(() => store.getProposalsTypeEmergency.length);
+
+const emergency = computed(
+  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length
+);
 
 const { epoch } = storeToRefs(spog);
 

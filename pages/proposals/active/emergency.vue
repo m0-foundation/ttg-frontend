@@ -22,26 +22,16 @@ const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 const { address: userAccount } = useAccount();
 
-const { getProposalsTypeEmergency: proposals } = storeToRefs(proposalsStore);
 const { epoch } = storeToRefs(spog);
+
+const proposals = computed(
+  () =>
+    proposalsStore.getProposalsByState("Active").filter((p) => p.isEmergency)
+      .length
+);
 
 const hasProposals = computed(() => {
   return proposals.value && proposals.value.length > 0;
-});
-
-const currentEpochAsDate = computed(() => {
-  const { toFormat } = useDate(Number(epoch.value.current?.asTimestamp));
-  return toFormat("LLL");
-});
-
-const nextEpochAsDate = computed(() => {
-  const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
-  return toFormat("LLL");
-});
-
-const timeLeft = computed(() => {
-  const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
-  return timeAgo;
 });
 
 function onCast(vote: number, proposalId: string) {
