@@ -58,7 +58,7 @@ describe("Proposals", () => {
         cy.wrap($proposal).find("a").click();
       });
 
-      cy.url().should("match", /proposals\/([0-9])\w+/g);
+      cy.url().should("match", /proposal\/([0-9])\w+/g);
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
@@ -82,22 +82,18 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      cy.visit(proposalUrl);
+      cy.visit("http://localhost:3000/proposals/active/succeeded");
       cy.connectWallet();
 
       cy.task("mine", 100);
       cy.wait(500);
       cy.reload();
 
-      cy.get("#proposal-state").should("contain", "succeeded");
-      cy.contains("article", "Execute?").should("exist");
+      cy.contains("article", "Execute").should("exist");
       cy.get("#button-proposal-execute").click();
       cy.wait(500);
 
-      cy.task("mine", 10);
-      cy.wait(500);
-      cy.reload();
-
+      cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
       cy.get("#technical-proposal-current").should("contain", input);
     });
