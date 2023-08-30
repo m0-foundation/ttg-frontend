@@ -9,7 +9,7 @@
       <h2 class="text-2xl mb-4 break-all">
         {{ title }}
       </h2>
-      <div class="text-sm mb-6 flex justify-between text-grey-600">
+      <div class="text-sm mb-6 flex justify-between text-gray-400">
         <div class="truncate w-52">
           Proposed by <u>{{ proposal.proposer }}</u>
         </div>
@@ -48,7 +48,10 @@
         </svg>
       </NuxtLink>
 
-      <div class="flex justify-between items-center">
+      <div
+        v-if="proposal?.state === 'Active'"
+        class="flex justify-between items-center"
+      >
         <div class="inline-flex gap-1" role="group">
           <ProposalButtonCastVote
             id="button-cast-yes"
@@ -70,6 +73,17 @@
           tokens needed to vote
         </div>
       </div>
+
+      <div
+        v-if="proposal?.state === 'Succeeded'"
+        class="flex justify-between items-center"
+      >
+        <div class="inline-flex gap-1" role="group">
+          <MButton id="button-proposal-execute" @click="execute()">
+            Execute
+          </MButton>
+        </div>
+      </div>
     </article>
   </div>
 </template>
@@ -77,8 +91,8 @@
 <script setup lang="ts">
 import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
-import { Hash } from "viem";
-import { ispogGovernorABI } from "@/lib/sdk";
+import { keccak256, toHex, Hash } from "viem";
+import { ispogGovernorABI, writeIspogGovernor } from "@/lib/sdk";
 import { MProposal } from "@/lib/api";
 
 export interface ProposalCardProps {
@@ -129,4 +143,27 @@ const {
   ],
   watch: true,
 });
+
+function execute() {
+  const { description, calldatas, proposalType } = props.proposal;
+  const hashedDescription = keccak256(toHex(description));
+  const targets = [
+    "updateValueQuorumNumerator",
+    "updateVoteQuorumNumerator",
+  ].includes(proposalType)
+    ? [spog.contracts.governor as Hash] // dual governor contract as target for dual governance proposals
+    : [config.public.contracts.spog as Hash];
+  const values = [BigInt(0)]; // do not change
+
+  return writeIspogGovernor({
+    address: spog.contracts.governor as Hash,
+    functionName: "execute",
+    args: [targets, values, calldatas as Hash[], hashedDescription], // (targets, values, calldatas, hashedDescription
+    account: userAccount.value,
+    value: BigInt(0),
+  }).then(() => {
+    console.log("executed");
+    window.location.reload();
+  });
+}
 </script>
