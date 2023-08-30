@@ -1,11 +1,12 @@
 <template>
-  <div class="mb-10">
-    <div v-if="!hasProposals">No Active proposals.</div>
+  <div class="mb-40">
     <div
-      v-for="proposal in nonEmergencyProposals"
-      v-else
-      :key="proposal.proposalId"
+      v-if="!hasProposals"
+      class="flex items-center justify-center text-grey-primary"
     >
+      No Active proposals
+    </div>
+    <div v-for="proposal in activeProposals" v-else :key="proposal.proposalId">
       <ProposalCard
         :proposal="proposal"
         @on-cast="onCast"
@@ -13,20 +14,40 @@
       />
     </div>
 
-    <div v-show="hasProposals" class="flex justify-between mt-8">
-      <p v-if="!hasFinishedVoting">
-        To submit your vote, please vote on the proposal.
-      </p>
-      <p v-else class="text-grey-primary">Your votes has been submitted</p>
-      <MButton
-        id="button-cast-submit"
-        :disabled="
-          !isSelectedCastProposalsFull || hasFinishedVoting || isDisconnected
-        "
-        @click="onCastBatchVotes"
+    <div
+      v-show="hasProposals && isConnected"
+      class="p-8 overflow-x-hidden bg-grey-600 fixed inset-x-0 bottom-0 mb-16 lg:ml-[22rem] lg:mr-[4.5rem]"
+    >
+      <div class="flex justify-between items-center gap-2">
+        <div class="w-1/3 bg-grey-800 rounded-full h-1.5">
+          <div
+            class="bg-primary h-1.5 rounded-ful"
+            :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
+          ></div>
+        </div>
+
+        <p v-if="hasFinishedVoting" class="text-grey-primary">
+          Your votes has been submitted
+        </p>
+        <p v-else class="text-xs">
+          {{ selectedCastProposals.length }} out
+          {{ activeProposals.length }} proposals are left to vote on
+        </p>
+        <MButton
+          id="button-cast-submit"
+          :disabled="!isSelectedCastProposalsFull || hasFinishedVoting"
+          @click="onCastBatchVotes"
+        >
+          submit votes
+        </MButton>
+      </div>
+
+      <p
+        v-show="!hasFinishedVoting"
+        class="text-xs text-grey-primary flex justify-end mt-2 italic"
       >
-        submit votes
-      </MButton>
+        Your voting power will decrease over time if you do not vote
+      </p>
     </div>
   </div>
 </template>
@@ -49,19 +70,25 @@ const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 
 const { epoch } = storeToRefs(spog);
-const proposals = computed(() => proposalsStore.getProposalsByState("Active"));
+const activeProposals = computed(() =>
+  proposalsStore.getProposalsByState("Active").filter((p) => !p.isEmergency)
+);
 
-const hasProposals = computed(() => proposals && proposals.value.length > 0);
-
-const nonEmergencyProposals = computed(() => {
-  return proposals.value.filter((p) => !p.isEmergency);
-});
+const hasProposals = computed(
+  () => activeProposals && activeProposals.value.length > 0
+);
 
 const isSelectedCastProposalsFull = computed(() => {
-  return selectedCastProposals.value.length === proposals.value.length;
+  return selectedCastProposals.value.length === activeProposals.value.length;
 });
 
-const { address: userAccount, isDisconnected } = useAccount();
+const progressBarWidth = computed(() => {
+  return (
+    (selectedCastProposals.value.length / activeProposals.value.length) * 100
+  );
+});
+
+const { address: userAccount, isConnected } = useAccount();
 
 function onCast(vote: number, proposalId: string) {
   console.log("casted", { vote, proposalId });
