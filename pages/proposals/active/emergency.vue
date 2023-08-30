@@ -1,6 +1,11 @@
 <template>
   <div class="mb-10">
-    <div v-if="!hasProposals">No Emergency proposals.</div>
+    <div
+      v-if="!hasProposals"
+      class="flex items-center justify-center text-grey-primary"
+    >
+      No Emergency proposals
+    </div>
     <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
       <ProposalCard :proposal="proposal" @on-cast="onCast" />
     </div>
