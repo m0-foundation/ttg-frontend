@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
 import { Hash } from "viem";
 import { writeIspogGovernor } from "@/lib/sdk";
@@ -22,12 +21,8 @@ const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 const { address: userAccount } = useAccount();
 
-const { epoch } = storeToRefs(spog);
-
-const proposals = computed(
-  () =>
-    proposalsStore.getProposalsByState("Active").filter((p) => p.isEmergency)
-      .length
+const proposals = computed(() =>
+  proposalsStore.getProposalsByState("Active").filter((p) => p.isEmergency)
 );
 
 const hasProposals = computed(() => {

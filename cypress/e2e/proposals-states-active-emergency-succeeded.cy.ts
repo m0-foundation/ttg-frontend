@@ -4,9 +4,6 @@ describe("Proposals", () => {
     const description1 = "Change tax to 1 $CASH";
 
     it("I should be able to DELEGATE", () => {
-      cy.visit("http://localhost:3000/proposals/active");
-      cy.connectWallet();
-      cy.reload();
       // delegate to self account before voting to have vote power
       cy.delegateVote();
     });
@@ -72,15 +69,7 @@ describe("Proposals", () => {
       });
 
       it("I should be able to CAST vote YES for the proposal", () => {
-        cy.visit(proposalUrl);
-        cy.connectWallet();
-        cy.wait(1000);
-
-        cy.get("#vote-yes-percentage").should("contain", "0%");
-        cy.get("#button-cast-yes").click();
-        cy.task("mine", 5);
-        cy.reload();
-        cy.get("#vote-yes-percentage").should("contain", "100%");
+        cy.castYesOneProposal(description1);
       });
     });
 

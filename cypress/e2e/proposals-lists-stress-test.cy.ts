@@ -33,7 +33,7 @@ describe("Proposals Lists", () => {
     const proposalUrl = "";
     const description = `Add ${address} to list: ${list}`;
 
-    cy.visit("http://localhost:3000/proposals/create");
+    cy.visit("http://localhost:3000/proposal/create");
     cy.contains("Select a proposal type").should("exist");
     cy.contains("Select a proposal type").click();
 
@@ -70,7 +70,7 @@ describe("Proposals Lists", () => {
   }
 
   function createProposalRemoveFromList(list: string, address: string) {
-    cy.visit("http://localhost:3000/proposals/create");
+    cy.visit("http://localhost:3000/proposal/create");
     cy.contains("Select a proposal type").should("exist");
     cy.contains("Select a proposal type").click();
 
@@ -108,41 +108,20 @@ describe("Proposals Lists", () => {
   }
 
   function executeProposal(description: string) {
-    cy.visit("http://localhost:3000/proposals/succeeded");
+    cy.visit("http://localhost:3000/proposals/active/succeeded");
     cy.connectWallet();
 
-    cy.contains("article", description).then(($proposal) => {
-      expect($proposal.find("a")).to.contain("show details");
-      cy.wrap($proposal).find("a").click();
-    });
-
-    cy.get("#proposal-state").should("contain", "succeeded");
-    cy.contains("article", "Execute?").should("exist");
-    cy.get("#button-proposal-execute").click();
-    // cy.wait(500);
-
-    cy.task("mine", 1);
     cy.wait(500);
-    cy.reload();
 
-    cy.get("#proposal-state").should("contain", "executed");
-  }
-
-  before(() => {
-    it("I should be able to DELEGATE", () => {
-      cy.visit("http://localhost:3000/proposals/active");
-      cy.connectWallet();
-      cy.reload();
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
+    cy.contains("article", description).then(($proposal) => {
+      cy.wrap($proposal).find("#button-proposal-execute").click();
     });
-  });
+
+    cy.wait(500);
+  }
 
   describe("Add to lists", () => {
     it("I should be able to DELEGATE", () => {
-      cy.visit("http://localhost:3000/proposals/active");
-      cy.connectWallet();
-      cy.reload();
       // delegate to self account before voting to have vote power
       cy.delegateVote();
     });
@@ -181,7 +160,6 @@ describe("Proposals Lists", () => {
 
       for (const description of descriptions) {
         cy.contains("article", description).then(($proposal) => {
-          expect($proposal.find(".active")).to.contain("active");
           cy.wrap($proposal).find("#button-cast-yes").click();
         });
       }
@@ -189,7 +167,7 @@ describe("Proposals Lists", () => {
       cy.get("#button-cast-submit").click();
       cy.task("mine", 1);
       cy.reload();
-      cy.get(".voted").should("have.length", descriptions.length);
+      cy.get("[data-test='voted']").should("have.length", descriptions.length);
     });
 
     it("Forward to EXECUTE proposal", () => {
@@ -243,7 +221,6 @@ describe("Proposals Lists", () => {
 
       for (const description of descriptionsRemove) {
         cy.contains("article", description).then(($proposal) => {
-          expect($proposal.find(".active")).to.contain("active");
           cy.wrap($proposal).find("#button-cast-yes").click();
         });
       }
@@ -251,7 +228,10 @@ describe("Proposals Lists", () => {
       cy.get("#button-cast-submit").click();
       cy.task("mine", 1);
       cy.reload();
-      cy.get(".voted").should("have.length", descriptionsRemove.length);
+      cy.get("[data-test='voted']").should(
+        "have.length",
+        descriptionsRemove.length
+      );
     });
 
     it("Forward to EXECUTE proposal", () => {

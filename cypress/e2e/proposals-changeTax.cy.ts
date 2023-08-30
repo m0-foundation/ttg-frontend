@@ -35,9 +35,6 @@ describe("Proposals", () => {
     });
 
     it("I should be able to DELEGATE", () => {
-      cy.visit("http://localhost:3000/proposals/active");
-      cy.connectWallet();
-      cy.reload();
       // delegate to self account before voting to have vote power
       cy.delegateVote();
     });
@@ -70,29 +67,14 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.visit(proposalUrl);
-      cy.connectWallet();
-      cy.wait(1000);
-
-      cy.get("#vote-yes-percentage").should("contain", "0%");
-      cy.get("#button-cast-yes").click();
-      cy.task("mine", 5);
-      cy.reload();
-      cy.get("#vote-yes-percentage").should("contain", "100%");
+      cy.castYesOneProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("http://localhost:3000/proposals/active/succeeded");
-      cy.connectWallet();
+      cy.executeOneProposal(description);
+    });
 
-      cy.task("mine", 100);
-      cy.wait(500);
-      cy.reload();
-
-      cy.contains("article", "Execute").should("exist");
-      cy.get("#button-proposal-execute").click();
-      cy.wait(500);
-
+    it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
       cy.get("#technical-proposal-current").should("contain", input);
