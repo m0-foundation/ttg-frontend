@@ -5,7 +5,10 @@
       class="text-white bg-[#CC0000] text-xs"
       text="EMERGENCY_VOTING"
     />
-    <article class="text-white bg-grey-800 p-8 mb-4">
+    <article
+      :data-test="hasVoted ? 'voted' : 'not-voted'"
+      class="text-white bg-grey-800 p-8 mb-4"
+    >
       <h2 class="text-2xl mb-4 break-all">
         {{ title }}
       </h2>
