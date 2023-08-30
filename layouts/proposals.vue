@@ -57,8 +57,10 @@ import { storeToRefs } from "pinia";
 const store = useProposalsStore();
 const spog = useSpogStore();
 
-const active = computed(() => store.getProposalsByState("Active").length);
-const scheduled = computed(() => store.getProposalsByState("Pending").length);
+const active = computed(
+  () => store.getProposalsByState("Active").filter((p) => !p.isEmergency).length
+);
+
 const pendingExecution = computed(
   () => store.getProposalsByState("Succeeded").length
 );
