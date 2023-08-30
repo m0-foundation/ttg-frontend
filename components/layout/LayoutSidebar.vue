@@ -14,7 +14,9 @@
   <nav class="text-white text-xl mb-8">
     <ul>
       <li>
-        <NuxtLink to="/proposals" active-class="active">proposals</NuxtLink>
+        <NuxtLink to="/proposals/active" active-class="active">
+          proposals
+        </NuxtLink>
       </li>
 
       <li>
