@@ -83,7 +83,7 @@
         class="flex justify-between items-center"
       >
         <div class="inline-flex gap-1" role="group">
-          <MButton id="button-proposal-execute" @click="execute()">
+          <MButton id="button-proposal-execute" @click="onExecuteProposal()">
             Execute
           </MButton>
         </div>
@@ -95,8 +95,8 @@
 <script setup lang="ts">
 import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
-import { keccak256, toHex, Hash } from "viem";
-import { ispogGovernorABI, writeIspogGovernor } from "@/lib/sdk";
+import { Hash } from "viem";
+import { ispogGovernorABI } from "@/lib/sdk";
 import { MProposal } from "@/lib/api";
 
 export interface ProposalCardProps {
@@ -108,6 +108,7 @@ const emit = defineEmits<{
   (e: "on-cast", vote: number, proposaId: string): void;
   (e: "on-uncast", proposaId: string): void;
   (e: "on-view", proposaId: string): void;
+  (e: "on-execute", proposal: MProposal): void;
 }>();
 
 const spog = useSpogStore();
@@ -124,6 +125,10 @@ const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
 
 function onViewProposal() {
   emit("on-view", props.proposal.proposalId);
+}
+
+function onExecuteProposal() {
+  emit("on-execute", props.proposal);
 }
 
 function onCastSelected(vote: number) {
@@ -152,27 +157,4 @@ const {
   ],
   watch: true,
 });
-
-function execute() {
-  const { description, calldatas, proposalType } = props.proposal;
-  const hashedDescription = keccak256(toHex(description));
-  const targets = [
-    "updateValueQuorumNumerator",
-    "updateVoteQuorumNumerator",
-  ].includes(proposalType)
-    ? [spog.contracts.governor as Hash] // dual governor contract as target for dual governance proposals
-    : [config.public.contracts.spog as Hash];
-  const values = [BigInt(0)]; // do not change
-
-  return writeIspogGovernor({
-    address: spog.contracts.governor as Hash,
-    functionName: "execute",
-    args: [targets, values, calldatas as Hash[], hashedDescription], // (targets, values, calldatas, hashedDescription
-    account: userAccount.value,
-    value: BigInt(0),
-  }).then(() => {
-    console.log("executed");
-    window.location.reload();
-  });
-}
 </script>
