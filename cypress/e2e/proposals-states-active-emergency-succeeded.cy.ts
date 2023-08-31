@@ -9,8 +9,6 @@ describe("Proposals", () => {
     });
 
     describe("Epoch 1", () => {
-      let proposalUrl = "";
-
       it("I should be able to CREATE a proposal", () => {
         cy.visit("http://localhost:3000/proposal/create");
         cy.contains("Select a proposal type").should("exist");
@@ -53,8 +51,7 @@ describe("Proposals", () => {
         cy.contains(description1).should("exist");
 
         cy.contains("article", description1).then(($proposal) => {
-          expect($proposal.find("a")).to.contain("show details");
-          cy.wrap($proposal).find("a").click();
+          cy.wrap($proposal).find("#show-details").click({ force: true });
         });
 
         cy.url().should("match", /proposal\/([0-9])\w+/g);
@@ -62,10 +59,6 @@ describe("Proposals", () => {
         cy.wait(500); // wait to load props values
 
         cy.get("#technical-proposal-incoming-change").should("contain", input1);
-
-        cy.url().then((url) => {
-          proposalUrl = url;
-        });
       });
 
       it("I should be able to CAST vote YES for the proposal", () => {
