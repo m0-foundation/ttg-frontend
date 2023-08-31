@@ -1,5 +1,11 @@
 <template>
-  <div class="w-full bg-red h-3">
+  <div
+    :class="[
+      'w-full',
+      'h-3',
+      { 'bg-red': width > 0, 'bg-gray-200': width === 0 },
+    ]"
+  >
     <div class="bg-primary h-3" :style="`width: ${width}%`"></div>
   </div>
 </template>

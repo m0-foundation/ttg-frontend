@@ -93,12 +93,12 @@ export interface ProposalVotesState {
   yes: {
     count: bigint;
     ratio: bigint;
-    percentage: bigint;
+    percentage: number;
   };
   no: {
     count: bigint;
     ratio: bigint;
-    percentage: bigint;
+    percentage: number;
   };
 }
 
@@ -456,12 +456,12 @@ export class SPOG {
       yes: {
         count: yes,
         ratio: yesRatio,
-        percentage: yesPercentage,
+        percentage: Number(yesPercentage),
       },
       no: {
         count: no,
         ratio: noRatio,
-        percentage: noPercentage,
+        percentage: Number(noPercentage),
       },
     };
   }
