@@ -27,10 +27,11 @@
         }}
       </div>
 
-      <NuxtLink
+      <button
         id="show-details"
+        type="button"
         class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full py-2 px-4 my-4"
-        :to="`/proposal/${proposal.proposalId}`"
+        @click="onViewProposal"
       >
         <span>show details </span>
         <svg
@@ -49,7 +50,7 @@
             fill="currentColor"
           />
         </svg>
-      </NuxtLink>
+      </button>
 
       <div
         v-if="proposal?.state === 'Active'"
@@ -106,6 +107,7 @@ const props = defineProps<ProposalCardProps>();
 const emit = defineEmits<{
   (e: "on-cast", vote: number, proposaId: string): void;
   (e: "on-uncast", proposaId: string): void;
+  (e: "on-view", proposaId: string): void;
 }>();
 
 const spog = useSpogStore();
@@ -119,6 +121,10 @@ const selectedVote = ref<null | number>(null);
 const formatedDate = computed(() => toFormat("LL"));
 const isCastVoteYesDisabled = computed(() => selectedVote.value === 0);
 const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
+
+function onViewProposal() {
+  emit("on-view", props.proposal.proposalId);
+}
 
 function onCastSelected(vote: number) {
   if (isVoteSelected.value) {
