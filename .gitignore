@@ -12,3 +12,5 @@ cache/
 cypress/screenshots/
 cypress/videos/
 ./contracts/
+auto-imports.d.ts
+components.d.ts

@@ -53,6 +53,8 @@
     "tailwindcss": "^3.3.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-vue-components": "^0.25.2",
     "vite-plugin-node-polyfills": "^0.8.2"
   },
   "dependencies": {
