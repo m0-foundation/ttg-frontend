@@ -6,7 +6,11 @@
           {{ votes?.yes?.percentage.toFixed(1) }}%
         </span>
 
-        <MProgressBar :width="votes?.yes?.percentage" />
+        <MProgressBar
+          :quorum="quorum"
+          :version="version"
+          :width="votes?.yes?.percentage"
+        />
 
         <span
           id="vote-no-percentage"
@@ -25,10 +29,14 @@ import { ProposalVotesState } from "~/lib/api";
 interface Props {
   yes: bigint | number;
   no: bigint | number;
+  version: "majority" | "quorum" | "double-quorum";
+  quorum?: number;
 }
 const props = withDefaults(defineProps<Props>(), {
   yes: 0,
   no: 0,
+  version: "majority",
+  quorum: 0,
 });
 
 function parseProposalVotes(

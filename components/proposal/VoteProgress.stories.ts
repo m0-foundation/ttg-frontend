@@ -54,3 +54,30 @@ export const No100: Story = {
     no: 100,
   },
 };
+
+export const Quorum70Reached: Story = {
+  args: {
+    yes: 150,
+    no: 50,
+    version: "quorum",
+    quorum: 0.7,
+  },
+};
+
+export const Quorum50Reached: Story = {
+  args: {
+    yes: 150,
+    no: 50,
+    version: "quorum",
+    quorum: 0.5,
+  },
+};
+
+export const QuorumNo: Story = {
+  args: {
+    yes: 0,
+    no: 100,
+    version: "quorum",
+    quorum: 0.5,
+  },
+};
