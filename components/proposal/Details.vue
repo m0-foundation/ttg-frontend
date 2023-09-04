@@ -67,7 +67,6 @@ const {
   functionName: "proposalVotes",
   args: [BigInt((proposalId.value as string) || 0)],
   watch: true,
-  select: (data) => client.parseProposalVotes(data),
   onSuccess(data) {
     console.log("Fetched votes for proposal", proposalId, data);
   },

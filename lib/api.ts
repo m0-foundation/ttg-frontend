@@ -89,15 +89,15 @@ export interface MUpdateConfigEvent extends EventLog {
 }
 
 export interface ProposalVotesState {
-  total: bigint;
+  total: number;
   yes: {
-    count: bigint;
-    ratio: bigint;
+    count: number;
+    ratio: number;
     percentage: number;
   };
   no: {
-    count: bigint;
-    ratio: bigint;
+    count: number;
+    ratio: number;
     percentage: number;
   };
 }
@@ -437,33 +437,6 @@ export class SPOG {
     });
 
     return ProposalState[proposalStateNumber] as keyof typeof ProposalState;
-  }
-
-  parseProposalVotes(votes: readonly [bigint, bigint]): ProposalVotesState {
-    console.log("parse votes", votes);
-    const no = votes[0];
-    const yes = votes[1];
-
-    const total = yes + no || 1n;
-
-    const yesRatio = yes / total;
-    const noRatio = no / total;
-    const yesPercentage = yesRatio * 100n;
-    const noPercentage = noRatio * 100n;
-
-    return {
-      total,
-      yes: {
-        count: yes,
-        ratio: yesRatio,
-        percentage: Number(yesPercentage),
-      },
-      no: {
-        count: no,
-        ratio: noRatio,
-        percentage: Number(noPercentage),
-      },
-    };
   }
 
   async getProposalVoters(proposalId: string): Promise<VoteCast[]> {

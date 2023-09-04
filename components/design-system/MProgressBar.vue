@@ -3,7 +3,8 @@
     :class="[
       'w-full',
       'h-3',
-      { 'bg-red': width > 0, 'bg-gray-200': width === 0 },
+      'bg-red',
+      // { 'bg-red': width > 0, 'bg-gray-200': width === 0 },
     ]"
   >
     <div class="bg-primary h-3" :style="`width: ${width}%`"></div>
