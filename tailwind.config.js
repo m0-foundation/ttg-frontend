@@ -1,5 +1,9 @@
 module.exports = {
-  content: ["./src/**/*.{js,ts,vue}", "./stories/**/*.{js,ts,vue}"],
+  content: [
+    "./pages/**/*.{js,ts,vue}",
+    "./components/**/*.{js,ts,vue}",
+    "./stories/**/*.{js,ts,vue}",
+  ],
   plugins: [],
   theme: {
     letterSpacing: {
