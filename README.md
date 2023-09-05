@@ -14,11 +14,7 @@ The Dapp is based on the SPOG contracts in order to run the local testnet. Altho
 This will install the SPOG contracts and all of their submodules recursively
 
 ```bash
-git clone https://github.com/MZero-Labs/SPOG.git contracts
-
-cd contracts/
-
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 ```
 
 Note: Run `git submodule status` on root / of this repo to find the commit hash of the code based placed in contracts/ folder.
@@ -32,8 +28,9 @@ Note: Run `git submodule status` on root / of this repo to find the commit hash 
 ### 1.3 Update SDK from SPOG smart contracts (only when contracts change) - (optional)
 
 1. Do steps on (1.2) item
-5. then run `yarn wagmi generate`
-6. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
+2. cd ../
+3. then run `yarn wagmi generate`
+4. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
 
 Depending on contract changes this file must be also updated with correct import dependencies of contracts:
 `/wagmi.config.ts`
