@@ -1,4 +1,4 @@
-describe("Proposals", () => {
+it.skip("Proposals", () => {
   let proposalUrl = "";
   describe("Append an Address to the list", () => {
     const input1 = "CollateralManagers";

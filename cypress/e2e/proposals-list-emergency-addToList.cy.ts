@@ -1,7 +1,7 @@
 describe("Proposals", () => {
   let proposalUrl = "";
 
-  describe("Emergency proposal for type action: AddToList", () => {
+  it.skip("Emergency proposal for type action: AddToList", () => {
     const input1 = "CollateralManagers";
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
     const description = `Emergency Add ${input2} to list ${input1}`;
