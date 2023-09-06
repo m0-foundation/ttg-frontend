@@ -19,6 +19,8 @@ Cypress.Commands.add("connectWallet", () => {
 
 Cypress.Commands.add("delegateVote", () => {
   cy.visit("http://localhost:3000/delegate");
+  cy.connectWallet();
+  cy.wait(500); // wait to load props values
   cy.get("#button-use-my-address-vote").click({ force: true });
   cy.get("#button-delegate-vote").click({ force: true });
   cy.wait(500);
@@ -27,6 +29,8 @@ Cypress.Commands.add("delegateVote", () => {
 
 Cypress.Commands.add("delegateValue", () => {
   cy.visit("http://localhost:3000/delegate");
+  cy.connectWallet();
+  cy.wait(500); // wait to load props values
   cy.get("#button-use-my-address-value").click({ force: true });
   cy.get("#button-delegate-value").click({ force: true });
   cy.wait(500);
@@ -43,6 +47,36 @@ Cypress.Commands.add("executeProposal", (proposalUrl: string) => {
   cy.task("mine", 10);
   cy.wait(500);
   cy.reload();
+});
+
+Cypress.Commands.add("castYesOneProposal", (description: string) => {
+  cy.visit("http://localhost:3000/proposals/active");
+  cy.connectWallet();
+  cy.wait(500);
+
+  cy.contains("article", description).then(($proposal) => {
+    cy.wrap($proposal).find("#button-cast-yes").click();
+  });
+
+  cy.get("#button-cast-submit").click();
+  cy.task("mine", 1);
+  cy.reload();
+  cy.get("[data-test='voted']").should("have.length", 1);
+});
+
+Cypress.Commands.add("executeOneProposal", (description: string) => {
+  cy.visit("http://localhost:3000/proposals/active/succeeded");
+  cy.connectWallet();
+
+  cy.task("mine", 100);
+  cy.wait(500);
+  cy.reload();
+
+  cy.contains("article", description).then(($proposal) => {
+    cy.wrap($proposal).find("#button-proposal-execute").click();
+  });
+
+  cy.wait(500);
 });
 
 //

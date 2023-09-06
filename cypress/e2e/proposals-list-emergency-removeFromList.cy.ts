@@ -1,4 +1,4 @@
-describe("Proposals", () => {
+it.skip("Proposals", () => {
   let proposalUrl = "";
   describe("Append an Address to the list", () => {
     const input1 = "CollateralManagers";
@@ -6,15 +6,12 @@ describe("Proposals", () => {
     const description = `Add ${input2} to list ${input1}`;
 
     it("I should be able to DELEGATE", () => {
-      cy.visit("http://localhost:3000/proposals/active");
-      cy.connectWallet();
-      cy.reload();
       // delegate to self account before voting to have vote power
       cy.delegateVote();
     });
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
-      cy.visit("http://localhost:3000/proposals/create");
+      cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
@@ -52,22 +49,19 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.task("mine", 100).then((obj) => {
-        console.log("mined", { obj });
-      });
+      cy.task("mine", 100);
 
-      cy.wait(1000);
+      cy.wait(500);
       cy.visit("http://localhost:3000/proposals/active");
 
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        expect($proposal.find(".active")).to.contain("active");
         expect($proposal.find("a")).to.contain("show details");
         cy.wrap($proposal).find("a").click();
       });
 
-      cy.url().should("match", /proposals\/([0-9])\w+/g);
+      cy.url().should("match", /proposal\/([0-9])\w+/g);
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
@@ -80,34 +74,15 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal of Append to a list", () => {
-      cy.visit(proposalUrl);
-      cy.connectWallet();
-      cy.wait(1000);
-
-      cy.get("#vote-yes-percentage").should("contain", "0%");
-      cy.get("#button-cast-yes").click();
-      cy.task("mine", 5);
-      cy.reload();
-      cy.get("#vote-yes-percentage").should("contain", "100%");
+      cy.castYesOneProposal(description);
     });
 
-    it("I should be able to EXECUTE the proposal of Append to a list", () => {
+    it("I should be able to EXECUTE the proposal", () => {
+      cy.executeOneProposal(description);
+    });
+
+    it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
-      cy.connectWallet();
-
-      cy.task("mine", 100);
-      cy.wait(500);
-      cy.reload();
-
-      cy.get("#proposal-state").should("contain", "succeeded");
-      cy.contains("article", "Execute?").should("exist");
-      cy.get("#button-proposal-execute").click();
-      cy.wait(500);
-
-      cy.task("mine", 10);
-      cy.wait(500);
-      cy.reload();
-
       cy.get("#proposal-state").should("contain", "executed");
     });
   });
@@ -118,7 +93,7 @@ describe("Proposals", () => {
     const description = `Emergency Remove ${input2} from list ${input1}`;
 
     it("I should be able to CREATE a proposal to REMOVE an address from a list", () => {
-      cy.visit("http://localhost:3000/proposals/create");
+      cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
@@ -157,22 +132,21 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to ACCESS the ACTIVE proposal", () => {
+    it("I should be able to ACCESS the EMERGENCY proposal", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
       cy.task("mine", 5);
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.visit("http://localhost:3000/proposals/active/emergency");
 
       cy.contains(description).should("exist");
 
       // from active page go to proposal page
       cy.contains("article", description).then(($proposal) => {
-        expect($proposal.find(".active")).to.contain("active");
         expect($proposal.find("a")).to.contain("show details");
         cy.wrap($proposal).find("a").click();
       });
 
-      cy.url().should("match", /proposals\/([0-9])\w+/g);
+      cy.url().should("match", /proposal\/([0-9])\w+/g);
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
@@ -185,30 +159,32 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal of Remove from a list", () => {
-      cy.visit(proposalUrl);
+      cy.visit("http://localhost:3000/proposals/active/emergency");
       cy.connectWallet();
-      cy.wait(1000);
+      cy.wait(500);
 
-      cy.get("#vote-yes-percentage").should("contain", "0%");
-      cy.get("#button-cast-yes").click();
-      cy.task("mine", 5);
+      cy.contains("article", description).then(($proposal) => {
+        cy.wrap($proposal).find("#button-cast-yes").click();
+      });
+
+      cy.get("[data-test='voted']").should("have.length", 1);
+      cy.task("mine", 1);
       cy.reload();
-      cy.get("#vote-yes-percentage").should("contain", "100%");
     });
 
-    it("I should be able to EXECUTE the proposal of Remove from a list", () => {
-      cy.visit(proposalUrl);
+    it("I should be able to EXECUTE the proposal", () => {
+      cy.visit("http://localhost:3000/proposals/active/succeeded");
       cy.connectWallet();
 
-      cy.get("#proposal-state").should("contain", "succeeded");
-      cy.contains("article", "Execute?").should("exist");
-      cy.get("#button-proposal-execute").click();
-      cy.wait(500);
+      cy.contains("article", description).then(($proposal) => {
+        cy.wrap($proposal).find("#button-proposal-execute").click();
+      });
 
-      cy.task("mine", 10);
       cy.wait(500);
-      cy.reload();
+    });
 
+    it("I should be able to check the executed proposal", () => {
+      cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
     });
   });

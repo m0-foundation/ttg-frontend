@@ -20,41 +20,6 @@
             :proposal="proposal"
             :current-proposal-values="currentProposalValues"
           />
-          <!--  -->
-          <div
-            v-if="proposal?.state === 'Active'"
-            class="flex justify-between items-center bg-gray-200 p-8 my-4"
-          >
-            <div class="text-body-dark text-3xl mr-4">Approve?</div>
-            <div class="space-x-1">
-              <MButton
-                id="button-cast-yes"
-                :disabled="hasVoted"
-                @click="castVote(1)"
-              >
-                YES
-              </MButton>
-              <MButton
-                id="button-cast-no"
-                :disabled="hasVoted"
-                @click="castVote(0)"
-              >
-                NO
-              </MButton>
-            </div>
-          </div>
-
-          <div
-            v-if="proposal?.state === 'Succeeded'"
-            class="flex justify-between items-center bg-gray-200 p-8"
-          >
-            <div class="text-body-dark text-3xl mr-4">Execute?</div>
-            <div class="space-x-1 uppercase">
-              <MButton id="button-proposal-execute" @click="execute()">
-                Yes
-              </MButton>
-            </div>
-          </div>
         </article>
       </div>
 
@@ -114,7 +79,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useAccount, useContractRead } from "use-wagmi";
-import { keccak256, toHex, Hash } from "viem";
+import { Hash } from "viem";
 import { writeIspogGovernor, ispogGovernorABI } from "@/lib/sdk";
 
 const store = useProposalsStore();
@@ -181,32 +146,4 @@ const timeLeft = computed(() => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
   return timeAgo;
 });
-
-function castVote(vote) {
-  return writeIspogGovernor({
-    address: spog.contracts.governor,
-    functionName: "castVote",
-    args: [proposalId, vote], // uint256 proposalId, uint8 support
-    account: userAccount.value,
-  });
-}
-
-function execute() {
-  const { description, calldatas, proposalType } = proposal;
-  const hashedDescription = keccak256(toHex(description));
-  const targets = [
-    "updateValueQuorumNumerator",
-    "updateVoteQuorumNumerator",
-  ].includes(proposalType)
-    ? [spog.contracts.governor] // dual governor contract as target for dual governance proposals
-    : [config.public.contracts.spog];
-  const values = [0]; // do not change
-
-  return writeIspogGovernor({
-    address: spog.contracts.governor,
-    functionName: "execute",
-    args: [targets, values, calldatas, hashedDescription], // (targets, values, calldatas, hashedDescription
-    account: userAccount.value,
-  });
-}
 </script>
