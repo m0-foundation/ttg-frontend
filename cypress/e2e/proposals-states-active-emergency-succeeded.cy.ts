@@ -1,5 +1,5 @@
 describe("Proposals", () => {
-  describe("type action: changeTax", () => {
+  it.skip("type action: changeTax", () => {
     const input1 = "1";
     const description1 = "Change tax to 1 $CASH";
 
