@@ -1,7 +1,7 @@
 describe("Proposals", () => {
   let proposalUrl = "";
 
-  it.skip("Emergency proposal for type action: AddToList", () => {
+  describe("Emergency proposal for type action: AddToList", () => {
     const input1 = "CollateralManagers";
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
     const description = `Emergency Add ${input2} to list ${input1}`;
@@ -65,8 +65,7 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        expect($proposal.find("a")).to.contain("show details");
-        cy.wrap($proposal).find("a").click();
+        cy.wrap($proposal).find("#show-details").click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);

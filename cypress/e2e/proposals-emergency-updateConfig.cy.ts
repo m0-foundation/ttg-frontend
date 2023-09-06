@@ -1,5 +1,5 @@
 describe("Proposals", () => {
-  it.skip("type action: Emergency updateConfig", () => {
+  describe("type action: Emergency updateConfig", () => {
     const value = "1";
     const valueName = "INFLATION_RATE";
     const description = `Add config ${valueName} = ${value}`;
@@ -56,8 +56,7 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        expect($proposal.find("a")).to.contain("show details");
-        cy.wrap($proposal).find("a").click();
+        cy.wrap($proposal).find("#show-details").click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);

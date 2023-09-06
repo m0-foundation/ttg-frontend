@@ -1,18 +1,14 @@
 <template>
   <div class="mb-40">
-    <div
-      v-if="!hasProposals"
-      class="flex items-center justify-center text-grey-primary"
+    <ProposalList
+      :proposals="activeProposals"
+      @on-cast="onCast"
+      @on-uncast="onUncast"
     >
-      No Active proposals
-    </div>
-    <div v-for="proposal in activeProposals" v-else :key="proposal.proposalId">
-      <ProposalCard
-        :proposal="proposal"
-        @on-cast="onCast"
-        @on-uncast="onUncast"
-      />
-    </div>
+      <template #emptyState>
+        <ProposalListEmptyState> No Active proposals </ProposalListEmptyState>
+      </template>
+    </ProposalList>
 
     <div
       v-show="hasProposals && isConnected"

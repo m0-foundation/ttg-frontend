@@ -59,8 +59,7 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        expect($proposal.find("a")).to.contain("show details");
-        cy.wrap($proposal).find("a").click();
+        cy.wrap($proposal).find("#show-details").click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
@@ -144,8 +143,7 @@ describe("Proposals", () => {
 
       // from active page go to proposal page
       cy.contains("article", description).then(($proposal) => {
-        expect($proposal.find("a")).to.contain("show details");
-        cy.wrap($proposal).find("a").click();
+        cy.wrap($proposal).find("#show-details").click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
