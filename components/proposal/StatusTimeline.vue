@@ -7,18 +7,34 @@
 
       <p :class="[{ active: 'Active' === version }, 'item']">Active</p>
 
-      <p v-if="version === 'Defeated'" :class="['defeated', 'item', 'active']">
+      <p
+        v-if="version === 'Defeated'"
+        id="proposal-state"
+        :class="['defeated', 'item', 'active']"
+      >
         Defeated
       </p>
 
-      <p v-else :class="[{ active: 'Succeeded' === version }, 'item']">
+      <p
+        v-else
+        id="proposal-state"
+        :class="[{ active: 'Succeeded' === version }, 'item']"
+      >
         Succeeded
       </p>
 
-      <p v-if="version === 'Expired'" :class="['expired', 'item', , 'active']">
+      <p
+        v-if="version === 'Expired'"
+        id="proposal-state"
+        :class="['expired', 'item', , 'active']"
+      >
         Expired
       </p>
-      <p v-else :class="[{ active: 'Executed' === version }, 'item']">
+      <p
+        v-else
+        id="proposal-state"
+        :class="[{ active: 'Executed' === version }, 'item']"
+      >
         Executed
       </p>
 
