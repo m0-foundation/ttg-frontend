@@ -39,6 +39,29 @@ export interface EventLog {
   transactionHash: string;
 }
 
+export enum VotingTokens {
+  Vote = "Vote",
+  Value = "Value",
+}
+
+export const ProposalEmergencyVotingTokens = {
+  addToList: [VotingTokens.Vote],
+  removeFromList: [VotingTokens.Vote],
+  updateConfig: [VotingTokens.Vote],
+};
+
+export const ProposalVotingTokens = {
+  addToList: [VotingTokens.Vote],
+  removeFromList: [VotingTokens.Vote],
+  updateConfig: [VotingTokens.Vote],
+  reset: [VotingTokens.Value],
+  updateVoteQuorumNumerator: [VotingTokens.Vote, VotingTokens.Value],
+  updateValueQuorumNumerator: [VotingTokens.Vote, VotingTokens.Value],
+  changeTax: [VotingTokens.Vote],
+  changeTaxRange: [VotingTokens.Vote, VotingTokens.Value],
+  emergency: { ...ProposalEmergencyVotingTokens },
+};
+
 export enum ProposalState {
   Pending = 0,
   Active = 1,
