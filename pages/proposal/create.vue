@@ -77,11 +77,31 @@
 
             <textarea v-model="formData.description" name="description" />
           </div>
+
+          <div class="mb-6">
+            <label for="type-value">IPFS</label>
+
+            <input
+              v-model="formData.ipfsURL"
+              type="text"
+              placeholder="https://"
+            />
+          </div>
+
+          <div class="mb-6">
+            <label for="type-value">Discussion URL:</label>
+
+            <input
+              v-model="formData.discussionURL"
+              type="text"
+              placeholder="https://"
+            />
+          </div>
         </div>
 
         <div v-else>
           <ProposalPreview
-            :description="formData.description"
+            :description="previewDescription"
             @on-back="onBack"
           />
         </div>
@@ -191,7 +211,11 @@ const formData = reactive({
   proposalValue2: null,
   proposalValue3: null,
   description: null,
+  ipfsURL: null,
+  discussionURL: null,
 });
+
+const previewDescription = ref();
 
 const { address: userAccount } = useAccount();
 
@@ -312,7 +336,23 @@ function onChangeProposalType(option) {
   selectedProposalType.value = option;
 }
 
+function addHyperlinksToDescription() {
+  const addHyperlink = (text, url) => (url ? `[${text}](${url})` : "");
+
+  const descriptionWithLinks =
+    formData.description +
+    [
+      "\n\n---",
+      addHyperlink("Discussion", formData.discussionURL),
+      addHyperlink("IPFS", formData.ipfsURL),
+    ].join("\n\n");
+
+  return descriptionWithLinks;
+}
+
 function onPreview() {
+  previewDescription.value = addHyperlinksToDescription();
+
   isPreview.value = true;
 }
 
@@ -419,8 +459,13 @@ async function onSubmit() {
 
     stepper.value.nextStep();
 
-    const calldatas = buildCalldatas(formData);
-    await writeProposal(calldatas, formData).catch(catchErrorStep);
+    const formDataWithLinks = {
+      ...formData,
+      description: addHyperlinksToDescription(),
+    };
+
+    const calldatas = buildCalldatas(formDataWithLinks);
+    await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
 
     stepper.value.nextStep();
     stepper.value.changeCurrentStep("complete");
@@ -577,6 +622,7 @@ function buildCalldatasGovernor(functionName, args) {
 
 function onBack() {
   isPreview.value = false;
+  previewDescription.value = null;
 }
 </script>
 
