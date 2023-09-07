@@ -22,6 +22,38 @@
           </div>
 
           <div v-show="formData.proposalType" class="mb-6">
+            <div class="gap-4 flex my-4">
+              <div v-for="token in selectedProposalType?.tokens" :key="token">
+                <div
+                  v-if="token === VotingTokens.Vote"
+                  class="p-4 bg-primary-darker"
+                >
+                  <div class="flex items-center gap-2 mb-2">
+                    <p class="uppercase text-xs">Vote type</p>
+                    <MIconPower class="w-6 h-6" />
+                  </div>
+                  Only holders who possess active
+                  <u>{{ VotingTokens.Vote }} tokens</u> will be eligible to
+                  participate in voting for or against the selected proposal
+                  type.
+                </div>
+
+                <div
+                  v-if="token === VotingTokens.Value"
+                  class="p-4 bg-primary-darker"
+                >
+                  <div class="flex items-center gap-2 mb-2">
+                    <p class="uppercase text-xs">Vote type</p>
+                    <MIconZero class="w-6 h-6" />
+                  </div>
+                  Only holders who possess active
+                  <u>{{ VotingTokens.Value }} tokens</u> will be eligible to
+                  participate in voting for or against the selected proposal
+                  type.
+                </div>
+              </div>
+            </div>
+
             <label for="type-value">{{ selectedProposalType?.label }}</label>
 
             <component
@@ -54,6 +86,17 @@
           />
         </div>
       </div>
+
+      <div class="flex justify-end">
+        <div class="flex items-center gap-2 text-lg">
+          Submission tax:
+          <MIconWeth />
+          0.05
+        </div>
+      </div>
+      <p class="text-grey-primary text-xs flex justify-end">
+        You will be prompted to pay the tax for submitting the proposal.
+      </p>
 
       <div v-if="isPreview" class="flex justify-end mt-12">
         <button class="text-primary-dark uppercase mx-4" @click="onBack">
@@ -101,8 +144,6 @@
 </template>
 
 <script setup>
-import get from "lodash/get";
-import random from "lodash/random";
 import { ref } from "vue";
 import { waitForTransaction } from "@wagmi/core";
 import {
@@ -126,7 +167,7 @@ import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation";
 import ProposalInputSingleText from "@/components/proposal/InputSingleText";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig";
-
+import { ProposalVotingTokens, VotingTokens } from "@/lib/api";
 /* control stepper */
 let steps = reactive([]);
 
@@ -165,17 +206,20 @@ const proposalTypes = [
     value: "addToList",
     label: "Add to a list",
     component: ProposalInputListOperation,
+    tokens: ProposalVotingTokens.addToList,
   },
   {
     value: "removeFromList",
     label: "Remove from a list",
     component: ProposalInputListOperation,
+    tokens: ProposalVotingTokens.removeFromList,
   },
 
   {
     value: "updateConfig",
     label: "Update Config",
     component: ProposalInputUpdateConfig,
+    tokens: ProposalVotingTokens.updateConfig,
   },
 
   {
@@ -183,6 +227,7 @@ const proposalTypes = [
     label: "Reset",
     placeholder: "Governance Address",
     component: ProposalInputSingleText,
+    tokens: ProposalVotingTokens.reset,
   },
 
   {
@@ -198,11 +243,13 @@ const proposalTypes = [
         label: "Vote Quorum",
         component: ProposalInputSingleNumber,
         modelValue: formData.proposalValue,
+        tokens: ProposalVotingTokens.updateVoteQuorumNumerator,
       },
       {
         value: "updateValueQuorumNumerator",
         label: "Value Quorum",
         component: ProposalInputSingleNumber,
+        tokens: ProposalVotingTokens.updateValueQuorumNumerator,
       },
     ],
   },
@@ -214,11 +261,13 @@ const proposalTypes = [
         value: "changeTax",
         label: "Change Tax",
         component: ProposalInputSingleNumber,
+        tokens: ProposalVotingTokens.changeTax,
       },
       {
         value: "changeTaxRange",
         label: "Change Tax range",
         component: ProposalInputRangeNumber,
+        tokens: ProposalVotingTokens.changeTaxRange,
       },
     ],
   },
@@ -233,18 +282,21 @@ const proposalTypes = [
         label: "Emergency Add to a list",
         isEmergency: true,
         component: ProposalInputListOperation,
+        tokens: ProposalVotingTokens.emergency.addToList,
       },
       {
         value: "removeFromList",
         label: "Emergency Remove from a list",
         isEmergency: true,
         component: ProposalInputListOperation,
+        tokens: ProposalVotingTokens.emergency.removeFromList,
       },
       {
         value: "updateConfig",
         label: "Emergency Update Config",
         isEmergency: true,
         component: ProposalInputUpdateConfig,
+        tokens: ProposalVotingTokens.emergency.updateConfig,
       },
     ],
   },

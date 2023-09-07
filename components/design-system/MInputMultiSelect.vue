@@ -6,7 +6,7 @@
       @click="onOpen"
     >
       {{ selected?.label || "Select a proposal type" }}
-
+      {{ console.log({ selected }) }}
       <span
         v-if="selected?.isEmergency"
         class="text-xs text-[#5d605d] bg-red text-white p-2"
@@ -43,22 +43,39 @@
             </div>
           </button>
 
-          <button v-else type="button" class="button" @click="onSelect(opt)">
+          <button
+            v-else
+            type="button"
+            class="flex justify-between items-center button"
+            @click="onSelect(opt)"
+          >
             {{ opt.label }}
+
+            <div v-for="token in opt.tokens" :key="token">
+              <MIconPower v-if="token === VotingTokens.Vote" />
+              <MIconZero v-if="token === VotingTokens.Value" />
+            </div>
           </button>
 
           <ul
             v-show="isSubmenuOpen(opt)"
-            class="sub-menu"
+            class="flex justify-between items-center sub-menu"
             :class="{ 'fix-when-emergency': opt.isEmergency }"
           >
             <li v-for="child in opt.children" :key="child.value">
               <button
                 type="button"
-                class="button sub-button"
+                class="flex justify-between items-center button sub-button"
                 @click="onSelect(child)"
               >
-                {{ child.label }}
+                <span class="mr-8">{{ child.label }}</span>
+
+                <div class="flex">
+                  <div v-for="token in child.tokens" :key="token">
+                    <MIconPower v-if="token === VotingTokens.Vote" />
+                    <MIconZero v-if="token === VotingTokens.Value" />
+                  </div>
+                </div>
               </button>
             </li>
           </ul>
@@ -70,11 +87,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
+import { VotingTokens } from "@/lib/api";
 
 export interface OptionItem {
   value: string;
   label: string;
   component: any;
+  tokens: string[];
   header?: string;
   isEmergency?: boolean;
   children?: Array<{
@@ -82,6 +101,7 @@ export interface OptionItem {
     label: string;
     isEmergency: boolean;
     component: any;
+    tokens: string[];
   }>;
 }
 
@@ -127,7 +147,7 @@ onClickOutside(target, onOut);
 </script>
 <style scoped>
 .button {
-  @apply text-left  block w-full py-2 px-4 hover:bg-[#202220];
+  @apply text-left w-full py-2 px-4 hover:bg-[#202220];
 }
 
 .sub-button {
