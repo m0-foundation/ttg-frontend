@@ -77,7 +77,7 @@
                 </div>
               </div>
 
-              <MTextarea
+              <MTextareaMarkdown
                 v-model="formData.description"
                 name="description"
                 :errors="$validation.description.$errors"
