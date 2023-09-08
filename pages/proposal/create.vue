@@ -21,81 +21,89 @@
             />
           </div>
 
-          <div v-show="formData.proposalType" class="mb-6">
-            <div class="gap-4 flex my-4">
-              <div v-for="token in selectedProposalType?.tokens" :key="token">
-                <div
-                  v-if="token === VotingTokens.Vote"
-                  class="p-4 bg-primary-darker"
-                >
-                  <div class="flex items-center gap-2 mb-2">
-                    <p class="uppercase text-xs">Vote type</p>
-                    <MIconPower class="w-6 h-6" />
+          <div :class="{ disabled: selectedProposalType === undefined }">
+            <div v-show="formData.proposalType" class="mb-6">
+              <div class="gap-4 flex my-4">
+                <div v-for="token in selectedProposalType?.tokens" :key="token">
+                  <div
+                    v-if="token === VotingTokens.Vote"
+                    class="p-4 bg-primary-darker"
+                  >
+                    <div class="flex items-center gap-2 mb-2">
+                      <p class="uppercase text-xs">Vote type</p>
+                      <MIconPower class="w-6 h-6" />
+                    </div>
+                    Only holders who possess active
+                    <u>{{ VotingTokens.Vote }} tokens</u> will be eligible to
+                    participate in voting for or against the selected proposal
+                    type.
                   </div>
-                  Only holders who possess active
-                  <u>{{ VotingTokens.Vote }} tokens</u> will be eligible to
-                  participate in voting for or against the selected proposal
-                  type.
-                </div>
 
-                <div
-                  v-if="token === VotingTokens.Value"
-                  class="p-4 bg-primary-darker"
-                >
-                  <div class="flex items-center gap-2 mb-2">
-                    <p class="uppercase text-xs">Vote type</p>
-                    <MIconZero class="w-6 h-6" />
+                  <div
+                    v-if="token === VotingTokens.Value"
+                    class="p-4 bg-primary-darker"
+                  >
+                    <div class="flex items-center gap-2 mb-2">
+                      <p class="uppercase text-xs">Vote type</p>
+                      <MIconZero class="w-6 h-6" />
+                    </div>
+                    Only holders who possess active
+                    <u>{{ VotingTokens.Value }} tokens</u> will be eligible to
+                    participate in voting for or against the selected proposal
+                    type.
                   </div>
-                  Only holders who possess active
-                  <u>{{ VotingTokens.Value }} tokens</u> will be eligible to
-                  participate in voting for or against the selected proposal
-                  type.
                 </div>
               </div>
+
+              <label for="type-value">{{ selectedProposalType?.label }}</label>
+
+              <component
+                :is="selectedProposalType.component"
+                v-if="selectedProposalType"
+                v-model="formData.proposalValue"
+                v-model:modelValue2="formData.proposalValue2"
+                :placeholder="selectedProposalType.placeholder"
+                :model-value-errors="$validation.proposalValue?.$errors"
+                :model-value2-errors="$validation.proposalValue2?.$errors"
+              />
             </div>
 
-            <label for="type-value">{{ selectedProposalType?.label }}</label>
-
-            <component
-              :is="selectedProposalType.component"
-              v-if="selectedProposalType"
-              v-model="formData.proposalValue"
-              v-model:modelValue2="formData.proposalValue2"
-              v-model:modelValue3="formData.proposalValue3"
-              :placeholder="selectedProposalType.placeholder"
-            />
-          </div>
-
-          <div class="mb-6">
-            <div class="flex justify-between mb-2">
-              <label for="description"> Description </label>
-              <div class="text-sm text-gray-400 flex">
-                <img src="/img/icon-markdown.svg" class="h-6 mx-2" />
-                Markdown supported
+            <div class="mb-6">
+              <div class="flex justify-between mb-2">
+                <label for="description">Description*</label>
+                <div class="text-sm text-gray-400 flex">
+                  <img src="/img/icon-markdown.svg" class="h-6 mx-2" />
+                  Markdown supported
+                </div>
               </div>
+
+              <MTextarea
+                v-model="formData.description"
+                name="description"
+                :errors="$validation.description.$errors"
+                class="h-80"
+              />
             </div>
 
-            <textarea v-model="formData.description" name="description" />
-          </div>
+            <div class="mb-6">
+              <label for="type-value">IPFS</label>
 
-          <div class="mb-6">
-            <label for="type-value">IPFS</label>
+              <input
+                v-model="formData.ipfsURL"
+                type="text"
+                placeholder="https://"
+              />
+            </div>
 
-            <input
-              v-model="formData.ipfsURL"
-              type="text"
-              placeholder="https://"
-            />
-          </div>
+            <div class="mb-6">
+              <label for="type-value">Discussion URL:</label>
 
-          <div class="mb-6">
-            <label for="type-value">Discussion URL:</label>
-
-            <input
-              v-model="formData.discussionURL"
-              type="text"
-              placeholder="https://"
-            />
+              <input
+                v-model="formData.discussionURL"
+                type="text"
+                placeholder="https://"
+              />
+            </div>
           </div>
         </div>
 
@@ -169,12 +177,12 @@ import { waitForTransaction } from "@wagmi/core";
 import {
   encodeFunctionData,
   encodeAbiParameters,
-  keccak256,
   toHex,
-  toBytes,
   stringToBytes,
 } from "viem";
 import { useAccount } from "use-wagmi";
+import { required, minLength } from "@vuelidate/validators";
+import { useVuelidate } from "@vuelidate/core";
 import {
   ispogGovernorABI,
   writeIspogGovernor,
@@ -188,6 +196,7 @@ import ProposalInputListOperation from "@/components/proposal/InputListOperation
 import ProposalInputSingleText from "@/components/proposal/InputSingleText";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig";
 import { ProposalVotingTokens, VotingTokens } from "@/lib/api";
+
 /* control stepper */
 let steps = reactive([]);
 
@@ -209,11 +218,27 @@ const formData = reactive({
   proposalType: null,
   proposalValue: null,
   proposalValue2: null,
-  proposalValue3: null,
   description: null,
   ipfsURL: null,
   discussionURL: null,
 });
+
+const rules = computed(() => {
+  const isProposalValue2Required = [
+    "addToList",
+    "removeFromList",
+    "updateConfig",
+    "changeTaxRange",
+  ].includes(selectedProposalType?.value?.value);
+
+  return {
+    proposalValue: { required },
+    proposalValue2: isProposalValue2Required ? { required } : {},
+    description: { required, minLength: minLength(6) },
+  };
+});
+
+const $validation = useVuelidate(rules, formData);
 
 const previewDescription = ref();
 
@@ -241,7 +266,7 @@ const proposalTypes = [
 
   {
     value: "updateConfig",
-    label: "Update Config",
+    label: "Update config",
     component: ProposalInputUpdateConfig,
     tokens: ProposalVotingTokens.updateConfig,
   },
@@ -249,7 +274,7 @@ const proposalTypes = [
   {
     value: "reset",
     label: "Reset",
-    placeholder: "Governance Address",
+    placeholder: "Governance address",
     component: ProposalInputSingleText,
     tokens: ProposalVotingTokens.reset,
   },
@@ -264,14 +289,14 @@ const proposalTypes = [
     children: [
       {
         value: "updateVoteQuorumNumerator",
-        label: "Vote Quorum",
+        label: "Vote quorum",
         component: ProposalInputSingleNumber,
         modelValue: formData.proposalValue,
         tokens: ProposalVotingTokens.updateVoteQuorumNumerator,
       },
       {
         value: "updateValueQuorumNumerator",
-        label: "Value Quorum",
+        label: "Value quorum",
         component: ProposalInputSingleNumber,
         tokens: ProposalVotingTokens.updateValueQuorumNumerator,
       },
@@ -283,13 +308,13 @@ const proposalTypes = [
     children: [
       {
         value: "changeTax",
-        label: "Change Tax",
+        label: "Change tax",
         component: ProposalInputSingleNumber,
         tokens: ProposalVotingTokens.changeTax,
       },
       {
         value: "changeTaxRange",
-        label: "Change Tax range",
+        label: "Change tax range",
         component: ProposalInputRangeNumber,
         tokens: ProposalVotingTokens.changeTaxRange,
       },
@@ -317,7 +342,7 @@ const proposalTypes = [
       },
       {
         value: "updateConfig",
-        label: "Emergency Update Config",
+        label: "Emergency Update config",
         isEmergency: true,
         component: ProposalInputUpdateConfig,
         tokens: ProposalVotingTokens.emergency.updateConfig,
@@ -334,6 +359,7 @@ function onChangeProposalType(option) {
   console.log("onChangeProposalType", { option });
   formData.proposalType = option.value;
   selectedProposalType.value = option;
+  $validation.value.$reset();
 }
 
 function addHyperlinksToDescription() {
@@ -351,9 +377,11 @@ function addHyperlinksToDescription() {
 }
 
 function onPreview() {
-  previewDescription.value = addHyperlinksToDescription();
-
-  isPreview.value = true;
+  $validation.value.$validate();
+  if (!$validation.value.$error) {
+    previewDescription.value = addHyperlinksToDescription();
+    isPreview.value = true;
+  }
 }
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -527,7 +555,6 @@ function buildCalldatas(formData) {
     proposalType: type,
     proposalValue: input1,
     proposalValue2: input2,
-    proposalValue3: input3,
   } = formData;
 
   if (["addToList", "removeFromList"].includes(type)) {
@@ -635,15 +662,21 @@ label {
   @apply text-grey-primary block mb-2 text-sm font-medium;
 }
 
-textarea {
-  @apply h-80;
-}
-
 hr {
   border-top: 1px dashed #979797;
 }
 
 #info-text * {
   @apply my-4;
+}
+
+.error {
+  @apply border border-red;
+}
+
+.disabled {
+  /* selectedProposalType */
+  pointer-events: none;
+  opacity: 0.4;
 }
 </style>
