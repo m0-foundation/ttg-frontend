@@ -352,7 +352,7 @@ const proposalTypes = [
 ];
 
 const isEmergency = computed(
-  () => selectedProposalType.value.isEmergency || false
+  () => selectedProposalType?.value?.isEmergency || false
 );
 
 function onChangeProposalType(option) {
