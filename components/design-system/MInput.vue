@@ -1,5 +1,5 @@
 <template>
-  <input v-bind="$attrs" :class="{ error: hasErrors }" />
+  <input v-bind="$attrs" v-model="value" :class="{ error: hasErrors }" />
   <p
     v-for="error of props.errors"
     :key="error.$uid"
@@ -14,10 +14,12 @@ import { ErrorObject } from "@vuelidate/core";
 
 export interface InputProps {
   errors?: ErrorObject[];
+  modelValue: any;
 }
 
 const props = defineProps<InputProps>();
-
+const emit = defineEmits(["update:modelValue"]);
+const value = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const hasErrors = computed(() => props.errors?.length);
 </script>
 

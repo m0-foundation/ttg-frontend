@@ -24,13 +24,5 @@ export interface ProposalInputProps {
 
 const props = defineProps<ProposalInputProps>();
 const emit = defineEmits(["update:modelValue"]);
-
-const value = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit("update:modelValue", value);
-  },
-});
+const value = useVModelWrapper<ProposalInputProps>(props, emit, "modelValue");
 </script>
