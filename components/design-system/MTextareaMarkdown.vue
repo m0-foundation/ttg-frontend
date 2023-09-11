@@ -71,4 +71,20 @@ onMounted(() => {
 .editor-toolbar button:hover {
   @apply bg-secondary-dark;
 }
+
+.CodeMirror-selected {
+  @apply !bg-primary;
+}
+
+.CodeMirror-focused {
+  @apply !bg-primary-dark;
+}
+
+.CodeMirror-guttermarker {
+  @apply !text-white;
+}
+
+.CodeMirror-cursor {
+  @apply !border-l-white;
+}
 </style>
