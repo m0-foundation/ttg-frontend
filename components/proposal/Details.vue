@@ -96,12 +96,6 @@ const { state: currentProposalValues } = useAsyncState(
 );
 console.log({ currentProposalValues });
 
-const { state: voters } = useAsyncState(
-  client.getProposalVoters(proposalId.value),
-  null
-);
-console.log({ voters });
-
 const timeLeft = computed(() => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
   return timeAgo;
