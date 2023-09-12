@@ -19,6 +19,8 @@ import * as EasyMDE from "easymde";
 import { ErrorObject } from "@vuelidate/core";
 import "@/node_modules/easymde/dist/easymde.min.css";
 
+import { useAttrs } from "vue";
+
 export interface InputProps {
   errors?: ErrorObject[];
   modelValue: string;
@@ -39,6 +41,7 @@ const inputValue = computed({
     emit("update:modelValue", value);
   },
 });
+const attrs = useAttrs();
 
 onMounted(() => {
   const easyMDE = new EasyMDE({
@@ -50,6 +53,9 @@ onMounted(() => {
   easyMDE.codemirror.on("change", () => {
     inputValue.value = easyMDE.value();
   });
+
+  const container = document.getElementsByClassName("CodeMirror");
+  container[0].setAttribute("data-test", attrs.name as string);
 });
 </script>
 
