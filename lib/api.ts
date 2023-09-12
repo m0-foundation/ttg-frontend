@@ -138,13 +138,13 @@ export interface EpochState {
   };
 }
 
-export interface VoteCast {
+export interface VoteCast extends EventLog {
   proposalId: string;
   reason: string;
   support: boolean;
   voter: string;
   weight: BigInt;
-  transactionHash?: string;
+  timestamp?: number;
 }
 
 export interface SpogMutableValues {
@@ -483,6 +483,47 @@ export class SPOG {
     }));
 
     return voters.filter((v) => v.proposalId === proposalId);
+  }
+
+  async getVotesByVoter(voter: string): Promise<VoteCast[]> {
+    if (!voter) {
+      throw new Error("Voter must be defined");
+    }
+    const deployedBlock = BigInt(this.config.deployedBlock.toString());
+
+    const rawLogs = await this.client.getLogs({
+      address: this.config.contracts!.governor as Hash,
+      fromBlock: deployedBlock,
+      event: parseAbiItem(
+        "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
+      ),
+      args: {
+        voter: voter as Hash,
+      },
+    });
+
+    const votes: Array<VoteCast> = rawLogs.map((log) => ({
+      eventName: log.eventName,
+      proposalId: log?.args?.proposalId?.toString(),
+      reason: log?.args?.reason,
+      support: Boolean(log?.args?.support),
+      voter: log?.args?.voter?.toString(),
+      weight: log?.args?.weight,
+      transactionHash: log.transactionHash?.toString(),
+      blockNumber: Number(log.blockNumber),
+    }));
+
+    const votesWithTimestamp = await Promise.all(
+      votes.map(async (vote) => {
+        const block = await this.client.getBlock({
+          blockNumber: BigInt(vote.blockNumber),
+        });
+        vote.timestamp = Number(block.timestamp);
+        return vote;
+      })
+    );
+
+    return votesWithTimestamp;
   }
 
   async getEpochState(): Promise<EpochState> {
