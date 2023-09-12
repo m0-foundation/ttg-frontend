@@ -10,7 +10,7 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").click();
 
       cy.contains("Tax").click();
-      cy.contains("Change Tax").click();
+      cy.contains("Change tax").click();
 
       cy.get("input[data-test='proposalValue']").should(
         "have.attr",
@@ -20,7 +20,7 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue']").type(input);
 
-      cy.get("textarea[name='description']").type(description);
+      cy.get("div[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
