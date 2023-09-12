@@ -25,25 +25,39 @@ export const useWagmi = (rpc: string) => {
     ]
   );
 
-  const connectors = [
-    // browsers that inject ethereum such as mobile app and metamask
-    new InjectedConnector({
+  const getConnectors = () => {
+    const injectedConnector = new InjectedConnector({
       chains,
-    }),
-    new CoinbaseWalletConnector({
-      chains,
-      options: {
-        appName: "spog",
-        jsonRpcUrl: config.public.network.defaultRpc,
-      },
-    }),
-    new WalletConnectConnector({
-      chains,
-      options: {
-        projectId: config.public.walletConnectProjectId,
-      },
-    }),
-  ];
+    });
+
+    if (config.public.env === "production") {
+      // need to skip the code to avoid calling wallet connect server
+      const walletConnectConnector = new WalletConnectConnector({
+        chains,
+        options: {
+          projectId: config.public.walletConnectProjectId,
+        },
+      });
+
+      const coinbaseWalletConnector = new CoinbaseWalletConnector({
+        chains,
+        options: {
+          appName: "spog",
+          jsonRpcUrl: config.public.network.defaultRpc,
+        },
+      });
+
+      return [
+        injectedConnector,
+        walletConnectConnector,
+        coinbaseWalletConnector,
+      ];
+    } else {
+      return [injectedConnector];
+    }
+  };
+
+  const connectors = getConnectors();
 
   const wagmiConfig = createConfig({
     autoConnect: true,
