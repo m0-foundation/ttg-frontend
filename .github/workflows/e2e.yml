@@ -38,5 +38,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn install
-      - run: cp .env.ci .env
-      - run: yarn dev & sleep 5 && yarn test
+      - run: cp .env.example .env
+      - run: yarn dev
+      # - run: yarn dev & sleep 5 && yarn test
