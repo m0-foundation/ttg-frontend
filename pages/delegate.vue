@@ -1,21 +1,17 @@
 <template>
-  <div>
+  <div class="mb-20 w-full xl:w-1/2 mx-auto">
     <h1 class="text-white text-2xl p-8 text-center">Delegate Tokens</h1>
     <p class="text-grey-primary text-center">
-      In order to start voting delegate your vote tokens to yourself or somebody
-      else.
+      In order to start voting delegate your Power tokens to yourself or
+      somebody else.
     </p>
 
     <form class="my-4" @submit.prevent="delegateVote">
       <div class="bg-secondary-dark p-8">
         <div class="flex justify-between my-4">
-          <div class="text-2xl">Delegate vote tokens</div>
+          <div class="text-2xl">Delegate Power tokens</div>
           <div class="flex">
-            <span
-              class="bg-primary text-black rounded-full w-8 h-8 text-md text-center flex items-center justify-center"
-            >
-              VT
-            </span>
+            <MIconPower class="h-8 w-8 mr-4" />
             <span class="mx-2 flex items-center text-2xl text-primary">
               {{ votePower && formatEther(votePower as bigint) }}
             </span>
@@ -54,13 +50,9 @@
     <form class="my-4" @submit.prevent="delegateValue">
       <div class="bg-secondary-dark p-8 my-8">
         <div class="flex justify-between my-4">
-          <div class="text-2xl">Delegate value tokens</div>
+          <div class="text-2xl">Delegate Zero tokens</div>
           <div class="flex">
-            <span
-              class="border border-primary text-primary rounded-full w-8 h-8 text-md text-center flex items-center justify-center"
-            >
-              $V
-            </span>
+            <MIconZero class="h-8 w-8 mr-4" />
             <span class="mx-2 flex items-center text-2xl text-primary">
               {{ valuePower && formatEther(valuePower as bigint) }}
             </span>
