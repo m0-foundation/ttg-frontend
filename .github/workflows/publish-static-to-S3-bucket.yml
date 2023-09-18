@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - 'main'
-      #- 'feature/**'
   workflow_dispatch:
 
 env:
@@ -34,22 +33,11 @@ jobs:
       - name: generating static files
         run: |
           yarn install
-          #yarn build
+          yarn build
           yarn generate
-
-      # Upload to sub-folders for non-main branch pipeline
-      #- name: upload static files to S3 bucket
-      #  if: github.ref != 'refs/heads/main'
-      #  uses: jakejarvis/s3-sync-action@master
-      #  with:
-      #    args: --follow-symlinks --delete --exclude '.git/*' --exclude '.github/*'
-      #  env:
-      #    AWS_S3_BUCKET: "thething-publish-spog-frontend-dev-p14y/$GITHUB_SHA"
-      #    SOURCE_DIR: './.output/public'
 
       # Upload to main folder for main branch pipeline
       - name: upload static files to S3 bucket
-        #if: github.ref == 'refs/heads/main'
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --follow-symlinks --delete --exclude '.git/*' --exclude '.github/*'
