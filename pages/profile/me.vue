@@ -18,54 +18,38 @@
     </div>
     <div class="flex justify-between gap-8 my-8">
       <!-- power tokens -->
-      <div class="flex justify-between gap-12">
+      <div class="flex w-full justify-between">
         <div>
-          <p class="uppercase text-xs">my power tokens</p>
+          <p class="uppercase text-xs">balance power tokens</p>
           <p class="text-4xl inline-flex items-center my-2">
-            <MIconPower class="h-8 w-8" />
-            135
+            <MIconPower class="h-8 w-8 mr-4" />
+            {{ powerToken?.data.value?.formatted }}
           </p>
         </div>
+
         <div>
-          <p class="uppercase text-grey-primary text-xs">
-            addresses delegated to me
+          <p class="uppercase text-xs text-grey-primary">Epoch Voting Power</p>
+          <p class="text-4xl inline-flex items-center my-2">
+            {{ powerTokenVotingPower?.data.value }}
           </p>
-          <div class="inline-flex gap-2 my-2">
-            <p class="bg-primary text-white px-2 py-1 inline-flex items-center">
-              <MIconPower class="h-4 w-4" />
-              123
-            </p>
-            <p class="bg-primary text-white px-2 py-1 inline-flex items-center">
-              <MIconZero class="h-4 w-4" />
-              12
-            </p>
-          </div>
         </div>
       </div>
       <div class="flex border-r border-r-primary-darker mx-2"></div>
       <!-- zero tokens -->
-      <div class="flex justify-between gap-12">
+      <div class="flex w-full justify-between">
         <div>
-          <p class="uppercase text-xs">my zero tokens</p>
+          <p class="uppercase text-xs">balance zero tokens</p>
           <p class="text-4xl inline-flex items-center my-2">
-            <MIconZero class="h-8 w-8" />
-            135
+            <MIconZero class="h-8 w-8 mr-4" />
+            {{ zeroToken?.data.value?.formatted }}
           </p>
         </div>
+
         <div>
-          <p class="uppercase text-grey-primary text-xs">
-            addresses delegated to me
+          <p class="uppercase text-xs text-grey-primary">Epoch Voting Power</p>
+          <p class="text-4xl inline-flex items-center my-2">
+            {{ zeroTokenVotingPower?.data?.value }}
           </p>
-          <div class="inline-flex gap-2 my-2">
-            <p class="bg-primary text-white px-2 py-1 inline-flex items-center">
-              <MIconPower class="h-4 w-4" />
-              123
-            </p>
-            <p class="bg-primary text-white px-2 py-1 inline-flex items-center">
-              <MIconZero class="h-4 w-4" />
-              12
-            </p>
-          </div>
         </div>
       </div>
     </div>
@@ -75,7 +59,7 @@
       <div class="flex justify-start gap-12 bg-[#1b1c1b] px-4 py-8">
         <button
           :class="[
-            'uppercase hover:underline',
+            'uppercase hover:underline text-xs',
             { underline: selectedTab === 0 },
           ]"
           @click="selectedTab = 0"
@@ -84,7 +68,7 @@
         </button>
         <button
           :class="[
-            'uppercase hover:underline',
+            'uppercase hover:underline text-xs',
             { underline: selectedTab === 1 },
           ]"
           @click="selectedTab = 1"
@@ -127,6 +111,7 @@ import { html } from "gridjs";
 import { useAccount } from "use-wagmi";
 import ProposalStatus from "@/components/proposal/Status.vue";
 import { MProposal, VoteCast } from "@/lib/api";
+import { useMBalances, useMVotingPower } from "@/lib/hooks";
 
 const { address: userAccount } = useAccount();
 
@@ -265,4 +250,8 @@ const votesTableConfig = computed(() => {
     search: true,
   };
 });
+
+const { powerToken, zeroToken } = useMBalances(userAccount);
+const { powerTokenVotingPower, zeroTokenVotingPower } =
+  useMVotingPower(userAccount);
 </script>
