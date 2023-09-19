@@ -30,6 +30,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@vueuse/nuxt",
+    "@nuxt/devtools",
   ],
   imports: {
     dirs: ["./stores"],
