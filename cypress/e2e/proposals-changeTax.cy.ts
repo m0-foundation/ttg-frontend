@@ -6,6 +6,9 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
+
+      cy.connectWallet();
+
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
@@ -24,8 +27,6 @@ describe("Proposals", () => {
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
