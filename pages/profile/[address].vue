@@ -2,17 +2,10 @@
   <div v-if="address">
     <div class="flex justify-between gap-4">
       <div>
-        <h1 class="text-2xl uppercase">
-          my profile<span class="text-primary">_</span>
-        </h1>
-        <p class="text-grey-primary text-xs">
+        <p class="text-grey-primary text-xs uppercase">voting address</p>
+        <p class="text-white text-md">
           {{ address }}
         </p>
-      </div>
-      <div>
-        <MButton>
-          <NuxtLink to="/delegate">re-delegate</NuxtLink>
-        </MButton>
       </div>
     </div>
     <ProfileBalances :address="address" />
@@ -23,11 +16,13 @@
     v-else
     class="flex flex-col items-center justify-center h-80 text-grey-primary"
   >
-    User not conntecd
+    User not found
   </div>
 </template>
 
 <script setup lang="ts">
-import { useAccount } from "use-wagmi";
-const { address } = useAccount();
+import { Hash } from "viem";
+
+const route = useRoute();
+const address = ref(route.params.address as Hash);
 </script>

@@ -1,0 +1,81 @@
+<template>
+  <div>
+    <div
+      v-if="!votes || !votes.length"
+      class="flex flex-col items-center justify-center h-80 text-grey-primary"
+    >
+      No voting history to show.
+    </div>
+    <MTable v-else :config="votesTableConfig" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { html } from "gridjs";
+import { MProposal, VoteCast } from "@/lib/api";
+
+interface Props {
+  votes: VoteCast[];
+}
+
+const props = defineProps<Props>();
+const proposals = useProposalsStore();
+
+const votesTableConfig = computed(() => {
+  return {
+    columns: [
+      {
+        id: "proposalId",
+        hidden: true,
+      },
+
+      {
+        id: "proposal",
+        name: "Proposal",
+        sort: true,
+        formatter: (proposal: MProposal) => {
+          const { title } = useParsedDescriptionTitle(proposal.description);
+          return html(
+            `<a href="/proposal/${proposal.proposalId}" class="underline">${title}</a>`
+          );
+        },
+      },
+
+      {
+        id: "vote",
+        name: "vote",
+        sort: true,
+        formatter: (vote: boolean) => {
+          return html(
+            vote
+              ? "<span class='bg-primary text-body-black px-2 py-1'>YES</span>"
+              : "<span class='bg-red text-white px-2 py-1'>NO</span>"
+          );
+        },
+      },
+
+      {
+        id: "castedAt",
+        name: "Casted at",
+        sort: true,
+        formatter: (cell: string) => {
+          const { toFormat } = useDate(Number(cell));
+          const formatedDate = toFormat("LLL");
+          return html(
+            `<span class="text-xs text-grey-primary">${formatedDate}</span>`
+          );
+        },
+      },
+    ],
+    data: props.votes.map((v: VoteCast) => ({
+      proposalId: v.proposalId,
+      proposal: proposals.getProposalById(v.proposalId),
+      vote: v.support,
+      weight: v.weight,
+      transactionHash: v.transactionHash,
+      castedAt: v.timestamp,
+    })),
+    search: true,
+  };
+});
+</script>
