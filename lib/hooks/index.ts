@@ -1,11 +1,5 @@
 import useMBalances from "./useMBalances";
 import useMVotingPower from "./useMVotingPower";
-import useVotingPowerZeroToken from "./useVotingPowerZeroToken";
-import useVotingPowerPowerToken from "./useVotingPowerPowerToken";
+import useMTokens from "./useMTokens";
 
-export {
-  useMBalances,
-  useMVotingPower,
-  useVotingPowerZeroToken,
-  useVotingPowerPowerToken,
-};
+export { useMBalances, useMVotingPower, useMTokens };

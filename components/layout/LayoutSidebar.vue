@@ -60,12 +60,12 @@
       <div class="flex justify-between mb-4">
         <div class="text-gray-400 flex items-center">
           <MIconPower class="h-6 w-6 mr-2" />
-          {{ powerTokenVotingPower?.data?.value }}
+          {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
         </div>
 
         <div class="text-gray-400 flex items-center">
           <MIconZero class="h-6 w-6 mr-2" />
-          {{ zeroTokenVotingPower?.data?.value }}
+          {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
         </div>
       </div>
     </div>
