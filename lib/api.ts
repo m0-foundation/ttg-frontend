@@ -40,25 +40,25 @@ export interface EventLog {
 }
 
 export enum VotingTokens {
-  Vote = "Vote",
-  Value = "Value",
+  Power = "Power",
+  Zero = "Zero",
 }
 
 export const ProposalEmergencyVotingTokens = {
-  addToList: [VotingTokens.Vote],
-  removeFromList: [VotingTokens.Vote],
-  updateConfig: [VotingTokens.Vote],
+  addToList: [VotingTokens.Power],
+  removeFromList: [VotingTokens.Power],
+  updateConfig: [VotingTokens.Power],
 };
 
 export const ProposalVotingTokens = {
-  addToList: [VotingTokens.Vote],
-  removeFromList: [VotingTokens.Vote],
-  updateConfig: [VotingTokens.Vote],
-  reset: [VotingTokens.Value],
-  updateVoteQuorumNumerator: [VotingTokens.Vote, VotingTokens.Value],
-  updateValueQuorumNumerator: [VotingTokens.Vote, VotingTokens.Value],
-  changeTax: [VotingTokens.Vote],
-  changeTaxRange: [VotingTokens.Vote, VotingTokens.Value],
+  addToList: [VotingTokens.Power],
+  removeFromList: [VotingTokens.Power],
+  updateConfig: [VotingTokens.Power],
+  reset: [VotingTokens.Zero],
+  updateVoteQuorumNumerator: [VotingTokens.Power, VotingTokens.Zero],
+  updateValueQuorumNumerator: [VotingTokens.Power, VotingTokens.Zero],
+  changeTax: [VotingTokens.Power],
+  changeTaxRange: [VotingTokens.Power, VotingTokens.Zero],
   emergency: { ...ProposalEmergencyVotingTokens },
 };
 

@@ -55,8 +55,8 @@
             {{ opt.label }}
 
             <div v-for="token in opt.tokens" :key="token">
-              <MIconPower v-if="token === VotingTokens.Vote" />
-              <MIconZero v-if="token === VotingTokens.Value" />
+              <MIconPower v-if="token === VotingTokens.Power" />
+              <MIconZero v-if="token === VotingTokens.Zero" />
             </div>
           </button>
 
@@ -75,8 +75,8 @@
 
                 <div class="flex">
                   <div v-for="token in child.tokens" :key="token">
-                    <MIconPower v-if="token === VotingTokens.Vote" />
-                    <MIconZero v-if="token === VotingTokens.Value" />
+                    <MIconPower v-if="token === VotingTokens.Power" />
+                    <MIconZero v-if="token === VotingTokens.Zero" />
                   </div>
                 </div>
               </button>
