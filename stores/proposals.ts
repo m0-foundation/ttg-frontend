@@ -27,7 +27,9 @@ export const useProposalsStore = defineStore("proposals", {
 
     getProposalsByProposer: (state) => {
       return (proposer: string) =>
-        state.data.filter((p) => p.proposer === proposer);
+        state.data.filter(
+          (p) => p.proposer.toLowerCase() === proposer.toLowerCase()
+        );
     },
   },
 
