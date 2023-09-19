@@ -19,7 +19,10 @@
       </div>
 
       <div class="text-primary-darker text-sm mb-6 truncate w-52 lg:w-full">
-        Proposed by <u>{{ proposal?.proposer }}</u>
+        Proposed by
+        <NuxtLink :to="`/profile/${proposal?.proposer}`">
+          <u>{{ proposal?.proposer }}</u>
+        </NuxtLink>
       </div>
 
       <div class="markdown-body mb-6" v-html="html"></div>
