@@ -96,12 +96,8 @@ async function onSetup(rpc: string) {
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
 
   /* setup spog client */
-  const network = [mainnet, sepolia, hardhat].find(
-    (chain) => chain.id === Number(config.public.network.chainId)
-  );
-
   const configVars = config.public.contracts as Config;
-  const spogClient = new SPOG(rpc, network!, configVars);
+  const spogClient = new SPOG(rpc, configVars);
   spogStore.setClient(spogClient);
 
   await Promise.all([
