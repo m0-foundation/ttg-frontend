@@ -1,7 +1,6 @@
 import {
   Abi,
   bytesToHex,
-  Chain,
   createPublicClient,
   decodeAbiParameters,
   parseAbiParameters,
@@ -210,19 +209,16 @@ function hexToBytes32String(hex: string): string {
 export class SPOG {
   client: PublicClient;
   config: Config;
-  chain: Chain;
   rpcUrl: string;
 
-  constructor(rpcUrl: string, chain: Chain, config: Config) {
-    this.client = createPublicClient({ chain, transport: http(rpcUrl) });
+  constructor(rpcUrl: string, config: Config) {
+    this.client = createPublicClient({ transport: http(rpcUrl) });
     this.config = config;
-    this.chain = chain;
     this.rpcUrl = rpcUrl;
   }
 
   setRpc(rpcUrl: string) {
     this.client = createPublicClient({
-      chain: this.chain,
       transport: http(rpcUrl),
     });
   }
