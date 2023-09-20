@@ -26,8 +26,6 @@
 
 <script lang="ts" setup>
 import { UseWagmiPlugin } from "use-wagmi";
-// chains
-import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
 import { SPOG, Config } from "@/lib/api";
 
@@ -37,12 +35,6 @@ const spogStore = useSpogClientStore();
 
 const { rpc } = storeToRefs(spogStore);
 const isLoading = ref(true);
-
-// force hardhat network to allow multicall3
-// @ts-ignore
-hardhat.contracts = {
-  multicall3: { address: config.public.contracts.multicall3, blockCreated: 3 },
-};
 
 const fetchSpogContracts = async (spog: SPOG) => {
   try {
