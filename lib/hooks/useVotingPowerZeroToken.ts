@@ -31,7 +31,7 @@ export default (
       );
 
       return {
-        relative: Number((votingPower * 100n) / totalSupply) / 100,
+        relative: Number((votingPower * 100n) / totalSupply),
         value: votingPower.toString(),
         formatted: formatEther(votingPower),
       };
