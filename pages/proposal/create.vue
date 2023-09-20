@@ -26,7 +26,7 @@
               <div class="gap-4 flex my-4">
                 <div v-for="token in selectedProposalType?.tokens" :key="token">
                   <div
-                    v-if="token === VotingTokens.Vote"
+                    v-if="token === VotingTokens.Power"
                     class="p-4 bg-primary-darker"
                   >
                     <div class="flex items-center gap-2 mb-2">
@@ -34,13 +34,13 @@
                       <MIconPower class="w-6 h-6" />
                     </div>
                     Only holders who possess active
-                    <u>{{ VotingTokens.Vote }} tokens</u> will be eligible to
+                    <u>{{ VotingTokens.Power }} tokens</u> will be eligible to
                     participate in voting for or against the selected proposal
                     type.
                   </div>
 
                   <div
-                    v-if="token === VotingTokens.Value"
+                    v-if="token === VotingTokens.Zero"
                     class="p-4 bg-primary-darker"
                   >
                     <div class="flex items-center gap-2 mb-2">
@@ -48,7 +48,7 @@
                       <MIconZero class="w-6 h-6" />
                     </div>
                     Only holders who possess active
-                    <u>{{ VotingTokens.Value }} tokens</u> will be eligible to
+                    <u>{{ VotingTokens.Zero }} tokens</u> will be eligible to
                     participate in voting for or against the selected proposal
                     type.
                   </div>

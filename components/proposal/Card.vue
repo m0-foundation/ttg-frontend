@@ -12,9 +12,12 @@
       <h2 class="text-2xl mb-4 break-all">
         {{ title }}
       </h2>
-      <div class="text-sm mb-6 flex justify-between text-gray-400">
-        <div class="truncate w-52">
-          Proposed by <u>{{ proposal.proposer }}</u>
+      <div class="text-xs xl:text-sm mb-6 flex justify-between text-gray-400">
+        <div class="">
+          Proposed by
+          <NuxtLink :to="`/profile/${proposal.proposer}`">
+            <u>{{ proposal.proposer }}</u>
+          </NuxtLink>
         </div>
         <div>{{ timeAgo }} | {{ formatedDate }}</div>
       </div>

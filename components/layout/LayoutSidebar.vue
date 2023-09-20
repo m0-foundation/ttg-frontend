@@ -47,7 +47,7 @@
 
   <div v-if="isConnected">
     <div class="flex justify-between items-center mb-6">
-      <div>MY PROFILE</div>
+      <NuxtLink to="/profile/me" class="underline">MY PROFILE</NuxtLink>
       <div class="truncate w-28 text-xs text-gray-400">
         {{ userAccount }}
       </div>
@@ -58,26 +58,16 @@
         current voting power [?]
       </p>
       <div class="flex justify-between mb-4">
-        <div class="text-gray-400 flex">
-          <span class="bg-white text-black rounded-full p-1 mr-4 text-sm">
-            VT
-          </span>
-          {{ votePower && formatEther(votePower as bigint) }}
+        <div class="text-gray-400 flex items-center">
+          <MIconPower class="h-6 w-6 mr-2" />
+          {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
         </div>
 
-        <div class="text-gray-400 flex">
-          <span
-            class="border border-1-white bg-transparent p-1 text-white rounded-full mr-4 text-sm"
-          >
-            $V
-          </span>
-          {{ valuePower && formatEther(valuePower as bigint) }}
+        <div class="text-gray-400 flex items-center">
+          <MIconZero class="h-6 w-6 mr-2" />
+          {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
         </div>
       </div>
-
-      <p class="uppercase text-primary text-xs">
-        Delegated voting power will be available next epoch
-      </p>
     </div>
 
     <button
@@ -94,41 +84,14 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-import { Hash, formatEther } from "viem";
-import { useAccount, useDisconnect, useContractRead } from "use-wagmi";
-import { voteABI, valueABI } from "@/lib/sdk";
-
-const config = useRuntimeConfig();
-const store = useSpogStore();
-const spog = storeToRefs(store);
+import { useAccount, useDisconnect } from "use-wagmi";
+import { useMVotingPower } from "@/lib/hooks";
 
 const { address: userAccount, isConnected } = useAccount();
 const { disconnect } = useDisconnect();
 
-const {
-  data: votePower,
-  isError: voteIsError,
-  isLoading: voteIsLoading,
-} = useContractRead({
-  address: spog.contracts.value.vote as Hash,
-  abi: voteABI,
-  functionName: "getVotes",
-  args: [(userAccount.value || config.public.ZERO_ADDRESS) as Hash],
-  watch: true,
-});
-
-const {
-  data: valuePower,
-  isError: valueIsError,
-  isLoading: valueIsLoading,
-} = useContractRead({
-  address: spog.contracts.value.value as Hash,
-  abi: valueABI,
-  functionName: "getVotes",
-  args: [(userAccount.value || config.public.ZERO_ADDRESS) as Hash],
-  watch: true,
-});
+const { powerTokenVotingPower, zeroTokenVotingPower } =
+  useMVotingPower(userAccount);
 </script>
 
 <style scoped>

@@ -6,11 +6,14 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
+
+      cy.connectWallet();
+
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
       cy.contains("Tax").click();
-      cy.contains("Change Tax").click();
+      cy.contains("Change tax").click();
 
       cy.get("input[data-test='proposalValue']").should(
         "have.attr",
@@ -20,12 +23,10 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue']").type(input);
 
-      cy.get("textarea[name='description']").type(description);
+      cy.get("div[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {

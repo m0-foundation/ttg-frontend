@@ -3,39 +3,49 @@
     <div class="inline-flex uppercase text-black">
       <div class="text-grey-primary item">status:</div>
 
-      <p :class="[{ active: 'Pending' === version }, 'item']">Pending</p>
+      <p
+        :id="version === 'Pending' ? 'proposal-state' : undefined"
+        :class="[{ active: 'Pending' === version }, 'item']"
+      >
+        pending
+      </p>
 
-      <p :class="[{ active: 'Active' === version }, 'item']">Active</p>
+      <p
+        :id="version === 'Active' ? 'proposal-state' : undefined"
+        :class="[{ active: 'Active' === version }, 'item']"
+      >
+        active
+      </p>
 
       <p
         v-if="version === 'Defeated'"
-        id="proposal-state"
+        :id="version === 'Defeated' ? 'proposal-state' : undefined"
         :class="['defeated', 'item', 'active']"
       >
-        Defeated
+        defeated
       </p>
 
       <p
         v-else
-        id="proposal-state"
+        :id="version === 'Succeeded' ? 'proposal-state' : undefined"
         :class="[{ active: 'Succeeded' === version }, 'item']"
       >
-        Succeeded
+        succeeded
       </p>
 
       <p
         v-if="version === 'Expired'"
-        id="proposal-state"
-        :class="['expired', 'item', , 'active']"
+        :id="version === 'Expired' ? 'proposal-state' : undefined"
+        :class="['expired', 'item', 'active']"
       >
-        Expired
+        expired
       </p>
       <p
         v-else
-        id="proposal-state"
+        :id="version === 'Executed' ? 'proposal-state' : undefined"
         :class="[{ active: 'Executed' === version }, 'item']"
       >
-        Executed
+        executed
       </p>
 
       <div class="text-grey-primary item">[?]</div>
