@@ -177,7 +177,6 @@ export type SpogValues = SpogImmutableValues & SpogMutableValues;
 
 export interface Config {
   multicall3: `0x${string}`;
-  deployedBlock: BigInt | string;
   spog: string;
   contracts?: SpogImmutableValues;
 }
@@ -210,11 +209,13 @@ export class SPOG {
   client: PublicClient;
   config: Config;
   rpcUrl: string;
+  fromBlock: bigint;
 
   constructor(rpcUrl: string, config: Config) {
     this.client = createPublicClient({ transport: http(rpcUrl) });
     this.config = config;
     this.rpcUrl = rpcUrl;
+    this.fromBlock = 1n; // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
   }
 
   setRpc(rpcUrl: string) {
@@ -413,11 +414,9 @@ export class SPOG {
   }
 
   async getProposals(): Promise<Array<MProposal>> {
-    const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
-
     const rawLogs = await this.client.getLogs({
       address: this.config.contracts!.governor as Hash,
-      fromBlock: deployedBlock,
+      fromBlock: this.fromBlock,
       event: parseAbiItem(
         "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 startBlock, uint256 endBlock, string description)"
       ),
@@ -459,11 +458,9 @@ export class SPOG {
   }
 
   async getProposalVoters(proposalId: string): Promise<VoteCast[]> {
-    const deployedBlock: BigInt = BigInt(this.config.deployedBlock.toString());
-
     const rawLogs = await this.client.getLogs({
       address: this.config.contracts!.governor as Hash,
-      fromBlock: deployedBlock,
+      fromBlock: this.fromBlock,
       event: parseAbiItem(
         "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
       ),
@@ -485,11 +482,10 @@ export class SPOG {
     if (!voter) {
       throw new Error("Voter must be defined");
     }
-    const deployedBlock = BigInt(this.config.deployedBlock.toString());
 
     const rawLogs = await this.client.getLogs({
       address: this.config.contracts!.governor as Hash,
-      fromBlock: deployedBlock,
+      fromBlock: this.fromBlock,
       event: parseAbiItem(
         "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
       ),
@@ -727,11 +723,9 @@ export class SPOG {
   }
 
   async getLists(): Promise<Array<MLists>> {
-    const deployedBlock = BigInt(this.config.deployedBlock.toString());
-
     const addRawLogs = await this.client.getLogs({
       address: this.config.spog as Hash,
-      fromBlock: deployedBlock,
+      fromBlock: this.fromBlock,
       event: parseAbiItem(
         "event AddressAddedToList(bytes32 listName, address account)"
       ),
@@ -739,7 +733,7 @@ export class SPOG {
 
     const removeRawLogs = await this.client.getLogs({
       address: this.config.spog as Hash,
-      fromBlock: deployedBlock,
+      fromBlock: this.fromBlock,
       event: parseAbiItem(
         "event AddressRemovedFromList(bytes32 listName, address account)"
       ),
@@ -820,11 +814,9 @@ export class SPOG {
   }
 
   async getProtocolConfigs(): Promise<MProtocolConfig> {
-    const deployedBlock = BigInt(this.config.deployedBlock.toString());
-
     const rawLogs = await this.client.getLogs({
       address: this.config.spog as Hash,
-      fromBlock: deployedBlock,
+      fromBlock: this.fromBlock,
       event: parseAbiItem(
         "event ConfigUpdated(bytes32 valueName, bytes32 value)"
       ),
