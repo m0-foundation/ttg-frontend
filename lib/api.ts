@@ -601,9 +601,12 @@ export class SPOG {
       return params as T;
     };
 
+    const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
+    // if chain is hardhat then will be undefined
+
     return this.client
       .multicall({
-        multicallAddress: this.config.multicall3 as Hash,
+        multicallAddress: (this.config.multicall3 ?? defaultMulticall3) as Hash,
         contracts: contractCalls,
       })
       .then(decodeResults);

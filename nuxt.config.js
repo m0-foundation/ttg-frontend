@@ -12,7 +12,9 @@ export default defineNuxtConfig({
       },
       contracts: {
         spog: process.env.CONTRACT_ADDRESS_SPOG,
-        multicall3: process.env.CONTRACT_ADDRESS_MULTICALL3,
+        multicall3:
+          process.env.NODE_ENV === "development" &&
+          "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f",
       },
     },
   },
