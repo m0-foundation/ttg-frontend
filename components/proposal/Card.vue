@@ -154,10 +154,7 @@ const {
   address: spog.contracts.governor as Hash,
   abi: ispogGovernorABI,
   functionName: "hasVoted",
-  args: [
-    BigInt(props.proposal.proposalId),
-    (userAccount.value || config.public.ZERO_ADDRESS) as Hash,
-  ],
+  args: [BigInt(props.proposal.proposalId), userAccount],
   watch: true,
 });
 </script>

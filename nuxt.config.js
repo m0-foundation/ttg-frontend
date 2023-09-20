@@ -4,7 +4,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       env: process.env.NODE_ENV,
-      ZERO_ADDRESS: "0x0000000000000000000000000000000000000000",
       walletConnectProjectId: process.env.WALLET_CONNECT_PROJECT_ID,
       network: {
         defaultRpc: process.env.NETWORK_DEFAULT_RPC,
