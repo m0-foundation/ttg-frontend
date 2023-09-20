@@ -9,10 +9,8 @@ export default defineNuxtConfig({
       network: {
         defaultRpc: process.env.NETWORK_DEFAULT_RPC,
         rpcs: process.env.NETWORK_RPC_LIST,
-        chainId: process.env.NETWORK_CHAIN_ID,
       },
       contracts: {
-        deployedBlock: process.env.CONTRACT_DEPLOYED_BLOCK,
         spog: process.env.CONTRACT_ADDRESS_SPOG,
         multicall3: process.env.CONTRACT_ADDRESS_MULTICALL3,
       },
