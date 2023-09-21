@@ -67,6 +67,9 @@ This app uses an .env file to set environment variables locally (not in docker-c
 
 For production or public testnets, please deploy the contracts using the script provided in the SPOG contracts repo, and create an `.env` file with appropriate values.
 
+```
+NETWORK=sepolia | mainnet | local | hardhat | undefined
+```
 #### 2.1.4 RUN
 
 In another terminal, run:
