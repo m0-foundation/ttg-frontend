@@ -30,7 +30,7 @@ export const useWagmi = (rpc: string) => {
       chains,
     });
 
-    if (config.public.env === "production") {
+    if (config.public.env.node === "production") {
       // need to skip the code to avoid calling wallet connect server
       const walletConnectConnector = new WalletConnectConnector({
         chains,
@@ -43,7 +43,7 @@ export const useWagmi = (rpc: string) => {
         chains,
         options: {
           appName: "spog",
-          jsonRpcUrl: config.public.network.defaultRpc,
+          jsonRpcUrl: config.public.rpc.default,
         },
       });
 

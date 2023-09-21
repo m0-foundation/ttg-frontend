@@ -1,20 +1,18 @@
 import { defineStore } from "pinia";
 import { SPOG } from "@/lib/api";
 
-const defaultRpc = import.meta.env.VITE_NETWORK_DEFAULT_RPC as string;
+export const useSpogClientStore = defineStore("client", () => {
+  const client = ref({} as SPOG);
+  const config = useRuntimeConfig();
+  const rpc = useLocalStorage("m0.rpc", config.public.rpc.default);
 
-export const useSpogClientStore = defineStore("client", {
-  state: () => ({
-    client: {} as SPOG,
-    rpc: useLocalStorage("m0.rpc", defaultRpc),
-  }),
+  function setClient(newClient: SPOG) {
+    client.value = newClient;
+  }
 
-  actions: {
-    setClient(newClient: SPOG) {
-      this.client = newClient;
-    },
-    setRpc(newRpc: string) {
-      this.rpc = newRpc;
-    },
-  },
+  function setRpc(newRpc: string) {
+    rpc.value = newRpc;
+  }
+
+  return { client, rpc, setClient, setRpc };
 });

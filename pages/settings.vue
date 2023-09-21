@@ -74,8 +74,8 @@ const config = useRuntimeConfig();
 const selectedRPC = ref();
 const isWithCustomRPC = ref(false);
 
-const rpcs = config.network.rpcs.split(",");
-const chainId = config.network.chainId;
+const rpcs: string[] = config.rpc.values;
+const chainId: number = config.chainId;
 
 function onSubmit() {
   const newRpc = selectedRPC.value.toString();
