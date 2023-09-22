@@ -1,25 +1,12 @@
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-import { NetworkConfig, getNetworkConfig } from "./network";
-
-const config: NetworkConfig = getNetworkConfig();
-
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
+      walletConnectProjectId: undefined,
       env: {
         node: process.env.NODE_ENV,
         network: process.env.NETWORK,
-      },
-      walletConnectProjectId: process.env.WALLET_CONNECT_PROJECT_ID,
-      chainId: config.chainId,
-      rpc: {
-        default: config.rpc.default,
-        values: config.rpc.values,
-      },
-      contracts: {
-        spog: config.spog,
-        multicall3: config.multicall3,
       },
     },
   },

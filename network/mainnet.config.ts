@@ -1,11 +1,16 @@
+import { mainnet } from "@wagmi/core/chains";
 import { NetworkConfig } from "./types.d";
 
 export default {
-  spog: "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
-  chainId: 1,
+  contracts: {
+    spog: "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+    multicall3: mainnet.contracts.multicall3.address,
+  },
   rpc: {
-    default: "https://eth-mainnet.g.alchemy.com/v2/demo",
+    chainId: 1,
+    default: mainnet.rpcUrls.public.http[0],
     values: [
+      mainnet.rpcUrls.public.http[0],
       "https://eth-mainnet.g.alchemy.com/v2/demo",
       "https://eth.llamarpc.com",
       "https://eth.rpc.blxrbdn.com",

@@ -1,21 +1,43 @@
 import mainnet from "./mainnet.config";
 import sepolia from "./sepolia.config";
 import hardhat from "./hardhat.config";
+import { NetworkConfig } from "./types.d";
 export * from "./types.d";
 
-const getNetworkConfig = () => {
-  const { NODE_ENV, NETWORK } = process.env;
+const networks = {
+  mainnet,
+  sepolia,
+  hardhat,
+};
 
-  console.log({ NODE_ENV, NETWORK });
+const getNetworkConfig = (
+  inputNetwork?: "mainnet" | "sepolia" | "hardhat" | number
+) => {
+  if (!inputNetwork) return findNetworkConfig();
 
-  if (!NETWORK) {
-    return NODE_ENV === "production" ? mainnet : hardhat;
+  if (typeof inputNetwork === "number") {
+    return Object.values(networks).find(
+      (network) => network.rpc.chainId === inputNetwork
+    )!;
   }
 
-  if (NETWORK === "mainnet") return mainnet;
-  if (NETWORK === "sepolia") return sepolia;
-  if (NETWORK === "local" || NETWORK === "hardhat") return hardhat;
-  else return hardhat;
+  return networks[inputNetwork] as NetworkConfig;
+};
+
+const findNetworkConfig = () => {
+  const config = useRuntimeConfig();
+  const { node, network } = config.public.env;
+
+  console.log({ node, network });
+
+  if (node === "production") return mainnet;
+  if (node === "development") {
+    if (network === "mainnet") return mainnet;
+    if (network === "sepolia") return sepolia;
+    else return hardhat;
+  }
+
+  return mainnet;
 };
 
 export { mainnet, sepolia, hardhat, getNetworkConfig };
