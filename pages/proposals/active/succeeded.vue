@@ -23,7 +23,7 @@ const proposals = computed(() =>
 
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
-const config = useRuntimeConfig();
+const spogAddress = useNetworkStore().getSpogAddress();
 
 function onExecute(proposal: MProposal) {
   const { description, calldatas, proposalType } = proposal;
@@ -33,7 +33,7 @@ function onExecute(proposal: MProposal) {
     "updateVoteQuorumNumerator",
   ].includes(proposalType)
     ? [spog.contracts.governor as Hash] // dual governor contract as target for dual governance proposals
-    : [config.public.contracts.spog as Hash];
+    : [spogAddress.value as Hash];
   const values = [BigInt(0)]; // do not change
 
   return writeIspogGovernor({

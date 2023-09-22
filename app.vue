@@ -27,10 +27,11 @@
 <script lang="ts" setup>
 import { UseWagmiPlugin } from "use-wagmi";
 import { storeToRefs } from "pinia";
-import { SPOG, Config } from "@/lib/api";
+import { SPOG } from "@/lib/api";
 
-const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
+const network = useNetworkStore().getNetwork();
+
 const spogStore = useSpogClientStore();
 
 const { rpc } = storeToRefs(spogStore);
@@ -88,8 +89,10 @@ async function onSetup(rpc: string) {
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
 
   /* setup spog client */
-  const configVars = config.public.contracts as Config;
-  const spogClient = new SPOG(rpc, configVars);
+  const spogClient = new SPOG(rpc, {
+    spog: network.value.contracts.spog,
+    multicall3: network.value.contracts.multicall3,
+  });
   spogStore.setClient(spogClient);
 
   await Promise.all([

@@ -54,7 +54,6 @@ const proposal = store.getProposalById(props.proposalId);
 const proposalId = computed(() => proposal?.proposalId);
 const { html } = useParsedDescription(proposal?.description || "");
 
-const config = useRuntimeConfig();
 const { address: userAccount } = useAccount();
 const { client } = useSpogClientStore();
 const spog = useSpogStore();
@@ -65,7 +64,7 @@ const {
   isError,
   isLoading,
 } = useContractRead({
-  address: spog.contracts.governor,
+  address: spog.contracts.governor as Hash,
   abi: ispogGovernorABI,
   functionName: "proposalVotes",
   args: [BigInt((proposalId.value as string) || 0)],

@@ -12,9 +12,10 @@ import { createConfig } from "use-wagmi";
 
 export const useWagmi = (rpc: string) => {
   const config = useRuntimeConfig();
+  const networkStore = useNetworkStore();
 
   const { chains, publicClient, webSocketPublicClient } = configureChains(
-    [hardhat], // mainnet, sepolia,
+    [hardhat, mainnet, sepolia],
     [
       jsonRpcProvider({
         rpc: () => ({
@@ -43,7 +44,7 @@ export const useWagmi = (rpc: string) => {
         chains,
         options: {
           appName: "spog",
-          jsonRpcUrl: config.public.rpc.default,
+          jsonRpcUrl: networkStore.network.rpc.default,
         },
       });
 

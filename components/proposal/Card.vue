@@ -118,7 +118,6 @@ const spog = useSpogStore();
 const { address: userAccount } = useAccount();
 const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
-const config = useRuntimeConfig();
 
 const isVoteSelected = ref(false);
 const selectedVote = ref<null | number>(null);

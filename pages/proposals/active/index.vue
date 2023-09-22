@@ -61,7 +61,6 @@ interface CastedProposal {
 
 const selectedCastProposals = ref<Array<CastedProposal>>([]);
 
-const config = useRuntimeConfig();
 const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 
