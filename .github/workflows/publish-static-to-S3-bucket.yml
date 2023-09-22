@@ -33,7 +33,6 @@ jobs:
       - name: generating static files
         run: |
           yarn install
-          cp .env.development .env
           yarn generate
 
       # Upload to main folder for main branch pipeline

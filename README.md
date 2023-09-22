@@ -63,13 +63,13 @@ See file `/hardhat.config.js` for configs.
 
 #### 2.1.3 Env vars: `.env` file
 
-This app uses an .env file to set environment variables locally (not in docker-compose). For local development, copy `.env.example` to `.env`
-
-For production or public testnets, please deploy the contracts using the script provided in the SPOG contracts repo, and create an `.env` file with appropriate values.
+This app uses an environment variables locally (not in docker-compose). For local development: See package.json.
 
 ```
 NETWORK=sepolia | mainnet | local | hardhat | undefined
 ```
+
+
 #### 2.1.4 RUN
 
 In another terminal, run:
