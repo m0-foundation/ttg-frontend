@@ -30,12 +30,14 @@ const findNetworkConfig = () => {
 
   console.log({ node, network });
 
-  if (node === "production") return mainnet;
-  if (node === "development") {
+  // NETWORK env has higher priority
+  if (network) {
     if (network === "mainnet") return mainnet;
     if (network === "sepolia") return sepolia;
     else return hardhat;
   }
+
+  if (node === "development") return hardhat;
 
   return mainnet;
 };
