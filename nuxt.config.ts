@@ -3,18 +3,10 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      env: process.env.NODE_ENV,
-      ZERO_ADDRESS: "0x0000000000000000000000000000000000000000",
-      walletConnectProjectId: process.env.WALLET_CONNECT_PROJECT_ID,
-      network: {
-        defaultRpc: process.env.NETWORK_DEFAULT_RPC,
-        rpcs: process.env.NETWORK_RPC_LIST,
-        chainId: process.env.NETWORK_CHAIN_ID,
-      },
-      contracts: {
-        deployedBlock: process.env.CONTRACT_DEPLOYED_BLOCK,
-        spog: process.env.CONTRACT_ADDRESS_SPOG,
-        multicall3: process.env.CONTRACT_ADDRESS_MULTICALL3,
+      walletConnectProjectId: undefined,
+      env: {
+        node: process.env.NODE_ENV,
+        network: process.env.NETWORK,
       },
     },
   },
@@ -51,5 +43,13 @@ export default defineNuxtConfig({
         protocolImports: true,
       }),
     ],
+  },
+
+  nitro: {
+    esbuild: {
+      options: {
+        target: "esnext",
+      },
+    },
   },
 });

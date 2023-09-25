@@ -244,7 +244,7 @@ const previewDescription = ref();
 
 const { address: userAccount } = useAccount();
 
-const config = useRuntimeConfig();
+const spogAddress = useNetworkStore().getSpogAddress();
 const spog = useSpogStore();
 
 const proposalTypes = [
@@ -393,7 +393,7 @@ async function writeAllowance() {
   const allowance = await readIerc20({
     address: spog.contracts.cash,
     functionName: "allowance",
-    args: [account, config.public.contracts.spog], // address owner, address spender
+    args: [account, spogAddress.value], // address owner, address spender
     account,
   });
 
@@ -403,7 +403,7 @@ async function writeAllowance() {
     const { hash } = await writeIerc20({
       address: spog.contracts.cash,
       functionName: "approve",
-      args: [config.public.contracts.spog, tax * BigInt(1e18)], // address spender, uint256 amount
+      args: [spogAddress.value, tax * BigInt(1e18)], // address spender, uint256 amount
       account,
     });
 
@@ -429,7 +429,7 @@ async function writeProposal(calldatas, formData) {
     "updateVoteQuorumNumerator",
   ].includes(formData.proposalType)
     ? [spog.contracts.governor] // dual governor contract as target for dual governance proposals
-    : [config.public.contracts.spog];
+    : [spogAddress.value];
 
   const description = formData.description;
   const values = [0]; // do not change

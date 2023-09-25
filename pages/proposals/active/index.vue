@@ -61,7 +61,6 @@ interface CastedProposal {
 
 const selectedCastProposals = ref<Array<CastedProposal>>([]);
 
-const config = useRuntimeConfig();
 const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 
@@ -115,10 +114,7 @@ const { data: hasFinishedVoting } = useContractRead({
   address: spog.contracts.governor as Hash,
   abi: ispogGovernorABI,
   functionName: "hasFinishedVoting",
-  args: [
-    BigInt(epoch.value.current?.asNumber),
-    (userAccount.value || config.public.ZERO_ADDRESS) as Hash,
-  ],
+  args: [BigInt(epoch.value.current?.asNumber), userAccount],
   watch: true,
 });
 </script>

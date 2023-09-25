@@ -6,7 +6,7 @@
       <div class="flex justify-between">
         <p class="text-xl text-white">
           Current epoch:
-          <span class="text-primary">#{{ epoch.current.asNumber }}</span>
+          <span class="text-primary">#{{ epoch?.current?.asNumber }}</span>
         </p>
         <div>
           <NuxtLink to="/proposals/all">

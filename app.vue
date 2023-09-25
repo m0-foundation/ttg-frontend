@@ -26,23 +26,16 @@
 
 <script lang="ts" setup>
 import { UseWagmiPlugin } from "use-wagmi";
-// chains
-import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { storeToRefs } from "pinia";
-import { SPOG, Config } from "@/lib/api";
+import { SPOG } from "@/lib/api";
 
-const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
+const network = useNetworkStore().getNetwork();
+
 const spogStore = useSpogClientStore();
 
 const { rpc } = storeToRefs(spogStore);
 const isLoading = ref(true);
-
-// force hardhat network to allow multicall3
-// @ts-ignore
-hardhat.contracts = {
-  multicall3: { address: config.public.contracts.multicall3, blockCreated: 3 },
-};
 
 const fetchSpogContracts = async (spog: SPOG) => {
   try {
@@ -96,12 +89,10 @@ async function onSetup(rpc: string) {
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
 
   /* setup spog client */
-  const network = [mainnet, sepolia, hardhat].find(
-    (chain) => chain.id === Number(config.public.network.chainId)
-  );
-
-  const configVars = config.public.contracts as Config;
-  const spogClient = new SPOG(rpc, network!, configVars);
+  const spogClient = new SPOG(rpc, {
+    spog: network.value.contracts.spog,
+    multicall3: network.value.contracts.multicall3,
+  });
   spogStore.setClient(spogClient);
 
   await Promise.all([

@@ -1,10 +1,10 @@
-import * as dayjs from "dayjs";
-import { UnitType } from "dayjs";
+import _dayjs, { UnitType } from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
+const dayjs = _dayjs;
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(utc);

@@ -102,7 +102,8 @@ import { useAccount, useContractRead } from "use-wagmi";
 import { whenever } from "@vueuse/core";
 import { writeVote, voteABI, valueABI, writeValue } from "@/lib/sdk";
 
-const config = useRuntimeConfig();
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
 const store = useSpogStore();
 const spogClient = useSpogClientStore();
 const spog = storeToRefs(store);
@@ -147,7 +148,7 @@ const {
   address: spog.contracts.value.vote as Hash,
   abi: voteABI,
   functionName: "getVotes",
-  args: [(userAccount.value || config.public.ZERO_ADDRESS) as Hash],
+  args: [userAccount],
   watch: true,
 });
 
@@ -159,7 +160,7 @@ const {
   address: spog.contracts.value.value as Hash,
   abi: valueABI,
   functionName: "getVotes",
-  args: [(userAccount.value || config.public.ZERO_ADDRESS) as Hash],
+  args: [userAccount],
   watch: true,
 });
 
@@ -170,17 +171,13 @@ whenever(
     spogClient.client.getVoteDelegates(userAccount.value!).then((delegate) => {
       console.log("voteDelegate", { delegate });
       voteDelegate.value =
-        delegate === config.public.ZERO_ADDRESS
-          ? undefined
-          : (delegate as Hash);
+        delegate === ZERO_ADDRESS ? undefined : (delegate as Hash);
     });
 
     spogClient.client.getValueDelegates(userAccount.value!).then((delegate) => {
       console.log("valueDelegate", { delegate });
       valueDelegate.value =
-        delegate === config.public.ZERO_ADDRESS
-          ? undefined
-          : (delegate as Hash);
+        delegate === ZERO_ADDRESS ? undefined : (delegate as Hash);
     });
   },
   { immediate: true }
