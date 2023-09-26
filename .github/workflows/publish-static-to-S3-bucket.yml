@@ -1,4 +1,3 @@
----
 name: publish-static-to-S3-bucket
 
 on:
@@ -7,39 +6,12 @@ on:
       - 'main'
   workflow_dispatch:
 
-env:
-  AWS_REGION: "eu-central-1"
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
 jobs:
   publish-static-to-S3-bucket-job:
-    runs-on: ubuntu-latest
-    container:
-      image: node:18
-    steps:
-
-      - name: checkout repo
-        uses: actions/checkout@v2
-
-      - name: installing yarn
-        run: |
-          apt-get update
-          apt install -y curl
-          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-          echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-          apt-get install -y yarn
-
-      - name: generating static files
-        run: |
-          yarn install
-          yarn generate
-
-      # Upload to main folder for main branch pipeline
-      - name: upload static files to S3 bucket
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --follow-symlinks --delete --exclude '.git/*' --exclude '.github/*'
-        env:
-          AWS_S3_BUCKET: "thething-publish-spog-frontend-dev-p14y"
-          SOURCE_DIR: './.output/public'
+    uses: MZero-Labs/devops-templates/.github/workflows/groups/standalone_app_build_and_deploy_s3.yml@main    
+    secrets:
+       AWS_REGION:            "eu-central-1"
+       AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+       AWS_S3_BUCKET:         "thething-publish-spog-frontend-dev-p14y"
+       SOURCE_DIR:            "./.output/public"
