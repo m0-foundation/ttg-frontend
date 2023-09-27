@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { mineUpTo } from "@nomicfoundation/hardhat-network-helpers";
 import { Wallet } from "@ethersproject/wallet";
@@ -13,22 +14,37 @@ import { MockERC20Permit__factory } from "../modules/spog/types/ethers/factories
 
 import { Network } from "./setup";
 
-const initialZeroAccounts: string[] = [
-  "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-];
-
-const initialZeroBalances: string[] = ["1000000000000", "500000000000"];
-
-const initialPowerAccounts: string[] = [
-  "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-];
-
-const initialPowerBalances: string[] = ["1000000000000", "500000000000"];
-
 export default async function deploySpog(network: Network) {
-  await mineUpTo(17740856);
+  const initialZeroAccounts: string[] = [
+    network.accounts[0].address,
+    network.accounts[1].address,
+    network.accounts[2].address,
+  ];
+
+  const initialZeroBalances: string[] = [
+    "500000000000",
+    "400000000000",
+    "300000000000",
+  ];
+
+  const initialPowerAccounts: string[] = [
+    network.accounts[0].address,
+    network.accounts[1].address,
+    network.accounts[2].address,
+  ];
+
+  const initialPowerBalances: string[] = [
+    "500000000000",
+    "400000000000",
+    "300000000000",
+  ];
+
+  /*
+  hardhat network block number starts at 1, but PureEpochs makes the assumption that its being deployed to the mainnet when Ethereum went POS
+  Thus epochs are counted from the block number 17_740_856
+  Hardhat network must start with a block number and timestamp relatively recent
+  */
+  await mineUpTo(17_740_856);
 
   const provider = new JsonRpcProvider(network.url);
   const wallet = new Wallet(network.accounts[0].privateKey, provider);
