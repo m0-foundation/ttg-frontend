@@ -1,4 +1,5 @@
 import { defineConfig } from "@wagmi/cli";
+import { actions } from "@wagmi/cli/plugins";
 import DualGovernorABI from "./modules/spog/abi/DualGovernor.json";
 import PowerBootstrapTokenABI from "./modules/spog/abi/PowerBootstrapToken.json";
 import PowerTokenABI from "./modules/spog/abi/PowerToken.json";
@@ -29,4 +30,5 @@ export default defineConfig({
       abi: ZeroTokenABI,
     },
   ],
+  plugins: [actions()],
 });
