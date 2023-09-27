@@ -8,10 +8,11 @@ on:
 
 jobs:
   publish-static-to-S3-bucket-job:
-    uses: MZero-Labs/devops-templates/.github/workflows/groups/standalone_app_build_and_deploy_s3.yml@main    
+    uses: MZero-Labs/devops-templates/.github/workflows/groups/standalone_app_build_and_deploy_s3.yml@main
+    with:
+      AWS_REGION:            "eu-central-1"
+      AWS_S3_BUCKET:         "thething-publish-spog-frontend-dev-p14y"
+      SOURCE_DIR:            "./.output/public"
     secrets:
-       AWS_REGION:            "eu-central-1"
-       AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
-       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-       AWS_S3_BUCKET:         "thething-publish-spog-frontend-dev-p14y"
-       SOURCE_DIR:            "./.output/public"
+      AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
