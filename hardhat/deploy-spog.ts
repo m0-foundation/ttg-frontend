@@ -12,8 +12,11 @@ import { MockERC20Permit__factory } from "../modules/spog/types/ethers/factories
 
 import { Network } from "./setup";
 
-const initialZeroAccounts = [];
-const initialZeroBalances = [];
+const initialZeroAccounts = [
+  "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+];
+const initialZeroBalances = [1_000_000_000_000n, 500_000_000_000n];
 
 const initialPowerAccounts = [];
 const initialPowerBalances = [];
