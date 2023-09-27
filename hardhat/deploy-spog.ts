@@ -1,4 +1,5 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { mineUpTo } from "@nomicfoundation/hardhat-network-helpers";
 import { Wallet } from "@ethersproject/wallet";
 import { utils } from "ethers";
 
@@ -12,16 +13,23 @@ import { MockERC20Permit__factory } from "../modules/spog/types/ethers/factories
 
 import { Network } from "./setup";
 
-const initialZeroAccounts = [
+const initialZeroAccounts: string[] = [
   "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
   "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
 ];
-const initialZeroBalances = [1_000_000_000_000n, 500_000_000_000n];
 
-const initialPowerAccounts = [];
-const initialPowerBalances = [];
+const initialZeroBalances: string[] = ["1000000000000", "500000000000"];
+
+const initialPowerAccounts: string[] = [
+  "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+];
+
+const initialPowerBalances: string[] = ["1000000000000", "500000000000"];
 
 export default async function deploySpog(network: Network) {
+  await mineUpTo(17740856);
+
   const provider = new JsonRpcProvider(network.url);
   const wallet = new Wallet(network.accounts[0].privateKey, provider);
 
@@ -72,7 +80,10 @@ export default async function deploySpog(network: Network) {
     governorDeployer.address,
     powerTokenDeployer.address,
     bootstrapToken.address,
-    cashToken.address
+    cashToken.address,
+    {
+      gasLimit: 20000000,
+    }
   );
 
   const governorAddress = await registrar.governor();
