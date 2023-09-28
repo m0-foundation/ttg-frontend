@@ -21,11 +21,7 @@ export default async function deploySpog(network: Network) {
     network.accounts[2].address,
   ];
 
-  const initialZeroBalances: string[] = [
-    "500000000000",
-    "400000000000",
-    "300000000000",
-  ];
+  const initialZeroBalances: string[] = ["60000000", "30000000", "10000000"];
 
   const initialPowerAccounts: string[] = [
     network.accounts[0].address,
@@ -33,10 +29,12 @@ export default async function deploySpog(network: Network) {
     network.accounts[2].address,
   ];
 
+  //  initPowerSupply = 1_000_000_000;
+
   const initialPowerBalances: string[] = [
-    "500000000000",
-    "400000000000",
-    "300000000000",
+    "60", // 60% of supply => 600_000_000 POWER tokens
+    "30", // 30% of supply => 300_000_000 POWER tokens
+    "10", // 10% of supply => 100_000_000 POWER tokens
   ];
 
   /*
@@ -106,6 +104,14 @@ export default async function deploySpog(network: Network) {
   const powerTokenAddress = await dualGovernorFactory
     .attach(governorAddress)
     .powerToken();
+
+  for (const account of network.accounts) {
+    console.log("Minting tokens for account: ", account.address);
+    await cashToken.mint(
+      account.address,
+      1000000000000000000000n // 1000
+    );
+  }
 
   console.log("Zero Token Address:", zeroToken.address);
   console.log("Registrar address:", registrar.address);
