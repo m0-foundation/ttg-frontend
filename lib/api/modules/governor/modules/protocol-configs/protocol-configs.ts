@@ -1,20 +1,13 @@
 import { Abi, Hash, Log, decodeEventLog, parseAbiItem } from "viem";
 import orderBy from "lodash/orderBy";
 
-import { ApiContext, ApiModule } from "../..";
-import { hexToBytes32String } from "../../utils";
+import { GovernorModule } from "../GovernorModule";
 import { MUpdateConfigEvent, MProtocolConfig } from "./protocol-configs.types";
 
 import { dualGovernorABI } from "~/lib/sdk";
+import { hexToBytes32String } from "~/lib/api/utils";
 
-export class ProtocolConfigs extends ApiModule {
-  contract: Hash;
-
-  constructor(context: ApiContext) {
-    super(context);
-    this.contract = this.config.contracts?.governor as Hash;
-  }
-
+export class ProtocolConfigs extends GovernorModule {
   async decodeProtocolConfigLog(
     log: Log,
     abi: Abi

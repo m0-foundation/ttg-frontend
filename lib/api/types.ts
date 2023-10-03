@@ -1,5 +1,5 @@
+export * from "./modules/governor/modules/proposal/proposal.types";
 export interface IApiConfig {
   multicall3: `0x${string}`;
-  spog: string;
-  contracts?: { governor?: string };
+  registrar: string;
 }

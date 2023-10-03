@@ -1,11 +1,28 @@
 import { defineStore } from "pinia";
-import { EpochState, SpogImmutableValues, SpogMutableValues } from "@/lib/api";
+import { MEpoch } from "~/lib/api/modules/governor/modules/epoch/epoch.types";
+
+interface SpogContracts {
+  registrar?: string;
+  governor?: string;
+  zeroToken?: string;
+  powerToken?: string;
+  cashToken?: string;
+  clock?: string;
+}
+
+interface SpogValues {
+  minProposalFee?: string | BigInt | number;
+  maxProposalFee?: string | BigInt | number;
+  proposalFee?: string | BigInt | number;
+  powerTokenQuorumRatio?: string | BigInt | number;
+  zeroTokenQuorumRatio?: string | BigInt | number;
+}
 
 export const useSpogStore = defineStore("spog", {
   state: () => ({
-    epoch: {} as EpochState,
-    contracts: {} as SpogImmutableValues,
-    values: {} as SpogMutableValues,
+    epoch: {} as MEpoch,
+    contracts: {} as SpogContracts,
+    values: {} as SpogValues,
   }),
 
   getters: {
@@ -13,13 +30,13 @@ export const useSpogStore = defineStore("spog", {
   },
 
   actions: {
-    setEpoch(epoch: EpochState) {
+    setEpoch(epoch: MEpoch) {
       this.epoch = epoch;
     },
-    setContracts(params: SpogImmutableValues) {
+    setContracts(params: SpogContracts) {
       this.contracts = params;
     },
-    setValues(params: SpogMutableValues) {
+    setValues(params: SpogValues) {
       this.values = params;
     },
   },

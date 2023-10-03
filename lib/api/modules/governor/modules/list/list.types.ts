@@ -1,5 +1,5 @@
 import { Hash } from "viem";
-import { EventLog } from "../event/event.types";
+import { EventLog } from "../../../event/event.types";
 
 export interface MListEvent extends EventLog {
   eventName: "AddressAddedToList" | "AddressRemovedFromList";

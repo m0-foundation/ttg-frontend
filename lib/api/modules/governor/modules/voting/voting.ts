@@ -1,12 +1,12 @@
 import { Hash, parseAbiItem } from "viem";
 
-import { ApiModule } from "../..";
+import { GovernorModule } from "../GovernorModule";
 import { MVote } from "./voting.types";
 
-export class Voting extends ApiModule {
+export class Voting extends GovernorModule {
   async getVotesByProposalId(proposalId: string): Promise<MVote[]> {
     const rawLogs = await this.client.getLogs({
-      address: this.config.contracts!.governor as Hash,
+      address: this.contract,
       fromBlock: 0n,
       event: parseAbiItem(
         "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
@@ -31,7 +31,7 @@ export class Voting extends ApiModule {
     }
 
     const rawLogs = await this.client.getLogs({
-      address: this.config.contracts!.governor as Hash,
+      address: this.contract,
       fromBlock: 0n,
       event: parseAbiItem(
         "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"

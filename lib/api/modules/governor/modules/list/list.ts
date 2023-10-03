@@ -3,13 +3,13 @@ import orderBy from "lodash/orderBy";
 import groupBy from "lodash/groupBy";
 import forEach from "lodash/forEach";
 
-import { ApiModule } from "../..";
-import { hexToBytes32String } from "../../utils";
+import { hexToBytes32String } from "../../../../utils";
+import { GovernorModule } from "../GovernorModule";
 import { MListDecoded, MListEvent, MLists } from "./list.types";
 
 import { dualGovernorABI } from "~/lib/sdk";
 
-export class List extends ApiModule {
+export class List extends GovernorModule {
   async decodeListLog(log: Log, abi: Abi): Promise<MListEvent> {
     const { eventName, args: event } = decodeEventLog({
       abi,
@@ -40,7 +40,7 @@ export class List extends ApiModule {
 
   async getLists(): Promise<Array<MLists>> {
     const addRawLogs = await this.client.getLogs({
-      address: this.config.contracts?.governor as Hash,
+      address: this.contract,
       fromBlock: 0n,
       event: parseAbiItem(
         "event AddressAddedToList(bytes32 listName, address account)"
@@ -48,7 +48,7 @@ export class List extends ApiModule {
     });
 
     const removeRawLogs = await this.client.getLogs({
-      address: this.config.contracts?.governor as Hash,
+      address: this.contract,
       fromBlock: 0n,
       event: parseAbiItem(
         "event AddressRemovedFromList(bytes32 listName, address account)"

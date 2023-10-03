@@ -1,12 +1,12 @@
 export interface MEpoch {
   current: {
     asNumber: number;
-    asBlockNumber: BigInt;
-    asTimestamp: BigInt;
+    asBlockNumber: number;
+    asTimestamp: number;
   };
   next: {
     asNumber: number;
-    asBlockNumber: BigInt;
-    asTimestamp: BigInt;
+    asBlockNumber: number;
+    asTimestamp: number;
   };
 }

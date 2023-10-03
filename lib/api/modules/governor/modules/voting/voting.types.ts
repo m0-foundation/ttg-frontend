@@ -1,4 +1,4 @@
-import { EventLog } from "../event/event.types";
+import { EventLog } from "../../../event/event.types";
 
 export interface MVote extends EventLog {
   proposalId: string;

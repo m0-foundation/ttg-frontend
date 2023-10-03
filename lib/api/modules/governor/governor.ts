@@ -1,70 +1,58 @@
-import { Abi, Hash } from "viem";
+import { Hash } from "viem";
 
-import { ApiModule, ApiContext } from "../..";
-import { MGovernorState } from "./governor.types";
-
+import { ApiModule } from "../../api-module";
+import { ApiContext } from "../../api-context";
+import { MGovernorContracts, MGovernorValues } from "./governor.types";
+import { Proposals } from "./modules/proposal";
+import { ProtocolConfigs } from "./modules/protocol-configs";
+import { List } from "./modules/list";
+import { Voting } from "./modules/voting";
+import { Epoch } from "./modules/epoch";
 import { dualGovernorABI } from "~/lib/sdk";
 
 export class Governor extends ApiModule {
   contract: Hash;
 
-  constructor(context: ApiContext) {
+  proposals: Proposals;
+  protocolConfigs: ProtocolConfigs;
+  list: List;
+  voting: Voting;
+  epoch: Epoch;
+
+  constructor(contract: Hash, context: ApiContext) {
     super(context);
-    this.contract = this.config.contracts!.governor as Hash;
-  }
+    this.contract = contract;
 
-  get<T>(
-    parameters: string[],
-    contract: { address: Hash; abi: Abi }
-  ): Promise<T> {
-    const contractCalls = parameters.map((name) => ({
-      ...contract,
-      functionName: name,
-    }));
-
-    const decodeResults = (results: any[]): T => {
-      const keys = results.map((r, i) => {
-        const key = parameters[i];
-        return { [key]: r.result };
-      });
-
-      const params = keys.reduce((acc, cur) => {
-        return { ...acc, ...cur };
-      }, {});
-
-      console.log("Get Params", params);
-      return params as T;
-    };
-
-    const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
-    // if chain is hardhat then will be undefined
-
-    return this.client
-      .multicall({
-        multicallAddress: (this.config.multicall3 ?? defaultMulticall3) as Hash,
-        contracts: contractCalls,
-      })
-      .then(decodeResults);
+    this.proposals = new Proposals(contract, context);
+    this.voting = new Voting(contract, context);
+    this.list = new List(contract, context);
+    this.protocolConfigs = new ProtocolConfigs(contract, context);
+    this.epoch = new Epoch(contract, context);
   }
 
   getParameters<T>(parameters: string[]): Promise<T> {
     return this.get<T>(parameters, {
-      address: this.contract,
+      address: this.contract!,
       abi: dualGovernorABI,
     });
   }
 
-  getState(): Promise<Partial<MGovernorState>> {
-    return this.getParameters<Partial<MGovernorState>>([
+  getContracts(): Promise<Partial<MGovernorContracts>> {
+    return this.getParameters<Partial<MGovernorContracts>>([
+      "clock",
+      "cashToken",
+      "zeroToken",
+      "powerToken",
+    ]);
+  }
+
+  getValues(): Promise<Partial<MGovernorValues>> {
+    return this.getParameters<Partial<MGovernorValues>>([
       "powerTokenQuorumRatio",
       "zeroTokenQuorumRatio",
       "proposalFee",
       "minProposalFee",
       "maxProposalFee",
-      "clock",
-      "cashToken",
-      "zeroToken",
-      "powerToken",
     ]);
     // votingDelay
     // votingPeriod

@@ -11,8 +11,12 @@ import {
   parseAbiParameters,
 } from "viem";
 
-import { hexToBytes32String, removeSelectorFromCallData } from "../../utils";
-import { ApiContext, ApiModule } from "../..";
+import {
+  hexToBytes32String,
+  removeSelectorFromCallData,
+} from "../../../../utils";
+import { ApiContext } from "../../../..";
+import { GovernorModule } from "../GovernorModule";
 import { MProposal, ProposalEventLog, ProposalState } from "./proposal.types";
 import { dualGovernorABI, readDualGovernor } from "@/lib/sdk";
 
@@ -49,11 +53,11 @@ type IParams =
   | readonly [bigint, bigint]
   | string[];
 
-export class Proposals extends ApiModule {
+export class Proposals extends GovernorModule {
   fromBlock: bigint;
 
-  constructor(context: ApiContext) {
-    super(context);
+  constructor(governor: Hash, context: ApiContext) {
+    super(governor, context);
 
     this.fromBlock = 1n; // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
   }
@@ -296,7 +300,7 @@ export class Proposals extends ApiModule {
     proposalId: string
   ): Promise<keyof typeof ProposalState> {
     const proposalStateNumber = await readDualGovernor({
-      address: this.config.contracts!.governor as Hash,
+      address: this.contract,
       functionName: "state",
       args: [BigInt(proposalId)],
     });
@@ -306,7 +310,7 @@ export class Proposals extends ApiModule {
 
   async getProposals(): Promise<Array<MProposal>> {
     const rawLogs = await this.client.getLogs({
-      address: this.config.contracts!.governor as Hash,
+      address: this.contract as Hash,
       fromBlock: this.fromBlock,
       event: parseAbiItem(
         "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 startBlock, uint256 endBlock, string description)"

@@ -1,11 +1,9 @@
-import { createPublicClient, http, PublicClient } from "viem";
-import { Proposals } from "./modules/proposal";
-import { Voting } from "./modules/voting";
-import { List } from "./modules/list";
-import { ProtocolConfigs } from "./modules/protocol-configs";
-import { Governor } from "./modules/governor";
-import { MVotingTokens } from "./modules/voting/voting.types";
+import { createPublicClient, Hash, http } from "viem";
 import { IApiConfig } from "./types";
+import { ApiContext } from "./api-context";
+import { Registrar } from "./modules/registrar";
+import { Governor } from "./modules/governor";
+import { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
 export const MProposalEmergencyVotingTokens = {
   addToList: [MVotingTokens.Power],
@@ -25,44 +23,17 @@ export const MProposalVotingTokens = {
   emergency: { ...MProposalEmergencyVotingTokens },
 };
 
-export class ApiModule {
-  client: PublicClient;
-  config: IApiConfig;
-
-  constructor(context: ApiContext) {
-    this.client = context.client;
-    this.config = context.config;
-  }
-}
-
-export class ApiContext {
-  client: PublicClient;
-  config: IApiConfig;
-
-  constructor(client: PublicClient, config: IApiConfig) {
-    this.client = client;
-    this.config = config;
-  }
-}
-
 export class Api {
   private context: ApiContext;
-
-  proposals: Proposals;
-  voting: Voting;
-  list: List;
-  protocolConfigs: ProtocolConfigs;
-  governor: Governor;
+  registrar: Registrar;
+  governor?: Governor;
 
   constructor(rpcUrl: string, config: IApiConfig) {
     const client = createPublicClient({ transport: http(rpcUrl) });
+
     this.context = new ApiContext(client, config);
 
-    this.proposals = new Proposals(this.context);
-    this.voting = new Voting(this.context);
-    this.list = new List(this.context);
-    this.protocolConfigs = new ProtocolConfigs(this.context);
-    this.governor = new Governor(this.context);
+    this.registrar = new Registrar(this.context);
   }
 
   setRpc(rpcUrl: string) {
@@ -71,5 +42,9 @@ export class Api {
 
   addConfig(config: Partial<IApiConfig>): void {
     this.context.config = { ...this.context.config, ...config };
+  }
+
+  setGovernor(governor: Hash) {
+    this.governor = new Governor(governor, this.context);
   }
 }
