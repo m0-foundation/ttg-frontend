@@ -2,15 +2,15 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { mineUpTo } from "@nomicfoundation/hardhat-network-helpers";
 import { Wallet } from "@ethersproject/wallet";
-import { ContractFactory, utils } from "ethers";
+import * as ethers from "ethers";
 
-import { DualGovernorDeployer__factory } from "../modules/spog/types/ethers/factories/DualGovernorDeployer.sol";
-import { DualGovernor__factory } from "../modules/spog/types/ethers/factories/DualGovernor.sol";
-import { PowerBootstrapToken__factory } from "../modules/spog/types/ethers/factories/PowerBootstrapToken.sol";
-import { PowerTokenDeployer__factory } from "../modules/spog/types/ethers/factories/PowerTokenDeployer.sol";
-import { Registrar__factory } from "../modules/spog/types/ethers/factories/Registrar.sol";
-import { ZeroToken__factory } from "../modules/spog/types/ethers/factories/ZeroToken.sol";
-import { MockERC20Permit__factory } from "../modules/spog/types/ethers/factories/Mocks.sol";
+import { DualGovernorDeployer__factory } from "../modules/spog/types/ethers-v6/factories/DualGovernorDeployer.sol";
+import { DualGovernor__factory } from "../modules/spog/types/ethers-v6/factories/DualGovernor.sol";
+import { PowerBootstrapToken__factory } from "../modules/spog/types/ethers-v6/factories/PowerBootstrapToken.sol";
+import { PowerTokenDeployer__factory } from "../modules/spog/types/ethers-v6/factories/PowerTokenDeployer.sol";
+import { Registrar__factory } from "../modules/spog/types/ethers-v6/factories/Registrar.sol";
+import { ZeroToken__factory } from "../modules/spog/types/ethers-v6/factories/ZeroToken.sol";
+import { MockERC20Permit__factory } from "../modules/spog/types/ethers-v6/factories/Mocks.sol";
 import multicall3 from "./contracts/Multicall3.json";
 import { Network } from "./setup";
 
@@ -42,10 +42,13 @@ export default async function deploySpog(network: Network) {
   Thus epochs are counted from the block number 15_537_393
   Hardhat network must start with a block number and timestamp relatively recent
   */
-  await mineUpTo(15_537_393 + 108_000);
+  await mineUpTo(15537393 + 108000);
 
-  const provider = new JsonRpcProvider(network.url);
-  const wallet = new Wallet(network.accounts[0].privateKey, provider);
+  // const provider = new JsonRpcProvider(network.url);
+  // const wallet = new Wallet(network.accounts[0].privateKey, provider);
+
+  const provider = new ethers.JsonRpcProvider(network.url);
+  const wallet = new ethers.Wallet(network.accounts[0].privateKey, provider);
 
   const dualGovernorDeployerFactory = new DualGovernorDeployer__factory(wallet);
   const dualGovernorFactory = new DualGovernor__factory(wallet);
@@ -54,15 +57,15 @@ export default async function deploySpog(network: Network) {
   const registrarFactory = new Registrar__factory(wallet);
   const zeroTokenFactory = new ZeroToken__factory(wallet);
   const mockERC20PermitFactory = new MockERC20Permit__factory(wallet);
-  const multicallFactory = new ContractFactory(
+  const multicallFactory = new ethers.ContractFactory(
     multicall3.abi,
     multicall3.bytecode,
     wallet
   );
 
-  const transactionCount = await wallet.getTransactionCount();
+  const transactionCount = await provider.getTransactionCount(wallet.address);
 
-  const expectedRegistrarAddress = utils.getContractAddress({
+  const expectedRegistrarAddress = ethers.getCreateAddress({
     from: wallet.address,
     nonce: transactionCount + 5,
   });
@@ -73,9 +76,10 @@ export default async function deploySpog(network: Network) {
     initialZeroBalances
   );
 
+  const zeroTokenAddress = await zeroToken.getAddress();
   const governorDeployer = await dualGovernorDeployerFactory.deploy(
     expectedRegistrarAddress,
-    zeroToken.address
+    zeroTokenAddress
   );
 
   // NOTE: For now, cash is sent to the main wallet, instead of some vault or treasury. Will change.
@@ -95,22 +99,30 @@ export default async function deploySpog(network: Network) {
     18
   );
 
+  const governorDeployerAddress = await governorDeployer.getAddress();
+  const powerTokenDeployerAddress = await powerTokenDeployer.getAddress();
+  const bootstrapTokenAddress = await bootstrapToken.getAddress();
+  const cashTokenAddress = await cashToken.getAddress();
+
   const registrar = await registrarFactory.deploy(
-    governorDeployer.address,
-    powerTokenDeployer.address,
-    bootstrapToken.address,
-    cashToken.address,
+    governorDeployerAddress,
+    powerTokenDeployerAddress,
+    bootstrapTokenAddress,
+    cashTokenAddress,
     {
       gasLimit: 20000000,
     }
   );
 
+  const registrarAddress = await registrar.getAddress();
+
   const governorAddress = await registrar.governor();
   const powerTokenAddress = await dualGovernorFactory
     .attach(governorAddress)
-    .powerToken();
+    .getFunction("powerToken")();
 
   const multicall3Contract = await multicallFactory.deploy();
+  const multicall3Address = await multicall3Contract.getAddress();
 
   for (const account of network.accounts) {
     console.log("Minting tokens for account: ", account.address);
@@ -120,10 +132,10 @@ export default async function deploySpog(network: Network) {
     );
   }
 
-  console.log("Zero Token Address:", zeroToken.address);
-  console.log("Registrar address:", registrar.address);
+  console.log("Zero Token Address:", zeroTokenAddress);
+  console.log("Registrar address:", registrarAddress);
   console.log("DualGovernor Address:", governorAddress);
   console.log("Power Token Address:", powerTokenAddress);
-  console.log("Cash address:", cashToken.address);
-  console.log("Multicall3 address: ", multicall3Contract.address);
+  console.log("Cash address:", cashTokenAddress);
+  console.log("Multicall3 address: ", multicall3Address);
 }
