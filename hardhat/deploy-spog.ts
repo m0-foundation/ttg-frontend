@@ -2,7 +2,7 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { mineUpTo } from "@nomicfoundation/hardhat-network-helpers";
 import { Wallet } from "@ethersproject/wallet";
-import { utils } from "ethers";
+import { ContractFactory, utils } from "ethers";
 
 import { DualGovernorDeployer__factory } from "../modules/spog/types/ethers/factories/DualGovernorDeployer.sol";
 import { DualGovernor__factory } from "../modules/spog/types/ethers/factories/DualGovernor.sol";
@@ -11,7 +11,7 @@ import { PowerTokenDeployer__factory } from "../modules/spog/types/ethers/factor
 import { Registrar__factory } from "../modules/spog/types/ethers/factories/Registrar.sol";
 import { ZeroToken__factory } from "../modules/spog/types/ethers/factories/ZeroToken.sol";
 import { MockERC20Permit__factory } from "../modules/spog/types/ethers/factories/Mocks.sol";
-
+import multicall3 from "./contracts/Multicall3.json";
 import { Network } from "./setup";
 
 export default async function deploySpog(network: Network) {
@@ -39,10 +39,10 @@ export default async function deploySpog(network: Network) {
 
   /*
   hardhat network block number starts at 1, but PureEpochs makes the assumption that its being deployed to the mainnet when Ethereum went POS
-  Thus epochs are counted from the block number 17_740_856
+  Thus epochs are counted from the block number 15_537_393
   Hardhat network must start with a block number and timestamp relatively recent
   */
-  await mineUpTo(17_740_856);
+  await mineUpTo(15_537_393 + 108_000);
 
   const provider = new JsonRpcProvider(network.url);
   const wallet = new Wallet(network.accounts[0].privateKey, provider);
@@ -54,6 +54,11 @@ export default async function deploySpog(network: Network) {
   const registrarFactory = new Registrar__factory(wallet);
   const zeroTokenFactory = new ZeroToken__factory(wallet);
   const mockERC20PermitFactory = new MockERC20Permit__factory(wallet);
+  const multicallFactory = new ContractFactory(
+    multicall3.abi,
+    multicall3.bytecode,
+    wallet
+  );
 
   const transactionCount = await wallet.getTransactionCount();
 
@@ -105,6 +110,8 @@ export default async function deploySpog(network: Network) {
     .attach(governorAddress)
     .powerToken();
 
+  const multicall3Contract = await multicallFactory.deploy();
+
   for (const account of network.accounts) {
     console.log("Minting tokens for account: ", account.address);
     await cashToken.mint(
@@ -118,4 +125,5 @@ export default async function deploySpog(network: Network) {
   console.log("DualGovernor Address:", governorAddress);
   console.log("Power Token Address:", powerTokenAddress);
   console.log("Cash address:", cashToken.address);
+  console.log("Multicall3 address: ", multicall3Contract.address);
 }
