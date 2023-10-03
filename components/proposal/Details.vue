@@ -39,7 +39,7 @@
 import { storeToRefs } from "pinia";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
-import { ispogGovernorABI } from "@/lib/sdk";
+import { dualGovernorABI } from "@/lib/sdk";
 
 export interface ProposalDetailsProps {
   proposalId: string;
@@ -65,7 +65,7 @@ const {
   isLoading,
 } = useContractRead({
   address: spog.contracts.governor as Hash,
-  abi: ispogGovernorABI,
+  abi: dualGovernorABI,
   functionName: "proposalVotes",
   args: [BigInt((proposalId.value as string) || 0)],
   watch: true,
@@ -80,7 +80,7 @@ const {
   isLoading: hasVotedLoading,
 } = useContractRead({
   address: spog.contracts.governor as Hash,
-  abi: ispogGovernorABI,
+  abi: dualGovernorABI,
   functionName: "hasVoted",
   args: [BigInt(proposalId.value), userAccount],
   watch: true,

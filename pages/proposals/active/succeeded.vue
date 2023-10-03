@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { useAccount } from "use-wagmi";
 import { keccak256, toHex, Hash } from "viem";
-import { writeIspogGovernor } from "@/lib/sdk";
+import { writeDualGovernor } from "@/lib/sdk";
 import { MProposal } from "~/lib/api";
 
 const proposalsStore = useProposalsStore();
@@ -36,7 +36,7 @@ function onExecute(proposal: MProposal) {
     : [spogAddress.value as Hash];
   const values = [BigInt(0)]; // do not change
 
-  return writeIspogGovernor({
+  return writeDualGovernor({
     address: spog.contracts.governor as Hash,
     functionName: "execute",
     args: [targets, values, calldatas as Hash[], hashedDescription], // (targets, values, calldatas, hashedDescription

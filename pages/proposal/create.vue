@@ -184,8 +184,8 @@ import { useAccount } from "use-wagmi";
 import { required, minLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import {
-  ispogGovernorABI,
-  writeIspogGovernor,
+  dualGovernorABI,
+  writeDualGovernor,
   writeIerc20,
   readIerc20,
   ispogABI,
@@ -434,7 +434,7 @@ async function writeProposal(calldatas, formData) {
   const description = formData.description;
   const values = [0]; // do not change
 
-  const { hash } = await writeIspogGovernor({
+  const { hash } = await writeDualGovernor({
     address: spog.contracts.governor,
     functionName: "propose",
     args: [targets, values, [calldatas], description],
@@ -644,7 +644,7 @@ function buildCalldatasSpog(functionName, args) {
 }
 
 function buildCalldatasGovernor(functionName, args) {
-  return encodeFunctionData({ abi: ispogGovernorABI, functionName, args });
+  return encodeFunctionData({ abi: dualGovernorABI, functionName, args });
 }
 
 function onBack() {

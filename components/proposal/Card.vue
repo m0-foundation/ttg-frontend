@@ -99,7 +99,7 @@
 import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
-import { ispogGovernorABI } from "@/lib/sdk";
+import { dualGovernorABI } from "@/lib/sdk";
 import { MProposal } from "@/lib/api";
 
 export interface ProposalCardProps {
@@ -151,7 +151,7 @@ const {
   isLoading,
 } = useContractRead({
   address: spog.contracts.governor as Hash,
-  abi: ispogGovernorABI,
+  abi: dualGovernorABI,
   functionName: "hasVoted",
   args: [BigInt(props.proposal.proposalId), userAccount],
   watch: true,

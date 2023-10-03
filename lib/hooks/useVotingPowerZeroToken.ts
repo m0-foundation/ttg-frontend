@@ -2,7 +2,7 @@ import { storeToRefs } from "pinia";
 import { Hash, formatEther } from "viem";
 import { useContractRead } from "use-wagmi";
 import useMTokenZero from "./useMTokenZero";
-import { valueABI } from "@/lib/sdk";
+import { zeroTokenABI } from "@/lib/sdk";
 
 const store = useSpogStore();
 const spog = storeToRefs(store);
@@ -19,8 +19,8 @@ export default (
   const token = useMTokenZero();
 
   return useContractRead({
-    address: spog.contracts.value.value as Hash,
-    abi: valueABI,
+    address: spog.contracts.value.zeroToken as Hash,
+    abi: zeroTokenABI,
     functionName: "getVotes",
     args: [account as Ref<Hash>],
     watch: true,
