@@ -41,7 +41,6 @@ const isLoading = ref(true);
 
 const fetchGovernorData = async (api: Api) => {
   try {
-    console.log({ api }, api);
     const [contracts, values] = await Promise.all([
       api.governor!.getContracts(),
       api.governor!.getValues(),
@@ -81,7 +80,6 @@ async function onSetup(rpc: string) {
   /* setup wagmi client as vue plugin */
   const { client: wagmiClient } = useWagmi(rpc);
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
-  console.log("network", network);
   /* setup spog client */
   const api = new Api(rpc, {
     registrar: network.value.contracts.registrar,

@@ -18,26 +18,33 @@ export class Epoch extends GovernorModule {
     // });
 
     const currentBlock = await this.client.getBlock();
-    console.log({ currentBlock });
     const currentEpoch = await this.currentEpoch(currentBlock.number);
-    console.log({ currentEpoch });
 
     const currentEpochAsBlockNumber =
       this.getBlockNumberOfEpochStart(currentEpoch);
-    console.log({ currentEpochAsBlockNumber });
+
+    console.log({ currentBlock, currentEpochAsBlockNumber });
+
     const nextEpochAsBlockNumber = this.getBlockNumberOfEpochEnd(currentEpoch);
-    console.log({ nextEpochAsBlockNumber });
+
+    const currentEpochAsBlock = await this.client.getBlock({
+      blockNumber: BigInt(currentEpochAsBlockNumber),
+    });
+
+    const nextEpochAsTimestamp =
+      Number(currentEpochAsBlock.timestamp) +
+      _EPOCH_PERIOD * _SECONDS_PER_BLOCK;
 
     return {
       current: {
         asNumber: currentEpoch,
         asBlockNumber: currentEpochAsBlockNumber,
-        asTimestamp: this.toSeconds(currentEpochAsBlockNumber),
+        asTimestamp: Number(currentEpochAsBlock.timestamp),
       },
       next: {
         asNumber: currentEpoch + 1,
         asBlockNumber: nextEpochAsBlockNumber,
-        asTimestamp: this.toSeconds(nextEpochAsBlockNumber),
+        asTimestamp: nextEpochAsTimestamp,
       },
     };
   }
@@ -96,7 +103,7 @@ export class Epoch extends GovernorModule {
     return this.getBlockNumberOfEpochStart(epoch) - Number(blockNumber);
   }
 
-  async getTimeUntilEpochStart(epoch: number) {
+  async getSecondsUntilEpochStart(epoch: number) {
     const blocks = await this.getBlocksUntilEpochStart(epoch);
     return this.toSeconds(blocks);
   }
@@ -107,7 +114,7 @@ export class Epoch extends GovernorModule {
     return blockStart - Number(blockNumber);
   }
 
-  async getTimeUntilEpochEnds(epoch: number) {
+  async getSecondsUntilEpochEnds(epoch: number) {
     const blocks = await this.getBlocksUntilEpochEnds(epoch);
     return this.toSeconds(blocks);
   }
@@ -117,7 +124,7 @@ export class Epoch extends GovernorModule {
     return Number(blockNumber) - this.getBlockNumberOfEpochStart(epoch);
   }
 
-  async getTimeSinceEpochStart(epoch: number) {
+  async getSecondsSinceEpochStart(epoch: number) {
     const blocks = await this.getBlocksSinceEpochStart(epoch);
     return this.toSeconds(blocks);
   }
@@ -127,7 +134,7 @@ export class Epoch extends GovernorModule {
     return Number(blockNumber) - this.getBlockNumberOfEpochStart(epoch + 1);
   }
 
-  async getTimeSinceEpochEnd(epoch: number) {
+  async getSecondsSinceEpochEnd(epoch: number) {
     const blocks = await this.getBlocksSinceEpochEnd(epoch);
     return this.toSeconds(blocks);
   }
