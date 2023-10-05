@@ -24,7 +24,7 @@
 
     <div class="bg-[#1c1c1c]">
       <div
-        class="text-white text-xs px-6 pt-4 lg:p-6 lg:pb-4 flex justify-between lg:justify-start lg:gap-6"
+        class="text-white text-xs p-6 pb-4 flex justify-between lg:justify-start lg:gap-6"
       >
         <NuxtLink to="/proposals/active">
           <MNavButton class="flex items-center gap-1 mr-0">
