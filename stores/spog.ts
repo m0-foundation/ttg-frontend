@@ -1,31 +1,12 @@
 import { defineStore } from "pinia";
 import { formatEther } from "viem";
-import { MEpoch } from "~/lib/api/modules/governor/modules/epoch/epoch.types";
-
-interface SpogContracts {
-  registrar?: string;
-  governor?: string;
-  zeroToken?: string;
-  powerToken?: string;
-  cashToken?: string;
-}
-
-interface SpogValues {
-  minProposalFee?: string;
-  maxProposalFee?: string;
-  proposalFee?: string;
-  powerTokenQuorumRatio?: string;
-  zeroTokenQuorumRatio?: string;
-  clock?: number;
-  votingDelay?: number;
-  votingPeriod?: number;
-}
+import { MGovernorContracts, MGovernorValues, MEpoch } from "@/lib/api/types";
 
 export const useSpogStore = defineStore("spog", {
   state: () => ({
     epoch: {} as MEpoch,
-    contracts: {} as SpogContracts,
-    values: {} as SpogValues,
+    contracts: {} as Partial<MGovernorContracts>,
+    values: {} as Partial<MGovernorValues>,
   }),
 
   getters: {
@@ -51,10 +32,10 @@ export const useSpogStore = defineStore("spog", {
     setEpoch(epoch: MEpoch) {
       this.epoch = epoch;
     },
-    setContracts(params: SpogContracts) {
+    setContracts(params: Partial<MGovernorContracts>) {
       this.contracts = params;
     },
-    setValues(params: SpogValues) {
+    setValues(params: Partial<MGovernorValues>) {
       this.values = params;
     },
   },

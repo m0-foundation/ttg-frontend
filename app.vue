@@ -46,7 +46,10 @@ const fetchGovernorData = async (api: Api) => {
       api.governor!.getValues(),
     ]);
 
-    spog.setContracts(contracts);
+    spog.setContracts({
+      ...contracts,
+      governor: api.governor!.contract as string,
+    });
     spog.setValues(values);
   } catch (error) {
     console.error({ error });

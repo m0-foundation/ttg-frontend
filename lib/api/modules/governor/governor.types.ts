@@ -1,16 +1,20 @@
 export interface MGovernorContracts {
-  clock: string;
   cashToken: string;
   zeroToken: string;
   powerToken: string;
+  governor?: string;
+  registrar?: string;
 }
 
 export interface MGovernorValues {
-  powerTokenQuorumRatio: bigint;
-  zeroTokenQuorumRatio: bigint;
-  proposalFee: bigint;
-  minProposalFee: bigint;
-  maxProposalFee: bigint;
+  powerTokenQuorumRatio: string;
+  zeroTokenQuorumRatio: string;
+  proposalFee: string;
+  minProposalFee: string;
+  maxProposalFee: string;
+  clock?: number;
+  votingDelay?: string;
+  votingPeriod?: string;
 }
 
 export type MGovernorState = MGovernorContracts & MGovernorValues;

@@ -8,7 +8,7 @@ import { ProtocolConfigs } from "./modules/protocol-configs";
 import { List } from "./modules/list";
 import { Voting } from "./modules/voting";
 import { Epoch } from "./modules/epoch";
-import { dualGovernorABI } from "~/lib/sdk";
+import { dualGovernorABI } from "@/lib/sdk";
 
 export class Governor extends ApiModule {
   contract: Hash;
@@ -39,6 +39,7 @@ export class Governor extends ApiModule {
 
   getContracts(): Promise<Partial<MGovernorContracts>> {
     return this.getParameters<Partial<MGovernorContracts>>([
+      "registrar",
       "cashToken",
       "zeroToken",
       "powerToken",

@@ -6,26 +6,22 @@ import { Governor } from "./modules/governor";
 import { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
-export const MProposalEmergencyVotingTokens = {
-  addToList: [MVotingTokens.Power],
-  removeFromList: [MVotingTokens.Power],
-  updateConfig: [MVotingTokens.Power],
-};
-
 export const MProposalVotingTokens = {
   addToList: [MVotingTokens.Power],
   removeFromList: [MVotingTokens.Power],
   updateConfig: [MVotingTokens.Power],
   reset: [MVotingTokens.Zero],
-  updateVoteQuorumNumerator: [MVotingTokens.Power, MVotingTokens.Zero],
-  updateValueQuorumNumerator: [MVotingTokens.Power, MVotingTokens.Zero],
-  changeTax: [MVotingTokens.Power],
-  changeTaxRange: [MVotingTokens.Power, MVotingTokens.Zero],
-  emergency: { ...MProposalEmergencyVotingTokens },
+  setPowerTokenQuorumRatio: [MVotingTokens.Power, MVotingTokens.Zero],
+  setZeroTokenQuorumRatio: [MVotingTokens.Power, MVotingTokens.Zero],
+  setProposalFee: [MVotingTokens.Power],
+  setProposalFeeRange: [MVotingTokens.Power, MVotingTokens.Zero],
+  emergencyAddToList: [MVotingTokens.Power],
+  emergencyRemoveFromList: [MVotingTokens.Power],
+  emergencyUpdateConfig: [MVotingTokens.Power],
 };
 
 export class Api {
-  private context: ApiContext;
+  context: ApiContext;
   registrar: Registrar;
   governor?: Governor;
 
