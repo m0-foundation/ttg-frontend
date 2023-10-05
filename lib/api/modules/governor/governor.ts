@@ -39,7 +39,6 @@ export class Governor extends ApiModule {
 
   getContracts(): Promise<Partial<MGovernorContracts>> {
     return this.getParameters<Partial<MGovernorContracts>>([
-      "clock",
       "cashToken",
       "zeroToken",
       "powerToken",
@@ -53,8 +52,9 @@ export class Governor extends ApiModule {
       "proposalFee",
       "minProposalFee",
       "maxProposalFee",
+      "clock",
+      "votingDelay",
+      "votingPeriod",
     ]);
-    // votingDelay
-    // votingPeriod
   }
 }
