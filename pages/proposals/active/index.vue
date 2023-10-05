@@ -52,7 +52,7 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useAccount, useContractRead } from "use-wagmi";
-import { writeDualGovernor, dualGovernorABI } from "@/lib/sdk";
+import { writeDualGovernor, powerTokenABI } from "@/lib/sdk";
 
 interface CastedProposal {
   vote: number;
@@ -110,13 +110,11 @@ function onCastBatchVotes() {
   });
 }
 
-const hasFinishedVoting = false;
-
-// const { data: hasFinishedVoting } = useContractRead({
-//   address: spog.contracts.governor as Hash,
-//   abi: dualGovernorABI,
-//   functionName: "hasFinishedVoting",
-//   args: [BigInt(epoch.value.current?.asNumber), userAccount],
-//   watch: true,
-// });
+const { data: hasFinishedVoting } = useContractRead({
+  address: spog.contracts.powerToken as Hash,
+  abi: powerTokenABI,
+  functionName: "hasParticipatedAt",
+  args: [userAccount as Ref<Hash>, BigInt(epoch.value.current?.asNumber)],
+  watch: true,
+});
 </script>

@@ -75,14 +75,14 @@
 import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 import { getNetworkConfig } from "@/network";
 
-const spogStore = useSpogClientStore();
+const apiStore = useApiClientStore();
 const networkStore = useNetworkStore();
 
 const networks = [mainnet, sepolia, hardhat];
 const configNetwork = networkStore.getNetwork();
 
 const isWithCustomRPC = ref(
-  !configNetwork.value!.rpc.values.includes(spogStore.rpc)
+  !configNetwork.value!.rpc.values.includes(apiStore.rpc)
 );
 
 const selectedNetworkId = ref(
@@ -94,8 +94,8 @@ const selectedNetworkConfig = computed(() =>
   getNetworkConfig(selectedNetworkId.value)
 );
 
-const customRPC = ref(spogStore.rpc);
-const selectedRPC = ref(spogStore.rpc);
+const customRPC = ref(apiStore.rpc);
+const selectedRPC = ref(apiStore.rpc);
 
 const rpcs = computed(() => selectedNetworkConfig.value!.rpc.values);
 const chainId = computed(() => selectedNetworkConfig.value!.rpc.chainId);
@@ -106,7 +106,7 @@ function onSubmit() {
   const newConfig = getNetworkConfig(unref(selectedNetworkId))!;
 
   networkStore.setNetwork(newConfig);
-  spogStore.setRpc(newRpc);
+  apiStore.setRpc(newRpc);
 
   reloadNuxtApp({ path: "/settings", force: true });
 }

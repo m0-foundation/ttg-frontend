@@ -19,11 +19,11 @@
 import { storeToRefs } from "pinia";
 import { html } from "gridjs";
 
-const spog = useSpogClientStore();
+const apiStore = useApiClientStore();
 
 const fetchLists = async () => {
   try {
-    const data = await spog.client.getLists();
+    const data = await apiStore.client.governor!.list.getLists();
     const listsStore = useListsStore();
     listsStore.setLists(data);
     console.log("fetched Lists", { data });

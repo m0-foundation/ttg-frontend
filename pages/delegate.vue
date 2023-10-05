@@ -13,13 +13,13 @@
           <div class="flex">
             <MIconPower class="h-8 w-8 mr-4" />
             <span class="mx-2 flex items-center text-2xl text-primary">
-              {{ votePower && formatEther(votePower as bigint) }}
+              {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
             </span>
           </div>
         </div>
         <label class="text-grey-primary">Enter address</label>
         <input
-          v-model="voteDelegate"
+          v-model="inputPowerDelegates"
           placeholder="0x..."
           type="text"
           class="w-full bg-secondary-dark text-white border border-1 border-gray-500 rounded p-4 mb-4"
@@ -54,13 +54,13 @@
           <div class="flex">
             <MIconZero class="h-8 w-8 mr-4" />
             <span class="mx-2 flex items-center text-2xl text-primary">
-              {{ valuePower && formatEther(valuePower as bigint) }}
+              {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
             </span>
           </div>
         </div>
         <label class="text-grey-primary">Enter address</label>
         <input
-          v-model="valueDelegate"
+          v-model="inputZeroDelegates"
           placeholder="0x..."
           type="text"
           class="w-full bg-secondary-dark text-white border border-1 border-gray-500 rounded p-4 mb-4"
@@ -87,8 +87,9 @@
           id="button-delegate-value"
           type="submit"
           :disabled="!isConnected"
-          >delegate</MButton
         >
+          delegate
+        </MButton>
       </div>
     </form>
   </div>
@@ -96,17 +97,14 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { Hash, formatEther } from "viem";
-import { ref } from "vue";
-import { useAccount, useContractRead } from "use-wagmi";
-import { whenever } from "@vueuse/core";
-import { writeVote, voteABI, valueABI, writeValue } from "@/lib/sdk";
+import { Hash } from "viem";
+import { useAccount } from "use-wagmi";
+import { useMDelegates, useMVotingPower } from "@/lib/hooks";
+import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-const store = useSpogStore();
-const spogClient = useSpogClientStore();
-const spog = storeToRefs(store);
+const spog = storeToRefs(useSpogStore());
 
 const { address: userAccount, isConnected } = useAccount();
 
@@ -115,71 +113,41 @@ const nextEpochAsDate = computed(() => {
   return toFormat("LLL");
 });
 
-const voteDelegate = ref<string>();
-const valueDelegate = ref<string>();
+const { powerDelegates, zeroDelegates } = useMDelegates(userAccount);
+const { powerTokenVotingPower, zeroTokenVotingPower } =
+  useMVotingPower(userAccount);
 
 function onUseMyAddress(refAddress: Ref<string | undefined>) {
   refAddress.value = userAccount.value!;
 }
-const onUseMyAddressVote = () => onUseMyAddress(voteDelegate);
-const onUseMyAddressValue = () => onUseMyAddress(valueDelegate);
+const onUseMyAddressVote = () => onUseMyAddress(inputPowerDelegates);
+const onUseMyAddressValue = () => onUseMyAddress(inputZeroDelegates);
 
 function delegateVote() {
-  return writeVote({
-    address: spog.contracts.value.vote as Hash,
+  return writePowerToken({
+    address: spog.contracts.value.powerToken as Hash,
     functionName: "delegate",
-    args: [voteDelegate.value! as Hash],
+    args: [inputPowerDelegates.value! as Hash],
   });
 }
 
 function delegateValue() {
-  return writeValue({
-    address: spog.contracts.value.value as Hash,
+  return writeZeroToken({
+    address: spog.contracts.value.zeroToken as Hash,
     functionName: "delegate",
-    args: [valueDelegate.value! as Hash],
+    args: [inputZeroDelegates.value! as Hash],
   });
 }
 
-const {
-  data: votePower,
-  isError: voteIsError,
-  isLoading: voteIsLoading,
-} = useContractRead({
-  address: spog.contracts.value.vote as Hash,
-  abi: voteABI,
-  functionName: "getVotes",
-  args: [userAccount],
-  watch: true,
+const inputPowerDelegates = computed(() => {
+  return powerDelegates.data.value === ZERO_ADDRESS
+    ? undefined
+    : powerDelegates.data.value;
 });
 
-const {
-  data: valuePower,
-  isError: valueIsError,
-  isLoading: valueIsLoading,
-} = useContractRead({
-  address: spog.contracts.value.value as Hash,
-  abi: valueABI,
-  functionName: "getVotes",
-  args: [userAccount],
-  watch: true,
+const inputZeroDelegates = computed(() => {
+  return zeroDelegates.data.value === ZERO_ADDRESS
+    ? undefined
+    : zeroDelegates.data.value;
 });
-
-whenever(
-  isConnected,
-  () => {
-    console.log("whenever", { isConnected });
-    spogClient.client.getVoteDelegates(userAccount.value!).then((delegate) => {
-      console.log("voteDelegate", { delegate });
-      voteDelegate.value =
-        delegate === ZERO_ADDRESS ? undefined : (delegate as Hash);
-    });
-
-    spogClient.client.getValueDelegates(userAccount.value!).then((delegate) => {
-      console.log("valueDelegate", { delegate });
-      valueDelegate.value =
-        delegate === ZERO_ADDRESS ? undefined : (delegate as Hash);
-    });
-  },
-  { immediate: true }
-);
 </script>

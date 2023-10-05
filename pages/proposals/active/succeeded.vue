@@ -14,7 +14,7 @@
 import { useAccount } from "use-wagmi";
 import { keccak256, toHex, Hash } from "viem";
 import { writeDualGovernor } from "@/lib/sdk";
-import { MProposal } from "~/lib/api";
+import { MProposal } from "@/lib/api/types";
 
 const proposalsStore = useProposalsStore();
 const proposals = computed(() =>

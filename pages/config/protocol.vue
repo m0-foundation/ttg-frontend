@@ -22,11 +22,12 @@
 import { storeToRefs } from "pinia";
 import { html } from "gridjs";
 
-const spog = useSpogClientStore();
+const apiStore = useApiClientStore();
 
 const fetchProtocolConfigs = async () => {
   try {
-    const data = await spog.client.getProtocolConfigs();
+    const data =
+      await apiStore.client.governor!.protocolConfigs.getProtocolConfigs();
     const store = useProtocolConfigsStore();
     store.setProtocolConfigs(data);
     console.log("fetched configs", { data });
