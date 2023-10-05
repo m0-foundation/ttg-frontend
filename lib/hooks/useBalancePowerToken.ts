@@ -16,7 +16,7 @@ export default (
 
   return useBalance({
     address: account,
-    token: spog.contracts.value.vote as Hash,
+    token: spog.contracts.value.powerToken as Hash,
     watch: true,
     enabled: true,
   });

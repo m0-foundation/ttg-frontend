@@ -4,6 +4,7 @@ import { ApiContext } from "./api-context";
 import { Registrar } from "./modules/registrar";
 import { Governor } from "./modules/governor";
 import { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
+export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
 export const MProposalEmergencyVotingTokens = {
   addToList: [MVotingTokens.Power],

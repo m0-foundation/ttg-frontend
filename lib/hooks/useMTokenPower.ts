@@ -7,6 +7,6 @@ const spog = storeToRefs(store);
 
 export default () => {
   return useToken({
-    address: spog.contracts.value.vote as Hash,
+    address: spog.contracts.value.powerToken as Hash,
   });
 };
