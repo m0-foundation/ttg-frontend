@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="flex">
-      <div class="fixed flex items-center space-x-4 top-5 right-10 lg:hidden">
+      <div
+        class="fixed flex items-center space-x-4 top-5 right-10 lg:hidden z-50"
+      >
         <button
           class="p-1 text-primary transition-colors duration-200 rounded-md bg-grey-secondary focus:outline-none focus:ring"
           @click="isSidebarOpen = !isSidebarOpen"
@@ -59,6 +61,6 @@ const isSidebarOpen = ref(false);
 
 <style scoped>
 aside {
-  @apply z-50 w-80 fixed left-0 top-0 h-screen p-10 hidden lg:block bg-body-dark shadow-[10px_10px_0px_0px_rgba(0,0,0,0.3)];
+  @apply z-40 w-80 fixed left-0 top-0 h-screen p-10 hidden lg:block bg-body-dark shadow-[10px_10px_0px_0px_rgba(0,0,0,0.3)];
 }
 </style>
