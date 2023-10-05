@@ -15,43 +15,58 @@ import {
   hexToBytes32String,
   removeSelectorFromCallData,
 } from "../../../../utils";
-import { ApiContext } from "../../../..";
+
 import { GovernorModule } from "../GovernorModule";
 import { MProposal, ProposalEventLog, ProposalState } from "./proposal.types";
 import { dualGovernorABI, readDualGovernor } from "@/lib/sdk";
+import { ApiContext } from "@/lib/api/api-context";
 
 const ProposalTypesFunctionSelectors = {
   addToList: getFunctionSelector("addToList(bytes32,address)"),
   removeFromList: getFunctionSelector("removeFromList(bytes32,address)"),
   updateConfig: getFunctionSelector("updateConfig(bytes32,bytes32)"),
-  emergency: getFunctionSelector("emergency(uint8,bytes)"),
-  reset: getFunctionSelector("reset(address,address)"),
-  changeTax: getFunctionSelector("changeTax(uint256)"),
-  changeTaxRange: getFunctionSelector("changeTaxRange(uint256,uint256)"),
-  updateVoteQuorumNumerator: getFunctionSelector(
-    "updateVoteQuorumNumerator(uint256)"
+  emergencyAddToList: getFunctionSelector(
+    "emergencyAddToList(bytes32,address)"
   ),
-  updateValueQuorumNumerator: getFunctionSelector(
-    "updateValueQuorumNumerator(uint256)"
+  emergencyRemoveFromList: getFunctionSelector(
+    "emergencyRemoveFromList(bytes32,address)"
+  ),
+  emergencyUpdateConfig: getFunctionSelector(
+    "emergencyUpdateConfig(bytes32,address)"
+  ),
+
+  reset: getFunctionSelector("reset()"),
+  setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
+  setProposalFeeRange: getFunctionSelector(
+    "setProposalFeeRange(uint256,uint256,uint256)"
+  ),
+  setPowerTokenQuorumRatio: getFunctionSelector(
+    "setPowerTokenQuorumRatio(uint16)"
+  ),
+  setZeroTokenQuorumRatio: getFunctionSelector(
+    "setZeroTokenQuorumRatio(uint16)"
   ),
 };
 
 const ProposalLabels = {
-  changeTax: "Change Tax",
-  changeTaxRange: "Change Tax Range",
+  setProposalFee: "Change Proposal Fee",
+  setProposalFeeRange: "Change Tax Range",
   addToList: "Add to list",
   removeFromList: "Remove from list",
   updateConfig: "Update Config",
-  reset: "Reset Vote Holders",
-  updateVoteQuorumNumerator: "Update Vote Quorum",
-  updateValueQuorumNumerator: "Update Value Quorum",
+  reset: "Reset",
+  setPowerTokenQuorumRatio: "Update Power Quorum",
+  setZeroTokenQuorumRatio: "Update Zero Quorum",
 };
 
 type IParams =
   | readonly [`0x${string}`, `0x${string}`]
   | readonly [bigint]
   | readonly [bigint, bigint]
-  | string[];
+  | readonly [bigint, bigint, bigint]
+  | readonly [number]
+  | string[]
+  | string;
 
 export class Proposals extends GovernorModule {
   fromBlock: bigint;
@@ -65,8 +80,8 @@ export class Proposals extends GovernorModule {
   decodeProposalTypeAddToList(calldata: Hash) {
     const params = decodeAbiParameters(
       [
-        { name: "list", type: "bytes32" },
-        { name: "account", type: "address" },
+        { name: "list_", type: "bytes32" },
+        { name: "account_", type: "address" },
       ],
       removeSelectorFromCallData(calldata)
     );
@@ -79,8 +94,8 @@ export class Proposals extends GovernorModule {
   decodeProposalRemoveFromList(calldata: Hash) {
     const params = decodeAbiParameters(
       [
-        { name: "list", type: "bytes32" },
-        { name: "account", type: "address" },
+        { name: "list_", type: "bytes32" },
+        { name: "account_", type: "address" },
       ],
       removeSelectorFromCallData(calldata)
     );
@@ -93,8 +108,8 @@ export class Proposals extends GovernorModule {
   decodeProposalTypeUpdateConfig(calldata: Hash) {
     const params = decodeAbiParameters(
       [
-        { name: "valueName", type: "bytes32" },
-        { name: "value", type: "bytes32" },
+        { name: "key_", type: "bytes32" },
+        { name: "value_", type: "bytes32" },
       ],
       removeSelectorFromCallData(calldata)
     ).map(hexToBytes32String);
@@ -106,10 +121,7 @@ export class Proposals extends GovernorModule {
 
   decodeProposalTypeReset(calldata: Hash) {
     const params = decodeAbiParameters(
-      [
-        { name: "newGovernor", type: "address" },
-        { name: "newVoteVault", type: "address" },
-      ],
+      [],
       removeSelectorFromCallData(calldata)
     );
     return {
@@ -118,88 +130,40 @@ export class Proposals extends GovernorModule {
     };
   }
 
-  decodeProposalTypeChangeTax(calldata: Hash) {
+  decodeProposalTypeSetProposalFee(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newTax", type: "uint256" }],
+      [{ name: "newProposalFee_", type: "uint256" }],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "changeTax", params };
+    return { proposalType: "setProposalFee", params };
   }
 
-  decodeProposalTypeChangeTaxRange(calldata: Hash) {
+  decodeProposalTypeSetProposalFeeRange(calldata: Hash) {
     const params = decodeAbiParameters(
       [
-        { name: "newTaxLowerBound", type: "uint256" },
-        { name: "newTaxUpperBound", type: "uint256" },
+        { name: "newMinProposalFee_", type: "uint256" },
+        { name: "newMaxProposalFee_", type: "uint256" },
+        { name: "newProposalFee_", type: "uint256" },
       ],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "changeTaxRange", params };
+    return { proposalType: "setProposalFeeRange", params };
   }
 
-  decodeProposalTypeUpdateVoteQuorumNumerator(calldata: Hash) {
+  decodeProposalTypeSetPowerTokenQuorumRatio(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newVoteQuorumNumerator", type: "uint256" }],
+      [{ name: "newPowerTokenQuorumRatio_", type: "uint16" }],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "updateVoteQuorumNumerator", params };
+    return { proposalType: "setPowerTokenQuorumRatio", params };
   }
 
-  decodeProposalTypeUpdateValueQuorumNumerator(calldata: Hash) {
+  decodeProposalTypeSetZeroTokenQuorumRatio(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newValueQuorumNumerator", type: "uint256" }],
+      [{ name: "newZeroTokenQuorumRatio_", type: "uint16" }],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "updateValueQuorumNumerator", params };
-  }
-
-  parseEmergency(emergencyType: number, callData: Hash) {
-    if (emergencyType === 0) {
-      const values = decodeAbiParameters(
-        parseAbiParameters("bytes32 list, address account"),
-        callData
-      );
-
-      return {
-        proposalType: "removeFromList",
-        params: [hexToBytes32String(values[0]), values[1]],
-      };
-    } else if (emergencyType === 1) {
-      const values = decodeAbiParameters(
-        parseAbiParameters("bytes32 list, address account"),
-        callData
-      );
-
-      return {
-        proposalType: "addToList",
-        params: [hexToBytes32String(values[0]), values[1]],
-      };
-    } else {
-      // if (emergencyType === 2)
-      const values = decodeAbiParameters(
-        [
-          { name: "valueName", type: "bytes32" },
-          { name: "value", type: "bytes32" },
-        ],
-        callData
-      ).map(hexToBytes32String);
-
-      return { proposalType: "updateConfig", params: values };
-    }
-  }
-
-  decodeProposalTypeEmergency(calldata: Hash) {
-    const values = decodeAbiParameters(
-      [
-        { name: "emergencyType", type: "uint8" },
-        { name: "callData", type: "bytes" },
-      ],
-      removeSelectorFromCallData(calldata)
-    );
-
-    const { proposalType, params } = this.parseEmergency(values[0], values[1]);
-
-    return { proposalType, params };
+    return { proposalType: "setZeroTokenQuorumRatio", params };
   }
 
   decodeProposalTypes(
@@ -207,33 +171,36 @@ export class Proposals extends GovernorModule {
     calldata: Hash
   ): { proposalType: string; params: IParams } {
     switch (selector) {
-      case ProposalTypesFunctionSelectors.addToList:
+      case ProposalTypesFunctionSelectors.addToList ||
+        ProposalTypesFunctionSelectors.emergencyAddToList:
         return this.decodeProposalTypeAddToList(calldata);
         break;
-      case ProposalTypesFunctionSelectors.removeFromList:
+      case ProposalTypesFunctionSelectors.removeFromList ||
+        ProposalTypesFunctionSelectors.emergencyRemoveFromList:
         return this.decodeProposalRemoveFromList(calldata);
         break;
-      case ProposalTypesFunctionSelectors.updateConfig:
+      case ProposalTypesFunctionSelectors.updateConfig ||
+        ProposalTypesFunctionSelectors.emergencyUpdateConfig:
         return this.decodeProposalTypeUpdateConfig(calldata);
         break;
       case ProposalTypesFunctionSelectors.reset:
         return this.decodeProposalTypeReset(calldata);
         break;
-      case ProposalTypesFunctionSelectors.changeTax:
-        return this.decodeProposalTypeChangeTax(calldata);
+      case ProposalTypesFunctionSelectors.setProposalFee:
+        return this.decodeProposalTypeSetProposalFee(calldata);
         break;
-      case ProposalTypesFunctionSelectors.changeTaxRange:
-        return this.decodeProposalTypeChangeTaxRange(calldata);
+      case ProposalTypesFunctionSelectors.setProposalFeeRange:
+        return this.decodeProposalTypeSetProposalFeeRange(calldata);
         break;
-      case ProposalTypesFunctionSelectors.updateVoteQuorumNumerator:
-        return this.decodeProposalTypeUpdateVoteQuorumNumerator(calldata);
+      case ProposalTypesFunctionSelectors.setPowerTokenQuorumRatio:
+        return this.decodeProposalTypeSetPowerTokenQuorumRatio(calldata);
         break;
-      case ProposalTypesFunctionSelectors.updateValueQuorumNumerator:
-        return this.decodeProposalTypeUpdateValueQuorumNumerator(calldata);
+      case ProposalTypesFunctionSelectors.setZeroTokenQuorumRatio:
+        return this.decodeProposalTypeSetZeroTokenQuorumRatio(calldata);
         break;
+
       default:
-        // case ProposalTypesFunctionSelectors.emergency:
-        return this.decodeProposalTypeEmergency(calldata);
+        return { proposalType: "unknown", params: [] };
         break;
     }
   }
@@ -260,7 +227,11 @@ export class Proposals extends GovernorModule {
         fromHex(event.calldatas[0] as Hash, "bytes").slice(0, 4)
       );
 
-      const isEmergency = selector === ProposalTypesFunctionSelectors.emergency;
+      const isEmergency = [
+        ProposalTypesFunctionSelectors.emergencyAddToList,
+        ProposalTypesFunctionSelectors.emergencyRemoveFromList,
+        ProposalTypesFunctionSelectors.emergencyUpdateConfig,
+      ].includes(selector);
 
       const { proposalType, params } = this.decodeProposalTypes(
         selector,

@@ -173,12 +173,18 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { waitForTransaction, erc20ABI, writeContract } from "@wagmi/core";
+import {
+  waitForTransaction,
+  erc20ABI,
+  writeContract,
+  readContract,
+} from "@wagmi/core";
 import {
   encodeFunctionData,
   encodeAbiParameters,
   toHex,
   stringToBytes,
+  Hash,
 } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength } from "@vuelidate/validators";
@@ -236,8 +242,6 @@ const $validation = useVuelidate(rules, formData);
 const previewDescription = ref();
 
 const { address: userAccount } = useAccount();
-
-const spogAddress = useNetworkStore().getSpogAddress();
 const spog = useSpogStore();
 
 const proposalTypes = [
@@ -281,35 +285,35 @@ const proposalTypes = [
     label: "Quorums",
     children: [
       {
-        value: "updateVoteQuorumNumerator",
+        value: "setPowerTokenQuorumRatio",
         label: "Vote quorum",
         component: ProposalInputSingleNumber,
         modelValue: formData.proposalValue,
-        tokens: MProposalVotingTokens.updateVoteQuorumNumerator,
+        tokens: MProposalVotingTokens.setPowerTokenQuorumRatio,
       },
       {
-        value: "updateValueQuorumNumerator",
+        value: "setZeroTokenQuorumRatio",
         label: "Value quorum",
         component: ProposalInputSingleNumber,
-        tokens: MProposalVotingTokens.updateValueQuorumNumerator,
+        tokens: MProposalVotingTokens.setZeroTokenQuorumRatio,
       },
     ],
   },
   {
-    value: "tax",
-    label: "Tax",
+    value: "fee",
+    label: "Fee",
     children: [
       {
-        value: "changeTax",
-        label: "Change tax",
+        value: "setProposalFee",
+        label: "Change fee",
         component: ProposalInputSingleNumber,
-        tokens: MProposalVotingTokens.changeTax,
+        tokens: MProposalVotingTokens.setProposalFee,
       },
       {
-        value: "changeTaxRange",
-        label: "Change tax range",
+        value: "setProposalFeeRange",
+        label: "Change fee range",
         component: ProposalInputRangeNumber,
-        tokens: MProposalVotingTokens.changeTaxRange,
+        tokens: MProposalVotingTokens.setProposalFeeRange,
       },
     ],
   },
@@ -320,25 +324,25 @@ const proposalTypes = [
     isEmergency: true,
     children: [
       {
-        value: "addToList",
+        value: "emergencyAddToList",
         label: "Emergency Add to a list",
         isEmergency: true,
         component: ProposalInputListOperation,
-        tokens: MProposalVotingTokens.emergency.addToList,
+        tokens: MProposalVotingTokens.emergencyAddToList,
       },
       {
-        value: "removeFromList",
+        value: "emergencyRemoveFromList",
         label: "Emergency Remove from a list",
         isEmergency: true,
         component: ProposalInputListOperation,
-        tokens: MProposalVotingTokens.emergency.removeFromList,
+        tokens: MProposalVotingTokens.emergencyRemoveFromList,
       },
       {
-        value: "updateConfig",
+        value: "emergencyUpdateConfig",
         label: "Emergency Update config",
         isEmergency: true,
         component: ProposalInputUpdateConfig,
-        tokens: MProposalVotingTokens.emergency.updateConfig,
+        tokens: MProposalVotingTokens.emergencyUpdateConfig,
       },
     ],
   },
@@ -381,24 +385,24 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function writeAllowance() {
   const account = userAccount.value;
-  console.log({ account });
   // It needs approval to pay for taxes
   const allowance = await readContract({
     abi: erc20ABI,
-    address: spog.contracts.cashToken,
+    address: spog.contracts.cashToken as Hash,
     functionName: "allowance",
-    args: [account, spogAddress.value], // address owner, address spender
+    args: [account as Hash, spog.contracts.governor as Hash], // address owner, address spender
     account,
   });
+  console.log({ allowance });
 
   // TODO: allowance > tax  : check againts tax for create proposal
   const tax = 1n;
   if (allowance <= tax) {
     const { hash } = await writeContract({
       abi: erc20ABI,
-      address: spog.contracts.cash,
+      address: spog.contracts.cashToken as Hash,
       functionName: "approve",
-      args: [spogAddress.value, tax * BigInt(1e18)], // address spender, uint256 amount
+      args: [spog.contracts.governor as Hash, tax * BigInt(1e18)], // address spender, uint256 amount
       account,
     });
 
@@ -419,24 +423,16 @@ async function writeAllowance() {
 
 async function writeProposal(calldatas, formData) {
   const account = userAccount.value;
-  const targets = [
-    "updateValueQuorumNumerator",
-    "updateVoteQuorumNumerator",
-  ].includes(formData.proposalType)
-    ? [spog.contracts.governor] // dual governor contract as target for dual governance proposals
-    : [spogAddress.value];
+  const targets = [spog.contracts.governor as Hash];
 
   const description = formData.description;
-  const values = [0]; // do not change
+  const values = [0n]; // do not change
 
   const { hash } = await writeDualGovernor({
-    address: spog.contracts.governor,
+    address: spog.contracts.governor as Hash,
     functionName: "propose",
     args: [targets, values, [calldatas], description],
     account,
-    overrides: {
-      gasLimit: 2100000n,
-    },
   });
 
   stepper.value.changeCurrentStep("pending");
@@ -599,7 +595,7 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(type, [input1, spog.contracts.voteVault]);
   }
 
-  if (["changeTax"].includes(type)) {
+  if (["setProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
       [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
@@ -607,7 +603,7 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(type, [valueEncoded]);
   }
 
-  if (["changeTaxRange"].includes(type)) {
+  if (["setProposalFeeRange"].includes(type)) {
     // tax is using 18 decimals precision
     const encodeBigInt = (value) =>
       encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
@@ -623,22 +619,16 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (
-    ["updateValueQuorumNumerator", "updateVoteQuorumNumerator"].includes(type)
-  ) {
+  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
       [BigInt(input1)] // tax is using 18 decimals precision
     );
-    return buildCalldatasGovernor(type, [valueEncoded]);
+    return buildCalldatasSpog(type, [valueEncoded]);
   }
 }
 
-function buildCalldatasSpog(functionName, args) {
-  return encodeFunctionData({ abi: registrarABI, functionName, args });
-}
-
-function buildCalldatasGovernor(functionName, args) {
+function buildCalldatasSpog(functionName: any, args: any) {
   return encodeFunctionData({ abi: dualGovernorABI, functionName, args });
 }
 
