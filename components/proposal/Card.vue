@@ -100,7 +100,7 @@ import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
 import { dualGovernorABI } from "@/lib/sdk";
-import { MProposal } from "@/lib/api";
+import { MProposal } from "@/lib/api/types";
 
 export interface ProposalCardProps {
   proposal: MProposal;
@@ -153,7 +153,7 @@ const {
   address: spog.contracts.governor as Hash,
   abi: dualGovernorABI,
   functionName: "hasVoted",
-  args: [BigInt(props.proposal.proposalId), userAccount],
+  args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
   watch: true,
 });
 </script>

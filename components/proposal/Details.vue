@@ -55,10 +55,10 @@ const proposalId = computed(() => proposal?.proposalId);
 const { html } = useParsedDescription(proposal?.description || "");
 
 const { address: userAccount } = useAccount();
-const { client } = useSpogClientStore();
 const spog = useSpogStore();
-const { epoch } = storeToRefs(spog);
+const { epoch, valuesForProposal: currentProposalValues } = storeToRefs(spog);
 
+// TODO: missing on new SPOG
 const {
   data: votes = [0n, 0n],
   isError,
@@ -82,17 +82,13 @@ const {
   address: spog.contracts.governor as Hash,
   abi: dualGovernorABI,
   functionName: "hasVoted",
-  args: [BigInt(proposalId.value), userAccount],
+  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
   watch: true,
   onSuccess(hasVoted) {
     console.log({ hasVoted });
   },
 });
 
-const { state: currentProposalValues } = useAsyncState(
-  client.getCurrentProposalValues(),
-  null
-);
 console.log({ currentProposalValues });
 
 const timeLeft = computed(() => {
