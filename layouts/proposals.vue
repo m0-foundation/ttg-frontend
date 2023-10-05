@@ -1,14 +1,13 @@
 <template>
   <div>
-    <div class="px-8 py-4 uppercase">
-      <p class="text-lg text-grey-primary">Proposals</p>
-
-      <div class="flex justify-between">
-        <p class="text-xl text-white">
+    <div class="p-6 lg:px-8 lg:py-4 uppercase">
+      <p class="text-xs text-grey-primary">Proposals</p>
+      <div class="lg:flex justify-between">
+        <p class="text-lg text-white">
           Current epoch:
-          <span class="text-primary">#{{ epoch?.current?.asNumber }}</span>
+          <span class="text-primary">#{{ epoch?.current?.asNumber }}_</span>
         </p>
-        <div>
+        <div class="hidden lg:block">
           <NuxtLink to="/proposals/all">
             <MNavButton class="underline text-xs text-white">
               all epochs
@@ -17,34 +16,38 @@
         </div>
       </div>
 
-      <p class="text-grey-primary text-xs">
+      <p class="text-grey-primary text-xs mt-1">
         {{ currentEpochAsDate }} - {{ nextEpochAsDate }} *
         <span>ENDS {{ timeLeft }}</span>
       </p>
     </div>
 
     <div class="bg-[#1c1c1c]">
-      <div class="text-white text-xs p-8 flex justify-start">
+      <div
+        class="text-white text-xs px-6 pt-4 lg:p-6 lg:pb-4 flex justify-between lg:justify-start lg:gap-6"
+      >
         <NuxtLink to="/proposals/active">
-          <MNavButton>
-            Current Proposals <MBadge>{{ active }}</MBadge>
+          <MNavButton class="flex items-center gap-1 mr-0">
+            <span class="lg:hidden">Active</span>
+            <span class="hidden lg:inline-block">Current Proposals</span>
+            <MBadge>{{ active }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
         <NuxtLink to="/proposals/active/emergency">
-          <MNavButton>
+          <MNavButton class="flex items-center gap-1 mr-0">
             Emergency <MBadge version="error">{{ emergency }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
         <NuxtLink to="/proposals/active/succeeded">
-          <MNavButton>
+          <MNavButton class="flex items-center gap-1 mr-0">
             Pending Execution <MBadge>{{ pendingExecution }}</MBadge>
           </MNavButton>
         </NuxtLink>
       </div>
 
-      <div class="px-4 py-2">
+      <div>
         <NuxtPage />
       </div>
     </div>
@@ -73,12 +76,12 @@ const { epoch } = storeToRefs(spog);
 
 const currentEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.current?.asTimestamp));
-  return toFormat("LL");
+  return toFormat("D MMM");
 });
 
 const nextEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
-  return toFormat("LL");
+  return toFormat("D MMM");
 });
 
 const timeLeft = computed(() => {

@@ -1,7 +1,8 @@
 <template>
-  <div class="mb-40">
+  <div>
     <ProposalList
       :proposals="activeProposals"
+      class="px-3 pb-2"
       @on-cast="onCast"
       @on-uncast="onUncast"
     >
@@ -12,26 +13,28 @@
 
     <div
       v-show="hasProposals && isConnected"
-      class="p-8 overflow-x-hidden bg-grey-600 fixed inset-x-0 bottom-0 mb-16 lg:ml-[22rem] lg:mr-[4.5rem]"
+      class="p-6 bg-grey-600 mb-28 lg:mb-0"
     >
-      <div class="flex justify-between items-center gap-2">
-        <div class="w-1/3 bg-grey-800 rounded-full h-1.5">
-          <div
-            class="bg-primary h-1.5 rounded-ful"
-            :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
-          ></div>
+      <div class="lg:flex justify-between items-center gap-2">
+        <div class="grow flex items-center gap-2 mb-2 lg:mb-0">
+          <div class="w-1/4 lg:w-1/3 bg-grey-800 rounded-full h-1.5">
+            <div
+              class="bg-primary h-1.5 rounded-ful"
+              :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
+            ></div>
+          </div>
+          <p v-if="hasFinishedVoting" class="text-grey-primary">
+            Your votes has been submitted
+          </p>
+          <span v-else class="text-xs">
+            {{ selectedCastProposals.length }} out
+            {{ activeProposals.length }} proposals are left to vote on
+          </span>
         </div>
-
-        <p v-if="hasFinishedVoting" class="text-grey-primary">
-          Your votes has been submitted
-        </p>
-        <p v-else class="text-xs">
-          {{ selectedCastProposals.length }} out
-          {{ activeProposals.length }} proposals are left to vote on
-        </p>
         <MButton
           id="button-cast-submit"
           :disabled="!isSelectedCastProposalsFull || hasFinishedVoting"
+          class="w-full lg:w-auto"
           @click="onCastBatchVotes"
         >
           submit votes
@@ -40,7 +43,7 @@
 
       <p
         v-show="!hasFinishedVoting"
-        class="text-xs text-grey-primary flex justify-end mt-2 italic"
+        class="text-xs text-grey-primary flex lg:justify-end mt-2"
       >
         Your voting power will decrease over time if you do not vote
       </p>

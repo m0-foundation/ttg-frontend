@@ -46,7 +46,7 @@
       <aside :class="{ '!block': isSidebarOpen }">
         <LayoutSidebar />
       </aside>
-      <main class="flex-1 ml-0 mr-10 lg:ml-80 p-8 overflow-x-hidden">
+      <main class="flex-1 ml-0 lg:mr-10 lg:ml-80 lg:p-8 overflow-x-hidden">
         <NuxtPage />
       </main>
     </div>
