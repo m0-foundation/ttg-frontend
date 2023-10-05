@@ -23,7 +23,10 @@ export class ApiModule {
     const decodeResults = (results: any[]): T => {
       const keys = results.map((r, i) => {
         const key = parameters[i];
-        return { [key]: r.result };
+
+        return {
+          [key]: typeof r.result === "bigint" ? String(r.result) : r.result,
+        };
       });
 
       const params = keys.reduce((acc, cur) => {
