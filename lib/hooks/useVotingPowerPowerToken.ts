@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { Hash, formatEther } from "viem";
+import { Hash, formatUnits } from "viem";
 import { useContractRead } from "use-wagmi";
 import useMTokenPower from "./useMTokenPower";
 import { powerTokenABI } from "@/lib/sdk";
@@ -33,7 +33,7 @@ export default (
       return {
         relative: Number((votingPower * 100n) / totalSupply),
         value: votingPower.toString(),
-        formatted: formatEther(votingPower),
+        formatted: formatUnits(votingPower, token?.data?.value?.decimals || 0),
       };
     },
   });

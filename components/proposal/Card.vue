@@ -62,14 +62,14 @@
         <div class="inline-flex gap-1" role="group">
           <ProposalButtonCastVote
             id="button-cast-yes"
-            :disabled="isCastVoteYesDisabled || hasVoted"
+            :disabled="isCastVoteYesDisabled || hasVoted || isDisconnected"
             @click="onCastSelected(1)"
           >
             YES
           </ProposalButtonCastVote>
           <ProposalButtonCastVote
             id="button-cast-no"
-            :disabled="isCastVoteNoDisabled || hasVoted"
+            :disabled="isCastVoteNoDisabled || hasVoted || isDisconnected"
             @click="onCastSelected(0)"
           >
             NO
@@ -86,7 +86,11 @@
         class="flex justify-between items-center"
       >
         <div class="inline-flex gap-1" role="group">
-          <MButton id="button-proposal-execute" @click="onExecuteProposal()">
+          <MButton
+            id="button-proposal-execute"
+            :disabled="isDisconnected"
+            @click="onExecuteProposal()"
+          >
             Execute
           </MButton>
         </div>
@@ -115,7 +119,7 @@ const emit = defineEmits<{
 }>();
 
 const spog = useSpogStore();
-const { address: userAccount } = useAccount();
+const { address: userAccount, isDisconnected } = useAccount();
 const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 

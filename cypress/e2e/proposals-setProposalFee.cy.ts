@@ -1,8 +1,13 @@
 describe("Proposals", () => {
-  describe("type action: changeTax", () => {
+  describe("type action: setProposalFee", () => {
     const input = "1";
-    const description = "Change tax to 1 $CASH";
+    const description = "Change Proposal Fee to 1 $CASH";
     let proposalUrl = "";
+
+    it("I should be able to DELEGATE VOTE", () => {
+      // delegate to self account before voting to have vote power
+      cy.delegateVote();
+    });
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
@@ -12,8 +17,8 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Tax").click();
-      cy.contains("Change tax").click();
+      cy.contains("Fee").click();
+      cy.contains("Change fee").click();
 
       cy.get("input[data-test='proposalValue']").should(
         "have.attr",
@@ -35,16 +40,11 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to DELEGATE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
-
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.task("mine", 100).then((obj) => {
-        console.log("mined", { obj });
-      });
+      // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
+      // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
+      cy.mineEpochs(2);
 
       cy.wait(1000);
       cy.visit("http://localhost:3000/proposals/active");

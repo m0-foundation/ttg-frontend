@@ -2,9 +2,9 @@ import { GovernorModule } from "../GovernorModule";
 import { MEpoch } from "./epoch.types";
 
 // Ethereum finalized 'The Merge' at block 15_537_393 on September 15, 2022, at 05:42:42 GMT.
-const _START_BLOCK = 15_537_393;
-const _SECONDS_PER_BLOCK = 12;
-const _EPOCH_PERIOD = 108_000; // Defines 15 days worth of blocks (108,000)
+export const _START_BLOCK = 15_537_393;
+export const _SECONDS_PER_BLOCK = 12;
+export const _EPOCH_PERIOD = 108_000; // Defines 15 days worth of blocks (108,000)
 
 export class Epoch extends GovernorModule {
   async getBlockNumber(): Promise<bigint> {
