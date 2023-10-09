@@ -20,6 +20,10 @@
       </li>
 
       <li>
+        <NuxtLink to="/auction" active-class="active"> auction </NuxtLink>
+      </li>
+
+      <li>
         <NuxtLink to="/lists" active-class="active">lists</NuxtLink>
       </li>
 
