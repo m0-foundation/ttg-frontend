@@ -14,8 +14,8 @@ export const useSpogStore = defineStore("spog", {
 
     valuesForProposal: (state) => {
       const values = {
-        changeTax: formatEther(BigInt(state.values?.proposalFee || 0n)),
-        changeTaxRange: [
+        setProposalFee: formatEther(BigInt(state.values?.proposalFee || 0n)),
+        setProposalFeeRange: [
           formatEther(BigInt(state.values?.minProposalFee || 0n)),
           formatEther(BigInt(state.values?.maxProposalFee || 0n)),
         ],

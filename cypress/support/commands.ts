@@ -59,7 +59,7 @@ Cypress.Commands.add("castYesOneProposal", (description: string) => {
   });
 
   cy.get("#button-cast-submit").click();
-  cy.task("mine", 1);
+
   cy.reload();
   cy.get("[data-test='voted']").should("have.length", 1);
 });
@@ -68,7 +68,7 @@ Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.visit("http://localhost:3000/proposals/active/succeeded");
   cy.connectWallet();
 
-  cy.task("mine", 100);
+  cy.mineEpochs(1);
   cy.wait(500);
   cy.reload();
 

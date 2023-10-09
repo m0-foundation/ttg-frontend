@@ -227,7 +227,7 @@ const rules = computed(() => {
     "addToList",
     "removeFromList",
     "updateConfig",
-    "changeTaxRange",
+    "setProposalFeeRange",
   ].includes(selectedProposalType?.value?.value);
 
   return {
@@ -608,14 +608,14 @@ function buildCalldatas(formData) {
     const encodeBigInt = (value) =>
       encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
 
-    const encondeInputsChangeTaxRange = ({
+    const encondeInputsSetProposalFeeRange = ({
       input1: lowerBound,
       input2: upperBound,
     }) => [encodeBigInt(lowerBound), encodeBigInt(upperBound)];
 
     return buildCalldatasSpog(
       type,
-      encondeInputsChangeTaxRange({ input1, input2 })
+      encondeInputsSetProposalFeeRange({ input1, input2 })
     );
   }
 

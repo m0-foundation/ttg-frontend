@@ -1,7 +1,7 @@
 describe("Proposals", () => {
   describe("type action: setProposalFee", () => {
-    const input = "1";
-    const description = "Change Proposal Fee to 1 $CASH";
+    const input = "0.001";
+    const description = "Change Proposal Fee to 0.001 $CASH";
     let proposalUrl = "";
 
     it("I should be able to DELEGATE VOTE", () => {
