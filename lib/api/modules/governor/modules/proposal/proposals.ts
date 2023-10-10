@@ -11,13 +11,21 @@ import {
   parseAbiParameters,
 } from "viem";
 
+import { pick } from "lodash";
 import {
   hexToBytes32String,
   removeSelectorFromCallData,
 } from "../../../../utils";
 
 import { GovernorModule } from "../GovernorModule";
-import { MProposal, ProposalEventLog, ProposalState } from "./proposal.types";
+import {
+  GetProposalOutput,
+  MProposal,
+  ProposalEventLog,
+  ProposalState,
+  MVotingType,
+  VotingType,
+} from "./proposal.types";
 import { dualGovernorABI, readDualGovernor } from "@/lib/sdk";
 import { ApiContext } from "@/lib/api/api-context";
 
@@ -267,16 +275,36 @@ export class Proposals extends GovernorModule {
     return {} as MProposal;
   }
 
-  async getProposalState(
-    proposalId: string
-  ): Promise<keyof typeof ProposalState> {
-    const proposalStateNumber = await readDualGovernor({
+  async getProposal(proposalId: string): Promise<GetProposalOutput> {
+    const [
+      proposer,
+      voteStart,
+      voteEnd,
+      executed,
+      proposalType_,
+      state,
+      noPowerTokenVotes,
+      yesPowerTokenVotes,
+      noZeroTokenVotes,
+      yesZeroTokenVotes,
+    ] = await readDualGovernor({
       address: this.contract,
-      functionName: "state",
+      functionName: "getProposal",
       args: [BigInt(proposalId)],
     });
 
-    return ProposalState[proposalStateNumber] as keyof typeof ProposalState;
+    return {
+      proposer: proposer as Hash,
+      voteStart,
+      voteEnd,
+      executed,
+      state: ProposalState[state] as keyof typeof ProposalState,
+      votingType: VotingType[proposalType_] as keyof typeof VotingType,
+      noPowerTokenVotes,
+      yesPowerTokenVotes,
+      noZeroTokenVotes,
+      yesZeroTokenVotes,
+    };
   }
 
   async getProposals(): Promise<Array<MProposal>> {
@@ -292,22 +320,47 @@ export class Proposals extends GovernorModule {
       this.decodeProposalLog(log, dualGovernorABI)
     );
 
-    const proposalsWithState = await Promise.all(
+    const proposalsWithTallies = await Promise.all(
       proposals.map(async (proposal) => {
-        const state = await this.getProposalState(
+        const proposalData = await this.getProposal(
           proposal.proposalId.toString()
         );
-
+        console.log({ proposalData });
         const block = await this.client.getBlock({
           blockNumber: BigInt(proposal.blockNumber),
         });
 
-        proposal.state = state;
         proposal.timestamp = Number(block.timestamp);
-        return proposal;
+        return {
+          ...proposal,
+          ...pick(proposalData, [
+            "proposer",
+            "voteStart",
+            "voteEnd",
+            "executed",
+            "state",
+            "votingType",
+          ]),
+          votes: {
+            power: {
+              yes: Number(proposalData.yesPowerTokenVotes),
+              no: Number(proposalData.noPowerTokenVotes),
+              total: Number(
+                proposalData.yesPowerTokenVotes + proposalData.noPowerTokenVotes
+              ),
+            },
+            zero: {
+              yes: Number(proposalData.yesZeroTokenVotes),
+              no: Number(proposalData.noZeroTokenVotes),
+              total: Number(
+                proposalData.yesZeroTokenVotes + proposalData.noZeroTokenVotes
+              ),
+            },
+          },
+        };
       })
     );
 
-    return proposalsWithState;
+    return proposalsWithTallies;
   }
 }

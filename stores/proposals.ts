@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import _ from "lodash";
-import { MProposal, ProposalState } from "@/lib/api";
+import { MProposal, ProposalState } from "@/lib/api/types";
 
 export const useProposalsStore = defineStore("proposals", {
   state: () => ({
