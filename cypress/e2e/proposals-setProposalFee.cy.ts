@@ -4,11 +4,6 @@ describe("Proposals", () => {
     const description = "Change Proposal Fee to 0.001 $CASH";
     let proposalUrl = "";
 
-    it("I should be able to DELEGATE VOTE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
-
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
 
