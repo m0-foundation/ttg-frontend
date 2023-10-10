@@ -62,9 +62,11 @@
                 v-if="selectedProposalType"
                 v-model="formData.proposalValue"
                 v-model:modelValue2="formData.proposalValue2"
-                :placeholder="selectedProposalType.placeholder"
+                v-model:modelValue3="formData.proposalValue3"
                 :model-value-errors="$validation.proposalValue?.$errors"
                 :model-value2-errors="$validation.proposalValue2?.$errors"
+                :model-value3-errors="$validation.proposalValue3?.$errors"
+                :placeholder="selectedProposalType.placeholder"
               />
             </div>
 
@@ -217,6 +219,7 @@ const formData = reactive({
   proposalType: null,
   proposalValue: null,
   proposalValue2: null,
+  proposalValue3: null,
   description: null,
   ipfsURL: null,
   discussionURL: null,
@@ -233,6 +236,7 @@ const rules = computed(() => {
   return {
     proposalValue: { required },
     proposalValue2: isProposalValue2Required ? { required } : {},
+    proposalValue3: { required },
     description: { required, minLength: minLength(6) },
   };
 });
@@ -546,6 +550,7 @@ function buildCalldatas(formData) {
     proposalType: type,
     proposalValue: input1,
     proposalValue2: input2,
+    proposalValue3: input3,
   } = formData;
 
   if (["addToList", "removeFromList"].includes(type)) {
@@ -605,17 +610,13 @@ function buildCalldatas(formData) {
 
   if (["setProposalFeeRange"].includes(type)) {
     // tax is using 18 decimals precision
-    const encodeBigInt = (value) =>
+    const encodeBigInt = (value: any) =>
       encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
-
-    const encondeInputsSetProposalFeeRange = ({
-      input1: lowerBound,
-      input2: upperBound,
-    }) => [encodeBigInt(lowerBound), encodeBigInt(upperBound)];
 
     return buildCalldatasSpog(
       type,
-      encondeInputsSetProposalFeeRange({ input1, input2 })
+      // min, max, newFee
+      [encodeBigInt(input1), encodeBigInt(input2), encodeBigInt(input3)]
     );
   }
 

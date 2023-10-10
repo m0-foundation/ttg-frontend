@@ -18,6 +18,7 @@ export const useSpogStore = defineStore("spog", {
         setProposalFeeRange: [
           formatEther(BigInt(state.values?.minProposalFee || 0n)),
           formatEther(BigInt(state.values?.maxProposalFee || 0n)),
+          formatEther(BigInt(state.values?.proposalFee || 0n)),
         ],
 
         updateVoteQuorumNumerator: state.values?.powerTokenQuorumRatio,
