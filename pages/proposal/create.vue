@@ -233,10 +233,14 @@ const rules = computed(() => {
     "setProposalFeeRange",
   ].includes(selectedProposalType?.value?.value);
 
+  const isProposalValue3Required = ["setProposalFeeRange"].includes(
+    selectedProposalType?.value?.value
+  );
+
   return {
     proposalValue: { required },
     proposalValue2: isProposalValue2Required ? { required } : {},
-    proposalValue3: { required },
+    proposalValue3: isProposalValue3Required ? { required } : {},
     description: { required, minLength: minLength(6) },
   };
 });
