@@ -84,9 +84,9 @@ const timeLeft = computed(() => {
 });
 
 const zeroQuorum = computed(
-  () => Number(spog.values.zeroTokenQuorumRatio) / 100
+  () => Number(spog.values.zeroTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
 );
 const powerQuorum = computed(
-  () => Number(spog.values.powerTokenQuorumRatio) / 100
+  () => Number(spog.values.powerTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
 );
 </script>
