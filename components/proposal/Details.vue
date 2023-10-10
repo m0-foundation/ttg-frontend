@@ -11,7 +11,10 @@
 
       <ProposalVoteProgress
         v-if="proposal?.state !== 'Pending'"
-        :votes="votes"
+        :votes="proposal?.votes"
+        :version="proposal?.votingType"
+        :zero-quorum="zeroQuorum"
+        :power-quorum="powerQuorum"
       />
 
       <div class="flex justify-between mb-7">
@@ -58,22 +61,6 @@ const { address: userAccount } = useAccount();
 const spog = useSpogStore();
 const { epoch, valuesForProposal: currentProposalValues } = storeToRefs(spog);
 
-// TODO: missing on new SPOG
-const {
-  data: votes = [0n, 0n],
-  isError,
-  isLoading,
-} = useContractRead({
-  address: spog.contracts.governor as Hash,
-  abi: dualGovernorABI,
-  functionName: "proposalVotes",
-  args: [BigInt((proposalId.value as string) || 0)],
-  watch: true,
-  onSuccess(data) {
-    console.log("Fetched votes for proposal", proposalId, data);
-  },
-});
-
 const {
   data: hasVoted,
   isError: hasVotedError,
@@ -95,4 +82,11 @@ const timeLeft = computed(() => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
   return timeAgo;
 });
+
+const zeroQuorum = computed(
+  () => Number(spog.values.zeroTokenQuorumRatio) / 100
+);
+const powerQuorum = computed(
+  () => Number(spog.values.powerTokenQuorumRatio) / 100
+);
 </script>
