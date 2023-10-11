@@ -6,16 +6,6 @@ describe("Proposals", () => {
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
     const description = `Emergency Add ${input2} to list ${input1}`;
 
-    it("I should be able to DELEGATE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
-
-    it("Go to next Epoch", () => {
-      cy.task("mine", 100);
-      cy.reload();
-    });
-
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
@@ -42,7 +32,7 @@ describe("Proposals", () => {
       // address to append
       cy.get("input[data-test='proposalValue2']").type(input2);
 
-      cy.get("textarea[name='description']").type(description);
+      cy.get("div[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
@@ -58,7 +48,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the EMERGENCY proposal", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
-      cy.task("mine", 10);
+      // cy.task("mine", 10);
       cy.reload();
       cy.visit("http://localhost:3000/proposals/active/emergency");
 

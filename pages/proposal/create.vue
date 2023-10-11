@@ -294,14 +294,14 @@ const proposalTypes = [
     children: [
       {
         value: "setPowerTokenQuorumRatio",
-        label: "Vote quorum",
+        label: "Power quorum",
         component: ProposalInputSingleNumber,
         modelValue: formData.proposalValue,
         tokens: MProposalVotingTokens.setPowerTokenQuorumRatio,
       },
       {
         value: "setZeroTokenQuorumRatio",
-        label: "Value quorum",
+        label: "Zero quorum",
         component: ProposalInputSingleNumber,
         tokens: MProposalVotingTokens.setZeroTokenQuorumRatio,
       },
@@ -355,10 +355,6 @@ const proposalTypes = [
     ],
   },
 ];
-
-const isEmergency = computed(
-  () => selectedProposalType?.value?.isEmergency || false
-);
 
 function onChangeProposalType(option) {
   console.log("onChangeProposalType", { option });
@@ -510,45 +506,6 @@ function stringToHexWith32Bytes(data) {
   return toHex(stringToBytes(data, { size: 32 }));
 }
 
-function buildCalldatasEmergency({ input1, input2, type }) {
-  const emergencyTypesMap = {
-    removeFromList: 0,
-    addToList: 1,
-    updateConfig: 2,
-  };
-
-  const emergencyType = emergencyTypesMap[type];
-  console.log({ type, emergencyType });
-  const valueEncoded = encodeAbiParameters(
-    [{ type: "uint8" }],
-    [BigInt(emergencyType)]
-  );
-
-  const encodeUpdateConfig = ({ input1: valueName, input2: value }) => {
-    return encodeAbiParameters(
-      [{ type: "bytes32" }, { type: "bytes32" }],
-      [stringToHexWith32Bytes(valueName), stringToHexWith32Bytes(value)]
-    );
-  };
-
-  const encondeListOperation = ({ input1: list, input2: address }) => {
-    return encodeAbiParameters(
-      [
-        { name: "list", type: "bytes32" },
-        { name: "account", type: "address" },
-      ],
-      [stringToHexWith32Bytes(list), address]
-    );
-  };
-
-  const valueEncoded2 =
-    emergencyType === emergencyTypesMap.updateConfig
-      ? encodeUpdateConfig({ input1, input2 })
-      : encondeListOperation({ input1, input2 });
-
-  return buildCalldatasSpog("emergency", [valueEncoded, valueEncoded2]);
-}
-
 function buildCalldatas(formData) {
   const {
     proposalType: type,
@@ -557,17 +514,21 @@ function buildCalldatas(formData) {
     proposalValue3: input3,
   } = formData;
 
-  if (["addToList", "removeFromList"].includes(type)) {
-    if (isEmergency.value) {
-      return buildCalldatasEmergency({
-        type,
-        input1,
-        input2,
-        input3,
-      });
-    }
-
-    const encondeInputsListOperation = ({ input1: list, input2: address }) => {
+  if (
+    [
+      "addToList",
+      "removeFromList",
+      "emergencyAddToList",
+      "emergencyRemoveFromList",
+    ].includes(type)
+  ) {
+    const encondeInputsListOperation = ({
+      input1: list,
+      input2: address,
+    }: {
+      input1: string;
+      input2: string;
+    }) => {
       return [stringToHexWith32Bytes(list), address];
     };
 
@@ -577,20 +538,15 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (["updateConfig"].includes(type)) {
-    if (isEmergency.value) {
-      return buildCalldatasEmergency({
-        type,
-        input1,
-        input2,
-      });
-    }
-
+  if (["updateConfig", "emergencyUpdateConfig"].includes(type)) {
     const encondeInputsUpdateConfig = ({
-      input1: valueName,
+      input1: key,
       input2: value,
+    }: {
+      input1: string;
+      input2: any;
     }) => {
-      return [stringToHexWith32Bytes(valueName), stringToHexWith32Bytes(value)];
+      return [stringToHexWith32Bytes(key), stringToHexWith32Bytes(value)];
     };
 
     return buildCalldatasSpog(

@@ -21,8 +21,8 @@ export const useSpogStore = defineStore("spog", {
           formatEther(BigInt(state.values?.proposalFee || 0n)),
         ],
 
-        updateVoteQuorumNumerator: state.values?.powerTokenQuorumRatio,
-        updateValueQuorumNumerator: state.values?.zeroTokenQuorumRatio,
+        setPowerTokenQuorumRatio: state.values?.powerTokenQuorumRatio,
+        setZeroTokenQuorumRatio: state.values?.zeroTokenQuorumRatio,
       };
 
       return values;

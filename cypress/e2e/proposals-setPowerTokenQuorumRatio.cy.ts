@@ -1,18 +1,8 @@
 describe("Proposals", () => {
-  describe("type action: updateVoteQuorumNumerator", () => {
+  describe("type action: setPowerTokenQuorumRatio", () => {
     const input1 = "15";
-    const description = "Change update Vote Quorum Numerator to 15";
+    const description = "Set Power Token Quorum Ratio to 15";
     let proposalUrl = "";
-
-    it("I should be able to DELEGATE VOTE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
-
-    it("I should be able to DELEGATE VALUE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateValue();
-    });
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
@@ -22,8 +12,8 @@ describe("Proposals", () => {
       cy.contains("Quorums").should("exist");
       cy.contains("Quorums").click();
 
-      cy.contains("Vote Quorum").should("exist");
-      cy.contains("Vote Quorum").click();
+      cy.contains("Power quorum").should("exist");
+      cy.contains("Power quorum").click();
 
       cy.get("input[data-test='proposalValue']").should(
         "have.attr",
@@ -33,7 +23,7 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue']").type(input1);
 
-      cy.get("textarea[name='description']").type(description);
+      cy.get("div[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
@@ -49,7 +39,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.task("mine", 100);
+      cy.mineEpochs(2);
 
       cy.wait(500);
       cy.visit("http://localhost:3000/proposals/active");

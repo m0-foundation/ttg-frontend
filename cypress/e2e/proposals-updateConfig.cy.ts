@@ -5,21 +5,16 @@ describe("Proposals", () => {
     const description = `Add config ${valueName} = ${value}`;
     let proposalUrl = "";
 
-    it("I should be able to DELEGATE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
-
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Update Config").click();
+      cy.contains("Update config").click();
 
       cy.get("input[data-test='proposalValue']").type(valueName);
       cy.get("input[data-test='proposalValue2']").type(value);
-      cy.get("textarea[name='description']").type(description);
+      cy.get("div[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
@@ -35,7 +30,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.task("mine", 100);
+      cy.mineEpochs(2);
 
       cy.wait(500);
       cy.visit("http://localhost:3000/proposals/active");
