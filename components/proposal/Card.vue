@@ -7,12 +7,14 @@
     />
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="text-white bg-grey-800 p-8 mb-4"
+      class="text-white bg-grey-800 p-6 mb-4"
     >
       <h2 class="text-2xl mb-4 break-all">
         {{ title }}
       </h2>
-      <div class="text-xs xl:text-sm mb-6 flex justify-between text-gray-400">
+      <div
+        class="text-xs xl:text-sm mb-6 text-gray-400 hidden lg:flexjustify-between"
+      >
         <div class="">
           Proposed by
           <NuxtLink :to="`/profile/${proposal.proposer}`">
@@ -57,26 +59,28 @@
 
       <div
         v-if="proposal?.state === 'Active'"
-        class="flex justify-between items-center"
+        class="lg:flex justify-between items-center"
       >
-        <div class="inline-flex gap-1" role="group">
-          <ProposalButtonCastVote
-            id="button-cast-yes"
+        <div class="flex gap-1">
+          <MButtonRadio
+            v-model="selectedVote"
             :disabled="isCastVoteYesDisabled || hasVoted"
-            @click="onCastSelected(1)"
-          >
-            YES
-          </ProposalButtonCastVote>
-          <ProposalButtonCastVote
-            id="button-cast-no"
+            :name="props.proposal.proposalId"
+            :value="1"
+            text="Yes"
+            @change="onCastSelected"
+          />
+          <MButtonRadio
+            v-model="selectedVote"
             :disabled="isCastVoteNoDisabled || hasVoted"
-            @click="onCastSelected(0)"
-          >
-            NO
-          </ProposalButtonCastVote>
+            :name="props.proposal.proposalId"
+            :value="0"
+            text="No"
+            @change="onCastSelected"
+          />
         </div>
 
-        <div class="uppercase text-xs text-grey-primary">
+        <div class="uppercase text-xs text-grey-primary mt-4 lg:mt-0">
           tokens needed to vote
         </div>
       </div>
@@ -119,11 +123,8 @@ const { address: userAccount } = useAccount();
 const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
-const isVoteSelected = ref(false);
 const selectedVote = ref<null | number>(null);
 const formatedDate = computed(() => toFormat("LL"));
-const isCastVoteYesDisabled = computed(() => selectedVote.value === 0);
-const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
 
 function onViewProposal() {
   emit("on-view", props.proposal.proposalId);
@@ -133,16 +134,10 @@ function onExecuteProposal() {
   emit("on-execute", props.proposal);
 }
 
-function onCastSelected(vote: number) {
-  if (isVoteSelected.value) {
-    emit("on-uncast", props.proposal.proposalId);
-    isVoteSelected.value = false;
-    selectedVote.value = null;
-  } else {
-    emit("on-cast", vote, props.proposal.proposalId);
-    isVoteSelected.value = true;
-    selectedVote.value = vote;
-  }
+function onCastSelected(event: Event) {
+  const value = Number((event.target as HTMLInputElement).value);
+  emit("on-cast", value, props.proposal.proposalId);
+  selectedVote.value = value;
 }
 
 const {
