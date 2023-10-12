@@ -13,11 +13,11 @@
         <div class="grid grid-cols-3 gap-8">
           <div class="col-span-3 lg:col-span-1 text-zinc-500 text-xs uppercase">
             <p class="mb-2">WETH / Power token</p>
-            <MTokenAmount image="/img/tokens/eth.svg" size="30" amount="120" />
+            <MTokenAmount image="/img/tokens/eth.svg" :size="30" amount="120" />
           </div>
           <div class="col-span-3 lg:col-span-1 text-zinc-500 text-xs uppercase">
             <p class="mb-2">Total available</p>
-            <MTokenAmount image="/img/tokens/p.svg" size="30" amount="343" />
+            <MTokenAmount image="/img/tokens/p.svg" :size="30" amount="343" />
           </div>
         </div>
         <div>
@@ -44,7 +44,7 @@
         <MTokenAmount
           class="text-zinc-500"
           image="/img/tokens/eth.svg"
-          size="36"
+          :size="36"
           amount="344"
         />
         <MButton :disabled="!purchaseAmount" class="mt-4 w-full" type="submit">

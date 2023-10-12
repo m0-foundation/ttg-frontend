@@ -13,14 +13,14 @@
 <script setup lang="ts">
 interface MTokenAmountProps {
   image: string;
-  amount: string;
-  size: string;
+  amount: string | null;
+  size: number | null;
 }
 
 const props = withDefaults(defineProps<MTokenAmountProps>(), {
   image: "",
-  amount: "-",
-  size: "40",
+  amount: null,
+  size: 40,
 });
 
 const { image, amount, size } = toRefs(props);
