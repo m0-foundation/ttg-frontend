@@ -17,10 +17,17 @@
           </div>
           <div class="col-span-3 lg:col-span-1 text-zinc-500 text-xs uppercase">
             <p class="mb-2">Total available</p>
-            <MTokenAmount image="/img/tokens/p.svg" size="30" amount="3400" />
+            <MTokenAmount image="/img/tokens/p.svg" size="30" amount="343" />
           </div>
         </div>
+        <div>
+          <span>{{ dataRead }}</span>
+        </div>
+        <div class="mt-4">
+          <AuctionChart />
+        </div>
       </div>
+
       <div
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-neutral-800 p-8 py-10"
       >
@@ -56,6 +63,22 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { useContractRead, useAccount } from "use-wagmi";
+import { storeToRefs } from "pinia";
+import { Hash } from "viem";
+import { ispogGovernorABI } from "@/lib/sdk";
+
 const purchaseAmount = ref("");
+const spog = useSpogStore();
+const { epoch } = storeToRefs(spog);
+const { address: userAccount } = useAccount();
+
+const { data: dataRead } = useContractRead({
+  address: spog.contracts.governor as Hash,
+  abi: ispogGovernorABI,
+  functionName: "hasFinishedVoting",
+  args: [BigInt(epoch.value.current?.asNumber), userAccount],
+  watch: true,
+});
 </script>
