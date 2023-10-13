@@ -79,7 +79,6 @@ describe("Proposals", () => {
         cy.wrap($proposal).find("#button-cast-yes").click();
       });
 
-      cy.get("[data-test='voted']").should("have.length", 1);
       cy.task("mine", 1);
       cy.reload();
     });

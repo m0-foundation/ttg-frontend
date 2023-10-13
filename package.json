@@ -9,7 +9,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
+    "postinstall": "nuxt prepare && husky install",
     "lint": "eslint .",
     "test": "cypress run --headless --browser chrome",
     "ci": "concurrently -s last -k \"nuxt dev\" \"sleep 6 && yarn test\"",
@@ -57,7 +57,8 @@
     "typescript": "^5.0.4",
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.2",
-    "vite-plugin-node-polyfills": "^0.8.2"
+    "vite-plugin-node-polyfills": "^0.8.2",
+    "husky": "^8.0.0"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
