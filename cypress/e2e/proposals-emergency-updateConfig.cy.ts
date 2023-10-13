@@ -34,7 +34,8 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the EMERGENCY proposal", () => {
-      cy.mineEpochs(2);
+      // cy.mineEpochs(2);
+      // emergency does not need to forward to next epoch, it will be able to vote on same epoch
 
       cy.visit("http://localhost:3000/proposals/active/emergency");
       cy.reload();

@@ -4,7 +4,6 @@ import { ApiModule } from "../../api-module";
 import { ApiContext } from "../../api-context";
 import { MGovernorContracts, MGovernorValues } from "./governor.types";
 import { Proposals } from "./modules/proposal";
-import { ProtocolConfigs } from "./modules/protocol-configs";
 import { List } from "./modules/list";
 import { Voting } from "./modules/voting";
 import { Epoch } from "./modules/epoch";
@@ -14,7 +13,6 @@ export class Governor extends ApiModule {
   contract: Hash;
 
   proposals: Proposals;
-  protocolConfigs: ProtocolConfigs;
   list: List;
   voting: Voting;
   epoch: Epoch;
@@ -26,7 +24,6 @@ export class Governor extends ApiModule {
     this.proposals = new Proposals(contract, context);
     this.voting = new Voting(contract, context);
     this.list = new List(contract, context);
-    this.protocolConfigs = new ProtocolConfigs(contract, context);
     this.epoch = new Epoch(contract, context);
   }
 

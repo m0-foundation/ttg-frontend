@@ -40,7 +40,7 @@ const ProposalTypesFunctionSelectors = {
     "emergencyRemoveFromList(bytes32,address)"
   ),
   emergencyUpdateConfig: getFunctionSelector(
-    "emergencyUpdateConfig(bytes32,address)"
+    "emergencyUpdateConfig(bytes32,bytes32)"
   ),
 
   reset: getFunctionSelector("reset()"),
@@ -179,18 +179,21 @@ export class Proposals extends GovernorModule {
     calldata: Hash
   ): { proposalType: string; params: IParams } {
     switch (selector) {
-      case ProposalTypesFunctionSelectors.addToList ||
-        ProposalTypesFunctionSelectors.emergencyAddToList:
+      case ProposalTypesFunctionSelectors.addToList:
+      case ProposalTypesFunctionSelectors.emergencyAddToList:
         return this.decodeProposalTypeAddToList(calldata);
         break;
-      case ProposalTypesFunctionSelectors.removeFromList ||
-        ProposalTypesFunctionSelectors.emergencyRemoveFromList:
+
+      case ProposalTypesFunctionSelectors.removeFromList:
+      case ProposalTypesFunctionSelectors.emergencyRemoveFromList:
         return this.decodeProposalRemoveFromList(calldata);
         break;
-      case ProposalTypesFunctionSelectors.updateConfig ||
-        ProposalTypesFunctionSelectors.emergencyUpdateConfig:
+
+      case ProposalTypesFunctionSelectors.updateConfig:
+      case ProposalTypesFunctionSelectors.emergencyUpdateConfig:
         return this.decodeProposalTypeUpdateConfig(calldata);
         break;
+
       case ProposalTypesFunctionSelectors.reset:
         return this.decodeProposalTypeReset(calldata);
         break;

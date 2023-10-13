@@ -27,7 +27,7 @@ const apiStore = useApiClientStore();
 const fetchProtocolConfigs = async () => {
   try {
     const data =
-      await apiStore.client.governor!.protocolConfigs.getProtocolConfigs();
+      await apiStore.client.registrar!.protocolConfigs.getProtocolConfigs();
     const store = useProtocolConfigsStore();
     store.setProtocolConfigs(data);
     console.log("fetched configs", { data });
@@ -45,7 +45,7 @@ const tableConfig = computed(() => {
   return {
     columns: [
       {
-        id: "valueName",
+        id: "key",
         name: "Name",
         sort: true,
       },
@@ -71,7 +71,7 @@ const tableConfig = computed(() => {
     ],
     data: data.value.map((p) => ({
       value: p.value,
-      valueName: p.valueName,
+      key: p.key,
       timestamp: p.timestamp,
     })),
     search: true,

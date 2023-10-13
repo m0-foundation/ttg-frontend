@@ -1,20 +1,20 @@
 import { Abi, Hash, Log, decodeEventLog, parseAbiItem } from "viem";
 import orderBy from "lodash/orderBy";
 
-import { GovernorModule } from "../GovernorModule";
 import { MUpdateConfigEvent, MProtocolConfig } from "./protocol-configs.types";
 
-import { dualGovernorABI } from "~/lib/sdk";
+import { registrarABI } from "~/lib/sdk";
 import { hexToBytes32String } from "~/lib/api/utils";
+import { ApiModule } from "~/lib/api/api-module";
 
-export class ProtocolConfigs extends GovernorModule {
+export class ProtocolConfigs extends ApiModule {
   async decodeProtocolConfigLog(
     log: Log,
     abi: Abi
   ): Promise<MUpdateConfigEvent> {
     interface MProtocolConfigDecoded {
       eventName: string;
-      args: { valueName: Hash; value: Hash };
+      args: { key: Hash; value: Hash };
     }
 
     const { eventName, args: event } = decodeEventLog({
@@ -33,7 +33,7 @@ export class ProtocolConfigs extends GovernorModule {
         eventName,
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
-        valueName: hexToBytes32String(event.valueName),
+        key: hexToBytes32String(event.key),
         value: hexToBytes32String(event.value),
         timestamp: Number(block.timestamp),
       };
@@ -45,18 +45,15 @@ export class ProtocolConfigs extends GovernorModule {
   }
 
   async getProtocolConfigs(): Promise<MProtocolConfig> {
+    console.log(this.config.registrar);
     const rawLogs = await this.client.getLogs({
-      address: this.contract,
+      address: this.config.registrar as Hash,
       fromBlock: 0n,
-      event: parseAbiItem(
-        "event ConfigUpdated(bytes32 valueName, bytes32 value)"
-      ),
+      event: parseAbiItem("event ConfigUpdated(bytes32 key, bytes32 value)"),
     });
 
     const decodedLogs = await Promise.all(
-      rawLogs.map((log: Log) =>
-        this.decodeProtocolConfigLog(log, dualGovernorABI)
-      )
+      rawLogs.map((log: Log) => this.decodeProtocolConfigLog(log, registrarABI))
     );
 
     const orderedLogs = orderBy([...decodedLogs], ["blockNumber"], ["asc"]);
@@ -65,7 +62,7 @@ export class ProtocolConfigs extends GovernorModule {
 
     // guaranteed order
     for (const event of orderedLogs) {
-      finalConfig[event.valueName] = {
+      finalConfig[event.key] = {
         value: event.value,
         timestamp: event.timestamp,
       };
