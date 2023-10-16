@@ -6,7 +6,6 @@
       @click="onOpen"
     >
       {{ selected?.label || "Select a proposal type" }}
-      {{ console.log({ selected }) }}
       <span
         v-if="selected?.isEmergency"
         class="text-xs text-[#5d605d] bg-red text-white p-2"
