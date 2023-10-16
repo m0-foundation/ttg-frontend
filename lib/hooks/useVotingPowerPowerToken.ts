@@ -1,8 +1,8 @@
 import { storeToRefs } from "pinia";
-import { Hash, formatEther } from "viem";
+import { Hash, formatUnits } from "viem";
 import { useContractRead } from "use-wagmi";
 import useMTokenPower from "./useMTokenPower";
-import { voteABI } from "@/lib/sdk";
+import { powerTokenABI } from "@/lib/sdk";
 
 const store = useSpogStore();
 const spog = storeToRefs(store);
@@ -19,21 +19,21 @@ export default (
   const token = useMTokenPower();
 
   return useContractRead({
-    address: spog.contracts.value.vote as Hash,
-    abi: voteABI,
+    address: spog.contracts.value.powerToken as Hash,
+    abi: powerTokenABI,
     functionName: "getVotes",
     args: [account as Ref<Hash>],
     watch: true,
     select: (data) => {
       const votingPower = BigInt(data as string);
       const totalSupply = BigInt(
-        token?.data?.value?.totalSupply.value as bigint
+        (token?.data?.value?.totalSupply?.value as bigint) || 1n
       );
 
       return {
         relative: Number((votingPower * 100n) / totalSupply),
         value: votingPower.toString(),
-        formatted: formatEther(votingPower),
+        formatted: formatUnits(votingPower, token?.data?.value?.decimals || 0),
       };
     },
   });

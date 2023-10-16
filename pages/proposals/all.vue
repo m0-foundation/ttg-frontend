@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-xl text-white uppercase my-4">
-      All epochs <span class="text-primary">_</span>
+      All epochs<span class="text-primary">_</span>
     </p>
     <LayoutPage>
       <div v-if="!proposals || !proposals.length">No proposals to show.</div>
@@ -24,9 +24,15 @@ const tableConfig = {
       hidden: true,
     },
     {
+      id: "epoch",
+      name: "Epoch",
+      sort: true,
+    },
+    {
       id: "proposal",
       name: "Proposal",
       sort: true,
+      width: "50%",
       formatter: (cell: string, row: any) => {
         const { title } = useParsedDescriptionTitle(cell);
         return html(
@@ -64,6 +70,7 @@ const tableConfig = {
   ],
   data: proposals.value.map((p) => ({
     proposalId: p.proposalId,
+    epoch: p.epoch,
     proposal: p.description,
     action: p.proposalLabel,
     status: p.state,

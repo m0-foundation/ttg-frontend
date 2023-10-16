@@ -6,7 +6,6 @@
       @click="onOpen"
     >
       {{ selected?.label || "Select a proposal type" }}
-      {{ console.log({ selected }) }}
       <span
         v-if="selected?.isEmergency"
         class="text-xs text-[#5d605d] bg-red text-white p-2"
@@ -55,8 +54,8 @@
             {{ opt.label }}
 
             <div v-for="token in opt.tokens" :key="token">
-              <MIconPower v-if="token === VotingTokens.Power" />
-              <MIconZero v-if="token === VotingTokens.Zero" />
+              <MIconPower v-if="token === MVotingTokens.Power" />
+              <MIconZero v-if="token === MVotingTokens.Zero" />
             </div>
           </button>
 
@@ -75,8 +74,8 @@
 
                 <div class="flex">
                   <div v-for="token in child.tokens" :key="token">
-                    <MIconPower v-if="token === VotingTokens.Power" />
-                    <MIconZero v-if="token === VotingTokens.Zero" />
+                    <MIconPower v-if="token === MVotingTokens.Power" />
+                    <MIconZero v-if="token === MVotingTokens.Zero" />
                   </div>
                 </div>
               </button>
@@ -90,7 +89,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
-import { VotingTokens } from "@/lib/api";
+import { MVotingTokens } from "@/lib/api/types";
 
 export interface OptionItem {
   value: string;

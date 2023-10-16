@@ -1,29 +1,19 @@
 describe("Proposals", () => {
-  describe("type action: updateVoteQuorumNumerator", () => {
-    const input1 = "15";
-    const description = "Change update Vote Quorum Numerator to 15";
+  describe("type action: setProposalFee", () => {
+    const input = "0.001";
+    const description = "Change Proposal Fee to 0.001 $CASH";
     let proposalUrl = "";
-
-    it("I should be able to DELEGATE VOTE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
-
-    it("I should be able to DELEGATE VALUE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateValue();
-    });
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
+
+      cy.connectWallet();
+
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Quorums").should("exist");
-      cy.contains("Quorums").click();
-
-      cy.contains("Vote Quorum").should("exist");
-      cy.contains("Vote Quorum").click();
+      cy.contains("Fee").click();
+      cy.contains("Change fee").click();
 
       cy.get("input[data-test='proposalValue']").should(
         "have.attr",
@@ -31,14 +21,12 @@ describe("Proposals", () => {
         "number"
       );
 
-      cy.get("input[data-test='proposalValue']").type(input1);
+      cy.get("input[data-test='proposalValue']").type(input);
 
-      cy.get("textarea[name='description']").type(description);
+      cy.get("div[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -49,9 +37,11 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.task("mine", 100);
+      // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
+      // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
+      cy.mineEpochs(2);
 
-      cy.wait(500);
+      cy.wait(1000);
       cy.visit("http://localhost:3000/proposals/active");
 
       cy.contains(description).should("exist");
@@ -64,7 +54,7 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", input);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -82,7 +72,7 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
-      cy.get("#technical-proposal-current").should("contain", input1);
+      cy.get("#technical-proposal-current").should("contain", input);
     });
   });
 });

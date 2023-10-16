@@ -1,0 +1,1 @@
+export { Registrar } from "./registrar";

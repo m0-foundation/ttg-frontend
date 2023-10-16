@@ -26,7 +26,7 @@
               <div class="gap-4 flex my-4">
                 <div v-for="token in selectedProposalType?.tokens" :key="token">
                   <div
-                    v-if="token === VotingTokens.Power"
+                    v-if="token === MVotingTokens.Power"
                     class="p-4 bg-primary-darker"
                   >
                     <div class="flex items-center gap-2 mb-2">
@@ -34,13 +34,13 @@
                       <MIconPower class="w-6 h-6" />
                     </div>
                     Only holders who possess active
-                    <u>{{ VotingTokens.Power }} tokens</u> will be eligible to
+                    <u>{{ MVotingTokens.Power }} tokens</u> will be eligible to
                     participate in voting for or against the selected proposal
                     type.
                   </div>
 
                   <div
-                    v-if="token === VotingTokens.Zero"
+                    v-if="token === MVotingTokens.Zero"
                     class="p-4 bg-primary-darker"
                   >
                     <div class="flex items-center gap-2 mb-2">
@@ -48,7 +48,7 @@
                       <MIconZero class="w-6 h-6" />
                     </div>
                     Only holders who possess active
-                    <u>{{ VotingTokens.Zero }} tokens</u> will be eligible to
+                    <u>{{ MVotingTokens.Zero }} tokens</u> will be eligible to
                     participate in voting for or against the selected proposal
                     type.
                   </div>
@@ -62,9 +62,11 @@
                 v-if="selectedProposalType"
                 v-model="formData.proposalValue"
                 v-model:modelValue2="formData.proposalValue2"
-                :placeholder="selectedProposalType.placeholder"
+                v-model:modelValue3="formData.proposalValue3"
                 :model-value-errors="$validation.proposalValue?.$errors"
                 :model-value2-errors="$validation.proposalValue2?.$errors"
+                :model-value3-errors="$validation.proposalValue3?.$errors"
+                :placeholder="selectedProposalType.placeholder"
               />
             </div>
 
@@ -117,9 +119,9 @@
 
       <div class="flex justify-end">
         <div class="flex items-center gap-2 text-lg">
-          Submission tax:
+          Proposal fee:
           <MIconWeth />
-          0.05
+          {{ spogValues.setProposalFee }}
         </div>
       </div>
       <p class="text-grey-primary text-xs flex justify-end">
@@ -171,32 +173,32 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
-import { waitForTransaction } from "@wagmi/core";
+import {
+  waitForTransaction,
+  erc20ABI,
+  writeContract,
+  readContract,
+} from "@wagmi/core";
 import {
   encodeFunctionData,
   encodeAbiParameters,
   toHex,
   stringToBytes,
+  Hash,
 } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import {
-  ispogGovernorABI,
-  writeIspogGovernor,
-  writeIerc20,
-  readIerc20,
-  ispogABI,
-} from "@/lib/sdk";
-import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber";
-import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber";
-import ProposalInputListOperation from "@/components/proposal/InputListOperation";
-import ProposalInputSingleText from "@/components/proposal/InputSingleText";
-import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig";
-import { ProposalVotingTokens, VotingTokens } from "@/lib/api";
-
+import { storeToRefs } from "pinia";
+import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
+import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber.vue";
+import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber.vue";
+import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
+import ProposalInputSingleText from "@/components/proposal/InputSingleText.vue";
+import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
+import { MProposalVotingTokens, MVotingTokens } from "@/lib/api";
 /* control stepper */
 let steps = reactive([]);
 
@@ -218,6 +220,7 @@ const formData = reactive({
   proposalType: null,
   proposalValue: null,
   proposalValue2: null,
+  proposalValue3: null,
   description: null,
   ipfsURL: null,
   discussionURL: null,
@@ -228,12 +231,17 @@ const rules = computed(() => {
     "addToList",
     "removeFromList",
     "updateConfig",
-    "changeTaxRange",
+    "setProposalFeeRange",
   ].includes(selectedProposalType?.value?.value);
+
+  const isProposalValue3Required = ["setProposalFeeRange"].includes(
+    selectedProposalType?.value?.value
+  );
 
   return {
     proposalValue: { required },
     proposalValue2: isProposalValue2Required ? { required } : {},
+    proposalValue3: isProposalValue3Required ? { required } : {},
     description: { required, minLength: minLength(6) },
   };
 });
@@ -243,9 +251,8 @@ const $validation = useVuelidate(rules, formData);
 const previewDescription = ref();
 
 const { address: userAccount } = useAccount();
-
-const spogAddress = useNetworkStore().getSpogAddress();
 const spog = useSpogStore();
+const { getValues: spogValues } = storeToRefs(spog);
 
 const proposalTypes = [
   {
@@ -255,20 +262,20 @@ const proposalTypes = [
     value: "addToList",
     label: "Add to a list",
     component: ProposalInputListOperation,
-    tokens: ProposalVotingTokens.addToList,
+    tokens: MProposalVotingTokens.addToList,
   },
   {
     value: "removeFromList",
     label: "Remove from a list",
     component: ProposalInputListOperation,
-    tokens: ProposalVotingTokens.removeFromList,
+    tokens: MProposalVotingTokens.removeFromList,
   },
 
   {
     value: "updateConfig",
     label: "Update config",
     component: ProposalInputUpdateConfig,
-    tokens: ProposalVotingTokens.updateConfig,
+    tokens: MProposalVotingTokens.updateConfig,
   },
 
   {
@@ -276,7 +283,7 @@ const proposalTypes = [
     label: "Reset",
     placeholder: "Governance address",
     component: ProposalInputSingleText,
-    tokens: ProposalVotingTokens.reset,
+    tokens: MProposalVotingTokens.reset,
   },
 
   {
@@ -288,35 +295,35 @@ const proposalTypes = [
     label: "Quorums",
     children: [
       {
-        value: "updateVoteQuorumNumerator",
-        label: "Vote quorum",
+        value: "setPowerTokenQuorumRatio",
+        label: "Power quorum",
         component: ProposalInputSingleNumber,
         modelValue: formData.proposalValue,
-        tokens: ProposalVotingTokens.updateVoteQuorumNumerator,
+        tokens: MProposalVotingTokens.setPowerTokenQuorumRatio,
       },
       {
-        value: "updateValueQuorumNumerator",
-        label: "Value quorum",
+        value: "setZeroTokenQuorumRatio",
+        label: "Zero quorum",
         component: ProposalInputSingleNumber,
-        tokens: ProposalVotingTokens.updateValueQuorumNumerator,
+        tokens: MProposalVotingTokens.setZeroTokenQuorumRatio,
       },
     ],
   },
   {
-    value: "tax",
-    label: "Tax",
+    value: "fee",
+    label: "Fee",
     children: [
       {
-        value: "changeTax",
-        label: "Change tax",
+        value: "setProposalFee",
+        label: "Change fee",
         component: ProposalInputSingleNumber,
-        tokens: ProposalVotingTokens.changeTax,
+        tokens: MProposalVotingTokens.setProposalFee,
       },
       {
-        value: "changeTaxRange",
-        label: "Change tax range",
+        value: "setProposalFeeRange",
+        label: "Change fee range",
         component: ProposalInputRangeNumber,
-        tokens: ProposalVotingTokens.changeTaxRange,
+        tokens: MProposalVotingTokens.setProposalFeeRange,
       },
     ],
   },
@@ -327,33 +334,29 @@ const proposalTypes = [
     isEmergency: true,
     children: [
       {
-        value: "addToList",
+        value: "emergencyAddToList",
         label: "Emergency Add to a list",
         isEmergency: true,
         component: ProposalInputListOperation,
-        tokens: ProposalVotingTokens.emergency.addToList,
+        tokens: MProposalVotingTokens.emergencyAddToList,
       },
       {
-        value: "removeFromList",
+        value: "emergencyRemoveFromList",
         label: "Emergency Remove from a list",
         isEmergency: true,
         component: ProposalInputListOperation,
-        tokens: ProposalVotingTokens.emergency.removeFromList,
+        tokens: MProposalVotingTokens.emergencyRemoveFromList,
       },
       {
-        value: "updateConfig",
+        value: "emergencyUpdateConfig",
         label: "Emergency Update config",
         isEmergency: true,
         component: ProposalInputUpdateConfig,
-        tokens: ProposalVotingTokens.emergency.updateConfig,
+        tokens: MProposalVotingTokens.emergencyUpdateConfig,
       },
     ],
   },
 ];
-
-const isEmergency = computed(
-  () => selectedProposalType?.value?.isEmergency || false
-);
 
 function onChangeProposalType(option) {
   console.log("onChangeProposalType", { option });
@@ -388,22 +391,23 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function writeAllowance() {
   const account = userAccount.value;
-  console.log({ account });
-  // It needs approval to pay for taxes
-  const allowance = await readIerc20({
-    address: spog.contracts.cash,
+  // It needs approval to pay for fees
+  const allowance = await readContract({
+    abi: erc20ABI,
+    address: spog.contracts.cashToken as Hash,
     functionName: "allowance",
-    args: [account, spogAddress.value], // address owner, address spender
+    args: [account as Hash, spog.contracts.governor as Hash], // address owner, address spender
     account,
   });
+  console.log({ allowance });
 
-  // TODO: allowance > tax  : check againts tax for create proposal
-  const tax = 1n;
-  if (allowance <= tax) {
-    const { hash } = await writeIerc20({
-      address: spog.contracts.cash,
+  const fee = BigInt(spog.values.proposalFee || 0n);
+  if (allowance <= fee) {
+    const { hash } = await writeContract({
+      abi: erc20ABI,
+      address: spog.contracts.cashToken as Hash,
       functionName: "approve",
-      args: [spogAddress.value, tax * BigInt(1e18)], // address spender, uint256 amount
+      args: [spog.contracts.governor as Hash, fee], // address spender, uint256 amount
       account,
     });
 
@@ -424,24 +428,16 @@ async function writeAllowance() {
 
 async function writeProposal(calldatas, formData) {
   const account = userAccount.value;
-  const targets = [
-    "updateValueQuorumNumerator",
-    "updateVoteQuorumNumerator",
-  ].includes(formData.proposalType)
-    ? [spog.contracts.governor] // dual governor contract as target for dual governance proposals
-    : [spogAddress.value];
+  const targets = [spog.contracts.governor as Hash];
 
   const description = formData.description;
-  const values = [0]; // do not change
+  const values = [0n]; // do not change
 
-  const { hash } = await writeIspogGovernor({
-    address: spog.contracts.governor,
+  const { hash } = await writeDualGovernor({
+    address: spog.contracts.governor as Hash,
     functionName: "propose",
     args: [targets, values, [calldatas], description],
     account,
-    overrides: {
-      gasLimit: 2100000n,
-    },
   });
 
   stepper.value.changeCurrentStep("pending");
@@ -511,63 +507,29 @@ function stringToHexWith32Bytes(data) {
   return toHex(stringToBytes(data, { size: 32 }));
 }
 
-function buildCalldatasEmergency({ input1, input2, type }) {
-  const emergencyTypesMap = {
-    removeFromList: 0,
-    addToList: 1,
-    updateConfig: 2,
-  };
-
-  const emergencyType = emergencyTypesMap[type];
-  console.log({ type, emergencyType });
-  const valueEncoded = encodeAbiParameters(
-    [{ type: "uint8" }],
-    [BigInt(emergencyType)]
-  );
-
-  const encodeUpdateConfig = ({ input1: valueName, input2: value }) => {
-    return encodeAbiParameters(
-      [{ type: "bytes32" }, { type: "bytes32" }],
-      [stringToHexWith32Bytes(valueName), stringToHexWith32Bytes(value)]
-    );
-  };
-
-  const encondeListOperation = ({ input1: list, input2: address }) => {
-    return encodeAbiParameters(
-      [
-        { name: "list", type: "bytes32" },
-        { name: "account", type: "address" },
-      ],
-      [stringToHexWith32Bytes(list), address]
-    );
-  };
-
-  const valueEncoded2 =
-    emergencyType === emergencyTypesMap.updateConfig
-      ? encodeUpdateConfig({ input1, input2 })
-      : encondeListOperation({ input1, input2 });
-
-  return buildCalldatasSpog("emergency", [valueEncoded, valueEncoded2]);
-}
-
 function buildCalldatas(formData) {
   const {
     proposalType: type,
     proposalValue: input1,
     proposalValue2: input2,
+    proposalValue3: input3,
   } = formData;
 
-  if (["addToList", "removeFromList"].includes(type)) {
-    if (isEmergency.value) {
-      return buildCalldatasEmergency({
-        type,
-        input1,
-        input2,
-        input3,
-      });
-    }
-
-    const encondeInputsListOperation = ({ input1: list, input2: address }) => {
+  if (
+    [
+      "addToList",
+      "removeFromList",
+      "emergencyAddToList",
+      "emergencyRemoveFromList",
+    ].includes(type)
+  ) {
+    const encondeInputsListOperation = ({
+      input1: list,
+      input2: address,
+    }: {
+      input1: string;
+      input2: string;
+    }) => {
       return [stringToHexWith32Bytes(list), address];
     };
 
@@ -577,20 +539,15 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (["updateConfig"].includes(type)) {
-    if (isEmergency.value) {
-      return buildCalldatasEmergency({
-        type,
-        input1,
-        input2,
-      });
-    }
-
+  if (["updateConfig", "emergencyUpdateConfig"].includes(type)) {
     const encondeInputsUpdateConfig = ({
-      input1: valueName,
+      input1: key,
       input2: value,
+    }: {
+      input1: string;
+      input2: any;
     }) => {
-      return [stringToHexWith32Bytes(valueName), stringToHexWith32Bytes(value)];
+      return [stringToHexWith32Bytes(key), stringToHexWith32Bytes(value)];
     };
 
     return buildCalldatasSpog(
@@ -604,7 +561,7 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(type, [input1, spog.contracts.voteVault]);
   }
 
-  if (["changeTax"].includes(type)) {
+  if (["setProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
       [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
@@ -612,39 +569,29 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(type, [valueEncoded]);
   }
 
-  if (["changeTaxRange"].includes(type)) {
+  if (["setProposalFeeRange"].includes(type)) {
     // tax is using 18 decimals precision
-    const encodeBigInt = (value) =>
+    const encodeBigInt = (value: any) =>
       encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
-
-    const encondeInputsChangeTaxRange = ({
-      input1: lowerBound,
-      input2: upperBound,
-    }) => [encodeBigInt(lowerBound), encodeBigInt(upperBound)];
 
     return buildCalldatasSpog(
       type,
-      encondeInputsChangeTaxRange({ input1, input2 })
+      // min, max, newFee
+      [encodeBigInt(input1), encodeBigInt(input2), encodeBigInt(input3)]
     );
   }
 
-  if (
-    ["updateValueQuorumNumerator", "updateVoteQuorumNumerator"].includes(type)
-  ) {
+  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
       [BigInt(input1)] // tax is using 18 decimals precision
     );
-    return buildCalldatasGovernor(type, [valueEncoded]);
+    return buildCalldatasSpog(type, [valueEncoded]);
   }
 }
 
-function buildCalldatasSpog(functionName, args) {
-  return encodeFunctionData({ abi: ispogABI, functionName, args });
-}
-
-function buildCalldatasGovernor(functionName, args) {
-  return encodeFunctionData({ abi: ispogGovernorABI, functionName, args });
+function buildCalldatasSpog(functionName: any, args: any) {
+  return encodeFunctionData({ abi: dualGovernorABI, functionName, args });
 }
 
 function onBack() {

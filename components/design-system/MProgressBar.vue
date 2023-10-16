@@ -6,8 +6,10 @@
       { 'bg-red': version === 'majority', 'bg-gray-200': version === 'quorum' },
     ]"
   >
-    <div v-if="version === 'quorum'" class="quorum" :style="style" />
-    <div class="bg-primary h-2" :style="`width: ${width}%`"></div>
+    <div>
+      <div class="bg-primary h-2" :style="`width: ${width}%`"></div>
+      <div v-if="version === 'quorum'" class="quorum" :style="style" />
+    </div>
   </div>
 </template>
 
@@ -33,6 +35,6 @@ const style = computed(() => {
 
 <style scoped>
 .quorum {
-  @apply absolute z-10 border-r-2 border-gray-400 w-2 h-8 top-[1.2rem];
+  @apply relative z-10 border-r-2 border-gray-400 w-2 h-6 top-[-1rem];
 }
 </style>

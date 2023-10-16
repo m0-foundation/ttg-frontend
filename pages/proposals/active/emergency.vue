@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { useAccount } from "use-wagmi";
 import { Hash } from "viem";
-import { writeIspogGovernor } from "@/lib/sdk";
+import { writeDualGovernor } from "@/lib/sdk";
 
 const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
@@ -25,7 +25,7 @@ const proposals = computed(() =>
 
 function onCast(vote: number, proposalId: string) {
   console.log("cast", { vote, proposalId });
-  return writeIspogGovernor({
+  return writeDualGovernor({
     address: spog.contracts.governor as Hash,
     functionName: "castVote",
     args: [BigInt(proposalId), vote],

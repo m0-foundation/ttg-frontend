@@ -15,7 +15,8 @@ export const useNetworkStore = defineStore("network", () => {
   }
 
   const getNetwork = () => computed(() => network.value);
-  const getSpogAddress = () => computed(() => network.value.contracts.spog);
+  const getSpogAddress = () =>
+    computed(() => network.value.contracts.registrar);
 
   return { network, setNetwork, getNetwork, getSpogAddress };
 });
