@@ -58,6 +58,10 @@ export class Epoch extends GovernorModule {
     return Math.floor((Number(blockNumber) - _START_BLOCK) / _EPOCH_PERIOD);
   }
 
+  static getEpochFromBlock(blockNumber: number) {
+    return Math.floor((Number(blockNumber) - _START_BLOCK) / _EPOCH_PERIOD);
+  }
+
   toSeconds(blocks_: number) {
     return blocks_ * _SECONDS_PER_BLOCK;
   }

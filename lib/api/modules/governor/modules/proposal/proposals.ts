@@ -28,6 +28,7 @@ import {
 } from "./proposal.types";
 import { dualGovernorABI, readDualGovernor } from "@/lib/sdk";
 import { ApiContext } from "@/lib/api/api-context";
+import { Epoch } from "@/lib/api/modules/governor/modules/epoch/epoch";
 
 const ProposalTypesFunctionSelectors = {
   addToList: getFunctionSelector("addToList(bytes32,address)"),
@@ -333,6 +334,8 @@ export class Proposals extends GovernorModule {
           blockNumber: BigInt(proposal.blockNumber),
         });
 
+        const epoch = Epoch.getEpochFromBlock(proposal.blockNumber);
+
         proposal.timestamp = Number(block.timestamp);
         return {
           ...proposal,
@@ -344,6 +347,7 @@ export class Proposals extends GovernorModule {
             "state",
             "votingType",
           ]),
+          epoch,
           votes: {
             power: {
               yes: Number(proposalData.yesPowerTokenVotes),
