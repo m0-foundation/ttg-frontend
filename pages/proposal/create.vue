@@ -119,9 +119,9 @@
 
       <div class="flex justify-end">
         <div class="flex items-center gap-2 text-lg">
-          Submission tax:
+          Proposal fee:
           <MIconWeth />
-          0.05
+          {{ spogValues.setProposalFee }}
         </div>
       </div>
       <p class="text-grey-primary text-xs flex justify-end">
@@ -191,7 +191,8 @@ import {
 import { useAccount } from "use-wagmi";
 import { required, minLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import { dualGovernorABI, writeDualGovernor, registrarABI } from "@/lib/sdk";
+import { storeToRefs } from "pinia";
+import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
 import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber.vue";
 import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber.vue";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
@@ -251,6 +252,7 @@ const previewDescription = ref();
 
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
+const { getValues: spogValues } = storeToRefs(spog);
 
 const proposalTypes = [
   {
@@ -389,7 +391,7 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function writeAllowance() {
   const account = userAccount.value;
-  // It needs approval to pay for taxes
+  // It needs approval to pay for fees
   const allowance = await readContract({
     abi: erc20ABI,
     address: spog.contracts.cashToken as Hash,
@@ -399,14 +401,13 @@ async function writeAllowance() {
   });
   console.log({ allowance });
 
-  // TODO: allowance > tax  : check againts tax for create proposal
-  const tax = 1n;
-  if (allowance <= tax) {
+  const fee = BigInt(spog.values.proposalFee || 0n);
+  if (allowance <= fee) {
     const { hash } = await writeContract({
       abi: erc20ABI,
       address: spog.contracts.cashToken as Hash,
       functionName: "approve",
-      args: [spog.contracts.governor as Hash, tax * BigInt(1e18)], // address spender, uint256 amount
+      args: [spog.contracts.governor as Hash, fee], // address spender, uint256 amount
       account,
     });
 

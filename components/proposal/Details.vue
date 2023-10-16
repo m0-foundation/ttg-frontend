@@ -59,7 +59,7 @@ const { html } = useParsedDescription(proposal?.description || "");
 
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
-const { epoch, valuesForProposal: currentProposalValues } = storeToRefs(spog);
+const { epoch, getValues: currentProposalValues } = storeToRefs(spog);
 
 const {
   data: hasVoted,

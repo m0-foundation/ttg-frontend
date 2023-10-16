@@ -12,7 +12,7 @@ export const useSpogStore = defineStore("spog", {
   getters: {
     getEpoch: (state) => state.epoch,
 
-    valuesForProposal: (state) => {
+    getValues: (state) => {
       const values = {
         setProposalFee: formatEther(BigInt(state.values?.proposalFee || 0n)),
         setProposalFeeRange: [
