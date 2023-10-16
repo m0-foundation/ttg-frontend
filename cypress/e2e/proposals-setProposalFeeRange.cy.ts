@@ -1,8 +1,9 @@
 describe("Proposals", () => {
-  describe("type action: changeTaxRange", () => {
-    const input1 = "2";
-    const input2 = "8";
-    const description = "Change Tax Range to 2-8 $CASH";
+  describe("type action: setProposalFeeRange", () => {
+    const newFee = "0.002";
+    const minFee = "0.001";
+    const maxFee = "0.008";
+    const description = `Set proposal fee range to ${minFee}-${maxFee} and new fee = ${newFee} $CASH`;
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
@@ -10,13 +11,14 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Tax").click();
-      cy.contains("Change Tax range").click();
+      cy.contains("Fee").click();
+      cy.contains("Change fee range").click();
 
-      cy.get("input[data-test='proposalValue']").type(input1);
-      cy.get("input[data-test='proposalValue2']").type(input2);
+      cy.get("input[data-test='proposalValue']").type(minFee);
+      cy.get("input[data-test='proposalValue2']").type(maxFee);
+      cy.get("input[data-test='proposalValue3']").type(newFee);
 
-      cy.get("textarea[name='description']").type(description);
+      cy.get("div[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
@@ -30,19 +32,9 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to DELEGATE VOTE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
-
-    it("I should be able to DELEGATE VALUE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateValue();
-    });
-
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.task("mine", 100);
+      cy.mineEpochs(2);
 
       cy.wait(500);
       cy.visit("http://localhost:3000/proposals/active");
@@ -57,7 +49,9 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", minFee);
+      cy.get("#technical-proposal-incoming-change").should("contain", maxFee);
+      cy.get("#technical-proposal-incoming-change").should("contain", newFee);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -75,8 +69,9 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
-      cy.get("#technical-proposal-current").should("contain", input1);
-      cy.get("#technical-proposal-current").should("contain", input2);
+      cy.get("#technical-proposal-current").should("contain", minFee);
+      cy.get("#technical-proposal-current").should("contain", maxFee);
+      cy.get("#technical-proposal-current").should("contain", newFee);
     });
   });
 });

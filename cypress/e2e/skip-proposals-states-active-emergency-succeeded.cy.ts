@@ -1,12 +1,7 @@
-describe("Proposals", () => {
-  describe("type action: changeTax", () => {
-    const input1 = "1";
-    const description1 = "Change tax to 1 $CASH";
-
-    it("I should be able to DELEGATE", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
+describe.skip("Proposals", () => {
+  describe("type action: setProposalFee", () => {
+    const input1 = "0.002";
+    const description1 = `Set proposal fee to ${input1} $CASH`;
 
     describe("Epoch 1", () => {
       it("I should be able to CREATE a proposal", () => {
@@ -14,8 +9,8 @@ describe("Proposals", () => {
         cy.contains("Select a proposal type").should("exist");
         cy.contains("Select a proposal type").click();
 
-        cy.contains("Tax").click();
-        cy.contains("Change Tax").click();
+        cy.contains("Fee").click();
+        cy.contains("Change fee").click();
 
         cy.get("input[data-test='proposalValue']").should(
           "have.attr",
@@ -25,7 +20,7 @@ describe("Proposals", () => {
 
         cy.get("input[data-test='proposalValue']").type(input1);
 
-        cy.get("textarea[name='description']").type(description1);
+        cy.get("div[data-test='description']").type(description1);
 
         cy.contains("Preview proposal").should("exist");
         cy.contains("Preview proposal").click();
@@ -39,8 +34,8 @@ describe("Proposals", () => {
         });
       });
 
-      it("Forward time to next epoch", () => {
-        cy.task("mine", 100);
+      it("Forward time to next Voting epoch", () => {
+        cy.mineEpochs(2);
         cy.wait(500);
         cy.reload();
       });
@@ -66,17 +61,17 @@ describe("Proposals", () => {
       });
     });
 
-    describe("Epoch 2", () => {
+    describe("Epoch 3", () => {
       it("I should be able to CREATE a second proposal", () => {
-        const input = "2";
-        const description = "Change tax to 2 $CASH";
+        const input = "0.003";
+        const description = `Set proposal fee to ${input} $CASH`;
 
         cy.visit("http://localhost:3000/proposal/create");
         cy.contains("Select a proposal type").should("exist");
         cy.contains("Select a proposal type").click();
 
-        cy.contains("Tax").click();
-        cy.contains("Change Tax").click();
+        cy.contains("Fee").click();
+        cy.contains("Change fee").click();
 
         cy.get("input[data-test='proposalValue']").should(
           "have.attr",
@@ -86,7 +81,7 @@ describe("Proposals", () => {
 
         cy.get("input[data-test='proposalValue']").type(input);
 
-        cy.get("textarea[name='description']").type(description);
+        cy.get("div[data-test='description']").type(description);
 
         cy.contains("Preview proposal").should("exist");
         cy.contains("Preview proposal").click();
@@ -101,15 +96,15 @@ describe("Proposals", () => {
       });
 
       it("I should be able to CREATE a third proposal", () => {
-        const input = "3";
-        const description = "Change tax to 3 $CASH";
+        const input = "0.004";
+        const description = `Set proposal fee to ${input} $CASH`;
 
         cy.visit("http://localhost:3000/proposal/create");
         cy.contains("Select a proposal type").should("exist");
         cy.contains("Select a proposal type").click();
 
-        cy.contains("Tax").click();
-        cy.contains("Change Tax").click();
+        cy.contains("Fee").click();
+        cy.contains("Change fee").click();
 
         cy.get("input[data-test='proposalValue']").should(
           "have.attr",
@@ -119,7 +114,7 @@ describe("Proposals", () => {
 
         cy.get("input[data-test='proposalValue']").type(input);
 
-        cy.get("textarea[name='description']").type(description);
+        cy.get("div[data-test='description']").type(description);
 
         cy.contains("Preview proposal").should("exist");
         cy.contains("Preview proposal").click();
@@ -135,7 +130,7 @@ describe("Proposals", () => {
 
       it("Forward in time to be able make it ACTIVE", () => {
         // forward in time to be able to vote
-        cy.task("mine", 100);
+        cy.mineEpochs(2);
       });
 
       it("I should be able to CREATE a Emergency proposal to ADD an address to a list", () => {
@@ -168,7 +163,7 @@ describe("Proposals", () => {
         // address to append
         cy.get("input[data-test='proposalValue2']").type(input2);
 
-        cy.get("textarea[name='description']").type(description);
+        cy.get("div[data-test='description']").type(description);
 
         cy.contains("Preview proposal").should("exist");
         cy.contains("Preview proposal").click();

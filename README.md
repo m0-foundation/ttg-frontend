@@ -19,13 +19,9 @@ git submodule update --init --recursive
 
 Note: Run `git submodule status` on root / of this repo to find the commit hash of the code based placed in contracts/ folder.
 
-### 1.2 Compile contracts
 
-1. install `foundry` https://getfoundry.sh/
-2. `cd contracts/`
-3. `forge build`
 
-### 1.3 Update SDK from SPOG smart contracts (only when contracts change) - (optional)
+### 1.2 Update SDK from SPOG smart contracts (only when contracts change) - (optional)
 
 1. Do steps on (1.2) item
 5. then run `yarn wagmi generate`

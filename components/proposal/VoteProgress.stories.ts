@@ -10,11 +10,15 @@ const meta = {
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/vue/writing-docs/autodocs
   tags: ["autodocs"],
   argTypes: {
-    yes: {
-      control: "number",
-    },
-    no: {
-      control: "number",
+    votes: {
+      power: {
+        yes: {
+          control: "number",
+        },
+        no: {
+          control: "number",
+        },
+      },
     },
   },
   render: (args) => ({
@@ -41,43 +45,156 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Yes100: Story = {
+export const PowerYes100: Story = {
   args: {
-    yes: 100,
-    no: 0,
+    votes: {
+      power: {
+        yes: 1000,
+        no: 0,
+        total: 1000,
+      },
+      zero: {
+        yes: 0,
+        no: 0,
+        total: 0,
+      },
+    },
   },
 };
 
-export const No100: Story = {
+export const PowerNo100: Story = {
   args: {
-    yes: 0,
-    no: 100,
+    votes: {
+      power: {
+        yes: 0,
+        no: 1000,
+        total: 1000,
+      },
+      zero: {
+        yes: 0,
+        no: 0,
+        total: 0,
+      },
+    },
   },
 };
 
-export const Quorum70Reached: Story = {
+export const ZeroQuorumReached: Story = {
   args: {
-    yes: 150,
-    no: 50,
-    version: "quorum",
-    quorum: 0.7,
+    version: "Zero",
+    votes: {
+      power: {
+        yes: 0,
+        no: 0,
+        total: 0,
+      },
+      zero: {
+        yes: 70,
+        no: 30,
+        total: 100,
+      },
+    },
+
+    zeroQuorum: 0.5,
   },
 };
 
-export const Quorum50Reached: Story = {
+export const ZeroQuorumNotReached: Story = {
   args: {
-    yes: 150,
-    no: 50,
-    version: "quorum",
-    quorum: 0.5,
+    version: "Zero",
+    votes: {
+      power: {
+        yes: 0,
+        no: 0,
+        total: 0,
+      },
+      zero: {
+        yes: 10,
+        no: 50,
+        total: 60,
+      },
+    },
+
+    zeroQuorum: 0.5,
   },
 };
 
-export const QuorumNo: Story = {
+export const DoubleQuorumReachedAll: Story = {
   args: {
-    yes: 0,
-    no: 100,
-    version: "quorum",
-    quorum: 0.5,
+    version: "Double",
+    votes: {
+      power: {
+        yes: 100,
+        no: 10,
+        total: 110,
+      },
+      zero: {
+        yes: 70,
+        no: 30,
+        total: 100,
+      },
+    },
+    powerQuorum: 0.5,
+    zeroQuorum: 0.5,
+  },
+};
+
+export const DoubleQuorumPowerReachedZeroNotReached: Story = {
+  args: {
+    version: "Double",
+    votes: {
+      power: {
+        yes: 100,
+        no: 10,
+        total: 110,
+      },
+      zero: {
+        yes: 10,
+        no: 50,
+        total: 60,
+      },
+    },
+    powerQuorum: 0.5,
+    zeroQuorum: 0.5,
+  },
+};
+
+export const DoubleQuorumPowerNotReachedZeroReached: Story = {
+  args: {
+    version: "Double",
+    votes: {
+      power: {
+        yes: 10,
+        no: 40,
+        total: 50,
+      },
+      zero: {
+        yes: 70,
+        no: 30,
+        total: 100,
+      },
+    },
+    powerQuorum: 0.5,
+    zeroQuorum: 0.5,
+  },
+};
+
+export const DoubleQuorumNoneNotReached: Story = {
+  args: {
+    version: "Double",
+    votes: {
+      power: {
+        yes: 20,
+        no: 0,
+        total: 100,
+      },
+      zero: {
+        yes: 10,
+        no: 0,
+        total: 100,
+      },
+    },
+    powerQuorum: 0.5,
+    zeroQuorum: 0.5,
   },
 };

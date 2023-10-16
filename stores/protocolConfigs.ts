@@ -11,7 +11,7 @@ export const useProtocolConfigsStore = defineStore("protocol", {
       return Object.keys(state.configs).map((key) => {
         const event = state.configs[key];
         return {
-          valueName: key,
+          key,
           value: event.value,
           timestamp: event.timestamp,
         };
