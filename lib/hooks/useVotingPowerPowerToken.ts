@@ -27,7 +27,7 @@ export default (
     select: (data) => {
       const votingPower = BigInt(data as string);
       const totalSupply = BigInt(
-        token?.data?.value?.totalSupply.value as bigint
+        (token?.data?.value?.totalSupply?.value as bigint) || 1n
       );
 
       return {
