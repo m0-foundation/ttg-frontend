@@ -22,7 +22,9 @@
     >
       <div v-for="param in proposal?.proposalParams" :key="param.name">
         {{
-          ["changeTax", "changeTaxRange"].includes(proposal?.proposalType)
+          ["setProposalFee", "setProposalFeeRange"].includes(
+            proposal?.proposalType
+          )
             ? formatEther(param)
             : param
         }}

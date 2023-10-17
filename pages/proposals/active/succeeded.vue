@@ -13,8 +13,8 @@
 <script setup lang="ts">
 import { useAccount } from "use-wagmi";
 import { keccak256, toHex, Hash } from "viem";
-import { writeIspogGovernor } from "@/lib/sdk";
-import { MProposal } from "~/lib/api";
+import { writeDualGovernor } from "@/lib/sdk";
+import { MProposal } from "@/lib/api/types";
 
 const proposalsStore = useProposalsStore();
 const proposals = computed(() =>
@@ -23,20 +23,14 @@ const proposals = computed(() =>
 
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
-const spogAddress = useNetworkStore().getSpogAddress();
 
 function onExecute(proposal: MProposal) {
-  const { description, calldatas, proposalType } = proposal;
+  const { description, calldatas } = proposal;
   const hashedDescription = keccak256(toHex(description));
-  const targets = [
-    "updateValueQuorumNumerator",
-    "updateVoteQuorumNumerator",
-  ].includes(proposalType)
-    ? [spog.contracts.governor as Hash] // dual governor contract as target for dual governance proposals
-    : [spogAddress.value as Hash];
+  const targets = [spog.contracts.governor as Hash];
   const values = [BigInt(0)]; // do not change
 
-  return writeIspogGovernor({
+  return writeDualGovernor({
     address: spog.contracts.governor as Hash,
     functionName: "execute",
     args: [targets, values, calldatas as Hash[], hashedDescription], // (targets, values, calldatas, hashedDescription

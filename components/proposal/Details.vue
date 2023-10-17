@@ -11,7 +11,10 @@
 
       <ProposalVoteProgress
         v-if="proposal?.state !== 'Pending'"
-        :votes="votes"
+        :votes="proposal?.votes"
+        :version="proposal?.votingType"
+        :zero-quorum="zeroQuorum"
+        :power-quorum="powerQuorum"
       />
 
       <div class="flex justify-between mb-7">
@@ -39,7 +42,7 @@
 import { storeToRefs } from "pinia";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
-import { ispogGovernorABI } from "@/lib/sdk";
+import { dualGovernorABI } from "@/lib/sdk";
 
 export interface ProposalDetailsProps {
   proposalId: string;
@@ -55,24 +58,8 @@ const proposalId = computed(() => proposal?.proposalId);
 const { html } = useParsedDescription(proposal?.description || "");
 
 const { address: userAccount } = useAccount();
-const { client } = useSpogClientStore();
 const spog = useSpogStore();
-const { epoch } = storeToRefs(spog);
-
-const {
-  data: votes = [0n, 0n],
-  isError,
-  isLoading,
-} = useContractRead({
-  address: spog.contracts.governor as Hash,
-  abi: ispogGovernorABI,
-  functionName: "proposalVotes",
-  args: [BigInt((proposalId.value as string) || 0)],
-  watch: true,
-  onSuccess(data) {
-    console.log("Fetched votes for proposal", proposalId, data);
-  },
-});
+const { epoch, getValues: currentProposalValues } = storeToRefs(spog);
 
 const {
   data: hasVoted,
@@ -80,23 +67,26 @@ const {
   isLoading: hasVotedLoading,
 } = useContractRead({
   address: spog.contracts.governor as Hash,
-  abi: ispogGovernorABI,
+  abi: dualGovernorABI,
   functionName: "hasVoted",
-  args: [BigInt(proposalId.value), userAccount],
+  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
   watch: true,
   onSuccess(hasVoted) {
     console.log({ hasVoted });
   },
 });
 
-const { state: currentProposalValues } = useAsyncState(
-  client.getCurrentProposalValues(),
-  null
-);
 console.log({ currentProposalValues });
 
 const timeLeft = computed(() => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
   return timeAgo;
 });
+
+const zeroQuorum = computed(
+  () => Number(spog.values.zeroTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
+);
+const powerQuorum = computed(
+  () => Number(spog.values.powerTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
+);
 </script>

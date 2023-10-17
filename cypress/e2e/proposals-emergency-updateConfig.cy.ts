@@ -1,40 +1,25 @@
 describe("Proposals", () => {
-  describe("type action: Emergency updateConfig", () => {
+  describe("type action: Emergency update config", () => {
     const value = "1";
     const valueName = "INFLATION_RATE";
     const description = `Add config ${valueName} = ${value}`;
     let proposalUrl = "";
-
-    it("I should be able to DELEGATE Vote", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateVote();
-    });
-
-    it("I should be able to DELEGATE Value", () => {
-      // delegate to self account before voting to have vote power
-      cy.delegateValue();
-    });
-
-    it("Go to next Epoch", () => {
-      cy.task("mine", 100);
-      cy.reload();
-    });
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Update Config").click();
+      cy.contains("Update config").click();
 
       cy.contains("Emergency").should("exist").click({ force: true });
-      cy.contains("Emergency Update Config")
+      cy.contains("Emergency Update config")
         .should("exist")
         .click({ force: true });
 
       cy.get("input[data-test='proposalValue']").type(valueName);
       cy.get("input[data-test='proposalValue2']").type(value);
-      cy.get("textarea[name='description']").type(description);
+      cy.get("div[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
@@ -49,7 +34,9 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the EMERGENCY proposal", () => {
-      cy.task("mine", 10);
+      // cy.mineEpochs(2);
+      // emergency does not need to forward to next epoch, it will be able to vote on same epoch
+
       cy.visit("http://localhost:3000/proposals/active/emergency");
       cy.reload();
 

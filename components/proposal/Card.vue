@@ -90,7 +90,11 @@
         class="flex justify-between items-center"
       >
         <div class="inline-flex gap-1" role="group">
-          <MButton id="button-proposal-execute" @click="onExecuteProposal()">
+          <MButton
+            id="button-proposal-execute"
+            :disabled="isDisconnected"
+            @click="onExecuteProposal()"
+          >
             Execute
           </MButton>
         </div>
@@ -103,8 +107,8 @@
 import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
-import { ispogGovernorABI } from "@/lib/sdk";
-import { MProposal } from "@/lib/api";
+import { dualGovernorABI } from "@/lib/sdk";
+import { MProposal } from "@/lib/api/types";
 
 export interface ProposalCardProps {
   proposal: MProposal;
@@ -119,7 +123,7 @@ const emit = defineEmits<{
 }>();
 
 const spog = useSpogStore();
-const { address: userAccount } = useAccount();
+const { address: userAccount, isDisconnected } = useAccount();
 const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
@@ -146,9 +150,9 @@ const {
   isLoading,
 } = useContractRead({
   address: spog.contracts.governor as Hash,
-  abi: ispogGovernorABI,
+  abi: dualGovernorABI,
   functionName: "hasVoted",
-  args: [BigInt(props.proposal.proposalId), userAccount],
+  args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
   watch: true,
 });
 </script>

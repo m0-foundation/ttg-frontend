@@ -27,42 +27,38 @@
 <script lang="ts" setup>
 import { UseWagmiPlugin } from "use-wagmi";
 import { storeToRefs } from "pinia";
-import { SPOG } from "@/lib/api";
+import { Hash } from "viem";
+import { Api } from "@/lib/api";
 
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
 
-const spogStore = useSpogClientStore();
+const apiStore = useApiClientStore();
+const spog = useSpogStore();
 
-const { rpc } = storeToRefs(spogStore);
+const { rpc } = storeToRefs(apiStore);
 const isLoading = ref(true);
 
-const fetchSpogContracts = async (spog: SPOG) => {
+const fetchGovernorData = async (api: Api) => {
   try {
-    const data = await spog.getContracts();
-    const store = useSpogStore();
-    store.setContracts(data);
+    const [contracts, values] = await Promise.all([
+      api.governor!.getContracts(),
+      api.governor!.getValues(),
+    ]);
 
-    const newConfig = { contracts: data };
-    spog.addConfig(newConfig);
+    spog.setContracts({
+      ...contracts,
+      governor: api.governor!.contract as string,
+    });
+    spog.setValues(values);
   } catch (error) {
     console.error({ error });
   }
 };
 
-const fetchSpogValues = async (spog: SPOG) => {
+const fetchProposals = async (api: Api) => {
   try {
-    const data = await spog.getSpogValues();
-    const store = useSpogStore();
-    store.setValues(data);
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const fetchProposals = async (spog: SPOG) => {
-  try {
-    const data = await spog.getProposals();
+    const data = await api.governor!.proposals.getProposals();
     const proposalStore = useProposalsStore();
     proposalStore.setProposals(data);
     console.log("fetched Proposals", { data });
@@ -71,9 +67,9 @@ const fetchProposals = async (spog: SPOG) => {
   }
 };
 
-const fetchEpoch = async (spog: SPOG) => {
+const fetchEpoch = async (api: Api) => {
   try {
-    const data = await spog.getEpochState();
+    const data = await api.governor!.epoch.getEpochState();
     const store = useSpogStore();
     store.setEpoch(data);
     console.log("fetched Epoch", { data });
@@ -87,24 +83,26 @@ async function onSetup(rpc: string) {
   /* setup wagmi client as vue plugin */
   const { client: wagmiClient } = useWagmi(rpc);
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
-
   /* setup spog client */
-  const spogClient = new SPOG(rpc, {
-    spog: network.value.contracts.spog,
+  const api = new Api(rpc, {
+    registrar: network.value.contracts.registrar,
     multicall3: network.value.contracts.multicall3,
   });
-  spogStore.setClient(spogClient);
 
-  await Promise.all([
-    fetchSpogContracts(spogClient),
-    fetchSpogValues(spogClient),
-  ]);
-  return spogClient;
+  const { governor } = await api.registrar.getContracts();
+  api.setGovernor(governor as Hash);
+  apiStore.setClient(api);
+
+  return api;
 }
 
-await onSetup(rpc.value).then(async (client) => {
+await onSetup(rpc.value).then(async (api) => {
   isLoading.value = true;
-  await Promise.all([fetchProposals(client), fetchEpoch(client)]);
+  await Promise.all([
+    fetchGovernorData(api),
+    fetchProposals(api),
+    fetchEpoch(api),
+  ]);
   isLoading.value = false;
 });
 

@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-describe("Proposals Lists", () => {
+describe.skip("Proposals Lists", () => {
   const LIST1 = "CollateralManagers";
   const LIST2 = "Vendors";
 

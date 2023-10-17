@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
-import { VoteCast } from "@/lib/api";
+import { MVote } from "@/lib/api/types";
 
 const props = defineProps<{
   address: Ref<Hash>;
@@ -44,15 +44,17 @@ const address = toRef(props, "address");
 
 const selectedTab = ref(0);
 
-let votes = ref<VoteCast[]>([]);
+let votes = ref<MVote[]>([]);
 const proposals = useProposalsStore();
-const spogClient = useSpogClientStore();
+const apiStore = useApiClientStore();
 
 watch(
   address,
   () => {
     const { state } = useAsyncState(
-      spogClient.client.getVotesByVoter(address.value as string),
+      apiStore.client.governor!.voting!.getVotesByVoter(
+        address.value as string
+      ),
       []
     );
     votes = state;
