@@ -11,30 +11,55 @@
 //
 // -- This is a parent command --
 Cypress.Commands.add("connectWallet", () => {
-  cy.contains("Connect Wallet").click();
-  cy.get("div#modal-backdrop").within(() => {
-    return cy.get("button").eq(1).click(); // injected provider wallet is the first one
+  cy.get("aside").then(($body) => {
+    if ($body.find("#button-connect-wallet").length > 0) {
+      console.log("not connected");
+
+      cy.contains("Connect Wallet").click();
+      cy.get("div#modal-backdrop").within(() => {
+        return cy.get("button").eq(1).click(); // injected provider wallet is the first one
+      });
+    } else {
+      // Element does not exist, do something else
+      console.log("already connected");
+    }
   });
 });
 
-Cypress.Commands.add("delegateVote", () => {
+Cypress.Commands.add("delegatePower", (delegate?: string) => {
   cy.visit("http://localhost:3000/delegate");
   cy.connectWallet();
   cy.wait(500); // wait to load props values
-  cy.get("#button-use-my-address-vote").click({ force: true });
-  cy.get("#button-delegate-vote").click({ force: true });
+
+  if (delegate) {
+    cy.get("#input-delegate-power").type(delegate);
+    console.log("type");
+  } else {
+    // self delegate
+    cy.get("#button-use-my-address-power").click({ force: true });
+  }
+
+  cy.get("#button-delegate-power").click({ force: true });
   cy.wait(500);
   cy.reload();
 });
 
-Cypress.Commands.add("delegateValue", () => {
+Cypress.Commands.add("delegateZero", (delegate?: string) => {
   cy.visit("http://localhost:3000/delegate");
   cy.connectWallet();
   cy.wait(500); // wait to load props values
-  cy.get("#button-use-my-address-value").click({ force: true });
-  cy.get("#button-delegate-value").click({ force: true });
+
+  if (delegate) {
+    cy.get("#input-delegate-zero").type(delegate);
+    console.log("type");
+  } else {
+    // self delegate
+    cy.get("#button-use-my-address-zero").click({ force: true });
+  }
+
+  cy.get("#button-delegate-zero").click({ force: true });
   cy.wait(500);
-  cy.reload();
+  // cy.reload();
 });
 
 Cypress.Commands.add("executeProposal", (proposalUrl: string) => {
