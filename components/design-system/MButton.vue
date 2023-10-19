@@ -6,7 +6,12 @@
 
 <script lang="ts" setup>
 export interface MButtonProps {
-  version: "primary" | "secondary-light" | "secondary-dark";
+  version:
+    | "primary"
+    | "secondary-light"
+    | "secondary-dark"
+    | "outline-light"
+    | "outline-dark";
 }
 
 const props = withDefaults(defineProps<MButtonProps>(), {
@@ -29,5 +34,13 @@ button:disabled {
 
 .secondary-light {
   @apply border border-secondary-dark text-secondary-dark bg-white  hover:bg-grey-primary focus:ring-4 focus:outline-none focus:ring-gray-300;
+}
+
+.outline-light {
+  @apply border border-white text-white bg-transparent  hover:bg-gray-100 hover:bg-opacity-10;
+}
+
+.outline-dark {
+  @apply border border-secondary-dark text-secondary-dark bg-transparent  hover:bg-gray-100 hover:bg-opacity-50;
 }
 </style>

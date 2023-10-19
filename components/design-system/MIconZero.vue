@@ -11,14 +11,28 @@
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M16.4944 9C16.4944 4.85786 13.1378 1.5 8.99721 1.5C4.85662 1.5 1.5 4.85786 1.5 9C1.5 13.1421 4.85662 16.5 8.99721 16.5C13.1378 16.5 16.4944 13.1421 16.4944 9ZM2.25 9C2.25 5.27202 5.27089 2.25 8.99721 2.25C12.7235 2.25 15.7444 5.27202 15.7444 9C15.7444 12.728 12.7235 15.75 8.99721 15.75C5.27089 15.75 2.25 12.728 2.25 9Z"
-        fill="#EBEBEB"
+        :fill="fill"
       />
       <path
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M11.25 6.75V6H6.75V6.75H10.2596L8.85574 8.25L6.75 8.25V9L8.15383 9L6.75 10.5V11.25H11.25V10.5H7.7512L9.15072 9L11.25 9V8.25L9.85048 8.25L11.25 6.75Z"
-        fill="#EBEBEB"
+        :fill="fill"
       />
     </g>
   </svg>
 </template>
+
+<script lang="ts" setup>
+export interface MButtonProps {
+  version: "light" | "dark";
+}
+
+const props = withDefaults(defineProps<MButtonProps>(), {
+  version: "light",
+});
+
+const fill = computed(() =>
+  props.version === "light" ? "#EBEBEB" : "#868886"
+);
+</script>
