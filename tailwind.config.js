@@ -23,6 +23,9 @@ module.exports = {
         "grey-800": "#202220",
         "grey-600": "#363835",
       },
+      fontSize: {
+        xxs: ["0.65rem"],
+      },
     },
   },
 };

@@ -11,7 +11,13 @@ const meta = {
   argTypes: {
     version: {
       control: "select",
-      options: ["primary", "secondary-light", "secondary-dark"],
+      options: [
+        "primary",
+        "secondary-light",
+        "secondary-dark",
+        "outline-light",
+        "outline-dark",
+      ],
     },
   },
   render: (args) => ({
@@ -52,5 +58,17 @@ export const SecondaryLight: Story = {
 export const SecondaryDark: Story = {
   args: {
     version: "secondary-dark",
+  },
+};
+
+export const OutlineLight: Story = {
+  args: {
+    version: "outline-light",
+  },
+};
+
+export const OutlineDark: Story = {
+  args: {
+    version: "outline-dark",
   },
 };

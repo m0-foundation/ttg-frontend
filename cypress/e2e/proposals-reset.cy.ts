@@ -15,7 +15,7 @@ describe("Proposals", () => {
       );
     });
 
-    it("I should be able to CREATE a proposal to ADD an address to a list", () => {
+    it("I should be able to CREATE a proposal to Reset", () => {
       // zero holders cannot vote on first epoch
       cy.mineEpochs(1);
 
