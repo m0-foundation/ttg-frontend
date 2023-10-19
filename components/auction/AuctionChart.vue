@@ -13,18 +13,7 @@
 const series = ref([
   {
     name: "RP",
-    data: [
-      { x: +new Date() - 150, y: 1 },
-      { x: new Date(), y: 0.6 },
-      { x: +new Date() + 300, y: 0.2 },
-      { x: +new Date() + 400, y: 0.13 },
-      { x: +new Date() + 500, y: 0.1 },
-      { x: +new Date() + 600, y: 0.07 },
-      { x: +new Date() + 700, y: 0.05 },
-      { x: +new Date() + 800, y: 0.04 },
-      { x: +new Date() + 900, y: 0.03 },
-      { x: +new Date() + 1000, y: 0.02 },
-    ],
+    data: getPricePoints(),
   },
 ]);
 
@@ -33,14 +22,15 @@ const options = ref({
     xaxis: [
       {
         x: +new Date(),
-        strokeDashArray: 5,
+        strokeDashArray: 4,
         borderColor: "#627EEA",
       },
     ],
+
     points: [
       {
         x: +new Date(),
-        y: 0.6,
+        y: 256,
         marker: {
           size: 6,
           fillColor: "#627EEA",
@@ -49,8 +39,8 @@ const options = ref({
           borderWidth: 0,
           text: 0.6,
           textAnchor: "right",
-          offsetX: 15,
-          offsetY: 0,
+          offsetX: 20,
+          offsetY: -15,
           style: {
             background: "#627EEA",
             color: "white",
@@ -66,6 +56,28 @@ const options = ref({
           },
         },
       },
+      {
+        x: +new Date(),
+        y: 0,
+        marker: {
+          size: 6,
+          fillColor: "#627EEA",
+        },
+        label: {
+          borderWidth: 0,
+          text: "TODAY",
+          textAnchor: "bottom",
+          offsetX: 0,
+          offsetY: 50,
+          style: {
+            background: "transparent",
+            color: "#868886",
+            fontSize: "12px",
+            fontFamily:
+              "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
+          },
+        },
+      },
     ],
   },
   chart: {
@@ -75,9 +87,7 @@ const options = ref({
       tools: {
         download: false,
         selection: false,
-        pan: false,
         zoom: false,
-        reset: false,
       },
     },
   },
@@ -107,8 +117,10 @@ const options = ref({
   },
   labels: ["0", "Today", "Today", "asd"],
   stroke: {
-    curve: "smooth",
-    width: 1.5,
+    width: 2,
+  },
+  theme: {
+    mode: "light",
   },
   title: {
     text: "RATE PROJECTION",
@@ -136,9 +148,20 @@ const options = ref({
     marker: {
       show: false,
     },
+
+    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+      return (
+        '<div class="bg-gray-600 px-2 py-1">' +
+        "<span>" +
+        series[seriesIndex][dataPointIndex] +
+        "</span>" +
+        "</div>"
+      );
+    },
     style: {
       fontSize: "12px",
-      fontFamily: undefined,
+      fontFamily:
+        "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
     },
   },
   xaxis: {
@@ -167,9 +190,10 @@ const options = ref({
 });
 </script>
 
-<style scoped>
+<style>
 .apexcharts-tooltip {
-  background: #f3f3f3;
-  color: red;
+  box-shadow: none !important;
+  border: none !important;
+  font-family: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace";
 }
 </style>

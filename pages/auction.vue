@@ -13,11 +13,20 @@
         <div class="grid grid-cols-3 gap-8">
           <div class="col-span-3 lg:col-span-1 text-zinc-500 text-xs uppercase">
             <p class="mb-2">WETH / Power token</p>
-            <MTokenAmount image="/img/tokens/eth.svg" :size="30" amount="120" />
+            <MTokenAmount
+              name="Eth"
+              image="/img/tokens/eth.svg"
+              :size="30"
+              amount="120"
+            />
           </div>
           <div class="col-span-3 lg:col-span-1 text-zinc-500 text-xs uppercase">
             <p class="mb-2">Total available</p>
-            <MTokenAmount image="/img/tokens/p.svg" :size="30" amount="343" />
+            <MTokenAmount
+              name="Power"
+              :size="30"
+              :amount="balancePowerToken?.data.value?.formatted"
+            />
           </div>
         </div>
         <div>
@@ -29,6 +38,7 @@
       </div>
 
       <div
+        v-if="!transferEpoch"
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-neutral-800 p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">Value for purchase:</p>
@@ -37,6 +47,7 @@
           class="input"
           type="text"
           placeholder="0"
+          @update:model-value="getPurchaseCost"
         />
         <p class="text-zinc-500 text-xs mt-2">Max: 3043</p>
         <div class="my-12"></div>
@@ -45,11 +56,24 @@
           class="text-zinc-500"
           image="/img/tokens/eth.svg"
           :size="36"
-          amount="344"
+          :amount="purchaseCost + ''"
         />
         <MButton :disabled="!purchaseAmount" class="mt-4 w-full" type="submit">
           Buy
         </MButton>
+      </div>
+      <div
+        v-else
+        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
+      >
+        <p class="text-gray-200 text-xs uppercase mb-2">Warning</p>
+        <div class="flex items-start gap-2">
+          <img src="/img/icon-warning.svg" alt="" />
+          <p>
+            The transfer epoch has concluded. You will be able to participate in
+            the auction in the next transfer epoch.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -64,21 +88,41 @@
 </template>
 
 <script lang="ts" setup>
-import { useContractRead, useAccount } from "use-wagmi";
 import { storeToRefs } from "pinia";
+import { useBlockNumber, useAccount } from "use-wagmi";
 import { Hash } from "viem";
-import { ispogGovernorABI } from "@/lib/sdk";
+import { readPowerBootstrapToken } from "@/lib/sdk";
+
+const { address: userAccount } = useAccount();
+const { data: blockNumber } = useBlockNumber();
+
+const spog = storeToRefs(useSpogStore());
 
 const purchaseAmount = ref("");
-const spog = useSpogStore();
+const purchaseCost = ref(0n);
+const lastEpochTotalSupply = ref();
+const transferEpoch = isTransferEpoch(blockNumber.value || 0n);
 const { epoch } = storeToRefs(spog);
-const { address: userAccount } = useAccount();
 
-const { data: dataRead } = useContractRead({
-  address: spog.contracts.governor as Hash,
-  abi: ispogGovernorABI,
-  functionName: "hasFinishedVoting",
-  args: [BigInt(epoch.value.current?.asNumber), userAccount],
-  watch: true,
-});
+async function getLastEpochTotalSupply() {
+  try {
+    lastEpochTotalSupply.value = await readPowerBootstrapToken({
+      address: spog.contracts.value.powerToken as Hash,
+      functionName: "totalSupplyAt",
+      args: [BigInt(epoch.value.current?.asNumber - 1)],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function getPurchaseCost() {
+  purchaseCost.value = getAuctionPurchaseCost(
+    BigInt(purchaseAmount.value),
+    blockNumber.value,
+    33333333333n
+  );
+}
+
+getLastEpochTotalSupply();
 </script>

@@ -41,6 +41,7 @@ export const Default: Story = {
     size: 40,
     image: "/img/tokens/eth.svg",
     amount: "4000",
+    name: "Ethereum",
   },
 };
 
@@ -48,21 +49,23 @@ export const NoAmount: Story = {
   args: {
     size: 40,
     image: "/img/tokens/eth.svg",
+    name: "Ethereum",
   },
 };
 
 export const Size20: Story = {
   args: {
     size: 20,
-    image: "/img/tokens/p.svg",
+    image: "/img/tokens/eth.svg",
     amount: "4000",
+    name: "Ethereum",
   },
 };
 
-export const Size60: Story = {
+export const NoImageButName: Story = {
   args: {
-    size: 60,
-    image: "/img/tokens/eth.svg",
+    size: 40,
     amount: "4000",
+    name: "Token",
   },
 };
