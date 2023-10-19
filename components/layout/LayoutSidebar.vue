@@ -70,7 +70,12 @@
       </div>
     </div>
 
+    <div v-if="hasDelegatedPower || hasDelegatedZero" class="p-2 text-primary">
+      Delegated voting power will be available next epoch.
+    </div>
+
     <button
+      id="button-disconnect-wallet"
       type="button"
       class="block w-full py-2 hover:bg-gray-600 text-left uppercase"
       @click="() => disconnect()"
@@ -92,6 +97,8 @@ const { disconnect } = useDisconnect();
 
 const { powerTokenVotingPower, zeroTokenVotingPower } =
   useMVotingPower(userAccount);
+
+const { hasDelegatedPower, hasDelegatedZero } = useDelegate();
 </script>
 
 <style scoped>

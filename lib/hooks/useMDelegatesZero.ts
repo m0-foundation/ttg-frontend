@@ -20,6 +20,9 @@ export default (
     functionName: "delegates",
     args: [account as Ref<Hash>],
     watch: true,
-    select: (data) => String(data),
+    select: (data) => {
+      console.log("delegates", data);
+      return String(data);
+    },
   });
 };

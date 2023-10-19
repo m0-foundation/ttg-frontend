@@ -1,5 +1,5 @@
 import { GovernorModule } from "../GovernorModule";
-import { MEpoch } from "./epoch.types";
+import { EpochTypes, MEpoch } from "./epoch.types";
 
 // Ethereum finalized 'The Merge' at block 15_537_393 on September 15, 2022, at 05:42:42 GMT.
 export const _START_BLOCK = 15_537_393;
@@ -35,16 +35,21 @@ export class Epoch extends GovernorModule {
       Number(currentEpochAsBlock.timestamp) +
       _EPOCH_PERIOD * _SECONDS_PER_BLOCK;
 
+    const getType = (epoch: number) =>
+      epoch % 2 === 0 ? EpochTypes.TRANSFER : EpochTypes.VOTING;
+
     return {
       current: {
         asNumber: currentEpoch,
         asBlockNumber: currentEpochAsBlockNumber,
         asTimestamp: Number(currentEpochAsBlock.timestamp),
+        type: getType(currentEpoch),
       },
       next: {
         asNumber: currentEpoch + 1,
         asBlockNumber: nextEpochAsBlockNumber,
         asTimestamp: nextEpochAsTimestamp,
+        type: getType(currentEpoch + 1),
       },
     };
   }
@@ -58,7 +63,7 @@ export class Epoch extends GovernorModule {
     return Math.floor((Number(blockNumber) - _START_BLOCK) / _EPOCH_PERIOD);
   }
 
-  static getEpochFromBlock(blockNumber: number) {
+  static getEpochFromBlock(blockNumber: bigint) {
     return Math.floor((Number(blockNumber) - _START_BLOCK) / _EPOCH_PERIOD);
   }
 
