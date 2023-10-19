@@ -62,14 +62,18 @@
         <div class="inline-flex gap-1" role="group">
           <ProposalButtonCastVote
             id="button-cast-yes"
-            :disabled="isCastVoteYesDisabled || hasVoted || isDisconnected"
+            :disabled="
+              isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
+            "
             @click="onCastSelected(1)"
           >
             YES
           </ProposalButtonCastVote>
           <ProposalButtonCastVote
             id="button-cast-no"
-            :disabled="isCastVoteNoDisabled || hasVoted || isDisconnected"
+            :disabled="
+              isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
+            "
             @click="onCastSelected(0)"
           >
             NO
@@ -77,7 +81,27 @@
         </div>
 
         <div class="uppercase text-xs text-grey-primary">
-          tokens needed to vote
+          <div v-if="proposal?.votingType === 'Power'" class="flex">
+            power tokens
+            <MIconPower class="h-4 w-4 ml-1" />
+          </div>
+
+          <div v-if="proposal?.votingType === 'Zero'" class="flex">
+            zero tokens
+            <MIconZero class="h-4 w-4 ml-1" />
+          </div>
+
+          <div v-if="proposal?.votingType === 'Double'" class="flex gap-2">
+            <div class="flex">
+              power tokens
+              <MIconPower class="h-4 w-4 ml-1" />
+            </div>
+
+            <div class="flex">
+              zero tokens
+              <MIconZero class="h-4 w-4 ml-1" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -104,6 +128,7 @@ import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
 import { dualGovernorABI } from "@/lib/sdk";
+import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
 
 export interface ProposalCardProps {
@@ -159,5 +184,18 @@ const {
   functionName: "hasVoted",
   args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
   watch: true,
+});
+
+const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
+  useMVotingPower(userAccount);
+
+const canVote = computed(() => {
+  if (props.proposal?.votingType === "Power") {
+    return hasPowerTokensVotingPower.value;
+  } else if (props.proposal?.votingType === "Zero") {
+    return hasZeroTokenVotingPower.value;
+  } else if (props.proposal?.votingType === "Double") {
+    return hasPowerTokensVotingPower.value && hasZeroTokenVotingPower.value;
+  }
 });
 </script>
