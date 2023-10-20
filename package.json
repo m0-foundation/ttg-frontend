@@ -8,7 +8,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "build:sepolia": "NETWORK=sepolia yarn generate",
+    "build:sepolia": "NETWORK=sepolia yarn generate && npx http-server .output/public",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare && husky install",
     "lint": "eslint .",
