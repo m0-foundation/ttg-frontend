@@ -41,7 +41,7 @@ export class List extends GovernorModule {
   async getLists(): Promise<Array<MLists>> {
     const addRawLogs = await this.client.getLogs({
       address: this.contract,
-      fromBlock: 0n,
+      fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
         "event AddressAddedToList(bytes32 listName, address account)"
       ),
@@ -49,7 +49,7 @@ export class List extends GovernorModule {
 
     const removeRawLogs = await this.client.getLogs({
       address: this.contract,
-      fromBlock: 0n,
+      fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
         "event AddressRemovedFromList(bytes32 listName, address account)"
       ),
