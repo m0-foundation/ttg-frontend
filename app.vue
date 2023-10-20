@@ -87,9 +87,11 @@ async function onSetup(rpc: string) {
   const api = new Api(rpc, {
     registrar: network.value.contracts.registrar,
     multicall3: network.value.contracts.multicall3,
+    deploymentBlock: BigInt(network.value.contracts.deploymentBlock),
   });
 
   const { governor } = await api.registrar.getContracts();
+
   api.setGovernor(governor as Hash);
   apiStore.setClient(api);
 

@@ -7,7 +7,7 @@ export class Voting extends GovernorModule {
   async getVotesByProposalId(proposalId: string): Promise<MVote[]> {
     const rawLogs = await this.client.getLogs({
       address: this.contract,
-      fromBlock: 0n,
+      fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
         "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
       ),
@@ -32,7 +32,7 @@ export class Voting extends GovernorModule {
 
     const rawLogs = await this.client.getLogs({
       address: this.contract,
-      fromBlock: 0n,
+      fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
         "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
       ),
