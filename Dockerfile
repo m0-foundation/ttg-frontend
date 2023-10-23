@@ -26,9 +26,9 @@ COPY --from=build /usr/src/app/.output/public /usr/share/nginx/html
 # Add the maintance-page
 COPY maintenance/ /usr/share/nginx/html/maintenance
 
-EXPOSE 3000
-EXPOSE 8545
-
-CMD [ "yarn", "dev" ]
+#EXPOSE 3000
+#EXPOSE 8545
+#
+#CMD [ "yarn", "dev" ]
 # CMD [ "yarn", "hardhat" ]
 
