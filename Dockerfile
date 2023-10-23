@@ -22,7 +22,7 @@ FROM nginx:stable-alpine
 # "our" default.conf overwrites the nginx:stable's default.conf
 COPY build/docker/nginx/conf.d/*.conf /etc/nginx/conf.d/
 # Copy the built app from the build-stage
-COPY --from=build /.output/public /usr/share/nginx/html
+COPY --from=build /usr/src/app/.output/public /usr/share/nginx/html
 # Add the maintance-page
 COPY maintenance/ /usr/share/nginx/html/maintenance
 
