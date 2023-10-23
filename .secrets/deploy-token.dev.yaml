@@ -1,23 +1,23 @@
 kind: SealedSecret
 apiVersion: bitnami.com/v1alpha1
 metadata:
-  name: m0-github-deploy-token
+  name: crosslend-github-deploy-token
   creationTimestamp: null
   annotations:
     sealedsecrets.bitnami.com/cluster-wide: "true"
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-50"
-    checksum: 88b8408a47248e0f75b0d7085309b229d29ad36ba9de3b809c2f08b853d83491
+    checksum: ba1a441d33df74db6fd9193ef8310c0b414420f505cfdd4b7ead32aa83a4e7c8
 spec:
   template:
     metadata:
-      name: m0-github-deploy-token
+      name: crosslend-github-deploy-token
       creationTimestamp: null
       annotations:
         sealedsecrets.bitnami.com/cluster-wide: "true"
         helm.sh/hook: pre-install,pre-upgrade
         helm.sh/hook-weight: "-50"
-        checksum: 88b8408a47248e0f75b0d7085309b229d29ad36ba9de3b809c2f08b853d83491
+        checksum: ba1a441d33df74db6fd9193ef8310c0b414420f505cfdd4b7ead32aa83a4e7c8
     type: kubernetes.io/dockerconfigjson
   encryptedData:
-    .dockerconfigjson: AgAcvoP9ZzVHFbhY6Ntq9ds3IXZOTJ+m/Nipo/+O65joh7931+U24t98F5txiYH7cO7tD5I6ybPMLJ0UdVf/GqDc+jsGo7H6LrtIEaUVdPiPTWIuo0l0Ghc5MiWy05crPRaMFz7G9whRl5femaLJfBwIHpiMSADjAktttzaWkdfpj5PPVN1FqAEL4vQz9BxWQaQbhOMTyBGrHMnguQbiSC2kU7nuJE9isT11jU69/5tjp4wJYsC/kPARfnXk9W6XJE0kNfOqgZS1KK9uuAoCax5Ziv8sOMOieQyIVwTzyWWe9j7su2Qsmy/rUG/AFeIlFCyiephGWo0sNmkAt7L/mhFQytAhyA7MwKsP1PGExMkw/VjwAQMTKxEBZcqMhrjyNUzcd/FwM6QjCoyqo/nS1UmP+eoJzRRDjqT+9jkVf4VPSp0+xMsp+Lc3MZyL2WUGouKBg+nFgpHZBojdM3fDQTTcj+SUy16DXUXlvj7QC9VUoGV+0FDwMW4dnENgosbnCe2QAq7yClDMEmJIUntdapo1UqAK2hPK9x1Lh/w3G2iY0WMph9feOd3Z01JQ/luoQaiFRvq/9WtQfmaKO+Q3i7oKFGPjscMCXpcA9KQQsy52/zDaXCGgWz0Klft69as3a3VwJNI6B3tuqbIYMnwNr4ZYT8aPAkeAuQaR6nQ0Cana1hxUPCM4DVFK09KB2J28nBhSzvGpiHpDxQkX/K2pLC7vDXw3i8S6weRUF6zyj0hyt4bkgMXOJOVYKwhHMy2eC5Im1d3wVtuQnicBikPYJO6a340TWIqvf6oCCfpU9xXcHEg8D1zIRHXkH1vNr7rwqubMUw6m8vBHhb0/rrUqp1kMIgFBOCkjHe31uW7QVMR6dMSs0o6BORmm8y40MnNv9vkl00180UfjQPgTQnq3ZM11ZF24b3l741EeQD3w21d6l4UuRlyNXXrIVn59zvyHdpWqsTiLeXT5SEeJ
+    .dockerconfigjson: AgAqHIhh0B9pTDiGg6MaG4vPHHF3bI4Ku89AEeNCYbk66JV8CMdug6KHJMcs2VgFUHj+lq+eGmMTBAay/n7/lPfhNwMbrvdPVxbu3A9U5TA8oWqQTOhFm2jw1uXizGhLhpTIDT8MCEQWBVPAerb4snlN31qLSj6uzjUZ+1rY9NYuwh6/upiJe0mU1K1s3buzya/1MMdrNUgd/qlLVl15r5XoPwkghOUz0ZYLJvIF/3dMrU5CG1/T2vkGMPsnarKK8OFmJh46SGe/VBOo3m6zsI4SdRDHZb7RSFmqaQKkhw/aq8jDUDw+NHB+QN70UoxjllmEGDlzauDndzk+t2KkEzbc+FYX5AjQx95Ft7C+GudlOPEBXAWkC1j8oOuUaehUZP2GvXJFeiwv1IaY6FYqe7tmfNQnZXHUR4FSWPlkToGAc5RTJUGjlq3ZqXNMvIWcBHchMvK9nWc9k4o9aqpKqrNJnfdw3F1hAA+NApw2bBbzaAnVoQrmzumr/2VqEFNPDaZPwcCDZyNLnHwSCBP5PTPmq7tVfb5bFIFu5+1nu62xR/au6+toG5ReJgHOus0bmLfmCqE9mJYErmsBomKjC/c8xsIP9qL6W+LGtnUGaRuphZ3KP/Ujdt8NTUor/HUG39jADnRB+0IcZJVDcb3g+Fo7GH6CD5bXLbAZItVIcpSTE97cXIucdx/vHI7qcfFasfnBFXCemZCl8w50CJH3jtEibfU+K81VkXSoFGZzbJoYafq/5CNfPrsJJ+mYIcIMb2kRVp+Xftol3OyzubF66xSvPm2jg4V0SYrzqhTXe2NBEXVOR+uOkdngDGlXBj9Z73FAsddzKii7V5ldEwv/whlffw059eDFswCCEWqF0iIPszL2/OVuIW2TqHR7YLRejV6w2JAXdoJmlllcHNQAjspXig6y+bkFNzRAI09JN/9EDPB6/ez+RnWq3IySsbGeUHIVhatP
