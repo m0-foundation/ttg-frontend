@@ -46,8 +46,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "ethers": "^5.7.2",
     "hardhat": "^2.15.0",
+    "husky": "^8.0.0",
     "nitropack": "^2.5.2",
-    "nuxt": "^3.4.3",
+    "nuxt": "^3.8.0",
     "postcss": "^8.4.29",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
@@ -58,8 +59,7 @@
     "typescript": "^5.0.4",
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.2",
-    "vite-plugin-node-polyfills": "^0.8.2",
-    "husky": "^8.0.0"
+    "vite-plugin-node-polyfills": "^0.8.2"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
