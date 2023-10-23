@@ -1,5 +1,4 @@
 import { useAccount } from "use-wagmi";
-import { useMDelegates } from "@/lib/hooks";
 
 export default () => {
   const { address: userAccount } = useAccount();

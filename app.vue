@@ -31,7 +31,7 @@ import { Hash } from "viem";
 import { Api } from "@/lib/api";
 
 const nuxtApp = useNuxtApp();
-const network = useNetworkStore().getNetwork();
+const networkStore = useNetworkStore();
 
 const apiStore = useApiClientStore();
 const spog = useSpogStore();
@@ -83,6 +83,8 @@ async function onSetup(rpc: string) {
   /* setup wagmi client as vue plugin */
   const { client: wagmiClient } = useWagmi(rpc);
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
+  const network = networkStore.getNetwork();
+
   /* setup spog client */
   const api = new Api(rpc, {
     registrar: network.value.contracts.registrar,

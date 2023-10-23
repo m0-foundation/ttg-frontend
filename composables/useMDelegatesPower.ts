@@ -1,9 +1,8 @@
 import { storeToRefs } from "pinia";
-import { Hash } from "viem";
+import type { Hash } from "viem";
 import { useContractRead } from "use-wagmi";
+import { useSpogStore } from "@/stores/spog";
 import { powerTokenABI } from "@/lib/sdk";
-
-const spog = storeToRefs(useSpogStore());
 
 export default (
   userAccount:
@@ -11,11 +10,14 @@ export default (
     | globalThis.Ref<`0x${string}`>
     | globalThis.Ref<`0x${string}` | undefined>
 ) => {
+  const spogStore = useSpogStore();
+  const spog = storeToRefs(spogStore);
+
   // keep the reactive from the prop alive
   const account = ref(userAccount);
 
   return useContractRead({
-    address: spog.contracts.value.powerToken as Hash,
+    address: spog?.contracts?.value?.powerToken as Hash,
     abi: powerTokenABI,
     functionName: "delegates",
     args: [account as Ref<Hash>],

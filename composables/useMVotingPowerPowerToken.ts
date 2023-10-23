@@ -4,15 +4,15 @@ import { useContractRead } from "use-wagmi";
 import useMTokenPower from "./useMTokenPower";
 import { powerTokenABI } from "@/lib/sdk";
 
-const store = useSpogStore();
-const spog = storeToRefs(store);
-
 export default (
   userAccount:
     | globalThis.Ref<undefined>
     | globalThis.Ref<`0x${string}`>
     | globalThis.Ref<`0x${string}` | undefined>
 ) => {
+  const store = useSpogStore();
+  const spog = storeToRefs(store);
+
   // keep the reactivity alive
   const account = ref(userAccount);
 

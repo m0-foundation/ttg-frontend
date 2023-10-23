@@ -1,5 +1,5 @@
-import useBalancePowerToken from "./useBalancePowerToken";
-import useBalanceZeroToken from "./useBalanceZeroToken";
+import useMBalancePowerToken from "./useMBalancePowerToken";
+import useMBalanceZeroToken from "./useMBalanceZeroToken";
 
 const useMBalances = (
   userAccount:
@@ -7,8 +7,8 @@ const useMBalances = (
     | globalThis.Ref<`0x${string}`>
     | globalThis.Ref<`0x${string}` | undefined>
 ) => {
-  const powerToken = useBalancePowerToken(userAccount);
-  const zeroToken = useBalanceZeroToken(userAccount);
+  const powerToken = useMBalancePowerToken(userAccount);
+  const zeroToken = useMBalanceZeroToken(userAccount);
 
   return { powerToken, zeroToken };
 };
