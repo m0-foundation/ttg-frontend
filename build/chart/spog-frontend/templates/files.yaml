@@ -1,0 +1,23 @@
+{{ if .Values.files }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ $.Chart.Name }}-configmap"
+  labels:
+    {{- include "spog-frontend.labels" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    {{- range $files := .Values.files }}
+    {{- $name := $files.name }}
+    {{- $content := $files.content }}
+    checksum/{{ $name | lower | replace "_" "-" }}: {{ $content | sha256sum }}
+    {{- end }}
+data:
+{{- range $files := .Values.files }}
+{{- $name := $files.name }}
+{{- $content := $files.content }}
+  {{ $name | lower | replace "_" "-" }}: | {{ $content | nindent 4 }}
+{{- end }}
+{{- end }}

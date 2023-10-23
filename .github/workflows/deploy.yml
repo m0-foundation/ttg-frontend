@@ -1,0 +1,20 @@
+name: Deploy to DEV
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/**'
+  workflow_dispatch:
+
+jobs:
+  deploy-to-dev:
+    uses: MZero-Labs/devops-templates/.github/workflows/deploy_crosslend_dev_cluster_pipeline.yml@feature/CL-823
+    secrets: inherit
+    permissions:
+      contents: write
+      packages: write
+    with:
+      DEPLOY_NAMESPACE: ${{ github.event.repository.name }}
+      HELM_COMPONENTS: ${{ github.event.repository.name }}
+      #DEPLOY_TOKEN: not_mandatory

@@ -1,0 +1,13 @@
+---
+# "official" service-name
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "spog-frontend.fullname" . }}
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: {{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local
+  ports:
+  - port: {{ .Values.service.port }}
+
