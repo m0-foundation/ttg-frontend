@@ -16,7 +16,7 @@ RUN yarn install
 
 # Build app
 COPY . .
-RUN NETWORK=sepolia yarn build
+RUN yarn build:sepolia
 
 EXPOSE 3000
 EXPOSE 8545
@@ -30,6 +30,4 @@ COPY build/docker/nginx/conf.d/*.conf /etc/nginx/conf.d/
 COPY --from=build /usr/src/app/.output/public /usr/share/nginx/html
 # Add the maintance-page
 COPY maintenance/ /usr/share/nginx/html/maintenance
-
-# CMD [ "yarn", "hardhat" ]
 
