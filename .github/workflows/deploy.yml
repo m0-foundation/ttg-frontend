@@ -17,4 +17,3 @@ jobs:
     with:
       DEPLOY_NAMESPACE: cm
       HELM_COMPONENTS: ${{ github.event.repository.name }}
-      #DEPLOY_TOKEN: not_mandatory
