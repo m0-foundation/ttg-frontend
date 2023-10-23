@@ -501,7 +501,7 @@ async function onSubmit() {
 
     await wait(1000);
 
-    return navigateTo("/proposals/active");
+    return navigateTo("/proposals/active/");
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);

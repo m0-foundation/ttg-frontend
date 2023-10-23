@@ -36,7 +36,7 @@ const tableConfig = {
       formatter: (cell: string, row: any) => {
         const { title } = useParsedDescriptionTitle(cell);
         return html(
-          `<a href="/proposal/${row.cells[0].data}" class="underline">${title}</a>`
+          `<a href="/proposal/${row.cells[0].data}/" class="underline">${title}</a>`
         );
       },
     },
