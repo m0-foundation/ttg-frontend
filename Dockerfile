@@ -18,6 +18,11 @@ RUN yarn install
 COPY . .
 RUN NETWORK=sepolia yarn build
 
+EXPOSE 3000
+EXPOSE 8545
+
+CMD [ "yarn", "dev" ]
+
 FROM nginx:stable-alpine
 # "our" default.conf overwrites the nginx:stable's default.conf
 COPY build/docker/nginx/conf.d/*.conf /etc/nginx/conf.d/
@@ -26,9 +31,5 @@ COPY --from=build /usr/src/app/.output/public /usr/share/nginx/html
 # Add the maintance-page
 COPY maintenance/ /usr/share/nginx/html/maintenance
 
-#EXPOSE 3000
-#EXPOSE 8545
-#
-#CMD [ "yarn", "dev" ]
 # CMD [ "yarn", "hardhat" ]
 
