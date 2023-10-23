@@ -108,7 +108,6 @@
 
 <script lang="ts" setup>
 import { useAccount, useDisconnect } from "use-wagmi";
-import { useMVotingPower } from "@/lib/hooks";
 
 const { address: userAccount, isConnected } = useAccount();
 const { disconnect } = useDisconnect();

@@ -41,7 +41,6 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
-import { useMBalances, useMVotingPower } from "@/lib/hooks";
 
 const props = defineProps<{
   address: Ref<Hash>;

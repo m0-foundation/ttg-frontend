@@ -128,7 +128,6 @@ import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
 import { dualGovernorABI } from "@/lib/sdk";
-import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
 
 export interface ProposalCardProps {

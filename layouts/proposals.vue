@@ -8,7 +8,7 @@
           <span class="text-primary">#{{ epoch?.current?.asNumber }}_</span>
         </p>
         <div class="hidden lg:block">
-          <NuxtLink to="/proposals/all">
+          <NuxtLink to="/proposals/all/">
             <MNavButton class="underline text-xs text-white">
               all epochs
             </MNavButton>
@@ -26,7 +26,7 @@
       <div
         class="text-white text-xs p-6 pb-4 flex justify-between lg:justify-start lg:gap-6"
       >
-        <NuxtLink to="/proposals/active">
+        <NuxtLink to="/proposals/active/">
           <MNavButton class="flex items-center gap-1 mr-0">
             <span class="lg:hidden">Active</span>
             <span class="hidden lg:inline-block">Current Proposals</span>
@@ -34,13 +34,13 @@
           </MNavButton>
         </NuxtLink>
 
-        <NuxtLink to="/proposals/active/emergency">
+        <NuxtLink to="/proposals/active/emergency/">
           <MNavButton class="flex items-center gap-1 mr-0">
             Emergency <MBadge version="error">{{ emergency }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
-        <NuxtLink to="/proposals/active/succeeded">
+        <NuxtLink to="/proposals/active/succeeded/">
           <MNavButton class="flex items-center gap-1 mr-0">
             Pending Execution <MBadge>{{ pendingExecution }}</MBadge>
           </MNavButton>

@@ -52,4 +52,12 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        verbatimModuleSyntax: false,
+      },
+    },
+  },
 });

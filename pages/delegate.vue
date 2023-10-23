@@ -109,9 +109,8 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { Hash } from "viem";
+import type { Hash } from "viem";
 import { useAccount } from "use-wagmi";
-import { useMVotingPower } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
 const spog = storeToRefs(useSpogStore());
