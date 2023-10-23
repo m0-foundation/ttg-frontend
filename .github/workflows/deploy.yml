@@ -15,6 +15,6 @@ jobs:
       contents: write
       packages: write
     with:
-      DEPLOY_NAMESPACE: ${{ github.event.repository.name }}
+      DEPLOY_NAMESPACE: cm
       HELM_COMPONENTS: ${{ github.event.repository.name }}
       #DEPLOY_TOKEN: not_mandatory
