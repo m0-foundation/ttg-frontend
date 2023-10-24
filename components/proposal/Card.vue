@@ -196,6 +196,8 @@ const canVote = computed(() => {
     return hasZeroTokenVotingPower.value;
   } else if (props.proposal?.votingType === "Double") {
     return hasPowerTokensVotingPower.value && hasZeroTokenVotingPower.value;
+  } else if (props.proposal?.votingType === "Emergency") {
+    return hasPowerTokensVotingPower.value;
   }
 });
 </script>
