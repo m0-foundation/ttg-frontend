@@ -14,7 +14,7 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue']").type(valueName);
       cy.get("input[data-test='proposalValue2']").type(value);
-      cy.get("div[data-test='description']").type(description);
+      cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();

@@ -23,7 +23,7 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue']").type(input);
 
-      cy.get("div[data-test='description']").type(description);
+      cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();

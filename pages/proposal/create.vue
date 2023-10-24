@@ -81,6 +81,7 @@
 
               <MTextareaMarkdown
                 v-model="formData.description"
+                data-test="description"
                 name="description"
                 :errors="$validation.description.$errors"
                 class="h-80"
@@ -501,7 +502,7 @@ async function onSubmit() {
 
     await wait(1000);
 
-    return navigateTo("/proposals/active");
+    return navigateTo("/proposals/active/");
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);

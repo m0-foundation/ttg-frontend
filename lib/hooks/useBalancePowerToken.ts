@@ -1,9 +1,7 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useBalance } from "use-wagmi";
-
-const store = useSpogStore();
-const spog = storeToRefs(store);
+import { useSpogStore } from "@/stores/spog";
 
 export default (
   userAccount:
@@ -11,6 +9,9 @@ export default (
     | globalThis.Ref<`0x${string}`>
     | globalThis.Ref<`0x${string}` | undefined>
 ) => {
+  const store = useSpogStore();
+  const spog = storeToRefs(store);
+
   // keep the reactive from the prop alive
   const account = ref(userAccount);
 
