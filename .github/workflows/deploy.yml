@@ -9,7 +9,7 @@ on:
 
 jobs:
   deploy-to-dev:
-    uses: MZero-Labs/devops-templates/.github/workflows/deploy_crosslend_dev_cluster_pipeline.yml@feature/CL-823
+    uses: MZero-Labs/devops-templates/.github/workflows/deploy_crosslend_dev_cluster_pipeline.yml@main
     secrets: inherit
     permissions:
       contents: write
