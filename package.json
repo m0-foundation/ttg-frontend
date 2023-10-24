@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt generate",
-    "build:sepolia": "NETWORK=sepolia yarn build",
+    "build:sepolia": "NETWORK=sepolia nuxt generate",
     "build:test": "npx http-server .output/public",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare && husky install",
