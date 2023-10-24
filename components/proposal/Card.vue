@@ -15,7 +15,7 @@
       <div class="text-xs xl:text-sm mb-6 flex justify-between text-gray-400">
         <div class="">
           Proposed by
-          <NuxtLink :to="`/profile/${proposal.proposer}`">
+          <NuxtLink :to="`/profile/${proposal.proposer}/`">
             <u>{{ proposal.proposer }}</u>
           </NuxtLink>
         </div>
