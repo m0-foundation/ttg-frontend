@@ -3,7 +3,7 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      walletConnectProjectId: undefined,
+      walletConnectProjectId: "4b34af2e9148b5a50056cf1894e88bf3",
       env: {
         node: process.env.NODE_ENV,
         network: process.env.NETWORK,

@@ -11,7 +11,7 @@
       </div>
 
       <div>
-        <p class="uppercase text-xs text-grey-primary">Epoch Voting Power</p>
+        <p class="uppercase text-xs text-grey-primary">Voting Power</p>
 
         <p class="text-4xl inline-flex items-center my-2">
           {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
@@ -30,7 +30,7 @@
       </div>
 
       <div>
-        <p class="uppercase text-xs text-grey-primary">Epoch Voting Power</p>
+        <p class="uppercase text-xs text-grey-primary">Voting Power</p>
         <p class="text-4xl inline-flex items-center my-2">
           {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
         </p>

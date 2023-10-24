@@ -26,6 +26,9 @@ module.exports = {
         "slate-500": "#439776",
         "zinc-600": "#5E605D",
       },
+      fontSize: {
+        xxs: ["0.65rem"],
+      },
     },
   },
 };

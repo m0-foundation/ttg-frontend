@@ -1,4 +1,4 @@
 [submodule "modules/spog"]
 	path = modules/spog
 	url = git@github.com:MZero-Labs/SPOG.git
-	branch = refactor/mdl-typechain
+	branch = front-end-testing

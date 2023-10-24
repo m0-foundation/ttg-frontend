@@ -108,6 +108,7 @@ import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
 import { dualGovernorABI } from "@/lib/sdk";
+import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
 
 export interface ProposalCardProps {
@@ -154,5 +155,18 @@ const {
   functionName: "hasVoted",
   args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
   watch: true,
+});
+
+const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
+  useMVotingPower(userAccount);
+
+const canVote = computed(() => {
+  if (props.proposal?.votingType === "Power") {
+    return hasPowerTokensVotingPower.value;
+  } else if (props.proposal?.votingType === "Zero") {
+    return hasZeroTokenVotingPower.value;
+  } else if (props.proposal?.votingType === "Double") {
+    return hasPowerTokensVotingPower.value && hasZeroTokenVotingPower.value;
+  }
 });
 </script>

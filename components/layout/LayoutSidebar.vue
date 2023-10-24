@@ -54,9 +54,7 @@
     </div>
 
     <div class="p-4">
-      <p class="uppercase text-xs mb-4 text-gray-400">
-        current voting power [?]
-      </p>
+      <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
       <div class="flex justify-between mb-4">
         <div class="text-gray-400 flex items-center">
           <MIconPower class="h-6 w-6 mr-2" />
@@ -70,7 +68,32 @@
       </div>
     </div>
 
+    <div
+      v-show="hasDelegatedPower || hasDelegatedZero"
+      class="p-4 bg-primary-darker text-white"
+    >
+      <div class="mb-2">
+        <p class="uppercase mb-2 text-xxs">Voting power is delegated to:</p>
+
+        <div v-show="hasDelegatedPower" class="flex items-center">
+          <MIconPower class="h-6 w-6 mr-1" />
+          <p class="underline text-xs truncate flex">
+            {{ powerDelegates }}
+          </p>
+        </div>
+
+        <div v-show="hasDelegatedZero" class="flex items-center">
+          <MIconZero class="h-6 w-6 mr-1" />
+          <p class="underline text-xs truncate flex">{{ zeroDelegates }}</p>
+        </div>
+      </div>
+      <MButton version="outline-light" class="w-full">
+        <NuxtLink to="/delegate">re-delegate</NuxtLink>
+      </MButton>
+    </div>
+
     <button
+      id="button-disconnect-wallet"
       type="button"
       class="block w-full py-2 hover:bg-gray-600 text-left uppercase"
       @click="() => disconnect()"
@@ -92,6 +115,9 @@ const { disconnect } = useDisconnect();
 
 const { powerTokenVotingPower, zeroTokenVotingPower } =
   useMVotingPower(userAccount);
+
+const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
+  useDelegate();
 </script>
 
 <style scoped>

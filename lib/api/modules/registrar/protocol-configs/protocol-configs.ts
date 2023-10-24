@@ -48,7 +48,7 @@ export class ProtocolConfigs extends ApiModule {
     console.log(this.config.registrar);
     const rawLogs = await this.client.getLogs({
       address: this.config.registrar as Hash,
-      fromBlock: 0n,
+      fromBlock: this.config.deploymentBlock,
       event: parseAbiItem("event ConfigUpdated(bytes32 key, bytes32 value)"),
     });
 

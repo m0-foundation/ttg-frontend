@@ -227,6 +227,11 @@ const formData = reactive({
 });
 
 const rules = computed(() => {
+  // all besides reset
+  const isProposalValueRequired = !["reset"].includes(
+    selectedProposalType?.value?.value
+  );
+
   const isProposalValue2Required = [
     "addToList",
     "removeFromList",
@@ -239,7 +244,7 @@ const rules = computed(() => {
   );
 
   return {
-    proposalValue: { required },
+    proposalValue: isProposalValueRequired ? { required } : {},
     proposalValue2: isProposalValue2Required ? { required } : {},
     proposalValue3: isProposalValue3Required ? { required } : {},
     description: { required, minLength: minLength(6) },
@@ -276,14 +281,6 @@ const proposalTypes = [
     label: "Update config",
     component: ProposalInputUpdateConfig,
     tokens: MProposalVotingTokens.updateConfig,
-  },
-
-  {
-    value: "reset",
-    label: "Reset",
-    placeholder: "Governance address",
-    component: ProposalInputSingleText,
-    tokens: MProposalVotingTokens.reset,
   },
 
   {
@@ -326,6 +323,14 @@ const proposalTypes = [
         tokens: MProposalVotingTokens.setProposalFeeRange,
       },
     ],
+  },
+
+  {
+    value: "reset",
+    label: "Reset",
+    placeholder: "Governance address",
+    component: undefined,
+    tokens: MProposalVotingTokens.reset,
   },
 
   {
@@ -558,7 +563,7 @@ function buildCalldatas(formData) {
 
   if (["reset"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
-    return buildCalldatasSpog(type, [input1, spog.contracts.voteVault]);
+    return buildCalldatasSpog(type, undefined);
   }
 
   if (["setProposalFee"].includes(type)) {

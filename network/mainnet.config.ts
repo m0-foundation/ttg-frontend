@@ -5,6 +5,7 @@ export default {
   contracts: {
     registrar: "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
     multicall3: mainnet.contracts.multicall3.address,
+    deploymentBlock: 4520940,
   },
   rpc: {
     chainId: 1,

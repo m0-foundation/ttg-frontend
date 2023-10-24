@@ -32,7 +32,7 @@ export default (
 
       return {
         relative: Number((votingPower * 100n) / totalSupply),
-        value: votingPower.toString(),
+        value: votingPower,
         formatted: formatUnits(votingPower, token?.data?.value?.decimals || 0),
       };
     },
