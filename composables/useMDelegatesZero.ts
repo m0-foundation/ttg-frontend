@@ -13,7 +13,6 @@ export default (
   const spogStore = useSpogStore();
   const spog = storeToRefs(spogStore);
 
-  console.log("before zero", { spog, userAccount });
   // keep the reactive from the prop alive
   const account = ref(userAccount);
 

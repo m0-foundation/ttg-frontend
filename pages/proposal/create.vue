@@ -81,6 +81,7 @@
 
               <MTextareaMarkdown
                 v-model="formData.description"
+                data-test="description"
                 name="description"
                 :errors="$validation.description.$errors"
                 class="h-80"
