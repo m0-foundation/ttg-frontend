@@ -66,17 +66,17 @@
             v-model="selectedVote"
             :disabled="isCastVoteYesDisabled || hasVoted"
             :name="props.proposal.proposalId"
-            :value="1"
             text="Yes"
-            @change="onCastSelected"
+            :value="1"
+            @click="onCastSelected(1)"
           />
           <MButtonRadio
             v-model="selectedVote"
             :disabled="isCastVoteNoDisabled || hasVoted"
             :name="props.proposal.proposalId"
-            :value="0"
             text="No"
-            @change="onCastSelected"
+            :value="0"
+            @click="onCastSelected(0)"
           />
         </div>
 
@@ -128,6 +128,7 @@ const { address: userAccount, isDisconnected } = useAccount();
 const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
+const isVoteSelected = ref(false);
 const selectedVote = ref<null | number>(null);
 const formatedDate = computed(() => toFormat("LL"));
 
@@ -139,10 +140,16 @@ function onExecuteProposal() {
   emit("on-execute", props.proposal);
 }
 
-function onCastSelected(event: Event) {
-  const value = Number((event.target as HTMLInputElement).value);
-  emit("on-cast", value, props.proposal.proposalId);
-  selectedVote.value = value;
+function onCastSelected(vote: number) {
+  if (selectedVote.value === vote) {
+    emit("on-uncast", props.proposal.proposalId);
+    isVoteSelected.value = false;
+    selectedVote.value = null;
+  } else {
+    emit("on-cast", vote, props.proposal.proposalId);
+    isVoteSelected.value = true;
+    selectedVote.value = vote;
+  }
 }
 
 const {

@@ -30,7 +30,13 @@
       ></div>
     </div>
     <span class="text-xs mb-[-3px] whitespace-nowrap"> {{ text }} </span>
-    <input v-bind="$attrs" v-model.number="value" type="radio" class="hidden" />
+    <input
+      v-bind="$attrs"
+      v-model.number="value"
+      type="radio"
+      class="hidden"
+      @click="emits('click', $event)"
+    />
   </label>
 </template>
 
@@ -40,7 +46,7 @@ export interface MButtonRadioProps {
   text: string;
 }
 
-const emits = defineEmits(["update:modelValue"]);
+const emits = defineEmits(["update:modelValue", "click"]);
 const attrs = useAttrs();
 const props = withDefaults(defineProps<MButtonRadioProps>(), {
   modelValue: null,

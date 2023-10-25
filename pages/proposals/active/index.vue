@@ -1,6 +1,11 @@
 <template>
   <div class="mb-40">
-    <ProposalList :proposals="activeProposals" @on-cast="onCast">
+    <ProposalList
+      :proposals="activeProposals"
+      class="px-3 pb-2"
+      @on-cast="onCast"
+      @on-uncast="onUncast"
+    >
       <template #emptyState>
         <ProposalListEmptyState> No Active proposals </ProposalListEmptyState>
       </template>
@@ -84,17 +89,20 @@ const progressBarWidth = computed(() => {
 const { address: userAccount, isConnected } = useAccount();
 
 function onCast(vote: number, proposalId: string) {
-  const castingVote = { vote, proposalId } as CastedProposal;
-
   const proposalIndex = selectedCastProposals.value.findIndex(
-    (proposal) => proposal.proposalId === proposalId
+    (p) => p.proposalId === proposalId
   );
-
   if (proposalIndex === -1) {
-    selectedCastProposals.value.push(castingVote);
+    selectedCastProposals.value.push({ vote, proposalId });
   } else {
-    selectedCastProposals.value[proposalIndex] = castingVote;
+    selectedCastProposals.value[proposalIndex].vote = vote;
   }
+}
+
+function onUncast(proposalId: string) {
+  selectedCastProposals.value = selectedCastProposals.value.filter(
+    (p) => p.proposalId !== proposalId
+  );
 }
 
 function onCastBatchVotes() {
