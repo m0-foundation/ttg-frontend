@@ -23,7 +23,7 @@
 
       <div class="text-primary-darker text-sm mb-6 truncate w-52 lg:w-full">
         Proposed by
-        <NuxtLink :to="`/profile/${proposal?.proposer}`">
+        <NuxtLink :to="`/profile/${proposal?.proposer}/`">
           <u>{{ proposal?.proposer }}</u>
         </NuxtLink>
       </div>

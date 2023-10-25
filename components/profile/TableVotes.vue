@@ -36,7 +36,7 @@ const votesTableConfig = computed(() => {
         formatter: (proposal: MProposal) => {
           const { title } = useParsedDescriptionTitle(proposal.description);
           return html(
-            `<a href="/proposal/${proposal.proposalId}" class="underline">${title}</a>`
+            `<a href="/proposal/${proposal.proposalId}/" class="underline">${title}</a>`
           );
         },
       },

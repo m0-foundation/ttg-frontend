@@ -1,0 +1,176 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "spog-frontend.fullname" . }}
+  labels:
+    {{- include "spog-frontend.labels" . | nindent 4 }}
+spec:
+  # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#max-surge
+      maxSurge: "20%"
+      # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#max-unavailable
+      maxUnavailable: "20%"
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "spog-frontend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{ if or .Values.config .Values.secrets .Values.podAnnotations .Values.files }}
+      annotations:
+        # annotations
+        {{ if .Values.podAnnotations }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- end }}
+        # config checksums
+        {{ if .Values.config }}
+        {{- range $key, $value := .Values.config }}
+        checksum/{{ $key }}: {{ $value | toString | sha256sum }}
+        {{- end }}
+        {{- end }}
+        {{ if .Values.secrets }}
+        # secrets checksums
+        {{- range $key, $value := .Values.secrets }}
+        checksum/{{ $.Chart.Name }}-{{ $key | lower | replace "_" "-" }}: {{ $value | toString | sha256sum }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        # files checksums
+        {{ if .Values.files }}
+        {{- range $files := .Values.files }}
+        {{- $name := $files.name }}
+        {{- $content := $files.content }}
+        checksum/{{ $name | lower | replace "_" "-" }}: {{ $content | sha256sum }}
+        {{- end }}
+        {{- end }}
+
+      labels:
+        {{- include "spog-frontend.selectorLabels" . | nindent 8 }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - spog-frontend
+              topologyKey: "kubernetes.io/hostname"
+
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "spog-frontend.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      {{ if or .Values.secrets .Values.files }}
+      volumes:
+      {{ if .Values.secrets }}
+      {{- range $key, $value := .Values.secrets }}
+      - name: '{{ $.Chart.Name }}-{{ $key | lower | replace "_" "-" }}-volume'
+        secret:
+          secretName: {{ $.Chart.Name }}-{{ $key | lower | replace "_" "-" }}
+      {{- end }}
+      {{- end }}
+
+      {{ if .Values.files }}
+      - name: "{{ $.Chart.Name }}-configmap-volume"
+        configMap:
+          name: {{ $.Chart.Name }}-configmap
+          defaultMode: {{ default "0444" }}
+      {{- end }}
+      {{- end }}
+
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          {{ if or .Values.config .Values.secrets }}
+          env:
+          {{ if .Values.config }}
+          # mapping config keys as env vars
+          {{- range $key, $value := .Values.config }}
+          - name: "{{ $key }}"
+            value: "{{ $value }}"
+          {{- end }}
+          {{- end }}
+
+          {{ if .Values.secrets }}
+          # referencing k8s secrets as env vars
+          {{- range $key, $value := .Values.secrets }}
+          # secret read from k8s and presented as env-var
+          - name: "{{ $key }}"
+            valueFrom:
+              secretKeyRef:
+                # secret name in k8s
+                name: {{ $.Chart.Name }}-{{ $key | lower | replace "_" "-" }}
+                # will be mapped to env-var ... in container
+                key: "{{ $key }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
+
+          {{ if .Values.files }}
+          volumeMounts:
+          {{- range $files := .Values.files }}
+          {{- $name := $files.name }}
+          {{- $mountPath := $files.mountPath }}
+          # what to mount - which volume
+          - name: "{{ $.Chart.Name }}-configmap-volume"
+            # where it should be mounted
+            mountPath: "{{ $mountPath }}"
+            # what key from the volume  as content
+            subPath: {{ $name | lower | replace "_" "-" | quote }}
+            readOnly: true
+          {{- end }}
+          {{- end }}
+
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.service.liveness.probePath | default "/" | quote }}
+              port: {{ .Values.service.liveness.port | default  .Values.service.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.service.readiness.probePath | default "/" | quote }}
+              port: {{ .Values.service.readiness.port | default .Values.service.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
