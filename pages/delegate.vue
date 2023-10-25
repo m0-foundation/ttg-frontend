@@ -19,6 +19,7 @@
         </div>
         <label class="text-grey-primary">Enter address</label>
         <input
+          id="input-delegate-power"
           v-model="inputPowerDelegates"
           placeholder="0x..."
           type="text"
@@ -26,7 +27,7 @@
         />
         <div class="flex justify-between">
           <button
-            id="button-use-my-address-vote"
+            id="button-use-my-address-power"
             type="button"
             class="underline text-grey-primary"
             @click="onUseMyAddressVote"
@@ -34,13 +35,18 @@
             Use my address
           </button>
         </div>
+
+        <div v-if="hasDelegatedPower" class="my-4 text-xs text-grey-primary">
+          <p>Current Delegatee:</p>
+          <p class="underline">{{ powerDelegates }}</p>
+        </div>
       </div>
 
       <div class="flex justify-end gap-2 my-4">
         <MButton
-          id="button-delegate-vote"
+          id="button-delegate-power"
           type="submit"
-          :disabled="!isConnected"
+          :disabled="!isConnected || !canDelegate"
         >
           delegate
         </MButton>
@@ -60,6 +66,7 @@
         </div>
         <label class="text-grey-primary">Enter address</label>
         <input
+          id="input-delegate-zero"
           v-model="inputZeroDelegates"
           placeholder="0x..."
           type="text"
@@ -67,13 +74,18 @@
         />
         <div class="flex justify-between">
           <button
-            id="button-use-my-address-value"
+            id="button-use-my-address-zero"
             type="button"
             class="underline text-grey-primary"
             @click="onUseMyAddressValue"
           >
             Use my address
           </button>
+        </div>
+
+        <div v-if="hasDelegatedZero" class="my-4 text-xs text-grey-primary">
+          <p>Current Delegatee:</p>
+          <p class="underline">{{ zeroDelegates }}</p>
         </div>
       </div>
 
@@ -84,9 +96,9 @@
 
       <div class="flex justify-end gap-2">
         <MButton
-          id="button-delegate-value"
+          id="button-delegate-zero"
           type="submit"
-          :disabled="!isConnected"
+          :disabled="!isConnected || !canDelegate"
         >
           delegate
         </MButton>
@@ -99,12 +111,13 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useAccount } from "use-wagmi";
-import { useMDelegates, useMVotingPower } from "@/lib/hooks";
+import { useMVotingPower } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-
 const spog = storeToRefs(useSpogStore());
+
+const inputPowerDelegates = ref();
+const inputZeroDelegates = ref();
 
 const { address: userAccount, isConnected } = useAccount();
 
@@ -113,15 +126,20 @@ const nextEpochAsDate = computed(() => {
   return toFormat("LLL");
 });
 
-const { powerDelegates, zeroDelegates } = useMDelegates(userAccount);
 const { powerTokenVotingPower, zeroTokenVotingPower } =
   useMVotingPower(userAccount);
+const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
+  useDelegate();
 
 function onUseMyAddress(refAddress: Ref<string | undefined>) {
   refAddress.value = userAccount.value!;
 }
 const onUseMyAddressVote = () => onUseMyAddress(inputPowerDelegates);
 const onUseMyAddressValue = () => onUseMyAddress(inputZeroDelegates);
+
+const canDelegate = computed(
+  () => spog.epoch.value.current.type === "TRANSFER"
+);
 
 function delegateVote() {
   return writePowerToken({
@@ -138,16 +156,4 @@ function delegateValue() {
     args: [inputZeroDelegates.value! as Hash],
   });
 }
-
-const inputPowerDelegates = computed(() => {
-  return powerDelegates.data.value === ZERO_ADDRESS
-    ? undefined
-    : powerDelegates.data.value;
-});
-
-const inputZeroDelegates = computed(() => {
-  return zeroDelegates.data.value === ZERO_ADDRESS
-    ? undefined
-    : zeroDelegates.data.value;
-});
 </script>

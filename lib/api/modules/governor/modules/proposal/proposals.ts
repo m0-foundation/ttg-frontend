@@ -83,7 +83,7 @@ export class Proposals extends GovernorModule {
   constructor(governor: Hash, context: ApiContext) {
     super(governor, context);
 
-    this.fromBlock = 1n; // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
+    this.fromBlock = this.config.deploymentBlock; // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
   }
 
   decodeProposalTypeAddToList(calldata: Hash) {

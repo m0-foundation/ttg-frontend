@@ -1,6 +1,8 @@
 <template>
   <div>
-    <MButton @click="open = true">Connect Wallet</MButton>
+    <MButton id="button-connect-wallet" @click="open = true"
+      >Connect Wallet</MButton
+    >
 
     <Teleport to="body">
       <div
@@ -58,7 +60,7 @@
 <script setup>
 import { ref } from "vue";
 
-import { useAccount, useConnect } from "use-wagmi";
+import { useAccount, useConnect, useSwitchNetwork } from "use-wagmi";
 
 const images = {
   MetaMask: "/img/icon-metamask.svg",
@@ -67,9 +69,14 @@ const images = {
 };
 
 const open = ref(false);
-
+const network = useNetworkStore().getNetwork();
 const { connector, isReconnecting } = useAccount();
-const { connect, connectors, isLoading, pendingConnector } = useConnect({
+const { switchNetwork } = useSwitchNetwork();
+const { connect, connectors } = useConnect({
   onError: (e) => console.error("error", e.message),
+  onSuccess: () => {
+    const chainId = network.value.rpc.chainId;
+    switchNetwork(chainId);
+  },
 });
 </script>

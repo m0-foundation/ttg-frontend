@@ -31,6 +31,9 @@ module.exports = {
         "zinc-500": "#868886",
         "zinc-600": "#5E605D",
       },
+      fontSize: {
+        xxs: ["0.65rem"],
+      },
     },
   },
 };

@@ -57,8 +57,6 @@ export default async function deploySpog(network: Network) {
   const mine = (blocks: number) =>
     provider.send("hardhat_mine", ["0x" + blocks.toString(16)]);
 
-  await mine(15537393 + 108000);
-
   const dualGovernorDeployerFactory = new ContractFactory(
     DualGovernorDeployerAbi,
     DualGovernorDeployerBytecode,

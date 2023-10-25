@@ -1,10 +1,8 @@
 import { GovernorModule } from "../GovernorModule";
-import { MEpoch } from "./epoch.types";
+import { EpochTypes, MEpoch } from "./epoch.types";
 
-// Ethereum finalized 'The Merge' at block 15_537_393 on September 15, 2022, at 05:42:42 GMT.
-export const _START_BLOCK = 15_537_393;
-export const _SECONDS_PER_BLOCK = 12;
-export const _EPOCH_PERIOD = 108_000; // Defines 15 days worth of blocks (108,000)
+export const _SECONDS_PER_BLOCK = 4;
+export const _EPOCH_PERIOD = 225; // Defines 15 min worth of blocks (108,000)
 
 export class Epoch extends GovernorModule {
   async getBlockNumber(): Promise<bigint> {
@@ -35,16 +33,21 @@ export class Epoch extends GovernorModule {
       Number(currentEpochAsBlock.timestamp) +
       _EPOCH_PERIOD * _SECONDS_PER_BLOCK;
 
+    const getType = (epoch: number) =>
+      epoch % 2 === 0 ? EpochTypes.TRANSFER : EpochTypes.VOTING;
+
     return {
       current: {
         asNumber: currentEpoch,
         asBlockNumber: currentEpochAsBlockNumber,
         asTimestamp: Number(currentEpochAsBlock.timestamp),
+        type: getType(currentEpoch),
       },
       next: {
         asNumber: currentEpoch + 1,
         asBlockNumber: nextEpochAsBlockNumber,
         asTimestamp: nextEpochAsTimestamp,
+        type: getType(currentEpoch + 1),
       },
     };
   }
@@ -55,11 +58,11 @@ export class Epoch extends GovernorModule {
       blockNumber = await this.getBlockNumber();
     }
 
-    return Math.floor((Number(blockNumber) - _START_BLOCK) / _EPOCH_PERIOD);
+    return Math.floor(Number(blockNumber) / _EPOCH_PERIOD) + 1; // Epoch at block 0 is 1.
   }
 
-  static getEpochFromBlock(blockNumber: number) {
-    return Math.floor((Number(blockNumber) - _START_BLOCK) / _EPOCH_PERIOD);
+  static getEpochFromBlock(blockNumber: bigint) {
+    return Math.floor(Number(blockNumber) / _EPOCH_PERIOD) + 1;
   }
 
   toSeconds(blocks_: number) {
@@ -67,7 +70,7 @@ export class Epoch extends GovernorModule {
   }
 
   getBlockNumberOfEpochStart(epoch: number) {
-    return _START_BLOCK + epoch * _EPOCH_PERIOD;
+    return (epoch - 1) * _EPOCH_PERIOD;
   }
 
   async startBlockOfCurrentEpoch() {

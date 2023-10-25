@@ -8,4 +8,5 @@ export * from "./modules/governor/modules/voting/voting.types";
 export interface IApiConfig {
   multicall3: `0x${string}`;
   registrar: string;
+  deploymentBlock: bigint;
 }

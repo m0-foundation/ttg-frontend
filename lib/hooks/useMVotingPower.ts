@@ -11,5 +11,22 @@ export default (
 
   const zeroTokenVotingPower = useVotingPowerZeroToken(userAccount);
 
-  return { powerTokenVotingPower, zeroTokenVotingPower };
+  const hasPowerTokensVotingPower = computed(() =>
+    powerTokenVotingPower?.data?.value?.value
+      ? powerTokenVotingPower?.data?.value.value > 0n
+      : false
+  );
+
+  const hasZeroTokenVotingPower = computed(() =>
+    powerTokenVotingPower?.data?.value?.value
+      ? powerTokenVotingPower?.data?.value.value > 0n
+      : false
+  );
+
+  return {
+    powerTokenVotingPower,
+    zeroTokenVotingPower,
+    hasPowerTokensVotingPower,
+    hasZeroTokenVotingPower,
+  };
 };
