@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import { useAccount } from "use-wagmi";
 import { keccak256, toHex, Hash } from "viem";
+import { waitForTransaction } from "@wagmi/core";
 import { writeDualGovernor } from "@/lib/sdk";
 import { MProposal } from "@/lib/api/types";
 
@@ -26,21 +27,25 @@ const proposals = computed(() =>
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
 
-function onExecute(proposal: MProposal) {
+async function onExecute(proposal: MProposal) {
   const { description, calldatas } = proposal;
   const hashedDescription = keccak256(toHex(description));
   const targets = [spog.contracts.governor as Hash];
   const values = [BigInt(0)]; // do not change
 
-  return writeDualGovernor({
+  const { hash } = await writeDualGovernor({
     address: spog.contracts.governor as Hash,
     functionName: "execute",
     args: [targets, values, calldatas as Hash[], hashedDescription], // (targets, values, calldatas, hashedDescription
     account: userAccount.value,
     value: BigInt(0),
-  }).then(() => {
-    console.log("executed");
-    window.location.reload();
   });
+
+  const txReceipt = await waitForTransaction({ confirmations: 1, hash });
+  if (txReceipt.status !== "success") {
+    throw new Error("Transaction was rejected");
+  }
+
+  return navigateTo(`/proposal/${proposal.proposalId}`);
 }
 </script>
