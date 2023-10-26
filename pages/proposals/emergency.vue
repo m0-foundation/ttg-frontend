@@ -1,13 +1,15 @@
 <template>
-  <div class="mb-10">
-    <ProposalList :proposals="proposals" @on-cast="onCast">
-      <template #emptyState>
-        <ProposalListEmptyState>
-          No Emergency proposals
-        </ProposalListEmptyState>
-      </template>
-    </ProposalList>
-  </div>
+  <NuxtLayout name="proposals">
+    <div class="mb-10">
+      <ProposalList :proposals="proposals" @on-cast="onCast">
+        <template #emptyState>
+          <ProposalListEmptyState>
+            No Emergency proposals
+          </ProposalListEmptyState>
+        </template>
+      </ProposalList>
+    </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">

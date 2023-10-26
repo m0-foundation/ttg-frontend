@@ -1,13 +1,15 @@
 <template>
-  <div class="mb-10">
-    <ProposalList :proposals="proposals" @on-execute="onExecute">
-      <template #emptyState>
-        <ProposalListEmptyState>
-          No Proposals to be executed
-        </ProposalListEmptyState>
-      </template>
-    </ProposalList>
-  </div>
+  <NuxtLayout name="proposals">
+    <div class="mb-10">
+      <ProposalList :proposals="proposals" @on-execute="onExecute">
+        <template #emptyState>
+          <ProposalListEmptyState>
+            No Proposals to be executed
+          </ProposalListEmptyState>
+        </template>
+      </ProposalList>
+    </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">

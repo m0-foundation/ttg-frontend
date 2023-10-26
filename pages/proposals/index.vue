@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <NuxtLayout name="proposals">
     <ProposalList
       :proposals="activeProposals"
       class="px-3 pb-2"
@@ -48,7 +48,7 @@
         Your voting power will decrease over time if you do not vote
       </p>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
