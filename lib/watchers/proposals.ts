@@ -17,13 +17,16 @@ export const watchProposalCreated = () => {
       eventName: "ProposalCreated",
       chainId: network.value.rpc.chainId,
     },
-    async (log) => {
-      console.log("newProposalCreated", log);
+    async (logs) => {
+      console.log("newProposalCreated", logs);
 
-      const newProposal =
-        await apiStore.client.governor?.proposals.getProposalFromWatchLog(log);
+      const newProposals = await Promise.all(
+        logs.map((log) =>
+          apiStore.client.governor?.proposals.getProposalFromWatchLog(log)
+        )
+      );
 
-      proposals.addProposal(newProposal!);
+      proposals.setProposals(newProposals);
     }
   );
 };
