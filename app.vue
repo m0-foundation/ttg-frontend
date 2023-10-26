@@ -29,6 +29,7 @@ import { UseWagmiPlugin } from "use-wagmi";
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { Api } from "@/lib/api";
+import { watchProposalCreated } from "@/lib/watchers";
 
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
@@ -105,6 +106,8 @@ await onSetup(rpc.value).then(async (api) => {
     fetchProposals(api),
     fetchEpoch(api),
   ]);
+
+  watchProposalCreated();
   isLoading.value = false;
 });
 

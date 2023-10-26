@@ -1,5 +1,6 @@
 import {
   Abi,
+  GetLogsReturnType,
   Hash,
   Log,
   bytesToHex,
@@ -8,10 +9,9 @@ import {
   fromHex,
   getFunctionSelector,
   parseAbiItem,
-  parseAbiParameters,
 } from "viem";
 
-import { pick } from "lodash";
+import pick from "lodash/pick";
 import {
   hexToBytes32String,
   removeSelectorFromCallData,
@@ -23,7 +23,6 @@ import {
   MProposal,
   ProposalEventLog,
   ProposalState,
-  MVotingType,
   VotingType,
 } from "./proposal.types";
 import { dualGovernorABI, readDualGovernor } from "@/lib/sdk";
@@ -369,5 +368,90 @@ export class Proposals extends GovernorModule {
     );
 
     return proposalsWithTallies;
+  }
+
+  async getProposalFromWatchLog({
+    eventName,
+    args,
+    ...log
+  }: any): Promise<MProposal> {
+    const calldata = args.calldatas[0] as Hash;
+
+    const selector = bytesToHex(
+      fromHex(args.calldatas[0] as Hash, "bytes").slice(0, 4)
+    );
+
+    const isEmergency = [
+      ProposalTypesFunctionSelectors.emergencyAddToList,
+      ProposalTypesFunctionSelectors.emergencyRemoveFromList,
+      ProposalTypesFunctionSelectors.emergencyUpdateConfig,
+    ].includes(selector);
+
+    const { proposalType, params } = this.decodeProposalTypes(
+      selector,
+      calldata
+    );
+
+    const proposalLabel =
+      ProposalLabels[proposalType as keyof typeof ProposalLabels];
+
+    const proposal: MProposal = {
+      isEmergency,
+      eventName,
+      blockNumber: Number(log.blockNumber),
+      transactionHash: String(log.transactionHash),
+      values: this.toString(args.values),
+      signatures: this.toString(args.signatures!),
+      calldatas: this.toString(args.calldatas),
+      targets: this.toString(args.targets!),
+      endBlock: Number(args.voteEnd),
+      startBlock: Number(args.voteStart),
+      proposer: args.proposer,
+      description: args.description,
+      timestamp: event.timestamp,
+      proposalId: String(args.proposalId),
+      proposalType: String(proposalType),
+      proposalParams: this.toString([...params]),
+      proposalLabel,
+    };
+
+    const proposalData = await this.getProposal(proposal.proposalId.toString());
+    console.log({ proposalData });
+
+    const block = await this.client.getBlock({
+      blockNumber: BigInt(proposal.blockNumber),
+    });
+    proposal.timestamp = Number(block.timestamp);
+
+    const epoch = Epoch.getEpochFromBlock(BigInt(proposal.blockNumber));
+
+    return {
+      ...proposal,
+      ...pick(proposalData, [
+        "proposer",
+        "voteStart",
+        "voteEnd",
+        "executed",
+        "state",
+        "votingType",
+      ]),
+      epoch,
+      votes: {
+        power: {
+          yes: Number(proposalData.yesPowerTokenVotes),
+          no: Number(proposalData.noPowerTokenVotes),
+          total: Number(
+            proposalData.yesPowerTokenVotes + proposalData.noPowerTokenVotes
+          ),
+        },
+        zero: {
+          yes: Number(proposalData.yesZeroTokenVotes),
+          no: Number(proposalData.noZeroTokenVotes),
+          total: Number(
+            proposalData.yesZeroTokenVotes + proposalData.noZeroTokenVotes
+          ),
+        },
+      },
+    };
   }
 }
