@@ -408,7 +408,7 @@ export class Proposals extends GovernorModule {
       startBlock: Number(args.voteStart),
       proposer: args.proposer,
       description: args.description,
-      timestamp: event.timestamp,
+      timestamp: 0,
       proposalId: String(args.proposalId),
       proposalType: String(proposalType),
       proposalParams: this.toString([...params]),

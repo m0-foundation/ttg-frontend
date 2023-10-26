@@ -45,7 +45,6 @@ export class ProtocolConfigs extends ApiModule {
   }
 
   async getProtocolConfigs(): Promise<MProtocolConfig> {
-    console.log(this.config.registrar);
     const rawLogs = await this.client.getLogs({
       address: this.config.registrar as Hash,
       fromBlock: this.config.deploymentBlock,
