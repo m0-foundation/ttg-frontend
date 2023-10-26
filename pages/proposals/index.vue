@@ -34,7 +34,9 @@
         <MButton
           id="button-cast-submit"
           class="w-full lg:w-auto"
-          :disabled="!isSelectedCastProposalsFull || hasFinishedVoting"
+          :disabled="
+            !isSelectedCastProposalsFull || hasFinishedVoting || isLoading
+          "
           :is-loading="isLoading"
           @click="onCastBatchVotes"
         >
