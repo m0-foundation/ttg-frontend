@@ -75,7 +75,7 @@ Cypress.Commands.add("executeProposal", (proposalUrl: string) => {
 });
 
 Cypress.Commands.add("castYesOneProposal", (description: string) => {
-  cy.visit("http://localhost:3000/proposals/active");
+  cy.visit("http://localhost:3000/proposals/");
   cy.connectWallet();
   cy.wait(500);
 
@@ -90,7 +90,7 @@ Cypress.Commands.add("castYesOneProposal", (description: string) => {
 });
 
 Cypress.Commands.add("executeOneProposal", (description: string) => {
-  cy.visit("http://localhost:3000/proposals/active/succeeded");
+  cy.visit("http://localhost:3000/proposals/succeeded");
   cy.connectWallet();
 
   cy.mineEpochs(1);

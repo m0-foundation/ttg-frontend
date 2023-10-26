@@ -48,7 +48,7 @@ describe.skip("Proposals Update Config", () => {
   }
 
   function executeProposal(description: string) {
-    cy.visit("http://localhost:3000/proposals/active/succeeded");
+    cy.visit("http://localhost:3000/proposals/succeeded");
     cy.connectWallet();
 
     cy.wait(500);
@@ -95,13 +95,13 @@ describe.skip("Proposals Update Config", () => {
 
     it("Forward to ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.visit("http://localhost:3000/proposals/active");
+      cy.visit("http://localhost:3000/proposals/");
       cy.task("mine", 100);
       cy.wait(1000);
     });
 
     it("I should be able to SELECT YES for proposals", () => {
-      cy.visit("http://localhost:3000/proposals/active");
+      cy.visit("http://localhost:3000/proposals/");
 
       cy.connectWallet();
 
@@ -118,7 +118,7 @@ describe.skip("Proposals Update Config", () => {
     });
 
     it("Forward to EXECUTE proposal", () => {
-      cy.visit("http://localhost:3000/proposals/active");
+      cy.visit("http://localhost:3000/proposals/");
       cy.task("mine", 100);
       cy.wait(500);
       cy.reload();

@@ -41,7 +41,7 @@ describe.skip("Proposals", () => {
       });
 
       it("I should be able to ACCESS the ACTIVE proposal", () => {
-        cy.visit("http://localhost:3000/proposals/active");
+        cy.visit("http://localhost:3000/proposals/");
 
         cy.contains(description1).should("exist");
 

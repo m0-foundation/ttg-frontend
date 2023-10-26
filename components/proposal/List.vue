@@ -43,6 +43,6 @@ function onViewProposal(proposalId: string) {
 
 function onCloseDrawer() {
   showProposal.value = undefined;
-  window.history.replaceState({}, "", "/proposals/active");
+  window.history.replaceState({}, "", "/proposals/");
 }
 </script>
