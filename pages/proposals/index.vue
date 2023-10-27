@@ -127,7 +127,7 @@ async function onCastBatchVotes() {
 
   isLoading.value = false;
 
-  return navigateTo("/proposals");
+  window.location.reload();
 }
 
 const { data: hasFinishedVoting } = useContractRead({
