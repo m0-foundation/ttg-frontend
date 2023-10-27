@@ -46,6 +46,8 @@ async function onExecute(proposal: MProposal) {
     throw new Error("Transaction was rejected");
   }
 
-  return navigateTo(`/proposal/${proposal.proposalId}`);
+  return navigateTo(`/proposal/${proposal.proposalId}`, {
+    external: true,
+  });
 }
 </script>
