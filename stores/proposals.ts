@@ -44,5 +44,14 @@ export const useProposalsStore = defineStore("proposals", {
         ),
       ];
     },
+    push(proposals: Array<MProposal>) {
+      this.data = [
+        ..._.orderBy(
+          _.uniqBy([...this.data, ...proposals], "proposalId"),
+          "blockNumber",
+          "desc"
+        ),
+      ];
+    },
   },
 });

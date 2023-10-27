@@ -5,14 +5,17 @@ import { ApiContext } from "../../api-context";
 import { ProtocolConfigs } from "./protocol-configs";
 import { MRegistrarState } from "./registrar.types";
 
+import { List } from "./modules/list";
 import { registrarABI } from "~/lib/sdk";
 
 export class Registrar extends ApiModule {
   protocolConfigs: ProtocolConfigs;
+  list: List;
 
   constructor(context: ApiContext) {
     super(context);
     this.protocolConfigs = new ProtocolConfigs(context);
+    this.list = new List(context);
   }
 
   getParameters<T>(parameters: string[]): Promise<T> {

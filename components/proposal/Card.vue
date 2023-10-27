@@ -23,11 +23,7 @@
       </div>
 
       <div class="text-grey-primary text-sm">
-        {{
-          truncate(props.proposal.description, {
-            length: 300,
-          })
-        }}
+        {{ truncatedDescriptionText }}
       </div>
 
       <button
@@ -112,7 +108,8 @@
         <div class="inline-flex gap-1" role="group">
           <MButton
             id="button-proposal-execute"
-            :disabled="isDisconnected"
+            :disabled="isDisconnected || isLoading"
+            :is-loading="isLoading"
             @click="onExecuteProposal()"
           >
             Execute
@@ -153,12 +150,20 @@ const selectedVote = ref<null | number>(null);
 const formatedDate = computed(() => toFormat("LL"));
 const isCastVoteYesDisabled = computed(() => selectedVote.value === 0);
 const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
+const isLoading = ref(false);
+
+const { text: truncatedDescriptionText } = useParsedDescription(
+  truncate(props.proposal.description, {
+    length: 300,
+  })
+);
 
 function onViewProposal() {
   emit("on-view", props.proposal.proposalId);
 }
 
 function onExecuteProposal() {
+  isLoading.value = true;
   emit("on-execute", props.proposal);
 }
 
@@ -174,11 +179,7 @@ function onCastSelected(vote: number) {
   }
 }
 
-const {
-  data: hasVoted,
-  isError,
-  isLoading,
-} = useContractRead({
+const { data: hasVoted } = useContractRead({
   address: spog.contracts.governor as Hash,
   abi: dualGovernorABI,
   functionName: "hasVoted",

@@ -4,12 +4,12 @@ import groupBy from "lodash/groupBy";
 import forEach from "lodash/forEach";
 
 import { hexToBytes32String } from "../../../../utils";
-import { GovernorModule } from "../GovernorModule";
 import { MListDecoded, MListEvent, MLists } from "./list.types";
 
-import { dualGovernorABI } from "~/lib/sdk";
+import { registrarABI } from "~/lib/sdk";
+import { ApiModule } from "~/lib/api/api-module";
 
-export class List extends GovernorModule {
+export class List extends ApiModule {
   async decodeListLog(log: Log, abi: Abi): Promise<MListEvent> {
     const { eventName, args: event } = decodeEventLog({
       abi,
@@ -27,10 +27,12 @@ export class List extends GovernorModule {
         eventName: eventName as "AddressAddedToList" | "AddressRemovedFromList",
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
-        listName: hexToBytes32String(event.listName),
+        list: hexToBytes32String(event.list),
         account: event.account,
         timestamp: Number(block.timestamp),
       };
+
+      console.log({ listEvent });
 
       return listEvent;
     }
@@ -40,27 +42,27 @@ export class List extends GovernorModule {
 
   async getLists(): Promise<Array<MLists>> {
     const addRawLogs = await this.client.getLogs({
-      address: this.contract,
+      address: this.config.registrar as Hash,
       fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
-        "event AddressAddedToList(bytes32 listName, address account)"
+        "event AddressAddedToList(bytes32 indexed list, address indexed account)"
       ),
     });
 
     const removeRawLogs = await this.client.getLogs({
-      address: this.contract,
+      address: this.config.registrar as Hash,
       fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
-        "event AddressRemovedFromList(bytes32 listName, address account)"
+        "event AddressRemovedFromList(bytes32 indexed list, address indexed account)"
       ),
     });
 
     const addOperations = await Promise.all(
-      addRawLogs.map((log: Log) => this.decodeListLog(log, dualGovernorABI))
+      addRawLogs.map((log: Log) => this.decodeListLog(log, registrarABI))
     );
 
     const removeOperations = await Promise.all(
-      removeRawLogs.map((log: Log) => this.decodeListLog(log, dualGovernorABI))
+      removeRawLogs.map((log: Log) => this.decodeListLog(log, registrarABI))
     );
 
     const listGrouped = groupBy(
@@ -69,7 +71,7 @@ export class List extends GovernorModule {
         ["blockNumber"],
         ["asc"]
       ),
-      "listName"
+      "list"
     );
 
     const lists: MLists[] = [];

@@ -12,10 +12,10 @@
 
 <script setup lang="ts">
 import { html } from "gridjs";
-import { MProposal, VoteCast } from "@/lib/api";
+import { MProposal, MVote } from "@/lib/api/types";
 
 interface Props {
-  votes: VoteCast[];
+  votes: MVote[];
 }
 
 const props = defineProps<Props>();
@@ -67,7 +67,7 @@ const votesTableConfig = computed(() => {
         },
       },
     ],
-    data: props.votes.map((v: VoteCast) => ({
+    data: props.votes.map((v: MVote) => ({
       proposalId: v.proposalId,
       proposal: proposals.getProposalById(v.proposalId),
       vote: v.support,
