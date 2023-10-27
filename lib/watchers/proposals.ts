@@ -1,5 +1,6 @@
 import { Hash } from "viem";
 import { storeToRefs } from "pinia";
+import { MProposal } from "../api/types";
 import { useProposalsStore } from "@/stores/proposals";
 import { useSpogStore } from "@/stores/spog";
 import { watchDualGovernorEvent } from "@/lib/sdk";
@@ -26,7 +27,7 @@ export const watchProposalCreated = () => {
         )
       );
 
-      proposals.setProposals(newProposals);
+      proposals.push(newProposals as Array<MProposal>);
     }
   );
 };
