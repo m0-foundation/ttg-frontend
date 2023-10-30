@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <p class="text-grey-primary text-xs mt-1">
+      <p class="text-grey-primary text-xxs lg:text-xs mt-1">
         {{ currentEpochAsDate }} - {{ nextEpochAsDate }} *
         <span>
           ENDS {{ timeLeft }} at block #{{ epoch?.next?.asBlockNumber }}
