@@ -26,10 +26,10 @@
 
     <div class="bg-[#1c1c1c]">
       <div
-        class="text-white text-xs p-6 pb-4 flex justify-between lg:justify-start lg:gap-6"
+        class="text-white text-xs p-6 pb-4 flex justify-between lg:justify-start gap-4 whitespace-nowrap overflow-x-auto"
       >
         <NuxtLink to="/proposals/">
-          <MNavButton class="flex items-center gap-1 mr-0">
+          <MNavButton class="flex items-center gap-1">
             <span class="lg:hidden">Active</span>
             <span class="hidden lg:inline-block">Current Proposals</span>
             <MBadge>{{ active }}</MBadge>
@@ -37,19 +37,19 @@
         </NuxtLink>
 
         <NuxtLink to="/proposals/emergency/">
-          <MNavButton class="flex items-center gap-1 mr-0">
+          <MNavButton class="flex items-center gap-1">
             Emergency <MBadge version="error">{{ emergency }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
         <NuxtLink to="/proposals/succeeded/">
-          <MNavButton class="flex items-center gap-1 mr-0">
+          <MNavButton class="flex items-center gap-1">
             Pending Execution <MBadge>{{ pendingExecution }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
         <NuxtLink to="/proposals/pending/">
-          <MNavButton class="flex items-center gap-1 mr-0">
+          <MNavButton class="flex items-center gap-1">
             Scheduled <MBadge>{{ pending }}</MBadge>
           </MNavButton>
         </NuxtLink>
