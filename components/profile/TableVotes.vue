@@ -2,9 +2,12 @@
   <div>
     <div
       v-if="!votes || !votes.length"
-      class="flex flex-col items-center justify-center h-80 text-grey-primary"
+      class="flex flex-col items-center justify-center h-24 text-grey-primary"
     >
-      No voting history to show.
+      <span class="text-lg mb-2 opacity-50">No voting history to show.</span>
+      <span class="text-xs font-light opacity-50"
+        >Check later for updates.</span
+      >
     </div>
     <MTable v-else :config="votesTableConfig" />
   </div>
