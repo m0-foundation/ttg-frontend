@@ -1,11 +1,6 @@
 <template>
   <div>
-    <nav class="text-white text-xl p-8">
-      <MNavButton>
-        Governance Configurations
-        <span class="text-primary">_</span>
-      </MNavButton>
-    </nav>
+    <PageTitle class="p-6" title="Governance Configurations"></PageTitle>
 
     <LayoutPage>
       <div v-if="!data || !data.length">No Configs to show.</div>

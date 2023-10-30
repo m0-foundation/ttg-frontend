@@ -1,16 +1,17 @@
 <template>
-  <div v-if="address">
-    <div class="flex justify-between gap-4">
+  <div v-if="address" class="p-6">
+    <div class="lg:flex justify-between gap-4">
       <div>
-        <h1 class="text-2xl uppercase">
-          my profile<span class="text-primary">_</span>
-        </h1>
-        <p class="text-grey-primary text-xs">
+        <PageTitle title="My Profile"></PageTitle>
+        <p class="text-zinc-400 text-xs">
           {{ address }}
         </p>
       </div>
       <div>
-        <MButton :disabled="!canDelegate">
+        <MButton
+          class="w-full justify-center mt-4 lg:mt-0"
+          :disabled="!canDelegate"
+        >
           <NuxtLink to="/delegate/">re-delegate</NuxtLink>
         </MButton>
       </div>

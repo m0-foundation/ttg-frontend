@@ -7,7 +7,7 @@
         :steps="steps"
       />
     </MModal>
-    <form @submit.prevent="onSubmit">
+    <form class="p-6" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
       <div v-else>
         <div v-if="!isPreview">
