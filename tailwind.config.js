@@ -22,6 +22,7 @@ module.exports = {
         "grey-secondary": "#353835",
         "grey-800": "#202220",
         "grey-600": "#363835",
+        "neutral-900": "#151615",
       },
       fontSize: {
         xxs: ["0.65rem"],
