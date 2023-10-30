@@ -35,7 +35,7 @@ watch(
 
 <style scoped>
 aside {
-  @apply z-30 fixed lg:static w-full lg:min-w-[280px] lg:w-auto overflow-y-scroll p-6 hidden lg:block bg-neutral-900;
+  @apply z-30 fixed lg:static w-full h-full lg:min-w-[280px] lg:w-auto overflow-y-scroll p-6 hidden lg:block bg-neutral-900;
   max-height: calc(100vh - 96px);
 }
 </style>

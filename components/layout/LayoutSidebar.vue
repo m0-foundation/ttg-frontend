@@ -77,13 +77,13 @@
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full p-2 hover:underline text-left uppercase text-xs"
+      class="block w-full py-2 hover:underline text-left uppercase text-xs"
       @click="() => disconnect()"
     >
       Disconnect
     </button>
   </div>
-  <div v-else>
+  <div v-else class="py-2">
     <MModalWeb3Connect />
   </div>
 
@@ -111,7 +111,7 @@ const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
 <style scoped>
 li {
   list-style-type: none;
-  @apply text-white text-sm  px-2 py-2 uppercase hover:underline;
+  @apply text-white text-sm py-2 uppercase hover:underline;
 }
 .active {
   @apply text-primary;
