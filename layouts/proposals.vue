@@ -4,11 +4,11 @@
       <p class="text-xs text-grey-primary">Proposals</p>
       <div class="lg:flex justify-between">
         <p class="text-lg text-white">
-          Current epoch:
+          {{ epoch?.current?.type }} epoch:
           <span class="text-primary">#{{ epoch?.current?.asNumber }}_</span>
         </p>
         <div class="hidden lg:block">
-          <NuxtLink to="/proposals/all">
+          <NuxtLink to="/proposals/all/">
             <MNavButton class="underline text-xs text-white">
               all epochs
             </MNavButton>
@@ -18,7 +18,9 @@
 
       <p class="text-grey-primary text-xs mt-1">
         {{ currentEpochAsDate }} - {{ nextEpochAsDate }} *
-        <span>ENDS {{ timeLeft }}</span>
+        <span>
+          ENDS {{ timeLeft }} at block #{{ epoch?.next?.asBlockNumber }}
+        </span>
       </p>
     </div>
 
@@ -26,7 +28,7 @@
       <div
         class="text-white text-xs p-6 pb-4 flex justify-between lg:justify-start lg:gap-6"
       >
-        <NuxtLink to="/proposals/active">
+        <NuxtLink to="/proposals/">
           <MNavButton class="flex items-center gap-1 mr-0">
             <span class="lg:hidden">Active</span>
             <span class="hidden lg:inline-block">Current Proposals</span>
@@ -34,21 +36,27 @@
           </MNavButton>
         </NuxtLink>
 
-        <NuxtLink to="/proposals/active/emergency">
+        <NuxtLink to="/proposals/emergency/">
           <MNavButton class="flex items-center gap-1 mr-0">
             Emergency <MBadge version="error">{{ emergency }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
-        <NuxtLink to="/proposals/active/succeeded">
+        <NuxtLink to="/proposals/succeeded/">
           <MNavButton class="flex items-center gap-1 mr-0">
             Pending Execution <MBadge>{{ pendingExecution }}</MBadge>
+          </MNavButton>
+        </NuxtLink>
+
+        <NuxtLink to="/proposals/pending/">
+          <MNavButton class="flex items-center gap-1 mr-0">
+            Scheduled <MBadge>{{ pending }}</MBadge>
           </MNavButton>
         </NuxtLink>
       </div>
 
       <div>
-        <NuxtPage />
+        <slot />
       </div>
     </div>
   </div>
@@ -71,6 +79,8 @@ const pendingExecution = computed(
 const emergency = computed(
   () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length
 );
+
+const pending = computed(() => store.getProposalsByState("Pending").length);
 
 const { epoch } = storeToRefs(spog);
 

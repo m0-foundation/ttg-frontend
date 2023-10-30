@@ -19,6 +19,10 @@ const meta = {
         "outline-dark",
       ],
     },
+    isLoading: {
+      control: "boolean",
+      options: [false, true],
+    },
   },
   render: (args) => ({
     components: {

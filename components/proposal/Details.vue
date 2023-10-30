@@ -17,15 +17,12 @@
         :power-quorum="powerQuorum"
       />
 
-      <div class="flex justify-between mb-7">
-        <div class="text-white text-xs">{{ timeLeft }}</div>
-      </div>
-
-      <div class="text-primary-darker text-sm mb-6 truncate w-52 lg:w-full">
+      <div class="text-grey-primary text-xs mb-6 truncate w-52 lg:w-full">
         Proposed by
-        <NuxtLink :to="`/profile/${proposal?.proposer}`">
+        <NuxtLink :to="`/profile/${proposal?.proposer}/`">
           <u>{{ proposal?.proposer }}</u>
         </NuxtLink>
+        at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
 
       <div class="markdown-body mb-6" v-html="html"></div>
@@ -78,10 +75,8 @@ const {
 
 console.log({ currentProposalValues });
 
-const timeLeft = computed(() => {
-  const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
-  return timeAgo;
-});
+const { toFormat } = useDate(proposal?.timestamp);
+const proposalCreatedFormatedDate = computed(() => toFormat("LL"));
 
 const zeroQuorum = computed(
   () => Number(spog.values.zeroTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range

@@ -1,0 +1,14 @@
+{{/* Not needed atm yet
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "spog-frontend.fullname" . }}
+  labels:
+    {{- include "spog-frontend.labels" . | nindent 4 }}
+data:
+{{- range $key, $value := .Values.config }}
+  {{ $key }}: {{ $value }}
+{{- end }}
+
+*/}}

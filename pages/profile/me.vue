@@ -11,7 +11,7 @@
       </div>
       <div>
         <MButton :disabled="!canDelegate">
-          <NuxtLink to="/delegate">re-delegate</NuxtLink>
+          <NuxtLink to="/delegate/">re-delegate</NuxtLink>
         </MButton>
       </div>
     </div>

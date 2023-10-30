@@ -7,47 +7,37 @@
     </span>
   </a>
 
-  <NuxtLink class="block" to="/proposal/create">
+  <NuxtLink class="block" to="/proposal/create/">
     <MButton class="mb-4">Create Proposal</MButton>
   </NuxtLink>
 
   <nav class="text-white text-xl mb-8">
     <ul>
       <li>
-        <NuxtLink to="/proposals/active" active-class="active">
-          proposals
-        </NuxtLink>
+        <NuxtLink to="/proposals/" active-class="active"> proposals </NuxtLink>
       </li>
 
       <li>
-        <NuxtLink to="/lists" active-class="active">lists</NuxtLink>
-      </li>
-
-      <li v-show="isConnected">
-        <NuxtLink to="/delegate" active-class="active">delegate</NuxtLink>
+        <NuxtLink to="/lists/" active-class="active">lists</NuxtLink>
       </li>
 
       <li>
-        <NuxtLink to="/config/governance" active-class="active">
+        <NuxtLink to="/config/governance/" active-class="active">
           governance config
         </NuxtLink>
       </li>
 
       <li>
-        <NuxtLink to="/config/protocol" active-class="active">
+        <NuxtLink to="/config/protocol/" active-class="active">
           M0 Protocol config
         </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink to="/settings" active-class="active">settings</NuxtLink>
       </li>
     </ul>
   </nav>
 
   <div v-if="isConnected">
     <div class="flex justify-between items-center mb-6">
-      <NuxtLink to="/profile/me" class="underline">MY PROFILE</NuxtLink>
+      <NuxtLink to="/profile/me/" class="underline">MY PROFILE</NuxtLink>
       <div class="truncate w-28 text-xs text-gray-400">
         {{ userAccount }}
       </div>
@@ -88,14 +78,14 @@
         </div>
       </div>
       <MButton version="outline-light" class="w-full">
-        <NuxtLink to="/delegate">re-delegate</NuxtLink>
+        <NuxtLink to="/delegate/">re-delegate</NuxtLink>
       </MButton>
     </div>
 
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full py-2 hover:bg-gray-600 text-left uppercase"
+      class="block w-full p-2 hover:underline text-left uppercase text-xs"
       @click="() => disconnect()"
     >
       Disconnect
@@ -104,6 +94,12 @@
   <div v-else>
     <MModalWeb3Connect />
   </div>
+
+  <li>
+    <NuxtLink to="/settings/" active-class="active" class="text-xs"
+      >settings</NuxtLink
+    >
+  </li>
 </template>
 
 <script lang="ts" setup>

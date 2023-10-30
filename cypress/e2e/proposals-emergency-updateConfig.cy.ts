@@ -19,7 +19,7 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue']").type(valueName);
       cy.get("input[data-test='proposalValue2']").type(value);
-      cy.get("div[data-test='description']").type(description);
+      cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
@@ -37,7 +37,7 @@ describe("Proposals", () => {
       // cy.mineEpochs(2);
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
 
-      cy.visit("http://localhost:3000/proposals/active/emergency");
+      cy.visit("http://localhost:3000/proposals/emergency");
       cy.reload();
 
       cy.contains(description).should("exist");
@@ -62,7 +62,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.visit("http://localhost:3000/proposals/active/emergency");
+      cy.visit("http://localhost:3000/proposals/emergency");
       cy.connectWallet();
       cy.wait(500);
 
@@ -76,7 +76,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("http://localhost:3000/proposals/active/succeeded");
+      cy.visit("http://localhost:3000/proposals/succeeded");
       cy.connectWallet();
 
       cy.contains("article", description).then(($proposal) => {

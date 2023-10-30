@@ -1,8 +1,8 @@
 import { GovernorModule } from "../GovernorModule";
 import { EpochTypes, MEpoch } from "./epoch.types";
 
-export const _SECONDS_PER_BLOCK = 4;
-export const _EPOCH_PERIOD = 225; // Defines 15 min worth of blocks (108,000)
+export const _SECONDS_PER_BLOCK = 12;
+export const _EPOCH_PERIOD = 100; // Defines 15 min worth of blocks (108,000)
 
 export class Epoch extends GovernorModule {
   async getBlockNumber(): Promise<bigint> {
@@ -10,11 +10,6 @@ export class Epoch extends GovernorModule {
   }
 
   async getEpochState(): Promise<MEpoch> {
-    // const currentEpoch = await readDualGovernor({
-    //   address: this.contract,
-    //   functionName: "clock",
-    // });
-
     const currentBlock = await this.client.getBlock();
     const currentEpoch = await this.currentEpoch(currentBlock.number);
 

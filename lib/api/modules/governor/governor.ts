@@ -4,7 +4,6 @@ import { ApiModule } from "../../api-module";
 import { ApiContext } from "../../api-context";
 import { MGovernorContracts, MGovernorValues } from "./governor.types";
 import { Proposals } from "./modules/proposal";
-import { List } from "./modules/list";
 import { Voting } from "./modules/voting";
 import { Epoch } from "./modules/epoch";
 import { dualGovernorABI } from "@/lib/sdk";
@@ -13,7 +12,6 @@ export class Governor extends ApiModule {
   contract: Hash;
 
   proposals: Proposals;
-  list: List;
   voting: Voting;
   epoch: Epoch;
 
@@ -23,7 +21,6 @@ export class Governor extends ApiModule {
 
     this.proposals = new Proposals(contract, context);
     this.voting = new Voting(contract, context);
-    this.list = new List(contract, context);
     this.epoch = new Epoch(contract, context);
   }
 

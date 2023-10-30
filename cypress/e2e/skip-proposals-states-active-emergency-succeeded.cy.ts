@@ -20,7 +20,7 @@ describe.skip("Proposals", () => {
 
         cy.get("input[data-test='proposalValue']").type(input1);
 
-        cy.get("div[data-test='description']").type(description1);
+        cy.get("textarea[data-test='description']").type(description1);
 
         cy.contains("Preview proposal").should("exist");
         cy.contains("Preview proposal").click();
@@ -41,7 +41,7 @@ describe.skip("Proposals", () => {
       });
 
       it("I should be able to ACCESS the ACTIVE proposal", () => {
-        cy.visit("http://localhost:3000/proposals/active");
+        cy.visit("http://localhost:3000/proposals/");
 
         cy.contains(description1).should("exist");
 
@@ -81,7 +81,7 @@ describe.skip("Proposals", () => {
 
         cy.get("input[data-test='proposalValue']").type(input);
 
-        cy.get("div[data-test='description']").type(description);
+        cy.get("textarea[data-test='description']").type(description);
 
         cy.contains("Preview proposal").should("exist");
         cy.contains("Preview proposal").click();
@@ -114,7 +114,7 @@ describe.skip("Proposals", () => {
 
         cy.get("input[data-test='proposalValue']").type(input);
 
-        cy.get("div[data-test='description']").type(description);
+        cy.get("textarea[data-test='description']").type(description);
 
         cy.contains("Preview proposal").should("exist");
         cy.contains("Preview proposal").click();
@@ -163,7 +163,7 @@ describe.skip("Proposals", () => {
         // address to append
         cy.get("input[data-test='proposalValue2']").type(input2);
 
-        cy.get("div[data-test='description']").type(description);
+        cy.get("textarea[data-test='description']").type(description);
 
         cy.contains("Preview proposal").should("exist");
         cy.contains("Preview proposal").click();

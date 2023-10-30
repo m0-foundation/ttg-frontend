@@ -23,7 +23,7 @@ const apiStore = useApiClientStore();
 
 const fetchLists = async () => {
   try {
-    const data = await apiStore.client.governor!.list.getLists();
+    const data = await apiStore.client.registrar!.list.getLists();
     const listsStore = useListsStore();
     listsStore.setLists(data);
     console.log("fetched Lists", { data });
@@ -41,7 +41,7 @@ const tableConfig = computed(() => {
   return {
     columns: [
       {
-        id: "listName",
+        id: "list",
         name: "List",
         sort: true,
       },
@@ -67,7 +67,7 @@ const tableConfig = computed(() => {
     ],
     data: lists.value.map((p) => ({
       account: p.account,
-      listName: p.listName,
+      list: p.list,
       timestamp: p.timestamp,
     })),
     search: true,
