@@ -1,5 +1,5 @@
-<template lang="">
-  <div>
+<template>
+  <div class="p-6">
     <h1 class="text-white text-lg font-normal font-['IBM Plex Mono'] uppercase">
       {{ props?.title }}<span class="text-teal-500">_</span>
     </h1>

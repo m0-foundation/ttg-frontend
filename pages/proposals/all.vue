@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle class="p-6" title="All Epochs"></PageTitle>
+    <PageTitle title="All Epochs"></PageTitle>
 
     <LayoutPage>
       <div v-if="!proposals || !proposals.length">No proposals to show.</div>

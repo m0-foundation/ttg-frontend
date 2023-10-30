@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle class="p-6" title="Lists"></PageTitle>
+    <PageTitle title="Lists"></PageTitle>
 
     <LayoutPage>
       <div v-if="isLoading">Loading...</div>
