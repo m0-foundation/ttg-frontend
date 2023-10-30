@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <div class="p-4">
+    <div class="py-4">
       <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
       <div class="flex justify-between mb-4">
         <div class="text-gray-400 flex items-center">
@@ -52,7 +52,7 @@
 
     <div
       v-show="hasDelegatedPower || hasDelegatedZero"
-      class="p-4 bg-primary-darker text-white"
+      class="py-4 bg-primary-darker text-white"
     >
       <div class="mb-2">
         <p class="uppercase mb-2 text-xxs">Voting power is delegated to:</p>

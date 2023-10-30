@@ -1,6 +1,6 @@
 <template>
   <div v-if="address">
-    <div class="lg:flex justify-between gap-4 p-6">
+    <div class="lg:flex justify-between gap-4 p-6 pt-2 lg:pt-6">
       <div>
         <PageTitle title="My Profile" class="p-0"></PageTitle>
         <p class="text-zinc-400 text-xs">

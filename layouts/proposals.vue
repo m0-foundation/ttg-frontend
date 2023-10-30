@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="p-6 uppercase">
+    <div class="p-6 pt-2 lg:pt-6 uppercase">
       <p class="text-xs text-grey-primary">Proposals</p>
       <div class="lg:flex justify-between">
         <p class="text-lg text-white">
