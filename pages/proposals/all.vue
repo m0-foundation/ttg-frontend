@@ -1,8 +1,7 @@
 <template>
   <div>
-    <p class="text-xl text-white uppercase my-4">
-      All epochs<span class="text-primary">_</span>
-    </p>
+    <PageTitle class="p-6" title="All Epochs"></PageTitle>
+
     <LayoutPage>
       <div v-if="!proposals || !proposals.length">No proposals to show.</div>
       <MTable v-else :config="tableConfig" />
