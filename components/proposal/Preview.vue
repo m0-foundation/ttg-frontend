@@ -15,7 +15,7 @@
       <div class="text-green-900 text-xs lg:text-base">
         <p class="overflow-hidden text-ellipsis">
           Proposed by
-          <span>{{ address }}</span>
+          <span>{{ address || "0x..." }}</span>
         </p>
       </div>
       <div class="markdown-body" v-html="descriptionHtml"></div>
