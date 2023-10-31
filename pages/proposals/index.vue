@@ -11,10 +11,7 @@
       </template>
     </ProposalList>
 
-    <div
-      v-show="hasProposals && isConnected"
-      class="p-6 bg-grey-600 mb-28 lg:mb-0"
-    >
+    <div v-show="hasProposals && isConnected" class="p-6 bg-grey-600">
       <div class="lg:flex justify-between items-center gap-2">
         <div class="grow flex items-center gap-2 mb-2 lg:mb-0">
           <div class="w-1/4 lg:w-1/3 bg-grey-800 rounded-full h-1.5">
@@ -26,14 +23,14 @@
           <p v-if="hasFinishedVoting" class="text-grey-primary">
             Your votes has been submitted
           </p>
-          <span v-else class="text-xs">
+          <span v-else class="text-xxs lg:text-xs">
             {{ selectedCastProposals.length }} out
             {{ activeProposals.length }} proposals are left to vote on
           </span>
         </div>
         <MButton
           id="button-cast-submit"
-          class="w-full lg:w-auto"
+          class="w-full lg:w-auto flex justify-center my-3"
           :disabled="
             !isSelectedCastProposalsFull || hasFinishedVoting || isLoading
           "
@@ -46,7 +43,7 @@
 
       <p
         v-show="!hasFinishedVoting"
-        class="text-xs text-grey-primary flex lg:justify-end mt-2"
+        class="text-xxs text-grey-primary flex lg:justify-end mt-2"
       >
         Your voting power will decrease over time if you do not vote
       </p>

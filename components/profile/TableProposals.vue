@@ -2,9 +2,9 @@
   <div>
     <div
       v-if="!proposals || !proposals.length"
-      class="flex flex-col items-center justify-center h-80 text-grey-primary"
+      class="flex flex-col items-center justify-center h-24 text-grey-primary"
     >
-      No proposals created by you.
+      <span class="text-lg mb-2 opacity-50">No proposals created by you.</span>
     </div>
     <MTable v-else :config="proposalsTableConfig" />
   </div>

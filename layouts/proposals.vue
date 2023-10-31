@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="p-6 lg:px-8 lg:py-4 uppercase">
+    <div class="p-6 pt-2 lg:pt-6 uppercase">
       <p class="text-xs text-grey-primary">Proposals</p>
       <div class="lg:flex justify-between">
         <p class="text-lg text-white">
@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <p class="text-grey-primary text-xs mt-1">
+      <p class="text-grey-primary text-xxs lg:text-xs mt-1">
         {{ currentEpochAsDate }} - {{ nextEpochAsDate }} *
         <span>
           ENDS {{ timeLeft }} at block #{{ epoch?.next?.asBlockNumber }}
@@ -26,10 +26,10 @@
 
     <div class="bg-[#1c1c1c]">
       <div
-        class="text-white text-xs p-6 pb-4 flex justify-between lg:justify-start lg:gap-6"
+        class="text-white text-xs p-6 pb-4 flex justify-between lg:justify-start gap-4 whitespace-nowrap overflow-x-auto"
       >
         <NuxtLink to="/proposals/">
-          <MNavButton class="flex items-center gap-1 mr-0">
+          <MNavButton class="flex items-center gap-1">
             <span class="lg:hidden">Active</span>
             <span class="hidden lg:inline-block">Current Proposals</span>
             <MBadge>{{ active }}</MBadge>
@@ -37,19 +37,19 @@
         </NuxtLink>
 
         <NuxtLink to="/proposals/emergency/">
-          <MNavButton class="flex items-center gap-1 mr-0">
+          <MNavButton class="flex items-center gap-1">
             Emergency <MBadge version="error">{{ emergency }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
         <NuxtLink to="/proposals/succeeded/">
-          <MNavButton class="flex items-center gap-1 mr-0">
+          <MNavButton class="flex items-center gap-1">
             Pending Execution <MBadge>{{ pendingExecution }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
         <NuxtLink to="/proposals/pending/">
-          <MNavButton class="flex items-center gap-1 mr-0">
+          <MNavButton class="flex items-center gap-1">
             Scheduled <MBadge>{{ pending }}</MBadge>
           </MNavButton>
         </NuxtLink>

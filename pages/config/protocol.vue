@@ -1,11 +1,6 @@
 <template>
   <div>
-    <nav class="text-white text-xl p-8">
-      <MNavButton>
-        M^0 Protocol Configurations
-        <span class="text-primary">_</span>
-      </MNavButton>
-    </nav>
+    <PageTitle>M^0 Protocol Configurations</PageTitle>
 
     <LayoutPage>
       <div v-if="isLoading">Loading...</div>

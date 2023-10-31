@@ -1,8 +1,6 @@
 <template>
   <div>
-    <nav class="text-white text-xl p-8">
-      <MNavButton>Lists<span class="text-primary">_</span></MNavButton>
-    </nav>
+    <PageTitle>Lists</PageTitle>
 
     <LayoutPage>
       <div v-if="isLoading">Loading...</div>

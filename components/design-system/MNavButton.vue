@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="text-grey-primary uppercase hover:text-white focus:text-white text-center mr-5"
+    class="text-grey-primary uppercase hover:text-white focus:text-white text-center"
   >
     <slot />
   </button>
