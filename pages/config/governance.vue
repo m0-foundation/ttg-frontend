@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="Governance Configurations"></PageTitle>
+    <PageTitle>Governance Configurations</PageTitle>
 
     <LayoutPage>
       <div v-if="!data || !data.length">No Configs to show.</div>
