@@ -1,12 +1,4 @@
 <template>
-  <a href="/" class="inline-block items-center mb-4">
-    <span
-      class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-    >
-      M&#94;ZERO <span class="text-sm text-gray-400">Governance</span>
-    </span>
-  </a>
-
   <NuxtLink class="block" to="/proposal/create/">
     <MButton class="mb-4">Create Proposal</MButton>
   </NuxtLink>
@@ -36,14 +28,14 @@
   </nav>
 
   <div v-if="isConnected">
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-2">
       <NuxtLink to="/profile/me/" class="underline">MY PROFILE</NuxtLink>
       <div class="truncate w-28 text-xs text-gray-400">
         {{ userAccount }}
       </div>
     </div>
 
-    <div class="p-4">
+    <div class="py-4">
       <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
       <div class="flex justify-between mb-4">
         <div class="text-gray-400 flex items-center">
@@ -60,7 +52,7 @@
 
     <div
       v-show="hasDelegatedPower || hasDelegatedZero"
-      class="p-4 bg-primary-darker text-white"
+      class="py-4 bg-primary-darker text-white"
     >
       <div class="mb-2">
         <p class="uppercase mb-2 text-xxs">Voting power is delegated to:</p>
@@ -85,13 +77,13 @@
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full p-2 hover:underline text-left uppercase text-xs"
+      class="block w-full py-2 hover:underline text-left uppercase text-xs"
       @click="() => disconnect()"
     >
       Disconnect
     </button>
   </div>
-  <div v-else>
+  <div v-else class="py-2">
     <MModalWeb3Connect />
   </div>
 
@@ -119,7 +111,7 @@ const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
 <style scoped>
 li {
   list-style-type: none;
-  @apply text-white text-sm  px-2 py-2 uppercase hover:underline;
+  @apply text-white text-sm py-2 uppercase hover:underline;
 }
 .active {
   @apply text-primary;

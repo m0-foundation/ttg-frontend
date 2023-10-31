@@ -7,7 +7,7 @@
 
 @layer base {
   html {
-    @apply bg-body-dark text-white font-mono;
+    @apply bg-neutral-900 text-white font-mono;
   }
 
 input,

@@ -1,21 +1,21 @@
 <template>
   <div v-if="address">
-    <div class="flex justify-between gap-4">
-      <div>
-        <h1 class="text-2xl uppercase">
-          my profile<span class="text-primary">_</span>
-        </h1>
-        <p class="text-grey-primary text-xs">
-          {{ address }}
-        </p>
-      </div>
-      <div>
-        <MButton :disabled="!canDelegate">
-          <NuxtLink to="/delegate/">re-delegate</NuxtLink>
-        </MButton>
-      </div>
-    </div>
-    <ProfileBalances :address="address" />
+    <PageTitle>
+      My Profile
+      <template #subtitle>{{ address }}</template>
+      <template #side>
+        <NuxtLink to="/delegate/">
+          <MButton
+            class="w-full justify-center mt-4 lg:mt-0"
+            :disabled="!canDelegate"
+          >
+            re-delegate
+          </MButton></NuxtLink
+        >
+      </template>
+    </PageTitle>
+
+    <ProfileBalances class="p-6" :address="address" />
     <div v-if="hasDelegatedPower" class="p-4 bg-primary-darker text-white my-2">
       <p class="uppercase text-xs mb-6">
         Your POWER tokens <u>voting power</u> is delegated to the address:

@@ -1,5 +1,5 @@
 <template>
-  <footer class="fixed bg-body-dark bottom-0 left-0 z-50 w-full p-6 md:p-6">
+  <footer class="bg-neutral-900 w-full p-6 md:p-6">
     <div class="lg:flex items-center">
       <div class="lg:grow">
         <span class="text-xs text-zinc-500"
