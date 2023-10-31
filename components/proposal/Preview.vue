@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { Hash } from "crypto";
+import { Hash } from "viem";
 import { marked } from "marked";
 import xss from "xss";
 import { computed } from "vue";
