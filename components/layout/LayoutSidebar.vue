@@ -14,17 +14,11 @@
   <nav class="text-white text-xl mb-8">
     <ul>
       <li>
-        <NuxtLink to="/proposals/active/" active-class="active">
-          proposals
-        </NuxtLink>
+        <NuxtLink to="/proposals/" active-class="active"> proposals </NuxtLink>
       </li>
 
       <li>
         <NuxtLink to="/lists/" active-class="active">lists</NuxtLink>
-      </li>
-
-      <li v-show="isConnected">
-        <NuxtLink to="/delegate/" active-class="active">delegate</NuxtLink>
       </li>
 
       <li>
@@ -37,10 +31,6 @@
         <NuxtLink to="/config/protocol/" active-class="active">
           M0 Protocol config
         </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink to="/settings/" active-class="active">settings</NuxtLink>
       </li>
     </ul>
   </nav>
@@ -95,7 +85,7 @@
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full py-2 hover:bg-gray-600 text-left uppercase"
+      class="block w-full p-2 hover:underline text-left uppercase text-xs"
       @click="() => disconnect()"
     >
       Disconnect
@@ -104,6 +94,12 @@
   <div v-else>
     <MModalWeb3Connect />
   </div>
+
+  <li>
+    <NuxtLink to="/settings/" active-class="active" class="text-xs"
+      >settings</NuxtLink
+    >
+  </li>
 </template>
 
 <script lang="ts" setup>

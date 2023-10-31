@@ -197,7 +197,6 @@ import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
 import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber.vue";
 import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber.vue";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
-import ProposalInputSingleText from "@/components/proposal/InputSingleText.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import { MProposalVotingTokens, MVotingTokens } from "@/lib/api";
 /* control stepper */
@@ -502,7 +501,7 @@ async function onSubmit() {
 
     await wait(1000);
 
-    return navigateTo("/proposals/active/");
+    return navigateTo("/proposals/pending/");
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <NuxtLayout name="proposals">
     <ProposalList
       :proposals="activeProposals"
       class="px-3 pb-2"
@@ -33,8 +33,11 @@
         </div>
         <MButton
           id="button-cast-submit"
-          :disabled="!isSelectedCastProposalsFull || hasFinishedVoting"
           class="w-full lg:w-auto"
+          :disabled="
+            !isSelectedCastProposalsFull || hasFinishedVoting || isLoading
+          "
+          :is-loading="isLoading"
           @click="onCastBatchVotes"
         >
           submit votes
@@ -48,13 +51,14 @@
         Your voting power will decrease over time if you do not vote
       </p>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useAccount, useContractRead } from "use-wagmi";
+import { waitForTransaction } from "@wagmi/core";
 import { writeDualGovernor, powerTokenABI } from "@/lib/sdk";
 
 interface CastedProposal {
@@ -63,6 +67,7 @@ interface CastedProposal {
 }
 
 const selectedCastProposals = ref<Array<CastedProposal>>([]);
+const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
@@ -100,17 +105,29 @@ function onUncast(proposalId: string) {
   );
 }
 
-function onCastBatchVotes() {
+async function onCastBatchVotes() {
+  isLoading.value = true;
+
   const proposalIds = selectedCastProposals.value.map((p) =>
     BigInt(p.proposalId)
   );
   const votes = selectedCastProposals.value.map((p) => p.vote);
-  return writeDualGovernor({
+
+  const { hash } = await writeDualGovernor({
     address: spog.contracts.governor as Hash,
     functionName: "castVotes",
     args: [proposalIds, votes], // uint256 proposalId, uint8 support
     account: userAccount.value,
   });
+
+  const txReceipt = await waitForTransaction({ confirmations: 1, hash });
+  if (txReceipt.status !== "success") {
+    throw new Error("Transaction was rejected");
+  }
+
+  isLoading.value = false;
+
+  window.location.reload();
 }
 
 const { data: hasFinishedVoting } = useContractRead({
