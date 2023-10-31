@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- TODO: Change to new PageTitle component -->
     <nav class="text-white text-xl p-8">
       <MNavButton class="text-white text-lg">
         Auction<span class="text-primary">_</span>
@@ -38,7 +39,7 @@
       </div>
 
       <div
-        v-if="!transferEpoch"
+        v-if="transferEpoch"
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-neutral-800 p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">Value for purchase:</p>
@@ -49,7 +50,7 @@
           placeholder="0"
           @update:model-value="getPurchaseCost"
         />
-        <p class="text-zinc-500 text-xs mt-2">Max: 3043</p>
+        <p class="text-zinc-500 text-xs mt-2">Max: 0</p>
         <div class="my-12"></div>
         <p class="text-gray-200 text-xs uppercase mb-2">Value for purchase:</p>
         <MTokenAmount
@@ -120,7 +121,7 @@ function getPurchaseCost() {
   purchaseCost.value = getAuctionPurchaseCost(
     BigInt(purchaseAmount.value),
     blockNumber.value,
-    33333333333n
+    lastEpochTotalSupply.value
   );
 }
 
