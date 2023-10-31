@@ -2,7 +2,7 @@
   <div v-if="address">
     <PageTitle>
       My Profile
-      <template #subtitle>address</template>
+      <template #subtitle>{{ address }}</template>
       <template #side>
         <NuxtLink to="/delegate/">
           <MButton

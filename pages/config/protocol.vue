@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="M^0 Protocol Configurations"></PageTitle>
+    <PageTitle>M^0 Protocol Configurations</PageTitle>
 
     <LayoutPage>
       <div v-if="isLoading">Loading...</div>
