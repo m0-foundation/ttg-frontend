@@ -23,23 +23,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Hash } from "viem";
 import { marked } from "marked";
 import xss from "xss";
 import { computed } from "vue";
 const emit = defineEmits(["on-back"]);
 
-const props = defineProps({
-  description: {
-    type: String,
-    default: "",
-  },
-  address: {
-    type: Hash,
-    default: "0x...",
-  },
-});
+interface PreviewProps {
+  address?: Ref<Hash>;
+  description: String;
+}
+
+const props = defineProps<PreviewProps>();
 
 const descriptionHtml = computed(() => {
   return xss(marked.parse(props.description));
