@@ -55,7 +55,7 @@
         v-if="proposal?.state === 'Active'"
         class="flex justify-between items-center"
       >
-        <div class="inline-flex gap-1" role="group">
+        <div class="inline-flex gap-1 items-center" role="group">
           <ProposalButtonCastVote
             id="button-cast-yes"
             :disabled="
@@ -74,10 +74,23 @@
           >
             NO
           </ProposalButtonCastVote>
+
+          <div
+            v-show="!canVote"
+            class="uppercase text-xs text-grey-primary mx-4"
+          >
+            not enought voting power
+          </div>
         </div>
 
         <div class="uppercase text-xs text-grey-primary">
-          <div v-if="proposal?.votingType === 'Power'" class="flex">
+          <div
+            v-if="
+              proposal?.votingType === 'Power' ||
+              proposal?.votingType === 'Emergency'
+            "
+            class="flex"
+          >
             power tokens
             <MIconPower class="h-4 w-4 ml-1" />
           </div>
