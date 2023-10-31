@@ -10,15 +10,21 @@
 
     <MTextLoop class="text-primary-darker bg-primary text-sm" text="PREVIEW" />
 
-    <div class="bg-white px-16 py-8 mb-4">
+    <div class="bg-white p-6 lg:px-16 lg:py-8 mb-4">
       <h2>proposal.title</h2>
-      <div class="text-primary-darker">Proposed by 0x....</div>
+      <div class="text-green-900 text-xs lg:text-base">
+        <p class="overflow-hidden text-ellipsis">
+          Proposed by
+          <span>{{ address }}</span>
+        </p>
+      </div>
       <div class="markdown-body" v-html="descriptionHtml"></div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { Hash } from "crypto";
 import { marked } from "marked";
 import xss from "xss";
 import { computed } from "vue";
@@ -28,6 +34,10 @@ const props = defineProps({
   description: {
     type: String,
     default: "",
+  },
+  address: {
+    type: Hash,
+    default: "0x...",
   },
 });
 

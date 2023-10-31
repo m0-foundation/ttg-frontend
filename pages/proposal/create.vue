@@ -112,6 +112,7 @@
 
         <div v-else>
           <ProposalPreview
+            :address="userAccount"
             :description="previewDescription"
             @on-back="onBack"
           />
