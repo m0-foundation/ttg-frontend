@@ -1,6 +1,9 @@
 <template>
   <div v-if="address">
-    <PageTitle title="My Profile" :subtitle="address">
+<PageTitle>
+  My Profile
+  <template #subtitle>address/template>
+</PageTitle>
       <template #side>
         <NuxtLink to="/delegate/">
           <MButton
