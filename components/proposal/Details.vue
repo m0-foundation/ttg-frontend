@@ -32,6 +32,10 @@
         :current-proposal-values="currentProposalValues"
       />
     </article>
+
+    <div class="my-8">
+      <ProposalTableVotes :votes="votes?.value" />
+    </div>
   </div>
 </template>
 
@@ -84,4 +88,11 @@ const zeroQuorum = computed(
 const powerQuorum = computed(
   () => Number(spog.values.powerTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
 );
+
+const votesStore = useVotesStore();
+const votes = computed(() => {
+  if (proposalId.value) {
+    return votesStore.getBy("proposalId", proposalId.value);
+  }
+});
 </script>
