@@ -17,7 +17,7 @@
         :power-quorum="powerQuorum"
       />
 
-      <div class="text-grey-primary text-xs mb-6 truncate w-52 lg:w-full">
+      <div class="text-grey-primary text-xs mt-8 mb-2 truncate w-52 lg:w-full">
         Proposed by
         <NuxtLink :to="`/profile/${proposal?.proposer}/`">
           <u>{{ proposal?.proposer }}</u>
