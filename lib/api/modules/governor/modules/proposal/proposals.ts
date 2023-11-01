@@ -328,7 +328,7 @@ export class Proposals extends GovernorModule {
         const proposalData = await this.getProposal(
           proposal.proposalId.toString()
         );
-        console.log({ proposalData });
+
         const block = await this.client.getBlock({
           blockNumber: BigInt(proposal.blockNumber),
         });
@@ -416,7 +416,6 @@ export class Proposals extends GovernorModule {
     };
 
     const proposalData = await this.getProposal(proposal.proposalId.toString());
-    console.log({ proposalData });
 
     const block = await this.client.getBlock({
       blockNumber: BigInt(proposal.blockNumber),
