@@ -2,9 +2,25 @@
   <div class="mb-20 w-full xl:w-1/2 mx-auto">
     <h1 class="text-white text-2xl p-8 text-center">Delegate Tokens</h1>
     <p class="text-grey-primary text-center">
-      In order to start voting delegate your Power tokens to yourself or
-      somebody else.
+      You can delegate your voting power to any address. The tokens will remain
+      in your balance, and you can re-delegate them in the future.
     </p>
+
+    <div
+      v-show="!canDelegate"
+      class="bg-primary-darker text-white text-xs px-4 py-5 my-4"
+    >
+      <p class="uppercase mb-2">Warning</p>
+
+      <div class="flex items-center">
+        <MIconWarning class="mr-2" />
+        <p>
+          The transfer epoch has concluded. You will be able to delegate in the
+          next
+          <b>Transfer</b> epoch.
+        </p>
+      </div>
+    </div>
 
     <form class="my-4" @submit.prevent="delegateVote">
       <div class="bg-secondary-dark p-8">
@@ -91,7 +107,7 @@
 
       <p class="text-primary my-4">
         /* The delegated tokens will be available for voting starting from the
-        next epoch. Next epoch starts {{ nextEpochAsDate }}. */
+        next <b>Voting</b> epoch. */
       </p>
 
       <div class="flex justify-end gap-2">
@@ -120,11 +136,6 @@ const inputPowerDelegates = ref();
 const inputZeroDelegates = ref();
 
 const { address: userAccount, isConnected } = useAccount();
-
-const nextEpochAsDate = computed(() => {
-  const { toFormat } = useDate(Number(spog.epoch.value.next?.asTimestamp));
-  return toFormat("LLL");
-});
 
 const { powerTokenVotingPower, zeroTokenVotingPower } =
   useMVotingPower(userAccount);
