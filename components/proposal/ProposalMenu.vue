@@ -1,8 +1,5 @@
 <template lang="">
-  <div
-    v-if="chain?.blockExplorers?.default"
-    class="relative inline-block text-left dropdown text-white"
-  >
+  <div class="relative inline-block text-left dropdown text-white">
     <button
       aria-haspopup="true"
       aria-expanded="true"
@@ -31,10 +28,19 @@
       >
         <ul class="menu-items">
           <li>
-            <a @click="copyToClipboard(transactionExplorerUrl)">Copy url</a>
+            <a
+              @click="
+                copyToClipboard(
+                  useBlockExplorer('tx', props?.proposal?.transactionHash)
+                )
+              "
+              >Copy url</a
+            >
           </li>
           <li>
-            <a target="_blank" :href="transactionExplorerUrl"
+            <a
+              target="_blank"
+              :href="useBlockExplorer('tx', props?.proposal?.transactionHash)"
               >View on Block Explorer</a
             >
           </li>
@@ -44,20 +50,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useNetwork } from "use-wagmi";
 import { MProposal } from "@/lib/api";
-
-const { chain } = useNetwork();
 
 export interface ProposalProps {
   proposal: MProposal;
 }
 
 const props = defineProps<ProposalProps>();
-
-const transactionExplorerUrl = computed(() => {
-  return `${chain?.value?.blockExplorers?.default?.url}/tx/${props.proposal?.transactionHash}`;
-});
 </script>
 <style>
 .menu-items {
