@@ -23,6 +23,7 @@ module.exports = {
         "grey-800": "#202220",
         "grey-600": "#363835",
         "neutral-900": "#151615",
+        "grey-900": "#151615",
         "zinc-400": "#AEAFAE",
       },
       fontSize: {
