@@ -29,7 +29,7 @@ import { UseWagmiPlugin } from "use-wagmi";
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { Api } from "@/lib/api";
-import { watchProposalCreated } from "@/lib/watchers";
+import { watchProposalCreated, watchVoteCast } from "@/lib/watchers";
 
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
@@ -79,6 +79,11 @@ const fetchEpoch = async (api: Api) => {
   }
 };
 
+const fetchVotes = () => {
+  const votes = useVotesStore();
+  return votes.fetchAllVotes();
+};
+
 async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
@@ -105,9 +110,11 @@ await onSetup(rpc.value).then(async (api) => {
     fetchGovernorData(api),
     fetchProposals(api),
     fetchEpoch(api),
+    fetchVotes(),
   ]);
 
   watchProposalCreated();
+  watchVoteCast();
   isLoading.value = false;
 });
 

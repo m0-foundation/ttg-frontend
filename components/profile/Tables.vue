@@ -46,18 +46,12 @@ const selectedTab = ref(0);
 
 let votes = ref<MVote[]>([]);
 const proposals = useProposalsStore();
-const apiStore = useApiClientStore();
+const votesStore = useVotesStore();
 
 watch(
   address,
   () => {
-    const { state } = useAsyncState(
-      apiStore.client.governor!.voting!.getVotesByVoter(
-        address.value as string
-      ),
-      []
-    );
-    votes = state;
+    votes = votesStore.getBy("voter", address.value);
   },
   { immediate: true }
 );
