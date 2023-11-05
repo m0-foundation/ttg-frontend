@@ -5,7 +5,7 @@
       <div class="lg:flex justify-between">
         <p class="text-lg text-white">
           {{ epoch?.current?.type }} epoch:
-          <span class="text-primary">#{{ epoch?.current?.asNumber }}_</span>
+          <span class="text-green-700">#{{ epoch?.current?.asNumber }}_</span>
         </p>
         <div class="hidden lg:block">
           <NuxtLink to="/proposals/all/">

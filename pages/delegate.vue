@@ -28,7 +28,7 @@
           <div class="text-2xl">Delegate Power tokens</div>
           <div class="flex">
             <MIconPower class="h-8 w-8 mr-4" />
-            <span class="mx-2 flex items-center text-2xl text-primary">
+            <span class="mx-2 flex items-center text-2xl text-green-700">
               {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
             </span>
           </div>
@@ -75,7 +75,7 @@
           <div class="text-2xl">Delegate Zero tokens</div>
           <div class="flex">
             <MIconZero class="h-8 w-8 mr-4" />
-            <span class="mx-2 flex items-center text-2xl text-primary">
+            <span class="mx-2 flex items-center text-2xl text-green-700">
               {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
             </span>
           </div>
@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <p class="text-primary my-4">
+      <p class="text-green-700 my-4">
         /* The delegated tokens will be available for voting starting from the
         next <b>Voting</b> epoch. */
       </p>

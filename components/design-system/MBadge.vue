@@ -19,7 +19,7 @@ span {
 }
 
 .success {
-  @apply bg-primary text-green-900;
+  @apply bg-green-700 text-green-900;
 }
 .error {
   @apply bg-red-500 text-white;

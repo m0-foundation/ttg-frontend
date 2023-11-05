@@ -10,7 +10,7 @@
     ]"
   >
     <div>
-      <div class="bg-primary h-2" :style="`width: ${width}%`"></div>
+      <div class="bg-green-700 h-2" :style="`width: ${width}%`"></div>
       <div v-if="version === 'quorum'" class="quorum" :style="style" />
     </div>
   </div>

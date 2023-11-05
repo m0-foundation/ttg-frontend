@@ -106,7 +106,7 @@ h3 {
 }
 
 .complete {
-  @apply text-primary;
+  @apply text-green-700;
 }
 
 .incomplete {

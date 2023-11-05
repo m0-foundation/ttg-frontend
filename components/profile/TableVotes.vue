@@ -51,7 +51,7 @@ const votesTableConfig = computed(() => {
         formatter: (vote: boolean) => {
           return html(
             vote
-              ? "<span class='bg-primary text-body-black px-2 py-1'>YES</span>"
+              ? "<span class='bg-green-700 text-body-black px-2 py-1'>YES</span>"
               : "<span class='bg-red-500 text-white px-2 py-1'>NO</span>"
           );
         },

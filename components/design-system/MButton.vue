@@ -29,7 +29,7 @@ button:disabled {
   @apply opacity-50 cursor-not-allowed bg-green-800;
 }
 .primary {
-  @apply text-black bg-primary hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300;
+  @apply text-black bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300;
 }
 .secondary-dark {
   @apply border border-white text-white bg-secondary-dark hover:border-grey-400 hover:text-grey-400 focus:ring-4 focus:outline-none focus:ring-gray-300;

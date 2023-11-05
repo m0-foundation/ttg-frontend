@@ -28,14 +28,14 @@ div {
   @apply border border-grey-400 text-grey-400;
 }
 .active {
-  @apply border border-primary text-green-800;
+  @apply border border-green-700 text-green-800;
 }
 .defeated {
   @apply bg-red-500 text-white;
 }
 
 .succeeded {
-  @apply bg-primary text-green-900;
+  @apply bg-green-700 text-green-900;
 }
 
 .expired {

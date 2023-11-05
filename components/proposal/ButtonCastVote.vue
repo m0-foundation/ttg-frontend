@@ -32,7 +32,7 @@ button:disabled {
 }
 
 .default {
-  @apply text-black bg-primary hover:bg-green-800;
+  @apply text-black bg-green-700 hover:bg-green-800;
 }
 
 .active {

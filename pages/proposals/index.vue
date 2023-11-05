@@ -16,7 +16,7 @@
         <div class="grow flex items-center gap-2 mb-2 lg:mb-0">
           <div class="w-1/4 lg:w-1/3 bg-grey-800 rounded-full h-1.5">
             <div
-              class="bg-primary h-1.5 rounded-ful"
+              class="bg-green-700 h-1.5 rounded-ful"
               :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
             ></div>
           </div>
