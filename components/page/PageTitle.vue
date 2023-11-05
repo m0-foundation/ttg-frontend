@@ -6,7 +6,7 @@
       >
         <slot></slot><span class="text-teal-500">_</span>
       </h1>
-      <span class="text-xs text-zinc-400"><slot name="subtitle"></slot></span>
+      <span class="text-xs text-grey-300"><slot name="subtitle"></slot></span>
     </div>
 
     <slot name="side"></slot>

@@ -50,7 +50,6 @@ module.exports = {
         "red-800": "#99000",
         "red-900": "#660000",
         "red-1000": "#330000",
-        "zinc-400": "#AEAFAE",
       },
       fontSize: {
         xxs: ["0.65rem"],
