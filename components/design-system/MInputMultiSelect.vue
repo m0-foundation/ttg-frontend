@@ -15,10 +15,7 @@
 
       <span v-else class="text-xs text-[#5d605d]">change</span>
     </button>
-    <ul
-      v-show="isMenuOpen"
-      class="absolute z-50 text-white pt-4 bg-grey-secondary"
-    >
+    <ul v-show="isMenuOpen" class="absolute z-50 text-white pt-4 bg-grey-600">
       <li v-for="opt in options" :key="opt.value" class="">
         <div
           v-show="opt.header"
