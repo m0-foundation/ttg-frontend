@@ -52,7 +52,7 @@
 
     <div
       v-show="hasDelegatedPower || hasDelegatedZero"
-      class="py-4 bg-primary-darker text-white"
+      class="py-4 bg-green-900 text-white"
     >
       <div class="mb-2">
         <p class="uppercase mb-2 text-xxs">Voting power is delegated to:</p>

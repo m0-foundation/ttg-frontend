@@ -27,7 +27,7 @@
                 <div v-for="token in selectedProposalType?.tokens" :key="token">
                   <div
                     v-if="token === MVotingTokens.Power"
-                    class="p-4 bg-primary-darker"
+                    class="p-4 bg-green-900"
                   >
                     <div class="flex items-center gap-2 mb-2">
                       <p class="uppercase text-xs">Vote type</p>
@@ -41,7 +41,7 @@
 
                   <div
                     v-if="token === MVotingTokens.Zero"
-                    class="p-4 bg-primary-darker"
+                    class="p-4 bg-green-900"
                   >
                     <div class="flex items-center gap-2 mb-2">
                       <p class="uppercase text-xs">Vote type</p>

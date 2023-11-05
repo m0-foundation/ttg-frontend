@@ -8,7 +8,7 @@
 
     <div
       v-show="!canDelegate"
-      class="bg-primary-darker text-white text-xs px-4 py-5 my-4"
+      class="bg-green-900 text-white text-xs px-4 py-5 my-4"
     >
       <p class="uppercase mb-2">Warning</p>
 

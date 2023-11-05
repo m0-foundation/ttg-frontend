@@ -36,7 +36,7 @@ button:disabled {
 }
 
 .active {
-  @apply text-white bg-primary-darker;
+  @apply text-white bg-green-900;
 }
 
 .disabled {

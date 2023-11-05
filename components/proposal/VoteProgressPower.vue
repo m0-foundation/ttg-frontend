@@ -5,7 +5,7 @@
       <span class="flex uppercase text-xxs text-grey-400"> power tokens </span>
     </div>
 
-    <span id="vote-yes-percentage" class="text-primary-darker text-xs">
+    <span id="vote-yes-percentage" class="text-green-900 text-xs">
       {{ props.votes?.yes?.percentage.toFixed(1) }}%
     </span>
 

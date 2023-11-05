@@ -16,7 +16,7 @@
     </PageTitle>
 
     <ProfileBalances class="p-6" :address="address" />
-    <div v-if="hasDelegatedPower" class="p-4 bg-primary-darker text-white my-2">
+    <div v-if="hasDelegatedPower" class="p-4 bg-green-900 text-white my-2">
       <p class="uppercase text-xs mb-6">
         Your POWER tokens <u>voting power</u> is delegated to the address:
       </p>
@@ -26,7 +26,7 @@
       </p>
     </div>
 
-    <div v-if="hasDelegatedZero" class="p-4 bg-primary-darker text-white my-2">
+    <div v-if="hasDelegatedZero" class="p-4 bg-green-900 text-white my-2">
       <p class="uppercase text-xs mb-6">
         Your ZERO tokens <u>voting power</u> is delegated to the address:
       </p>

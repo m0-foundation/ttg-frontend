@@ -35,7 +35,7 @@ div {
 }
 
 .succeeded {
-  @apply bg-primary text-primary-darker;
+  @apply bg-primary text-green-900;
 }
 
 .expired {
