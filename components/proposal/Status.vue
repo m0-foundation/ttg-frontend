@@ -31,7 +31,7 @@ div {
   @apply border border-primary text-green-800;
 }
 .defeated {
-  @apply bg-red text-white;
+  @apply bg-red-500 text-white;
 }
 
 .succeeded {

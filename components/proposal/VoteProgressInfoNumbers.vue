@@ -9,8 +9,8 @@
     </div>
 
     <div class="flex items-center gap-2">
-      <div class="bg-red h-4 w-4 rounded"></div>
-      <div class="uppercase text-xs text-red">Againts</div>
+      <div class="bg-red-500 h-4 w-4 rounded"></div>
+      <div class="uppercase text-xs text-red-500">Againts</div>
       <div class="uppercase text-xs">
         {{ props.againts }}
       </div>

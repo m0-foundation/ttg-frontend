@@ -86,7 +86,7 @@ const props = defineProps<Props>();
 }
 
 .defeated {
-  @apply bg-red text-white;
+  @apply bg-red-500 text-white;
 }
 
 .expired {

@@ -624,7 +624,7 @@ hr {
 }
 
 .error {
-  @apply border border-red;
+  @apply border border-red-500;
 }
 
 .disabled {

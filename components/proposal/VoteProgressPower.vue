@@ -11,7 +11,10 @@
 
     <MProgressBar version="majority" :width="props.votes?.yes?.percentage" />
 
-    <span id="vote-no-percentage" class="text-red text-xs flex items-baseline">
+    <span
+      id="vote-no-percentage"
+      class="text-red-500 text-xs flex items-baseline"
+    >
       {{ props.votes?.no?.percentage.toFixed(1) }}%
     </span>
   </div>

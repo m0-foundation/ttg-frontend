@@ -8,7 +8,7 @@
       {{ selected?.label || "Select a proposal type" }}
       <span
         v-if="selected?.isEmergency"
-        class="text-xs text-[#5d605d] bg-red text-white p-2"
+        class="text-xs text-[#5d605d] bg-red-500 text-white p-2"
       >
         emergency
       </span>

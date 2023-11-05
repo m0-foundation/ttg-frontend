@@ -121,7 +121,7 @@ h3 {
   @apply text-white;
 }
 .error {
-  @apply text-white bg-red;
+  @apply text-white bg-red-500;
 }
 .error span {
   @apply !text-white;

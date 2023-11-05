@@ -101,6 +101,6 @@ const zeroVotes = computed(() => parseVotes(props.votes.zero));
 }
 
 .text-no {
-  @apply text-red text-xs mx-auto;
+  @apply text-red-500 text-xs mx-auto;
 }
 </style>

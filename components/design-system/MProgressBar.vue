@@ -3,7 +3,10 @@
     :class="[
       'w-full',
       'h-2',
-      { 'bg-red': version === 'majority', 'bg-gray-200': version === 'quorum' },
+      {
+        'bg-red-500': version === 'majority',
+        'bg-gray-200': version === 'quorum',
+      },
     ]"
   >
     <div>
