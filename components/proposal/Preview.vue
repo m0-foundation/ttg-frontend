@@ -2,7 +2,7 @@
 <template>
   <div>
     <div>
-      <button class="text-primary-dark uppercase mb-4" @click="onBack">
+      <button class="text-green-800 uppercase mb-4" @click="onBack">
         &#60; back
       </button>
     </div>

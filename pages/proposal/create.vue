@@ -131,7 +131,7 @@
       </p>
 
       <div v-if="isPreview" class="flex justify-end mt-12">
-        <button class="text-primary-dark uppercase mx-4" @click="onBack">
+        <button class="text-green-800 uppercase mx-4" @click="onBack">
           &#60; back
         </button>
         <MButton v-if="isPreview" type="submit">Submit proposal</MButton>

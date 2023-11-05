@@ -28,7 +28,7 @@ div {
   @apply border border-grey-400 text-grey-400;
 }
 .active {
-  @apply border border-primary text-primary-dark;
+  @apply border border-primary text-green-800;
 }
 .defeated {
   @apply bg-red text-white;
