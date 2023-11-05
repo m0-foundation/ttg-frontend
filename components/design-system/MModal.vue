@@ -3,7 +3,7 @@
     <div
       v-show="isOpen"
       ref="modal-backdrop"
-      class="fixed z-10 inset-0 overflow-y-auto bg-body-dark"
+      class="fixed z-10 inset-0 overflow-y-auto bg-grey-1000"
     >
       <div class="flex items-start justify-center min-h-screen pt-24">
         <div class="p-8 w-full md:w-1/2 lg:w-1/3 xl:w-1/2">

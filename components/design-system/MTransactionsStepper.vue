@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-body-dark">
+  <div class="bg-grey-1000">
     <div class="p-4">
       <h2 class="text-white text-2xl text-center">{{ title }}</h2>
     </div>
