@@ -40,6 +40,6 @@ button:disabled {
 }
 
 .disabled {
-  @apply border border-grey-primary text-grey-primary bg-white;
+  @apply border border-grey-400 text-grey-400 bg-white;
 }
 </style>

@@ -2,9 +2,7 @@
   <div class="flex justify-between gap-2 items-center">
     <div class="flex items-end w-[9rem]">
       <MIconPower class="h-4 w-4 mr-1" />
-      <span class="flex uppercase text-xxs text-grey-primary">
-        power tokens
-      </span>
+      <span class="flex uppercase text-xxs text-grey-400"> power tokens </span>
     </div>
 
     <span id="vote-yes-percentage" class="text-primary-darker text-xs">

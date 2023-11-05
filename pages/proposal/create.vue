@@ -126,7 +126,7 @@
           {{ spogValues.setProposalFee }}
         </div>
       </div>
-      <p class="text-grey-primary text-xs flex justify-end">
+      <p class="text-grey-400 text-xs flex justify-end">
         You will be prompted to pay the tax for submitting the proposal.
       </p>
 
@@ -147,7 +147,7 @@
         <h2 class="text-white">
           What is the standard for Governor proposal descriptions?
         </h2>
-        <div class="text-sm text-grey-primary">
+        <div class="text-sm text-grey-400">
           <p>
             Ever since Governor proposals have had an on-chain, human-readable
             description field. Governor front ends like Tally, Compound and
@@ -612,7 +612,7 @@ h1 {
 }
 
 label {
-  @apply text-grey-primary block mb-2 text-sm font-medium;
+  @apply text-grey-400 block mb-2 text-sm font-medium;
 }
 
 hr {

@@ -45,7 +45,7 @@ const tableConfig = {
       name: "Action",
       sort: true,
       formatter: (cell: string) =>
-        html(`<span class="text-xs text-grey-primary">${cell}</span>`),
+        html(`<span class="text-xs text-grey-400">${cell}</span>`),
     },
     {
       id: "created",
@@ -55,7 +55,7 @@ const tableConfig = {
         const { toFormat } = useDate(Number(cell));
         const formatedDate = toFormat("LLL");
         return html(
-          `<span class="text-xs text-grey-primary">${formatedDate}</span>`
+          `<span class="text-xs text-grey-400">${formatedDate}</span>`
         );
       },
     },

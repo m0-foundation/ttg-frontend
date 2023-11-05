@@ -2,9 +2,7 @@
   <div class="flex justify-between gap-2 items-center">
     <div class="flex items-end w-[9rem]">
       <MIconZero class="h-4 w-4 mr-1" version="dark" />
-      <span class="flex uppercase text-xxs text-grey-primary">
-        zero tokens
-      </span>
+      <span class="flex uppercase text-xxs text-grey-400"> zero tokens </span>
     </div>
 
     <span id="vote-yes-percentage" class="text-primary-darker text-xs">

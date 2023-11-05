@@ -41,7 +41,7 @@
                 {{ step.title }}
               </h3>
 
-              <span class="text-sm text-grey-primary">
+              <span class="text-sm text-grey-400">
                 {{ messages[step.status] }}
               </span>
             </div>
@@ -110,7 +110,7 @@ h3 {
 }
 
 .incomplete {
-  @apply text-grey-primary;
+  @apply text-grey-400;
 }
 
 .current {

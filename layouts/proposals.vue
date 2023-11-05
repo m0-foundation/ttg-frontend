@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="p-6 pt-2 lg:pt-6 uppercase">
-      <p class="text-xs text-grey-primary">Proposals</p>
+      <p class="text-xs text-grey-400">Proposals</p>
       <div class="lg:flex justify-between">
         <p class="text-lg text-white">
           {{ epoch?.current?.type }} epoch:
@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <p class="text-grey-primary text-xxs lg:text-xs mt-1">
+      <p class="text-grey-400 text-xxs lg:text-xs mt-1">
         {{ currentEpochAsDate }} - {{ nextEpochAsDate }} *
         <span>
           ENDS {{ timeLeft }} at block #{{ epoch?.next?.asBlockNumber }}

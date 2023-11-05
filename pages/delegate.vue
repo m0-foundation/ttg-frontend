@@ -1,7 +1,7 @@
 <template>
   <div class="mb-20 w-full xl:w-1/2 mx-auto">
     <h1 class="text-white text-2xl p-8 text-center">Delegate Tokens</h1>
-    <p class="text-grey-primary text-center">
+    <p class="text-grey-400 text-center">
       You can delegate your voting power to any address. The tokens will remain
       in your balance, and you can re-delegate them in the future.
     </p>
@@ -33,7 +33,7 @@
             </span>
           </div>
         </div>
-        <label class="text-grey-primary">Enter address</label>
+        <label class="text-grey-400">Enter address</label>
         <input
           id="input-delegate-power"
           v-model="inputPowerDelegates"
@@ -45,14 +45,14 @@
           <button
             id="button-use-my-address-power"
             type="button"
-            class="underline text-grey-primary"
+            class="underline text-grey-400"
             @click="onUseMyAddressVote"
           >
             Use my address
           </button>
         </div>
 
-        <div v-if="hasDelegatedPower" class="my-4 text-xs text-grey-primary">
+        <div v-if="hasDelegatedPower" class="my-4 text-xs text-grey-400">
           <p>Current Delegatee:</p>
           <p class="underline">{{ powerDelegates }}</p>
         </div>
@@ -80,7 +80,7 @@
             </span>
           </div>
         </div>
-        <label class="text-grey-primary">Enter address</label>
+        <label class="text-grey-400">Enter address</label>
         <input
           id="input-delegate-zero"
           v-model="inputZeroDelegates"
@@ -92,14 +92,14 @@
           <button
             id="button-use-my-address-zero"
             type="button"
-            class="underline text-grey-primary"
+            class="underline text-grey-400"
             @click="onUseMyAddressValue"
           >
             Use my address
           </button>
         </div>
 
-        <div v-if="hasDelegatedZero" class="my-4 text-xs text-grey-primary">
+        <div v-if="hasDelegatedZero" class="my-4 text-xs text-grey-400">
           <p>Current Delegatee:</p>
           <p class="underline">{{ zeroDelegates }}</p>
         </div>

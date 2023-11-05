@@ -25,7 +25,7 @@ div {
 }
 
 .pending {
-  @apply border border-grey-primary text-grey-primary;
+  @apply border border-grey-400 text-grey-400;
 }
 .active {
   @apply border border-primary text-primary-dark;

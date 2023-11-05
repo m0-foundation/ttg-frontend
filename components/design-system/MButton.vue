@@ -32,11 +32,11 @@ button:disabled {
   @apply text-black bg-primary hover:bg-primary-dark focus:ring-4 focus:outline-none focus:ring-green-300;
 }
 .secondary-dark {
-  @apply border border-white text-white bg-secondary-dark hover:border-grey-primary hover:text-grey-primary focus:ring-4 focus:outline-none focus:ring-gray-300;
+  @apply border border-white text-white bg-secondary-dark hover:border-grey-400 hover:text-grey-400 focus:ring-4 focus:outline-none focus:ring-gray-300;
 }
 
 .secondary-light {
-  @apply border border-secondary-dark text-secondary-dark bg-white  hover:bg-grey-primary focus:ring-4 focus:outline-none focus:ring-gray-300;
+  @apply border border-secondary-dark text-secondary-dark bg-white  hover:bg-grey-400 focus:ring-4 focus:outline-none focus:ring-gray-300;
 }
 
 .outline-light {

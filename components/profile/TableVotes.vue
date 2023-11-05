@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="!votes || !votes.length"
-      class="flex flex-col items-center justify-center h-24 text-grey-primary"
+      class="flex flex-col items-center justify-center h-24 text-grey-400"
     >
       <span class="text-lg mb-2 opacity-50">No voting history to show.</span>
       <span class="text-xs font-light opacity-50"
@@ -65,7 +65,7 @@ const votesTableConfig = computed(() => {
           const { toFormat } = useDate(Number(cell));
           const formatedDate = toFormat("LLL");
           return html(
-            `<span class="text-xs text-grey-primary">${formatedDate}</span>`
+            `<span class="text-xs text-grey-400">${formatedDate}</span>`
           );
         },
       },

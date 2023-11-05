@@ -40,7 +40,7 @@
   </div>
   <div
     v-else
-    class="flex flex-col items-center justify-center h-80 text-grey-primary"
+    class="flex flex-col items-center justify-center h-80 text-grey-400"
   >
     User not conntecd
   </div>
