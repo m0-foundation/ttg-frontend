@@ -87,11 +87,11 @@ console.log({ currentProposalValues });
 const { toFormat } = useDate(proposal?.timestamp);
 const proposalCreatedFormatedDate = computed(() => toFormat("LL"));
 
-const zeroQuorum = computed(
-  () => Number(spog.values.zeroTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
+const zeroQuorum = computed(() =>
+  basisPointsToDecimal(spog.values.zeroTokenQuorumRatio!)
 );
-const powerQuorum = computed(
-  () => Number(spog.values.powerTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
+const powerQuorum = computed(() =>
+  basisPointsToDecimal(spog.values.powerTokenQuorumRatio!)
 );
 
 const votesStore = useVotesStore();
