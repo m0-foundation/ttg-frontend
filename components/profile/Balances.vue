@@ -3,7 +3,7 @@
     <!-- power tokens -->
     <div class="flex gap-12">
       <div>
-        <p class="uppercase text-xxs text-zinc-400">My vote tokens</p>
+        <p class="uppercase text-xxs text-grey-300">My vote tokens</p>
         <p class="text-2xl lg:text-3xl inline-flex items-center my-2">
           <MIconPower class="h-8 w-8 mr-3" />
           {{ balancePowerToken?.data.value?.formatted }}
@@ -11,7 +11,7 @@
       </div>
 
       <div class="hidden lg:block">
-        <p class="uppercase text-xxs text-zinc-400">Voting Power</p>
+        <p class="uppercase text-xxs text-grey-300">Voting Power</p>
 
         <p class="text-3xl inline-flex items-center my-2">
           {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
@@ -22,7 +22,7 @@
     <!-- zero tokens -->
     <div class="flex gap-12">
       <div>
-        <p class="uppercase text-xxs text-zinc-400">My value tokens</p>
+        <p class="uppercase text-xxs text-grey-300">My value tokens</p>
         <p class="text-2xl lg:text-3xl inline-flex items-center my-2">
           <MIconZero class="h-8 w-8 mr-3" />
           {{ balanceZeroToken?.data.value?.formatted }}
@@ -30,7 +30,7 @@
       </div>
 
       <div class="hidden lg:block">
-        <p class="uppercase text-xxs text-zinc-400">Voting Power</p>
+        <p class="uppercase text-xxs text-grey-300">Voting Power</p>
         <p class="text-3xl inline-flex items-center my-2">
           {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
         </p>

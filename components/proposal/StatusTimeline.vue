@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-between">
     <div
-      class="inline-flex uppercase text-black text-xs gap-1 lg:gap-2 items-center"
+      class="inline-flex uppercase text-grey-400 text-xs gap-1 lg:gap-2 items-center"
     >
       <div class="text-grey-primary hidden lg:block">status:</div>
 
@@ -70,11 +70,11 @@ const props = defineProps<Props>();
   @apply bg-[#00664E] text-[#5CC99E];
 }
 .active ~ p {
-  @apply text-grey-primary;
+  @apply text-grey-400;
 }
 
 .defeated {
-  @apply bg-red text-white;
+  @apply bg-red-500 text-white;
 }
 
 .expired {

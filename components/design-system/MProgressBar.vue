@@ -3,11 +3,14 @@
     :class="[
       'w-full',
       'h-2',
-      { 'bg-red': version === 'majority', 'bg-gray-200': version === 'quorum' },
+      {
+        'bg-red-500': version === 'majority',
+        'bg-gray-200': version === 'quorum',
+      },
     ]"
   >
     <div>
-      <div class="bg-primary h-2" :style="`width: ${width}%`"></div>
+      <div class="bg-green-700 h-2" :style="`width: ${width}%`"></div>
       <div v-if="version === 'quorum'" class="quorum" :style="style" />
     </div>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-body-dark">
+  <div class="bg-grey-1000">
     <div class="p-4">
       <h2 class="text-white text-2xl text-center">{{ title }}</h2>
     </div>
@@ -41,7 +41,7 @@
                 {{ step.title }}
               </h3>
 
-              <span class="text-sm text-grey-primary">
+              <span class="text-sm text-grey-400">
                 {{ messages[step.status] }}
               </span>
             </div>
@@ -106,11 +106,11 @@ h3 {
 }
 
 .complete {
-  @apply text-primary;
+  @apply text-green-700;
 }
 
 .incomplete {
-  @apply text-grey-primary;
+  @apply text-grey-400;
 }
 
 .current {
@@ -121,7 +121,7 @@ h3 {
   @apply text-white;
 }
 .error {
-  @apply text-white bg-red;
+  @apply text-white bg-red-500;
 }
 .error span {
   @apply !text-white;

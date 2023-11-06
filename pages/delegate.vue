@@ -1,14 +1,14 @@
 <template>
   <div class="mb-20 w-full xl:w-1/2 mx-auto">
     <h1 class="text-white text-2xl p-8 text-center">Delegate Tokens</h1>
-    <p class="text-grey-primary text-center">
+    <p class="text-grey-400 text-center">
       You can delegate your voting power to any address. The tokens will remain
       in your balance, and you can re-delegate them in the future.
     </p>
 
     <div
       v-show="!canDelegate"
-      class="bg-primary-darker text-white text-xs px-4 py-5 my-4"
+      class="bg-green-900 text-white text-xs px-4 py-5 my-4"
     >
       <p class="uppercase mb-2">Warning</p>
 
@@ -28,12 +28,12 @@
           <div class="text-2xl">Delegate Power tokens</div>
           <div class="flex">
             <MIconPower class="h-8 w-8 mr-4" />
-            <span class="mx-2 flex items-center text-2xl text-primary">
+            <span class="mx-2 flex items-center text-2xl text-green-700">
               {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
             </span>
           </div>
         </div>
-        <label class="text-grey-primary">Enter address</label>
+        <label class="text-grey-400">Enter address</label>
         <input
           id="input-delegate-power"
           v-model="inputPowerDelegates"
@@ -45,14 +45,14 @@
           <button
             id="button-use-my-address-power"
             type="button"
-            class="underline text-grey-primary"
+            class="underline text-grey-400"
             @click="onUseMyAddressVote"
           >
             Use my address
           </button>
         </div>
 
-        <div v-if="hasDelegatedPower" class="my-4 text-xs text-grey-primary">
+        <div v-if="hasDelegatedPower" class="my-4 text-xs text-grey-400">
           <p>Current Delegatee:</p>
           <p class="underline">{{ powerDelegates }}</p>
         </div>
@@ -75,12 +75,12 @@
           <div class="text-2xl">Delegate Zero tokens</div>
           <div class="flex">
             <MIconZero class="h-8 w-8 mr-4" />
-            <span class="mx-2 flex items-center text-2xl text-primary">
+            <span class="mx-2 flex items-center text-2xl text-green-700">
               {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
             </span>
           </div>
         </div>
-        <label class="text-grey-primary">Enter address</label>
+        <label class="text-grey-400">Enter address</label>
         <input
           id="input-delegate-zero"
           v-model="inputZeroDelegates"
@@ -92,20 +92,20 @@
           <button
             id="button-use-my-address-zero"
             type="button"
-            class="underline text-grey-primary"
+            class="underline text-grey-400"
             @click="onUseMyAddressValue"
           >
             Use my address
           </button>
         </div>
 
-        <div v-if="hasDelegatedZero" class="my-4 text-xs text-grey-primary">
+        <div v-if="hasDelegatedZero" class="my-4 text-xs text-grey-400">
           <p>Current Delegatee:</p>
           <p class="underline">{{ zeroDelegates }}</p>
         </div>
       </div>
 
-      <p class="text-primary my-4">
+      <p class="text-green-700 my-4">
         /* The delegated tokens will be available for voting starting from the
         next <b>Voting</b> epoch. */
       </p>
