@@ -27,7 +27,7 @@
                 <div v-for="token in selectedProposalType?.tokens" :key="token">
                   <div
                     v-if="token === MVotingTokens.Power"
-                    class="p-4 bg-primary-darker"
+                    class="p-4 bg-green-900"
                   >
                     <div class="flex items-center gap-2 mb-2">
                       <p class="uppercase text-xs">Vote type</p>
@@ -41,7 +41,7 @@
 
                   <div
                     v-if="token === MVotingTokens.Zero"
-                    class="p-4 bg-primary-darker"
+                    class="p-4 bg-green-900"
                   >
                     <div class="flex items-center gap-2 mb-2">
                       <p class="uppercase text-xs">Vote type</p>
@@ -126,12 +126,12 @@
           {{ spogValues.setProposalFee }}
         </div>
       </div>
-      <p class="text-grey-primary text-xs flex justify-end">
+      <p class="text-grey-400 text-xs flex justify-end">
         You will be prompted to pay the tax for submitting the proposal.
       </p>
 
       <div v-if="isPreview" class="flex justify-end mt-12">
-        <button class="text-primary-dark uppercase mx-4" @click="onBack">
+        <button class="text-green-800 uppercase mx-4" @click="onBack">
           &#60; back
         </button>
         <MButton v-if="isPreview" type="submit">Submit proposal</MButton>
@@ -147,7 +147,7 @@
         <h2 class="text-white">
           What is the standard for Governor proposal descriptions?
         </h2>
-        <div class="text-sm text-grey-primary">
+        <div class="text-sm text-grey-400">
           <p>
             Ever since Governor proposals have had an on-chain, human-readable
             description field. Governor front ends like Tally, Compound and
@@ -612,7 +612,7 @@ h1 {
 }
 
 label {
-  @apply text-grey-primary block mb-2 text-sm font-medium;
+  @apply text-grey-400 block mb-2 text-sm font-medium;
 }
 
 hr {
@@ -624,7 +624,7 @@ hr {
 }
 
 .error {
-  @apply border border-red;
+  @apply border border-red-500;
 }
 
 .disabled {

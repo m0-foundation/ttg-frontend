@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="!proposals || !proposals.length"
-      class="flex flex-col items-center justify-center h-24 text-grey-primary"
+      class="flex flex-col items-center justify-center h-24 text-grey-400"
     >
       <span class="text-lg mb-2 opacity-50">No proposals created by you.</span>
     </div>
@@ -45,7 +45,7 @@ const proposalsTableConfig = computed(() => {
         name: "Action",
         sort: true,
         formatter: (cell: string) =>
-          html(`<span class="text-xs text-grey-primary">${cell}</span>`),
+          html(`<span class="text-xs text-grey-400">${cell}</span>`),
       },
       {
         id: "created",
@@ -55,7 +55,7 @@ const proposalsTableConfig = computed(() => {
           const { toFormat } = useDate(Number(cell));
           const formatedDate = toFormat("LLL");
           return html(
-            `<span class="text-xs text-grey-primary">${formatedDate}</span>`
+            `<span class="text-xs text-grey-400">${formatedDate}</span>`
           );
         },
       },

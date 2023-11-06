@@ -8,21 +8,18 @@
       {{ selected?.label || "Select a proposal type" }}
       <span
         v-if="selected?.isEmergency"
-        class="text-xs text-[#5d605d] bg-red text-white p-2"
+        class="text-xs text-[#5d605d] bg-red-500 text-white p-2"
       >
         emergency
       </span>
 
       <span v-else class="text-xs text-[#5d605d]">change</span>
     </button>
-    <ul
-      v-show="isMenuOpen"
-      class="absolute z-50 text-white pt-4 bg-grey-secondary"
-    >
+    <ul v-show="isMenuOpen" class="absolute z-50 text-white pt-4 bg-grey-600">
       <li v-for="opt in options" :key="opt.value" class="">
         <div
           v-show="opt.header"
-          class="uppercase text-xs text-grey-primary px-4 py-2"
+          class="uppercase text-xs text-grey-400 px-4 py-2"
         >
           {{ opt.header }}
         </div>
@@ -38,7 +35,7 @@
 
             <div
               v-show="opt.isEmergency"
-              class="text-grey-primary text-xs w-72 py-2"
+              class="text-grey-400 text-xs w-72 py-2"
             >
               The emergency proposal will be executed immediately when the
               quorum is reached.

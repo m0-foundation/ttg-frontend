@@ -16,11 +16,11 @@
         <div class="grow flex items-center gap-2 mb-2 lg:mb-0">
           <div class="w-1/4 lg:w-1/3 bg-grey-800 rounded-full h-1.5">
             <div
-              class="bg-primary h-1.5 rounded-ful"
+              class="bg-green-700 h-1.5 rounded-ful"
               :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
             ></div>
           </div>
-          <p v-if="hasFinishedVoting" class="text-grey-primary">
+          <p v-if="hasFinishedVoting" class="text-grey-400">
             Your votes has been submitted
           </p>
           <span v-else class="text-xxs lg:text-xs">
@@ -43,7 +43,7 @@
 
       <p
         v-show="!hasFinishedVoting"
-        class="text-xxs text-grey-primary flex lg:justify-end mt-2"
+        class="text-xxs text-grey-400 flex lg:justify-end mt-2"
       >
         Your voting power will decrease over time if you do not vote
       </p>

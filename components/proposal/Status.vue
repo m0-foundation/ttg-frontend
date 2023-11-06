@@ -25,17 +25,17 @@ div {
 }
 
 .pending {
-  @apply border border-grey-primary text-grey-primary;
+  @apply border border-grey-400 text-grey-400;
 }
 .active {
-  @apply border border-primary text-primary-dark;
+  @apply border border-green-700 text-green-800;
 }
 .defeated {
-  @apply bg-red text-white;
+  @apply bg-red-500 text-white;
 }
 
 .succeeded {
-  @apply bg-primary text-primary-darker;
+  @apply bg-green-700 text-green-900;
 }
 
 .expired {

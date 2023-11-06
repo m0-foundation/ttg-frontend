@@ -2,13 +2,13 @@
 <template>
   <div>
     <div>
-      <button class="text-primary-dark uppercase mb-4" @click="onBack">
+      <button class="text-green-800 uppercase mb-4" @click="onBack">
         &#60; back
       </button>
     </div>
     <h1>Preview your proposal</h1>
 
-    <MTextLoop class="text-primary-darker bg-primary text-sm" text="PREVIEW" />
+    <MTextLoop class="text-green-900 bg-green-700 text-sm" text="PREVIEW" />
 
     <div class="bg-white p-6 lg:px-16 lg:py-8 mb-4">
       <h2>proposal.title</h2>

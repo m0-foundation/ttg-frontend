@@ -97,10 +97,10 @@ const zeroVotes = computed(() => parseVotes(props.votes.zero));
 </script>
 <style scoped>
 .text-yes {
-  @apply text-primary-darker text-xs mx-auto;
+  @apply text-green-900 text-xs mx-auto;
 }
 
 .text-no {
-  @apply text-red text-xs mx-auto;
+  @apply text-red-500 text-xs mx-auto;
 }
 </style>

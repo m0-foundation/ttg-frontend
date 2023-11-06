@@ -22,7 +22,7 @@
         <div>{{ timeAgo }} | {{ formatedDate }}</div>
       </div>
 
-      <div class="text-grey-primary text-sm">
+      <div class="text-grey-400 text-sm">
         {{ truncatedDescriptionText }}
       </div>
 
@@ -75,15 +75,12 @@
             NO
           </ProposalButtonCastVote>
 
-          <div
-            v-show="!canVote"
-            class="uppercase text-xs text-grey-primary mx-4"
-          >
+          <div v-show="!canVote" class="uppercase text-xs text-grey-400 mx-4">
             not enought voting power
           </div>
         </div>
 
-        <div class="uppercase text-xs text-grey-primary">
+        <div class="uppercase text-xs text-grey-400">
           <div
             v-if="
               proposal?.votingType === 'Power' ||
