@@ -6,8 +6,13 @@
       text="EMERGENCY_VOTING"
     />
 
-    <article class="bg-white text-black px-8 py-4">
-      <ProposalStatusTimeline :version="proposal?.state" />
+    <article class="bg-white text-black px-4 py-4">
+      <div class="flex justify-between">
+        <ProposalStatusTimeline :version="proposal?.state" />
+        <div>
+          <ProposalMenu :proposal="proposal" />
+        </div>
+      </div>
 
       <ProposalVoteProgress
         v-if="proposal?.state !== 'Pending'"
@@ -20,7 +25,7 @@
       <div class="text-grey-400 text-xs mt-8 mb-2 truncate w-52 lg:w-full">
         Proposed by
         <NuxtLink :to="`/profile/${proposal?.proposer}/`">
-          <u>{{ proposal?.proposer }}</u>
+          <u>{{ shortenAddress(proposal?.proposer) }}</u>
         </NuxtLink>
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
