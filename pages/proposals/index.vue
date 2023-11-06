@@ -24,7 +24,7 @@
             Your votes has been submitted
           </p>
           <span v-else class="text-xxs lg:text-xs">
-            {{ selectedCastProposals.length }} out
+            {{ activeProposals.length - selectedCastProposals.length }} of
             {{ activeProposals.length }} proposals are left to vote on
           </span>
         </div>
