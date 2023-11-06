@@ -2,8 +2,12 @@
   <div>
     <div class="my-4">
       <!-- Power or Emergency -->
-      <div v-if="['Power', 'Emergency'].includes(version)">
+      <div v-if="version === 'Power'">
         <VoteProgressPower :votes="powerVotes" />
+      </div>
+
+      <div v-else-if="version === 'Emergency'">
+        <VoteProgressPower :votes="powerVotes" :quorum="props.powerQuorum" />
       </div>
 
       <!-- Zero -->
@@ -14,7 +18,7 @@
       <!-- Double -->
       <div v-else-if="version === 'Double'">
         <div class="mb-8">
-          <VoteProgressPower :votes="powerVotes" />
+          <VoteProgressPower :votes="powerVotes" :quorum="props.powerQuorum" />
         </div>
 
         <div>
@@ -37,9 +41,9 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   votes: {
     power: {
-      yes: 10,
+      yes: 0,
       no: 0,
-      total: 10,
+      total: 0,
     },
     zero: {
       yes: 0,
