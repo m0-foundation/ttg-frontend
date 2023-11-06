@@ -11,7 +11,7 @@
 
     <MProgressBar
       version="quorum"
-      :quorum="props.zeroQuorum"
+      :quorum="props.quorum"
       :width="props.votes?.yes?.percentage"
     />
 
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 interface Props {
-  zeroQuorum: number;
+  quorum: number;
   votes: {
     total: number;
     yes: {
