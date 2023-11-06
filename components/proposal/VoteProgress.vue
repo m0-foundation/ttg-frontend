@@ -1,117 +1,24 @@
 <template>
   <div>
     <div class="my-4">
-      <!-- Power -->
-      <div
-        v-if="version === 'Power'"
-        class="flex justify-between gap-2 items-center"
-      >
-        <div class="flex items-end w-[9rem]">
-          <MIconPower class="h-4 w-4 mr-1" />
-          <span class="flex uppercase text-xxs text-grey-primary">
-            power tokens
-          </span>
-        </div>
-
-        <span id="vote-yes-percentage" class="text-primary-darker text-xs">
-          {{ powerVotes?.yes?.percentage.toFixed(1) }}%
-        </span>
-
-        <MProgressBar version="majority" :width="powerVotes?.yes?.percentage" />
-
-        <span
-          id="vote-no-percentage"
-          class="text-red text-xs flex items-baseline"
-        >
-          {{ powerVotes?.no?.percentage.toFixed(1) }}%
-        </span>
+      <!-- Power or Emergency -->
+      <div v-if="['Power', 'Emergency'].includes(version)">
+        <VoteProgressPower :votes="powerVotes" />
       </div>
+
       <!-- Zero -->
-      <div
-        v-else-if="version === 'Zero'"
-        class="flex justify-between gap-2 items-center"
-      >
-        <div class="flex items-end w-[9rem]">
-          <MIconZero class="h-4 w-4 mr-1" version="dark" />
-          <span class="flex uppercase text-xxs text-grey-primary">
-            zero tokens
-          </span>
-        </div>
-
-        <span id="vote-yes-percentage" class="text-primary-darker text-xs">
-          {{ zeroVotes?.yes?.percentage.toFixed(1) }}%
-        </span>
-
-        <MProgressBar
-          version="quorum"
-          :quorum="props.zeroQuorum"
-          :width="zeroVotes?.yes?.percentage"
-        />
-
-        <span
-          id="vote-no-percentage"
-          class="text-red text-xs flex items-baseline"
-        >
-          {{ zeroVotes?.no?.percentage.toFixed(1) }}%
-        </span>
+      <div v-else-if="version === 'Zero'">
+        <VoteProgressZero :votes="zeroVotes" :quorum="props.zeroQuorum" />
       </div>
 
       <!-- Double -->
       <div v-else-if="version === 'Double'">
-        <div class="flex items-center mb-4">
-          <div class="flex items-end w-[9rem]">
-            <MIconPower class="h-4 w-4 mr-1" />
-            <span class="flex uppercase text-xxs text-grey-primary">
-              power tokens
-            </span>
-          </div>
-
-          <div id="power-votes-yes-percentage" class="flex w-1/12">
-            <span class="text-yes">
-              {{ powerVotes?.yes?.percentage.toFixed(0) }}%
-            </span>
-          </div>
-
-          <MProgressBar
-            version="quorum"
-            :width="powerVotes?.yes?.percentage"
-            :quorum="props.powerQuorum"
-            class="w-10/12"
-          />
-
-          <div id="power-votes-no-percentage" class="flex w-1/12">
-            <span class="text-no">
-              {{ powerVotes?.no?.percentage.toFixed(0) }}%
-            </span>
-          </div>
+        <div class="mb-8">
+          <VoteProgressPower :votes="powerVotes" />
         </div>
 
-        <div class="flex items-center">
-          <div class="flex items-end w-[9rem]">
-            <MIconZero class="h-4 w-4 mr-1" version="dark" />
-            <span class="flex uppercase text-xxs text-grey-primary">
-              zero tokens
-            </span>
-          </div>
-
-          <div id="zero-votes-yes-percentage" class="flex w-1/12">
-            <span class="text-yes">
-              {{ zeroVotes?.yes?.percentage.toFixed(0) }}%
-            </span>
-          </div>
-
-          <MProgressBar
-            version="quorum"
-            :quorum="props.zeroQuorum"
-            :width="zeroVotes?.yes?.percentage"
-            class="w-10/12"
-          />
-
-          <div id="zero-votes-no-percentage" class="flex w-1/12">
-            <span class="text-no">
-              {{ zeroVotes?.no?.percentage.toFixed(0) }}%
-            </span>
-          </div>
+        <div>
+          <VoteProgressZero :votes="zeroVotes" :quorum="props.zeroQuorum" />
         </div>
       </div>
     </div>
@@ -172,11 +79,13 @@ function parseVotes({
     total,
     yes: {
       count: yes,
+      formatted: useNumberFormatter(yes),
       ratio: yesRatio,
       percentage: yesPercentage,
     },
     no: {
       count: no,
+      formatted: useNumberFormatter(no),
       ratio: noRatio,
       percentage: noPercentage,
     },

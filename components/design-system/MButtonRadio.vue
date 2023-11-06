@@ -29,7 +29,7 @@
         }"
       ></div>
     </div>
-    <span class="text-xs mb-[-3px] whitespace-nowrap"> {{ text }} </span>
+    <span class="text-xs mb-[-3px] whitespace-nowrap"> <slot /> </span>
     <input
       v-bind="$attrs"
       v-model.number="value"

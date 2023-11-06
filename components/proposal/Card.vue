@@ -57,27 +57,62 @@
         v-if="proposal?.state === 'Active'"
         class="lg:flex justify-between items-center"
       >
-        <div class="flex gap-1">
-          <MButtonRadio
-            v-model="selectedVote"
-            :disabled="isCastVoteYesDisabled || hasVoted"
-            :name="props.proposal.proposalId"
-            text="Yes"
-            :value="1"
+        <div class="inline-flex gap-1 items-center" role="group">
+          <ProposalButtonCastVote
+            id="button-cast-yes"
+            :disabled="
+              isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
+            "
             @click="onCastSelected(1)"
-          />
-          <MButtonRadio
-            v-model="selectedVote"
-            :disabled="isCastVoteNoDisabled || hasVoted"
-            :name="props.proposal.proposalId"
-            text="No"
-            :value="0"
+          >
+            YES
+          </ProposalButtonCastVote>
+          <ProposalButtonCastVote
+            id="button-cast-no"
+            :disabled="
+              isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
+            "
             @click="onCastSelected(0)"
-          />
+          >
+            NO
+          </ProposalButtonCastVote>
+
+          <div
+            v-show="!canVote"
+            class="uppercase text-xs text-grey-primary mx-4"
+          >
+            not enought voting power
+          </div>
         </div>
 
-        <div class="uppercase text-xs text-grey-primary mt-4 lg:mt-0">
-          tokens needed to vote
+        <div class="uppercase text-xs text-grey-primary">
+          <div
+            v-if="
+              proposal?.votingType === 'Power' ||
+              proposal?.votingType === 'Emergency'
+            "
+            class="flex"
+          >
+            power tokens
+            <MIconPower class="h-4 w-4 ml-1" />
+          </div>
+
+          <div v-if="proposal?.votingType === 'Zero'" class="flex">
+            zero tokens
+            <MIconZero class="h-4 w-4 ml-1" />
+          </div>
+
+          <div v-if="proposal?.votingType === 'Double'" class="flex gap-2">
+            <div class="flex">
+              power tokens
+              <MIconPower class="h-4 w-4 ml-1" />
+            </div>
+
+            <div class="flex">
+              zero tokens
+              <MIconZero class="h-4 w-4 ml-1" />
+            </div>
+          </div>
         </div>
       </div>
 
