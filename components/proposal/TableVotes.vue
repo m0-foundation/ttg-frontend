@@ -49,13 +49,16 @@ const config = computed(() => {
         sort: true,
         formatter: (cell: boolean, row: any) => {
           const vote = cell
-            ? "<span class='bg-primary text-body-black px-2 py-1'>YES</span>"
-            : "<span class='bg-red text-white px-2 py-1'>NO</span>";
+            ? "<span class='bg-green-700 text-body-black px-2 py-1'>YES</span>"
+            : "<span class='bg-red-500 text-white px-2 py-1'>NO</span>";
 
           const transactionHash = row.cells[3].data;
 
           return html(
-            `<a href="https://sepolia.etherscan.io/tx/${transactionHash}/" target="_blank" class="underline text-xs" >${vote}</a>`
+            `<a href="${useBlockExplorer(
+              "tx",
+              transactionHash
+            )}" target="_blank" class="underline text-xs" >${vote}</a>`
           );
         },
       },
