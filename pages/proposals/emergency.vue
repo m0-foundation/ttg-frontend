@@ -25,7 +25,10 @@ const proposals = computed(() =>
   proposalsStore.getProposalsByState("Active").filter((p) => p.isEmergency)
 );
 
-function onCast(vote: number, proposalId: string) {
+const { forceSwitchChain } = useCorrectChain();
+
+async function onCast(vote: number, proposalId: string) {
+  await forceSwitchChain();
   console.log("cast", { vote, proposalId });
   return writeDualGovernor({
     address: spog.contracts.governor as Hash,

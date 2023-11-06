@@ -25,9 +25,12 @@ const proposals = computed(() =>
 );
 
 const { address: userAccount } = useAccount();
+const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
 
 async function onExecute(proposal: MProposal) {
+  await forceSwitchChain();
+
   const { description, calldatas } = proposal;
   const hashedDescription = keccak256(toHex(description));
   const targets = [spog.contracts.governor as Hash];
