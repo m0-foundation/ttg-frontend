@@ -1,9 +1,9 @@
 <template>
   <span class="inline-flex items-center">
-    <div v-if="ensAvatar" class="address-avatar">
-      <img :src="ensAvatar" alt="" />
+    <div class="address-avatar">
+      <img v-if="ensAvatar" :src="ensAvatar" alt="" />
+      <img v-else :src="identiconIcon" />
     </div>
-
     <span v-if="ensName">{{ ensName }}</span>
     <span v-else class="ml-5">{{
       shortAddress ? shortenAddress(props.address) : props.address
@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import { useEnsAvatar, useEnsName } from "use-wagmi";
 import { Hash } from "viem";
+import Identicon from "identicon.js";
 
 export interface MAddressAvatar {
   address: Hash | undefined;
@@ -26,12 +27,19 @@ const props = withDefaults(defineProps<MAddressAvatar>(), {
 
 const { data: ensName } = useEnsName({
   address: props.address,
-  chainId: 1,
 });
 
 const { data: ensAvatar } = useEnsAvatar({
-  name: "jxom.eth",
-  chainId: 1,
+  name: props.address,
+});
+
+const identiconIcon = computed(() => {
+  const identicon = new Identicon(props.address || "", {
+    size: 16,
+    format: "svg",
+  });
+
+  return `data:image/svg+xml;base64,${identicon}`;
 });
 </script>
 
