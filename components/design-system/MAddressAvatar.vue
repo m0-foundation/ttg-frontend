@@ -4,10 +4,12 @@
       <img v-if="ensAvatar" :src="ensAvatar" alt="" />
       <img v-else :src="identiconIcon" />
     </div>
-    <span v-if="ensName">{{ ensName }}</span>
-    <span v-else class="ml-5">{{
-      shortAddress ? shortenAddress(props.address) : props.address
-    }}</span>
+    <span class="ml-5">
+      <span v-if="ensName">{{ ensName }}</span>
+      <span v-else>{{
+        shortAddress ? shortenAddress(props.address) : props.address
+      }}</span>
+    </span>
   </span>
 </template>
 <script setup lang="ts">
