@@ -13,10 +13,10 @@
         {{ title }}
       </h2>
       <div class="text-xs xl:text-sm mb-6 flex justify-between text-gray-400">
-        <div class="">
+        <div>
           Proposed by
           <NuxtLink :to="`/profile/${proposal.proposer}/`">
-            <u>{{ proposal.proposer }}</u>
+            <MAddressAvatar :address="proposal.proposer" />
           </NuxtLink>
         </div>
         <div>{{ timeAgo }} | {{ formatedDate }}</div>

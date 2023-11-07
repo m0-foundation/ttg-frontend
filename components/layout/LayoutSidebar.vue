@@ -31,7 +31,7 @@
     <div class="flex justify-between items-center mb-2">
       <NuxtLink to="/profile/me/" class="underline">MY PROFILE</NuxtLink>
       <div class="truncate w-28 text-xs text-gray-400">
-        {{ shortenAddress(userAccount) }}
+        <MAddressAvatar :address="userAccount" />
       </div>
     </div>
 
