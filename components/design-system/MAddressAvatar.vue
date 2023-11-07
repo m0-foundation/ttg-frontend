@@ -31,10 +31,12 @@ const props = withDefaults(defineProps<MAddressAvatar>(), {
 
 const { data: ensName } = useEnsName({
   address: props.address,
+  chainId: 1,
 });
 
 const { data: ensAvatar } = useEnsAvatar({
-  name: props.address,
+  name: "jxom.eth",
+  chainId: 1,
 });
 
 const identiconIcon = computed(() => {
@@ -42,7 +44,6 @@ const identiconIcon = computed(() => {
     size: 16,
     format: "svg",
   });
-
   return `data:image/svg+xml;base64,${identicon}`;
 });
 </script>
