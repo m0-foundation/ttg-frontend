@@ -257,6 +257,7 @@ const $validation = useVuelidate(rules, formData);
 const previewDescription = ref();
 
 const { address: userAccount } = useAccount();
+const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
 const { getValues: spogValues } = storeToRefs(spog);
 
@@ -461,6 +462,8 @@ async function writeProposal(calldatas, formData) {
 }
 
 async function onSubmit() {
+  await forceSwitchChain();
+
   const catchErrorStep = (error) => {
     console.error({ error });
     stepper.value.changeCurrentStep("error");

@@ -152,7 +152,11 @@ const canDelegate = computed(
   () => spog.epoch.value.current.type === "TRANSFER"
 );
 
-function delegateVote() {
+const { forceSwitchChain } = useCorrectChain();
+
+async function delegateVote() {
+  await forceSwitchChain();
+
   return writePowerToken({
     address: spog.contracts.value.powerToken as Hash,
     functionName: "delegate",
@@ -160,7 +164,9 @@ function delegateVote() {
   });
 }
 
-function delegateValue() {
+async function delegateValue() {
+  await forceSwitchChain();
+
   return writeZeroToken({
     address: spog.contracts.value.zeroToken as Hash,
     functionName: "delegate",
