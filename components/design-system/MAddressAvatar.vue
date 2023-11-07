@@ -1,10 +1,10 @@
 <template>
   <span class="inline-flex items-center">
-    <div class="address-avatar">
+    <div v-if="showAvatar" class="address-avatar">
       <img v-if="ensAvatar" :src="ensAvatar" alt="" />
       <img v-else :src="identiconIcon" />
     </div>
-    <span class="ml-5">
+    <span :class="{ 'ml-5': showAvatar }">
       <span v-if="ensName">{{ ensName }}</span>
       <span v-else>{{
         shortAddress ? shortenAddress(props.address) : props.address
@@ -20,11 +20,13 @@ import Identicon from "identicon.js";
 export interface MAddressAvatar {
   address: Hash | undefined;
   shortAddress: boolean;
+  showAvatar: boolean;
 }
 
 const props = withDefaults(defineProps<MAddressAvatar>(), {
   address: undefined,
   shortAddress: true,
+  showAvatar: true,
 });
 
 const { data: ensName } = useEnsName({
