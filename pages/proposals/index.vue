@@ -24,7 +24,7 @@
             Your votes has been submitted
           </p>
           <span v-else class="text-xxs lg:text-xs">
-            {{ selectedCastProposals.length }} out
+            {{ activeProposals.length - selectedCastProposals.length }} of
             {{ activeProposals.length }} proposals are left to vote on
           </span>
         </div>
@@ -89,6 +89,7 @@ const progressBarWidth = computed(() => {
 });
 
 const { address: userAccount, isConnected } = useAccount();
+const { forceSwitchChain } = useCorrectChain();
 
 function onCast(vote: number, proposalId: string) {
   console.log("casted", { vote, proposalId });
@@ -103,6 +104,8 @@ function onUncast(proposalId: string) {
 }
 
 async function onCastBatchVotes() {
+  await forceSwitchChain();
+
   isLoading.value = true;
 
   const proposalIds = selectedCastProposals.value.map((p) =>

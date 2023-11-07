@@ -17,7 +17,7 @@ Cypress.Commands.add("connectWallet", () => {
 
       cy.contains("Connect Wallet").click();
       cy.get("div#modal-backdrop").within(() => {
-        return cy.get("button").eq(1).click(); // injected provider wallet is the first one
+        return cy.get("button").eq(0).click(); // injected provider wallet is the first one
       });
     } else {
       // Element does not exist, do something else

@@ -72,12 +72,13 @@ const images = {
 
 const open = ref(false);
 const network = useNetworkStore().getNetwork();
+const chainId = computed(() => network.value.rpc.chainId);
+
 const { connector, isReconnecting } = useAccount();
 const { switchNetwork } = useSwitchNetwork();
 const { connect, connectors } = useConnect({
   onError: (e) => console.error("error", e.message),
   onSuccess: () => {
-    const chainId = network.value.rpc.chainId;
     switchNetwork(chainId);
   },
 });
