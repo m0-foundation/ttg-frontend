@@ -6,7 +6,7 @@
     </div>
 
     <span id="vote-yes-percentage" class="text-green-900 text-xs">
-      {{ props.votes?.yes?.percentage.toFixed(1) }}%
+      {{ props.votes?.yes?.percentage }}%
     </span>
 
     <MProgressBarQuorum
@@ -19,7 +19,7 @@
       id="vote-no-percentage"
       class="text-red-500 text-xs flex items-baseline"
     >
-      {{ props.votes?.no?.percentage.toFixed(1) }}%
+      {{ props.votes?.no?.percentage }}%
     </span>
   </div>
 

@@ -4,8 +4,8 @@
       'w-full',
       'h-2',
       {
-        'bg-red-500': width > 0,
-        'bg-gray-200': width === 0,
+        'bg-red-500': hasVotes,
+        'bg-gray-200': !hasVotes,
       },
     ]"
   >
@@ -18,6 +18,7 @@
 <script lang="ts" setup>
 export interface MProgressBarProps {
   width: number;
+  hasVotes: boolean;
 }
 
 const props = withDefaults(defineProps<MProgressBarProps>(), {

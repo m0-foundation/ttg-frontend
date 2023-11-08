@@ -6,7 +6,7 @@
     </div>
 
     <span id="vote-yes-percentage" class="text-green-900 text-xs">
-      {{ props.votes?.yes?.percentage.toFixed(1) }}%
+      {{ props.votes?.yes?.percentage }}%
     </span>
 
     <MProgressBarQuorum
@@ -16,13 +16,17 @@
       :quorum="props.quorum"
     />
 
-    <MProgressBar v-else :width="props.votes?.yes?.percentage" />
+    <MProgressBar
+      v-else
+      :width="props.votes?.yes?.percentage"
+      :has-votes="hasVotes"
+    />
 
     <span
       id="vote-no-percentage"
       class="text-red-500 text-xs flex items-baseline"
     >
-      {{ props.votes?.no?.percentage.toFixed(1) }}%
+      {{ props.votes?.no?.percentage }}%
     </span>
   </div>
 
@@ -52,4 +56,8 @@ interface Props {
   };
 }
 const props = defineProps<Props>();
+
+const hasVotes = computed(
+  () => props.votes?.yes?.count > 0 || props.votes?.no?.count > 0
+);
 </script>
