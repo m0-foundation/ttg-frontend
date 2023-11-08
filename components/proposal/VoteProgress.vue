@@ -58,22 +58,20 @@ const props = withDefaults(defineProps<Props>(), {
   zeroTotalSupply: () => 0n,
 });
 
-function parseVotesForMajority({ yes, no }: { yes: bigint; no: bigint }) {
-  const yesN = Number(yes);
-  const noN = Number(no);
-  const total = yesN + noN;
+/* @output: range 0.00-100.00 */
+const percentageSafeDiv = (a: bigint, b: bigint) =>
+  Number((a * 10000n) / b) / 100;
 
-  const yesRatio = total === 0 ? 0 : yesN / total;
-  const noRatio = total === 0 ? 0 : noN / total;
-  const yesPercentage = yesRatio * 100;
-  const noPercentage = noRatio * 100;
+function parseVotesForMajority({ yes, no }: { yes: bigint; no: bigint }) {
+  const total = yes + no;
+
+  const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yes, total);
+  const noPercentage = total === 0n ? 0 : percentageSafeDiv(no, total);
 
   console.log("parseVotesForMajority", {
     yes,
     no,
     total,
-    yesRatio,
-    noRatio,
     yesPercentage,
     noPercentage,
   });
@@ -82,13 +80,11 @@ function parseVotesForMajority({ yes, no }: { yes: bigint; no: bigint }) {
     yes: {
       count: yes,
       formatted: useNumberFormatter(yes),
-      ratio: yesRatio,
       percentage: yesPercentage,
     },
     no: {
       count: no,
       formatted: useNumberFormatter(no),
-      ratio: noRatio,
       percentage: noPercentage,
     },
   };
@@ -104,21 +100,13 @@ function parseVotesForQuorom(
   },
   totalSupply: bigint
 ) {
-  const yesN = Number(yes);
-  const noN = Number(no);
-  const total = Number(totalSupply);
+  const total = totalSupply;
 
-  const yesRatio = total === 0 ? 0 : yesN / total;
-  const noRatio = total === 0 ? 0 : noN / total;
-  const yesPercentage = yesRatio * 100;
-  const noPercentage = noRatio * 100;
+  const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yes, total);
+  const noPercentage = total === 0n ? 0 : percentageSafeDiv(no, total);
 
   console.log("parseVotesForQuorom", {
-    yesN,
-    noN,
     total,
-    yesRatio,
-    noRatio,
     yesPercentage,
     noPercentage,
   });
@@ -127,14 +115,12 @@ function parseVotesForQuorom(
     yes: {
       count: yes,
       formatted: useNumberFormatter(yes),
-      ratio: yesRatio,
       percentage: yesPercentage,
     },
     no: {
       count: no,
       formatted: useNumberFormatter(no),
-      ratio: noRatio,
-      percentage: noPercentage,
+      percentage: noPercentage, // range 0-100
     },
   };
 }
