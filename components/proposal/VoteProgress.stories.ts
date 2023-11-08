@@ -74,7 +74,7 @@ export const PowerYes100: Story = {
   args: {
     tallies: {
       power: {
-        yes: "1000n",
+        yes: "1000",
         no: "0",
       },
       zero: {
@@ -89,8 +89,8 @@ export const PowerYes30: Story = {
   args: {
     tallies: {
       power: {
-        yes: "300n",
-        no: "700n",
+        yes: "300",
+        no: "700",
       },
       zero: {
         yes: "0",
@@ -105,7 +105,7 @@ export const PowerNo100: Story = {
     tallies: {
       power: {
         yes: "0",
-        no: "1000n",
+        no: "1000",
       },
       zero: {
         yes: "0",
@@ -120,8 +120,8 @@ export const PowerQuorumReachedEmergency: Story = {
     version: "Emergency",
     tallies: {
       power: {
-        yes: "550n",
-        no: "100n",
+        yes: "550",
+        no: "100",
       },
       zero: {
         yes: "0",
@@ -139,8 +139,8 @@ export const PowerQuorumNotReachedEmergency: Story = {
     version: "Emergency",
     tallies: {
       power: {
-        yes: "550n",
-        no: "100n",
+        yes: "550",
+        no: "100",
       },
       zero: {
         yes: "0",
@@ -162,8 +162,8 @@ export const ZeroQuorumReached: Story = {
         no: "0",
       },
       zero: {
-        yes: "70n",
-        no: "30n",
+        yes: "70",
+        no: "30",
       },
     },
 
@@ -181,8 +181,8 @@ export const ZeroQuorumNotReached: Story = {
         no: "0",
       },
       zero: {
-        yes: "10n",
-        no: "50n",
+        yes: "10",
+        no: "50",
       },
     },
 
@@ -196,12 +196,12 @@ export const DoubleQuorumReachedAll: Story = {
     version: "Double",
     tallies: {
       power: {
-        yes: "550n",
-        no: "100n",
+        yes: "550",
+        no: "100",
       },
       zero: {
-        yes: "80n",
-        no: "30n",
+        yes: "80",
+        no: "30",
       },
     },
     powerQuorum: 0.5,
@@ -217,12 +217,12 @@ export const DoubleQuorumPowerReachedZeroNotReached: Story = {
     version: "Double",
     tallies: {
       power: {
-        yes: "550n",
-        no: "100n",
+        yes: "550",
+        no: "100",
       },
       zero: {
-        yes: "30n",
-        no: "30n",
+        yes: "30",
+        no: "30",
       },
     },
 
@@ -239,12 +239,12 @@ export const DoubleQuorumPowerNotReachedZeroReached: Story = {
     version: "Double",
     tallies: {
       power: {
-        yes: "150n",
-        no: "100n",
+        yes: "150",
+        no: "100",
       },
       zero: {
-        yes: "80n",
-        no: "30n",
+        yes: "80",
+        no: "30",
       },
     },
 
@@ -261,12 +261,12 @@ export const DoubleQuorumNoneNotReached: Story = {
     version: "Double",
     tallies: {
       power: {
-        yes: "50n",
-        no: "100n",
+        yes: "50",
+        no: "100",
       },
       zero: {
-        yes: "20n",
-        no: "30n",
+        yes: "20",
+        no: "30",
       },
     },
 
