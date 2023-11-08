@@ -2,18 +2,30 @@
   <div class="flex justify-between gap-2 items-center">
     <div class="flex items-end w-[9rem]">
       <MIconPower class="h-4 w-4 mr-1" />
-      <span class="flex uppercase text-xxs text-grey-primary">
-        power tokens
-      </span>
+      <span class="flex uppercase text-xxs text-grey-400"> power tokens </span>
     </div>
 
-    <span id="vote-yes-percentage" class="text-primary-darker text-xs">
+    <span id="vote-yes-percentage" class="text-green-900 text-xs">
       {{ props.votes?.yes?.percentage.toFixed(1) }}%
     </span>
 
-    <MProgressBar version="majority" :width="props.votes?.yes?.percentage" />
+    <MProgressBar
+      v-if="props.quorum"
+      version="quorum"
+      :width="props.votes?.yes?.percentage"
+      :quorum="props.quorum"
+    />
 
-    <span id="vote-no-percentage" class="text-red text-xs flex items-baseline">
+    <MProgressBar
+      v-else
+      version="majority"
+      :width="props.votes?.yes?.percentage"
+    />
+
+    <span
+      id="vote-no-percentage"
+      class="text-red-500 text-xs flex items-baseline"
+    >
       {{ props.votes?.no?.percentage.toFixed(1) }}%
     </span>
   </div>
@@ -26,6 +38,7 @@
 
 <script setup lang="ts">
 interface Props {
+  quorum: number;
   votes: {
     total: number;
     yes: {

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <LayoutHeader
-      class="w-full bg-neutral-900 fixed"
+      class="w-full bg-grey-900 fixed"
       :sidebar-open="isSidebarOpen"
       @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
     />
@@ -35,7 +35,7 @@ watch(
 
 <style scoped>
 aside {
-  @apply z-30 fixed lg:static w-full h-full lg:min-w-[280px] lg:w-auto overflow-y-scroll lg:overflow-y-visible p-6 hidden lg:block bg-neutral-900;
+  @apply z-30 fixed lg:static w-full h-full lg:min-w-[280px] lg:w-auto overflow-y-scroll lg:overflow-y-visible p-6 hidden lg:block bg-grey-900;
   max-height: calc(100vh - 96px);
 }
 </style>

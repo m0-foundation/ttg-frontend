@@ -12,19 +12,17 @@
       <h2 class="text-2xl mb-4 break-all">
         {{ title }}
       </h2>
-      <div
-        class="text-xs xl:text-sm mb-6 text-gray-400 hidden lg:flexjustify-between"
-      >
-        <div class="">
+      <div class="text-xs xl:text-sm mb-6 flex justify-between text-gray-400">
+        <div>
           Proposed by
           <NuxtLink :to="`/profile/${proposal.proposer}/`">
-            <u>{{ proposal.proposer }}</u>
+            <MAddressAvatar :address="proposal.proposer" />
           </NuxtLink>
         </div>
         <div>{{ timeAgo }} | {{ formatedDate }}</div>
       </div>
 
-      <div class="text-grey-primary text-sm">
+      <div class="text-grey-400 text-sm">
         {{ truncatedDescriptionText }}
       </div>
 
@@ -77,15 +75,12 @@
             NO
           </ProposalButtonCastVote>
 
-          <div
-            v-show="!canVote"
-            class="uppercase text-xs text-grey-primary mx-4"
-          >
+          <div v-show="!canVote" class="uppercase text-xs text-grey-400 mx-4">
             not enought voting power
           </div>
         </div>
 
-        <div class="uppercase text-xs text-grey-primary">
+        <div class="uppercase text-xs text-grey-400">
           <div
             v-if="
               proposal?.votingType === 'Power' ||

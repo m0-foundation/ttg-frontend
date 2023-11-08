@@ -9,12 +9,12 @@
         v-if="open"
         id="modal-backdrop"
         ref="modal-backdrop"
-        class="fixed z-40 lg:z-40 inset-0 overflow-y-auto bg-neutral-900"
+        class="fixed z-40 lg:z-40 inset-0 overflow-y-auto bg-grey-900"
       >
         <div class="flex items-center justify-center min-h-screen">
           <div class="w-full max-w-xl">
             <div class="flex flex-wrap flex-col">
-              <div class="bg-neutral-900 text-white p-8">
+              <div class="bg-grey-900 text-white p-8">
                 <p class="text-2xl text-center">Connect Wallet</p>
                 <p class="text-sm text-zinc-500 leading-normal mt-2">
                   Connect with one of our available wallet providers or create a
@@ -72,12 +72,13 @@ const images = {
 
 const open = ref(false);
 const network = useNetworkStore().getNetwork();
+const chainId = computed(() => network.value.rpc.chainId);
+
 const { connector, isReconnecting } = useAccount();
 const { switchNetwork } = useSwitchNetwork();
 const { connect, connectors } = useConnect({
   onError: (e) => console.error("error", e.message),
   onSuccess: () => {
-    const chainId = network.value.rpc.chainId;
     switchNetwork(chainId);
   },
 });

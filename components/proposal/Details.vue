@@ -6,8 +6,13 @@
       text="EMERGENCY_VOTING"
     />
 
-    <article class="bg-white text-black px-8 py-4">
-      <ProposalStatusTimeline :version="proposal?.state" />
+    <article class="bg-white text-black px-4 py-4">
+      <div class="flex justify-between">
+        <ProposalStatusTimeline :version="proposal?.state" />
+        <div>
+          <ProposalMenu :proposal="proposal" />
+        </div>
+      </div>
 
       <ProposalVoteProgress
         v-if="proposal?.state !== 'Pending'"
@@ -17,10 +22,10 @@
         :power-quorum="powerQuorum"
       />
 
-      <div class="text-grey-primary text-xs mt-8 mb-2 truncate w-52 lg:w-full">
+      <div class="text-grey-400 text-xs mt-8 mb-2 truncate w-52 lg:w-full">
         Proposed by
         <NuxtLink :to="`/profile/${proposal?.proposer}/`">
-          <u>{{ proposal?.proposer }}</u>
+          <u><MAddressAvatar :address="proposal?.proposer" /></u>
         </NuxtLink>
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
@@ -32,6 +37,10 @@
         :current-proposal-values="currentProposalValues"
       />
     </article>
+
+    <div class="my-8">
+      <ProposalTableVotes :votes="votes?.value" />
+    </div>
   </div>
 </template>
 
@@ -78,10 +87,17 @@ console.log({ currentProposalValues });
 const { toFormat } = useDate(proposal?.timestamp);
 const proposalCreatedFormatedDate = computed(() => toFormat("LL"));
 
-const zeroQuorum = computed(
-  () => Number(spog.values.zeroTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
+const zeroQuorum = computed(() =>
+  basisPointsToDecimal(spog.values.zeroTokenQuorumRatio!)
 );
-const powerQuorum = computed(
-  () => Number(spog.values.powerTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
+const powerQuorum = computed(() =>
+  basisPointsToDecimal(spog.values.powerTokenQuorumRatio!)
 );
+
+const votesStore = useVotesStore();
+const votes = computed(() => {
+  if (proposalId.value) {
+    return votesStore.getBy("proposalId", proposalId.value);
+  }
+});
 </script>

@@ -28,18 +28,18 @@ button {
 }
 
 button:disabled {
-  @apply opacity-50 cursor-not-allowed bg-primary-dark;
+  @apply opacity-50 cursor-not-allowed bg-green-800;
 }
 
 .default {
-  @apply text-black bg-primary hover:bg-primary-dark;
+  @apply text-black bg-green-700 hover:bg-green-800;
 }
 
 .active {
-  @apply text-white bg-primary-darker;
+  @apply text-white bg-green-900;
 }
 
 .disabled {
-  @apply border border-grey-primary text-grey-primary bg-white;
+  @apply border border-grey-400 text-grey-400 bg-white;
 }
 </style>

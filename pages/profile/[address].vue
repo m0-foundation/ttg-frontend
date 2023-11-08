@@ -2,7 +2,7 @@
   <div v-if="address">
     <div class="flex justify-between gap-4">
       <div>
-        <p class="text-grey-primary text-xs uppercase">voting address</p>
+        <p class="text-grey-400 text-xs uppercase">voting address</p>
         <p class="text-white text-md">
           {{ address }}
         </p>
@@ -14,7 +14,7 @@
   </div>
   <div
     v-else
-    class="flex flex-col items-center justify-center h-80 text-grey-primary"
+    class="flex flex-col items-center justify-center h-80 text-grey-400"
   >
     User not found
   </div>

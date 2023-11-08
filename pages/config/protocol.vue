@@ -59,7 +59,7 @@ const tableConfig = computed(() => {
           const { toFormat } = useDate(Number(cell));
           const formatedDate = toFormat("LLL");
           return html(
-            `<span class="text-xs text-grey-primary">${formatedDate}</span>`
+            `<span class="text-xs text-grey-400">${formatedDate}</span>`
           );
         },
       },
