@@ -261,8 +261,6 @@ export class Proposals extends GovernorModule {
         signatures: this.toString(event.signatures!),
         calldatas: this.toString(event.calldatas),
         targets: this.toString(event.targets!),
-        endBlock: Number(event.endBlock),
-        startBlock: Number(event.startBlock),
         proposer: event.proposer,
         description: event.description,
         timestamp: event.timestamp,
@@ -347,20 +345,14 @@ export class Proposals extends GovernorModule {
             "votingType",
           ]),
           epoch,
-          votes: {
+          tallies: {
             power: {
-              yes: Number(proposalData.yesPowerTokenVotes),
-              no: Number(proposalData.noPowerTokenVotes),
-              total: Number(
-                proposalData.yesPowerTokenVotes + proposalData.noPowerTokenVotes
-              ),
+              yes: proposalData.yesPowerTokenVotes,
+              no: proposalData.noPowerTokenVotes,
             },
             zero: {
-              yes: Number(proposalData.yesZeroTokenVotes),
-              no: Number(proposalData.noZeroTokenVotes),
-              total: Number(
-                proposalData.yesZeroTokenVotes + proposalData.noZeroTokenVotes
-              ),
+              yes: proposalData.yesZeroTokenVotes,
+              no: proposalData.noZeroTokenVotes,
             },
           },
         };
@@ -404,8 +396,6 @@ export class Proposals extends GovernorModule {
       signatures: this.toString(args.signatures!),
       calldatas: this.toString(args.calldatas),
       targets: this.toString(args.targets!),
-      endBlock: Number(args.voteEnd),
-      startBlock: Number(args.voteStart),
       proposer: args.proposer,
       description: args.description,
       timestamp: 0,
@@ -435,20 +425,14 @@ export class Proposals extends GovernorModule {
         "votingType",
       ]),
       epoch,
-      votes: {
+      tallies: {
         power: {
-          yes: Number(proposalData.yesPowerTokenVotes),
-          no: Number(proposalData.noPowerTokenVotes),
-          total: Number(
-            proposalData.yesPowerTokenVotes + proposalData.noPowerTokenVotes
-          ),
+          yes: proposalData.yesPowerTokenVotes,
+          no: proposalData.noPowerTokenVotes,
         },
         zero: {
-          yes: Number(proposalData.yesZeroTokenVotes),
-          no: Number(proposalData.noZeroTokenVotes),
-          total: Number(
-            proposalData.yesZeroTokenVotes + proposalData.noZeroTokenVotes
-          ),
+          yes: proposalData.yesZeroTokenVotes,
+          no: proposalData.noZeroTokenVotes,
         },
       },
     };
