@@ -14,13 +14,18 @@
         </div>
       </div>
 
-      <ProposalVoteProgress
-        v-if="proposal?.state !== 'Pending'"
-        :votes="proposal?.votes"
-        :version="proposal?.votingType"
-        :zero-quorum="zeroQuorum"
-        :power-quorum="powerQuorum"
-      />
+      <div v-if="isLoading">Loading...</div>
+      <div v-else>
+        <ProposalVoteProgress
+          v-if="proposal?.state !== 'Pending'"
+          :tallies="proposal?.tallies"
+          :version="proposal?.votingType"
+          :power-quorum="powerQuorum"
+          :power-total-supply="totalSupplyAt[0]"
+          :zero-quorum="zeroQuorum"
+          :zero-total-supply="totalSupplyAt[1]"
+        />
+      </div>
 
       <div class="text-grey-400 text-xs mt-8 mb-2 truncate w-52 lg:w-full">
         Proposed by
@@ -48,7 +53,7 @@
 import { storeToRefs } from "pinia";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
-import { dualGovernorABI } from "@/lib/sdk";
+import { dualGovernorABI, readPowerToken, readZeroToken } from "@/lib/sdk";
 
 export interface ProposalDetailsProps {
   proposalId: string;
@@ -100,4 +105,20 @@ const votes = computed(() => {
     return votesStore.getBy("proposalId", proposalId.value);
   }
 });
+
+const { state: totalSupplyAt, isLoading } = useAsyncState(
+  Promise.all([
+    readPowerToken({
+      address: spog!.contracts!.powerToken! as Hash,
+      functionName: "totalSupplyAt",
+      args: [BigInt(proposal!.epoch!)],
+    }),
+    readZeroToken({
+      address: spog!.contracts!.zeroToken! as Hash,
+      functionName: "totalSupplyAt",
+      args: [BigInt(proposal!.epoch!)],
+    }),
+  ]),
+  [0n, 0n]
+);
 </script>
