@@ -9,18 +9,14 @@
       {{ props.votes?.yes?.percentage.toFixed(1) }}%
     </span>
 
-    <MProgressBar
+    <MProgressBarQuorum
       v-if="props.quorum"
-      version="quorum"
-      :width="props.votes?.yes?.percentage"
+      :yes="props.votes?.yes?.percentage"
+      :no="props.votes?.no?.percentage"
       :quorum="props.quorum"
     />
 
-    <MProgressBar
-      v-else
-      version="majority"
-      :width="props.votes?.yes?.percentage"
-    />
+    <MProgressBar v-else :width="props.votes?.yes?.percentage" />
 
     <span
       id="vote-no-percentage"

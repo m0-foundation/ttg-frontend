@@ -9,10 +9,10 @@
       {{ props.votes?.yes?.percentage.toFixed(1) }}%
     </span>
 
-    <MProgressBar
-      version="quorum"
+    <MProgressBarQuorum
+      :yes="props.votes?.yes?.percentage"
+      :no="props.votes?.no?.percentage"
       :quorum="props.quorum"
-      :width="props.votes?.yes?.percentage"
     />
 
     <span
