@@ -5,79 +5,70 @@
     >
       <div class="text-grey-primary hidden lg:block">status:</div>
 
-      <p
-        :id="version === 'Pending' ? 'proposal-state' : undefined"
-        :class="[{ active: 'Pending' === version }, 'item']"
-      >
-        pending
-      </p>
+      <MDropdown>
+        <template #activator>
+          <ProposalStatusBadge :version="version" name="Pending" />
+        </template>
+        <template #content>
+          <ProposalStatusMenu :proposal="proposal" />
+        </template>
+      </MDropdown>
 
-      <p
-        :id="version === 'Active' ? 'proposal-state' : undefined"
-        :class="[{ active: 'Active' === version }, 'item']"
-      >
-        active
-      </p>
+      <MDropdown>
+        <template #activator>
+          <ProposalStatusBadge :version="version" name="Active" />
+        </template>
+        <template #content>
+          <ProposalStatusMenu :proposal="proposal" />
+        </template>
+      </MDropdown>
 
-      <p
-        v-if="version === 'Defeated'"
-        :id="version === 'Defeated' ? 'proposal-state' : undefined"
-        :class="['defeated', 'item', 'active']"
-      >
-        defeated
-      </p>
+      <MDropdown v-if="version === 'Defeated'">
+        <template #activator>
+          <ProposalStatusBadge :version="version" name="Defeated" />
+        </template>
+        <template #content>
+          <ProposalStatusMenu :proposal="proposal" />
+        </template>
+      </MDropdown>
 
-      <p
-        v-else
-        :id="version === 'Succeeded' ? 'proposal-state' : undefined"
-        :class="[{ active: 'Succeeded' === version }, 'item']"
-      >
-        succeeded
-      </p>
+      <MDropdown v-else>
+        <template #activator>
+          <ProposalStatusBadge :version="version" name="Succeeded" />
+        </template>
+        <template #content>
+          <ProposalStatusMenu :proposal="proposal" />
+        </template>
+      </MDropdown>
 
-      <p
-        v-if="version === 'Expired'"
-        :id="version === 'Expired' ? 'proposal-state' : undefined"
-        :class="['expired', 'item', 'active']"
-      >
-        expired
-      </p>
-      <p
-        v-else
-        :id="version === 'Executed' ? 'proposal-state' : undefined"
-        :class="[{ active: 'Executed' === version }, 'item']"
-      >
-        executed
-      </p>
+      <MDropdown v-if="version === 'Expired'">
+        <template #activator>
+          <ProposalStatusBadge :version="version" name="Expired" />
+        </template>
+        <template #content>
+          <ProposalStatusMenu :proposal="proposal" />
+        </template>
+      </MDropdown>
+
+      <MDropdown v-else>
+        <template #activator>
+          <ProposalStatusBadge :version="version" name="Executed" />
+        </template>
+        <template #content>
+          <ProposalStatusMenu :proposal="proposal" />
+        </template>
+      </MDropdown>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { MProposal } from "~/lib/api/types";
+
 export interface Props {
   version: string;
+  proposal: MProposal | undefined;
 }
 
 const props = defineProps<Props>();
 </script>
-
-<style scoped>
-.item {
-  @apply flex items-center py-1 px-2 lg:px-3;
-}
-
-.active {
-  @apply bg-[#00664E] text-[#5CC99E];
-}
-.active ~ p {
-  @apply text-grey-400;
-}
-
-.defeated {
-  @apply bg-red-500 text-white;
-}
-
-.expired {
-  @apply bg-[#EEEEEE] text-[#929492];
-}
-</style>
