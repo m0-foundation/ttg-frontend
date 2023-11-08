@@ -33,44 +33,42 @@
 import { MProposalTallies, MVotingType } from "@/lib/api/types";
 
 interface Props {
-  votes: MProposalTallies;
+  tallies: MProposalTallies;
   version: MVotingType;
   zeroQuorum?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
   powerQuorum?: number;
+  powerTotalSupply?: bigint;
+  zeroTotalSupply?: bigint;
 }
 const props = withDefaults(defineProps<Props>(), {
-  votes: {
+  tallies: () => ({
     power: {
-      yes: 0,
-      no: 0,
-      total: 0,
+      yes: 0n,
+      no: 0n,
     },
     zero: {
-      yes: 0,
-      no: 0,
-      total: 0,
+      yes: 0n,
+      no: 0n,
     },
-  },
+  }),
   version: "Power",
   zeroQuorum: undefined,
   powerQuorum: undefined,
+  powerTotalSupply: () => 0n,
+  zeroTotalSupply: () => 0n,
 });
 
-function parseVotes({
-  yes,
-  no,
-  total,
-}: {
-  yes: number;
-  no: number;
-  total: number;
-}) {
-  const yesRatio = total === 0 ? 0 : yes / total;
-  const noRatio = total === 0 ? 0 : no / total;
+function parseVotesForMajority({ yes, no }: { yes: bigint; no: bigint }) {
+  const yesN = Number(yes);
+  const noN = Number(no);
+  const total = yesN + noN;
+
+  const yesRatio = total === 0 ? 0 : yesN / total;
+  const noRatio = total === 0 ? 0 : noN / total;
   const yesPercentage = yesRatio * 100;
   const noPercentage = noRatio * 100;
 
-  console.log({
+  console.log("parseVotesForMajority", {
     yes,
     no,
     total,
@@ -96,8 +94,60 @@ function parseVotes({
   };
 }
 
-const powerVotes = computed(() => parseVotes(props.votes.power));
-const zeroVotes = computed(() => parseVotes(props.votes.zero));
+function parseVotesForQuorom(
+  {
+    yes,
+    no,
+  }: {
+    yes: bigint;
+    no: bigint;
+  },
+  totalSupply: bigint
+) {
+  const yesN = Number(yes);
+  const noN = Number(no);
+  const total = Number(totalSupply);
+
+  const yesRatio = total === 0 ? 0 : yesN / total;
+  const noRatio = total === 0 ? 0 : noN / total;
+  const yesPercentage = yesRatio * 100;
+  const noPercentage = noRatio * 100;
+
+  console.log("parseVotesForQuorom", {
+    yesN,
+    noN,
+    total,
+    yesRatio,
+    noRatio,
+    yesPercentage,
+    noPercentage,
+  });
+  return {
+    total,
+    yes: {
+      count: yes,
+      formatted: useNumberFormatter(yes),
+      ratio: yesRatio,
+      percentage: yesPercentage,
+    },
+    no: {
+      count: no,
+      formatted: useNumberFormatter(no),
+      ratio: noRatio,
+      percentage: noPercentage,
+    },
+  };
+}
+
+const powerVotes = computed(() => {
+  return props.version === "Power"
+    ? parseVotesForMajority(props.tallies.power)
+    : parseVotesForQuorom(props.tallies.power, props.powerTotalSupply);
+});
+
+const zeroVotes = computed(() =>
+  parseVotesForQuorom(props.tallies.zero, props.zeroTotalSupply)
+);
 </script>
 <style scoped>
 .text-yes {

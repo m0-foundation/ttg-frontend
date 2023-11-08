@@ -10,7 +10,7 @@ const meta = {
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/vue/writing-docs/autodocs
   tags: ["autodocs"],
   argTypes: {
-    votes: {
+    tallies: {
       power: {
         yes: {
           control: "number",
@@ -19,6 +19,31 @@ const meta = {
           control: "number",
         },
       },
+      zero: {
+        yes: {
+          control: "number",
+        },
+        no: {
+          control: "number",
+        },
+      },
+    },
+    version: {
+      control: "select",
+      options: ["Power", "Emergency", "Zero", "Double"],
+    },
+
+    zeroQuorum: {
+      control: "number",
+    },
+    powerQuorum: {
+      control: "number",
+    },
+    powerTotalSupply: {
+      control: "number",
+    },
+    zeroTotalSupply: {
+      control: "number",
     },
   },
   render: (args) => ({
@@ -47,16 +72,29 @@ export const Default: Story = {};
 
 export const PowerYes100: Story = {
   args: {
-    votes: {
+    tallies: {
       power: {
-        yes: 1000,
-        no: 0,
-        total: 1000,
+        yes: 1000n,
+        no: 0n,
       },
       zero: {
-        yes: 0,
-        no: 0,
-        total: 0,
+        yes: 0n,
+        no: 0n,
+      },
+    },
+  },
+};
+
+export const PowerYes30: Story = {
+  args: {
+    tallies: {
+      power: {
+        yes: 300n,
+        no: 700n,
+      },
+      zero: {
+        yes: 0n,
+        no: 0n,
       },
     },
   },
@@ -64,137 +102,178 @@ export const PowerYes100: Story = {
 
 export const PowerNo100: Story = {
   args: {
-    votes: {
+    tallies: {
       power: {
-        yes: 0,
-        no: 1000,
-        total: 1000,
+        yes: 0n,
+        no: 1000n,
       },
       zero: {
-        yes: 0,
-        no: 0,
-        total: 0,
+        yes: 0n,
+        no: 0n,
       },
     },
+  },
+};
+
+export const PowerQuorumReachedEmergency: Story = {
+  args: {
+    version: "Emergency",
+    tallies: {
+      power: {
+        yes: 550n,
+        no: 100n,
+      },
+      zero: {
+        yes: 0n,
+        no: 0n,
+      },
+    },
+
+    powerQuorum: 0.45,
+    powerTotalSupply: 1000n,
+  },
+};
+
+export const PowerQuorumNotReachedEmergency: Story = {
+  args: {
+    version: "Emergency",
+    tallies: {
+      power: {
+        yes: 550n,
+        no: 100n,
+      },
+      zero: {
+        yes: 0n,
+        no: 0n,
+      },
+    },
+
+    powerQuorum: 0.85,
+    powerTotalSupply: 1000n,
   },
 };
 
 export const ZeroQuorumReached: Story = {
   args: {
     version: "Zero",
-    votes: {
+    tallies: {
       power: {
-        yes: 0,
-        no: 0,
-        total: 0,
+        yes: 0n,
+        no: 0n,
       },
       zero: {
-        yes: 70,
-        no: 30,
-        total: 100,
+        yes: 70n,
+        no: 30n,
       },
     },
 
     zeroQuorum: 0.5,
+    zeroTotalSupply: 120n,
   },
 };
 
 export const ZeroQuorumNotReached: Story = {
   args: {
     version: "Zero",
-    votes: {
+    tallies: {
       power: {
-        yes: 0,
-        no: 0,
-        total: 0,
+        yes: 0n,
+        no: 0n,
       },
       zero: {
-        yes: 10,
-        no: 50,
-        total: 60,
+        yes: 10n,
+        no: 50n,
       },
     },
 
     zeroQuorum: 0.5,
+    zeroTotalSupply: 120n,
   },
 };
 
 export const DoubleQuorumReachedAll: Story = {
   args: {
     version: "Double",
-    votes: {
+    tallies: {
       power: {
-        yes: 100,
-        no: 10,
-        total: 110,
+        yes: 550n,
+        no: 100n,
       },
       zero: {
-        yes: 70,
-        no: 30,
-        total: 100,
+        yes: 80n,
+        no: 30n,
       },
     },
     powerQuorum: 0.5,
     zeroQuorum: 0.5,
+
+    powerTotalSupply: 1000n,
+    zeroTotalSupply: 150n,
   },
 };
 
 export const DoubleQuorumPowerReachedZeroNotReached: Story = {
   args: {
     version: "Double",
-    votes: {
+    tallies: {
       power: {
-        yes: 100,
-        no: 10,
-        total: 110,
+        yes: 550n,
+        no: 100n,
       },
       zero: {
-        yes: 10,
-        no: 50,
-        total: 60,
+        yes: 30n,
+        no: 30n,
       },
     },
+
     powerQuorum: 0.5,
     zeroQuorum: 0.5,
+
+    powerTotalSupply: 1000n,
+    zeroTotalSupply: 150n,
   },
 };
 
 export const DoubleQuorumPowerNotReachedZeroReached: Story = {
   args: {
     version: "Double",
-    votes: {
+    tallies: {
       power: {
-        yes: 10,
-        no: 40,
-        total: 50,
+        yes: 150n,
+        no: 100n,
       },
       zero: {
-        yes: 70,
-        no: 30,
-        total: 100,
+        yes: 80n,
+        no: 30n,
       },
     },
+
     powerQuorum: 0.5,
     zeroQuorum: 0.5,
+
+    powerTotalSupply: 1000n,
+    zeroTotalSupply: 150n,
   },
 };
 
 export const DoubleQuorumNoneNotReached: Story = {
   args: {
     version: "Double",
-    votes: {
+    tallies: {
       power: {
-        yes: 20,
-        no: 0,
-        total: 100,
+        yes: 50n,
+        no: 100n,
       },
       zero: {
-        yes: 10,
-        no: 0,
-        total: 100,
+        yes: 20n,
+        no: 30n,
       },
     },
+
     powerQuorum: 0.5,
     zeroQuorum: 0.5,
+
+    powerTotalSupply: 1000n,
+    zeroTotalSupply: 150n,
   },
 };
