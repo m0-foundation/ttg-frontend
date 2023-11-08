@@ -32,12 +32,12 @@ export interface ProposalEventLog extends EventLog {
 
 export interface MProposalTallies {
   power: {
-    yes: bigint;
-    no: bigint;
+    yes: string;
+    no: string;
   };
   zero: {
-    yes: bigint;
-    no: bigint;
+    yes: string;
+    no: string;
   };
 }
 

@@ -43,12 +43,12 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   tallies: () => ({
     power: {
-      yes: 0n,
-      no: 0n,
+      yes: "0",
+      no: "0",
     },
     zero: {
-      yes: 0n,
-      no: 0n,
+      yes: "0",
+      no: "0",
     },
   }),
   version: "Power",
@@ -62,11 +62,14 @@ const props = withDefaults(defineProps<Props>(), {
 const percentageSafeDiv = (a: bigint, b: bigint) =>
   Number((a * 10000n) / b) / 100;
 
-function parseVotesForMajority({ yes, no }: { yes: bigint; no: bigint }) {
-  const total = yes + no;
+function parseVotesForMajority({ yes, no }: { yes: string; no: string }) {
+  const yesBI = BigInt(yes);
+  const noBI = BigInt(no);
 
-  const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yes, total);
-  const noPercentage = total === 0n ? 0 : percentageSafeDiv(no, total);
+  const total = yesBI + noBI;
+
+  const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yesBI, total);
+  const noPercentage = total === 0n ? 0 : percentageSafeDiv(noBI, total);
 
   console.log("parseVotesForMajority", {
     yes,
@@ -95,15 +98,18 @@ function parseVotesForQuorom(
     yes,
     no,
   }: {
-    yes: bigint;
-    no: bigint;
+    yes: string;
+    no: string;
   },
   totalSupply: bigint
 ) {
+  const yesBI = BigInt(yes);
+  const noBI = BigInt(no);
+
   const total = totalSupply;
 
-  const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yes, total);
-  const noPercentage = total === 0n ? 0 : percentageSafeDiv(no, total);
+  const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yesBI, total);
+  const noPercentage = total === 0n ? 0 : percentageSafeDiv(noBI, total);
 
   console.log("parseVotesForQuorom", {
     total,
@@ -128,11 +134,11 @@ function parseVotesForQuorom(
 const powerVotes = computed(() => {
   return props.version === "Power"
     ? parseVotesForMajority(props.tallies.power)
-    : parseVotesForQuorom(props.tallies.power, props.powerTotalSupply);
+    : parseVotesForQuorom(props.tallies.power, props.powerTotalSupply!);
 });
 
 const zeroVotes = computed(() =>
-  parseVotesForQuorom(props.tallies.zero, props.zeroTotalSupply)
+  parseVotesForQuorom(props.tallies.zero, props.zeroTotalSupply!)
 );
 </script>
 <style scoped>

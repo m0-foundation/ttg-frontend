@@ -347,12 +347,12 @@ export class Proposals extends GovernorModule {
           epoch,
           tallies: {
             power: {
-              yes: proposalData.yesPowerTokenVotes,
-              no: proposalData.noPowerTokenVotes,
+              yes: String(proposalData.yesPowerTokenVotes),
+              no: String(proposalData.noPowerTokenVotes),
             },
             zero: {
-              yes: proposalData.yesZeroTokenVotes,
-              no: proposalData.noZeroTokenVotes,
+              yes: String(proposalData.yesZeroTokenVotes),
+              no: String(proposalData.noZeroTokenVotes),
             },
           },
         };
@@ -427,12 +427,12 @@ export class Proposals extends GovernorModule {
       epoch,
       tallies: {
         power: {
-          yes: proposalData.yesPowerTokenVotes,
-          no: proposalData.noPowerTokenVotes,
+          yes: String(proposalData.yesPowerTokenVotes),
+          no: String(proposalData.noPowerTokenVotes),
         },
         zero: {
-          yes: proposalData.yesZeroTokenVotes,
-          no: proposalData.noZeroTokenVotes,
+          yes: String(proposalData.yesZeroTokenVotes),
+          no: String(proposalData.noZeroTokenVotes),
         },
       },
     };
