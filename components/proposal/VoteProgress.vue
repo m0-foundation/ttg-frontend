@@ -71,13 +71,6 @@ function parseVotesForMajority({ yes, no }: { yes: string; no: string }) {
   const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yesBI, total);
   const noPercentage = total === 0n ? 0 : percentageSafeDiv(noBI, total);
 
-  console.log("parseVotesForMajority", {
-    yes,
-    no,
-    total,
-    yesPercentage,
-    noPercentage,
-  });
   return {
     total,
     yes: {
@@ -111,11 +104,6 @@ function parseVotesForQuorom(
   const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yesBI, total);
   const noPercentage = total === 0n ? 0 : percentageSafeDiv(noBI, total);
 
-  console.log("parseVotesForQuorom", {
-    total,
-    yesPercentage,
-    noPercentage,
-  });
   return {
     total,
     yes: {
