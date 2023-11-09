@@ -32,8 +32,8 @@
     </div>
   </div>
 
-  <div v-show="props.currentFrom && props.currentTo" class="w-1/2 uppercase">
-    current: {{ props.currentFrom }} - {{ props.currentTo }}
+  <div v-if="props.currentValue" class="text-xs text-grey-400 my-2">
+    Current: {{ props.currentValue }}
   </div>
 </template>
 
@@ -41,8 +41,7 @@
 import { ErrorObject } from "@vuelidate/core";
 
 export interface InputProps {
-  currentFrom: string;
-  currentTo: string;
+  currentValue: string;
   modelValue: number;
   modelValue2: number;
   modelValue3: number;
