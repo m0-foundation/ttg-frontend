@@ -7,22 +7,38 @@
       </div>
 
       <div v-else-if="version === 'Emergency'">
-        <VoteProgressPower :votes="powerVotes" :quorum="props.powerQuorum" />
+        <VoteProgressPower
+          :votes="powerVotes"
+          :quorum="props.powerQuorum"
+          :quorum-formatted="quorumFormattedPower"
+        />
       </div>
 
       <!-- Zero -->
       <div v-else-if="version === 'Zero'">
-        <VoteProgressZero :votes="zeroVotes" :quorum="props.zeroQuorum" />
+        <VoteProgressZero
+          :votes="zeroVotes"
+          :quorum="props.zeroQuorum"
+          :quorum-formatted="quorumFormattedZero"
+        />
       </div>
 
       <!-- Double -->
       <div v-else-if="version === 'Double'">
         <div class="mb-8">
-          <VoteProgressPower :votes="powerVotes" :quorum="props.powerQuorum" />
+          <VoteProgressPower
+            :votes="powerVotes"
+            :quorum="props.powerQuorum"
+            :quorum-formatted="quorumFormattedPower"
+          />
         </div>
 
         <div>
-          <VoteProgressZero :votes="zeroVotes" :quorum="props.zeroQuorum" />
+          <VoteProgressZero
+            :votes="zeroVotes"
+            :quorum="props.zeroQuorum"
+            :quorum-formatted="quorumFormattedZero"
+          />
         </div>
       </div>
     </div>
@@ -127,6 +143,18 @@ const powerVotes = computed(() => {
 
 const zeroVotes = computed(() =>
   parseVotesForQuorom(props.tallies.zero, props.zeroTotalSupply!)
+);
+
+const quorumFormattedPower = computed(() =>
+  useNumberFormatter(
+    (props.powerTotalSupply * BigInt(props.powerQuorum! * 100)) / 100n
+  )
+);
+
+const quorumFormattedZero = computed(() =>
+  useNumberFormatter(
+    (props.zeroTotalSupply * BigInt(props.zeroQuorum! * 100)) / 100n
+  )
 );
 </script>
 <style scoped>
