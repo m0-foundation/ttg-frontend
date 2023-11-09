@@ -1,6 +1,7 @@
 <template>
   <button
     class="flex gap-1 items-center justify-center h-9 lg:w-min uppercase px-6"
+    :class="version"
   >
     <div class="w-3 h-3 relative">
       <div class="outside-circle"></div>
@@ -9,6 +10,16 @@
     <span class="text-xs mb-[-2px] whitespace-nowrap"> <slot></slot> </span>
   </button>
 </template>
+
+<script setup lang="ts">
+export interface MButtonProps {
+  version: "default" | "active";
+}
+
+withDefaults(defineProps<MButtonProps>(), {
+  version: "default",
+});
+</script>
 
 <style>
 .default {

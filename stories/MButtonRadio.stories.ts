@@ -8,6 +8,16 @@ const meta = {
   component: MButtonRadio,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/vue/writing-docs/autodocs
   tags: ["autodocs"],
+  argTypes: {
+    version: {
+      control: "select",
+      options: ["default", "active"],
+    },
+    disabled: {
+      control: "boolean",
+      options: [false, true],
+    },
+  },
 
   render: (args) => ({
     components: {
@@ -29,36 +39,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    disabled: false,
-    modelValue: 1,
-    text: "Default",
-    value: 0,
+    version: "default",
   },
 };
 
-export const DefaultDisabled: Story = {
+export const Active: Story = {
+  args: {
+    version: "active",
+  },
+};
+
+export const Disabled: Story = {
   args: {
     disabled: true,
-    modelValue: 1,
-    text: "Disabled",
-    value: 0,
-  },
-};
-
-export const Checked: Story = {
-  args: {
-    disabled: false,
-    modelValue: 1,
-    text: "Checked",
-    value: 1,
-  },
-};
-
-export const CheckedDisabled: Story = {
-  args: {
-    disabled: 1,
-    modelValue: 1,
-    text: "Checked Disabled",
-    value: 1,
   },
 };
