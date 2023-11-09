@@ -1,9 +1,5 @@
 <template>
-  <MButtonRadio
-    class="grow lg:auto lg:grow-0"
-    :class="version"
-    @click="onClick"
-  >
+  <MButtonRadio class="grow lg:grow-0" :class="version" @click="onClick">
     <slot />
   </MButtonRadio>
 </template>

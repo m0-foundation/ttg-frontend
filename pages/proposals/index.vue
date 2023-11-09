@@ -92,14 +92,7 @@ const { address: userAccount, isConnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 
 function onCast(vote: number, proposalId: string) {
-  const proposalIndex = selectedCastProposals.value.findIndex(
-    (p) => p.proposalId === proposalId
-  );
-  if (proposalIndex === -1) {
-    selectedCastProposals.value.push({ vote, proposalId });
-  } else {
-    selectedCastProposals.value[proposalIndex].vote = vote;
-  }
+  selectedCastProposals.value.push({ vote, proposalId });
 }
 
 function onUncast(proposalId: string) {

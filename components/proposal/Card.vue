@@ -181,7 +181,7 @@ function onExecuteProposal() {
 }
 
 function onCastSelected(vote: number) {
-  if (selectedVote.value === vote) {
+  if (isVoteSelected.value) {
     emit("on-uncast", props.proposal.proposalId);
     isVoteSelected.value = false;
     selectedVote.value = null;
