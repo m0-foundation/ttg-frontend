@@ -67,6 +67,7 @@
                 :model-value2-errors="$validation.proposalValue2?.$errors"
                 :model-value3-errors="$validation.proposalValue3?.$errors"
                 :placeholder="selectedProposalType.placeholder"
+                :current-value="currentValue"
               />
             </div>
 
@@ -134,12 +135,20 @@
         <button class="text-green-800 uppercase mx-4" @click="onBack">
           &#60; back
         </button>
-        <MButton v-if="isPreview" type="submit">Submit proposal</MButton>
+        <MButton v-if="isPreview" type="submit" :disabled="isDisconnected">
+          Submit proposal
+        </MButton>
       </div>
-
       <div v-else class="flex justify-end mt-12">
         <MButton type="button" @click="onPreview">Preview proposal</MButton>
       </div>
+
+      <p
+        v-if="isDisconnected"
+        class="flex justify-end text-xs text-red-500 mx-2 my-1"
+      >
+        Please connect wallet
+      </p>
 
       <hr class="my-12" />
 
@@ -189,6 +198,7 @@ import {
   toHex,
   stringToBytes,
   Hash,
+  formatUnits,
 } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength } from "@vuelidate/validators";
@@ -199,6 +209,8 @@ import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber.v
 import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber.vue";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
+import ProposalInputQuorum from "@/components/proposal/InputQuorum.vue";
+
 import { MProposalVotingTokens, MVotingTokens } from "@/lib/api";
 /* control stepper */
 let steps = reactive([]);
@@ -256,7 +268,7 @@ const $validation = useVuelidate(rules, formData);
 
 const previewDescription = ref();
 
-const { address: userAccount } = useAccount();
+const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
 const { getValues: spogValues } = storeToRefs(spog);
@@ -296,7 +308,7 @@ const proposalTypes = [
       {
         value: "setPowerTokenQuorumRatio",
         label: "Power quorum",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputQuorum,
         modelValue: formData.proposalValue,
         tokens: MProposalVotingTokens.setPowerTokenQuorumRatio,
       },
@@ -365,6 +377,28 @@ const proposalTypes = [
   },
 ];
 
+const currentValue = computed(() => {
+  if (selectedProposalType?.value?.value === "setPowerTokenQuorumRatio") {
+    return `${basisPointsToPercentage(spog.values.powerTokenQuorumRatio!)}%`;
+  }
+
+  if (selectedProposalType?.value?.value === "setZeroTokenQuorumRatio") {
+    return `${basisPointsToPercentage(spog.values.zeroTokenQuorumRatio!)}%`;
+  }
+
+  const formatFee = (value: string) => formatUnits(BigInt(value), 18);
+
+  if (selectedProposalType?.value?.value === "setProposalFee") {
+    return formatFee(spog.values.proposalFee!);
+  }
+
+  if (selectedProposalType?.value?.value === "setProposalFeeRange") {
+    return `${formatFee(spog.values.proposalFee!)} | MIN: ${formatFee(
+      spog.values.minProposalFee!
+    )} - MAX:${formatFee(spog.values.maxProposalFee!)}`;
+  }
+});
+
 function onChangeProposalType(option) {
   console.log("onChangeProposalType", { option });
   formData.proposalType = option.value;
@@ -386,8 +420,8 @@ function addHyperlinksToDescription() {
   return descriptionWithLinks;
 }
 
-function onPreview() {
-  $validation.value.$validate();
+async function onPreview() {
+  await $validation.value.$validate();
   if (!$validation.value.$error) {
     previewDescription.value = addHyperlinksToDescription();
     isPreview.value = true;
@@ -593,7 +627,7 @@ function buildCalldatas(formData) {
   if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1)] // tax is using 18 decimals precision
+      [BigInt(percentageToBasispoints(input1))] // tax is using 18 decimals precision
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
