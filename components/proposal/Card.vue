@@ -55,7 +55,10 @@
         v-if="proposal?.state === 'Active'"
         class="lg:flex justify-between items-center"
       >
-        <div class="inline-flex gap-1 items-center" role="group">
+        <div
+          class="inline-flex gap-1 items-center w-full mb-4 lg:mb-0"
+          role="group"
+        >
           <ProposalButtonCastVote
             id="button-cast-yes"
             :disabled="
@@ -80,7 +83,7 @@
           </div>
         </div>
 
-        <div class="uppercase text-xs text-grey-400">
+        <div class="uppercase text-xs text-grey-400 whitespace-nowrap">
           <div
             v-if="
               proposal?.votingType === 'Power' ||
