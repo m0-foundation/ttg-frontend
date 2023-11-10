@@ -6,7 +6,7 @@
       :class="{ error: hasErrors }"
       data-test="proposalValue"
       class="input"
-      placeholder="From"
+      placeholder="Fee"
     />
 
     <p
