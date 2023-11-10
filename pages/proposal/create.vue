@@ -268,7 +268,7 @@ const rules = computed(() => {
   if (["setProposalFee"].includes(type)) {
     return {
       proposalValue: { required },
-      proposalValue2: { required },
+      proposalValue2: {},
       proposalValue3: {},
       description: { required, minLength: minLength(6) },
     };
@@ -423,7 +423,7 @@ const currentValue = computed(() => {
     return `${basisPointsToPercentage(spog.values.zeroTokenQuorumRatio!)}%`;
   }
 
-  const formatFee = (value: string) => formatUnits(BigInt(value), 18);
+  const formatFee = (value: string) => formatUnits(BigInt(value || 0n), 18);
 
   if (selectedProposalType?.value?.value === "setProposalFee") {
     return formatFee(spog.values.proposalFee!);

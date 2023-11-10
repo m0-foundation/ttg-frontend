@@ -19,8 +19,8 @@ import Identicon from "identicon.js";
 
 export interface MAddressAvatar {
   address: Hash | undefined;
-  shortAddress: boolean;
-  showAvatar: boolean;
+  shortAddress?: boolean;
+  showAvatar?: boolean;
 }
 
 const props = withDefaults(defineProps<MAddressAvatar>(), {
