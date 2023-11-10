@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 export interface MBadgeProps {
-  version: "success" | "error";
+  version?: "success" | "error";
 }
 
 const props = withDefaults(defineProps<MBadgeProps>(), {
