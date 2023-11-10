@@ -199,17 +199,18 @@ import {
   stringToBytes,
   Hash,
   formatUnits,
+  parseEther,
 } from "viem";
 import { useAccount } from "use-wagmi";
-import { required, minLength } from "@vuelidate/validators";
+import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
-import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber.vue";
-import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber.vue";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import ProposalInputQuorum from "@/components/proposal/InputQuorum.vue";
+import ProposalInputFeeRange from "@/components/proposal/InputFeeRange.vue";
+import ProposalInputFee from "@/components/proposal/InputFee.vue";
 
 import { MProposalVotingTokens, MVotingTokens } from "@/lib/api";
 /* control stepper */
@@ -240,26 +241,62 @@ const formData = reactive({
 });
 
 const rules = computed(() => {
-  // all besides reset
-  const isProposalValueRequired = !["reset"].includes(
-    selectedProposalType?.value?.value
-  );
+  const type = selectedProposalType?.value?.value;
 
-  const isProposalValue2Required = [
-    "addToList",
-    "removeFromList",
-    "updateConfig",
-    "setProposalFeeRange",
-  ].includes(selectedProposalType?.value?.value);
+  if (
+    [
+      "addToList",
+      "removeFromList",
+      "updateConfig",
+      "emergencyAddToList",
+      "emergencyRemoveFromList",
+      "emergencyUpdateConfig",
+    ].includes(type)
+  ) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {
+        required,
+        minLength: minLength(42),
+        maxLength: maxLength(42),
+      },
+      proposalValue3: {},
+      description: { required, minLength: minLength(6) },
+    };
+  }
 
-  const isProposalValue3Required = ["setProposalFeeRange"].includes(
-    selectedProposalType?.value?.value
-  );
+  if (["setProposalFee"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: { required },
+      proposalValue3: {},
+      description: { required, minLength: minLength(6) },
+    };
+  }
 
+  if (["setProposalFeeRange"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: { required },
+      proposalValue3: { required },
+      description: { required, minLength: minLength(6) },
+    };
+  }
+
+  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {},
+      proposalValue3: {},
+      description: { required, minLength: minLength(6) },
+    };
+  }
+
+  // default (type === "reset")
   return {
-    proposalValue: isProposalValueRequired ? { required } : {},
-    proposalValue2: isProposalValue2Required ? { required } : {},
-    proposalValue3: isProposalValue3Required ? { required } : {},
+    proposalValue: {},
+    proposalValue2: {},
+    proposalValue3: {},
     description: { required, minLength: minLength(6) },
   };
 });
@@ -315,7 +352,7 @@ const proposalTypes = [
       {
         value: "setZeroTokenQuorumRatio",
         label: "Zero quorum",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputQuorum,
         tokens: MProposalVotingTokens.setZeroTokenQuorumRatio,
       },
     ],
@@ -327,13 +364,13 @@ const proposalTypes = [
       {
         value: "setProposalFee",
         label: "Change fee",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputFee,
         tokens: MProposalVotingTokens.setProposalFee,
       },
       {
         value: "setProposalFeeRange",
         label: "Change fee range",
-        component: ProposalInputRangeNumber,
+        component: ProposalInputFeeRange,
         tokens: MProposalVotingTokens.setProposalFeeRange,
       },
     ],
@@ -607,7 +644,7 @@ function buildCalldatas(formData) {
   if (["setProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
+      [parseEther(input1)] // tax is using 18 decimals precision
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
@@ -615,7 +652,7 @@ function buildCalldatas(formData) {
   if (["setProposalFeeRange"].includes(type)) {
     // tax is using 18 decimals precision
     const encodeBigInt = (value: any) =>
-      encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
+      encodeAbiParameters([{ type: "uint256" }], [parseEther(value)]);
 
     return buildCalldatasSpog(
       type,
