@@ -25,6 +25,10 @@ import pick from "lodash/pick";
 const spog = useSpogStore();
 const { values, contracts } = storeToRefs(spog);
 
+useHead({
+  titleTemplate: "%s - Configurations",
+});
+
 const mapToArray = (obj: object) =>
   Object.keys(obj).map((key) => ({
     key,
