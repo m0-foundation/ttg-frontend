@@ -30,6 +30,7 @@ const config = computed(() => {
         id: "voter",
         name: "Address",
         sort: false,
+        width: 350,
         formatter: (voter: string) => {
           return html(
             `<a href="/profile/${voter}/" class="underline text-xs">${voter}</a>`

@@ -261,8 +261,6 @@ export class Proposals extends GovernorModule {
         signatures: this.toString(event.signatures!),
         calldatas: this.toString(event.calldatas),
         targets: this.toString(event.targets!),
-        endBlock: Number(event.endBlock),
-        startBlock: Number(event.startBlock),
         proposer: event.proposer,
         description: event.description,
         timestamp: event.timestamp,
@@ -278,7 +276,7 @@ export class Proposals extends GovernorModule {
     return {} as MProposal;
   }
 
-  async getProposal(proposalId: string): Promise<GetProposalOutput> {
+  parseGetProposal(proposal: any) {
     const [
       proposer,
       voteStart,
@@ -290,11 +288,7 @@ export class Proposals extends GovernorModule {
       yesPowerTokenVotes,
       noZeroTokenVotes,
       yesZeroTokenVotes,
-    ] = await readDualGovernor({
-      address: this.contract,
-      functionName: "getProposal",
-      args: [BigInt(proposalId)],
-    });
+    ] = proposal;
 
     return {
       proposer: proposer as Hash,
@@ -310,6 +304,15 @@ export class Proposals extends GovernorModule {
     };
   }
 
+  async getProposal(proposalId: string): Promise<GetProposalOutput> {
+    const getProposal = await readDualGovernor({
+      address: this.contract,
+      functionName: "getProposal",
+      args: [BigInt(proposalId)],
+    });
+    return this.parseGetProposal(getProposal);
+  }
+
   async getProposals(): Promise<Array<MProposal>> {
     const rawLogs = await this.client.getLogs({
       address: this.contract as Hash,
@@ -323,19 +326,33 @@ export class Proposals extends GovernorModule {
       this.decodeProposalLog(log, dualGovernorABI)
     );
 
+    const contractCallsGetProposal = proposals.map((p) => ({
+      abi: dualGovernorABI,
+      address: this.contract,
+      functionName: "getProposal",
+      args: [BigInt(p.proposalId)],
+    }));
+
+    const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
+    const proposalsWithGetProposal = (
+      await this.client.multicall({
+        multicallAddress: (this.config.multicall3 ?? defaultMulticall3) as Hash,
+        contracts: contractCallsGetProposal,
+      })
+    ).map((res) => res.result);
+
     const proposalsWithTallies = await Promise.all(
-      proposals.map(async (proposal) => {
-        const proposalData = await this.getProposal(
-          proposal.proposalId.toString()
+      proposals.map(async (proposal, index) => {
+        const proposalData = this.parseGetProposal(
+          proposalsWithGetProposal[index]
         );
 
         const block = await this.client.getBlock({
           blockNumber: BigInt(proposal.blockNumber),
         });
 
-        const epoch = Epoch.getEpochFromBlock(proposal.blockNumber);
+        const epoch = Epoch.getEpochFromBlock(BigInt(proposal.blockNumber));
 
-        proposal.timestamp = Number(block.timestamp);
         return {
           ...proposal,
           ...pick(proposalData, [
@@ -347,20 +364,15 @@ export class Proposals extends GovernorModule {
             "votingType",
           ]),
           epoch,
-          votes: {
+          timestamp: Number(block.timestamp),
+          tallies: {
             power: {
-              yes: Number(proposalData.yesPowerTokenVotes),
-              no: Number(proposalData.noPowerTokenVotes),
-              total: Number(
-                proposalData.yesPowerTokenVotes + proposalData.noPowerTokenVotes
-              ),
+              yes: String(proposalData.yesPowerTokenVotes),
+              no: String(proposalData.noPowerTokenVotes),
             },
             zero: {
-              yes: Number(proposalData.yesZeroTokenVotes),
-              no: Number(proposalData.noZeroTokenVotes),
-              total: Number(
-                proposalData.yesZeroTokenVotes + proposalData.noZeroTokenVotes
-              ),
+              yes: String(proposalData.yesZeroTokenVotes),
+              no: String(proposalData.noZeroTokenVotes),
             },
           },
         };
@@ -404,8 +416,6 @@ export class Proposals extends GovernorModule {
       signatures: this.toString(args.signatures!),
       calldatas: this.toString(args.calldatas),
       targets: this.toString(args.targets!),
-      endBlock: Number(args.voteEnd),
-      startBlock: Number(args.voteStart),
       proposer: args.proposer,
       description: args.description,
       timestamp: 0,
@@ -435,20 +445,14 @@ export class Proposals extends GovernorModule {
         "votingType",
       ]),
       epoch,
-      votes: {
+      tallies: {
         power: {
-          yes: Number(proposalData.yesPowerTokenVotes),
-          no: Number(proposalData.noPowerTokenVotes),
-          total: Number(
-            proposalData.yesPowerTokenVotes + proposalData.noPowerTokenVotes
-          ),
+          yes: String(proposalData.yesPowerTokenVotes),
+          no: String(proposalData.noPowerTokenVotes),
         },
         zero: {
-          yes: Number(proposalData.yesZeroTokenVotes),
-          no: Number(proposalData.noZeroTokenVotes),
-          total: Number(
-            proposalData.yesZeroTokenVotes + proposalData.noZeroTokenVotes
-          ),
+          yes: String(proposalData.yesZeroTokenVotes),
+          no: String(proposalData.noZeroTokenVotes),
         },
       },
     };
