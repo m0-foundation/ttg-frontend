@@ -25,4 +25,8 @@ import { Hash } from "viem";
 
 const route = useRoute();
 const address = ref(route.params.address as Hash);
+
+useHead({
+  titleTemplate: `%s - Profile ${shortenAddress(address.value)}`,
+});
 </script>

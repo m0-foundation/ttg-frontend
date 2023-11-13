@@ -57,4 +57,8 @@ const spog = storeToRefs(useSpogStore());
 const canDelegate = computed(
   () => spog.epoch.value.current.type === "TRANSFER"
 );
+
+useHead({
+  titleTemplate: "%s - My profile",
+});
 </script>

@@ -206,6 +206,10 @@ let steps = reactive([]);
 const stepper = ref(null);
 const modal = ref(null);
 
+useHead({
+  titleTemplate: "%s - Create proposal",
+});
+
 function onCloseModal() {
   stepper.value.reset();
   throw new Error("rejected by user");

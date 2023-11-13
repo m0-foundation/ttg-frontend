@@ -16,4 +16,8 @@
 const proposalsStore = useProposalsStore();
 
 const proposals = computed(() => proposalsStore.getProposalsByState("Pending"));
+
+useHead({
+  titleTemplate: "%s - Pending proposals",
+});
 </script>

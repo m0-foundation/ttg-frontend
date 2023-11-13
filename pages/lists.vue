@@ -35,6 +35,10 @@ const { isLoading } = useAsyncState(fetchLists(), null);
 const store = useListsStore();
 const { getFlattenLists: lists } = storeToRefs(store);
 
+useHead({
+  titleTemplate: "%s - Lists",
+});
+
 const tableConfig = computed(() => {
   return {
     columns: [
