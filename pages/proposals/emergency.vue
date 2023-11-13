@@ -27,6 +27,10 @@ const proposals = computed(() =>
 
 const { forceSwitchChain } = useCorrectChain();
 
+useHead({
+  titleTemplate: "%s - Emergency proposals",
+});
+
 async function onCast(vote: number, proposalId: string) {
   await forceSwitchChain();
   console.log("cast", { vote, proposalId });

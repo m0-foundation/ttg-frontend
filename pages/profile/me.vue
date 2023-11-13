@@ -57,6 +57,11 @@ const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
 
 const spog = storeToRefs(useSpogStore());
+
+useHead({
+  titleTemplate: "%s - My profile",
+});
+
 const canDelegate = computed(
   () => spog.epoch.value.current.type === "TRANSFER"
 );

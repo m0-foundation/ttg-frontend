@@ -18,6 +18,10 @@ import MIconZero from "@/components/design-system/MIconZero.vue";
 const store = useProposalsStore();
 const proposals = computed(() => store.data);
 
+useHead({
+  titleTemplate: "%s - All proposals",
+});
+
 const tableConfig = {
   columns: [
     {

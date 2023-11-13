@@ -71,6 +71,7 @@ const mutable = computed(() => {
   ];
 });
 
+
 const mutableTable = computed(() => {
   return {
     columns: [
