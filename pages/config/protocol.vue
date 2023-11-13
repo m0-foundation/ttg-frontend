@@ -36,6 +36,10 @@ const { isLoading } = useAsyncState(fetchProtocolConfigs(), null);
 const store = useProtocolConfigsStore();
 const { getConfigsAsArray: data } = storeToRefs(store);
 
+useHead({
+  titleTemplate: "%s - Protocol configurations",
+});
+
 const tableConfig = computed(() => {
   return {
     columns: [

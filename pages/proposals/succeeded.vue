@@ -28,6 +28,10 @@ const { address: userAccount } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
 
+useHead({
+  titleTemplate: "%s - Succeeded proposals",
+});
+
 async function onExecute(proposal: MProposal) {
   await forceSwitchChain();
 
