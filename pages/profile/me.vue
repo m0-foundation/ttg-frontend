@@ -2,7 +2,10 @@
   <div v-if="address">
     <PageTitle>
       My Profile
-      <template #subtitle>{{ address }}</template>
+      <!-- <template #subtitle>{{ address }}</template> -->
+      <template #subtitle
+        ><MAddressAvatar :short-address="false" :address="address"
+      /></template>
       <template #side>
         <NuxtLink to="/delegate/">
           <MButton
