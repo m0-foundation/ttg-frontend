@@ -16,6 +16,10 @@ import ProposalStatus from "@/components/proposal/Status.vue";
 const store = useProposalsStore();
 const proposals = computed(() => store.data);
 
+useHead({
+  titleTemplate: "%s - All proposals",
+});
+
 const tableConfig = {
   columns: [
     {

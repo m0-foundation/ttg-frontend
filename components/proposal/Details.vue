@@ -67,6 +67,10 @@ const { address: userAccount } = useAccount();
 const spog = useSpogStore();
 const { epoch, getValues: currentProposalValues } = storeToRefs(spog);
 
+useHead({
+  titleTemplate: `%s - Proposal #${proposalId.value}`,
+});
+
 const {
   data: hasVoted,
   isError: hasVotedError,

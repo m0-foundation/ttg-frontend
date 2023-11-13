@@ -15,6 +15,10 @@ import { storeToRefs } from "pinia";
 const spog = useSpogStore();
 const { values, contracts } = storeToRefs(spog);
 
+useHead({
+  titleTemplate: "%s - Configurations",
+});
+
 const data = computed(() => {
   const mapToArray = (ref: Ref) =>
     Object.keys(ref.value).map((key) => ({

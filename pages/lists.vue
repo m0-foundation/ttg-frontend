@@ -19,6 +19,10 @@ import { html } from "gridjs";
 
 const apiStore = useApiClientStore();
 
+useHead({
+  titleTemplate: "%s - Lists",
+});
+
 const fetchLists = async () => {
   try {
     const data = await apiStore.client.registrar!.list.getLists();
