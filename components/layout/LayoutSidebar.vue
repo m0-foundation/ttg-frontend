@@ -116,7 +116,7 @@ li {
   @apply text-white text-sm py-2 uppercase hover:underline;
 }
 .active {
-  @apply text-green-700;
+  @apply text-green-700 bg-transparent;
 }
 
 .active::before {
