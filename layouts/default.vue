@@ -11,6 +11,7 @@
           <LayoutSidebar class="h-screen w-full" />
         </aside>
         <main class="w-full overflow-x-hidden lg:p-6 lg:pt-0">
+          <LayoutAlerts />
           <NuxtPage />
         </main>
       </div>
