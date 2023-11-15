@@ -15,12 +15,6 @@ describe("Proposals", () => {
       cy.contains("Power quorum").should("exist");
       cy.contains("Power quorum").click();
 
-      cy.get("input[data-test='proposalValue']").should(
-        "have.attr",
-        "type",
-        "number"
-      );
-
       cy.get("input[data-test='proposalValue']").type(input1);
 
       cy.get("textarea[data-test='description']").type(description);

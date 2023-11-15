@@ -7,13 +7,13 @@
 
 <script lang="ts" setup>
 export interface MButtonProps {
-  version:
+  version?:
     | "primary"
     | "secondary-light"
     | "secondary-dark"
     | "outline-light"
     | "outline-dark";
-  isLoading: false;
+  isLoading?: false;
 }
 
 const props = withDefaults(defineProps<MButtonProps>(), {
