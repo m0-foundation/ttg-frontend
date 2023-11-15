@@ -10,7 +10,7 @@
         <div class="hidden lg:block">
           <NuxtLink to="/proposals/all/">
             <MNavButton class="underline text-xs text-white">
-              all epochs
+              all proposals
             </MNavButton>
           </NuxtLink>
         </div>

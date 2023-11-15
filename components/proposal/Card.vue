@@ -160,7 +160,7 @@ const { title } = useParsedDescriptionTitle(props.proposal.description);
 
 const isVoteSelected = ref(false);
 const selectedVote = ref<null | number>(null);
-const formatedDate = computed(() => toFormat("LL"));
+const formatedDate = computed(() => toFormat("LLL"));
 const isCastVoteYesDisabled = computed(() => selectedVote.value === 0);
 const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
 const isLoading = ref(false);
