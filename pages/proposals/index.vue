@@ -91,13 +91,15 @@ const progressBarWidth = computed(() => {
 const { address: userAccount, isConnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 
+useHead({
+  titleTemplate: "%s - Proposals",
+});
+
 function onCast(vote: number, proposalId: string) {
-  console.log("casted", { vote, proposalId });
   selectedCastProposals.value.push({ vote, proposalId });
 }
 
 function onUncast(proposalId: string) {
-  console.log("uncasted", { proposalId });
   selectedCastProposals.value = selectedCastProposals.value.filter(
     (p) => p.proposalId !== proposalId
   );

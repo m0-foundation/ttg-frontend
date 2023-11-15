@@ -32,14 +32,12 @@ export interface ProposalEventLog extends EventLog {
 
 export interface MProposalTallies {
   power: {
-    yes: number;
-    no: number;
-    total: number;
+    yes: string;
+    no: string;
   };
   zero: {
-    yes: number;
-    no: number;
-    total: number;
+    yes: string;
+    no: string;
   };
 }
 
@@ -66,7 +64,7 @@ export interface MProposal extends ProposalEventLog {
   voteEnd?: number;
   executed?: boolean;
   state?: MProposalState;
-  votes?: MProposalTallies;
+  tallies?: MProposalTallies;
   votingType?: MVotingType;
   epoch?: number;
 }

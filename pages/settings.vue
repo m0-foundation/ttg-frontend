@@ -100,6 +100,10 @@ const selectedRPC = ref(apiStore.rpc);
 const rpcs = computed(() => selectedNetworkConfig.value!.rpc.values);
 const chainId = computed(() => selectedNetworkConfig.value!.rpc.chainId);
 
+useHead({
+  titleTemplate: "%s - Settings",
+});
+
 function onSubmit() {
   const newRpc = isWithCustomRPC.value ? unref(customRPC) : unref(selectedRPC);
   console.log({ newRpc });

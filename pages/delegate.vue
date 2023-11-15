@@ -154,6 +154,10 @@ const canDelegate = computed(
 
 const { forceSwitchChain } = useCorrectChain();
 
+useHead({
+  titleTemplate: "%s - Delegate",
+});
+
 async function delegateVote() {
   await forceSwitchChain();
 

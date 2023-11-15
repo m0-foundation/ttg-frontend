@@ -1,37 +1,49 @@
 <template>
   <div class="flex justify-between gap-2 items-center">
-    <div class="flex items-end w-[9rem]">
+    <div class="flex items-start mr-2 w-12">
       <MIconZero class="h-4 w-4 mr-1" version="dark" />
-      <span class="flex uppercase text-xxs text-grey-400"> zero tokens </span>
+      <span class="flex uppercase text-xxs text-grey-400">zero</span>
     </div>
 
-    <span id="vote-yes-percentage" class="text-green-900 text-xs">
-      {{ props.votes?.yes?.percentage.toFixed(1) }}%
+    <div class="bg-green-800 h-2 w-2"></div>
+
+    <span id="vote-yes-percentage" class="text-green-800 text-xs">
+      {{ props.votes?.yes?.percentage }}%
     </span>
 
-    <MProgressBar
-      version="quorum"
+    <span id="vote-yes-percentage" class="text-grey-400 text-xs">
+      ({{ props.votes?.yes?.formatted }})
+    </span>
+
+    <MProgressBarQuorum
+      :yes="props.votes?.yes?.percentage"
+      :no="props.votes?.no?.percentage"
       :quorum="props.quorum"
-      :width="props.votes?.yes?.percentage"
     />
+
+    <div class="bg-red-500 h-2 w-2"></div>
 
     <span
       id="vote-no-percentage"
       class="text-red-500 text-xs flex items-baseline"
     >
-      {{ props.votes?.no?.percentage.toFixed(1) }}%
+      {{ props.votes?.no?.percentage }}%
+    </span>
+
+    <span id="vote-yes-percentage" class="text-grey-400 text-xs">
+      ({{ props.votes?.no?.formatted }})
+    </span>
+
+    <span class="text-grey-400 text-xs uppercase whitespace-nowrap ml-2">
+      Quorum: {{ props.quorum * 100 }}% ({{ props.quorumFormatted }})
     </span>
   </div>
-
-  <VoteProgressInfoNumbers
-    :for="props.votes?.yes?.formatted"
-    :againts="props.votes?.no?.formatted"
-  />
 </template>
 
 <script setup lang="ts">
 interface Props {
   quorum: number;
+  quorumFormatted: string;
   votes: {
     total: number;
     yes: {
