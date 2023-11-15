@@ -1,9 +1,9 @@
 <template>
   <NuxtLink class="block" to="/proposal/create/">
-    <MButton class="mb-4">Create Proposal</MButton>
+    <MButton class="mb-4 w-full flex justify-center">Create Proposal</MButton>
   </NuxtLink>
 
-  <nav class="text-white text-xl mb-8">
+  <nav class="text-grey-100 text-xl mb-8">
     <ul>
       <li>
         <NuxtLink to="/proposals/" active-class="active"> proposals </NuxtLink>
@@ -27,15 +27,12 @@
     </ul>
   </nav>
 
-  <div v-if="isConnected">
-    <div class="flex justify-between items-center mb-2 text-sm">
+  <div v-if="isConnected" class="text-grey-100">
+    <div class="mb-4 text-sm">
       <NuxtLink to="/profile/me/">MY PROFILE</NuxtLink>
-      <div class="text-xs text-gray-400">
-        <MAddressAvatar :address="userAccount" />
-      </div>
     </div>
 
-    <div class="py-4">
+    <div class="mb-4">
       <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
       <div class="flex justify-between mb-4">
         <div class="text-gray-400 flex items-center">
@@ -113,7 +110,7 @@ const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
 <style scoped>
 li {
   list-style-type: none;
-  @apply text-white text-sm py-2 uppercase hover:underline;
+  @apply text-grey-100 text-sm py-2 uppercase hover:underline;
 }
 .active {
   @apply text-green-700 bg-transparent;

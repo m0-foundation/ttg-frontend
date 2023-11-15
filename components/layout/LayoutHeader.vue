@@ -1,8 +1,8 @@
 <template>
-  <header class="flex items-center justify-between z-50 p-6 min-h-[96px]">
+  <header class="flex items-center justify-between z-50 p-6 lg:pl-16">
     <div class="flex items-end gap-4 leading-4">
       <NuxtLink to="/">
-        <img src="/img/mzero-logo-white.svg" alt=""
+        <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt=""
       /></NuxtLink>
       <span class="lg:hidden">Gov</span>
       <span class="hidden lg:block text-gray-400">Governance</span>
