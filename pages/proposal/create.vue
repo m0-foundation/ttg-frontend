@@ -67,6 +67,7 @@
                 :model-value2-errors="$validation.proposalValue2?.$errors"
                 :model-value3-errors="$validation.proposalValue3?.$errors"
                 :placeholder="selectedProposalType.placeholder"
+                :current-value="currentValue"
               />
             </div>
 
@@ -134,12 +135,20 @@
         <button class="text-green-800 uppercase mx-4" @click="onBack">
           &#60; back
         </button>
-        <MButton v-if="isPreview" type="submit">Submit proposal</MButton>
+        <MButton v-if="isPreview" type="submit" :disabled="isDisconnected">
+          Submit proposal
+        </MButton>
       </div>
-
       <div v-else class="flex justify-end mt-12">
         <MButton type="button" @click="onPreview">Preview proposal</MButton>
       </div>
+
+      <p
+        v-if="isDisconnected"
+        class="flex justify-end text-xs text-red-500 mx-2 my-1"
+      >
+        Please connect wallet
+      </p>
 
       <hr class="my-12" />
 
@@ -189,16 +198,20 @@ import {
   toHex,
   stringToBytes,
   Hash,
+  formatUnits,
+  parseEther,
 } from "viem";
 import { useAccount } from "use-wagmi";
-import { required, minLength } from "@vuelidate/validators";
+import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
-import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber.vue";
-import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber.vue";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
+import ProposalInputQuorum from "@/components/proposal/InputQuorum.vue";
+import ProposalInputFeeRange from "@/components/proposal/InputFeeRange.vue";
+import ProposalInputFee from "@/components/proposal/InputFee.vue";
+
 import { MProposalVotingTokens, MVotingTokens } from "@/lib/api";
 /* control stepper */
 let steps = reactive([]);
@@ -232,26 +245,62 @@ const formData = reactive({
 });
 
 const rules = computed(() => {
-  // all besides reset
-  const isProposalValueRequired = !["reset"].includes(
-    selectedProposalType?.value?.value
-  );
+  const type = selectedProposalType?.value?.value;
 
-  const isProposalValue2Required = [
-    "addToList",
-    "removeFromList",
-    "updateConfig",
-    "setProposalFeeRange",
-  ].includes(selectedProposalType?.value?.value);
+  if (
+    [
+      "addToList",
+      "removeFromList",
+      "updateConfig",
+      "emergencyAddToList",
+      "emergencyRemoveFromList",
+      "emergencyUpdateConfig",
+    ].includes(type)
+  ) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {
+        required,
+        minLength: minLength(42),
+        maxLength: maxLength(42),
+      },
+      proposalValue3: {},
+      description: { required, minLength: minLength(6) },
+    };
+  }
 
-  const isProposalValue3Required = ["setProposalFeeRange"].includes(
-    selectedProposalType?.value?.value
-  );
+  if (["setProposalFee"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {},
+      proposalValue3: {},
+      description: { required, minLength: minLength(6) },
+    };
+  }
 
+  if (["setProposalFeeRange"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: { required },
+      proposalValue3: { required },
+      description: { required, minLength: minLength(6) },
+    };
+  }
+
+  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {},
+      proposalValue3: {},
+      description: { required, minLength: minLength(6) },
+    };
+  }
+
+  // default (type === "reset")
   return {
-    proposalValue: isProposalValueRequired ? { required } : {},
-    proposalValue2: isProposalValue2Required ? { required } : {},
-    proposalValue3: isProposalValue3Required ? { required } : {},
+    proposalValue: {},
+    proposalValue2: {},
+    proposalValue3: {},
     description: { required, minLength: minLength(6) },
   };
 });
@@ -260,7 +309,7 @@ const $validation = useVuelidate(rules, formData);
 
 const previewDescription = ref();
 
-const { address: userAccount } = useAccount();
+const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
 const { getValues: spogValues } = storeToRefs(spog);
@@ -300,14 +349,14 @@ const proposalTypes = [
       {
         value: "setPowerTokenQuorumRatio",
         label: "Power quorum",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputQuorum,
         modelValue: formData.proposalValue,
         tokens: MProposalVotingTokens.setPowerTokenQuorumRatio,
       },
       {
         value: "setZeroTokenQuorumRatio",
         label: "Zero quorum",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputQuorum,
         tokens: MProposalVotingTokens.setZeroTokenQuorumRatio,
       },
     ],
@@ -319,13 +368,13 @@ const proposalTypes = [
       {
         value: "setProposalFee",
         label: "Change fee",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputFee,
         tokens: MProposalVotingTokens.setProposalFee,
       },
       {
         value: "setProposalFeeRange",
         label: "Change fee range",
-        component: ProposalInputRangeNumber,
+        component: ProposalInputFeeRange,
         tokens: MProposalVotingTokens.setProposalFeeRange,
       },
     ],
@@ -369,6 +418,28 @@ const proposalTypes = [
   },
 ];
 
+const currentValue = computed(() => {
+  if (selectedProposalType?.value?.value === "setPowerTokenQuorumRatio") {
+    return `${basisPointsToPercentage(spog.values.powerTokenQuorumRatio!)}%`;
+  }
+
+  if (selectedProposalType?.value?.value === "setZeroTokenQuorumRatio") {
+    return `${basisPointsToPercentage(spog.values.zeroTokenQuorumRatio!)}%`;
+  }
+
+  const formatFee = (value: string) => formatUnits(BigInt(value || 0n), 18);
+
+  if (selectedProposalType?.value?.value === "setProposalFee") {
+    return formatFee(spog.values.proposalFee!);
+  }
+
+  if (selectedProposalType?.value?.value === "setProposalFeeRange") {
+    return `${formatFee(spog.values.proposalFee!)} | MIN: ${formatFee(
+      spog.values.minProposalFee!
+    )} - MAX:${formatFee(spog.values.maxProposalFee!)}`;
+  }
+});
+
 function onChangeProposalType(option) {
   console.log("onChangeProposalType", { option });
   formData.proposalType = option.value;
@@ -390,8 +461,8 @@ function addHyperlinksToDescription() {
   return descriptionWithLinks;
 }
 
-function onPreview() {
-  $validation.value.$validate();
+async function onPreview() {
+  await $validation.value.$validate();
   if (!$validation.value.$error) {
     previewDescription.value = addHyperlinksToDescription();
     isPreview.value = true;
@@ -577,7 +648,7 @@ function buildCalldatas(formData) {
   if (["setProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
+      [parseEther(input1)] // tax is using 18 decimals precision
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
@@ -585,7 +656,7 @@ function buildCalldatas(formData) {
   if (["setProposalFeeRange"].includes(type)) {
     // tax is using 18 decimals precision
     const encodeBigInt = (value: any) =>
-      encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
+      encodeAbiParameters([{ type: "uint256" }], [parseEther(value)]);
 
     return buildCalldatasSpog(
       type,
@@ -597,7 +668,7 @@ function buildCalldatas(formData) {
   if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1)] // tax is using 18 decimals precision
+      [BigInt(percentageToBasispoints(input1))] // tax is using 18 decimals precision
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }

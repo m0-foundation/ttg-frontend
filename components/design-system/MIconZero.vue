@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 export interface MButtonProps {
-  version: "light" | "dark";
+  version?: "light" | "dark";
 }
 
 const props = withDefaults(defineProps<MButtonProps>(), {
