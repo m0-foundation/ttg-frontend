@@ -124,7 +124,7 @@
         <div class="flex items-center gap-2 text-lg">
           Proposal fee:
           <MIconWeth />
-          {{ spogValues.setProposalFee }}
+          {{ spogValuesFormatted.setProposalFee }}
         </div>
       </div>
       <p class="text-grey-400 text-xs flex justify-end">
@@ -198,8 +198,6 @@ import {
   toHex,
   stringToBytes,
   Hash,
-  formatUnits,
-  parseEther,
 } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
@@ -312,7 +310,7 @@ const previewDescription = ref();
 const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
-const { getValues: spogValues } = storeToRefs(spog);
+const { getValuesFormatted: spogValuesFormatted } = storeToRefs(spog);
 
 const proposalTypes = [
   {
@@ -427,7 +425,7 @@ const currentValue = computed(() => {
     return `${basisPointsToPercentage(spog.values.zeroTokenQuorumRatio!)}%`;
   }
 
-  const formatFee = (value: string) => formatUnits(BigInt(value || 0n), 18);
+  const formatFee = (value: string) => useFormatCash(value);
 
   if (selectedProposalType?.value?.value === "setProposalFee") {
     return formatFee(spog.values.proposalFee!);
@@ -483,7 +481,7 @@ async function writeAllowance() {
   });
   console.log({ allowance });
 
-  const fee = BigInt(spog.values.proposalFee || 0n);
+  const fee = BigInt(spog.values.proposalFee!);
   if (allowance <= fee) {
     const { hash } = await writeContract({
       abi: erc20ABI,
@@ -648,15 +646,14 @@ function buildCalldatas(formData) {
   if (["setProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [parseEther(input1)] // tax is using 18 decimals precision
+      [useParseCash(input1)]
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
 
   if (["setProposalFeeRange"].includes(type)) {
-    // tax is using 18 decimals precision
     const encodeBigInt = (value: any) =>
-      encodeAbiParameters([{ type: "uint256" }], [parseEther(value)]);
+      encodeAbiParameters([{ type: "uint256" }], [useParseCash(value)]);
 
     return buildCalldatasSpog(
       type,
@@ -668,7 +665,7 @@ function buildCalldatas(formData) {
   if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(percentageToBasispoints(input1))] // tax is using 18 decimals precision
+      [BigInt(percentageToBasispoints(input1))]
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
