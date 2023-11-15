@@ -1,6 +1,14 @@
 <template>
+  <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6">
+    <NuxtLink to="/">
+      <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt=""
+    /></NuxtLink>
+    <span class="lg:hidden">Gov</span>
+    <span class="hidden lg:block text-gray-400">Governance</span>
+  </div>
+
   <NuxtLink class="block" to="/proposal/create/">
-    <MButton class="mb-4 w-full flex justify-center">Create Proposal</MButton>
+    <MButton class="mb-6 w-full flex justify-center">Create Proposal</MButton>
   </NuxtLink>
 
   <nav class="text-grey-100 text-xl mb-8">
