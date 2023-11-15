@@ -10,7 +10,10 @@ export const useAlertsStore = defineStore("alerts", () => {
     reset.value.show = true;
     reset.value.proposal = proposal;
   };
-  const hideResetAlert = () => (reset.value.show = false);
+  const hideResetAlert = () => {
+    reset.value.show = false;
+    reset.value.proposal = undefined;
+  };
 
   return { reset, showResetAlert, hideResetAlert };
 });
