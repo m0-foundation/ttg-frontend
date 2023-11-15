@@ -17,14 +17,11 @@ export const watchForExecutedResetProposal = () => {
     const lastestResetProposal = maxBy(resetProposals, "blockNumber");
 
     if (lastestResetProposal) {
-      if (
-        alerts.reset.show === false &&
-        lastestResetProposal.voteEnd! + 6 >= spog.epoch.current.asNumber
-      ) {
+      if (lastestResetProposal.voteEnd! + 6 >= spog.epoch.current.asNumber) {
         alerts.showResetAlert(lastestResetProposal);
+      } else {
+        alerts.hideResetAlert();
       }
-    } else if (alerts.reset.show === true) {
-      alerts.hideResetAlert();
     }
   });
 };
