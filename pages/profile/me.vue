@@ -1,10 +1,11 @@
 <template>
   <div v-if="address">
-    <PageTitle>
-      My Profile
-      <!-- <template #subtitle>{{ address }}</template> -->
-      <template #subtitle
-        ><MAddressAvatar :short-address="false" :address="address"
+    <PageTitle class="lg:p-0 lg:mb-6">
+      My Profile<template #subtitle
+        ><MAddressAvatar
+          class="text-grey-300"
+          :short-address="false"
+          :address="address"
       /></template>
       <template #side>
         <NuxtLink to="/delegate/">
@@ -18,7 +19,8 @@
       </template>
     </PageTitle>
 
-    <ProfileBalances class="p-6" :address="address" />
+    <ProfileBalances class="p-6 pt-0 lg:p-0 mb-6" :address="address" />
+
     <div v-if="hasDelegatedPower" class="p-4 bg-green-900 text-white my-2">
       <p class="uppercase text-xs mb-6">
         Your POWER tokens <u>voting power</u> is delegated to the address:
