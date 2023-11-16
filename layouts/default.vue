@@ -10,7 +10,7 @@
         <aside :class="{ '!block': isSidebarOpen }">
           <LayoutSidebar class="h-screen w-full" />
         </aside>
-        <main class="w-full lg:mx-20 xl:mx-40 overflow-x-hidden lg:p-6 lg:pt-0">
+        <main class="w-full xl:mx-40 overflow-x-hidden lg:p-6 lg:pt-0">
           <LayoutAlerts />
           <NuxtPage />
         </main>
