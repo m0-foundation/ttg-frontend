@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-grey-900 w-full p-6 md:p-6">
+  <footer class="bg-grey-900 w-full p-6 lg:px-16">
     <div class="lg:flex items-center">
       <div class="lg:grow">
         <span class="text-xs text-zinc-500"

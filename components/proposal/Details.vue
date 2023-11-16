@@ -95,7 +95,7 @@ const {
 console.log({ currentProposalValuesFormatted });
 
 const { toFormat } = useDate(proposal?.timestamp);
-const proposalCreatedFormatedDate = computed(() => toFormat("LL"));
+const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
 const zeroQuorum = computed(() =>
   basisPointsToDecimal(spog.values.zeroTokenQuorumRatio!)

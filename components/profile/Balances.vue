@@ -1,39 +1,30 @@
 <template>
-  <div class="flex justify-start gap-12">
-    <!-- power tokens -->
+  <div>
+    <p class="uppercase text-xs text-grey-300 mb-1">Token Balance</p>
     <div class="flex gap-12">
-      <div>
-        <p class="uppercase text-xxs text-grey-300">My vote tokens</p>
-        <p class="text-2xl lg:text-3xl inline-flex items-center my-2">
-          <MIconPower class="h-8 w-8 mr-3" />
-          {{ balancePowerToken?.data.value?.formatted }}
-        </p>
+      <!-- power tokens -->
+      <div class="flex gap-2">
+        <MIconPower class="h-8 w-8" />
+        <div>
+          <p class="text-2xl lg:text-3xl inline-flex items-center">
+            {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+          </p>
+          <p class="text-xs text-grey-400">
+            {{ balancePowerToken?.data.value?.formatted }}
+          </p>
+        </div>
       </div>
-
-      <div class="hidden lg:block">
-        <p class="uppercase text-xxs text-grey-300">Voting Power</p>
-
-        <p class="text-3xl inline-flex items-center my-2">
-          {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
-        </p>
-      </div>
-    </div>
-    <div class="border-r border-r-zinc-600 mx-2 hidden lg:flex"></div>
-    <!-- zero tokens -->
-    <div class="flex gap-12">
-      <div>
-        <p class="uppercase text-xxs text-grey-300">My value tokens</p>
-        <p class="text-2xl lg:text-3xl inline-flex items-center my-2">
-          <MIconZero class="h-8 w-8 mr-3" />
-          {{ balanceZeroToken?.data.value?.formatted }}
-        </p>
-      </div>
-
-      <div class="hidden lg:block">
-        <p class="uppercase text-xxs text-grey-300">Voting Power</p>
-        <p class="text-3xl inline-flex items-center my-2">
-          {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
-        </p>
+      <!-- zero tokens -->
+      <div class="flex gap-2">
+        <MIconZero class="h-8 w-8" />
+        <div>
+          <p class="text-2xl lg:text-3xl inline-flex items-center">
+            {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+          </p>
+          <p class="text-xs text-grey-400">
+            {{ balanceZeroToken?.data.value?.formatted }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
