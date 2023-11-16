@@ -68,3 +68,10 @@ export interface MProposal extends ProposalEventLog {
   votingType?: MVotingType;
   epoch?: number;
 }
+
+export interface MProposalsActionTypes {
+  setPowerTokenQuorumRatio: string;
+  setZeroTokenQuorumRatio: string;
+  setProposalFee: string;
+  setProposalFeeRange: string[];
+}
