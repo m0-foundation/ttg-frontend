@@ -47,7 +47,7 @@ const fetchGovernorData = async (api: Api) => {
       api.governor!.getValues(),
     ]);
 
-    spog.setContracts({
+    await spog.setContracts({
       ...contracts,
       governor: api.governor!.contract as string,
     });
@@ -87,7 +87,7 @@ const fetchVotes = () => {
 async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
-  const { client: wagmiClient } = useWagmi(rpc);
+  const { client: wagmiClient } = useWagmi(rpc, network.value.rpc.values[1]);
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
   /* setup spog client */
   const api = new Api(rpc, {
