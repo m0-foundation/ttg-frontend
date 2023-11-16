@@ -94,12 +94,6 @@
   <div v-else class="py-2">
     <MModalWeb3Connect />
   </div>
-
-  <li>
-    <NuxtLink to="/settings/" active-class="active" class="text-xs"
-      >settings</NuxtLink
-    >
-  </li>
 </template>
 
 <script lang="ts" setup>
