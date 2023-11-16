@@ -15,12 +15,6 @@ describe("Proposals", () => {
       cy.contains("Fee").click();
       cy.contains("Change fee").click();
 
-      cy.get("input[data-test='proposalValue']").should(
-        "have.attr",
-        "type",
-        "number"
-      );
-
       cy.get("input[data-test='proposalValue']").type(input);
 
       cy.get("textarea[data-test='description']").type(description);

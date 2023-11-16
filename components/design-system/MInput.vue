@@ -1,12 +1,11 @@
 <template>
   <input v-bind="$attrs" v-model="value" :class="{ error: hasErrors }" />
-  <p
-    v-for="error of props.errors"
-    :key="error.$uid"
-    class="text-red-500 text-xs my-2"
-  >
-    {{ error.$message }}
-  </p>
+
+  <div class="text-red-500 text-xs my-2 h-4">
+    <p v-for="error of props.errors" :key="error.$uid">
+      {{ error.$message }}
+    </p>
+  </div>
 </template>
 
 <script setup lang="ts">

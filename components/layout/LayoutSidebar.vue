@@ -11,7 +11,7 @@
     <MButton class="mb-6 w-full flex justify-center">Create Proposal</MButton>
   </NuxtLink>
 
-  <nav class="text-grey-100 text-xl mb-8">
+  <nav class="text-grey-100 text-xl mb-6">
     <ul>
       <li>
         <NuxtLink to="/proposals/" active-class="active"> proposals </NuxtLink>
@@ -40,7 +40,7 @@
       <NuxtLink to="/profile/me/">MY PROFILE</NuxtLink>
     </div>
 
-    <div class="mb-4">
+    <div class="mb-6">
       <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
       <div class="flex justify-between mb-4">
         <div class="text-gray-400 flex items-center">
@@ -90,6 +90,7 @@
       Disconnect
     </button>
   </div>
+
   <div v-else class="py-2">
     <MModalWeb3Connect />
   </div>
