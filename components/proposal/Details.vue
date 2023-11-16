@@ -63,14 +63,14 @@ const props = defineProps<ProposalDetailsProps>();
 
 const store = useProposalsStore();
 
-const proposal = store.getProposalById(props.proposalId);
+const proposal = computed(() => store.getProposalById(props.proposalId));
+const proposalId = computed(() => props.proposalId);
 
-const proposalId = computed(() => proposal?.proposalId);
-const { html } = useParsedDescription(proposal?.description || "");
+const { html } = useParsedDescription(proposal?.value?.description || "");
 
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
-const { epoch, getValues: currentProposalValues } = storeToRefs(spog);
+const { getValues: currentProposalValues } = storeToRefs(spog);
 
 useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,
@@ -93,7 +93,7 @@ const {
 
 console.log({ currentProposalValues });
 
-const { toFormat } = useDate(proposal?.timestamp);
+const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
 const zeroQuorum = computed(() =>
@@ -115,12 +115,12 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
     readPowerToken({
       address: spog!.contracts!.powerToken! as Hash,
       functionName: "totalSupplyAt",
-      args: [BigInt(proposal!.epoch!)],
+      args: [BigInt(proposal.value!.epoch!)],
     }),
     readZeroToken({
       address: spog!.contracts!.zeroToken! as Hash,
       functionName: "totalSupplyAt",
-      args: [BigInt(proposal!.epoch!)],
+      args: [BigInt(proposal.value!.epoch!)],
     }),
   ]),
   [0n, 0n]
