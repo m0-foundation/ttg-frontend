@@ -18,12 +18,10 @@
             <a href="#" class="mr-4 hover:underline lg:mr-6">Documentation</a>
           </li>
         </ul>
-        <div class="flex justify-between align-center mt-4 lg:mt-0">
-          <a
-            href="#"
-            class="text-xs text-zinc-500 whitespace-nowrap hover:underline lg:mr-6"
-            >Join our community</a
-          >
+        <div class="flex justify-between align-center mt-4 lg:mt-0 lg:gap-6">
+          <NuxtLink to="/settings" class="footer-link">App settings</NuxtLink>
+          <div class="text-grey-600 text-xs hidden lg:block">|</div>
+          <a href="#" class="footer-link">Join our community</a>
           <ul class="flex items-center gap-4">
             <li>
               <a href="#" class="">
@@ -55,3 +53,9 @@
     </div>
   </footer>
 </template>
+
+<style>
+.footer-link {
+  @apply text-xs text-zinc-500 whitespace-nowrap hover:text-grey-100;
+}
+</style>
