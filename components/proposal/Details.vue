@@ -39,7 +39,7 @@
 
       <ProposalTechnical
         :proposal="proposal"
-        :current-proposal-values="currentProposalValues"
+        :current-proposal-values="currentProposalValuesFormatted"
       />
     </article>
 
@@ -70,7 +70,8 @@ const { html } = useParsedDescription(proposal?.value?.description || "");
 
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
-const { getValues: currentProposalValues } = storeToRefs(spog);
+
+const { getValuesFormatted: currentProposalValuesFormatted } = storeToRefs(spog);
 
 useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,
@@ -91,7 +92,7 @@ const {
   },
 });
 
-console.log({ currentProposalValues });
+console.log({ currentProposalValuesFormatted });
 
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));

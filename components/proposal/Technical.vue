@@ -34,7 +34,6 @@
 </template>
 
 <script setup lang="ts">
-import { formatUnits } from "viem";
 import { MProposal } from "@/lib/api/types";
 
 export interface ProposalProps {
@@ -50,7 +49,7 @@ export interface ProposalProps {
 const props = defineProps<ProposalProps>();
 
 const parsedValue = (value: string, type: string) => {
-  const formatFee = (value: string) => formatUnits(BigInt(value || 0n), 18);
+  const formatFee = (value: string) => useFormatCash(value);
 
   if (type === "setProposalFee") {
     return formatFee(value);
