@@ -43,7 +43,7 @@
       />
     </article>
 
-    <div class="my-8">
+    <div class="my-8 mx-4">
       <ProposalTableVotes :votes="votes?.value" />
     </div>
   </div>
@@ -71,7 +71,8 @@ const { html } = useParsedDescription(proposal?.value?.description || "");
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
 
-const { getValuesFormatted: currentProposalValuesFormatted } = storeToRefs(spog);
+const { getValuesFormatted: currentProposalValuesFormatted } =
+  storeToRefs(spog);
 
 useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,

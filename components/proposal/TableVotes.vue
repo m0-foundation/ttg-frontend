@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-secondary-dark">
     <div
       v-if="!votes || !votes.length"
       class="flex flex-col items-center justify-center h-80 text-grey-primary"
