@@ -1,5 +1,8 @@
 import { defineStore } from "pinia";
-import _ from "lodash";
+import orderBy from "lodash/orderBy";
+import uniqBy from "lodash/uniqBy";
+import has from "lodash/has";
+
 import { MProposal, ProposalState } from "@/lib/api/types";
 
 export const useProposalsStore = defineStore("proposals", {
@@ -37,8 +40,8 @@ export const useProposalsStore = defineStore("proposals", {
     setProposals(proposals: Array<MProposal>) {
       this.data = [];
       this.data = [
-        ..._.orderBy(
-          _.uniqBy([...this.data, ...proposals], "proposalId"),
+        ...orderBy(
+          uniqBy([...this.data, ...proposals], "proposalId"),
           "blockNumber",
           "desc"
         ),
@@ -46,12 +49,31 @@ export const useProposalsStore = defineStore("proposals", {
     },
     push(proposals: Array<MProposal>) {
       this.data = [
-        ..._.orderBy(
-          _.uniqBy([...this.data, ...proposals], "proposalId"),
+        ...orderBy(
+          uniqBy([...this.data, ...proposals], "proposalId"),
           "blockNumber",
           "desc"
         ),
       ];
+    },
+
+    update(proposal: MProposal) {
+      const proposalIndex = this.data.findIndex(
+        (p) => p.proposalId === proposal.proposalId
+      );
+      if (proposalIndex !== -1) {
+        this.data[proposalIndex] = proposal;
+      }
+    },
+
+    updateProposalByKey(proposalId: string, key: keyof MProposal, value: any) {
+      const proposalStore = this.data.find((p) => p.proposalId === proposalId);
+      if (proposalStore) {
+        if (has(proposalStore, key)) {
+          const newProposal = { ...proposalStore, [key]: value } as MProposal;
+          this.update(newProposal);
+        }
+      }
     },
   },
 });

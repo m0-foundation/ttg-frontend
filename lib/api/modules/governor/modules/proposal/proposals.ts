@@ -21,6 +21,7 @@ import { GovernorModule } from "../GovernorModule";
 import {
   GetProposalOutput,
   MProposal,
+  MProposalTallies,
   ProposalEventLog,
   ProposalState,
   VotingType,
@@ -276,7 +277,7 @@ export class Proposals extends GovernorModule {
     return {} as MProposal;
   }
 
-  parseGetProposal(proposal: any) {
+  decodeReadGetProposal(proposal: any) {
     const [
       proposer,
       voteStart,
@@ -304,13 +305,71 @@ export class Proposals extends GovernorModule {
     };
   }
 
-  async getProposal(proposalId: string): Promise<GetProposalOutput> {
+  async readGetProposal(proposalId: string): Promise<GetProposalOutput> {
     const getProposal = await readDualGovernor({
       address: this.contract,
       functionName: "getProposal",
       args: [BigInt(proposalId)],
     });
-    return this.parseGetProposal(getProposal);
+    return this.decodeReadGetProposal(getProposal);
+  }
+
+  async presenterProposal({
+    proposal,
+    readGetProposal,
+  }: {
+    proposal: MProposal;
+    readGetProposal: GetProposalOutput;
+  }): Promise<MProposal> {
+    const block = await this.client.getBlock({
+      blockNumber: BigInt(proposal.blockNumber),
+    });
+
+    const epoch = Epoch.getEpochFromBlock(BigInt(proposal.blockNumber));
+
+    return {
+      ...proposal,
+      ...pick(readGetProposal, [
+        "proposer",
+        "voteStart",
+        "voteEnd",
+        "executed",
+        "state",
+        "votingType",
+      ]),
+      epoch,
+      timestamp: Number(block.timestamp),
+      tallies: {
+        power: {
+          yes: String(readGetProposal.yesPowerTokenVotes),
+          no: String(readGetProposal.noPowerTokenVotes),
+        },
+        zero: {
+          yes: String(readGetProposal.yesZeroTokenVotes),
+          no: String(readGetProposal.noZeroTokenVotes),
+        },
+      },
+    };
+  }
+
+  async getProposalTallies(
+    proposalId: string
+  ): Promise<{ proposalId: string; talllies: MProposalTallies }> {
+    const readGetProposal = await this.readGetProposal(proposalId);
+
+    return {
+      proposalId,
+      tallies: {
+        power: {
+          yes: String(readGetProposal.yesPowerTokenVotes),
+          no: String(readGetProposal.noPowerTokenVotes),
+        },
+        zero: {
+          yes: String(readGetProposal.yesZeroTokenVotes),
+          no: String(readGetProposal.noZeroTokenVotes),
+        },
+      },
+    };
   }
 
   async getProposals(): Promise<Array<MProposal>> {
@@ -343,39 +402,16 @@ export class Proposals extends GovernorModule {
 
     const proposalsWithTallies = await Promise.all(
       proposals.map(async (proposal, index) => {
-        const proposalData = this.parseGetProposal(
+        const proposalData = this.decodeReadGetProposal(
           proposalsWithGetProposal[index]
         );
 
-        const block = await this.client.getBlock({
-          blockNumber: BigInt(proposal.blockNumber),
+        const proposalPresented = await this.presenterProposal({
+          proposal,
+          readGetProposal: proposalData,
         });
 
-        const epoch = Epoch.getEpochFromBlock(BigInt(proposal.blockNumber));
-
-        return {
-          ...proposal,
-          ...pick(proposalData, [
-            "proposer",
-            "voteStart",
-            "voteEnd",
-            "executed",
-            "state",
-            "votingType",
-          ]),
-          epoch,
-          timestamp: Number(block.timestamp),
-          tallies: {
-            power: {
-              yes: String(proposalData.yesPowerTokenVotes),
-              no: String(proposalData.noPowerTokenVotes),
-            },
-            zero: {
-              yes: String(proposalData.yesZeroTokenVotes),
-              no: String(proposalData.noZeroTokenVotes),
-            },
-          },
-        };
+        return proposalPresented;
       })
     );
 
@@ -425,36 +461,15 @@ export class Proposals extends GovernorModule {
       proposalLabel,
     };
 
-    const proposalData = await this.getProposal(proposal.proposalId.toString());
+    const readGetProposal = await this.readGetProposal(
+      proposal.proposalId.toString()
+    );
 
-    const block = await this.client.getBlock({
-      blockNumber: BigInt(proposal.blockNumber),
+    const proposalPresented = await this.presenterProposal({
+      proposal,
+      readGetProposal,
     });
-    proposal.timestamp = Number(block.timestamp);
 
-    const epoch = Epoch.getEpochFromBlock(BigInt(proposal.blockNumber));
-
-    return {
-      ...proposal,
-      ...pick(proposalData, [
-        "proposer",
-        "voteStart",
-        "voteEnd",
-        "executed",
-        "state",
-        "votingType",
-      ]),
-      epoch,
-      tallies: {
-        power: {
-          yes: String(proposalData.yesPowerTokenVotes),
-          no: String(proposalData.noPowerTokenVotes),
-        },
-        zero: {
-          yes: String(proposalData.yesZeroTokenVotes),
-          no: String(proposalData.noZeroTokenVotes),
-        },
-      },
-    };
+    return proposalPresented;
   }
 }
