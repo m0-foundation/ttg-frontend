@@ -249,10 +249,8 @@ const rules = computed(() => {
     [
       "addToList",
       "removeFromList",
-      "updateConfig",
       "emergencyAddToList",
       "emergencyRemoveFromList",
-      "emergencyUpdateConfig",
     ].includes(type)
   ) {
     return {
@@ -262,6 +260,15 @@ const rules = computed(() => {
         minLength: minLength(42),
         maxLength: maxLength(42),
       },
+      proposalValue3: {},
+      description: { required, minLength: minLength(6) },
+    };
+  }
+
+  if (["updateConfig", "emergencyUpdateConfig"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: { required },
       proposalValue3: {},
       description: { required, minLength: minLength(6) },
     };
