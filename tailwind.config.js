@@ -44,6 +44,9 @@ module.exports = {
         "red-900": "#660000",
         "red-1000": "#330000",
       },
+      fontFamily: {
+        inter: ["Inter", "sans-serif"],
+      },
       fontSize: {
         xxs: ["0.65rem"],
       },
