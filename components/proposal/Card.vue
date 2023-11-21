@@ -12,24 +12,15 @@
       <h2 class="text-2xl mb-4 break-all">
         {{ title }}
       </h2>
-      <div class="text-xs xl:text-sm mb-6 flex justify-between text-gray-400">
-        <div>
-          Proposed by
-          <NuxtLink :to="`/profile/${proposal.proposer}/`">
-            <MAddressAvatar :address="proposal.proposer" />
-          </NuxtLink>
-        </div>
-        <div>{{ timeAgo }} | {{ formatedDate }}</div>
-      </div>
 
-      <div class="text-grey-400 text-sm">
+      <div class="text-grey-400 mb-4">
         {{ truncatedDescriptionText }}
       </div>
 
       <button
         id="show-details"
         type="button"
-        class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full py-2 px-4 my-4"
+        class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full p-3 my-4"
         @click="onViewProposal"
       >
         <span>show details </span>
@@ -89,15 +80,15 @@
               proposal?.votingType === 'Power' ||
               proposal?.votingType === 'Emergency'
             "
-            class="flex"
+            class="flex gap-2"
           >
-            power tokens
             <MIconPower class="h-4 w-4 ml-1" />
+            vote with power tokens
           </div>
 
-          <div v-if="proposal?.votingType === 'Zero'" class="flex">
-            zero tokens
+          <div v-if="proposal?.votingType === 'Zero'" class="flex gap-2">
             <MIconZero class="h-4 w-4 ml-1" />
+            vote with zero tokens
           </div>
 
           <div v-if="proposal?.votingType === 'Double'" class="flex gap-2">
@@ -167,7 +158,7 @@ const isLoading = ref(false);
 
 const { text: truncatedDescriptionText } = useParsedDescription(
   truncate(props.proposal.description, {
-    length: 300,
+    length: 450,
   })
 );
 
