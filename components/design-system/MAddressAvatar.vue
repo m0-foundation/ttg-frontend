@@ -7,9 +7,14 @@
         :src="ensAvatar"
         alt=""
       />
-      <Jazzicon v-else :address="props?.address" diameter="16" />
+      <Jazzicon
+        v-else
+        class="flex items-center"
+        :address="props?.address"
+        diameter="16"
+      />
     </div>
-    <span :class="{ 'ml-6': showAvatar }">
+    <span :class="{ 'ml-[22px]': showAvatar }">
       <span v-if="ensName">{{ ensName }}</span>
       <span v-else>{{
         shortAddress ? shortenAddress(props.address) : props.address
