@@ -8,16 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  #deploy-to-dev:
-  #  uses: MZero-Labs/devops-templates/.github/workflows/deploy_crosslend_dev_cluster_pipeline.yml@main
-  #  secrets: inherit
-  #  permissions:
-  #    contents: write
-  #    packages: write
-  #  with:
-  #    DEPLOY_NAMESPACE: cm
-  #    HELM_COMPONENTS: ${{ github.event.repository.name }}
-  deploy-to-m0-dev:
+  deploy-to-dev:
     uses: MZero-Labs/devops-templates/.github/workflows/deploy_m0_dev_cluster_pipeline.yml@main
     secrets: inherit
     permissions:
