@@ -13,7 +13,7 @@
         {{ title }}
       </h2>
 
-      <div class="text-grey-400 mb-4">
+      <div class="text-grey-400 font-inter mb-4">
         {{ truncatedDescriptionText }}
       </div>
 
