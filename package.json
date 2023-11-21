@@ -79,6 +79,7 @@
     "postcss-custom-properties": "^13.3.0",
     "use-wagmi": "^0.3.8",
     "viem": "^1.11.0",
+    "vue3-jazzicon": "^0.1.4",
     "xss": "^1.0.14"
   },
   "overrides": {
