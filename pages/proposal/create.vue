@@ -72,6 +72,11 @@
             </div>
 
             <div class="mb-6">
+              <label for="type-value">Title*</label>
+              <input v-model="formData.title" type="text" placeholder="Title" />
+            </div>
+
+            <div class="mb-6">
               <div class="flex justify-between mb-2">
                 <label for="description">Description*</label>
                 <div class="text-sm text-gray-400 flex">
@@ -86,6 +91,7 @@
                 name="description"
                 :errors="$validation.description.$errors"
                 class="h-80"
+                :placeholder="descriptionPlaceHolder"
               />
             </div>
 
@@ -237,12 +243,35 @@ const formData = reactive({
   proposalValue: null,
   proposalValue2: null,
   proposalValue3: null,
+  title: null,
   description: null,
   ipfsURL: null,
   discussionURL: null,
 });
 
+const descriptionPlaceHolder = `## Heading2
+
+### Heading3
+
+List:  
+- **Bold**
+- _Italic_  
+- ~~Strikethrough~~
+- \`Code\` 
+- [Link](https://m0.xyz/)
+
+Delimiter:
+
+---
+
+`;
+
 const rules = computed(() => {
+  const constRules = {
+    description: { required, minLength: minLength(6) },
+    title: { required, minLength: minLength(6) },
+  };
+
   const type = selectedProposalType?.value?.value;
 
   if (
@@ -261,7 +290,7 @@ const rules = computed(() => {
         maxLength: maxLength(42),
       },
       proposalValue3: {},
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -270,7 +299,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: { required },
       proposalValue3: {},
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -279,7 +308,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: {},
       proposalValue3: {},
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -288,7 +317,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: { required },
       proposalValue3: { required },
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -297,7 +326,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: {},
       proposalValue3: {},
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -306,7 +335,7 @@ const rules = computed(() => {
     proposalValue: {},
     proposalValue2: {},
     proposalValue3: {},
-    description: { required, minLength: minLength(6) },
+    ...constRules,
   };
 });
 
@@ -452,24 +481,24 @@ function onChangeProposalType(option) {
   $validation.value.$reset();
 }
 
-function addHyperlinksToDescription() {
+function buildDescriptionPayload() {
   const addHyperlink = (text, url) => (url ? `[${text}](${url})` : "");
 
-  const descriptionWithLinks =
-    formData.description +
-    [
-      "\n\n---",
-      addHyperlink("Discussion", formData.discussionURL),
-      addHyperlink("IPFS", formData.ipfsURL),
-    ].join("\n\n");
+  const descriptionPayload = [
+    `# ${formData.title}`,
+    formData.description,
+    "\n\n---",
+    addHyperlink("Discussion", formData.discussionURL),
+    addHyperlink("IPFS", formData.ipfsURL),
+  ].join("\n\n");
 
-  return descriptionWithLinks;
+  return descriptionPayload;
 }
 
 async function onPreview() {
   await $validation.value.$validate();
   if (!$validation.value.$error) {
-    previewDescription.value = addHyperlinksToDescription();
+    previewDescription.value = buildDescriptionPayload();
     isPreview.value = true;
   }
 }
@@ -574,7 +603,7 @@ async function onSubmit() {
 
     const formDataWithLinks = {
       ...formData,
-      description: addHyperlinksToDescription(),
+      description: buildDescriptionPayload(),
     };
 
     const calldatas = buildCalldatas(formDataWithLinks);
