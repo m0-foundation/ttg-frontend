@@ -344,6 +344,16 @@ const rules = computed(() => {
   };
 });
 
+const hasToPayFee = computed(() => {
+  const type = selectedProposalType?.value?.value;
+  return ![
+    "reset",
+    "emergencyAddToList",
+    "emergencyRemoveFromList",
+    "emergencyUpdateConfig",
+  ].includes(type);
+});
+
 const $validation = useVuelidate(rules, formData);
 
 const previewDescription = ref();
@@ -523,7 +533,7 @@ async function writeAllowance() {
   console.log({ allowance });
 
   const fee = BigInt(spog.values.proposalFee!);
-  if (allowance <= fee) {
+  if (allowance <= fee && hasToPayFee.value) {
     const { hash } = await writeContract({
       abi: erc20ABI,
       address: spog.contracts.cashToken as Hash,
