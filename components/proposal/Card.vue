@@ -9,9 +9,14 @@
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="text-white bg-grey-800 p-6 mb-4"
     >
-      <h2 class="text-2xl mb-4 break-all">
-        {{ title }}
-      </h2>
+      <div class="mb-4">
+        <h2 class="text-2xl break-all">
+          {{ title }}
+        </h2>
+        <span v-if="proposal?.isEmergency" class="text-xs text-grey-400"
+          >Voting ends
+        </span>
+      </div>
 
       <div class="text-grey-400 font-inter mb-4">
         {{ truncatedDescriptionText }}
