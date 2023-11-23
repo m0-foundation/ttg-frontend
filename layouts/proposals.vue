@@ -31,14 +31,8 @@
         <NuxtLink to="/proposals/">
           <MNavButton class="flex items-center gap-1">
             <span class="lg:hidden">Active</span>
-            <span class="hidden lg:inline-block">Current Proposals</span>
+            <span class="hidden lg:inline-block">Proposals</span>
             <MBadge>{{ active }}</MBadge>
-          </MNavButton>
-        </NuxtLink>
-
-        <NuxtLink to="/proposals/emergency/">
-          <MNavButton class="flex items-center gap-1">
-            Emergency <MBadge version="error">{{ emergency }}</MBadge>
           </MNavButton>
         </NuxtLink>
 

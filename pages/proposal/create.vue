@@ -587,7 +587,7 @@ async function onSubmit() {
 
     const isEmergency = selectedProposalType?.value?.isEmergency;
     if (isEmergency) {
-      return navigateTo("/proposals/emergency/");
+      return navigateTo("/proposals/");
     }
 
     return navigateTo("/proposals/pending/");
