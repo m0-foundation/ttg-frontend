@@ -73,7 +73,12 @@
 
             <div class="mb-6">
               <label for="type-value">Title*</label>
-              <input v-model="formData.title" type="text" placeholder="Title" />
+              <MInput
+                v-model="formData.title"
+                type="text"
+                placeholder="Title"
+                :errors="$validation.title.$errors"
+              />
             </div>
 
             <div class="mb-6">
