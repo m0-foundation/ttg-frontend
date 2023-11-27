@@ -37,16 +37,15 @@ export class Governor extends ApiModule {
       "cashToken",
       "zeroToken",
       "powerToken",
+      "vault",
     ]);
   }
 
   getValues(): Promise<Partial<MGovernorValues>> {
     return this.getParameters<Partial<MGovernorValues>>([
-      "powerTokenQuorumRatio",
-      "zeroTokenQuorumRatio",
+      "powerTokenThresholdRatio",
+      "zeroTokenThresholdRatio",
       "proposalFee",
-      "minProposalFee",
-      "maxProposalFee",
       "clock",
       "votingDelay",
       "votingPeriod",
