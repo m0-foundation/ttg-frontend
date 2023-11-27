@@ -2,7 +2,7 @@
   <div>
     <div class="my-4">
       <!-- Power or Emergency -->
-      <div v-if="version === 'Power'">
+      <div v-if="version === 'Standard'">
         <VoteProgressPower :votes="powerVotes" />
       </div>
 

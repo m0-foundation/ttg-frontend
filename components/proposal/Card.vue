@@ -86,7 +86,7 @@
         <div class="uppercase text-xs text-grey-400 whitespace-nowrap">
           <div
             v-if="
-              proposal?.votingType === 'Power' ||
+              proposal?.votingType === 'Standard' ||
               proposal?.votingType === 'Emergency'
             "
             class="flex"
@@ -192,7 +192,7 @@ const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
   useMVotingPower(userAccount);
 
 const canVote = computed(() => {
-  if (["Power", "Emergency"].includes(props.proposal.votingType!)) {
+  if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
     return hasPowerTokensVotingPower.value;
   } else if (props.proposal?.votingType === "Zero") {
     return hasZeroTokenVotingPower.value;

@@ -30,7 +30,7 @@ const meta = {
     },
     version: {
       control: "select",
-      options: ["Power", "Emergency", "Zero"],
+      options: ["Standard", "Emergency", "Zero"],
     },
 
     zeroQuorum: {

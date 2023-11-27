@@ -67,7 +67,7 @@ const tableConfig = {
           class: "h-5 w-5 ml-1",
         }).html;
 
-        if (["Power", "Emergency"].includes(cell)) {
+        if (["Standard", "Emergency"].includes(cell)) {
           return html(PowerIcon);
         }
 
