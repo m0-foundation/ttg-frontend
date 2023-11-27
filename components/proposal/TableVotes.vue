@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-secondary-dark">
+  <div>
     <div
       v-if="!votes || !votes.length"
-      class="flex flex-col items-center justify-center h-80 text-grey-primary"
+      class="flex flex-col items-center justify-center h-20 text-grey-300"
     >
       No voting history to show.
     </div>
@@ -33,7 +33,9 @@ const config = computed(() => {
         width: 350,
         formatter: (voter: string) => {
           return html(
-            `<a href="/profile/${voter}/" class="underline text-xs">${voter}</a>`
+            `<a href="/profile/${voter}/" class="underline text-xs">${shortenAddress(
+              voter
+            )}</a>`
           );
         },
       },
@@ -59,7 +61,7 @@ const config = computed(() => {
             `<a href="${useBlockExplorer(
               "tx",
               transactionHash
-            )}" target="_blank" class="underline text-xs" >${vote}</a>`
+            )}" target="_blank" class="text-xs" >${vote}</a>`
           );
         },
       },
@@ -69,6 +71,10 @@ const config = computed(() => {
         hidden: true,
       },
     ],
+    className: {
+      container: "bg-transparent text-grey-400",
+      td: "text-grey-400",
+    },
     data: votesOrdered.map((v: MVote) => ({
       voter: v.voter,
       vote: v.support,
