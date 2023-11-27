@@ -22,25 +22,6 @@
           :quorum-formatted="quorumFormattedZero"
         />
       </div>
-
-      <!-- Double -->
-      <div v-else-if="version === 'Double'">
-        <div class="mb-8">
-          <VoteProgressPower
-            :votes="powerVotes"
-            :quorum="props.powerQuorum"
-            :quorum-formatted="quorumFormattedPower"
-          />
-        </div>
-
-        <div>
-          <VoteProgressZero
-            :votes="zeroVotes"
-            :quorum="props.zeroQuorum"
-            :quorum-formatted="quorumFormattedZero"
-          />
-        </div>
-      </div>
     </div>
   </div>
 </template>

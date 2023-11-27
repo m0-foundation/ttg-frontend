@@ -99,18 +99,6 @@
             zero tokens
             <MIconZero class="h-4 w-4 ml-1" />
           </div>
-
-          <div v-if="proposal?.votingType === 'Double'" class="flex gap-2">
-            <div class="flex">
-              power tokens
-              <MIconPower class="h-4 w-4 ml-1" />
-            </div>
-
-            <div class="flex">
-              zero tokens
-              <MIconZero class="h-4 w-4 ml-1" />
-            </div>
-          </div>
         </div>
       </div>
 
@@ -204,14 +192,10 @@ const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
   useMVotingPower(userAccount);
 
 const canVote = computed(() => {
-  if (props.proposal?.votingType === "Power") {
+  if (["Power", "Emergency"].includes(props.proposal.votingType!)) {
     return hasPowerTokensVotingPower.value;
   } else if (props.proposal?.votingType === "Zero") {
     return hasZeroTokenVotingPower.value;
-  } else if (props.proposal?.votingType === "Double") {
-    return hasPowerTokensVotingPower.value && hasZeroTokenVotingPower.value;
-  } else if (props.proposal?.votingType === "Emergency") {
-    return hasPowerTokensVotingPower.value;
   }
 });
 </script>

@@ -16,9 +16,8 @@ export type MProposalState = keyof typeof ProposalState;
 
 export enum VotingType {
   Power = 0,
-  Double = 1,
+  Emergency = 1,
   Zero = 2,
-  Emergency = 3,
 }
 export type MVotingType = keyof typeof VotingType;
 

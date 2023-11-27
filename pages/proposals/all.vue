@@ -74,15 +74,6 @@ const tableConfig = {
         if (["Zero"].includes(cell)) {
           return html(ZeroIcon);
         }
-
-        if (["Double"].includes(cell)) {
-          return html(`
-            <div class="flex">
-             ${PowerIcon}
-             ${ZeroIcon}
-            </div>
-          `);
-        }
       },
     },
 

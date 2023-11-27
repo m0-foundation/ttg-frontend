@@ -94,9 +94,7 @@ const activeProposals = computed(() =>
 );
 
 const mandatoryToVoteProposals = computed(() =>
-  activeProposals.value.filter(
-    (p) => p.votingType === "Power" || p.votingType === "Double"
-  )
+  activeProposals.value.filter((p) => p.votingType === "Power")
 );
 
 const optionalToVoteProposals = computed(() =>
