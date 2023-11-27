@@ -317,15 +317,6 @@ const rules = computed(() => {
     };
   }
 
-  if (["setProposalFeeRange"].includes(type)) {
-    return {
-      proposalValue: { required },
-      proposalValue2: { required },
-      proposalValue3: { required },
-      ...constRules,
-    };
-  }
-
   if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
     return {
       proposalValue: { required },
@@ -420,12 +411,6 @@ const proposalTypes = [
         component: ProposalInputFee,
         tokens: MProposalVotingTokens.setProposalFee,
       },
-      {
-        value: "setProposalFeeRange",
-        label: "Change fee range",
-        component: ProposalInputFeeRange,
-        tokens: MProposalVotingTokens.setProposalFeeRange,
-      },
     ],
   },
 
@@ -480,12 +465,6 @@ const currentValue = computed(() => {
 
   if (selectedProposalType?.value?.value === "setProposalFee") {
     return formatFee(spog.values.proposalFee!);
-  }
-
-  if (selectedProposalType?.value?.value === "setProposalFeeRange") {
-    return `${formatFee(spog.values.proposalFee!)} | MIN: ${formatFee(
-      spog.values.minProposalFee!
-    )} - MAX:${formatFee(spog.values.maxProposalFee!)}`;
   }
 });
 
@@ -705,17 +684,6 @@ function buildCalldatas(formData) {
       [useParseCash(input1)]
     );
     return buildCalldatasSpog(type, [valueEncoded]);
-  }
-
-  if (["setProposalFeeRange"].includes(type)) {
-    const encodeBigInt = (value: any) =>
-      encodeAbiParameters([{ type: "uint256" }], [useParseCash(value)]);
-
-    return buildCalldatasSpog(
-      type,
-      // min, max, newFee
-      [encodeBigInt(input1), encodeBigInt(input2), encodeBigInt(input3)]
-    );
   }
 
   if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {

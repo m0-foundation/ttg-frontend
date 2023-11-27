@@ -73,5 +73,4 @@ export interface MProposalsActionTypes {
   setPowerTokenQuorumRatio: string;
   setZeroTokenQuorumRatio: string;
   setProposalFee: string;
-  setProposalFeeRange: string[];
 }

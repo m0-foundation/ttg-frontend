@@ -46,9 +46,6 @@ const ProposalTypesFunctionSelectors = {
 
   reset: getFunctionSelector("reset()"),
   setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
-  setProposalFeeRange: getFunctionSelector(
-    "setProposalFeeRange(uint256,uint256,uint256)"
-  ),
   setPowerTokenQuorumRatio: getFunctionSelector(
     "setPowerTokenQuorumRatio(uint16)"
   ),
@@ -59,7 +56,6 @@ const ProposalTypesFunctionSelectors = {
 
 const ProposalLabels = {
   setProposalFee: "Change Proposal Fee",
-  setProposalFeeRange: "Change Tax Range",
   addToList: "Add to list",
   removeFromList: "Remove from list",
   updateConfig: "Update Config",
@@ -147,18 +143,6 @@ export class Proposals extends GovernorModule {
     return { proposalType: "setProposalFee", params };
   }
 
-  decodeProposalTypeSetProposalFeeRange(calldata: Hash) {
-    const params = decodeAbiParameters(
-      [
-        { name: "newMinProposalFee_", type: "uint256" },
-        { name: "newMaxProposalFee_", type: "uint256" },
-        { name: "newProposalFee_", type: "uint256" },
-      ],
-      removeSelectorFromCallData(calldata)
-    );
-    return { proposalType: "setProposalFeeRange", params };
-  }
-
   decodeProposalTypeSetPowerTokenQuorumRatio(calldata: Hash) {
     const params = decodeAbiParameters(
       [{ name: "newPowerTokenQuorumRatio_", type: "uint16" }],
@@ -200,9 +184,6 @@ export class Proposals extends GovernorModule {
         break;
       case ProposalTypesFunctionSelectors.setProposalFee:
         return this.decodeProposalTypeSetProposalFee(calldata);
-        break;
-      case ProposalTypesFunctionSelectors.setProposalFeeRange:
-        return this.decodeProposalTypeSetProposalFeeRange(calldata);
         break;
       case ProposalTypesFunctionSelectors.setPowerTokenQuorumRatio:
         return this.decodeProposalTypeSetPowerTokenQuorumRatio(calldata);
