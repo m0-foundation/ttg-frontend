@@ -260,16 +260,15 @@ export class Proposals extends GovernorModule {
 
   decodeReadGetProposal(proposal: any) {
     const [
-      proposer,
+      proposalType,
       voteStart,
       voteEnd,
       executed,
-      proposalType_,
       state,
-      noPowerTokenVotes,
-      yesPowerTokenVotes,
-      noZeroTokenVotes,
-      yesZeroTokenVotes,
+      thresholdRatio,
+      noVotes,
+      yesVotes,
+      proposer,
     ] = proposal;
 
     return {
@@ -278,11 +277,10 @@ export class Proposals extends GovernorModule {
       voteEnd,
       executed,
       state: ProposalState[state] as keyof typeof ProposalState,
-      votingType: VotingType[proposalType_] as keyof typeof VotingType,
-      noPowerTokenVotes,
-      yesPowerTokenVotes,
-      noZeroTokenVotes,
-      yesZeroTokenVotes,
+      votingType: VotingType[proposalType] as keyof typeof VotingType,
+      yesVotes,
+      noVotes,
+      thresholdRatio,
     };
   }
 
@@ -320,36 +318,44 @@ export class Proposals extends GovernorModule {
       ]),
       epoch,
       timestamp: Number(block.timestamp),
-      tallies: {
-        power: {
-          yes: String(readGetProposal.yesPowerTokenVotes),
-          no: String(readGetProposal.noPowerTokenVotes),
-        },
-        zero: {
-          yes: String(readGetProposal.yesZeroTokenVotes),
-          no: String(readGetProposal.noZeroTokenVotes),
-        },
-      },
+      tallies:
+        readGetProposal.votingType === "Zero"
+          ? {
+              zero: {
+                yes: String(readGetProposal.yesVotes),
+                no: String(readGetProposal.noVotes),
+              },
+            }
+          : {
+              power: {
+                yes: String(readGetProposal.yesVotes),
+                no: String(readGetProposal.noVotes),
+              },
+            },
     };
   }
 
   async getProposalTallies(
     proposalId: string
-  ): Promise<{ proposalId: string; talllies: MProposalTallies }> {
+  ): Promise<{ proposalId: string; tallies: MProposalTallies }> {
     const readGetProposal = await this.readGetProposal(proposalId);
 
     return {
       proposalId,
-      tallies: {
-        power: {
-          yes: String(readGetProposal.yesPowerTokenVotes),
-          no: String(readGetProposal.noPowerTokenVotes),
-        },
-        zero: {
-          yes: String(readGetProposal.yesZeroTokenVotes),
-          no: String(readGetProposal.noZeroTokenVotes),
-        },
-      },
+      tallies:
+        readGetProposal.votingType === "Zero"
+          ? {
+              zero: {
+                yes: String(readGetProposal.yesVotes),
+                no: String(readGetProposal.noVotes),
+              },
+            }
+          : {
+              power: {
+                yes: String(readGetProposal.yesVotes),
+                no: String(readGetProposal.noVotes),
+              },
+            },
     };
   }
 

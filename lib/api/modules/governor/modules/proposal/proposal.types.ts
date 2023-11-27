@@ -30,11 +30,11 @@ export interface ProposalEventLog extends EventLog {
 }
 
 export interface MProposalTallies {
-  power: {
+  power?: {
     yes: string;
     no: string;
   };
-  zero: {
+  zero?: {
     yes: string;
     no: string;
   };
@@ -47,10 +47,9 @@ export interface GetProposalOutput {
   executed: boolean;
   state: MProposalState;
   votingType: MVotingType;
-  noPowerTokenVotes: bigint;
-  yesPowerTokenVotes: bigint;
-  noZeroTokenVotes: bigint;
-  yesZeroTokenVotes: bigint;
+  thresholdRatio: string;
+  noVotes: bigint;
+  yesVotes: bigint;
 }
 
 export interface MProposal extends ProposalEventLog {

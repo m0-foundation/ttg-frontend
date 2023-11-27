@@ -16,10 +16,14 @@ async function updateProposalsStore(newVotes: MVote[]) {
   );
 
   newVotes.forEach((vote) => {
-    const { tallies } = newTallies.find(
-      (t) => t?.proposalId === vote.proposalId
-    );
-    proposals.updateProposalByKey(vote.proposalId!, "tallies", tallies);
+    const proposal = newTallies.find((t) => t?.proposalId === vote.proposalId);
+    if (proposal) {
+      proposals.updateProposalByKey(
+        vote.proposalId!,
+        "tallies",
+        proposal.tallies
+      );
+    }
   });
 }
 
