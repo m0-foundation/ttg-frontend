@@ -72,6 +72,16 @@
             </div>
 
             <div class="mb-6">
+              <label for="type-value">Title*</label>
+              <MInput
+                v-model="formData.title"
+                type="text"
+                placeholder="Title"
+                :errors="$validation.title.$errors"
+              />
+            </div>
+
+            <div class="mb-6">
               <div class="flex justify-between mb-2">
                 <label for="description">Description*</label>
                 <div class="text-sm text-gray-400 flex">
@@ -86,6 +96,7 @@
                 name="description"
                 :errors="$validation.description.$errors"
                 class="h-80"
+                :placeholder="descriptionPlaceHolder"
               />
             </div>
 
@@ -237,12 +248,35 @@ const formData = reactive({
   proposalValue: null,
   proposalValue2: null,
   proposalValue3: null,
+  title: null,
   description: null,
   ipfsURL: null,
   discussionURL: null,
 });
 
+const descriptionPlaceHolder = `## Heading2
+
+### Heading3
+
+List:  
+- **Bold**
+- _Italic_  
+- ~~Strikethrough~~
+- \`Code\` 
+- [Link](https://m0.xyz/)
+
+Delimiter:
+
+---
+
+`;
+
 const rules = computed(() => {
+  const constRules = {
+    description: { required, minLength: minLength(6) },
+    title: { required, minLength: minLength(6) },
+  };
+
   const type = selectedProposalType?.value?.value;
 
   if (
@@ -261,7 +295,7 @@ const rules = computed(() => {
         maxLength: maxLength(42),
       },
       proposalValue3: {},
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -270,7 +304,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: { required },
       proposalValue3: {},
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -279,7 +313,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: {},
       proposalValue3: {},
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -288,7 +322,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: { required },
       proposalValue3: { required },
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -297,7 +331,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: {},
       proposalValue3: {},
-      description: { required, minLength: minLength(6) },
+      ...constRules,
     };
   }
 
@@ -306,8 +340,18 @@ const rules = computed(() => {
     proposalValue: {},
     proposalValue2: {},
     proposalValue3: {},
-    description: { required, minLength: minLength(6) },
+    ...constRules,
   };
+});
+
+const hasToPayFee = computed(() => {
+  const type = selectedProposalType?.value?.value;
+  return ![
+    "reset",
+    "emergencyAddToList",
+    "emergencyRemoveFromList",
+    "emergencyUpdateConfig",
+  ].includes(type);
 });
 
 const $validation = useVuelidate(rules, formData);
@@ -452,24 +496,24 @@ function onChangeProposalType(option) {
   $validation.value.$reset();
 }
 
-function addHyperlinksToDescription() {
+function buildDescriptionPayload() {
   const addHyperlink = (text, url) => (url ? `[${text}](${url})` : "");
 
-  const descriptionWithLinks =
-    formData.description +
-    [
-      "\n\n---",
-      addHyperlink("Discussion", formData.discussionURL),
-      addHyperlink("IPFS", formData.ipfsURL),
-    ].join("\n\n");
+  const descriptionPayload = [
+    `# ${formData.title}`,
+    formData.description,
+    "\n\n---",
+    addHyperlink("Discussion", formData.discussionURL),
+    addHyperlink("IPFS", formData.ipfsURL),
+  ].join("\n\n");
 
-  return descriptionWithLinks;
+  return descriptionPayload;
 }
 
 async function onPreview() {
   await $validation.value.$validate();
   if (!$validation.value.$error) {
-    previewDescription.value = addHyperlinksToDescription();
+    previewDescription.value = buildDescriptionPayload();
     isPreview.value = true;
   }
 }
@@ -489,7 +533,7 @@ async function writeAllowance() {
   console.log({ allowance });
 
   const fee = BigInt(spog.values.proposalFee!);
-  if (allowance <= fee) {
+  if (allowance <= fee && hasToPayFee.value) {
     const { hash } = await writeContract({
       abi: erc20ABI,
       address: spog.contracts.cashToken as Hash,
@@ -574,7 +618,7 @@ async function onSubmit() {
 
     const formDataWithLinks = {
       ...formData,
-      description: addHyperlinksToDescription(),
+      description: buildDescriptionPayload(),
     };
 
     const calldatas = buildCalldatas(formDataWithLinks);
