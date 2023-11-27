@@ -8,7 +8,8 @@ import PowerBootstrapTokenAbi from "../modules/spog/abi/PowerBootstrapToken.json
 import PowerTokenDeployerAbi from "../modules/spog/abi/PowerTokenDeployer.json";
 import RegistrarAbi from "../modules/spog/abi/Registrar.json";
 import ZeroTokenAbi from "../modules/spog/abi/ZeroToken.json";
-import MockERC20PermitAbi from "../modules/spog/abi/MockERC20Permit.json";
+import ERC20PermitHarnessAbi from "../modules/spog/abi/ERC20PermitHarness.json";
+import DistributionVaultAbi from "../modules/spog/abi/DistributionVault.json";
 
 import { bytecode as DualGovernorDeployerBytecode } from "../modules/spog/bytecode/DualGovernorDeployer.json";
 import { bytecode as DualGovernorBytecode } from "../modules/spog/bytecode/DualGovernor.json";
@@ -16,19 +17,29 @@ import { bytecode as PowerBootstrapTokenBytecode } from "../modules/spog/bytecod
 import { bytecode as PowerTokenDeployerBytecode } from "../modules/spog/bytecode/PowerTokenDeployer.json";
 import { bytecode as RegistrarBytecode } from "../modules/spog/bytecode/Registrar.json";
 import { bytecode as ZeroTokenBytecode } from "../modules/spog/bytecode/ZeroToken.json";
-import { bytecode as MockERC20PermitBytecode } from "../modules/spog/bytecode/MockERC20Permit.json";
+import { bytecode as ERC20PermitHarnessBytecode } from "../modules/spog/bytecode/ERC20PermitHarness.json";
+import { bytecode as DistributionVaultBytecode } from "../modules/spog/bytecode/DistributionVault.json";
 
 import multicall3 from "./contracts/Multicall3.json";
 import { Network } from "./setup";
 
 export default async function deploySpog(network: Network) {
-  const initialZeroAccounts: string[] = [
-    network.accounts[0].address,
-    network.accounts[1].address,
-    network.accounts[2].address,
-  ];
+  console.log({ network });
 
-  const initialZeroBalances: string[] = ["60000000", "30000000", "10000000"];
+  const provider = new JsonRpcProvider(network.url);
+  const wallet = new Wallet(network.accounts[0].privateKey, provider);
+
+  const mockERC20Factory = new ContractFactory(
+    ERC20PermitHarnessAbi,
+    ERC20PermitHarnessBytecode,
+    wallet
+  );
+
+  const cashToken = await mockERC20Factory.deploy("CASH", "Cash Token", 18);
+
+  const allowedCashTokens = [cashToken.address];
+  // NOTE: Ensure this is the current nonce (transaction count) of the deploying address.
+  // const DEPLOYER_NONCE = 0;
 
   const initialPowerAccounts: string[] = [
     network.accounts[0].address,
@@ -37,22 +48,25 @@ export default async function deploySpog(network: Network) {
   ];
 
   //  initPowerSupply = 1_000_000_000;
-
   const initialPowerBalances: string[] = [
     "60", // 60% of supply => 600_000_000 POWER tokens
     "30", // 30% of supply => 300_000_000 POWER tokens
     "10", // 10% of supply => 100_000_000 POWER tokens
   ];
 
+  const initialZeroAccounts: string[] = [
+    network.accounts[0].address,
+    network.accounts[1].address,
+    network.accounts[2].address,
+  ];
+
+  const initialZeroBalances: string[] = ["60000000", "30000000", "10000000"];
+
   /*
   hardhat network block number starts at 1, but PureEpochs makes the assumption that its being deployed to the mainnet when Ethereum went POS
   Thus epochs are counted from the block number 15_537_393
   Hardhat network must start with a block number and timestamp relatively recent
   */
-  console.log({ network });
-
-  const provider = new JsonRpcProvider(network.url);
-  const wallet = new Wallet(network.accounts[0].privateKey, provider);
 
   const mine = (blocks: number) =>
     provider.send("hardhat_mine", ["0x" + blocks.toString(16)]);
@@ -88,9 +102,10 @@ export default async function deploySpog(network: Network) {
     ZeroTokenBytecode,
     wallet
   );
-  const mockERC20PermitFactory = new ContractFactory(
-    MockERC20PermitAbi,
-    MockERC20PermitBytecode,
+
+  const DistributionVaultFactory = new ContractFactory(
+    DistributionVaultAbi,
+    DistributionVaultBytecode,
     wallet
   );
 
@@ -113,15 +128,20 @@ export default async function deploySpog(network: Network) {
     initialZeroBalances
   );
 
+  // DistributionVault needs zeroToken address.
+  const vault = await DistributionVaultFactory.deploy(zeroToken.address);
+
   const governorDeployer = await dualGovernorDeployerFactory.deploy(
     expectedRegistrarAddress,
-    zeroToken.address
+    vault.address,
+    zeroToken.address,
+    allowedCashTokens
   );
 
   // NOTE: For now, cash is sent to the main wallet, instead of some vault or treasury. Will change.
   const powerTokenDeployer = await powerTokenDeployerFactory.deploy(
     expectedRegistrarAddress,
-    wallet.address
+    vault.address
   );
 
   const bootstrapToken = await powerBootstrapTokenFactory.deploy(
@@ -129,17 +149,10 @@ export default async function deploySpog(network: Network) {
     initialPowerBalances
   );
 
-  const cashToken = await mockERC20PermitFactory.deploy(
-    "CASH",
-    "Cash Token",
-    18
-  );
-
   const registrar = await registrarFactory.deploy(
     governorDeployer.address,
     powerTokenDeployer.address,
     bootstrapToken.address,
-    cashToken.address,
     {
       gasLimit: 20000000,
     }

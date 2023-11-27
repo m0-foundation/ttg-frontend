@@ -1,5 +1,6 @@
 import { defineConfig } from "@wagmi/cli";
 import { actions } from "@wagmi/cli/plugins";
+import DistributionVaultAbi from "./modules/spog/abi/DistributionVault.json";
 import DualGovernorABI from "./modules/spog/abi/DualGovernor.json";
 import PowerBootstrapTokenABI from "./modules/spog/abi/PowerBootstrapToken.json";
 import PowerTokenABI from "./modules/spog/abi/PowerToken.json";
@@ -28,6 +29,10 @@ export default defineConfig({
     {
       name: "ZeroToken",
       abi: ZeroTokenABI,
+    },
+    {
+      name: "DistributionVault",
+      abi: DistributionVaultAbi,
     },
   ],
   plugins: [actions()],
