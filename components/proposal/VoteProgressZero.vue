@@ -15,10 +15,10 @@
       ({{ props.votes?.yes?.formatted }})
     </span>
 
-    <MProgressBarQuorum
+    <MProgressBarThreshold
       :yes="props.votes?.yes?.percentage"
       :no="props.votes?.no?.percentage"
-      :quorum="props.quorum"
+      :threshold="props.threshold"
     />
 
     <div class="bg-red-500 h-2 w-2"></div>
@@ -35,15 +35,15 @@
     </span>
 
     <span class="text-grey-400 text-xs uppercase whitespace-nowrap ml-2">
-      Quorum: {{ props.quorum * 100 }}% ({{ props.quorumFormatted }})
+      Threshold: {{ props.threshold * 100 }}% ({{ props.thresholdFormatted }})
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
 interface Props {
-  quorum: number;
-  quorumFormatted: string;
+  threshold: number;
+  thresholdFormatted: string;
   votes: {
     total: number;
     yes: {

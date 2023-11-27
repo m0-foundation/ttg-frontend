@@ -20,9 +20,9 @@
           v-if="proposal?.state !== 'Pending'"
           :tallies="proposal?.tallies"
           :version="proposal?.votingType"
-          :power-quorum="powerQuorum"
+          :power-threshold="powerThreshold"
           :power-total-supply="totalSupplyAt[0]"
-          :zero-quorum="zeroQuorum"
+          :zero-threshold="zeroThreshold"
           :zero-total-supply="totalSupplyAt[1]"
         />
       </div>
@@ -104,11 +104,11 @@ console.log({ currentProposalValuesFormatted });
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
-const zeroQuorum = computed(() =>
-  basisPointsToDecimal(spog.values.zeroTokenQuorumRatio!)
+const zeroThreshold = computed(() =>
+  basisPointsToDecimal(spog.values.zeroTokenThresholdRatio!)
 );
-const powerQuorum = computed(() =>
-  basisPointsToDecimal(spog.values.powerTokenQuorumRatio!)
+const powerThreshold = computed(() =>
+  basisPointsToDecimal(spog.values.powerTokenThresholdRatio!)
 );
 
 const votesStore = useVotesStore();

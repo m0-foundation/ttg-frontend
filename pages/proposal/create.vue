@@ -217,7 +217,7 @@ import { storeToRefs } from "pinia";
 import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
-import ProposalInputQuorum from "@/components/proposal/InputQuorum.vue";
+import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
 import ProposalInputFeeRange from "@/components/proposal/InputFeeRange.vue";
 import ProposalInputFee from "@/components/proposal/InputFee.vue";
 
@@ -317,7 +317,9 @@ const rules = computed(() => {
     };
   }
 
-  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
+  if (
+    ["setPowerTokenThresholdRatio", "setZeroTokenThresholdRatio"].includes(type)
+  ) {
     return {
       proposalValue: { required },
       proposalValue2: {},
@@ -383,21 +385,21 @@ const proposalTypes = [
   },
 
   {
-    value: "Quorums",
-    label: "Quorums",
+    value: "Thresholds",
+    label: "Thresholds",
     children: [
       {
-        value: "setPowerTokenQuorumRatio",
-        label: "Power quorum",
-        component: ProposalInputQuorum,
+        value: "setPowerTokenThresholdRatio",
+        label: "Power threshold",
+        component: ProposalInputThreshold,
         modelValue: formData.proposalValue,
-        tokens: MProposalVotingTokens.setPowerTokenQuorumRatio,
+        tokens: MProposalVotingTokens.setPowerTokenThresholdRatio,
       },
       {
-        value: "setZeroTokenQuorumRatio",
-        label: "Zero quorum",
-        component: ProposalInputQuorum,
-        tokens: MProposalVotingTokens.setZeroTokenQuorumRatio,
+        value: "setZeroTokenThresholdRatio",
+        label: "Zero threshold",
+        component: ProposalInputThreshold,
+        tokens: MProposalVotingTokens.setZeroTokenThresholdRatio,
       },
     ],
   },
@@ -453,12 +455,12 @@ const proposalTypes = [
 ];
 
 const currentValue = computed(() => {
-  if (selectedProposalType?.value?.value === "setPowerTokenQuorumRatio") {
-    return `${basisPointsToPercentage(spog.values.powerTokenQuorumRatio!)}%`;
+  if (selectedProposalType?.value?.value === "setPowerTokenThresholdRatio") {
+    return `${basisPointsToPercentage(spog.values.powerTokenThresholdRatio!)}%`;
   }
 
-  if (selectedProposalType?.value?.value === "setZeroTokenQuorumRatio") {
-    return `${basisPointsToPercentage(spog.values.zeroTokenQuorumRatio!)}%`;
+  if (selectedProposalType?.value?.value === "setZeroTokenThresholdRatio") {
+    return `${basisPointsToPercentage(spog.values.zeroTokenThresholdRatio!)}%`;
   }
 
   const formatFee = (value: string) => useFormatCash(value);
@@ -686,7 +688,9 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(type, [valueEncoded]);
   }
 
-  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
+  if (
+    ["setPowerTokenThresholdRatio", "setZeroTokenThresholdRatio"].includes(type)
+  ) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
       [BigInt(percentageToBasispoints(input1))]

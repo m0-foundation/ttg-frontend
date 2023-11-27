@@ -40,8 +40,8 @@ export interface ProposalProps {
   proposal: MProposal;
   currentProposalValues: {
     setProposalFee: string;
-    setPowerTokenQuorumRatio: string;
-    setZeroTokenQuorumRatio: string;
+    setPowerTokenThresholdRatio: string;
+    setZeroTokenThresholdRatio: string;
   };
 }
 
@@ -54,7 +54,9 @@ const parsedValue = (value: string, type: string) => {
     return formatFee(value);
   }
 
-  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
+  if (
+    ["setPowerTokenThresholdRatio", "setZeroTokenThresholdRatio"].includes(type)
+  ) {
     return `${basisPointsToPercentage(value)}%`;
   }
 
@@ -64,8 +66,8 @@ const parsedValue = (value: string, type: string) => {
 const showParsed = computed(() =>
   [
     "setProposalFee",
-    "setPowerTokenQuorumRatio",
-    "setZeroTokenQuorumRatio",
+    "setPowerTokenThresholdRatio",
+    "setZeroTokenThresholdRatio",
   ].includes(props.proposal?.proposalType)
 );
 

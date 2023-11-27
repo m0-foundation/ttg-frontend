@@ -46,11 +46,11 @@ const ProposalTypesFunctionSelectors = {
 
   reset: getFunctionSelector("reset()"),
   setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
-  setPowerTokenQuorumRatio: getFunctionSelector(
-    "setPowerTokenQuorumRatio(uint16)"
+  setPowerTokenThresholdRatio: getFunctionSelector(
+    "setPowerTokenThresholdRatio(uint16)"
   ),
-  setZeroTokenQuorumRatio: getFunctionSelector(
-    "setZeroTokenQuorumRatio(uint16)"
+  setZeroTokenThresholdRatio: getFunctionSelector(
+    "setZeroTokenThresholdRatio(uint16)"
   ),
 };
 
@@ -60,8 +60,8 @@ const ProposalLabels = {
   removeFromList: "Remove from list",
   updateConfig: "Update Config",
   reset: "Reset",
-  setPowerTokenQuorumRatio: "Update Power Quorum",
-  setZeroTokenQuorumRatio: "Update Zero Quorum",
+  setPowerTokenThresholdRatio: "Update Power Threshold",
+  setZeroTokenThresholdRatio: "Update Zero Threshold",
 };
 
 type IParams =
@@ -143,20 +143,20 @@ export class Proposals extends GovernorModule {
     return { proposalType: "setProposalFee", params };
   }
 
-  decodeProposalTypeSetPowerTokenQuorumRatio(calldata: Hash) {
+  decodeProposalTypeSetPowerTokenThresholdRatio(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newPowerTokenQuorumRatio_", type: "uint16" }],
+      [{ name: "newPowerTokenThresholdRatio_", type: "uint16" }],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "setPowerTokenQuorumRatio", params };
+    return { proposalType: "setPowerTokenThresholdRatio", params };
   }
 
-  decodeProposalTypeSetZeroTokenQuorumRatio(calldata: Hash) {
+  decodeProposalTypeSetZeroTokenThresholdRatio(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newZeroTokenQuorumRatio_", type: "uint16" }],
+      [{ name: "newZeroTokenThresholdRatio_", type: "uint16" }],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "setZeroTokenQuorumRatio", params };
+    return { proposalType: "setZeroTokenThresholdRatio", params };
   }
 
   decodeProposalTypes(
@@ -185,11 +185,11 @@ export class Proposals extends GovernorModule {
       case ProposalTypesFunctionSelectors.setProposalFee:
         return this.decodeProposalTypeSetProposalFee(calldata);
         break;
-      case ProposalTypesFunctionSelectors.setPowerTokenQuorumRatio:
-        return this.decodeProposalTypeSetPowerTokenQuorumRatio(calldata);
+      case ProposalTypesFunctionSelectors.setPowerTokenThresholdRatio:
+        return this.decodeProposalTypeSetPowerTokenThresholdRatio(calldata);
         break;
-      case ProposalTypesFunctionSelectors.setZeroTokenQuorumRatio:
-        return this.decodeProposalTypeSetZeroTokenQuorumRatio(calldata);
+      case ProposalTypesFunctionSelectors.setZeroTokenThresholdRatio:
+        return this.decodeProposalTypeSetZeroTokenThresholdRatio(calldata);
         break;
 
       default:

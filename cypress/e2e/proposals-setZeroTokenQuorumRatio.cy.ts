@@ -1,7 +1,7 @@
 describe("Proposals", () => {
-  describe("type action: setZeroTokenQuorumRatio", () => {
+  describe("type action: setZeroTokenThresholdRatio", () => {
     const input1 = "15";
-    const description = "Set Zero Token Quorum Ratio to 15";
+    const description = "Set Zero Token Threshold Ratio to 15";
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
@@ -9,11 +9,11 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Quorums").should("exist");
-      cy.contains("Quorums").click();
+      cy.contains("Thresholds").should("exist");
+      cy.contains("Thresholds").click();
 
-      cy.contains("Zero quorum").should("exist");
-      cy.contains("Zero quorum").click();
+      cy.contains("Zero threshold").should("exist");
+      cy.contains("Zero threshold").click();
 
       cy.get("input[data-test='proposalValue']").type(input1);
 

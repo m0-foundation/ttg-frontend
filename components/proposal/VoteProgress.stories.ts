@@ -33,10 +33,10 @@ const meta = {
       options: ["Standard", "Emergency", "Zero"],
     },
 
-    zeroQuorum: {
+    zeroThreshold: {
       control: "number",
     },
-    powerQuorum: {
+    powerThreshold: {
       control: "number",
     },
     powerTotalSupply: {
@@ -115,7 +115,7 @@ export const PowerNo100: Story = {
   },
 };
 
-export const PowerQuorumReachedEmergency: Story = {
+export const PowerThresholdReachedEmergency: Story = {
   args: {
     version: "Emergency",
     tallies: {
@@ -129,12 +129,12 @@ export const PowerQuorumReachedEmergency: Story = {
       },
     },
 
-    powerQuorum: 0.45,
+    powerThreshold: 0.45,
     powerTotalSupply: 1000n,
   },
 };
 
-export const PowerQuorumNotReachedEmergency: Story = {
+export const PowerThresholdNotReachedEmergency: Story = {
   args: {
     version: "Emergency",
     tallies: {
@@ -148,12 +148,12 @@ export const PowerQuorumNotReachedEmergency: Story = {
       },
     },
 
-    powerQuorum: 0.85,
+    powerThreshold: 0.85,
     powerTotalSupply: 1000n,
   },
 };
 
-export const ZeroQuorumReached: Story = {
+export const ZeroThresholdReached: Story = {
   args: {
     version: "Zero",
     tallies: {
@@ -167,12 +167,12 @@ export const ZeroQuorumReached: Story = {
       },
     },
 
-    zeroQuorum: 0.5,
+    zeroThreshold: 0.5,
     zeroTotalSupply: 120n,
   },
 };
 
-export const ZeroQuorumNotReached: Story = {
+export const ZeroThresholdNotReached: Story = {
   args: {
     version: "Zero",
     tallies: {
@@ -186,7 +186,7 @@ export const ZeroQuorumNotReached: Story = {
       },
     },
 
-    zeroQuorum: 0.5,
+    zeroThreshold: 0.5,
     zeroTotalSupply: 120n,
   },
 };

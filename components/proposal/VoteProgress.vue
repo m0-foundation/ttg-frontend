@@ -9,8 +9,8 @@
       <div v-else-if="version === 'Emergency'">
         <VoteProgressPower
           :votes="powerVotes"
-          :quorum="props.powerQuorum"
-          :quorum-formatted="quorumFormattedPower"
+          :threshold="props.powerThreshold"
+          :threshold-formatted="thresholdFormattedPower"
         />
       </div>
 
@@ -18,8 +18,8 @@
       <div v-else-if="version === 'Zero'">
         <VoteProgressZero
           :votes="zeroVotes"
-          :quorum="props.zeroQuorum"
-          :quorum-formatted="quorumFormattedZero"
+          :threshold="props.zeroThreshold"
+          :threshold-formatted="thresholdFormattedZero"
         />
       </div>
     </div>
@@ -32,8 +32,8 @@ import { MProposalTallies, MVotingType } from "@/lib/api/types";
 interface Props {
   tallies: MProposalTallies;
   version: MVotingType;
-  zeroQuorum?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
-  powerQuorum?: number;
+  zeroThreshold?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
+  powerThreshold?: number;
   powerTotalSupply?: bigint;
   zeroTotalSupply?: bigint;
 }
@@ -49,8 +49,8 @@ const props = withDefaults(defineProps<Props>(), {
     },
   }),
   version: "Power",
-  zeroQuorum: undefined,
-  powerQuorum: undefined,
+  zeroThreshold: undefined,
+  powerThreshold: undefined,
   powerTotalSupply: () => 0n,
   zeroTotalSupply: () => 0n,
 });
@@ -126,15 +126,15 @@ const zeroVotes = computed(() =>
   parseVotesForQuorom(props.tallies.zero, props.zeroTotalSupply!)
 );
 
-const quorumFormattedPower = computed(() =>
+const thresholdFormattedPower = computed(() =>
   useNumberFormatter(
-    (props.powerTotalSupply * BigInt(props.powerQuorum! * 100)) / 100n
+    (props.powerTotalSupply * BigInt(props.powerThreshold! * 100)) / 100n
   )
 );
 
-const quorumFormattedZero = computed(() =>
+const thresholdFormattedZero = computed(() =>
   useNumberFormatter(
-    (props.zeroTotalSupply * BigInt(props.zeroQuorum! * 100)) / 100n
+    (props.zeroTotalSupply * BigInt(props.zeroThreshold! * 100)) / 100n
   )
 );
 </script>

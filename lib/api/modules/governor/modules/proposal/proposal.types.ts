@@ -69,7 +69,7 @@ export interface MProposal extends ProposalEventLog {
 }
 
 export interface MProposalsActionTypes {
-  setPowerTokenQuorumRatio: string;
-  setZeroTokenQuorumRatio: string;
+  setPowerTokenThresholdRatio: string;
+  setZeroTokenThresholdRatio: string;
   setProposalFee: string;
 }
