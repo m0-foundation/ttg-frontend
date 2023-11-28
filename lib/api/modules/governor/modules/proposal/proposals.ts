@@ -32,6 +32,9 @@ import { Epoch } from "@/lib/api/modules/governor/modules/epoch/epoch";
 const ProposalTypesFunctionSelectors = {
   addToList: getFunctionSelector("addToList(bytes32,address)"),
   removeFromList: getFunctionSelector("removeFromList(bytes32,address)"),
+  addAndRemoveFromList: getFunctionSelector(
+    "addAndRemoveFromList(bytes32,address,address)"
+  ),
   updateConfig: getFunctionSelector("updateConfig(bytes32,bytes32)"),
   emergencyAddToList: getFunctionSelector(
     "emergencyAddToList(bytes32,address)"
@@ -61,6 +64,7 @@ const ProposalLabels = {
   setProposalFee: "Change Proposal Fee",
   addToList: "Add to list",
   removeFromList: "Remove from list",
+  addAndRemoveFromList: "Remove from and Add to List",
   updateConfig: "Update Config",
   resetToPowerHolders: "Reset to Power Holders",
   resetToZeroHolders: "Reset to Zero Holders",
@@ -111,6 +115,21 @@ export class Proposals extends GovernorModule {
     return {
       proposalType: "removeFromList",
       params: [hexToBytes32String(params[0]), params[1]],
+    };
+  }
+
+  decodeProposalAddAndRemoveFromList(calldata: Hash) {
+    const params = decodeAbiParameters(
+      [
+        { name: "list_", type: "bytes32" },
+        { name: "accountToAdd_", type: "address" },
+        { name: "accountToRemove_", type: "address" },
+      ],
+      removeSelectorFromCallData(calldata)
+    );
+    return {
+      proposalType: "addAndRemoveFromList",
+      params: [hexToBytes32String(params[0]), params[1], params[2]],
     };
   }
 
@@ -169,6 +188,10 @@ export class Proposals extends GovernorModule {
       case ProposalTypesFunctionSelectors.removeFromList:
       case ProposalTypesFunctionSelectors.emergencyRemoveFromList:
         return this.decodeProposalRemoveFromList(calldata);
+        break;
+
+      case ProposalTypesFunctionSelectors.addAndRemoveFromList:
+        return this.decodeProposalAddAndRemoveFromList(calldata);
         break;
 
       case ProposalTypesFunctionSelectors.updateConfig:

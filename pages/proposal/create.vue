@@ -219,7 +219,7 @@ import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
-import ProposalInputFeeRange from "@/components/proposal/InputFeeRange.vue";
+import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
 import ProposalInputFee from "@/components/proposal/InputFee.vue";
 
 import { MProposalVotingTokens, MVotingTokens } from "@/lib/api";
@@ -300,6 +300,23 @@ const rules = computed(() => {
     };
   }
 
+  if (["addAndRemoveFromList"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {
+        required,
+        minLength: minLength(42),
+        maxLength: maxLength(42),
+      },
+      proposalValue3: {
+        required,
+        minLength: minLength(42),
+        maxLength: maxLength(42),
+      },
+      ...constRules,
+    };
+  }
+
   if (["updateConfig", "emergencyUpdateConfig"].includes(type)) {
     return {
       proposalValue: { required },
@@ -373,6 +390,13 @@ const proposalTypes = [
     label: "Remove from a list",
     component: ProposalInputListOperation,
     tokens: MProposalVotingTokens.removeFromList,
+  },
+
+  {
+    value: "addAndRemoveFromList",
+    label: "Remove from and Add to list",
+    component: ProposalInputListRemoveAddOperation,
+    tokens: MProposalVotingTokens.addAndRemoveFromList,
   },
 
   {
@@ -680,6 +704,25 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(
       type,
       encondeInputsListOperation({ input1, input2 })
+    );
+  }
+
+  if (["addAndRemoveFromList"].includes(type)) {
+    const encondeInputsListAddRemoveOperation = ({
+      input1: list,
+      input2: accountToAdd,
+      input3: accountToRemove,
+    }: {
+      input1: string;
+      input2: string;
+      input3: string;
+    }) => {
+      return [stringToHexWith32Bytes(list), accountToAdd, accountToRemove];
+    };
+
+    return buildCalldatasSpog(
+      type,
+      encondeInputsListAddRemoveOperation({ input1, input2, input3 })
     );
   }
 

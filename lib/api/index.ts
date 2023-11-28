@@ -9,6 +9,7 @@ export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 export const MProposalVotingTokens = {
   addToList: [MVotingTokens.Power],
   removeFromList: [MVotingTokens.Power],
+  addAndRemoveFromList: [MVotingTokens.Power],
   updateConfig: [MVotingTokens.Power],
   resetToPowerHolders: [MVotingTokens.Zero],
   resetToZeroHolders: [MVotingTokens.Zero],
