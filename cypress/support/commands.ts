@@ -89,6 +89,20 @@ Cypress.Commands.add("castYesOneProposal", (description: string) => {
   cy.get("[data-test='voted']").should("have.length", 1);
 });
 
+Cypress.Commands.add("castYesOneOptionalProposal", (description: string) => {
+  cy.visit("http://localhost:3000/proposals/");
+  cy.connectWallet();
+  cy.wait(500);
+
+  cy.contains("article", description).then(($proposal) => {
+    cy.wrap($proposal).find("#button-cast-yes").click();
+  });
+
+  cy.get("[data-test='voted']").should("have.length", 1);
+  cy.task("mine", 1);
+  cy.reload();
+});
+
 Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.visit("http://localhost:3000/proposals/succeeded");
   cy.connectWallet();
@@ -105,7 +119,7 @@ Cypress.Commands.add("executeOneProposal", (description: string) => {
 });
 
 Cypress.Commands.add("mineEpochs", (quantity: number) => {
-  const _EPOCH_PERIOD = 225;
+  const _EPOCH_PERIOD = 100;
   const blocks = _EPOCH_PERIOD * quantity;
   cy.task("mine", blocks).then((obj) => {
     console.log("mined", blocks);
