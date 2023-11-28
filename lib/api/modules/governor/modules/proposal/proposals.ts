@@ -99,7 +99,7 @@ export class Proposals extends GovernorModule {
     this.fromBlock = this.config.deploymentBlock; // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
   }
 
-  decodeProposalTypeAddToList(calldata: Hash) {
+  decodeProposalTypeAddToList(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
         { name: "list_", type: "bytes32" },
@@ -108,12 +108,12 @@ export class Proposals extends GovernorModule {
       removeSelectorFromCallData(calldata)
     );
     return {
-      proposalType: "addToList",
+      proposalType,
       params: [hexToBytes32String(params[0]), params[1]],
     };
   }
 
-  decodeProposalRemoveFromList(calldata: Hash) {
+  decodeProposalRemoveFromList(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
         { name: "list_", type: "bytes32" },
@@ -122,12 +122,12 @@ export class Proposals extends GovernorModule {
       removeSelectorFromCallData(calldata)
     );
     return {
-      proposalType: "removeFromList",
+      proposalType,
       params: [hexToBytes32String(params[0]), params[1]],
     };
   }
 
-  decodeProposalAddAndRemoveFromList(calldata: Hash) {
+  decodeProposalAddAndRemoveFromList(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
         { name: "list_", type: "bytes32" },
@@ -137,12 +137,12 @@ export class Proposals extends GovernorModule {
       removeSelectorFromCallData(calldata)
     );
     return {
-      proposalType: "addAndRemoveFromList",
+      proposalType,
       params: [hexToBytes32String(params[0]), params[1], params[2]],
     };
   }
 
-  decodeProposalTypeUpdateConfig(calldata: Hash) {
+  decodeProposalTypeUpdateConfig(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
         { name: "key_", type: "bytes32" },
@@ -150,22 +150,19 @@ export class Proposals extends GovernorModule {
       ],
       removeSelectorFromCallData(calldata)
     ).map(hexToBytes32String);
-    return {
-      proposalType: "updateConfig",
-      params,
-    };
+    return { proposalType, params };
   }
 
   decodeProposalTypeReset(proposalType: string) {
     return { proposalType, params: [] };
   }
 
-  decodeProposalTypeSetProposalFee(calldata: Hash) {
+  decodeProposalTypeSetProposalFee(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [{ name: "newProposalFee_", type: "uint256" }],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "setProposalFee", params };
+    return { proposalType, params };
   }
 
   decodeProposalTypeSetPowerTokenThresholdRatio(calldata: Hash) {
@@ -190,23 +187,43 @@ export class Proposals extends GovernorModule {
   ): { proposalType: string; params: IParams } {
     switch (selector) {
       case ProposalTypesFunctionSelectors.addToList:
+        return this.decodeProposalTypeAddToList(calldata, "addToList");
+        break;
       case ProposalTypesFunctionSelectors.emergencyAddToList:
-        return this.decodeProposalTypeAddToList(calldata);
+        return this.decodeProposalTypeAddToList(calldata, "emergencyAddToList");
         break;
 
       case ProposalTypesFunctionSelectors.removeFromList:
+        return this.decodeProposalRemoveFromList(calldata, "removeFromList");
+        break;
       case ProposalTypesFunctionSelectors.emergencyRemoveFromList:
-        return this.decodeProposalRemoveFromList(calldata);
+        return this.decodeProposalRemoveFromList(
+          calldata,
+          "emergencyRemoveFromList"
+        );
         break;
 
-      case ProposalTypesFunctionSelectors.emergencyAddAndRemoveFromList:
       case ProposalTypesFunctionSelectors.addAndRemoveFromList:
-        return this.decodeProposalAddAndRemoveFromList(calldata);
+        return this.decodeProposalAddAndRemoveFromList(
+          calldata,
+          "addAndRemoveFromList"
+        );
+        break;
+      case ProposalTypesFunctionSelectors.emergencyAddAndRemoveFromList:
+        return this.decodeProposalAddAndRemoveFromList(
+          calldata,
+          "emergencyAddAndRemoveFromList"
+        );
         break;
 
       case ProposalTypesFunctionSelectors.updateConfig:
+        return this.decodeProposalTypeUpdateConfig(calldata, "updateConfig");
+        break;
       case ProposalTypesFunctionSelectors.emergencyUpdateConfig:
-        return this.decodeProposalTypeUpdateConfig(calldata);
+        return this.decodeProposalTypeUpdateConfig(
+          calldata,
+          "emergencyUpdateConfig"
+        );
         break;
 
       case ProposalTypesFunctionSelectors.resetToZeroHolders:
@@ -217,8 +234,16 @@ export class Proposals extends GovernorModule {
         break;
 
       case ProposalTypesFunctionSelectors.setProposalFee:
+        return this.decodeProposalTypeSetProposalFee(
+          calldata,
+          "setProposalFee"
+        );
+        break;
       case ProposalTypesFunctionSelectors.emergencySetProposalFee:
-        return this.decodeProposalTypeSetProposalFee(calldata);
+        return this.decodeProposalTypeSetProposalFee(
+          calldata,
+          "emergencySetProposalFee"
+        );
         break;
       case ProposalTypesFunctionSelectors.setPowerTokenThresholdRatio:
         return this.decodeProposalTypeSetPowerTokenThresholdRatio(calldata);
