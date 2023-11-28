@@ -44,6 +44,7 @@ const ProposalTypesFunctionSelectors = {
   ),
 
   resetToPowerHolders: getFunctionSelector("resetToPowerHolders()"),
+  resetToZeroHolders: getFunctionSelector("resetToZeroHolders()"),
   setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
   emergencySetProposalFee: getFunctionSelector(
     "emergencySetProposalFee(uint256)"
@@ -62,6 +63,7 @@ const ProposalLabels = {
   removeFromList: "Remove from list",
   updateConfig: "Update Config",
   resetToPowerHolders: "Reset to Power Holders",
+  resetToZeroHolders: "Reset to Zero Holders",
   setPowerTokenThresholdRatio: "Update Power Threshold",
   setZeroTokenThresholdRatio: "Update Zero Threshold",
 };
@@ -174,6 +176,9 @@ export class Proposals extends GovernorModule {
         return this.decodeProposalTypeUpdateConfig(calldata);
         break;
 
+      case ProposalTypesFunctionSelectors.resetToZeroHolders:
+        return this.decodeProposalTypeReset("resetToZeroHolders");
+        break;
       case ProposalTypesFunctionSelectors.resetToPowerHolders:
         return this.decodeProposalTypeReset("resetToPowerHolders");
         break;

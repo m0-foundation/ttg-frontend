@@ -342,6 +342,7 @@ const hasToPayFee = computed(() => {
   const type = selectedProposalType?.value?.value;
   return ![
     "resetToPowerHolders",
+    "resetToZeroHolders",
     "emergencyAddToList",
     "emergencyRemoveFromList",
     "emergencyUpdateConfig",
@@ -426,6 +427,13 @@ const proposalTypes = [
         label: "Reset to Power holders",
         component: undefined,
         tokens: MProposalVotingTokens.resetToPowerHolders,
+      },
+
+      {
+        value: "resetToZeroHolders",
+        label: "Reset to Zero holders",
+        component: undefined,
+        tokens: MProposalVotingTokens.resetToZeroHolders,
       },
     ],
   },
@@ -692,7 +700,7 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (["resetToPowerHolders"].includes(type)) {
+  if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
     return buildCalldatasSpog(type, undefined);
   }

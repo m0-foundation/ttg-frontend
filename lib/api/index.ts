@@ -11,6 +11,7 @@ export const MProposalVotingTokens = {
   removeFromList: [MVotingTokens.Power],
   updateConfig: [MVotingTokens.Power],
   resetToPowerHolders: [MVotingTokens.Zero],
+  resetToZeroHolders: [MVotingTokens.Zero],
   setPowerTokenThresholdRatio: [MVotingTokens.Zero],
   setZeroTokenThresholdRatio: [MVotingTokens.Zero],
   setProposalFee: [MVotingTokens.Power],
