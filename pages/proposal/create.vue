@@ -75,6 +75,7 @@
               <label for="type-value">Title*</label>
               <MInput
                 v-model="formData.title"
+                data-test="title"
                 type="text"
                 placeholder="Title"
                 :errors="$validation.title.$errors"
