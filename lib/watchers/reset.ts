@@ -9,7 +9,7 @@ export const watchForExecutedResetProposal = () => {
 
   const resetProposals = computed(() => {
     return proposals.data.filter(
-      (p) => p.proposalType === "reset" && p.state === "Executed"
+      (p) => p.proposalType === "resetToPowerHolders" && p.state === "Executed"
     );
   });
 

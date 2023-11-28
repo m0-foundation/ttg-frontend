@@ -43,7 +43,7 @@ const ProposalTypesFunctionSelectors = {
     "emergencyUpdateConfig(bytes32,bytes32)"
   ),
 
-  reset: getFunctionSelector("reset()"),
+  resetToPowerHolders: getFunctionSelector("resetToPowerHolders()"),
   setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
   emergencySetProposalFee: getFunctionSelector(
     "emergencySetProposalFee(uint256)"
@@ -61,7 +61,7 @@ const ProposalLabels = {
   addToList: "Add to list",
   removeFromList: "Remove from list",
   updateConfig: "Update Config",
-  reset: "Reset",
+  resetToPowerHolders: "Reset to Power Holders",
   setPowerTokenThresholdRatio: "Update Power Threshold",
   setZeroTokenThresholdRatio: "Update Zero Threshold",
 };
@@ -126,15 +126,8 @@ export class Proposals extends GovernorModule {
     };
   }
 
-  decodeProposalTypeReset(calldata: Hash) {
-    const params = decodeAbiParameters(
-      [],
-      removeSelectorFromCallData(calldata)
-    );
-    return {
-      proposalType: "reset",
-      params,
-    };
+  decodeProposalTypeReset(proposalType: string) {
+    return { proposalType, params: [] };
   }
 
   decodeProposalTypeSetProposalFee(calldata: Hash) {
@@ -181,8 +174,8 @@ export class Proposals extends GovernorModule {
         return this.decodeProposalTypeUpdateConfig(calldata);
         break;
 
-      case ProposalTypesFunctionSelectors.reset:
-        return this.decodeProposalTypeReset(calldata);
+      case ProposalTypesFunctionSelectors.resetToPowerHolders:
+        return this.decodeProposalTypeReset("resetToPowerHolders");
         break;
 
       case ProposalTypesFunctionSelectors.setProposalFee:

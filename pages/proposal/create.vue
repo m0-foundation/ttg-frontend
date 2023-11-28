@@ -341,7 +341,7 @@ const rules = computed(() => {
 const hasToPayFee = computed(() => {
   const type = selectedProposalType?.value?.value;
   return ![
-    "reset",
+    "resetToPowerHolders",
     "emergencyAddToList",
     "emergencyRemoveFromList",
     "emergencyUpdateConfig",
@@ -420,9 +420,14 @@ const proposalTypes = [
   {
     value: "reset",
     label: "Reset",
-    placeholder: "Governance address",
-    component: undefined,
-    tokens: MProposalVotingTokens.reset,
+    children: [
+      {
+        value: "resetToPowerHolders",
+        label: "Reset to Power holders",
+        component: undefined,
+        tokens: MProposalVotingTokens.resetToPowerHolders,
+      },
+    ],
   },
 
   {
@@ -687,7 +692,7 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (["reset"].includes(type)) {
+  if (["resetToPowerHolders"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
     return buildCalldatasSpog(type, undefined);
   }
