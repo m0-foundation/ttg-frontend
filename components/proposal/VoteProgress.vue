@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
       no: "0",
     },
   }),
-  version: "Power",
+  version: "Standard",
   zeroThreshold: undefined,
   powerThreshold: undefined,
   powerTotalSupply: () => 0n,
@@ -117,13 +117,13 @@ function parseVotesForQuorom(
 }
 
 const powerVotes = computed(() => {
-  return props.version === "Power"
-    ? parseVotesForMajority(props.tallies.power)
-    : parseVotesForQuorom(props.tallies.power, props.powerTotalSupply!);
+  return props.version === "Standard"
+    ? parseVotesForMajority(props.tallies.power!)
+    : parseVotesForQuorom(props.tallies.power!, props.powerTotalSupply!);
 });
 
 const zeroVotes = computed(() =>
-  parseVotesForQuorom(props.tallies.zero, props.zeroTotalSupply!)
+  parseVotesForQuorom(props.tallies.zero!, props.zeroTotalSupply!)
 );
 
 const thresholdFormattedPower = computed(() =>
