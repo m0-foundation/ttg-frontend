@@ -7,11 +7,9 @@ export interface MGovernorContracts {
 }
 
 export interface MGovernorValues {
-  powerTokenQuorumRatio: string;
-  zeroTokenQuorumRatio: string;
+  powerTokenThresholdRatio: string;
+  zeroTokenThresholdRatio: string;
   proposalFee: string;
-  minProposalFee: string;
-  maxProposalFee: string;
   clock?: number;
   votingDelay?: string;
   votingPeriod?: string;
