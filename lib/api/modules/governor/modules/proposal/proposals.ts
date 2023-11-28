@@ -1,6 +1,5 @@
 import {
   Abi,
-  GetLogsReturnType,
   Hash,
   Log,
   bytesToHex,
@@ -46,6 +45,9 @@ const ProposalTypesFunctionSelectors = {
 
   reset: getFunctionSelector("reset()"),
   setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
+  emergencySetProposalFee: getFunctionSelector(
+    "emergencySetProposalFee(uint256)"
+  ),
   setPowerTokenThresholdRatio: getFunctionSelector(
     "setPowerTokenThresholdRatio(uint16)"
   ),
@@ -145,7 +147,7 @@ export class Proposals extends GovernorModule {
 
   decodeProposalTypeSetPowerTokenThresholdRatio(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newPowerTokenThresholdRatio_", type: "uint16" }],
+      [{ name: "newThresholdRatio_", type: "uint16" }],
       removeSelectorFromCallData(calldata)
     );
     return { proposalType: "setPowerTokenThresholdRatio", params };
@@ -153,7 +155,7 @@ export class Proposals extends GovernorModule {
 
   decodeProposalTypeSetZeroTokenThresholdRatio(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newZeroTokenThresholdRatio_", type: "uint16" }],
+      [{ name: "newThresholdRatio_", type: "uint16" }],
       removeSelectorFromCallData(calldata)
     );
     return { proposalType: "setZeroTokenThresholdRatio", params };
@@ -182,7 +184,9 @@ export class Proposals extends GovernorModule {
       case ProposalTypesFunctionSelectors.reset:
         return this.decodeProposalTypeReset(calldata);
         break;
+
       case ProposalTypesFunctionSelectors.setProposalFee:
+      case ProposalTypesFunctionSelectors.emergencySetProposalFee:
         return this.decodeProposalTypeSetProposalFee(calldata);
         break;
       case ProposalTypesFunctionSelectors.setPowerTokenThresholdRatio:
@@ -220,11 +224,7 @@ export class Proposals extends GovernorModule {
         fromHex(event.calldatas[0] as Hash, "bytes").slice(0, 4)
       );
 
-      const isEmergency = [
-        ProposalTypesFunctionSelectors.emergencyAddToList,
-        ProposalTypesFunctionSelectors.emergencyRemoveFromList,
-        ProposalTypesFunctionSelectors.emergencyUpdateConfig,
-      ].includes(selector);
+      const isEmergency = this.isEmergencyProposal(selector);
 
       const { proposalType, params } = this.decodeProposalTypes(
         selector,
@@ -359,6 +359,16 @@ export class Proposals extends GovernorModule {
     };
   }
 
+  isEmergencyProposal(selector: Hash) {
+    const isEmergency = [
+      ProposalTypesFunctionSelectors.emergencyAddToList,
+      ProposalTypesFunctionSelectors.emergencyRemoveFromList,
+      ProposalTypesFunctionSelectors.emergencyUpdateConfig,
+      ProposalTypesFunctionSelectors.emergencySetProposalFee,
+    ].includes(selector);
+    return isEmergency;
+  }
+
   async getProposals(): Promise<Array<MProposal>> {
     const rawLogs = await this.client.getLogs({
       address: this.contract as Hash,
@@ -379,6 +389,19 @@ export class Proposals extends GovernorModule {
       args: [BigInt(p.proposalId)],
     }));
 
+    console.log({ proposals });
+
+    const getProposal = await Promise.all(
+      proposals.map((p) =>
+        readDualGovernor({
+          address: this.contract,
+          functionName: "getProposal",
+          args: [BigInt(p.proposalId)],
+        })
+      )
+    );
+    console.log({ getProposal });
+
     const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
     const proposalsWithGetProposal = (
       await this.client.multicall({
@@ -387,6 +410,7 @@ export class Proposals extends GovernorModule {
       })
     ).map((res) => res.result);
 
+    console.log({ proposalsWithGetProposal });
     const proposalsWithTallies = await Promise.all(
       proposals.map(async (proposal, index) => {
         const proposalData = this.decodeReadGetProposal(
@@ -416,11 +440,7 @@ export class Proposals extends GovernorModule {
       fromHex(args.calldatas[0] as Hash, "bytes").slice(0, 4)
     );
 
-    const isEmergency = [
-      ProposalTypesFunctionSelectors.emergencyAddToList,
-      ProposalTypesFunctionSelectors.emergencyRemoveFromList,
-      ProposalTypesFunctionSelectors.emergencyUpdateConfig,
-    ].includes(selector);
+    const isEmergency = this.isEmergencyProposal(selector);
 
     const { proposalType, params } = this.decodeProposalTypes(
       selector,

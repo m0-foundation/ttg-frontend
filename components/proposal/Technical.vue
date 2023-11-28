@@ -50,7 +50,7 @@ const props = defineProps<ProposalProps>();
 const parsedValue = (value: string, type: string) => {
   const formatFee = (value: string) => useFormatCash(value);
 
-  if (type === "setProposalFee") {
+  if (["setProposalFee", "emergencySetProposalFee"].includes(type)) {
     return formatFee(value);
   }
 
@@ -66,6 +66,7 @@ const parsedValue = (value: string, type: string) => {
 const showParsed = computed(() =>
   [
     "setProposalFee",
+    "emergencySetProposalFee",
     "setPowerTokenThresholdRatio",
     "setZeroTokenThresholdRatio",
   ].includes(props.proposal?.proposalType)

@@ -309,7 +309,7 @@ const rules = computed(() => {
     };
   }
 
-  if (["setProposalFee"].includes(type)) {
+  if (["setProposalFee", "emergencySetProposalFee"].includes(type)) {
     return {
       proposalValue: { required },
       proposalValue2: {},
@@ -451,6 +451,13 @@ const proposalTypes = [
         component: ProposalInputUpdateConfig,
         tokens: MProposalVotingTokens.emergencyUpdateConfig,
       },
+      {
+        value: "emergencySetProposalFee",
+        label: "Emergency Change fee",
+        isEmergency: true,
+        component: ProposalInputFee,
+        tokens: MProposalVotingTokens.emergencySetProposalFee,
+      },
     ],
   },
 ];
@@ -466,7 +473,11 @@ const currentValue = computed(() => {
 
   const formatFee = (value: string) => useFormatCash(value);
 
-  if (selectedProposalType?.value?.value === "setProposalFee") {
+  if (
+    ["setProposalFee", "emergencySetProposalFee"].includes(
+      selectedProposalType?.value?.value
+    )
+  ) {
     return formatFee(spog.values.proposalFee!);
   }
 });
@@ -681,7 +692,7 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(type, undefined);
   }
 
-  if (["setProposalFee"].includes(type)) {
+  if (["setProposalFee", "emergencySetProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
       [useParseCash(input1)]
