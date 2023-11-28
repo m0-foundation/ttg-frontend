@@ -19,6 +19,7 @@ export const MProposalVotingTokens = {
   emergencySetProposalFee: [MVotingTokens.Power],
   emergencyAddToList: [MVotingTokens.Power],
   emergencyRemoveFromList: [MVotingTokens.Power],
+  emergencyAddAndRemoveFromList: [MVotingTokens.Power],
   emergencyUpdateConfig: [MVotingTokens.Power],
 };
 

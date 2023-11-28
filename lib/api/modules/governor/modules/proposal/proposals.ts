@@ -35,6 +35,9 @@ const ProposalTypesFunctionSelectors = {
   addAndRemoveFromList: getFunctionSelector(
     "addAndRemoveFromList(bytes32,address,address)"
   ),
+  emergencyAddAndRemoveFromList: getFunctionSelector(
+    "emergencyAddAndRemoveFromList(bytes32,address,address)"
+  ),
   updateConfig: getFunctionSelector("updateConfig(bytes32,bytes32)"),
   emergencyAddToList: getFunctionSelector(
     "emergencyAddToList(bytes32,address)"
@@ -66,6 +69,12 @@ const ProposalLabels = {
   removeFromList: "Remove from list",
   addAndRemoveFromList: "Remove from and Add to List",
   updateConfig: "Update Config",
+
+  emergencyAddAndRemoveFromList: "Emergency Remove from and Add to List",
+  emergencyAddToList: "Emergency Add to list",
+  emergencyRemoveFromList: "Emergency Remove from list",
+  emergencyUpdateConfig: "Emergency Update Config",
+
   resetToPowerHolders: "Reset to Power Holders",
   resetToZeroHolders: "Reset to Zero Holders",
   setPowerTokenThresholdRatio: "Update Power Threshold",
@@ -190,6 +199,7 @@ export class Proposals extends GovernorModule {
         return this.decodeProposalRemoveFromList(calldata);
         break;
 
+      case ProposalTypesFunctionSelectors.emergencyAddAndRemoveFromList:
       case ProposalTypesFunctionSelectors.addAndRemoveFromList:
         return this.decodeProposalAddAndRemoveFromList(calldata);
         break;

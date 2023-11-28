@@ -300,7 +300,9 @@ const rules = computed(() => {
     };
   }
 
-  if (["addAndRemoveFromList"].includes(type)) {
+  if (
+    ["addAndRemoveFromList", "emergencyAddAndRemoveFromList"].includes(type)
+  ) {
     return {
       proposalValue: { required },
       proposalValue2: {
@@ -481,6 +483,15 @@ const proposalTypes = [
         component: ProposalInputListOperation,
         tokens: MProposalVotingTokens.emergencyRemoveFromList,
       },
+
+      {
+        value: "emergencyAddAndRemoveFromList",
+        label: "Emergency Remove from and Add to list",
+        isEmergency: true,
+        component: ProposalInputListRemoveAddOperation,
+        tokens: MProposalVotingTokens.addAndRemoveFromList,
+      },
+
       {
         value: "emergencyUpdateConfig",
         label: "Emergency Update config",
@@ -707,7 +718,9 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (["addAndRemoveFromList"].includes(type)) {
+  if (
+    ["addAndRemoveFromList", "emergencyAddAndRemoveFromList"].includes(type)
+  ) {
     const encondeInputsListAddRemoveOperation = ({
       input1: list,
       input2: accountToAdd,
