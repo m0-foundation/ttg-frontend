@@ -1,31 +1,24 @@
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
-    viewBox="0 0 18 18"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
     fill="none"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <g opacity="0.4">
-      <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M16.4944 9C16.4944 4.85786 13.1378 1.5 8.99721 1.5C4.85662 1.5 1.5 4.85786 1.5 9C1.5 13.1421 4.85662 16.5 8.99721 16.5C13.1378 16.5 16.4944 13.1421 16.4944 9ZM2.25 9C2.25 5.27202 5.27089 2.25 8.99721 2.25C12.7235 2.25 15.7444 5.27202 15.7444 9C15.7444 12.728 12.7235 15.75 8.99721 15.75C5.27089 15.75 2.25 12.728 2.25 9Z"
-        :fill="fill"
-      />
-      <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M11.25 6.75V6H6.75V6.75H10.2596L8.85574 8.25L6.75 8.25V9L8.15383 9L6.75 10.5V11.25H11.25V10.5H7.7512L9.15072 9L11.25 9V8.25L9.85048 8.25L11.25 6.75Z"
-        :fill="fill"
-      />
-    </g>
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M21.9926 12C21.9926 6.47715 17.5171 2 11.9963 2C6.47549 2 2 6.47715 2 12C2 17.5228 6.47549 22 11.9963 22C17.5171 22 21.9926 17.5228 21.9926 12ZM3 12C3 7.02935 7.02786 3 11.9963 3C16.9647 3 20.9926 7.02935 20.9926 12C20.9926 16.9706 16.9647 21 11.9963 21C7.02786 21 3 16.9706 3 12Z"
+      fill="#EBEBEB"
+    />
+    <path d="M15 8V9L10.3349 14H15V15H9V14L13.6794 9H9V8H15Z" fill="#EBEBEB" />
   </svg>
 </template>
 
 <script lang="ts" setup>
 export interface MButtonProps {
-  version: "light" | "dark";
+  version?: "light" | "dark";
 }
 
 const props = withDefaults(defineProps<MButtonProps>(), {

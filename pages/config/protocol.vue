@@ -1,11 +1,6 @@
 <template>
   <div>
-    <nav class="text-white text-xl p-8">
-      <MNavButton>
-        M^0 Protocol Configurations
-        <span class="text-primary">_</span>
-      </MNavButton>
-    </nav>
+    <PageTitle>M^0 Protocol Configurations</PageTitle>
 
     <LayoutPage>
       <div v-if="isLoading">Loading...</div>
@@ -41,6 +36,10 @@ const { isLoading } = useAsyncState(fetchProtocolConfigs(), null);
 const store = useProtocolConfigsStore();
 const { getConfigsAsArray: data } = storeToRefs(store);
 
+useHead({
+  titleTemplate: "%s - Protocol configurations",
+});
+
 const tableConfig = computed(() => {
   return {
     columns: [
@@ -64,7 +63,7 @@ const tableConfig = computed(() => {
           const { toFormat } = useDate(Number(cell));
           const formatedDate = toFormat("LLL");
           return html(
-            `<span class="text-xs text-grey-primary">${formatedDate}</span>`
+            `<span class="text-xs text-grey-400">${formatedDate}</span>`
           );
         },
       },

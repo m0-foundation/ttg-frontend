@@ -10,7 +10,7 @@ import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
 // use wagmi
 import { createConfig } from "use-wagmi";
 
-export const useWagmi = (rpc: string) => {
+export const useWagmi = (rpc: string, fallbackRpc?: string) => {
   const config = useRuntimeConfig();
   const networkStore = useNetworkStore();
 
@@ -22,7 +22,10 @@ export const useWagmi = (rpc: string) => {
           http: rpc,
         }),
       }),
-      publicProvider(), // fallback
+      // fallback
+      fallbackRpc
+        ? jsonRpcProvider({ rpc: () => ({ http: fallbackRpc }) })
+        : publicProvider(),
     ]
   );
 

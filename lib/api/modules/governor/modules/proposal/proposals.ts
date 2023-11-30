@@ -21,6 +21,7 @@ import { GovernorModule } from "../GovernorModule";
 import {
   GetProposalOutput,
   MProposal,
+  MProposalTallies,
   ProposalEventLog,
   ProposalState,
   VotingType,
@@ -261,8 +262,6 @@ export class Proposals extends GovernorModule {
         signatures: this.toString(event.signatures!),
         calldatas: this.toString(event.calldatas),
         targets: this.toString(event.targets!),
-        endBlock: Number(event.endBlock),
-        startBlock: Number(event.startBlock),
         proposer: event.proposer,
         description: event.description,
         timestamp: event.timestamp,
@@ -278,7 +277,7 @@ export class Proposals extends GovernorModule {
     return {} as MProposal;
   }
 
-  async getProposal(proposalId: string): Promise<GetProposalOutput> {
+  decodeReadGetProposal(proposal: any) {
     const [
       proposer,
       voteStart,
@@ -290,11 +289,7 @@ export class Proposals extends GovernorModule {
       yesPowerTokenVotes,
       noZeroTokenVotes,
       yesZeroTokenVotes,
-    ] = await readDualGovernor({
-      address: this.contract,
-      functionName: "getProposal",
-      args: [BigInt(proposalId)],
-    });
+    ] = proposal;
 
     return {
       proposer: proposer as Hash,
@@ -307,6 +302,73 @@ export class Proposals extends GovernorModule {
       yesPowerTokenVotes,
       noZeroTokenVotes,
       yesZeroTokenVotes,
+    };
+  }
+
+  async readGetProposal(proposalId: string): Promise<GetProposalOutput> {
+    const getProposal = await readDualGovernor({
+      address: this.contract,
+      functionName: "getProposal",
+      args: [BigInt(proposalId)],
+    });
+    return this.decodeReadGetProposal(getProposal);
+  }
+
+  async presenterProposal({
+    proposal,
+    readGetProposal,
+  }: {
+    proposal: MProposal;
+    readGetProposal: GetProposalOutput;
+  }): Promise<MProposal> {
+    const block = await this.client.getBlock({
+      blockNumber: BigInt(proposal.blockNumber),
+    });
+
+    const epoch = Epoch.getEpochFromBlock(BigInt(proposal.blockNumber));
+
+    return {
+      ...proposal,
+      ...pick(readGetProposal, [
+        "proposer",
+        "voteStart",
+        "voteEnd",
+        "executed",
+        "state",
+        "votingType",
+      ]),
+      epoch,
+      timestamp: Number(block.timestamp),
+      tallies: {
+        power: {
+          yes: String(readGetProposal.yesPowerTokenVotes),
+          no: String(readGetProposal.noPowerTokenVotes),
+        },
+        zero: {
+          yes: String(readGetProposal.yesZeroTokenVotes),
+          no: String(readGetProposal.noZeroTokenVotes),
+        },
+      },
+    };
+  }
+
+  async getProposalTallies(
+    proposalId: string
+  ): Promise<{ proposalId: string; talllies: MProposalTallies }> {
+    const readGetProposal = await this.readGetProposal(proposalId);
+
+    return {
+      proposalId,
+      tallies: {
+        power: {
+          yes: String(readGetProposal.yesPowerTokenVotes),
+          no: String(readGetProposal.noPowerTokenVotes),
+        },
+        zero: {
+          yes: String(readGetProposal.yesZeroTokenVotes),
+          no: String(readGetProposal.noZeroTokenVotes),
+        },
+      },
     };
   }
 
@@ -323,47 +385,33 @@ export class Proposals extends GovernorModule {
       this.decodeProposalLog(log, dualGovernorABI)
     );
 
+    const contractCallsGetProposal = proposals.map((p) => ({
+      abi: dualGovernorABI,
+      address: this.contract,
+      functionName: "getProposal",
+      args: [BigInt(p.proposalId)],
+    }));
+
+    const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
+    const proposalsWithGetProposal = (
+      await this.client.multicall({
+        multicallAddress: (this.config.multicall3 ?? defaultMulticall3) as Hash,
+        contracts: contractCallsGetProposal,
+      })
+    ).map((res) => res.result);
+
     const proposalsWithTallies = await Promise.all(
-      proposals.map(async (proposal) => {
-        const proposalData = await this.getProposal(
-          proposal.proposalId.toString()
+      proposals.map(async (proposal, index) => {
+        const proposalData = this.decodeReadGetProposal(
+          proposalsWithGetProposal[index]
         );
-        console.log({ proposalData });
-        const block = await this.client.getBlock({
-          blockNumber: BigInt(proposal.blockNumber),
+
+        const proposalPresented = await this.presenterProposal({
+          proposal,
+          readGetProposal: proposalData,
         });
 
-        const epoch = Epoch.getEpochFromBlock(proposal.blockNumber);
-
-        proposal.timestamp = Number(block.timestamp);
-        return {
-          ...proposal,
-          ...pick(proposalData, [
-            "proposer",
-            "voteStart",
-            "voteEnd",
-            "executed",
-            "state",
-            "votingType",
-          ]),
-          epoch,
-          votes: {
-            power: {
-              yes: Number(proposalData.yesPowerTokenVotes),
-              no: Number(proposalData.noPowerTokenVotes),
-              total: Number(
-                proposalData.yesPowerTokenVotes + proposalData.noPowerTokenVotes
-              ),
-            },
-            zero: {
-              yes: Number(proposalData.yesZeroTokenVotes),
-              no: Number(proposalData.noZeroTokenVotes),
-              total: Number(
-                proposalData.yesZeroTokenVotes + proposalData.noZeroTokenVotes
-              ),
-            },
-          },
-        };
+        return proposalPresented;
       })
     );
 
@@ -404,8 +452,6 @@ export class Proposals extends GovernorModule {
       signatures: this.toString(args.signatures!),
       calldatas: this.toString(args.calldatas),
       targets: this.toString(args.targets!),
-      endBlock: Number(args.voteEnd),
-      startBlock: Number(args.voteStart),
       proposer: args.proposer,
       description: args.description,
       timestamp: 0,
@@ -415,43 +461,15 @@ export class Proposals extends GovernorModule {
       proposalLabel,
     };
 
-    const proposalData = await this.getProposal(proposal.proposalId.toString());
-    console.log({ proposalData });
+    const readGetProposal = await this.readGetProposal(
+      proposal.proposalId.toString()
+    );
 
-    const block = await this.client.getBlock({
-      blockNumber: BigInt(proposal.blockNumber),
+    const proposalPresented = await this.presenterProposal({
+      proposal,
+      readGetProposal,
     });
-    proposal.timestamp = Number(block.timestamp);
 
-    const epoch = Epoch.getEpochFromBlock(BigInt(proposal.blockNumber));
-
-    return {
-      ...proposal,
-      ...pick(proposalData, [
-        "proposer",
-        "voteStart",
-        "voteEnd",
-        "executed",
-        "state",
-        "votingType",
-      ]),
-      epoch,
-      votes: {
-        power: {
-          yes: Number(proposalData.yesPowerTokenVotes),
-          no: Number(proposalData.noPowerTokenVotes),
-          total: Number(
-            proposalData.yesPowerTokenVotes + proposalData.noPowerTokenVotes
-          ),
-        },
-        zero: {
-          yes: Number(proposalData.yesZeroTokenVotes),
-          no: Number(proposalData.noZeroTokenVotes),
-          total: Number(
-            proposalData.yesZeroTokenVotes + proposalData.noZeroTokenVotes
-          ),
-        },
-      },
-    };
+    return proposalPresented;
   }
 }

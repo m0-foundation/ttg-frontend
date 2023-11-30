@@ -1,8 +1,6 @@
 <template>
   <div>
-    <nav class="text-white text-xl p-8">
-      <MNavButton>Lists<span class="text-primary">_</span></MNavButton>
-    </nav>
+    <PageTitle>Lists</PageTitle>
 
     <LayoutPage>
       <div v-if="isLoading">Loading...</div>
@@ -20,6 +18,10 @@ import { storeToRefs } from "pinia";
 import { html } from "gridjs";
 
 const apiStore = useApiClientStore();
+
+useHead({
+  titleTemplate: "%s - Lists",
+});
 
 const fetchLists = async () => {
   try {
@@ -60,7 +62,7 @@ const tableConfig = computed(() => {
           const { toFormat } = useDate(Number(cell));
           const formatedDate = toFormat("LLL");
           return html(
-            `<span class="text-xs text-grey-primary">${formatedDate}</span>`
+            `<span class="text-xs text-grey-400">${formatedDate}</span>`
           );
         },
       },

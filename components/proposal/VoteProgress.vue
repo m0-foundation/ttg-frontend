@@ -1,117 +1,44 @@
 <template>
   <div>
     <div class="my-4">
-      <!-- Power -->
-      <div
-        v-if="version === 'Power'"
-        class="flex justify-between gap-2 items-center"
-      >
-        <div class="flex items-end w-[9rem]">
-          <MIconPower class="h-4 w-4 mr-1" />
-          <span class="flex uppercase text-xxs text-grey-primary">
-            power tokens
-          </span>
-        </div>
-
-        <span id="vote-yes-percentage" class="text-primary-darker text-xs">
-          {{ powerVotes?.yes?.percentage.toFixed(1) }}%
-        </span>
-
-        <MProgressBar version="majority" :width="powerVotes?.yes?.percentage" />
-
-        <span
-          id="vote-no-percentage"
-          class="text-red text-xs flex items-baseline"
-        >
-          {{ powerVotes?.no?.percentage.toFixed(1) }}%
-        </span>
+      <!-- Power or Emergency -->
+      <div v-if="version === 'Power'">
+        <VoteProgressPower :votes="powerVotes" />
       </div>
-      <!-- Zero -->
-      <div
-        v-else-if="version === 'Zero'"
-        class="flex justify-between gap-2 items-center"
-      >
-        <div class="flex items-end w-[9rem]">
-          <MIconZero class="h-4 w-4 mr-1" version="dark" />
-          <span class="flex uppercase text-xxs text-grey-primary">
-            zero tokens
-          </span>
-        </div>
 
-        <span id="vote-yes-percentage" class="text-primary-darker text-xs">
-          {{ zeroVotes?.yes?.percentage.toFixed(1) }}%
-        </span>
-
-        <MProgressBar
-          version="quorum"
-          :quorum="props.zeroQuorum"
-          :width="zeroVotes?.yes?.percentage"
+      <div v-else-if="version === 'Emergency'">
+        <VoteProgressPower
+          :votes="powerVotes"
+          :quorum="props.powerQuorum"
+          :quorum-formatted="quorumFormattedPower"
         />
+      </div>
 
-        <span
-          id="vote-no-percentage"
-          class="text-red text-xs flex items-baseline"
-        >
-          {{ zeroVotes?.no?.percentage.toFixed(1) }}%
-        </span>
+      <!-- Zero -->
+      <div v-else-if="version === 'Zero'">
+        <VoteProgressZero
+          :votes="zeroVotes"
+          :quorum="props.zeroQuorum"
+          :quorum-formatted="quorumFormattedZero"
+        />
       </div>
 
       <!-- Double -->
       <div v-else-if="version === 'Double'">
-        <div class="flex items-center mb-4">
-          <div class="flex items-end w-[9rem]">
-            <MIconPower class="h-4 w-4 mr-1" />
-            <span class="flex uppercase text-xxs text-grey-primary">
-              power tokens
-            </span>
-          </div>
-
-          <div id="power-votes-yes-percentage" class="flex w-1/12">
-            <span class="text-yes">
-              {{ powerVotes?.yes?.percentage.toFixed(0) }}%
-            </span>
-          </div>
-
-          <MProgressBar
-            version="quorum"
-            :width="powerVotes?.yes?.percentage"
+        <div class="mb-8">
+          <VoteProgressPower
+            :votes="powerVotes"
             :quorum="props.powerQuorum"
-            class="w-10/12"
+            :quorum-formatted="quorumFormattedPower"
           />
-
-          <div id="power-votes-no-percentage" class="flex w-1/12">
-            <span class="text-no">
-              {{ powerVotes?.no?.percentage.toFixed(0) }}%
-            </span>
-          </div>
         </div>
 
-        <div class="flex items-center">
-          <div class="flex items-end w-[9rem]">
-            <MIconZero class="h-4 w-4 mr-1" version="dark" />
-            <span class="flex uppercase text-xxs text-grey-primary">
-              zero tokens
-            </span>
-          </div>
-
-          <div id="zero-votes-yes-percentage" class="flex w-1/12">
-            <span class="text-yes">
-              {{ zeroVotes?.yes?.percentage.toFixed(0) }}%
-            </span>
-          </div>
-
-          <MProgressBar
-            version="quorum"
+        <div>
+          <VoteProgressZero
+            :votes="zeroVotes"
             :quorum="props.zeroQuorum"
-            :width="zeroVotes?.yes?.percentage"
-            class="w-10/12"
+            :quorum-formatted="quorumFormattedZero"
           />
-
-          <div id="zero-votes-no-percentage" class="flex w-1/12">
-            <span class="text-no">
-              {{ zeroVotes?.no?.percentage.toFixed(0) }}%
-            </span>
-          </div>
         </div>
       </div>
     </div>
@@ -122,76 +49,120 @@
 import { MProposalTallies, MVotingType } from "@/lib/api/types";
 
 interface Props {
-  votes: MProposalTallies;
+  tallies: MProposalTallies;
   version: MVotingType;
   zeroQuorum?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
   powerQuorum?: number;
+  powerTotalSupply?: bigint;
+  zeroTotalSupply?: bigint;
 }
 const props = withDefaults(defineProps<Props>(), {
-  votes: {
+  tallies: () => ({
     power: {
-      yes: 10,
-      no: 0,
-      total: 10,
+      yes: "0",
+      no: "0",
     },
     zero: {
-      yes: 0,
-      no: 0,
-      total: 0,
+      yes: "0",
+      no: "0",
     },
-  },
+  }),
   version: "Power",
   zeroQuorum: undefined,
   powerQuorum: undefined,
+  powerTotalSupply: () => 0n,
+  zeroTotalSupply: () => 0n,
 });
 
-function parseVotes({
-  yes,
-  no,
-  total,
-}: {
-  yes: number;
-  no: number;
-  total: number;
-}) {
-  const yesRatio = total === 0 ? 0 : yes / total;
-  const noRatio = total === 0 ? 0 : no / total;
-  const yesPercentage = yesRatio * 100;
-  const noPercentage = noRatio * 100;
+/* @output: range 0.00-100.00 */
+const percentageSafeDiv = (a: bigint, b: bigint) =>
+  Number((a * 10000n) / b) / 100;
 
-  console.log({
-    yes,
-    no,
-    total,
-    yesRatio,
-    noRatio,
-    yesPercentage,
-    noPercentage,
-  });
+function parseVotesForMajority({ yes, no }: { yes: string; no: string }) {
+  const yesBI = BigInt(yes);
+  const noBI = BigInt(no);
+
+  const total = yesBI + noBI;
+
+  const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yesBI, total);
+  const noPercentage = total === 0n ? 0 : percentageSafeDiv(noBI, total);
+
   return {
     total,
     yes: {
       count: yes,
-      ratio: yesRatio,
+      formatted: useNumberFormatter(yes),
       percentage: yesPercentage,
     },
     no: {
       count: no,
-      ratio: noRatio,
+      formatted: useNumberFormatter(no),
       percentage: noPercentage,
     },
   };
 }
 
-const powerVotes = computed(() => parseVotes(props.votes.power));
-const zeroVotes = computed(() => parseVotes(props.votes.zero));
+function parseVotesForQuorom(
+  {
+    yes,
+    no,
+  }: {
+    yes: string;
+    no: string;
+  },
+  totalSupply: bigint
+) {
+  const yesBI = BigInt(yes);
+  const noBI = BigInt(no);
+
+  const total = totalSupply;
+
+  const yesPercentage = total === 0n ? 0 : percentageSafeDiv(yesBI, total);
+  const noPercentage = total === 0n ? 0 : percentageSafeDiv(noBI, total);
+
+  return {
+    total,
+    yes: {
+      count: yes,
+      formatted: useNumberFormatter(yes),
+      percentage: yesPercentage,
+    },
+    no: {
+      count: no,
+      formatted: useNumberFormatter(no),
+      percentage: noPercentage, // range 0-100
+    },
+  };
+}
+
+const powerVotes = computed(() => {
+  return props.version === "Power"
+    ? parseVotesForMajority(props.tallies.power)
+    : parseVotesForQuorom(props.tallies.power, props.powerTotalSupply!);
+});
+
+const zeroVotes = computed(() =>
+  parseVotesForQuorom(props.tallies.zero, props.zeroTotalSupply!)
+);
+
+const quorumFormattedPower = computed(() =>
+  useNumberFormatter(
+    (props.powerTotalSupply * BigInt(props.powerQuorum! * 100)) / 100n
+  )
+);
+
+const quorumFormattedZero = computed(() =>
+  useNumberFormatter(
+    (props.zeroTotalSupply * BigInt(props.zeroQuorum! * 100)) / 100n
+  )
+);
 </script>
 <style scoped>
 .text-yes {
-  @apply text-primary-darker text-xs mx-auto;
+  @apply text-green-900 text-xs mx-auto;
 }
 
 .text-no {
-  @apply text-red text-xs mx-auto;
+  @apply text-red-500 text-xs mx-auto;
 }
 </style>

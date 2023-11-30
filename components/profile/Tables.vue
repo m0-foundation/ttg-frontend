@@ -1,11 +1,11 @@
 <template>
-  <div class="my-8">
+  <div class="my-2">
     <!-- tabs -->
-    <div class="flex justify-start gap-12 bg-[#1b1c1b] px-4 py-8">
+    <div class="flex justify-start gap-12 bg-[#1b1c1b] px-6 py-8">
       <button
         :class="[
-          'uppercase hover:underline text-xs',
-          { underline: selectedTab === 0 },
+          'uppercase hover:underline text-xs ',
+          selectedTab === 0 ? 'text-white' : 'text-zinc-500',
         ]"
         @click="selectedTab = 0"
       >
@@ -14,7 +14,7 @@
       <button
         :class="[
           'uppercase hover:underline text-xs',
-          { underline: selectedTab === 1 },
+          selectedTab === 1 ? 'text-white' : 'text-zinc-500',
         ]"
         @click="selectedTab = 1"
       >
@@ -46,18 +46,12 @@ const selectedTab = ref(0);
 
 let votes = ref<MVote[]>([]);
 const proposals = useProposalsStore();
-const apiStore = useApiClientStore();
+const votesStore = useVotesStore();
 
 watch(
   address,
   () => {
-    const { state } = useAsyncState(
-      apiStore.client.governor!.voting!.getVotesByVoter(
-        address.value as string
-      ),
-      []
-    );
-    votes = state;
+    votes = votesStore.getBy("voter", address.value);
   },
   { immediate: true }
 );

@@ -3,7 +3,7 @@
     <div>
       <form @submit.prevent="onSubmit">
         <h1 class="text-center text-2xl">Connect to M&#94;ZERO network</h1>
-        <p class="text-center text-grey-primary mb-8">
+        <p class="text-center text-grey-400 mb-8">
           Add from a list of popular networks or add a network manually. Only
           interact with the entities you trust.
         </p>
@@ -30,7 +30,7 @@
               <label> Custom RPC URL: </label>
               <input v-model="customRPC" type="text" placeholder="http://..." />
 
-              <p class="text-grey-primary">
+              <p class="text-grey-400">
                 <button
                   class="border-b border-white border-dashed"
                   @click="onSwitchInput(false)"
@@ -50,7 +50,7 @@
                 </option>
               </select>
 
-              <p class="text-grey-primary">
+              <p class="text-grey-400">
                 or enter
                 <button
                   class="border-b border-white border-dashed"
@@ -100,6 +100,10 @@ const selectedRPC = ref(apiStore.rpc);
 const rpcs = computed(() => selectedNetworkConfig.value!.rpc.values);
 const chainId = computed(() => selectedNetworkConfig.value!.rpc.chainId);
 
+useHead({
+  titleTemplate: "%s - Settings",
+});
+
 function onSubmit() {
   const newRpc = isWithCustomRPC.value ? unref(customRPC) : unref(selectedRPC);
   console.log({ newRpc });
@@ -124,6 +128,6 @@ input {
 }
 
 label {
-  @apply text-grey-primary text-sm block mb-2;
+  @apply text-grey-400 text-sm block mb-2;
 }
 </style>

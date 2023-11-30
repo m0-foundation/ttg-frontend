@@ -1,6 +1,10 @@
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 export default defineNuxtConfig({
+  alias: {
+    color: "color/index.js",
+    "mersenne-twister": "mersenne-twister/src/mersenne-twister.js",
+  },
   runtimeConfig: {
     public: {
       walletConnectProjectId: "4b34af2e9148b5a50056cf1894e88bf3",

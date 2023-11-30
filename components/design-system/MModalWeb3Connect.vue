@@ -9,21 +9,14 @@
         v-if="open"
         id="modal-backdrop"
         ref="modal-backdrop"
-        class="fixed z-50 lg:z-10 inset-0 overflow-y-auto bg-black bg-opacity-80"
+        class="fixed z-40 lg:z-40 inset-0 overflow-y-auto bg-grey-900"
       >
-        <div class="flex items-start justify-center min-h-screen pt-24">
-          <div class="p-8 w-full md:w-1/2 lg:w-1/3 xl:w-1/3">
-            <div class="flex flex-wrap flex-col shadow-xl">
-              <button
-                class="p-4 border text-white mb-2 self-end"
-                @click="open = false"
-              >
-                x
-              </button>
-
-              <div class="bg-body-dark text-white p-8">
+        <div class="flex items-center justify-center min-h-screen">
+          <div class="w-full max-w-xl">
+            <div class="flex flex-wrap flex-col">
+              <div class="bg-grey-900 text-white p-8">
                 <p class="text-2xl text-center">Connect Wallet</p>
-                <p class="text-sm text-gray-300">
+                <p class="text-sm text-zinc-500 leading-normal mt-2">
                   Connect with one of our available wallet providers or create a
                   new one.
                 </p>
@@ -48,6 +41,15 @@
                     </div>
                   </button>
                 </div>
+
+                <div class="flex justify-center">
+                  <button
+                    class="p-4 text-white mb-2 self-end text-3xl"
+                    @click="open = false"
+                  >
+                    x
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -70,12 +72,13 @@ const images = {
 
 const open = ref(false);
 const network = useNetworkStore().getNetwork();
+const chainId = computed(() => network.value.rpc.chainId);
+
 const { connector, isReconnecting } = useAccount();
 const { switchNetwork } = useSwitchNetwork();
 const { connect, connectors } = useConnect({
   onError: (e) => console.error("error", e.message),
   onSuccess: () => {
-    const chainId = network.value.rpc.chainId;
     switchNetwork(chainId);
   },
 });

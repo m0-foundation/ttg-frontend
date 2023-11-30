@@ -3,7 +3,7 @@
   <p
     v-for="error of props.errors"
     :key="error.$uid"
-    class="text-red text-xs my-2"
+    class="text-red-500 text-xs my-2"
   >
     {{ error.$message }}
   </p>
@@ -25,6 +25,6 @@ const hasErrors = computed(() => props.errors?.length);
 
 <style>
 .error {
-  @apply border border-red;
+  @apply border border-red-500;
 }
 </style>

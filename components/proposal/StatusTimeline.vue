@@ -1,7 +1,9 @@
 <template>
   <div class="flex justify-between">
-    <div class="inline-flex uppercase text-black">
-      <div class="text-grey-primary item">status:</div>
+    <div
+      class="inline-flex uppercase text-grey-400 text-xs gap-1 lg:gap-2 items-center"
+    >
+      <div class="text-grey-primary hidden lg:block">status:</div>
 
       <p
         :id="version === 'Pending' ? 'proposal-state' : undefined"
@@ -47,8 +49,6 @@
       >
         executed
       </p>
-
-      <div class="text-grey-primary item">[?]</div>
     </div>
   </div>
 </template>
@@ -63,30 +63,18 @@ const props = defineProps<Props>();
 
 <style scoped>
 .item {
-  @apply flex items-center px-2 py-1 mx-1;
+  @apply flex items-center py-1 px-2 lg:px-3;
 }
-
-/* .text-black > p::before {
-  content: "✓";
-}
-
-.active ~ p::before {
-  content: "";
-}
-
-.item + .active::before {
-  content: "";
-} */
 
 .active {
   @apply bg-[#00664E] text-[#5CC99E];
 }
 .active ~ p {
-  @apply text-grey-primary;
+  @apply text-grey-400;
 }
 
 .defeated {
-  @apply bg-red text-white;
+  @apply bg-red-500 text-white;
 }
 
 .expired {

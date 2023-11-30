@@ -6,21 +6,31 @@
       text="EMERGENCY_VOTING"
     />
 
-    <article class="bg-white text-black px-8 py-4">
-      <ProposalStatusTimeline :version="proposal?.state" />
+    <article class="bg-white text-black px-4 py-4">
+      <div class="flex justify-between">
+        <ProposalStatusTimeline :version="proposal?.state" />
+        <div>
+          <ProposalMenu :proposal="proposal" />
+        </div>
+      </div>
 
-      <ProposalVoteProgress
-        v-if="proposal?.state !== 'Pending'"
-        :votes="proposal?.votes"
-        :version="proposal?.votingType"
-        :zero-quorum="zeroQuorum"
-        :power-quorum="powerQuorum"
-      />
+      <div v-if="isLoading">Loading...</div>
+      <div v-else>
+        <ProposalVoteProgress
+          v-if="proposal?.state !== 'Pending'"
+          :tallies="proposal?.tallies"
+          :version="proposal?.votingType"
+          :power-quorum="powerQuorum"
+          :power-total-supply="totalSupplyAt[0]"
+          :zero-quorum="zeroQuorum"
+          :zero-total-supply="totalSupplyAt[1]"
+        />
+      </div>
 
-      <div class="text-grey-primary text-xs mb-6 truncate w-52 lg:w-full">
+      <div class="text-grey-400 text-xs mt-8 mb-2 truncate w-52 lg:w-full">
         Proposed by
         <NuxtLink :to="`/profile/${proposal?.proposer}/`">
-          <u>{{ proposal?.proposer }}</u>
+          <u><MAddressAvatar :address="proposal?.proposer" /></u>
         </NuxtLink>
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
@@ -29,8 +39,18 @@
 
       <ProposalTechnical
         :proposal="proposal"
-        :current-proposal-values="currentProposalValues"
+        :current-proposal-values="currentProposalValuesFormatted"
+        class="mb-6"
       />
+
+      <div class="text-green-900 mb-2">
+        <h2>Result details</h2>
+        <p class="text-xs">
+          List of addresses that have voted for or against the current proposal.
+        </p>
+      </div>
+
+      <ProposalTableVotes :votes="votes?.value" />
     </article>
   </div>
 </template>
@@ -39,7 +59,7 @@
 import { storeToRefs } from "pinia";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
-import { dualGovernorABI } from "@/lib/sdk";
+import { dualGovernorABI, readPowerToken, readZeroToken } from "@/lib/sdk";
 
 export interface ProposalDetailsProps {
   proposalId: string;
@@ -49,14 +69,20 @@ const props = defineProps<ProposalDetailsProps>();
 
 const store = useProposalsStore();
 
-const proposal = store.getProposalById(props.proposalId);
+const proposal = computed(() => store.getProposalById(props.proposalId));
+const proposalId = computed(() => props.proposalId);
 
-const proposalId = computed(() => proposal?.proposalId);
-const { html } = useParsedDescription(proposal?.description || "");
+const { html } = useParsedDescription(proposal?.value?.description || "");
 
 const { address: userAccount } = useAccount();
 const spog = useSpogStore();
-const { epoch, getValues: currentProposalValues } = storeToRefs(spog);
+
+const { getValuesFormatted: currentProposalValuesFormatted } =
+  storeToRefs(spog);
+
+useHead({
+  titleTemplate: `%s - Proposal #${proposalId.value}`,
+});
 
 const {
   data: hasVoted,
@@ -73,15 +99,38 @@ const {
   },
 });
 
-console.log({ currentProposalValues });
+console.log({ currentProposalValuesFormatted });
 
-const { toFormat } = useDate(proposal?.timestamp);
-const proposalCreatedFormatedDate = computed(() => toFormat("LL"));
+const { toFormat } = useDate(proposal.value!.timestamp!);
+const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
-const zeroQuorum = computed(
-  () => Number(spog.values.zeroTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
+const zeroQuorum = computed(() =>
+  basisPointsToDecimal(spog.values.zeroTokenQuorumRatio!)
 );
-const powerQuorum = computed(
-  () => Number(spog.values.powerTokenQuorumRatio) / 100 / 100 // convert from basis points to 0-1 percentage range
+const powerQuorum = computed(() =>
+  basisPointsToDecimal(spog.values.powerTokenQuorumRatio!)
+);
+
+const votesStore = useVotesStore();
+const votes = computed(() => {
+  if (proposalId.value) {
+    return votesStore.getBy("proposalId", proposalId.value);
+  }
+});
+
+const { state: totalSupplyAt, isLoading } = useAsyncState(
+  Promise.all([
+    readPowerToken({
+      address: spog!.contracts!.powerToken! as Hash,
+      functionName: "totalSupplyAt",
+      args: [BigInt(proposal.value!.epoch!)],
+    }),
+    readZeroToken({
+      address: spog!.contracts!.zeroToken! as Hash,
+      functionName: "totalSupplyAt",
+      args: [BigInt(proposal.value!.epoch!)],
+    }),
+  ]),
+  [0n, 0n]
 );
 </script>

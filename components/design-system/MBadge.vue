@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 export interface MBadgeProps {
-  version: "success" | "error";
+  version?: "success" | "error";
 }
 
 const props = withDefaults(defineProps<MBadgeProps>(), {
@@ -19,9 +19,9 @@ span {
 }
 
 .success {
-  @apply bg-primary text-primary-darker;
+  @apply bg-green-700 text-green-900;
 }
 .error {
-  @apply bg-red text-white;
+  @apply bg-red-500 text-white;
 }
 </style>

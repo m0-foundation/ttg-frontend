@@ -1,20 +1,20 @@
 <template>
   <div v-if="address">
-    <div class="flex justify-between gap-4">
+    <div class="flex justify-between pt-6 mb-6">
       <div>
-        <p class="text-grey-primary text-xs uppercase">voting address</p>
-        <p class="text-white text-md">
+        <p class="text-grey-300 text-xs uppercase">voting address</p>
+        <p class="text-white text-md uppercase">
           {{ address }}
         </p>
       </div>
     </div>
-    <ProfileBalances :address="address" />
+    <ProfileBalances class="mb-6" :address="address" />
     <!-- tables -->
     <ProfileTables :address="address" />
   </div>
   <div
     v-else
-    class="flex flex-col items-center justify-center h-80 text-grey-primary"
+    class="flex flex-col items-center justify-center h-80 text-grey-400"
   >
     User not found
   </div>
@@ -25,4 +25,8 @@ import { Hash } from "viem";
 
 const route = useRoute();
 const address = ref(route.params.address as Hash);
+
+useHead({
+  titleTemplate: `%s - Profile ${shortenAddress(address.value)}`,
+});
 </script>

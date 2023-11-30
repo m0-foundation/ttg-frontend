@@ -1,17 +1,17 @@
 <template>
-  <a href="/" class="inline-block items-center mb-4">
-    <span
-      class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-    >
-      M&#94;ZERO <span class="text-sm text-gray-400">Governance</span>
-    </span>
-  </a>
+  <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6">
+    <NuxtLink to="/">
+      <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt=""
+    /></NuxtLink>
+    <span class="lg:hidden">Gov</span>
+    <span class="hidden lg:block text-gray-400">Governance</span>
+  </div>
 
   <NuxtLink class="block" to="/proposal/create/">
-    <MButton class="mb-4">Create Proposal</MButton>
+    <MButton class="mb-6 w-full flex justify-center">Create Proposal</MButton>
   </NuxtLink>
 
-  <nav class="text-white text-xl mb-8">
+  <nav class="text-grey-100 text-xl mb-6">
     <ul>
       <li>
         <NuxtLink to="/proposals/" active-class="active"> proposals </NuxtLink>
@@ -35,15 +35,12 @@
     </ul>
   </nav>
 
-  <div v-if="isConnected">
-    <div class="flex justify-between items-center mb-6">
-      <NuxtLink to="/profile/me/" class="underline">MY PROFILE</NuxtLink>
-      <div class="truncate w-28 text-xs text-gray-400">
-        {{ userAccount }}
-      </div>
+  <div v-if="isConnected" class="text-grey-100">
+    <div class="mb-4 text-sm">
+      <NuxtLink to="/profile/me/">MY PROFILE</NuxtLink>
     </div>
 
-    <div class="p-4">
+    <div class="mb-6">
       <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
       <div class="flex justify-between mb-4">
         <div class="text-gray-400 flex items-center">
@@ -60,7 +57,7 @@
 
     <div
       v-show="hasDelegatedPower || hasDelegatedZero"
-      class="p-4 bg-primary-darker text-white"
+      class="p-3 bg-green-900 text-white"
     >
       <div class="mb-2">
         <p class="uppercase mb-2 text-xxs">Voting power is delegated to:</p>
@@ -68,13 +65,15 @@
         <div v-show="hasDelegatedPower" class="flex items-center">
           <MIconPower class="h-6 w-6 mr-1" />
           <p class="underline text-xs truncate flex">
-            {{ powerDelegates }}
+            <MAddressAvatar :show-avatar="false" :address="powerDelegates" />
           </p>
         </div>
 
         <div v-show="hasDelegatedZero" class="flex items-center">
           <MIconZero class="h-6 w-6 mr-1" />
-          <p class="underline text-xs truncate flex">{{ zeroDelegates }}</p>
+          <p class="underline text-xs truncate flex">
+            <MAddressAvatar :show-avatar="false" :address="zeroDelegates" />
+          </p>
         </div>
       </div>
       <MButton version="outline-light" class="w-full">
@@ -85,21 +84,16 @@
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full p-2 hover:underline text-left uppercase text-xs"
+      class="block w-full py-2 hover:underline text-left uppercase text-xs"
       @click="() => disconnect()"
     >
       Disconnect
     </button>
   </div>
-  <div v-else>
+
+  <div v-else class="py-2">
     <MModalWeb3Connect />
   </div>
-
-  <li>
-    <NuxtLink to="/settings/" active-class="active" class="text-xs"
-      >settings</NuxtLink
-    >
-  </li>
 </template>
 
 <script lang="ts" setup>
@@ -119,10 +113,10 @@ const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
 <style scoped>
 li {
   list-style-type: none;
-  @apply text-white text-sm  px-2 py-2 uppercase hover:underline;
+  @apply text-grey-100 text-sm py-2 uppercase hover:underline;
 }
 .active {
-  @apply text-primary;
+  @apply text-green-700 bg-transparent;
 }
 
 .active::before {

@@ -1,13 +1,13 @@
 <template>
-  <button type="button" :class="version" @click="onClick">
+  <MButtonRadio class="grow lg:grow-0" :version="version" @click="onClick">
     <slot />
-  </button>
+  </MButtonRadio>
 </template>
 
 <script lang="ts" setup>
 const isActive = ref(false);
 export interface Props {
-  version: "default" | "active" | "disabled";
+  version: "default" | "active";
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -22,24 +22,3 @@ function onClick() {
   isActive.value = !isActive.value;
 }
 </script>
-<style scoped>
-button {
-  @apply uppercase font-medium text-sm px-4 py-2 text-center mr-3 md:mr-0;
-}
-
-button:disabled {
-  @apply opacity-50 cursor-not-allowed bg-primary-dark;
-}
-
-.default {
-  @apply text-black bg-primary hover:bg-primary-dark;
-}
-
-.active {
-  @apply text-white bg-primary-darker;
-}
-
-.disabled {
-  @apply border border-grey-primary text-grey-primary bg-white;
-}
-</style>

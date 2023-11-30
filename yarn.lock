@@ -10236,6 +10236,11 @@ icss-utils@^5.0.0, icss-utils@^5.1.0:
   resolved "https://registry.npmjs.org/icss-utils/-/icss-utils-5.1.0.tgz"
   integrity sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==
 
+identicon.js@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/identicon.js/-/identicon.js-2.3.3.tgz#c505b8d60ecc6ea13bbd991a33964c44c1ad60a1"
+  integrity sha512-/qgOkXKZ7YbeCYbawJ9uQQ3XJ3uBg9VDpvHjabCAPp6aRMhjLaFAxG90+1TxzrhKaj6AYpVGrx6UXQfQA41UEA==
+
 idna-uts46-hx@^4.1.2:
   version "4.1.2"
   resolved "https://registry.npmjs.org/idna-uts46-hx/-/idna-uts46-hx-4.1.2.tgz"
@@ -11661,6 +11666,11 @@ marked@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/marked/-/marked-5.0.1.tgz"
   integrity sha512-Nn9peC4lvIZdcfp8Uze6xk4ZYowkcj/K6+e/6rLHadhtjqeip/bYRxMgt3124IGGJ3RPs2uX5YVmAGbUutY18g==
+
+maska@^2.1.10:
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/maska/-/maska-2.1.10.tgz#dff9d96bf472280fe623ea2ecd1860c15886d355"
+  integrity sha512-oQLLUCJ4qG1YFHSGQB9P6G0LKSmAwHFFBFhmkJ9pcSUXXDZew5NNTBbPACiixqFBaU7M7LydPlrL0DmI1p+ufQ==
 
 mcl-wasm@^0.7.1:
   version "0.7.9"

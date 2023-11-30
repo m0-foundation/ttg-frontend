@@ -8,8 +8,8 @@
       :errors="props.modelValueErrors"
     />
   </div>
-  <div v-show="props.currentValue" class="w-1/2 uppercase">
-    current: {{ props.currentValue }}
+  <div v-show="props.currentValue" class="text-xs text-grey-400 my-2">
+    Current: {{ props.currentValue }}
   </div>
 </template>
 

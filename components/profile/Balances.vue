@@ -1,39 +1,30 @@
 <template>
-  <div class="flex justify-start gap-8 my-8">
-    <!-- power tokens -->
+  <div>
+    <p class="uppercase text-xs text-grey-300 mb-1">Token Balance</p>
     <div class="flex gap-12">
-      <div>
-        <p class="uppercase text-xs">balance power tokens</p>
-        <p class="text-4xl inline-flex items-center my-2">
-          <MIconPower class="h-8 w-8 mr-4" />
-          {{ balancePowerToken?.data.value?.formatted }}
-        </p>
+      <!-- power tokens -->
+      <div class="flex gap-2">
+        <MIconPower class="h-8 w-8" />
+        <div>
+          <p class="text-2xl lg:text-3xl inline-flex items-center">
+            {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+          </p>
+          <p class="text-xs text-grey-400">
+            {{ balancePowerToken?.data.value?.formatted }}
+          </p>
+        </div>
       </div>
-
-      <div>
-        <p class="uppercase text-xs text-grey-primary">Voting Power</p>
-
-        <p class="text-4xl inline-flex items-center my-2">
-          {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
-        </p>
-      </div>
-    </div>
-    <div class="flex border-r border-r-primary-darker mx-2"></div>
-    <!-- zero tokens -->
-    <div class="flex gap-12">
-      <div>
-        <p class="uppercase text-xs">balance zero tokens</p>
-        <p class="text-4xl inline-flex items-center my-2">
-          <MIconZero class="h-8 w-8 mr-4" />
-          {{ balanceZeroToken?.data.value?.formatted }}
-        </p>
-      </div>
-
-      <div>
-        <p class="uppercase text-xs text-grey-primary">Voting Power</p>
-        <p class="text-4xl inline-flex items-center my-2">
-          {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
-        </p>
+      <!-- zero tokens -->
+      <div class="flex gap-2">
+        <MIconZero class="h-8 w-8" />
+        <div>
+          <p class="text-2xl lg:text-3xl inline-flex items-center">
+            {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+          </p>
+          <p class="text-xs text-grey-400">
+            {{ balanceZeroToken?.data.value?.formatted }}
+          </p>
+        </div>
       </div>
     </div>
   </div>

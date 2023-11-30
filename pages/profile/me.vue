@@ -1,22 +1,27 @@
 <template>
   <div v-if="address">
-    <div class="flex justify-between gap-4">
-      <div>
-        <h1 class="text-2xl uppercase">
-          my profile<span class="text-primary">_</span>
-        </h1>
-        <p class="text-grey-primary text-xs">
-          {{ address }}
-        </p>
-      </div>
-      <div>
-        <MButton :disabled="!canDelegate">
-          <NuxtLink to="/delegate/">re-delegate</NuxtLink>
-        </MButton>
-      </div>
-    </div>
-    <ProfileBalances :address="address" />
-    <div v-if="hasDelegatedPower" class="p-4 bg-primary-darker text-white my-2">
+    <PageTitle class="lg:p-0 lg:mb-6">
+      My Profile<template #subtitle
+        ><MAddressAvatar
+          class="text-grey-300"
+          :short-address="false"
+          :address="address"
+      /></template>
+      <template #side>
+        <NuxtLink to="/delegate/">
+          <MButton
+            class="w-full justify-center mt-4 lg:mt-0"
+            :disabled="!canDelegate"
+          >
+            re-delegate
+          </MButton></NuxtLink
+        >
+      </template>
+    </PageTitle>
+
+    <ProfileBalances class="p-6 pt-0 lg:p-0 mb-6" :address="address" />
+
+    <div v-if="hasDelegatedPower" class="p-4 bg-green-900 text-white my-2">
       <p class="uppercase text-xs mb-6">
         Your POWER tokens <u>voting power</u> is delegated to the address:
       </p>
@@ -26,7 +31,7 @@
       </p>
     </div>
 
-    <div v-if="hasDelegatedZero" class="p-4 bg-primary-darker text-white my-2">
+    <div v-if="hasDelegatedZero" class="p-4 bg-green-900 text-white my-2">
       <p class="uppercase text-xs mb-6">
         Your ZERO tokens <u>voting power</u> is delegated to the address:
       </p>
@@ -40,7 +45,7 @@
   </div>
   <div
     v-else
-    class="flex flex-col items-center justify-center h-80 text-grey-primary"
+    class="flex flex-col items-center justify-center h-80 text-grey-400"
   >
     User not conntecd
   </div>
@@ -54,6 +59,11 @@ const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
 
 const spog = storeToRefs(useSpogStore());
+
+useHead({
+  titleTemplate: "%s - My profile",
+});
+
 const canDelegate = computed(
   () => spog.epoch.value.current.type === "TRANSFER"
 );
