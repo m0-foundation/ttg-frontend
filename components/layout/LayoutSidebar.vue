@@ -22,6 +22,10 @@
       </li>
 
       <li>
+        <NuxtLink to="/auction/" active-class="active">auction</NuxtLink>
+      </li>
+
+      <li>
         <NuxtLink to="/config/governance/" active-class="active">
           governance config
         </NuxtLink>

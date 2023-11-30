@@ -1,11 +1,6 @@
 <template>
   <div>
-    <!-- TODO: Change to new PageTitle component -->
-    <nav class="text-white text-xl p-8">
-      <MNavButton class="text-white text-lg">
-        Auction<span class="text-primary">_</span>
-      </MNavButton>
-    </nav>
+    <PageTitle>Auction</PageTitle>
 
     <div class="grid grid-cols-3">
       <div
@@ -125,5 +120,7 @@ function getPurchaseCost() {
   );
 }
 
-getLastEpochTotalSupply();
+onMounted(() => {
+  getLastEpochTotalSupply();
+});
 </script>
