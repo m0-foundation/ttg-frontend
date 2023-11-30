@@ -14,7 +14,7 @@
           {{ title }}
         </h2>
         <span v-if="proposal?.isEmergency" class="text-xs text-grey-400"
-          >Voting ends
+          >Voting ends {{ voteEnds }}
         </span>
       </div>
 
@@ -150,16 +150,16 @@ const emit = defineEmits<{
 }>();
 
 const spog = useSpogStore();
+const apiStore = useApiClientStore();
 const { address: userAccount, isDisconnected } = useAccount();
-const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
 const isVoteSelected = ref(false);
 const selectedVote = ref<null | number>(null);
-const formatedDate = computed(() => toFormat("LLL"));
 const isCastVoteYesDisabled = computed(() => selectedVote.value === 0);
 const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
 const isLoading = ref(false);
+const voteEndTimestamp = ref();
 
 const { text: truncatedDescriptionText } = useParsedDescription(
   truncate(props.proposal.description, {
@@ -210,4 +210,11 @@ const canVote = computed(() => {
     return hasPowerTokensVotingPower.value;
   }
 });
+
+voteEndTimestamp.value =
+  await apiStore.client.governor!.epoch.getTimestampToEpoch(
+    props.proposal!.voteEnd!
+  );
+
+const { timeAgo: voteEnds } = useDate(voteEndTimestamp.value);
 </script>

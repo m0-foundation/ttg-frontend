@@ -144,4 +144,19 @@ export class Epoch extends GovernorModule {
   getBlockNumberOfEpochEnd(epoch: number) {
     return this.getBlockNumberOfEpochStart(epoch + 1);
   }
+
+  async getTimestampToEpoch(epoch: number) {
+    const epochBlockNumber = epoch * _EPOCH_PERIOD;
+    const currentBlockNumber = await this.getBlockNumber();
+
+    const currentEpochAsBlock = await this.client.getBlock({
+      blockNumber: BigInt(currentBlockNumber),
+    });
+
+    return (
+      Number(currentEpochAsBlock.timestamp) +
+      (this.toSeconds(epochBlockNumber) -
+        this.toSeconds(Number(currentBlockNumber)))
+    );
+  }
 }
