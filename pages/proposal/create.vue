@@ -393,18 +393,18 @@ const proposalTypes = [
 
   {
     value: "Quorums",
-    label: "Quorums",
+    label: "Thresholds",
     children: [
       {
         value: "setPowerTokenQuorumRatio",
-        label: "Power quorum",
+        label: "Power threshold",
         component: ProposalInputQuorum,
         modelValue: formData.proposalValue,
         tokens: MProposalVotingTokens.setPowerTokenQuorumRatio,
       },
       {
         value: "setZeroTokenQuorumRatio",
-        label: "Zero quorum",
+        label: "Zero threshold",
         component: ProposalInputQuorum,
         tokens: MProposalVotingTokens.setZeroTokenQuorumRatio,
       },

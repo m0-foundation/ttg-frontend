@@ -35,7 +35,7 @@
     </span>
 
     <span class="text-grey-400 text-xs uppercase whitespace-nowrap ml-2">
-      Quorum: {{ props.quorum * 100 }}% ({{ props.quorumFormatted }})
+      Threshold: {{ props.quorum * 100 }}% ({{ props.quorumFormatted }})
     </span>
   </div>
 </template>

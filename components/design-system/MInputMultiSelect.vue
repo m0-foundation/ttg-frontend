@@ -38,7 +38,7 @@
               class="text-grey-400 text-xs w-72 py-2"
             >
               The emergency proposal will be executed immediately when the
-              quorum is reached.
+              threshold is reached.
             </div>
           </button>
 
