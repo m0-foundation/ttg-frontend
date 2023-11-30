@@ -67,6 +67,17 @@
                 :model-value2-errors="$validation.proposalValue2?.$errors"
                 :model-value3-errors="$validation.proposalValue3?.$errors"
                 :placeholder="selectedProposalType.placeholder"
+                :current-value="currentValue"
+              />
+            </div>
+
+            <div class="mb-6">
+              <label for="type-value">Title*</label>
+              <MInput
+                v-model="formData.title"
+                type="text"
+                placeholder="Title"
+                :errors="$validation.title.$errors"
               />
             </div>
 
@@ -85,6 +96,7 @@
                 name="description"
                 :errors="$validation.description.$errors"
                 class="h-80"
+                :placeholder="descriptionPlaceHolder"
               />
             </div>
 
@@ -123,7 +135,7 @@
         <div class="flex items-center gap-2 text-lg">
           Proposal fee:
           <MIconWeth />
-          {{ spogValues.setProposalFee }}
+          {{ spogValuesFormatted.setProposalFee }}
         </div>
       </div>
       <p class="text-grey-400 text-xs flex justify-end">
@@ -134,12 +146,20 @@
         <button class="text-green-800 uppercase mx-4" @click="onBack">
           &#60; back
         </button>
-        <MButton v-if="isPreview" type="submit">Submit proposal</MButton>
+        <MButton v-if="isPreview" type="submit" :disabled="isDisconnected">
+          Submit proposal
+        </MButton>
       </div>
-
       <div v-else class="flex justify-end mt-12">
         <MButton type="button" @click="onPreview">Preview proposal</MButton>
       </div>
+
+      <p
+        v-if="isDisconnected"
+        class="flex justify-end text-xs text-red-500 mx-2 my-1"
+      >
+        Please connect wallet
+      </p>
 
       <hr class="my-12" />
 
@@ -191,20 +211,26 @@ import {
   Hash,
 } from "viem";
 import { useAccount } from "use-wagmi";
-import { required, minLength } from "@vuelidate/validators";
+import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
-import ProposalInputSingleNumber from "@/components/proposal/InputSingleNumber.vue";
-import ProposalInputRangeNumber from "@/components/proposal/InputRangeNumber.vue";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
+import ProposalInputQuorum from "@/components/proposal/InputQuorum.vue";
+import ProposalInputFeeRange from "@/components/proposal/InputFeeRange.vue";
+import ProposalInputFee from "@/components/proposal/InputFee.vue";
+
 import { MProposalVotingTokens, MVotingTokens } from "@/lib/api";
 /* control stepper */
 let steps = reactive([]);
 
 const stepper = ref(null);
 const modal = ref(null);
+
+useHead({
+  titleTemplate: "%s - Create proposal",
+});
 
 function onCloseModal() {
   stepper.value.reset();
@@ -222,44 +248,120 @@ const formData = reactive({
   proposalValue: null,
   proposalValue2: null,
   proposalValue3: null,
+  title: null,
   description: null,
   ipfsURL: null,
   discussionURL: null,
 });
 
+const descriptionPlaceHolder = `## Heading2
+
+### Heading3
+
+List:  
+- **Bold**
+- _Italic_  
+- ~~Strikethrough~~
+- \`Code\` 
+- [Link](https://m0.xyz/)
+
+Delimiter:
+
+---
+
+`;
+
 const rules = computed(() => {
-  // all besides reset
-  const isProposalValueRequired = !["reset"].includes(
-    selectedProposalType?.value?.value
-  );
-
-  const isProposalValue2Required = [
-    "addToList",
-    "removeFromList",
-    "updateConfig",
-    "setProposalFeeRange",
-  ].includes(selectedProposalType?.value?.value);
-
-  const isProposalValue3Required = ["setProposalFeeRange"].includes(
-    selectedProposalType?.value?.value
-  );
-
-  return {
-    proposalValue: isProposalValueRequired ? { required } : {},
-    proposalValue2: isProposalValue2Required ? { required } : {},
-    proposalValue3: isProposalValue3Required ? { required } : {},
+  const constRules = {
     description: { required, minLength: minLength(6) },
+    title: { required, minLength: minLength(6) },
   };
+
+  const type = selectedProposalType?.value?.value;
+
+  if (
+    [
+      "addToList",
+      "removeFromList",
+      "emergencyAddToList",
+      "emergencyRemoveFromList",
+    ].includes(type)
+  ) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {
+        required,
+        minLength: minLength(42),
+        maxLength: maxLength(42),
+      },
+      proposalValue3: {},
+      ...constRules,
+    };
+  }
+
+  if (["updateConfig", "emergencyUpdateConfig"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: { required },
+      proposalValue3: {},
+      ...constRules,
+    };
+  }
+
+  if (["setProposalFee"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {},
+      proposalValue3: {},
+      ...constRules,
+    };
+  }
+
+  if (["setProposalFeeRange"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: { required },
+      proposalValue3: { required },
+      ...constRules,
+    };
+  }
+
+  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: {},
+      proposalValue3: {},
+      ...constRules,
+    };
+  }
+
+  // default (type === "reset")
+  return {
+    proposalValue: {},
+    proposalValue2: {},
+    proposalValue3: {},
+    ...constRules,
+  };
+});
+
+const hasToPayFee = computed(() => {
+  const type = selectedProposalType?.value?.value;
+  return ![
+    "reset",
+    "emergencyAddToList",
+    "emergencyRemoveFromList",
+    "emergencyUpdateConfig",
+  ].includes(type);
 });
 
 const $validation = useVuelidate(rules, formData);
 
 const previewDescription = ref();
 
-const { address: userAccount } = useAccount();
+const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
-const { getValues: spogValues } = storeToRefs(spog);
+const { getValuesFormatted: spogValuesFormatted } = storeToRefs(spog);
 
 const proposalTypes = [
   {
@@ -296,14 +398,14 @@ const proposalTypes = [
       {
         value: "setPowerTokenQuorumRatio",
         label: "Power quorum",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputQuorum,
         modelValue: formData.proposalValue,
         tokens: MProposalVotingTokens.setPowerTokenQuorumRatio,
       },
       {
         value: "setZeroTokenQuorumRatio",
         label: "Zero quorum",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputQuorum,
         tokens: MProposalVotingTokens.setZeroTokenQuorumRatio,
       },
     ],
@@ -315,13 +417,13 @@ const proposalTypes = [
       {
         value: "setProposalFee",
         label: "Change fee",
-        component: ProposalInputSingleNumber,
+        component: ProposalInputFee,
         tokens: MProposalVotingTokens.setProposalFee,
       },
       {
         value: "setProposalFeeRange",
         label: "Change fee range",
-        component: ProposalInputRangeNumber,
+        component: ProposalInputFeeRange,
         tokens: MProposalVotingTokens.setProposalFeeRange,
       },
     ],
@@ -365,6 +467,28 @@ const proposalTypes = [
   },
 ];
 
+const currentValue = computed(() => {
+  if (selectedProposalType?.value?.value === "setPowerTokenQuorumRatio") {
+    return `${basisPointsToPercentage(spog.values.powerTokenQuorumRatio!)}%`;
+  }
+
+  if (selectedProposalType?.value?.value === "setZeroTokenQuorumRatio") {
+    return `${basisPointsToPercentage(spog.values.zeroTokenQuorumRatio!)}%`;
+  }
+
+  const formatFee = (value: string) => useFormatCash(value);
+
+  if (selectedProposalType?.value?.value === "setProposalFee") {
+    return formatFee(spog.values.proposalFee!);
+  }
+
+  if (selectedProposalType?.value?.value === "setProposalFeeRange") {
+    return `${formatFee(spog.values.proposalFee!)} | MIN: ${formatFee(
+      spog.values.minProposalFee!
+    )} - MAX:${formatFee(spog.values.maxProposalFee!)}`;
+  }
+});
+
 function onChangeProposalType(option) {
   console.log("onChangeProposalType", { option });
   formData.proposalType = option.value;
@@ -372,24 +496,24 @@ function onChangeProposalType(option) {
   $validation.value.$reset();
 }
 
-function addHyperlinksToDescription() {
+function buildDescriptionPayload() {
   const addHyperlink = (text, url) => (url ? `[${text}](${url})` : "");
 
-  const descriptionWithLinks =
-    formData.description +
-    [
-      "\n\n---",
-      addHyperlink("Discussion", formData.discussionURL),
-      addHyperlink("IPFS", formData.ipfsURL),
-    ].join("\n\n");
+  const descriptionPayload = [
+    `# ${formData.title}`,
+    formData.description,
+    "\n\n---",
+    addHyperlink("Discussion", formData.discussionURL),
+    addHyperlink("IPFS", formData.ipfsURL),
+  ].join("\n\n");
 
-  return descriptionWithLinks;
+  return descriptionPayload;
 }
 
-function onPreview() {
-  $validation.value.$validate();
+async function onPreview() {
+  await $validation.value.$validate();
   if (!$validation.value.$error) {
-    previewDescription.value = addHyperlinksToDescription();
+    previewDescription.value = buildDescriptionPayload();
     isPreview.value = true;
   }
 }
@@ -408,8 +532,8 @@ async function writeAllowance() {
   });
   console.log({ allowance });
 
-  const fee = BigInt(spog.values.proposalFee || 0n);
-  if (allowance <= fee) {
+  const fee = BigInt(spog.values.proposalFee!);
+  if (allowance <= fee && hasToPayFee.value) {
     const { hash } = await writeContract({
       abi: erc20ABI,
       address: spog.contracts.cashToken as Hash,
@@ -494,7 +618,7 @@ async function onSubmit() {
 
     const formDataWithLinks = {
       ...formData,
-      description: addHyperlinksToDescription(),
+      description: buildDescriptionPayload(),
     };
 
     const calldatas = buildCalldatas(formDataWithLinks);
@@ -504,6 +628,11 @@ async function onSubmit() {
     stepper.value.changeCurrentStep("complete");
 
     await wait(1000);
+
+    const isEmergency = selectedProposalType?.value?.isEmergency;
+    if (isEmergency) {
+      return navigateTo("/proposals/");
+    }
 
     return navigateTo("/proposals/pending/");
   } catch (error) {
@@ -573,15 +702,14 @@ function buildCalldatas(formData) {
   if (["setProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1 * 1e18)] // tax is using 18 decimals precision
+      [useParseCash(input1)]
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
 
   if (["setProposalFeeRange"].includes(type)) {
-    // tax is using 18 decimals precision
     const encodeBigInt = (value: any) =>
-      encodeAbiParameters([{ type: "uint256" }], [BigInt(value * 1e18)]);
+      encodeAbiParameters([{ type: "uint256" }], [useParseCash(value)]);
 
     return buildCalldatasSpog(
       type,
@@ -593,7 +721,7 @@ function buildCalldatas(formData) {
   if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(input1)] // tax is using 18 decimals precision
+      [BigInt(percentageToBasispoints(input1))]
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }

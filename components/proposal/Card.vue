@@ -7,16 +7,16 @@
     />
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="text-white bg-grey-800 p-8 mb-4"
+      class="text-white bg-grey-800 p-6 mb-4"
     >
       <h2 class="text-2xl mb-4 break-all">
         {{ title }}
       </h2>
       <div class="text-xs xl:text-sm mb-6 flex justify-between text-gray-400">
-        <div class="">
+        <div>
           Proposed by
           <NuxtLink :to="`/profile/${proposal.proposer}/`">
-            <u>{{ proposal.proposer }}</u>
+            <MAddressAvatar :address="proposal.proposer" />
           </NuxtLink>
         </div>
         <div>{{ timeAgo }} | {{ formatedDate }}</div>
@@ -53,9 +53,12 @@
 
       <div
         v-if="proposal?.state === 'Active'"
-        class="flex justify-between items-center"
+        class="lg:flex justify-between items-center"
       >
-        <div class="inline-flex gap-1 items-center" role="group">
+        <div
+          class="inline-flex gap-1 items-center w-full mb-4 lg:mb-0"
+          role="group"
+        >
           <ProposalButtonCastVote
             id="button-cast-yes"
             :disabled="
@@ -80,7 +83,7 @@
           </div>
         </div>
 
-        <div class="uppercase text-xs text-grey-400">
+        <div class="uppercase text-xs text-grey-400 whitespace-nowrap">
           <div
             v-if="
               proposal?.votingType === 'Power' ||
@@ -157,7 +160,7 @@ const { title } = useParsedDescriptionTitle(props.proposal.description);
 
 const isVoteSelected = ref(false);
 const selectedVote = ref<null | number>(null);
-const formatedDate = computed(() => toFormat("LL"));
+const formatedDate = computed(() => toFormat("LLL"));
 const isCastVoteYesDisabled = computed(() => selectedVote.value === 0);
 const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
 const isLoading = ref(false);

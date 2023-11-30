@@ -1,5 +1,6 @@
 ---
 # "official" service-name
+{{- if ne .Release.Namespace "default" }}
 kind: Service
 apiVersion: v1
 metadata:
@@ -10,4 +11,5 @@ spec:
   externalName: {{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local
   ports:
   - port: {{ .Values.service.port }}
+  {{- end }}
 

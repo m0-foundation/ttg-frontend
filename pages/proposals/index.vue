@@ -1,7 +1,10 @@
 <template>
   <NuxtLayout name="proposals">
+    <h2 class="uppercase text-sm px-6 py-4 text-grey-400">
+      mandatory proposals
+    </h2>
     <ProposalList
-      :proposals="activeProposals"
+      :proposals="mandatoryToVoteProposals"
       class="px-3 pb-2"
       @on-cast="onCast"
       @on-uncast="onUncast"
@@ -24,8 +27,9 @@
             Your votes has been submitted
           </p>
           <span v-else class="text-xxs lg:text-xs">
-            {{ activeProposals.length - selectedCastProposals.length }} of
-            {{ activeProposals.length }} proposals are left to vote on
+            {{ mandatoryToVoteProposals.length - selectedCastProposals.length }}
+            of {{ mandatoryToVoteProposals.length }} proposals are left to vote
+            on
           </span>
         </div>
         <MButton
@@ -48,6 +52,20 @@
         Your voting power will decrease over time if you do not vote
       </p>
     </div>
+
+    <h2 class="uppercase text-sm px-6 py-4 text-grey-400">
+      optional proposals
+    </h2>
+
+    <ProposalList
+      :proposals="optionalToVoteProposals"
+      class="px-3 pb-2"
+      @on-cast="onCastOptional"
+    >
+      <template #emptyState>
+        <ProposalListEmptyState> No Active proposals </ProposalListEmptyState>
+      </template>
+    </ProposalList>
   </NuxtLayout>
 </template>
 
@@ -70,34 +88,53 @@ const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 
 const { epoch } = storeToRefs(spog);
+
 const activeProposals = computed(() =>
-  proposalsStore.getProposalsByState("Active").filter((p) => !p.isEmergency)
+  proposalsStore.getProposalsByState("Active")
+);
+
+const mandatoryToVoteProposals = computed(() =>
+  activeProposals.value.filter(
+    (p) => p.votingType === "Power" || p.votingType === "Double"
+  )
+);
+
+const optionalToVoteProposals = computed(() =>
+  activeProposals.value.filter(
+    (p) => p.votingType === "Zero" || p.votingType === "Emergency"
+  )
 );
 
 const hasProposals = computed(
-  () => activeProposals && activeProposals.value.length > 0
+  () => mandatoryToVoteProposals && mandatoryToVoteProposals.value.length > 0
 );
 
 const isSelectedCastProposalsFull = computed(() => {
-  return selectedCastProposals.value.length === activeProposals.value.length;
+  return (
+    selectedCastProposals.value.length === mandatoryToVoteProposals.value.length
+  );
 });
 
 const progressBarWidth = computed(() => {
   return (
-    (selectedCastProposals.value.length / activeProposals.value.length) * 100
+    (selectedCastProposals.value.length /
+      mandatoryToVoteProposals.value.length) *
+    100
   );
 });
 
 const { address: userAccount, isConnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 
+useHead({
+  titleTemplate: "%s - Proposals",
+});
+
 function onCast(vote: number, proposalId: string) {
-  console.log("casted", { vote, proposalId });
   selectedCastProposals.value.push({ vote, proposalId });
 }
 
 function onUncast(proposalId: string) {
-  console.log("uncasted", { proposalId });
   selectedCastProposals.value = selectedCastProposals.value.filter(
     (p) => p.proposalId !== proposalId
   );
@@ -126,8 +163,6 @@ async function onCastBatchVotes() {
   }
 
   isLoading.value = false;
-
-  window.location.reload();
 }
 
 const { data: hasFinishedVoting } = useContractRead({
@@ -137,4 +172,15 @@ const { data: hasFinishedVoting } = useContractRead({
   args: [userAccount as Ref<Hash>, BigInt(epoch.value.current?.asNumber)],
   watch: true,
 });
+
+async function onCastOptional(vote: number, proposalId: string) {
+  await forceSwitchChain();
+  console.log("cast", { vote, proposalId });
+  return writeDualGovernor({
+    address: spog.contracts.governor as Hash,
+    functionName: "castVote",
+    args: [BigInt(proposalId), vote],
+    account: userAccount.value,
+  });
+}
 </script>

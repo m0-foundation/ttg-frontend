@@ -11,11 +11,10 @@
     <MTextLoop class="text-green-900 bg-green-700 text-sm" text="PREVIEW" />
 
     <div class="bg-white p-6 lg:px-16 lg:py-8 mb-4">
-      <h2>proposal.title</h2>
       <div class="text-green-900 text-xs lg:text-base">
-        <p class="overflow-hidden text-ellipsis">
+        <p v-if="address" class="overflow-hidden text-ellipsis">
           Proposed by
-          <span>{{ shortenAddress(address) || "0x..." }}</span>
+          <MAddressAvatar :address="address" />
         </p>
       </div>
       <div class="markdown-body" v-html="descriptionHtml"></div>
