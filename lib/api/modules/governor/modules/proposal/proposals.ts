@@ -204,17 +204,14 @@ export class Proposals extends GovernorModule {
         return this.decodeProposalTypeAddToList(calldata, "addToList");
         break;
       case ProposalTypesFunctionSelectors.emergencyAddToList:
-        return this.decodeProposalTypeAddToList(calldata, "emergencyAddToList");
+        return this.decodeProposalTypeAddToList(calldata, "addToList");
         break;
 
       case ProposalTypesFunctionSelectors.removeFromList:
         return this.decodeProposalRemoveFromList(calldata, "removeFromList");
         break;
       case ProposalTypesFunctionSelectors.emergencyRemoveFromList:
-        return this.decodeProposalRemoveFromList(
-          calldata,
-          "emergencyRemoveFromList"
-        );
+        return this.decodeProposalRemoveFromList(calldata, "removeFromList");
         break;
 
       case ProposalTypesFunctionSelectors.addAndRemoveFromList:
@@ -226,7 +223,7 @@ export class Proposals extends GovernorModule {
       case ProposalTypesFunctionSelectors.emergencyAddAndRemoveFromList:
         return this.decodeProposalAddAndRemoveFromList(
           calldata,
-          "emergencyAddAndRemoveFromList"
+          "addAndRemoveFromList"
         );
         break;
 
@@ -234,10 +231,7 @@ export class Proposals extends GovernorModule {
         return this.decodeProposalTypeUpdateConfig(calldata, "updateConfig");
         break;
       case ProposalTypesFunctionSelectors.emergencyUpdateConfig:
-        return this.decodeProposalTypeUpdateConfig(
-          calldata,
-          "emergencyUpdateConfig"
-        );
+        return this.decodeProposalTypeUpdateConfig(calldata, "updateConfig");
         break;
 
       case ProposalTypesFunctionSelectors.resetToZeroHolders:
@@ -256,7 +250,7 @@ export class Proposals extends GovernorModule {
       case ProposalTypesFunctionSelectors.emergencySetProposalFee:
         return this.decodeProposalTypeSetProposalFee(
           calldata,
-          "emergencySetProposalFee"
+          "setProposalFee"
         );
         break;
       case ProposalTypesFunctionSelectors.setPowerTokenThresholdRatio:
