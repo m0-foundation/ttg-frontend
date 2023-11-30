@@ -40,12 +40,18 @@
       <ProposalTechnical
         :proposal="proposal"
         :current-proposal-values="currentProposalValuesFormatted"
+        class="mb-6"
       />
-    </article>
 
-    <div class="my-8 mx-4">
+      <div class="text-green-900 mb-2">
+        <h2>Result details</h2>
+        <p class="text-xs">
+          List of addresses that have voted for or against the current proposal.
+        </p>
+      </div>
+
       <ProposalTableVotes :votes="votes?.value" />
-    </div>
+    </article>
   </div>
 </template>
 

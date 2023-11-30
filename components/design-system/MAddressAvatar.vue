@@ -1,10 +1,20 @@
 <template>
   <span class="inline-flex items-center">
-    <div v-if="showAvatar" class="address-avatar">
-      <img v-if="ensAvatar" :src="ensAvatar" alt="" />
-      <img v-else :src="identiconIcon" />
+    <div v-if="showAvatar" class="absolute flex items-center">
+      <img
+        v-if="ensAvatar"
+        class="w-4 h-4 rounded-full"
+        :src="ensAvatar"
+        alt=""
+      />
+      <Jazzicon
+        v-else
+        class="flex items-center"
+        :address="props?.address"
+        diameter="16"
+      />
     </div>
-    <span :class="{ 'ml-5': showAvatar }">
+    <span :class="{ 'ml-[22px]': showAvatar }">
       <span v-if="ensName">{{ ensName }}</span>
       <span v-else>{{
         shortAddress ? shortenAddress(props.address) : props.address
@@ -15,7 +25,7 @@
 <script setup lang="ts">
 import { useEnsAvatar, useEnsName } from "use-wagmi";
 import { Hash } from "viem";
-import Identicon from "identicon.js";
+import { Jazzicon } from "vue3-jazzicon/src/components";
 
 export interface MAddressAvatar {
   address: Hash | undefined;
@@ -36,25 +46,4 @@ const { data: ensName } = useEnsName({
 const { data: ensAvatar } = useEnsAvatar({
   name: ensName,
 });
-
-const identiconIcon = computed(() => {
-  const identicon = new Identicon(props.address || "", {
-    size: 16,
-    format: "svg",
-  });
-  return `data:image/svg+xml;base64,${identicon}`;
-});
 </script>
-
-<style>
-.address-avatar {
-  position: absolute;
-  display: flex;
-  align-items: center;
-}
-.address-avatar img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-</style>
