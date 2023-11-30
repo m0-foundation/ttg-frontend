@@ -52,6 +52,7 @@ const ProposalTypesFunctionSelectors = {
   resetToPowerHolders: getFunctionSelector("resetToPowerHolders()"),
   resetToZeroHolders: getFunctionSelector("resetToZeroHolders()"),
   setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
+  setCashToken: getFunctionSelector("setCashToken(address,uint256)"),
   emergencySetProposalFee: getFunctionSelector(
     "emergencySetProposalFee(uint256)"
   ),
@@ -79,6 +80,7 @@ const ProposalLabels = {
   resetToZeroHolders: "Reset to Zero Holders",
   setPowerTokenThresholdRatio: "Update Power Threshold",
   setZeroTokenThresholdRatio: "Update Zero Threshold",
+  setCashToken: "Set Cash Token",
 };
 
 type IParams =
@@ -87,6 +89,7 @@ type IParams =
   | readonly [bigint, bigint]
   | readonly [bigint, bigint, bigint]
   | readonly [number]
+  | readonly [`0x${string}`, bigint]
   | string[]
   | string;
 
@@ -155,6 +158,17 @@ export class Proposals extends GovernorModule {
 
   decodeProposalTypeReset(proposalType: string) {
     return { proposalType, params: [] };
+  }
+
+  decodeProposalTypeSetCashToken(calldata: Hash) {
+    const params = decodeAbiParameters(
+      [
+        { name: "newCashToken_", type: "address" },
+        { name: "newProposalFee_", type: "uint256" },
+      ],
+      removeSelectorFromCallData(calldata)
+    );
+    return { proposalType: "setCashToken", params };
   }
 
   decodeProposalTypeSetProposalFee(calldata: Hash, proposalType: string) {
@@ -250,6 +264,10 @@ export class Proposals extends GovernorModule {
         break;
       case ProposalTypesFunctionSelectors.setZeroTokenThresholdRatio:
         return this.decodeProposalTypeSetZeroTokenThresholdRatio(calldata);
+        break;
+
+      case ProposalTypesFunctionSelectors.setCashToken:
+        return this.decodeProposalTypeSetCashToken(calldata);
         break;
 
       default:

@@ -22,7 +22,8 @@
     >
       <div v-if="showParsed">
         <div v-for="(param, index) in incomingValuesParsed" :key="param">
-          {{ param }} ({{ incomingValues[index] }})
+          <span v-if="param.includes('0x')">{{ param }}</span>
+          <span v-else>{{ param }} ({{ incomingValues[index] }})</span>
         </div>
       </div>
 
@@ -60,6 +61,11 @@ const parsedValue = (value: string, type: string) => {
     return `${basisPointsToPercentage(value)}%`;
   }
 
+  if (["setCashToken"].includes(type)) {
+    // when is the address or is the fee
+    return value.includes("0x") ? value : formatFee(value);
+  }
+
   return value;
 };
 
@@ -69,6 +75,7 @@ const showParsed = computed(() =>
     "emergencySetProposalFee",
     "setPowerTokenThresholdRatio",
     "setZeroTokenThresholdRatio",
+    "setCashToken",
   ].includes(props.proposal?.proposalType)
 );
 

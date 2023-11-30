@@ -220,9 +220,11 @@ import ProposalInputListOperation from "@/components/proposal/InputListOperation
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
+import ProposalInputAddressFee from "@/components/proposal/InputAddressFee.vue";
 import ProposalInputFee from "@/components/proposal/InputFee.vue";
 
 import { MProposalVotingTokens, MVotingTokens } from "@/lib/api";
+
 /* control stepper */
 let steps = reactive([]);
 
@@ -442,6 +444,13 @@ const proposalTypes = [
         tokens: MProposalVotingTokens.setProposalFee,
       },
     ],
+  },
+
+  {
+    value: "setCashToken",
+    label: "Set Cash Token",
+    component: ProposalInputAddressFee,
+    tokens: MProposalVotingTokens.setCashToken,
   },
 
   {
@@ -767,6 +776,14 @@ function buildCalldatas(formData) {
       [useParseCash(input1)]
     );
     return buildCalldatasSpog(type, [valueEncoded]);
+  }
+
+  if (["setCashToken"].includes(type)) {
+    const newFee = encodeAbiParameters(
+      [{ type: "uint256" }],
+      [useParseCash(input2)]
+    );
+    return buildCalldatasSpog(type, [input1, newFee]);
   }
 
   if (
