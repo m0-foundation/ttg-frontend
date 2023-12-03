@@ -5,9 +5,13 @@
     >
       <div class="text-grey-primary hidden lg:block">status:</div>
 
-      <MDropdown>
+      <MDropdown v-if="!proposal?.isEmergency">
         <template #activator>
-          <ProposalStatusBadge :version="version" name="Pending" />
+          <ProposalStatusBadge
+            :version="version"
+            name="Pending"
+            :show-arrow="true"
+          />
         </template>
         <template #content>
           <ProposalStatusMenu :proposal="proposal" />
@@ -16,7 +20,11 @@
 
       <MDropdown>
         <template #activator>
-          <ProposalStatusBadge :version="version" name="Active" />
+          <ProposalStatusBadge
+            :version="version"
+            name="Active"
+            :show-arrow="true"
+          />
         </template>
         <template #content>
           <ProposalStatusMenu :proposal="proposal" />
@@ -25,7 +33,11 @@
 
       <MDropdown v-if="version === 'Defeated'">
         <template #activator>
-          <ProposalStatusBadge :version="version" name="Defeated" />
+          <ProposalStatusBadge
+            :version="version"
+            name="Defeated"
+            :show-arrow="true"
+          />
         </template>
         <template #content>
           <ProposalStatusMenu :proposal="proposal" />
@@ -34,7 +46,11 @@
 
       <MDropdown v-else>
         <template #activator>
-          <ProposalStatusBadge :version="version" name="Succeeded" />
+          <ProposalStatusBadge
+            :version="version"
+            name="Succeeded"
+            :show-arrow="true"
+          />
         </template>
         <template #content>
           <ProposalStatusMenu :proposal="proposal" />
@@ -50,14 +66,19 @@
         </template>
       </MDropdown>
 
-      <MDropdown v-else>
+      <MDropdown v-if="version === 'Executed'">
         <template #activator>
-          <ProposalStatusBadge :version="version" name="Executed" />
+          <ProposalStatusBadge
+            :version="version"
+            name="Executed"
+            :show-arrow="true"
+          />
         </template>
         <template #content>
           <ProposalStatusMenu :proposal="proposal" />
         </template>
       </MDropdown>
+      <ProposalStatusBadge v-else :version="version" name="Executed" />
     </div>
   </div>
 </template>

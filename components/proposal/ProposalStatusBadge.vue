@@ -7,6 +7,7 @@
     {{ name }}
 
     <svg
+      v-if="showArrow"
       xmlns="http://www.w3.org/2000/svg"
       width="6"
       height="4"
@@ -29,6 +30,10 @@ defineProps({
     type: String,
     required: true,
   },
+  showArrow: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
@@ -46,7 +51,7 @@ defineProps({
   @apply bg-[#00664E] text-[#5CC99E];
 }
 .active .status-chevron path {
-  @apply stroke-green-700;
+  @apply stroke-grey-700;
 }
 .defeated {
   @apply bg-red-500 text-white;

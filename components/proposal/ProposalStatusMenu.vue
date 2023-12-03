@@ -5,7 +5,7 @@
       <p class="text-grey-100">Mon Oct 30 17:04pm</p>
     </div>
     <hr class="border-grey-1000" />
-    <ul class="status-menu-items">
+    <ul v-if="statusBlock" class="status-menu-items">
       <li>
         <a target="_blank" href="">View on Block Explorer </a>
       </li>
@@ -24,6 +24,7 @@ import { MProposal } from "~/lib/api/types";
 
 export interface Props {
   proposal: MProposal | undefined;
+  statusBlock: number | undefined;
 }
 
 defineProps<Props>();
