@@ -1,3 +1,5 @@
+import { MVotingType } from "./modules/proposal/proposal.types";
+
 export interface MGovernorValues {
   thresholdRatio: string;
 }
@@ -7,5 +9,7 @@ export interface MStandardGovernorValues {
   proposalFee: string;
   maxTotalZeroRewardPerActiveEpoch: string;
 }
+
+export type GovernanceType = MVotingType;
 
 export type MGovernorState = MGovernorValues;

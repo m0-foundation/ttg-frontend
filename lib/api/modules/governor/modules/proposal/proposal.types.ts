@@ -1,4 +1,3 @@
-import { boolean } from "hardhat/internal/core/params/argumentTypes";
 import { Hash } from "viem";
 import { EventLog } from "../../../event/event.types";
 
@@ -47,7 +46,6 @@ export interface GetProposalOutput {
   executed: boolean;
   state: MProposalState;
   votingType: MVotingType;
-  thresholdRatio: string;
   noVotes: bigint;
   yesVotes: bigint;
 }

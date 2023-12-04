@@ -18,6 +18,7 @@ import {
 } from "../../../../utils";
 
 import { GovernorModule } from "../GovernorModule";
+import { GovernanceType } from "../../governor.types";
 import {
   GetProposalOutput,
   MProposal,
@@ -97,9 +98,16 @@ type IParams =
 export class Proposals extends GovernorModule {
   fromBlock: bigint;
   abi: Abi;
+  governanceType: GovernanceType;
 
-  constructor(governor: Hash, context: ApiContext, abi: Abi) {
+  constructor(
+    governor: Hash,
+    context: ApiContext,
+    abi: Abi,
+    governanceType: GovernanceType
+  ) {
     super(governor, context);
+    this.governanceType = governanceType;
     this.abi = abi;
     this.fromBlock = this.config.deploymentBlock; // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
   }
@@ -330,17 +338,8 @@ export class Proposals extends GovernorModule {
   }
 
   decodeReadGetProposal(proposal: any) {
-    const [
-      proposalType,
-      voteStart,
-      voteEnd,
-      executed,
-      state,
-      thresholdRatio,
-      noVotes,
-      yesVotes,
-      proposer,
-    ] = proposal;
+    const [voteStart, voteEnd, executed, state, noVotes, yesVotes, proposer] =
+      proposal;
 
     return {
       proposer: proposer as Hash,
@@ -348,10 +347,9 @@ export class Proposals extends GovernorModule {
       voteEnd,
       executed,
       state: ProposalState[state] as keyof typeof ProposalState,
-      votingType: VotingType[proposalType] as keyof typeof VotingType,
+      votingType: this.governanceType,
       yesVotes,
       noVotes,
-      thresholdRatio,
     };
   }
 
@@ -539,6 +537,7 @@ export class Proposals extends GovernorModule {
       proposalType: String(proposalType),
       proposalParams: this.toString([...params]),
       proposalLabel,
+      governor: this.contract,
     };
 
     const readGetProposal = await this.readGetProposal(
