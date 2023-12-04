@@ -63,6 +63,7 @@ export interface MProposal extends ProposalEventLog {
   voteStart?: number;
   voteEnd?: number;
   executed?: boolean;
+  executedEvent?: ProposalEventLog;
   state?: MProposalState;
   tallies?: MProposalTallies;
   votingType?: MVotingType;

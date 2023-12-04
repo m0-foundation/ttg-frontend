@@ -2,17 +2,19 @@
   <div class="bg-grey-600 whitespace-nowrap">
     <div class="p-6 py-3 text-xxs">
       <p class="text-grey-300">Status updated</p>
-      <p class="text-grey-100">Mon Oct 30 17:04pm</p>
+      <p v-if="updated" class="text-grey-100">{{ toFormat("LLL") }}</p>
     </div>
     <hr class="border-grey-1000" />
-    <ul v-if="statusBlock" class="status-menu-items">
-      <li>
-        <a target="_blank" href="">View on Block Explorer </a>
+    <ul class="status-menu-items">
+      <li v-if="txHash">
+        <a target="_blank" :href="useBlockExplorer('tx', txHash)"
+          >View on Block Explorer
+        </a>
       </li>
-      <li>
-        <a @click="copyToClipboard('')">
+      <li v-if="statusBlock">
+        <a @click="copyToClipboard(statusBlock)">
           <p>Copy Ethereum Block</p>
-          <p class="text-grey-400 text-xxs">{{ proposal?.blockNumber }}</p></a
+          <p class="text-grey-400 text-xxs">{{ statusBlock }}</p></a
         >
       </li>
     </ul>
@@ -20,14 +22,17 @@
 </template>
 
 <script setup lang="ts">
-import { MProposal } from "~/lib/api/types";
+import { Hash } from "viem";
 
 export interface Props {
-  proposal: MProposal | undefined;
-  statusBlock: number | undefined;
+  updated?: number | undefined;
+  statusBlock?: number | undefined;
+  txHash?: Hash | undefined | string;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const { toFormat } = useDate(Number(props?.updated));
 </script>
 
 <style>

@@ -381,6 +381,12 @@ export class Proposals extends GovernorModule {
       ),
     });
 
+    const rawExecutedLogs = await this.client.getLogs({
+      address: this.contract as Hash,
+      fromBlock: this.fromBlock,
+      event: parseAbiItem("event ProposalExecuted(uint256 proposalId)"),
+    });
+
     const proposals = rawLogs.map((log: Log) =>
       this.decodeProposalLog(log, dualGovernorABI)
     );
@@ -411,7 +417,24 @@ export class Proposals extends GovernorModule {
           readGetProposal: proposalData,
         });
 
-        return proposalPresented;
+        const executedEvent = rawExecutedLogs.filter(
+          (p) => String(p.args.proposalId) === proposal?.proposalId
+        )[0];
+
+        if (executedEvent) {
+          const block = await this.client.getBlock({
+            blockNumber: executedEvent?.blockNumber,
+          });
+          return {
+            ...proposalPresented,
+            executedEvent: {
+              ...executedEvent,
+              timestamp: Number(block?.timestamp),
+            },
+          };
+        } else {
+          return proposalPresented;
+        }
       })
     );
 

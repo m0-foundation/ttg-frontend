@@ -5,7 +5,7 @@
     >
       <div class="text-grey-primary hidden lg:block">status:</div>
 
-      <MDropdown v-if="!proposal?.isEmergency">
+      <MDropdown>
         <template #activator>
           <ProposalStatusBadge
             :version="version"
@@ -14,59 +14,33 @@
           />
         </template>
         <template #content>
-          <ProposalStatusMenu :proposal="proposal" />
-        </template>
-      </MDropdown>
-
-      <MDropdown>
-        <template #activator>
-          <ProposalStatusBadge
-            :version="version"
-            name="Active"
-            :show-arrow="true"
+          <ProposalStatusMenu
+            :updated="proposal?.timestamp"
+            :status-block="proposal?.blockNumber"
+            :tx-hash="proposal?.transactionHash"
           />
         </template>
-        <template #content>
-          <ProposalStatusMenu :proposal="proposal" />
-        </template>
       </MDropdown>
 
-      <MDropdown v-if="version === 'Defeated'">
-        <template #activator>
-          <ProposalStatusBadge
-            :version="version"
-            name="Defeated"
-            :show-arrow="true"
-          />
-        </template>
-        <template #content>
-          <ProposalStatusMenu :proposal="proposal" />
-        </template>
-      </MDropdown>
+      <ProposalStatusBadge :version="version" name="Active" />
 
-      <MDropdown v-else>
-        <template #activator>
-          <ProposalStatusBadge
-            :version="version"
-            name="Succeeded"
-            :show-arrow="true"
-          />
-        </template>
-        <template #content>
-          <ProposalStatusMenu :proposal="proposal" />
-        </template>
-      </MDropdown>
+      <ProposalStatusBadge
+        v-if="version === 'Defeated'"
+        :version="version"
+        name="Defeated"
+        class="defeated"
+      />
 
-      <MDropdown v-if="version === 'Expired'">
-        <template #activator>
-          <ProposalStatusBadge :version="version" name="Expired" />
-        </template>
-        <template #content>
-          <ProposalStatusMenu :proposal="proposal" />
-        </template>
-      </MDropdown>
+      <ProposalStatusBadge v-else :version="version" name="Succeeded" />
 
-      <MDropdown v-if="version === 'Executed'">
+      <ProposalStatusBadge
+        v-if="version === 'Expired'"
+        :version="version"
+        name="Expired"
+        class="expired"
+      />
+
+      <MDropdown v-else-if="version === 'Executed'">
         <template #activator>
           <ProposalStatusBadge
             :version="version"
@@ -75,7 +49,11 @@
           />
         </template>
         <template #content>
-          <ProposalStatusMenu :proposal="proposal" />
+          <ProposalStatusMenu
+            :status-block="proposal?.executedEvent?.blockNumber"
+            :tx-hash="proposal?.executedEvent?.transactionHash"
+            :updated="proposal?.executedEvent?.timestamp"
+          />
         </template>
       </MDropdown>
       <ProposalStatusBadge v-else :version="version" name="Executed" />
