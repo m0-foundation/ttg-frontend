@@ -35,6 +35,8 @@ import {
   watchForExecutedResetProposal,
 } from "@/lib/watchers";
 
+import { MStandardGovernorValues, MGovernorValues } from "@/lib/api/types";
+
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
 
@@ -44,18 +46,30 @@ const spog = useSpogStore();
 const { rpc } = storeToRefs(apiStore);
 const isLoading = ref(true);
 
-const fetchGovernorData = async (api: Api) => {
+const fetchGovernorsData = async (api: Api) => {
   try {
-    const [contracts, values] = await Promise.all([
-      api.governor!.getContracts(),
-      api.governor!.getValues(),
+    const [standard, emergency, zero] = await Promise.all([
+      api.standardGovernor!.getParameters<Partial<MStandardGovernorValues>>([
+        "proposalFee",
+        "cashToken",
+        "maxTotalZeroRewardPerActiveEpoch",
+      ]),
+      api.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
+        "thresholdRatio",
+      ]),
+      api.zeroGovernor!.getParameters<Partial<MGovernorValues>>([
+        "thresholdRatio",
+      ]),
     ]);
 
-    await spog.setContracts({
-      ...contracts,
-      governor: api.governor!.contract as string,
+    spog.contracts.cashToken = standard.cashToken;
+
+    spog.setGovernorsValues({
+      standard,
+      emergency,
+      zero,
     });
-    spog.setValues(values);
+    await spog.fetchTokens();
   } catch (error) {
     console.error({ error });
   }
@@ -63,10 +77,19 @@ const fetchGovernorData = async (api: Api) => {
 
 const fetchProposals = async (api: Api) => {
   try {
-    const data = await api.governor!.proposals.getProposals();
+    // const data = await api.standardGovernor!.proposals.getProposals();
+    // const data = await api.emergencyGovernor!.proposals.getProposals();
+    // const data = await api.zeroGovernor!.proposals.getProposals();
+
+    const [standard, emergency, zero] = await Promise.all([
+      api.standardGovernor!.proposals.getProposals(),
+      api.emergencyGovernor!.proposals.getProposals(),
+      api.zeroGovernor!.proposals.getProposals(),
+    ]);
+    const allProposals = [...standard, ...emergency, ...zero];
     const proposalStore = useProposalsStore();
-    proposalStore.setProposals(data);
-    console.log("fetched Proposals", { data });
+    proposalStore.setProposals(allProposals);
+    console.log("fetched Proposals", { allProposals });
   } catch (error) {
     console.error({ error });
   }
@@ -74,7 +97,7 @@ const fetchProposals = async (api: Api) => {
 
 const fetchEpoch = async (api: Api) => {
   try {
-    const data = await api.governor!.epoch.getEpochState();
+    const data = await api.epoch.getEpochState();
     const store = useSpogStore();
     store.setEpoch(data);
     console.log("fetched Epoch", { data });
@@ -100,9 +123,14 @@ async function onSetup(rpc: string) {
     deploymentBlock: BigInt(network.value.contracts.deploymentBlock),
   });
 
-  const { governor } = await api.registrar.getContracts();
+  const registrarContracts = await api.registrar.getValues();
+  spog.setContracts(registrarContracts);
 
-  api.setGovernor(governor as Hash);
+  api.setGovernors({
+    standardGovernor: registrarContracts.standardGovernor,
+    zeroGovernor: registrarContracts.zeroGovernor,
+    emergencyGovernor: registrarContracts.emergencyGovernor,
+  });
   apiStore.setClient(api);
 
   return api;
@@ -111,7 +139,7 @@ async function onSetup(rpc: string) {
 await onSetup(rpc.value).then(async (api) => {
   isLoading.value = true;
   await Promise.all([
-    fetchGovernorData(api),
+    fetchGovernorsData(api),
     fetchProposals(api),
     fetchEpoch(api),
     fetchVotes(),

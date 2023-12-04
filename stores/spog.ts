@@ -2,17 +2,22 @@ import { defineStore } from "pinia";
 import { Hash } from "viem";
 import { fetchToken, FetchTokenResult } from "@wagmi/core";
 import {
-  MGovernorContracts,
   MGovernorValues,
   MEpoch,
   MProposalsActionTypes,
+  MStandardGovernorValues,
 } from "@/lib/api/types";
+import { MRegistrarStore } from "@/lib/api/modules/registrar/registrar.types";
 
 export const useSpogStore = defineStore("spog", {
   state: () => ({
     epoch: {} as MEpoch,
-    contracts: {} as Partial<MGovernorContracts>,
-    values: {} as Partial<MGovernorValues>,
+    contracts: {} as Partial<MRegistrarStore>,
+    governors: {
+      standard: {} as Partial<MStandardGovernorValues>,
+      emergency: {} as Partial<MGovernorValues>,
+      zero: {} as Partial<MGovernorValues>,
+    },
     tokens: {
       cash: {} as Partial<FetchTokenResult>,
       power: {} as Partial<FetchTokenResult>,
@@ -25,12 +30,20 @@ export const useSpogStore = defineStore("spog", {
 
     getValuesFormatted: (state) => {
       const values: MProposalsActionTypes = {
-        setProposalFee: useFormatCash(state.values.proposalFee!),
-        setPowerTokenThresholdRatio: state.values.powerTokenThresholdRatio!,
-        setZeroTokenThresholdRatio: state.values.zeroTokenThresholdRatio!,
+        setProposalFee: useFormatCash(state.governors.standard.proposalFee!),
+        setPowerTokenThresholdRatio: state.governors.emergency.thresholdRatio!,
+        setZeroTokenThresholdRatio: state.governors.zero.thresholdRatio!,
       };
 
       return values;
+    },
+
+    getValues: (state) => {
+      return {
+        proposalFee: state.governors.standard.proposalFee!,
+        powerTokenThresholdRatio: state.governors.emergency.thresholdRatio!,
+        zeroTokenThresholdRatio: state.governors.zero.thresholdRatio!,
+      };
     },
   },
 
@@ -38,9 +51,7 @@ export const useSpogStore = defineStore("spog", {
     setEpoch(epoch: MEpoch) {
       this.epoch = epoch;
     },
-    async setContracts(params: Partial<MGovernorContracts>) {
-      this.contracts = params;
-
+    async fetchTokens() {
       const [cashToken, powerToken, zeroToken] = await Promise.all([
         fetchToken({
           address: this.contracts.cashToken as Hash,
@@ -57,8 +68,25 @@ export const useSpogStore = defineStore("spog", {
       this.tokens.power = powerToken;
       this.tokens.zero = zeroToken;
     },
-    setValues(params: Partial<MGovernorValues>) {
-      this.values = params;
+
+    setContracts(params: Partial<MRegistrarStore>) {
+      this.contracts = params;
+    },
+
+    setGovernorsValues({
+      standard,
+      emergency,
+      zero,
+    }: {
+      standard: Partial<MStandardGovernorValues>;
+      emergency: Partial<MGovernorValues>;
+      zero: Partial<MGovernorValues>;
+    }) {
+      this.governors = {
+        standard,
+        emergency,
+        zero,
+      };
     },
   },
 });
