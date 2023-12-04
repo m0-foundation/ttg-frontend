@@ -75,5 +75,17 @@ export const useProposalsStore = defineStore("proposals", {
         }
       }
     },
+
+    async fetchAllProposals() {
+      const api = useApiClientStore();
+
+      const [standard, emergency, zero] = await Promise.all([
+        api.client.standardGovernor!.proposals.getProposals(),
+        api.client.emergencyGovernor!.proposals.getProposals(),
+        api.client.zeroGovernor!.proposals.getProposals(),
+      ]);
+      const allProposals = [...standard, ...emergency, ...zero];
+      this.setProposals(allProposals);
+    },
   },
 });

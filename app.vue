@@ -46,71 +46,6 @@ const spog = useSpogStore();
 const { rpc } = storeToRefs(apiStore);
 const isLoading = ref(true);
 
-const fetchGovernorsData = async (api: Api) => {
-  try {
-    const [standard, emergency, zero] = await Promise.all([
-      api.standardGovernor!.getParameters<Partial<MStandardGovernorValues>>([
-        "proposalFee",
-        "cashToken",
-        "maxTotalZeroRewardPerActiveEpoch",
-      ]),
-      api.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
-        "thresholdRatio",
-      ]),
-      api.zeroGovernor!.getParameters<Partial<MGovernorValues>>([
-        "thresholdRatio",
-      ]),
-    ]);
-
-    spog.contracts.cashToken = standard.cashToken;
-
-    spog.setGovernorsValues({
-      standard,
-      emergency,
-      zero,
-    });
-    await spog.fetchTokens();
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const fetchProposals = async (api: Api) => {
-  try {
-    // const data = await api.standardGovernor!.proposals.getProposals();
-    // const data = await api.emergencyGovernor!.proposals.getProposals();
-    // const data = await api.zeroGovernor!.proposals.getProposals();
-
-    const [standard, emergency, zero] = await Promise.all([
-      api.standardGovernor!.proposals.getProposals(),
-      api.emergencyGovernor!.proposals.getProposals(),
-      api.zeroGovernor!.proposals.getProposals(),
-    ]);
-    const allProposals = [...standard, ...emergency, ...zero];
-    const proposalStore = useProposalsStore();
-    proposalStore.setProposals(allProposals);
-    console.log("fetched Proposals", { allProposals });
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const fetchEpoch = async (api: Api) => {
-  try {
-    const data = await api.epoch.getEpochState();
-    const store = useSpogStore();
-    store.setEpoch(data);
-    console.log("fetched Epoch", { data });
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const fetchVotes = () => {
-  const votes = useVotesStore();
-  return votes.fetchAllVotes();
-};
-
 async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
@@ -136,13 +71,27 @@ async function onSetup(rpc: string) {
   return api;
 }
 
-await onSetup(rpc.value).then(async (api) => {
+await onSetup(rpc.value).then(async () => {
   isLoading.value = true;
+  const proposalStore = useProposalsStore();
+  const votes = useVotesStore();
+
+  const trackError = (error: Error, label: string) => {
+    console.error(label, { error });
+  };
+
+  // this must go first
+  await spog
+    .fetchGovernorsValues()
+    .catch((e) => trackError(e, "fetchGovernorsValues"));
+
   await Promise.all([
-    fetchGovernorsData(api),
-    fetchProposals(api),
-    fetchEpoch(api),
-    fetchVotes(),
+    spog.fetchTokens().catch((e) => trackError(e, "fetchTokens")),
+    spog.fetchEpoch().catch((e) => trackError(e, "fetchEpoch")),
+    proposalStore
+      .fetchAllProposals()
+      .catch((e) => trackError(e, "fetchAllProposals")),
+    votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes")),
   ]);
 
   watchProposalCreated();

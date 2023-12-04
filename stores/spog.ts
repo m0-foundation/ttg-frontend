@@ -48,10 +48,13 @@ export const useSpogStore = defineStore("spog", {
   },
 
   actions: {
-    setEpoch(epoch: MEpoch) {
+    async fetchEpoch() {
+      const api = useApiClientStore();
+      const epoch = await api.client.epoch.getEpochState();
       this.epoch = epoch;
     },
     async fetchTokens() {
+      console.log("fetchTokens");
       const [cashToken, powerToken, zeroToken] = await Promise.all([
         fetchToken({
           address: this.contracts.cashToken as Hash,
@@ -87,6 +90,32 @@ export const useSpogStore = defineStore("spog", {
         emergency,
         zero,
       };
+    },
+
+    async fetchGovernorsValues() {
+      const api = useApiClientStore();
+
+      const [standard, emergency, zero] = await Promise.all([
+        // eslint-disable-next-line prettier/prettier
+        api.client.standardGovernor!.getParameters<Partial<MStandardGovernorValues>>([
+          // eslint-disable-next-line prettier/prettier
+          "proposalFee", "cashToken", "maxTotalZeroRewardPerActiveEpoch"
+        ]),
+        api.client.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
+          "thresholdRatio",
+        ]),
+        api.client.zeroGovernor!.getParameters<Partial<MGovernorValues>>([
+          "thresholdRatio",
+        ]),
+      ]);
+
+      this.contracts.cashToken = standard.cashToken;
+
+      this.setGovernorsValues({
+        standard,
+        emergency,
+        zero,
+      });
     },
   },
 });
