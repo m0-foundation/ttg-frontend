@@ -73,8 +73,8 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useAccount, useContractRead } from "use-wagmi";
-import { waitForTransaction } from "@wagmi/core";
-import { writeDualGovernor, powerTokenABI } from "@/lib/sdk";
+import { waitForTransaction, writeContract } from "@wagmi/core";
+import { powerTokenABI, writeStandardGovernor } from "@/lib/sdk";
 
 interface CastedProposal {
   vote: number;
@@ -138,6 +138,7 @@ function onUncast(proposalId: string) {
   );
 }
 
+// batch is only for standard proposals
 async function onCastBatchVotes() {
   await forceSwitchChain();
 
@@ -148,8 +149,8 @@ async function onCastBatchVotes() {
   );
   const votes = selectedCastProposals.value.map((p) => p.vote);
 
-  const { hash } = await writeDualGovernor({
-    address: spog.contracts.governor as Hash,
+  const { hash } = await writeStandardGovernor({
+    address: spog.contracts.standardGovernor as Hash,
     functionName: "castVotes",
     args: [proposalIds, votes], // uint256 proposalId, uint8 support
     account: userAccount.value,
@@ -174,7 +175,7 @@ const { data: hasFinishedVoting } = useContractRead({
 async function onCastOptional(vote: number, proposalId: string) {
   await forceSwitchChain();
   console.log("cast", { vote, proposalId });
-  return writeDualGovernor({
+  return writeContract({
     address: spog.contracts.governor as Hash,
     functionName: "castVote",
     args: [BigInt(proposalId), vote],

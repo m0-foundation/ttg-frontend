@@ -59,7 +59,7 @@
 import { storeToRefs } from "pinia";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
-import { dualGovernorABI, readPowerToken, readZeroToken } from "@/lib/sdk";
+import { readPowerToken, readZeroToken } from "@/lib/sdk";
 
 export interface ProposalDetailsProps {
   proposalId: string;
@@ -84,20 +84,20 @@ useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,
 });
 
-const {
-  data: hasVoted,
-  isError: hasVotedError,
-  isLoading: hasVotedLoading,
-} = useContractRead({
-  address: spog.contracts.governor as Hash,
-  abi: dualGovernorABI,
-  functionName: "hasVoted",
-  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
-  watch: true,
-  onSuccess(hasVoted) {
-    console.log({ hasVoted });
-  },
-});
+// const {
+//   data: hasVoted,
+//   isError: hasVotedError,
+//   isLoading: hasVotedLoading,
+// } = useContractRead({
+//   address: spog.contracts.governor as Hash,
+//   abi: dualGovernorABI,
+//   functionName: "hasVoted",
+//   args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
+//   watch: true,
+//   onSuccess(hasVoted) {
+//     console.log({ hasVoted });
+//   },
+// });
 
 console.log({ currentProposalValuesFormatted });
 

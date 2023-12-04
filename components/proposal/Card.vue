@@ -125,7 +125,7 @@
 import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
 import { Hash } from "viem";
-import { dualGovernorABI } from "@/lib/sdk";
+// import { dualGovernorABI } from "@/lib/sdk";
 import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
 
@@ -180,13 +180,13 @@ function onCastSelected(vote: number) {
   }
 }
 
-const { data: hasVoted } = useContractRead({
-  address: spog.contracts.governor as Hash,
-  abi: dualGovernorABI,
-  functionName: "hasVoted",
-  args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
-  watch: true,
-});
+// const { data: hasVoted } = useContractRead({
+//   address: spog.contracts.governor as Hash,
+//   abi: dualGovernorABI,
+//   functionName: "hasVoted",
+//   args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
+//   watch: true,
+// });
 
 const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
   useMVotingPower(userAccount);

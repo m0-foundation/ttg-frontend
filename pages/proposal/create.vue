@@ -215,7 +215,7 @@ import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
-import { dualGovernorABI, writeDualGovernor } from "@/lib/sdk";
+import { standardGovernorABI } from "@/lib/sdk";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
@@ -388,12 +388,14 @@ const proposalTypes = [
     label: "Add to a list",
     component: ProposalInputListOperation,
     tokens: MProposalVotingTokens.addToList,
+    governor: spog.contracts.standardGovernor,
   },
   {
     value: "removeFromList",
     label: "Remove from a list",
     component: ProposalInputListOperation,
     tokens: MProposalVotingTokens.removeFromList,
+    governor: spog.contracts.standardGovernor,
   },
 
   {
@@ -401,6 +403,7 @@ const proposalTypes = [
     label: "Remove from and Add to list",
     component: ProposalInputListRemoveAddOperation,
     tokens: MProposalVotingTokens.addAndRemoveFromList,
+    governor: spog.contracts.standardGovernor,
   },
 
   {
@@ -408,6 +411,7 @@ const proposalTypes = [
     label: "Update config",
     component: ProposalInputUpdateConfig,
     tokens: MProposalVotingTokens.updateConfig,
+    governor: spog.contracts.standardGovernor,
   },
 
   {
@@ -424,12 +428,14 @@ const proposalTypes = [
         component: ProposalInputThreshold,
         modelValue: formData.proposalValue,
         tokens: MProposalVotingTokens.setPowerTokenThresholdRatio,
+        governor: spog.contracts.emergencyGovernor,
       },
       {
         value: "setZeroTokenThresholdRatio",
         label: "Zero threshold",
         component: ProposalInputThreshold,
         tokens: MProposalVotingTokens.setZeroTokenThresholdRatio,
+        governor: spog.contracts.zeroGovernor,
       },
     ],
   },
@@ -442,6 +448,7 @@ const proposalTypes = [
         label: "Change fee",
         component: ProposalInputFee,
         tokens: MProposalVotingTokens.setProposalFee,
+        governor: spog.contracts.standardGovernor,
       },
     ],
   },
@@ -451,6 +458,7 @@ const proposalTypes = [
     label: "Set Cash Token",
     component: ProposalInputAddressFee,
     tokens: MProposalVotingTokens.setCashToken,
+    governor: spog.contracts.zeroGovernor,
   },
 
   {
@@ -462,6 +470,7 @@ const proposalTypes = [
         label: "Reset to Power holders",
         component: undefined,
         tokens: MProposalVotingTokens.resetToPowerHolders,
+        governor: spog.contracts.zeroGovernor,
       },
 
       {
@@ -469,6 +478,7 @@ const proposalTypes = [
         label: "Reset to Zero holders",
         component: undefined,
         tokens: MProposalVotingTokens.resetToZeroHolders,
+        governor: spog.contracts.zeroGovernor,
       },
     ],
   },
@@ -484,6 +494,7 @@ const proposalTypes = [
         isEmergency: true,
         component: ProposalInputListOperation,
         tokens: MProposalVotingTokens.emergencyAddToList,
+        governor: spog.contracts.emergencyGovernor,
       },
       {
         value: "emergencyRemoveFromList",
@@ -491,6 +502,7 @@ const proposalTypes = [
         isEmergency: true,
         component: ProposalInputListOperation,
         tokens: MProposalVotingTokens.emergencyRemoveFromList,
+        governor: spog.contracts.emergencyGovernor,
       },
 
       {
@@ -499,6 +511,7 @@ const proposalTypes = [
         isEmergency: true,
         component: ProposalInputListRemoveAddOperation,
         tokens: MProposalVotingTokens.addAndRemoveFromList,
+        governor: spog.contracts.emergencyGovernor,
       },
 
       {
@@ -507,6 +520,7 @@ const proposalTypes = [
         isEmergency: true,
         component: ProposalInputUpdateConfig,
         tokens: MProposalVotingTokens.emergencyUpdateConfig,
+        governor: spog.contracts.emergencyGovernor,
       },
       {
         value: "emergencySetProposalFee",
@@ -514,6 +528,7 @@ const proposalTypes = [
         isEmergency: true,
         component: ProposalInputFee,
         tokens: MProposalVotingTokens.emergencySetProposalFee,
+        governor: spog.contracts.emergencyGovernor,
       },
     ],
   },
@@ -521,11 +536,15 @@ const proposalTypes = [
 
 const currentValue = computed(() => {
   if (selectedProposalType?.value?.value === "setPowerTokenThresholdRatio") {
-    return `${basisPointsToPercentage(spog.values.powerTokenThresholdRatio!)}%`;
+    return `${basisPointsToPercentage(
+      spog.getValues.powerTokenThresholdRatio!
+    )}%`;
   }
 
   if (selectedProposalType?.value?.value === "setZeroTokenThresholdRatio") {
-    return `${basisPointsToPercentage(spog.values.zeroTokenThresholdRatio!)}%`;
+    return `${basisPointsToPercentage(
+      spog.getValues.zeroTokenThresholdRatio!
+    )}%`;
   }
 
   const formatFee = (value: string) => useFormatCash(value);
@@ -535,7 +554,7 @@ const currentValue = computed(() => {
       selectedProposalType?.value?.value
     )
   ) {
-    return formatFee(spog.values.proposalFee!);
+    return formatFee(spog.getValues.proposalFee!);
   }
 });
 
@@ -577,18 +596,18 @@ async function writeAllowance() {
     abi: erc20ABI,
     address: spog.contracts.cashToken as Hash,
     functionName: "allowance",
-    args: [account as Hash, spog.contracts.governor as Hash], // address owner, address spender
+    args: [account as Hash, selectedProposalType.value.governor as Hash], // address owner, address spender
     account,
   });
   console.log({ allowance });
 
-  const fee = BigInt(spog.values.proposalFee!);
+  const fee = BigInt(spog.getValues.proposalFee!);
   if (allowance <= fee && hasToPayFee.value) {
     const { hash } = await writeContract({
       abi: erc20ABI,
       address: spog.contracts.cashToken as Hash,
       functionName: "approve",
-      args: [spog.contracts.governor as Hash, fee], // address spender, uint256 amount
+      args: [selectedProposalType.value.governor as Hash, fee], // address spender, uint256 amount
       account,
     });
 
@@ -609,13 +628,14 @@ async function writeAllowance() {
 
 async function writeProposal(calldatas, formData) {
   const account = userAccount.value;
-  const targets = [spog.contracts.governor as Hash];
+  const targets = [selectedProposalType.value.governor as Hash];
 
   const description = formData.description;
   const values = [0n]; // do not change
 
-  const { hash } = await writeDualGovernor({
-    address: spog.contracts.governor as Hash,
+  const { hash } = await writeContract({
+    abi: standardGovernorABI,
+    address: selectedProposalType.value.governor as Hash,
     functionName: "propose",
     args: [targets, values, [calldatas], description],
     account,
@@ -798,7 +818,7 @@ function buildCalldatas(formData) {
 }
 
 function buildCalldatasSpog(functionName: any, args: any) {
-  return encodeFunctionData({ abi: dualGovernorABI, functionName, args });
+  return encodeFunctionData({ abi: standardGovernorABI, functionName, args });
 }
 
 function onBack() {
