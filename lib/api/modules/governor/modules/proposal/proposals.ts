@@ -11,6 +11,7 @@ import {
 } from "viem";
 
 import pick from "lodash/pick";
+import { readContract } from "@wagmi/core";
 import {
   hexToBytes32String,
   removeSelectorFromCallData,
@@ -25,9 +26,9 @@ import {
   ProposalState,
   VotingType,
 } from "./proposal.types";
-import { dualGovernorABI, readDualGovernor } from "@/lib/sdk";
+import { readDualGovernor } from "@/lib/sdk";
 import { ApiContext } from "@/lib/api/api-context";
-import { Epoch } from "@/lib/api/modules/governor/modules/epoch/epoch";
+import { Epoch } from "~/lib/api/modules/epoch/epoch";
 
 const ProposalTypesFunctionSelectors = {
   addToList: getFunctionSelector("addToList(bytes32,address)"),
@@ -95,10 +96,11 @@ type IParams =
 
 export class Proposals extends GovernorModule {
   fromBlock: bigint;
+  abi: Abi;
 
-  constructor(governor: Hash, context: ApiContext) {
+  constructor(governor: Hash, context: ApiContext, abi: Abi) {
     super(governor, context);
-
+    this.abi = abi;
     this.fromBlock = this.config.deploymentBlock; // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
   }
 
@@ -318,6 +320,7 @@ export class Proposals extends GovernorModule {
         proposalType: String(proposalType),
         proposalParams: this.toString([...params]),
         proposalLabel,
+        governor: this.contract,
       };
 
       return proposal;
@@ -353,7 +356,8 @@ export class Proposals extends GovernorModule {
   }
 
   async readGetProposal(proposalId: string): Promise<GetProposalOutput> {
-    const getProposal = await readDualGovernor({
+    const getProposal = await readContract({
+      abi: this.abi,
       address: this.contract,
       functionName: "getProposal",
       args: [BigInt(proposalId)],
@@ -447,11 +451,11 @@ export class Proposals extends GovernorModule {
     });
 
     const proposals = rawLogs.map((log: Log) =>
-      this.decodeProposalLog(log, dualGovernorABI)
+      this.decodeProposalLog(log, this.abi)
     );
 
     const contractCallsGetProposal = proposals.map((p) => ({
-      abi: dualGovernorABI,
+      abi: this.abi,
       address: this.contract,
       functionName: "getProposal",
       args: [BigInt(p.proposalId)],
@@ -461,7 +465,8 @@ export class Proposals extends GovernorModule {
 
     const getProposal = await Promise.all(
       proposals.map((p) =>
-        readDualGovernor({
+        readContract({
+          abi: this.abi,
           address: this.contract,
           functionName: "getProposal",
           args: [BigInt(p.proposalId)],

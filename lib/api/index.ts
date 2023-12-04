@@ -4,6 +4,13 @@ import { ApiContext } from "./api-context";
 import { Registrar } from "./modules/registrar";
 import { Governor } from "./modules/governor";
 import { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
+
+import { Epoch } from "./modules/epoch";
+import {
+  zeroGovernorABI,
+  standardGovernorABI,
+  emergencyGovernorABI,
+} from "@/lib/sdk";
 export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
 export const MProposalVotingTokens = {
@@ -27,7 +34,10 @@ export const MProposalVotingTokens = {
 export class Api {
   context: ApiContext;
   registrar: Registrar;
-  governor?: Governor;
+  standardGovernor?: Governor;
+  zeroGovernor?: Governor;
+  emergencyGovernor?: Governor;
+  epoch: Epoch;
 
   constructor(rpcUrl: string, config: IApiConfig) {
     const client = createPublicClient({ transport: http(rpcUrl) });
@@ -35,6 +45,8 @@ export class Api {
     this.context = new ApiContext(client, config);
 
     this.registrar = new Registrar(this.context);
+
+    this.epoch = new Epoch(client);
   }
 
   setRpc(rpcUrl: string) {
@@ -45,7 +57,27 @@ export class Api {
     this.context.config = { ...this.context.config, ...config };
   }
 
-  setGovernor(governor: Hash) {
-    this.governor = new Governor(governor, this.context);
+  setGovernors(governors: {
+    standardGovernor: string;
+    zeroGovernor: string;
+    emergencyGovernor: string;
+  }) {
+    this.standardGovernor = new Governor(
+      governors.standardGovernor as Hash,
+      this.context,
+      standardGovernorABI
+    );
+
+    this.zeroGovernor = new Governor(
+      governors.zeroGovernor as Hash,
+      this.context,
+      zeroGovernorABI
+    );
+
+    this.emergencyGovernor = new Governor(
+      governors.emergencyGovernor as Hash,
+      this.context,
+      emergencyGovernorABI
+    );
   }
 }

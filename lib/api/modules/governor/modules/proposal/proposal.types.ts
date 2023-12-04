@@ -65,6 +65,7 @@ export interface MProposal extends ProposalEventLog {
   tallies?: MProposalTallies;
   votingType?: MVotingType;
   epoch?: number;
+  governor: Hash; // governor address where it is stored
 }
 
 export interface MProposalsActionTypes {
