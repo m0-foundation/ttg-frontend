@@ -54,9 +54,9 @@ defineProps({
   @apply stroke-grey-700;
 }
 .defeated {
-  @apply bg-red-500 text-white;
+  @apply bg-red-500 text-white !important;
 }
 .expired {
-  @apply bg-[#EEEEEE] text-[#929492];
+  @apply bg-grey-100 !important;
 }
 </style>
