@@ -291,10 +291,11 @@ export class Proposals extends GovernorModule {
       topics: log?.topics,
     });
 
+    console.log({ eventName, args });
     const event = args as ProposalEventLog;
 
     if (event) {
-      event.calldatas = event.calldatas as Array<Hash>;
+      event.calldatas = event.callDatas as Array<Hash>;
 
       const calldata = event.calldatas[0] as Hash;
 
@@ -448,6 +449,7 @@ export class Proposals extends GovernorModule {
       ),
     });
 
+    console.log({ rawLogs });
     const proposals = rawLogs.map((log: Log) =>
       this.decodeProposalLog(log, this.abi)
     );
