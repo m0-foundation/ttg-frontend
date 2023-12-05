@@ -138,6 +138,12 @@ We use cypress that on every .cy.ts file deploys the spog contract found on `har
 
 To Run specific test or debug:
 
+In one terminal tab:
+```bash
+yarn dev
+```
+
+In a second terminal tab:
 ```bash
 yarn cy:open
 ```
