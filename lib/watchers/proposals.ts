@@ -17,7 +17,7 @@ export const watchProposalCreated = () => {
   const proposals = useProposalsStore();
 
   const onEvent = async (logs, governor) => {
-    console.log("newProposalCreated", logs);
+    console.log("newProposalCreated", { logs });
 
     const newProposals = await Promise.all(
       logs.map((log) => governor.proposals.getProposalFromWatchLog(log))

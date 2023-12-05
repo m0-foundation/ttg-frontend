@@ -297,17 +297,17 @@ export class Proposals extends GovernorModule {
     if (event) {
       event.calldatas = event.callDatas as Array<Hash>;
 
-      const calldata = event.calldatas[0] as Hash;
+      const calldataContent = event.calldatas[0] as Hash;
 
       const selector = bytesToHex(
-        fromHex(event.calldatas[0] as Hash, "bytes").slice(0, 4)
+        fromHex(calldataContent, "bytes").slice(0, 4)
       );
 
       const isEmergency = this.isEmergencyProposal(selector);
 
       const { proposalType, params } = this.decodeProposalTypes(
         selector,
-        calldata
+        calldataContent
       );
 
       const proposalLabel =
@@ -322,6 +322,8 @@ export class Proposals extends GovernorModule {
         signatures: this.toString(event.signatures!),
         calldatas: this.toString(event.calldatas),
         targets: this.toString(event.targets!),
+        voteStart: event.voteStart,
+        voteEnd: event.voteEnd,
         proposer: event.proposer,
         description: event.description,
         timestamp: event.timestamp,
@@ -445,7 +447,7 @@ export class Proposals extends GovernorModule {
       address: this.contract as Hash,
       fromBlock: this.fromBlock,
       event: parseAbiItem(
-        "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 startBlock, uint256 endBlock, string description)"
+        "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] callDatas, uint256 voteStart, uint256 voteEnd, string description)"
       ),
     });
 
@@ -507,17 +509,15 @@ export class Proposals extends GovernorModule {
     args,
     ...log
   }: any): Promise<MProposal> {
-    const calldata = args.calldatas[0] as Hash;
+    const calldataContent = args.callDatas[0] as Hash;
 
-    const selector = bytesToHex(
-      fromHex(args.calldatas[0] as Hash, "bytes").slice(0, 4)
-    );
+    const selector = bytesToHex(fromHex(calldataContent, "bytes").slice(0, 4));
 
     const isEmergency = this.isEmergencyProposal(selector);
 
     const { proposalType, params } = this.decodeProposalTypes(
       selector,
-      calldata
+      calldataContent
     );
 
     const proposalLabel =
@@ -530,8 +530,10 @@ export class Proposals extends GovernorModule {
       transactionHash: String(log.transactionHash),
       values: this.toString(args.values),
       signatures: this.toString(args.signatures!),
-      calldatas: this.toString(args.calldatas),
+      calldatas: this.toString(args.callDatas),
       targets: this.toString(args.targets!),
+      voteStart: event.voteStart,
+      voteEnd: event.voteEnd,
       proposer: args.proposer,
       description: args.description,
       timestamp: 0,

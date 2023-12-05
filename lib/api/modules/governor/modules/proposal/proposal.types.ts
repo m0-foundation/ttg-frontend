@@ -26,6 +26,8 @@ export interface ProposalEventLog extends EventLog {
   proposer: string;
   timestamp: number;
   description: string;
+  voteStart: number;
+  voteEnd: number;
 }
 
 export interface MProposalTallies {
