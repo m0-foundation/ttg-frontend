@@ -85,7 +85,6 @@ Cypress.Commands.add("castYesOneProposal", (description: string) => {
 
   cy.get("#button-cast-submit").click();
 
-  cy.reload();
   cy.get("[data-test='voted']").should("have.length", 1);
 });
 
@@ -99,8 +98,6 @@ Cypress.Commands.add("castYesOneOptionalProposal", (description: string) => {
   });
 
   cy.get("[data-test='voted']").should("have.length", 1);
-  cy.task("mine", 1);
-  cy.reload();
 });
 
 Cypress.Commands.add("executeOneProposal", (description: string) => {

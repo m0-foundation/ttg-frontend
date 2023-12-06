@@ -325,7 +325,7 @@ const rules = computed(() => {
     };
   }
 
-  if (["setProposalFee", "emergencySetProposalFee"].includes(type)) {
+  if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
     return {
       proposalValue: { required },
       proposalValue2: {},
@@ -537,11 +537,11 @@ const proposalTypes = [
         hasToPayFee: false,
       },
       {
-        value: "emergencySetProposalFee",
+        value: "setStandardProposalFee",
         label: "Emergency Change fee",
         isEmergency: true,
         component: ProposalInputFee,
-        tokens: MProposalVotingTokens.emergencySetProposalFee,
+        tokens: MProposalVotingTokens.setStandardProposalFee,
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
@@ -566,7 +566,7 @@ const currentValue = computed(() => {
   const formatFee = (value: string) => useFormatCash(value);
 
   if (
-    ["setProposalFee", "emergencySetProposalFee"].includes(
+    ["setProposalFee", "setStandardProposalFee"].includes(
       selectedProposalType?.value?.value
     )
   ) {
@@ -795,7 +795,7 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(type, undefined);
   }
 
-  if (["setProposalFee", "emergencySetProposalFee"].includes(type)) {
+  if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
       [useParseCash(input1)]

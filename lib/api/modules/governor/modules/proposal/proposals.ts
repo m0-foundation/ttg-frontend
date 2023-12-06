@@ -43,8 +43,8 @@ const ProposalTypesFunctionSelectors = {
   resetToZeroHolders: getFunctionSelector("resetToZeroHolders()"),
   setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
   setCashToken: getFunctionSelector("setCashToken(address,uint256)"),
-  emergencySetProposalFee: getFunctionSelector(
-    "emergencySetProposalFee(uint256)"
+  setStandardProposalFee: getFunctionSelector(
+    "setStandardProposalFee(uint256)"
   ),
   setPowerTokenThresholdRatio: getFunctionSelector("setThresholdRatio(uint16)"),
   setZeroTokenThresholdRatio: getFunctionSelector(
@@ -224,7 +224,7 @@ export class Proposals extends GovernorModule {
         );
         break;
 
-      case ProposalTypesFunctionSelectors.emergencySetProposalFee:
+      case ProposalTypesFunctionSelectors.setStandardProposalFee:
         return this.decodeProposalTypeSetProposalFee(
           calldata,
           "setProposalFee"

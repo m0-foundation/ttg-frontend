@@ -180,12 +180,13 @@ function onCastSelected(vote: number) {
 
 const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
+console.log({ governor });
 
 const { data: hasVoted } = useContractRead({
   address: governor?.value?.address as Hash,
   abi: governor?.value?.abi as Abi,
   functionName: "hasVoted",
-  args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
+  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
   watch: true,
 });
 

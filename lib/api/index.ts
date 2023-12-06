@@ -24,7 +24,7 @@ export const MProposalVotingTokens = {
   setZeroTokenThresholdRatio: [MVotingTokens.Zero],
   setProposalFee: [MVotingTokens.Power],
   setCashToken: [MVotingTokens.Zero],
-  emergencySetProposalFee: [MVotingTokens.Power],
+  setStandardProposalFee: [MVotingTokens.Power],
 };
 
 export class Api {
