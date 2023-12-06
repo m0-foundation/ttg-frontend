@@ -34,14 +34,14 @@ export const useGovernor = ({
     };
   }
 
-  if (votingType === "Emergency") {
+  if (type === "Emergency") {
     return {
       address: spog.contracts.emergencyGovernor as Hash,
       abi: emergencyGovernorABI,
     };
   }
 
-  if (votingType === "Zero") {
+  if (type === "Zero") {
     return {
       address: spog.contracts.zeroGovernor as Hash,
       abi: zeroGovernorABI,
