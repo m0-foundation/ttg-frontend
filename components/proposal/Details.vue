@@ -90,10 +90,10 @@ const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
 const zeroThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.zeroTokenThresholdRatio!)
+  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!)
 );
 const powerThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.powerTokenThresholdRatio!)
+  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!)
 );
 
 const votesStore = useVotesStore();

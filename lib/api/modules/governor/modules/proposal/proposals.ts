@@ -46,9 +46,11 @@ const ProposalTypesFunctionSelectors = {
   setStandardProposalFee: getFunctionSelector(
     "setStandardProposalFee(uint256)"
   ),
-  setPowerTokenThresholdRatio: getFunctionSelector("setThresholdRatio(uint16)"),
-  setZeroTokenThresholdRatio: getFunctionSelector(
-    "setZeroTokenThresholdRatio(uint16)"
+  setEmergencyProposalThresholdRatio: getFunctionSelector(
+    "setEmergencyProposalThresholdRatio(uint16)"
+  ),
+  setZeroProposalThresholdRatio: getFunctionSelector(
+    "setZeroProposalThresholdRatio(uint16)"
   ),
 };
 
@@ -60,8 +62,8 @@ const ProposalLabels = {
   setKey: "Set Config",
   resetToPowerHolders: "Reset to Power Holders",
   resetToZeroHolders: "Reset to Zero Holders",
-  setPowerTokenThresholdRatio: "Update Power Threshold",
-  setZeroTokenThresholdRatio: "Update Zero Threshold",
+  setEmergencyProposalThresholdRatio: "Update Power Threshold",
+  setZeroProposalThresholdRatio: "Update Zero Threshold",
   setCashToken: "Set Cash Token",
 };
 
@@ -169,20 +171,20 @@ export class Proposals extends GovernorModule {
     return { proposalType, params };
   }
 
-  decodeProposalTypeSetPowerTokenThresholdRatio(calldata: Hash) {
+  decodeProposalTypeSetEmergencyProposalThresholdRatio(calldata: Hash) {
     const params = decodeAbiParameters(
       [{ name: "newThresholdRatio_", type: "uint16" }],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "setPowerTokenThresholdRatio", params };
+    return { proposalType: "setEmergencyProposalThresholdRatio", params };
   }
 
-  decodeProposalTypeSetZeroTokenThresholdRatio(calldata: Hash) {
+  decodeProposalTypeSetZeroProposalThresholdRatio(calldata: Hash) {
     const params = decodeAbiParameters(
       [{ name: "newThresholdRatio_", type: "uint16" }],
       removeSelectorFromCallData(calldata)
     );
-    return { proposalType: "setZeroTokenThresholdRatio", params };
+    return { proposalType: "setZeroProposalThresholdRatio", params };
   }
 
   decodeProposalTypes(
@@ -231,12 +233,14 @@ export class Proposals extends GovernorModule {
         );
         break;
 
-      case ProposalTypesFunctionSelectors.setPowerTokenThresholdRatio:
-        return this.decodeProposalTypeSetPowerTokenThresholdRatio(calldata);
+      case ProposalTypesFunctionSelectors.setEmergencyProposalThresholdRatio:
+        return this.decodeProposalTypeSetEmergencyProposalThresholdRatio(
+          calldata
+        );
         break;
 
-      case ProposalTypesFunctionSelectors.setZeroTokenThresholdRatio:
-        return this.decodeProposalTypeSetZeroTokenThresholdRatio(calldata);
+      case ProposalTypesFunctionSelectors.setZeroProposalThresholdRatio:
+        return this.decodeProposalTypeSetZeroProposalThresholdRatio(calldata);
         break;
 
       case ProposalTypesFunctionSelectors.setCashToken:

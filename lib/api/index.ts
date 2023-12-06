@@ -3,7 +3,6 @@ import { IApiConfig } from "./types";
 import { ApiContext } from "./api-context";
 import { Registrar } from "./modules/registrar";
 import { Governor } from "./modules/governor";
-import { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
 import { Epoch } from "./modules/epoch";
 import {
@@ -12,20 +11,6 @@ import {
   emergencyGovernorABI,
 } from "@/lib/sdk";
 export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
-
-export const MProposalVotingTokens = {
-  addToList: [MVotingTokens.Power],
-  removeFromList: [MVotingTokens.Power],
-  removeFromAndAddToList: [MVotingTokens.Power],
-  setKey: [MVotingTokens.Power],
-  resetToPowerHolders: [MVotingTokens.Zero],
-  resetToZeroHolders: [MVotingTokens.Zero],
-  setPowerTokenThresholdRatio: [MVotingTokens.Zero],
-  setZeroTokenThresholdRatio: [MVotingTokens.Zero],
-  setProposalFee: [MVotingTokens.Power],
-  setCashToken: [MVotingTokens.Zero],
-  setStandardProposalFee: [MVotingTokens.Power],
-};
 
 export class Api {
   context: ApiContext;

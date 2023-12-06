@@ -1,5 +1,5 @@
 describe("Proposals", () => {
-  describe("type action: setZeroTokenThresholdRatio", () => {
+  describe("type action: setZeroProposalThresholdRatio", () => {
     const input1 = "15";
     const description = "Set Zero Token Threshold Ratio to 15";
     let proposalUrl = "";
@@ -33,7 +33,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.mineEpochs(2);
+      // cy.mineEpochs(1);
 
       cy.wait(500);
       cy.visit("http://localhost:3000/proposals/");

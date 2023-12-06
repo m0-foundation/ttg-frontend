@@ -55,8 +55,8 @@ const mutable = computed(() => {
   return [
     ...mapToArray(
       pick(getValues.value, [
-        "powerTokenThresholdRatio",
-        "zeroTokenThresholdRatio",
+        "emergencyProposalThresholdRatio",
+        "zeroProposalThresholdRatio",
         "proposalFee",
       ])
     ),

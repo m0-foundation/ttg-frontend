@@ -41,8 +41,8 @@ export interface ProposalProps {
   proposal: MProposal;
   currentProposalValues: {
     setProposalFee: string;
-    setPowerTokenThresholdRatio: string;
-    setZeroTokenThresholdRatio: string;
+    setEmergencyProposalThresholdRatio: string;
+    setZeroProposalThresholdRatio: string;
   };
 }
 
@@ -51,12 +51,15 @@ const props = defineProps<ProposalProps>();
 const parsedValue = (value: string, type: string) => {
   const formatFee = (value: string) => useFormatCash(value);
 
-  if (["setProposalFee", "emergencySetProposalFee"].includes(type)) {
+  if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
     return formatFee(value);
   }
 
   if (
-    ["setPowerTokenThresholdRatio", "setZeroTokenThresholdRatio"].includes(type)
+    [
+      "setEmergencyProposalThresholdRatio",
+      "setZeroProposalThresholdRatio",
+    ].includes(type)
   ) {
     return `${basisPointsToPercentage(value)}%`;
   }
@@ -72,9 +75,9 @@ const parsedValue = (value: string, type: string) => {
 const showParsed = computed(() =>
   [
     "setProposalFee",
-    "emergencySetProposalFee",
-    "setPowerTokenThresholdRatio",
-    "setZeroTokenThresholdRatio",
+    "setStandardProposalFee",
+    "setEmergencyProposalThresholdRatio",
+    "setZeroProposalThresholdRatio",
     "setCashToken",
   ].includes(props.proposal?.proposalType)
 );
