@@ -37,8 +37,7 @@ const ProposalTypesFunctionSelectors = {
   removeFromAndAddToList: getFunctionSelector(
     "removeFromAndAddToList(bytes32,address,address)"
   ),
-
-  updateConfig: getFunctionSelector("updateConfig(bytes32,bytes32)"),
+  setKey: getFunctionSelector("setKey(bytes32,bytes32)"),
 
   resetToPowerHolders: getFunctionSelector("resetToPowerHolders()"),
   resetToZeroHolders: getFunctionSelector("resetToZeroHolders()"),
@@ -58,7 +57,7 @@ const ProposalLabels = {
   addToList: "Add to list",
   removeFromList: "Remove from list",
   removeFromAndAddToList: "Remove from and Add to List",
-  updateConfig: "Update Config",
+  setKey: "Set Config",
   resetToPowerHolders: "Reset to Power Holders",
   resetToZeroHolders: "Reset to Zero Holders",
   setPowerTokenThresholdRatio: "Update Power Threshold",
@@ -136,7 +135,7 @@ export class Proposals extends GovernorModule {
     };
   }
 
-  decodeProposalTypeUpdateConfig(calldata: Hash, proposalType: string) {
+  decodeProposalTypeSetKey(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
         { name: "key_", type: "bytes32" },
@@ -206,8 +205,8 @@ export class Proposals extends GovernorModule {
         );
         break;
 
-      case ProposalTypesFunctionSelectors.updateConfig:
-        return this.decodeProposalTypeUpdateConfig(calldata, "updateConfig");
+      case ProposalTypesFunctionSelectors.setKey:
+        return this.decodeProposalTypeSetKey(calldata, "setKey");
         break;
 
       case ProposalTypesFunctionSelectors.resetToZeroHolders:

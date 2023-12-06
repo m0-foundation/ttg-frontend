@@ -165,6 +165,7 @@ const { data: hasFinishedVoting } = useContractRead({
   address: spog.contracts.standardGovernor as Hash,
   abi: standardGovernorABI,
   functionName: "hasVotedOnAllProposals",
+  args: [userAccount as Ref<Hash>, BigInt(spog.epoch.current.asNumber)],
   watch: true,
 });
 

@@ -316,7 +316,7 @@ const rules = computed(() => {
     };
   }
 
-  if (["updateConfig", "emergencyUpdateConfig"].includes(type)) {
+  if (["setKey"].includes(type)) {
     return {
       proposalValue: { required },
       proposalValue2: { required },
@@ -399,10 +399,10 @@ const proposalTypes = [
   },
 
   {
-    value: "updateConfig",
-    label: "Update config",
+    value: "setKey",
+    label: "Set config",
     component: ProposalInputUpdateConfig,
-    tokens: MProposalVotingTokens.updateConfig,
+    tokens: MProposalVotingTokens.setKey,
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
@@ -527,11 +527,11 @@ const proposalTypes = [
       },
 
       {
-        value: "updateConfig",
-        label: "Emergency Update config",
+        value: "setKey",
+        label: "Emergency Set config",
         isEmergency: true,
         component: ProposalInputUpdateConfig,
-        tokens: MProposalVotingTokens.updateConfig,
+        tokens: MProposalVotingTokens.setKey,
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
@@ -776,8 +776,8 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (["updateConfig"].includes(type)) {
-    const encondeInputsUpdateConfig = ({
+  if (["setKey"].includes(type)) {
+    const encondeInputsSetKey = ({
       input1: key,
       input2: value,
     }: {
@@ -787,10 +787,7 @@ function buildCalldatas(formData) {
       return [stringToHexWith32Bytes(key), stringToHexWith32Bytes(value)];
     };
 
-    return buildCalldatasSpog(
-      type,
-      encondeInputsUpdateConfig({ input1, input2 })
-    );
+    return buildCalldatasSpog(type, encondeInputsSetKey({ input1, input2 }));
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {

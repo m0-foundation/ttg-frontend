@@ -1,5 +1,5 @@
 describe("Proposals", () => {
-  describe("type action: changeConfig", () => {
+  describe("type action: Emergency setKey", () => {
     const value = "1";
     const valueName = "INFLATION_RATE";
     const description = `Add config ${valueName} = ${value}`;
@@ -10,12 +10,15 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Update config").click();
+      cy.contains("Emergency").should("exist").click({ force: true });
+      cy.contains("Emergency Set config")
+        .should("exist")
+        .click({ force: true });
 
       cy.get("input[data-test='proposalValue']").type(valueName);
       cy.get("input[data-test='proposalValue2']").type(value);
-      cy.get("textarea[data-test='description']").type(description);
       cy.get("input[data-test='title']").type(description);
+      cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
@@ -29,12 +32,12 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to ACCESS the ACTIVE proposal", () => {
-      // forward in time to be able to vote
-      cy.mineEpochs(2);
+    it("I should be able to ACCESS the EMERGENCY proposal", () => {
+      // cy.mineEpochs(2);
+      // emergency does not need to forward to next epoch, it will be able to vote on same epoch
 
-      cy.wait(500);
       cy.visit("http://localhost:3000/proposals/");
+      cy.reload();
 
       cy.contains(description).should("exist");
 
@@ -58,16 +61,52 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneProposal(description);
+      cy.visit("http://localhost:3000/proposals/");
+      cy.connectWallet();
+      cy.wait(500);
+
+      cy.contains("article", description).then(($proposal) => {
+        cy.wrap($proposal).find("#button-cast-yes").click();
+      });
+
+      cy.get("[data-test='voted']").should("have.length", 1);
+      cy.task("mine", 1);
+      cy.reload();
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      cy.executeOneProposal(description);
+      cy.visit("http://localhost:3000/proposals/succeeded");
+      cy.connectWallet();
+
+      cy.contains("article", description).then(($proposal) => {
+        cy.wrap($proposal).find("#button-proposal-execute").click();
+      });
+
+      cy.wait(500);
     });
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
+    });
+
+    it("I should be able to see lists", () => {
+      cy.visit("http://localhost:3000/config/protocol");
+
+      cy.get("table > tbody > tr").should("have.length", 1);
+
+      const rowCells = (row) =>
+        Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
+
+      cy.get("table tbody tr").then((rows) => {
+        const mapped = Cypress._.map(rows, rowCells)
+          .map((row) => row.slice(0, 2))
+          .sort();
+
+        const should = [[valueName.toLowerCase(), value.toLowerCase()]].sort();
+
+        expect(mapped).to.deep.equal(should);
+      });
     });
   });
 });
