@@ -43,6 +43,7 @@ export interface ProposalProps {
     setProposalFee: string;
     setEmergencyProposalThresholdRatio: string;
     setZeroProposalThresholdRatio: string;
+    setCashToken: string;
   };
 }
 

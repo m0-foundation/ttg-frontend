@@ -34,6 +34,7 @@ export const useSpogStore = defineStore("spog", {
         setEmergencyProposalThresholdRatio:
           state.governors.emergency.thresholdRatio!,
         setZeroProposalThresholdRatio: state.governors.zero.thresholdRatio!,
+        setCashToken: state.contracts.cashToken as Hash,
       };
 
       return values;

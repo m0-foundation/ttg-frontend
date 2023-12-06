@@ -70,4 +70,5 @@ export interface MProposalsActionTypes {
   setEmergencyProposalThresholdRatio: string;
   setZeroProposalThresholdRatio: string;
   setProposalFee: string;
+  setCashToken: string;
 }
