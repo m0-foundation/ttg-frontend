@@ -16,7 +16,7 @@ export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 export const MProposalVotingTokens = {
   addToList: [MVotingTokens.Power],
   removeFromList: [MVotingTokens.Power],
-  addAndRemoveFromList: [MVotingTokens.Power],
+  removeFromAndAddToList: [MVotingTokens.Power],
   updateConfig: [MVotingTokens.Power],
   resetToPowerHolders: [MVotingTokens.Zero],
   resetToZeroHolders: [MVotingTokens.Zero],
@@ -25,10 +25,6 @@ export const MProposalVotingTokens = {
   setProposalFee: [MVotingTokens.Power],
   setCashToken: [MVotingTokens.Zero],
   emergencySetProposalFee: [MVotingTokens.Power],
-  emergencyAddToList: [MVotingTokens.Power],
-  emergencyRemoveFromList: [MVotingTokens.Power],
-  emergencyAddAndRemoveFromList: [MVotingTokens.Power],
-  emergencyUpdateConfig: [MVotingTokens.Power],
 };
 
 export class Api {

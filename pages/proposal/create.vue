@@ -215,7 +215,11 @@ import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
-import { standardGovernorABI } from "@/lib/sdk";
+import {
+  standardGovernorABI,
+  emergencyGovernorABI,
+  zeroGovernorABI,
+} from "@/lib/sdk";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
@@ -282,14 +286,7 @@ const rules = computed(() => {
 
   const type = selectedProposalType?.value?.value;
 
-  if (
-    [
-      "addToList",
-      "removeFromList",
-      "emergencyAddToList",
-      "emergencyRemoveFromList",
-    ].includes(type)
-  ) {
+  if (["addToList", "removeFromList"].includes(type)) {
     return {
       proposalValue: { required },
       proposalValue2: {
@@ -302,9 +299,7 @@ const rules = computed(() => {
     };
   }
 
-  if (
-    ["addAndRemoveFromList", "emergencyAddAndRemoveFromList"].includes(type)
-  ) {
+  if (["removeFromAndAddToList"].includes(type)) {
     return {
       proposalValue: { required },
       proposalValue2: {
@@ -339,9 +334,7 @@ const rules = computed(() => {
     };
   }
 
-  if (
-    ["setPowerTokenThresholdRatio", "setZeroTokenThresholdRatio"].includes(type)
-  ) {
+  if (["setThresholdRatio", "setZeroTokenThresholdRatio"].includes(type)) {
     return {
       proposalValue: { required },
       proposalValue2: {},
@@ -360,14 +353,7 @@ const rules = computed(() => {
 });
 
 const hasToPayFee = computed(() => {
-  const type = selectedProposalType?.value?.value;
-  return ![
-    "resetToPowerHolders",
-    "resetToZeroHolders",
-    "emergencyAddToList",
-    "emergencyRemoveFromList",
-    "emergencyUpdateConfig",
-  ].includes(type);
+  return selectedProposalType.value.hasToPayFee;
 });
 
 const $validation = useVuelidate(rules, formData);
@@ -389,6 +375,8 @@ const proposalTypes = [
     component: ProposalInputListOperation,
     tokens: MProposalVotingTokens.addToList,
     governor: spog.contracts.standardGovernor,
+    abi: standardGovernorABI,
+    hasToPayFee: true,
   },
   {
     value: "removeFromList",
@@ -396,14 +384,18 @@ const proposalTypes = [
     component: ProposalInputListOperation,
     tokens: MProposalVotingTokens.removeFromList,
     governor: spog.contracts.standardGovernor,
+    abi: standardGovernorABI,
+    hasToPayFee: true,
   },
 
   {
-    value: "addAndRemoveFromList",
+    value: "removeFromAndAddToList",
     label: "Remove from and Add to list",
     component: ProposalInputListRemoveAddOperation,
-    tokens: MProposalVotingTokens.addAndRemoveFromList,
+    tokens: MProposalVotingTokens.removeFromAndAddToList,
     governor: spog.contracts.standardGovernor,
+    abi: standardGovernorABI,
+    hasToPayFee: true,
   },
 
   {
@@ -412,6 +404,8 @@ const proposalTypes = [
     component: ProposalInputUpdateConfig,
     tokens: MProposalVotingTokens.updateConfig,
     governor: spog.contracts.standardGovernor,
+    abi: standardGovernorABI,
+    hasToPayFee: true,
   },
 
   {
@@ -423,19 +417,23 @@ const proposalTypes = [
     label: "Thresholds",
     children: [
       {
-        value: "setPowerTokenThresholdRatio",
+        value: "setThresholdRatio",
         label: "Power threshold",
         component: ProposalInputThreshold,
         modelValue: formData.proposalValue,
         tokens: MProposalVotingTokens.setPowerTokenThresholdRatio,
         governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: true,
       },
       {
-        value: "setZeroTokenThresholdRatio",
+        value: "setZeroTokenThresholdRatio", // setZeroProposalThresholdRatio
         label: "Zero threshold",
         component: ProposalInputThreshold,
         tokens: MProposalVotingTokens.setZeroTokenThresholdRatio,
         governor: spog.contracts.zeroGovernor,
+        abi: zeroGovernorABI,
+        hasToPayFee: false,
       },
     ],
   },
@@ -449,6 +447,8 @@ const proposalTypes = [
         component: ProposalInputFee,
         tokens: MProposalVotingTokens.setProposalFee,
         governor: spog.contracts.standardGovernor,
+        abi: standardGovernorABI,
+        hasToPayFee: true,
       },
     ],
   },
@@ -459,6 +459,8 @@ const proposalTypes = [
     component: ProposalInputAddressFee,
     tokens: MProposalVotingTokens.setCashToken,
     governor: spog.contracts.zeroGovernor,
+    abi: zeroGovernorABI,
+    hasToPayFee: false,
   },
 
   {
@@ -471,6 +473,8 @@ const proposalTypes = [
         component: undefined,
         tokens: MProposalVotingTokens.resetToPowerHolders,
         governor: spog.contracts.zeroGovernor,
+        abi: zeroGovernorABI,
+        hasToPayFee: false,
       },
 
       {
@@ -479,6 +483,8 @@ const proposalTypes = [
         component: undefined,
         tokens: MProposalVotingTokens.resetToZeroHolders,
         governor: spog.contracts.zeroGovernor,
+        abi: zeroGovernorABI,
+        hasToPayFee: false,
       },
     ],
   },
@@ -489,38 +495,46 @@ const proposalTypes = [
     isEmergency: true,
     children: [
       {
-        value: "emergencyAddToList",
+        value: "addToList",
         label: "Emergency Add to a list",
         isEmergency: true,
         component: ProposalInputListOperation,
-        tokens: MProposalVotingTokens.emergencyAddToList,
+        tokens: MProposalVotingTokens.addToList,
         governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
       },
       {
-        value: "emergencyRemoveFromList",
+        value: "removeFromList",
         label: "Emergency Remove from a list",
         isEmergency: true,
         component: ProposalInputListOperation,
-        tokens: MProposalVotingTokens.emergencyRemoveFromList,
+        tokens: MProposalVotingTokens.removeFromList,
         governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
       },
 
       {
-        value: "emergencyAddAndRemoveFromList",
+        value: "removeFromAndAddToList",
         label: "Emergency Remove from and Add to list",
         isEmergency: true,
         component: ProposalInputListRemoveAddOperation,
-        tokens: MProposalVotingTokens.addAndRemoveFromList,
+        tokens: MProposalVotingTokens.removeFromAndAddToList,
         governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
       },
 
       {
-        value: "emergencyUpdateConfig",
+        value: "updateConfig",
         label: "Emergency Update config",
         isEmergency: true,
         component: ProposalInputUpdateConfig,
-        tokens: MProposalVotingTokens.emergencyUpdateConfig,
+        tokens: MProposalVotingTokens.updateConfig,
         governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
       },
       {
         value: "emergencySetProposalFee",
@@ -529,13 +543,15 @@ const proposalTypes = [
         component: ProposalInputFee,
         tokens: MProposalVotingTokens.emergencySetProposalFee,
         governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
       },
     ],
   },
 ];
 
 const currentValue = computed(() => {
-  if (selectedProposalType?.value?.value === "setPowerTokenThresholdRatio") {
+  if (selectedProposalType?.value?.value === "setThresholdRatio") {
     return `${basisPointsToPercentage(
       spog.getValues.powerTokenThresholdRatio!
     )}%`;
@@ -628,13 +644,14 @@ async function writeAllowance() {
 
 async function writeProposal(calldatas, formData) {
   const account = userAccount.value;
+  console.log({ selectedProposalType });
   const targets = [selectedProposalType.value.governor as Hash];
 
   const description = formData.description;
   const values = [0n]; // do not change
 
   const { hash } = await writeContract({
-    abi: standardGovernorABI,
+    abi: selectedProposalType.value.abi,
     address: selectedProposalType.value.governor as Hash,
     functionName: "propose",
     args: [targets, values, [calldatas], description],
@@ -723,14 +740,7 @@ function buildCalldatas(formData) {
     proposalValue3: input3,
   } = formData;
 
-  if (
-    [
-      "addToList",
-      "removeFromList",
-      "emergencyAddToList",
-      "emergencyRemoveFromList",
-    ].includes(type)
-  ) {
+  if (["addToList", "removeFromList"].includes(type)) {
     const encondeInputsListOperation = ({
       input1: list,
       input2: address,
@@ -747,9 +757,7 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (
-    ["addAndRemoveFromList", "emergencyAddAndRemoveFromList"].includes(type)
-  ) {
+  if (["removeFromAndAddToList"].includes(type)) {
     const encondeInputsListAddRemoveOperation = ({
       input1: list,
       input2: accountToAdd,
@@ -768,7 +776,7 @@ function buildCalldatas(formData) {
     );
   }
 
-  if (["updateConfig", "emergencyUpdateConfig"].includes(type)) {
+  if (["updateConfig"].includes(type)) {
     const encondeInputsUpdateConfig = ({
       input1: key,
       input2: value,
@@ -806,9 +814,7 @@ function buildCalldatas(formData) {
     return buildCalldatasSpog(type, [input1, newFee]);
   }
 
-  if (
-    ["setPowerTokenThresholdRatio", "setZeroTokenThresholdRatio"].includes(type)
-  ) {
+  if (["setThresholdRatio", "setZeroTokenThresholdRatio"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
       [BigInt(percentageToBasispoints(input1))]
@@ -818,7 +824,11 @@ function buildCalldatas(formData) {
 }
 
 function buildCalldatasSpog(functionName: any, args: any) {
-  return encodeFunctionData({ abi: standardGovernorABI, functionName, args });
+  return encodeFunctionData({
+    abi: selectedProposalType.value.abi,
+    functionName,
+    args,
+  });
 }
 
 function onBack() {

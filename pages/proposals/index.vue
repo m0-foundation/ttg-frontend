@@ -70,11 +70,10 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { Hash } from "viem";
+import { Abi, Hash } from "viem";
 import { useAccount, useContractRead } from "use-wagmi";
 import { waitForTransaction, writeContract } from "@wagmi/core";
-import { powerTokenABI, writeStandardGovernor } from "@/lib/sdk";
+import { standardGovernorABI, writeStandardGovernor } from "@/lib/sdk";
 
 interface CastedProposal {
   vote: number;
@@ -86,8 +85,6 @@ const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
-
-const { epoch } = storeToRefs(spog);
 
 const activeProposals = computed(() =>
   proposalsStore.getProposalsByState("Active")
@@ -165,18 +162,21 @@ async function onCastBatchVotes() {
 }
 
 const { data: hasFinishedVoting } = useContractRead({
-  address: spog.contracts.powerToken as Hash,
-  abi: powerTokenABI,
-  functionName: "hasParticipatedAt",
-  args: [userAccount as Ref<Hash>, BigInt(epoch.value.current?.asNumber)],
+  address: spog.contracts.standardGovernor as Hash,
+  abi: standardGovernorABI,
+  functionName: "hasVotedOnAllProposals",
   watch: true,
 });
 
 async function onCastOptional(vote: number, proposalId: string) {
   await forceSwitchChain();
-  console.log("cast", { vote, proposalId });
+
+  const governor = useGovernor({ proposalId });
+  console.log("cast", { vote, proposalId, governor });
+
   return writeContract({
-    address: spog.contracts.governor as Hash,
+    address: governor!.address as Hash,
+    abi: governor!.abi as Abi,
     functionName: "castVote",
     args: [BigInt(proposalId), vote],
     account: userAccount.value,

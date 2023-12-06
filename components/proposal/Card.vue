@@ -124,8 +124,7 @@
 <script setup lang="ts">
 import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
-import { Hash } from "viem";
-// import { dualGovernorABI } from "@/lib/sdk";
+import { Hash, Abi } from "viem";
 import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
 
@@ -141,7 +140,6 @@ const emit = defineEmits<{
   (e: "on-execute", proposal: MProposal): void;
 }>();
 
-const spog = useSpogStore();
 const { address: userAccount, isDisconnected } = useAccount();
 const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
@@ -180,13 +178,16 @@ function onCastSelected(vote: number) {
   }
 }
 
-// const { data: hasVoted } = useContractRead({
-//   address: spog.contracts.governor as Hash,
-//   abi: dualGovernorABI,
-//   functionName: "hasVoted",
-//   args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
-//   watch: true,
-// });
+const proposalId = computed(() => props.proposal.proposalId);
+const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
+
+const { data: hasVoted } = useContractRead({
+  address: governor?.value?.address as Hash,
+  abi: governor?.value?.abi as Abi,
+  functionName: "hasVoted",
+  args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
+  watch: true,
+});
 
 const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
   useMVotingPower(userAccount);

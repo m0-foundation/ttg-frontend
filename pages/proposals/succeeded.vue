@@ -14,9 +14,8 @@
 
 <script setup lang="ts">
 import { useAccount } from "use-wagmi";
-import { keccak256, toHex, Hash } from "viem";
+import { keccak256, toHex, Hash, Abi } from "viem";
 import { waitForTransaction, writeContract } from "@wagmi/core";
-import { standardGovernorABI } from "@/lib/sdk";
 import { MProposal } from "@/lib/api/types";
 
 const proposalsStore = useProposalsStore();
@@ -34,14 +33,16 @@ useHead({
 async function onExecute(proposal: MProposal) {
   await forceSwitchChain();
 
+  const governor = useGovernor({ proposalId: proposal.proposalId });
+
   const { description, calldatas } = proposal;
   const hashedDescription = keccak256(toHex(description));
-  const targets = [proposal.governor as Hash];
+  const targets = [governor?.address as Hash];
   const values = [BigInt(0)]; // do not change
 
   const { hash } = await writeContract({
-    abi: standardGovernorABI,
-    address: proposal.governor as Hash,
+    abi: governor!.abi as Abi,
+    address: governor!.address as Hash,
     functionName: "execute",
     args: [targets, values, calldatas as Hash[], hashedDescription], // (targets, values, calldatas, hashedDescription
     account: userAccount.value,

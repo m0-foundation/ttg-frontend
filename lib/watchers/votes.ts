@@ -42,7 +42,7 @@ export const watchVoteCast = () => {
     console.log("newVoteCast", logs);
 
     const newVotes = await Promise.all(
-      logs.map((log) => api.client.governor!.voting.decodeVote(log))
+      logs.map((log) => governor.voting.decodeVote(log))
     );
 
     votesStore.push(newVotes);
@@ -50,12 +50,30 @@ export const watchVoteCast = () => {
     return updateProposalsStore(newVotes);
   };
 
-  // watchDualGovernorEvent(
-  //   {
-  //     address: spog.contracts.value.governor as Hash,
-  //     eventName: "VoteCast",
-  //     chainId: network.value.rpc.chainId,
-  //   },
-  //   async (logs) => {}
-  // );
+  watchStandardGovernorEvent(
+    {
+      address: spog.contracts.value.standardGovernor as Hash,
+      eventName: "VoteCast",
+      chainId: network.value.rpc.chainId,
+    },
+    (logs) => onEvent(logs, api.client.standardGovernor)
+  );
+
+  watchEmergencyGovernorEvent(
+    {
+      address: spog.contracts.value.emergencyGovernor as Hash,
+      eventName: "VoteCast",
+      chainId: network.value.rpc.chainId,
+    },
+    (logs) => onEvent(logs, api.client.emergencyGovernor)
+  );
+
+  watchZeroGovernorEvent(
+    {
+      address: spog.contracts.value.zeroGovernor as Hash,
+      eventName: "VoteCast",
+      chainId: network.value.rpc.chainId,
+    },
+    (logs) => onEvent(logs, api.client.zeroGovernor)
+  );
 };

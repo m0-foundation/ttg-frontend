@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useAccount, useContractRead } from "use-wagmi";
+import { useAccount } from "use-wagmi";
 import { Hash } from "viem";
 import { readPowerToken, readZeroToken } from "@/lib/sdk";
 
@@ -84,31 +84,16 @@ useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,
 });
 
-// const {
-//   data: hasVoted,
-//   isError: hasVotedError,
-//   isLoading: hasVotedLoading,
-// } = useContractRead({
-//   address: spog.contracts.governor as Hash,
-//   abi: dualGovernorABI,
-//   functionName: "hasVoted",
-//   args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
-//   watch: true,
-//   onSuccess(hasVoted) {
-//     console.log({ hasVoted });
-//   },
-// });
-
 console.log({ currentProposalValuesFormatted });
 
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
 const zeroThreshold = computed(() =>
-  basisPointsToDecimal(spog.values.zeroTokenThresholdRatio!)
+  basisPointsToDecimal(spog.getValues.zeroTokenThresholdRatio!)
 );
 const powerThreshold = computed(() =>
-  basisPointsToDecimal(spog.values.powerTokenThresholdRatio!)
+  basisPointsToDecimal(spog.getValues.powerTokenThresholdRatio!)
 );
 
 const votesStore = useVotesStore();
