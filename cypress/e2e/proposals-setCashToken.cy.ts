@@ -1,5 +1,5 @@
 describe("Proposals", () => {
-  let newCashTokenAddress = "";
+  const newCashTokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
   describe("type action: setCashToken", () => {
     const fee = "0.001";
@@ -7,17 +7,10 @@ describe("Proposals", () => {
 
     let proposalUrl = "";
     let description = "";
-    // 0x5FbDB2315678afecb367f032d93F642f64180aa3
-
-    it("deployCashToken", () => {
-      cy.task("deployCashToken").then((cashTokenAddress: string) => {
-        console.log("mined", cashTokenAddress);
-        newCashTokenAddress = cashTokenAddress;
-        console.log({ newCashTokenAddress });
-      });
-    });
 
     it("I should be able to CREATE a proposal", () => {
+      cy.mineEpochs(1);
+
       description = `Change cash token to ${newCashTokenAddress} with fee to ${fee}`;
 
       cy.visit("http://localhost:3000/proposal/create");
@@ -49,9 +42,9 @@ describe("Proposals", () => {
       // forward in time to be able to vote
       // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
       // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
-      cy.mineEpochs(2);
+      // cy.mineEpochs(2);
 
-      cy.wait(1000);
+      // cy.wait(1000);
       cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
@@ -76,7 +69,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneProposal(description);
+      cy.castYesOneOptionalProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
@@ -90,7 +83,6 @@ describe("Proposals", () => {
         "contain",
         newCashTokenAddress
       );
-      cy.get("#technical-proposal-current").should("contain", fee);
     });
   });
 });

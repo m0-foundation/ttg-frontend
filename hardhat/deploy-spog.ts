@@ -45,8 +45,9 @@ export default async function deploySpog(network: Network) {
   );
 
   const cashToken = await mockERC20Factory.deploy("CASH", "Cash Token", 18);
-
-  const allowedCashTokens = [cashToken.address];
+  // const cashToken2 = await mockERC20Factory.deploy("CASH2", "Cash Token2", 18);
+  const MToken = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+  const allowedCashTokens = [cashToken.address, MToken];
   // NOTE: Ensure this is the current nonce (transaction count) of the deploying address.
   // const DEPLOYER_NONCE = 0;
 
