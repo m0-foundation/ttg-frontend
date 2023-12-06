@@ -66,7 +66,6 @@ const fetchProposals = async (api: Api) => {
     const data = await api.governor!.proposals.getProposals();
     const proposalStore = useProposalsStore();
     proposalStore.setProposals(data);
-    console.log("fetched Proposals", { data });
   } catch (error) {
     console.error({ error });
   }
@@ -77,7 +76,6 @@ const fetchEpoch = async (api: Api) => {
     const data = await api.governor!.epoch.getEpochState();
     const store = useSpogStore();
     store.setEpoch(data);
-    console.log("fetched Epoch", { data });
   } catch (error) {
     console.error({ error });
   }
@@ -89,7 +87,6 @@ const fetchVotes = () => {
 };
 
 async function onSetup(rpc: string) {
-  console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
   const { client: wagmiClient } = useWagmi(rpc, network.value.rpc.values[1]);
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
@@ -128,7 +125,6 @@ await onSetup(rpc.value).then(async (api) => {
 watch(
   rpc,
   (newRpc) => {
-    console.log("rpc has changed", { newRpc });
     onSetup(newRpc);
   },
   { deep: true }

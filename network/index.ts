@@ -28,8 +28,6 @@ const findNetworkConfig = () => {
   const config = useRuntimeConfig();
   const { node, network } = config.public.env;
 
-  console.log({ node, network });
-
   // NETWORK env has higher priority
   if (network) {
     if (network === "mainnet") return mainnet;

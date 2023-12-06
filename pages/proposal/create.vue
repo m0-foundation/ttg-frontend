@@ -490,7 +490,6 @@ const currentValue = computed(() => {
 });
 
 function onChangeProposalType(option) {
-  console.log("onChangeProposalType", { option });
   formData.proposalType = option.value;
   selectedProposalType.value = option;
   $validation.value.$reset();
@@ -530,7 +529,6 @@ async function writeAllowance() {
     args: [account as Hash, spog.contracts.governor as Hash], // address owner, address spender
     account,
   });
-  console.log({ allowance });
 
   const fee = BigInt(spog.values.proposalFee!);
   if (allowance <= fee && hasToPayFee.value) {

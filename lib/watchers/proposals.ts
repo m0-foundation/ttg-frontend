@@ -6,7 +6,6 @@ import { useSpogStore } from "@/stores/spog";
 import { watchDualGovernorEvent } from "@/lib/sdk";
 
 export const watchProposalCreated = () => {
-  console.log("watchProposalCreated");
   const spog = storeToRefs(useSpogStore());
   const network = useNetworkStore().getNetwork();
   const apiStore = useApiClientStore();
@@ -19,8 +18,6 @@ export const watchProposalCreated = () => {
       chainId: network.value.rpc.chainId,
     },
     async (logs) => {
-      console.log("newProposalCreated", logs);
-
       const newProposals = await Promise.all(
         logs.map((log) =>
           apiStore.client.governor?.proposals.getProposalFromWatchLog(log)

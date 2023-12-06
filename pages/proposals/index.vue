@@ -175,7 +175,7 @@ const { data: hasFinishedVoting } = useContractRead({
 
 async function onCastOptional(vote: number, proposalId: string) {
   await forceSwitchChain();
-  console.log("cast", { vote, proposalId });
+
   return writeDualGovernor({
     address: spog.contracts.governor as Hash,
     functionName: "castVote",

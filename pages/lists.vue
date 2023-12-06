@@ -28,7 +28,6 @@ const fetchLists = async () => {
     const data = await apiStore.client.registrar!.list.getLists();
     const listsStore = useListsStore();
     listsStore.setLists(data);
-    console.log("fetched Lists", { data });
   } catch (error) {
     console.error({ error });
   }

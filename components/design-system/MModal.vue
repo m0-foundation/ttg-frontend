@@ -29,13 +29,11 @@ const emit = defineEmits<{
 }>();
 
 function open(): void {
-  console.log("open");
   isOpen.value = true;
   emit("onOpened");
 }
 
 function close(): void {
-  console.log("close");
   isOpen.value = false;
   emit("onClosed");
 }

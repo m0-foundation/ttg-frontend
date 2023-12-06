@@ -16,8 +16,6 @@ export class Epoch extends GovernorModule {
     const currentEpochAsBlockNumber =
       this.getBlockNumberOfEpochStart(currentEpoch);
 
-    console.log({ currentBlock, currentEpochAsBlockNumber });
-
     const nextEpochAsBlockNumber = this.getBlockNumberOfEpochEnd(currentEpoch);
 
     const currentEpochAsBlock = await this.client.getBlock({

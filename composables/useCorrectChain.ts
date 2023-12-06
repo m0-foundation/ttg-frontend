@@ -8,11 +8,6 @@ export default () => {
   const { switchNetworkAsync } = useSwitchNetwork();
 
   function forceSwitchChain() {
-    console.log({
-      connectedChain: connectedChain?.value,
-      chainId: chainId.value,
-    });
-
     if (
       connectedChain &&
       connectedChain.value &&

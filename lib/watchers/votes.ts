@@ -24,7 +24,6 @@ async function updateProposalsStore(newVotes: MVote[]) {
 }
 
 export const watchVoteCast = () => {
-  console.log("watchVoteCast");
   const spog = storeToRefs(useSpogStore());
   const network = useNetworkStore().getNetwork();
   const apiStore = useApiClientStore();
@@ -37,8 +36,6 @@ export const watchVoteCast = () => {
       chainId: network.value.rpc.chainId,
     },
     async (logs) => {
-      console.log("newVoteCast", logs);
-
       const newVotes = await Promise.all(
         logs.map((log) => apiStore.client.governor!.voting.decodeVote(log))
       );

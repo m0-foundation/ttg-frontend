@@ -32,8 +32,6 @@ export class List extends ApiModule {
         timestamp: Number(block.timestamp),
       };
 
-      console.log({ listEvent });
-
       return listEvent;
     }
 

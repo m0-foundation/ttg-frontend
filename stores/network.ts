@@ -3,7 +3,6 @@ import { NetworkConfig, getNetworkConfig } from "@/network";
 
 export const useNetworkStore = defineStore("network", () => {
   const networkConfig: NetworkConfig = getNetworkConfig();
-  console.log({ networkConfig });
 
   const network = useLocalStorage("m0.network", {
     rpc: { ...networkConfig.rpc },

@@ -106,7 +106,6 @@ useHead({
 
 function onSubmit() {
   const newRpc = isWithCustomRPC.value ? unref(customRPC) : unref(selectedRPC);
-  console.log({ newRpc });
   const newConfig = getNetworkConfig(unref(selectedNetworkId))!;
 
   networkStore.setNetwork(newConfig);
