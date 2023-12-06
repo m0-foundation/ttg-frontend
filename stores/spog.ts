@@ -31,7 +31,7 @@ export const useSpogStore = defineStore("spog", {
     getValuesFormatted: (state) => {
       const values: MProposalsActionTypes = {
         setProposalFee: useFormatCash(state.governors.standard.proposalFee!),
-        setPowerTokenThresholdRatio: state.governors.emergency.thresholdRatio!,
+        setThresholdRatio: state.governors.emergency.thresholdRatio!,
         setZeroTokenThresholdRatio: state.governors.zero.thresholdRatio!,
       };
 

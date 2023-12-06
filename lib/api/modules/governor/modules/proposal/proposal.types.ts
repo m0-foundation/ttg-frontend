@@ -58,8 +58,6 @@ export interface MProposal extends ProposalEventLog {
   proposalLabel: string;
   proposalParams: any[];
   proposer: string;
-  voteStart?: number;
-  voteEnd?: number;
   executed?: boolean;
   state?: MProposalState;
   tallies?: MProposalTallies;
@@ -69,7 +67,7 @@ export interface MProposal extends ProposalEventLog {
 }
 
 export interface MProposalsActionTypes {
-  setPowerTokenThresholdRatio: string;
+  setThresholdRatio: string;
   setZeroTokenThresholdRatio: string;
   setProposalFee: string;
 }
