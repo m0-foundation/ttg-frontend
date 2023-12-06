@@ -1,7 +1,7 @@
 describe("Proposals", () => {
   let proposalUrl = "";
 
-  describe("addAndRemoveFromList", () => {
+  describe("removeFromAndAddToList", () => {
     const LIST = "CollateralManagers";
     const input1 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
     const input2 = "0x388c818ca8b9251b393131c08a736a67ccb19297";
