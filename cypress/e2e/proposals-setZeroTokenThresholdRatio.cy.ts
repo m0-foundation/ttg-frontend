@@ -5,6 +5,8 @@ describe("Proposals", () => {
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
+      cy.mineEpochs(1);
+
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
@@ -56,7 +58,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneProposal(description);
+      cy.castYesOneOptionalProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
