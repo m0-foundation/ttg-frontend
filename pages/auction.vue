@@ -6,22 +6,22 @@
       <div
         class="col-span-3 lg:col-span-2 order-2 lg:order-1 bg-neutral-900 p-8 py-10"
       >
-        <div class="grid grid-cols-3 gap-8">
-          <div class="col-span-3 lg:col-span-1 text-zinc-500 text-xs uppercase">
-            <p class="mb-2">WETH / Power token</p>
+        <div class="flex gap-8 text-grey-400">
+          <div>
+            <p class="mb-2 text-xs uppercase">WETH / Power token</p>
             <MTokenAmount
               name="Eth"
               image="/img/tokens/eth.svg"
               :size="30"
-              amount="120"
+              :amount="balancePowerToken?.data.value?.formatted"
             />
           </div>
-          <div class="col-span-3 lg:col-span-1 text-zinc-500 text-xs uppercase">
-            <p class="mb-2">Total available</p>
+          <div>
+            <p class="mb-2 text-xs uppercase">Total available</p>
             <MTokenAmount
               name="Power"
               :size="30"
-              :amount="balancePowerToken?.data.value?.formatted"
+              :amount="amountLeftToAuction"
             />
           </div>
         </div>
@@ -45,7 +45,12 @@
           placeholder="0"
           @update:model-value="getPurchaseCost"
         />
-        <p class="text-zinc-500 text-xs mt-2">Max: 0</p>
+        <button
+          class="text text-xs text-grey-400"
+          @click="setMaxPossiblePurchase"
+        >
+          Max: {{ amountLeftToAuction }}
+        </button>
         <div class="my-12"></div>
         <p class="text-gray-200 text-xs uppercase mb-2">Value for purchase:</p>
         <MTokenAmount
@@ -54,7 +59,13 @@
           :size="36"
           :amount="purchaseCost + ''"
         />
-        <MButton :disabled="!purchaseAmount" class="mt-4 w-full" type="submit">
+        <MButton
+          :disabled="!purchaseAmount || !userAccount"
+          class="mt-4 w-full flex justify-center"
+          type="submit"
+          :is-loading="isLoadingTransaction"
+          @click="auctionBuy()"
+        >
           Buy
         </MButton>
       </div>
@@ -87,16 +98,25 @@
 import { storeToRefs } from "pinia";
 import { useBlockNumber, useAccount } from "use-wagmi";
 import { Hash } from "viem";
-import { readPowerBootstrapToken } from "@/lib/sdk";
+import { use } from "chai";
+import {
+  readPowerBootstrapToken,
+  readPowerToken,
+  writePowerToken,
+} from "@/lib/sdk";
+import { useMBalances } from "@/lib/hooks";
 
 const { address: userAccount } = useAccount();
 const { data: blockNumber } = useBlockNumber();
+const { powerToken: balancePowerToken } = useMBalances(userAccount?.value);
 
 const spog = storeToRefs(useSpogStore());
 
 const purchaseAmount = ref("");
 const purchaseCost = ref(0n);
 const lastEpochTotalSupply = ref();
+const amountLeftToAuction = ref();
+const isLoadingTransaction = ref(false);
 const transferEpoch = isTransferEpoch(blockNumber.value || 0n);
 const { epoch } = storeToRefs(spog);
 
@@ -112,6 +132,12 @@ async function getLastEpochTotalSupply() {
   }
 }
 
+function setMaxPossiblePurchase() {
+  getAmountLeftToAuction();
+  getPurchaseCost();
+  purchaseAmount.value = amountLeftToAuction.value;
+}
+
 function getPurchaseCost() {
   purchaseCost.value = getAuctionPurchaseCost(
     BigInt(purchaseAmount.value),
@@ -120,7 +146,35 @@ function getPurchaseCost() {
   );
 }
 
+async function getAmountLeftToAuction() {
+  try {
+    amountLeftToAuction.value = await readPowerToken({
+      address: spog.contracts.value.powerToken as Hash,
+      functionName: "amountToAuction",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function auctionBuy() {
+  if (!userAccount.value) return;
+  isLoadingTransaction.value = true;
+  try {
+    amountLeftToAuction.value = await writePowerToken({
+      address: spog.contracts.value.powerToken as Hash,
+      functionName: "buy",
+      args: [BigInt(purchaseAmount.value), userAccount.value],
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoadingTransaction.value = false;
+  }
+}
+
 onMounted(() => {
   getLastEpochTotalSupply();
+  getAmountLeftToAuction();
 });
 </script>
