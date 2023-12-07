@@ -38,14 +38,13 @@ const mapToArray = (obj: object) =>
 const immutable = computed(() => {
   return [
     ...mapToArray(
-      pick(getValues.value, ["clock", "votingDelay", "votingPeriod"])
-    ),
-    ...mapToArray(
       pick(contracts.value, [
-        "cashToken",
-        "zeroToken",
+        "standardGovernor",
+        "emergencyGovernor",
         "powerToken",
-        "registrar",
+        "zeroGovernor",
+        "zeroToken",
+        "vault",
       ])
     ),
   ];
@@ -60,14 +59,7 @@ const mutable = computed(() => {
         "proposalFee",
       ])
     ),
-    ...mapToArray(
-      pick(contracts.value, [
-        "cashToken",
-        "zeroToken",
-        "powerToken",
-        "registrar",
-      ])
-    ),
+    ...mapToArray(pick(contracts.value, ["cashToken"])),
   ];
 });
 
