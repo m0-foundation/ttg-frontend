@@ -17,6 +17,13 @@ This will download the SPOG contracts and all of their submodules recursively
 git submodule update --init --recursive
 ```
 
+If you need to update the module with the latest commit from remote SPOG use this instead:
+
+```bash
+git submodule update --init --recursive --remote
+```
+
+
 Note: Run `git submodule status` on root / of this repo to find the commit hash of the code based placed in contracts/ folder.
 
 
