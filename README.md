@@ -64,7 +64,7 @@ See file `/hardhat.config.js` for configs.
 
 
 
-#### 2.1.3 Env vars: `.env` file
+#### 2.1.3 Env vars
 
 This app uses an environment variables locally (not in docker-compose). For local development: See package.json.
 
