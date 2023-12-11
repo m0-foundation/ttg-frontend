@@ -1,8 +1,8 @@
 import { PublicClient } from "viem";
 import { EpochTypes, MEpoch } from "./epoch.types";
 
-export const _SECONDS_PER_BLOCK = 4;
-export const _EPOCH_PERIOD = 100;
+export const _SECONDS_PER_BLOCK = 8;
+export const _EPOCH_PERIOD = 50;
 
 export class Epoch {
   client: PublicClient;

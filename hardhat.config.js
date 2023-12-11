@@ -8,7 +8,7 @@ module.exports = {
       hardfork: "shanghai",
       mining: {
         auto: true,
-        interval: 15000,
+        interval: 8000,
       },
       accounts: {
         mnemonic: "test test test test test test test test test test test junk",
