@@ -18,24 +18,28 @@ export class Epoch {
 
   async getEpochState(): Promise<MEpoch> {
     const currentBlock = await this.client.getBlock();
-    const currentEpoch = await this.currentEpoch(currentBlock.number);
-
-    const currentEpochAsBlockNumber =
-      this.getBlockNumberOfEpochStart(currentEpoch);
+    const currentEpoch = this.currentEpoch(currentBlock.number);
 
     console.log({
       currentBlock: currentBlock.number,
       currentEpoch,
     });
 
-    const nextEpochAsBlockNumber = this.getBlockNumberOfEpochEnd(currentEpoch);
+    const currentEpochStartAsBlockNumber =
+      this.getBlockNumberOfEpochStart(currentEpoch);
 
-    const currentEpochAsBlock = await this.client.getBlock({
-      blockNumber: BigInt(currentEpochAsBlockNumber),
+    const currentEpochStartAsBlock = await this.client.getBlock({
+      blockNumber: BigInt(currentEpochStartAsBlockNumber),
     });
 
+    console.log({
+      currentEpochStartAsBlockNumber,
+    });
+
+    const nextEpochAsBlockNumber = this.getBlockNumberOfEpochEnd(currentEpoch);
+
     const nextEpochAsTimestamp =
-      Number(currentEpochAsBlock.timestamp) +
+      Number(currentEpochStartAsBlock.timestamp) +
       _EPOCH_PERIOD * _SECONDS_PER_BLOCK;
 
     const getType = (epoch: number) =>
@@ -44,8 +48,8 @@ export class Epoch {
     return {
       current: {
         asNumber: currentEpoch,
-        asBlockNumber: currentEpochAsBlockNumber,
-        asTimestamp: Number(currentEpochAsBlock.timestamp),
+        asBlockNumber: currentEpochStartAsBlockNumber,
+        asTimestamp: Number(currentEpochStartAsBlock.timestamp),
         type: getType(currentEpoch),
       },
       next: {
@@ -57,100 +61,18 @@ export class Epoch {
     };
   }
 
-  async currentEpoch(_blockNumber?: bigint) {
-    let blockNumber = _blockNumber;
-    if (!blockNumber) {
-      blockNumber = await this.getBlockNumber();
-    }
+  currentEpoch(blockNumber: bigint) {
+    return Epoch.getEpochFromBlock(blockNumber);
+  }
 
+  static getEpochFromBlock(blockNumber: bigint) {
     return (
       Math.floor((Number(blockNumber) - _STARTING_BLOCK) / _EPOCH_PERIOD) + 1
     );
   }
 
-  static getEpochFromBlock(blockNumber: bigint) {
-    return Math.floor(Number(blockNumber) / _EPOCH_PERIOD) + 1;
-  }
-
-  toSeconds(blocks_: number) {
-    return blocks_ * _SECONDS_PER_BLOCK;
-  }
-
   getBlockNumberOfEpochStart(epoch: number) {
     return (epoch - 1) * _EPOCH_PERIOD;
-  }
-
-  async startBlockOfCurrentEpoch() {
-    const epoch = await this.currentEpoch();
-    return this.getBlockNumberOfEpochStart(epoch);
-  }
-
-  async endBlockOfCurrentEpoch() {
-    const epoch = await this.currentEpoch();
-    return this.getBlockNumberOfEpochStart(epoch + 1);
-  }
-
-  async blocksElapsedInCurrentEpoch() {
-    const blockNumber = await this.getBlockNumber();
-    const startBlock = await this.startBlockOfCurrentEpoch();
-    return Number(blockNumber) - startBlock;
-  }
-
-  async timeElapsedInCurrentEpoch() {
-    const blocks = await this.blocksElapsedInCurrentEpoch();
-    return this.toSeconds(blocks);
-  }
-
-  async blocksRemainingInCurrentEpoch() {
-    const blockNumber = await this.getBlockNumber();
-    const endBlock = await this.endBlockOfCurrentEpoch();
-    return endBlock - Number(blockNumber);
-  }
-
-  async timeRemainingInCurrentEpoch() {
-    const blocks = await this.blocksRemainingInCurrentEpoch();
-    return this.toSeconds(blocks);
-  }
-
-  async getBlocksUntilEpochStart(epoch: number) {
-    const blockNumber = await this.getBlockNumber();
-    return this.getBlockNumberOfEpochStart(epoch) - Number(blockNumber);
-  }
-
-  async getSecondsUntilEpochStart(epoch: number) {
-    const blocks = await this.getBlocksUntilEpochStart(epoch);
-    return this.toSeconds(blocks);
-  }
-
-  async getBlocksUntilEpochEnds(epoch: number) {
-    const blockNumber = await this.getBlockNumber();
-    const blockStart = this.getBlockNumberOfEpochStart(epoch + 1);
-    return blockStart - Number(blockNumber);
-  }
-
-  async getSecondsUntilEpochEnds(epoch: number) {
-    const blocks = await this.getBlocksUntilEpochEnds(epoch);
-    return this.toSeconds(blocks);
-  }
-
-  async getBlocksSinceEpochStart(epoch: number) {
-    const blockNumber = await this.getBlockNumber();
-    return Number(blockNumber) - this.getBlockNumberOfEpochStart(epoch);
-  }
-
-  async getSecondsSinceEpochStart(epoch: number) {
-    const blocks = await this.getBlocksSinceEpochStart(epoch);
-    return this.toSeconds(blocks);
-  }
-
-  async getBlocksSinceEpochEnd(epoch: number) {
-    const blockNumber = await this.getBlockNumber();
-    return Number(blockNumber) - this.getBlockNumberOfEpochStart(epoch + 1);
-  }
-
-  async getSecondsSinceEpochEnd(epoch: number) {
-    const blocks = await this.getBlocksSinceEpochEnd(epoch);
-    return this.toSeconds(blocks);
   }
 
   getBlockNumberOfEpochEnd(epoch: number) {
