@@ -18,8 +18,8 @@ describe("Proposals", () => {
     */
 
     it("I should be able to CREATE a proposal to Reset", () => {
-      // zero holders cannot vote on first epoch
-      cy.mineEpochs(1);
+      // zero proposals cant be created on first epoch
+      cy.mineEpochs(2);
 
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
@@ -46,8 +46,6 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the proposal", () => {
-      // reset does not need to forward to next epoch, it will be able to vote on same epoch
-      cy.reload();
       cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");

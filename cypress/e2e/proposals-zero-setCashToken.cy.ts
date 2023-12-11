@@ -9,7 +9,8 @@ describe("Proposals", () => {
     let description = "";
 
     it("I should be able to CREATE a proposal", () => {
-      cy.mineEpochs(1);
+      // zero proposals cant be created on first epoch
+      cy.mineEpochs(2);
 
       description = `Change cash token to ${newCashTokenAddress} with fee to ${fee}`;
 
@@ -39,12 +40,6 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
-      // forward in time to be able to vote
-      // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
-      // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
-      // cy.mineEpochs(2);
-
-      // cy.wait(1000);
       cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
