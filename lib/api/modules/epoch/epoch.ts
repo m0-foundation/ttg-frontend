@@ -1,6 +1,7 @@
 import { PublicClient } from "viem";
 import { EpochTypes, MEpoch } from "./epoch.types";
 
+export const _STARTING_BLOCK = 0;
 export const _SECONDS_PER_BLOCK = 8;
 export const _EPOCH_PERIOD = 50;
 
@@ -22,7 +23,10 @@ export class Epoch {
     const currentEpochAsBlockNumber =
       this.getBlockNumberOfEpochStart(currentEpoch);
 
-    console.log({ currentBlock, currentEpochAsBlockNumber });
+    console.log({
+      currentBlock: currentBlock.number,
+      currentEpoch,
+    });
 
     const nextEpochAsBlockNumber = this.getBlockNumberOfEpochEnd(currentEpoch);
 
@@ -59,7 +63,9 @@ export class Epoch {
       blockNumber = await this.getBlockNumber();
     }
 
-    return Math.floor(Number(blockNumber) / _EPOCH_PERIOD) + 1; // Epoch at block 0 is 1.
+    return (
+      Math.floor((Number(blockNumber) - _STARTING_BLOCK) / _EPOCH_PERIOD) + 1
+    );
   }
 
   static getEpochFromBlock(blockNumber: bigint) {

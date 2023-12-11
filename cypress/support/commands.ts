@@ -116,7 +116,7 @@ Cypress.Commands.add("executeOneProposal", (description: string) => {
 });
 
 Cypress.Commands.add("mineEpochs", (quantity: number) => {
-  const _EPOCH_PERIOD = 100;
+  const _EPOCH_PERIOD = 50;
   const blocks = _EPOCH_PERIOD * quantity;
   cy.task("mine", blocks).then((obj) => {
     console.log("mined", blocks);
