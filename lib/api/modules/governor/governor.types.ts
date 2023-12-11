@@ -8,6 +8,7 @@ export interface MStandardGovernorValues {
   cashToken: string;
   proposalFee: string;
   maxTotalZeroRewardPerActiveEpoch: string;
+  clock: number; // epoch
 }
 
 export type GovernanceType = MVotingType;

@@ -16,12 +16,8 @@ export class Epoch {
     return await this.client.getBlock().then((block) => block.number);
   }
 
-  async getEpochState(): Promise<MEpoch> {
-    const currentBlock = await this.client.getBlock();
-    const currentEpoch = this.currentEpoch(currentBlock.number);
-
+  async getEpochState(currentEpoch: number): Promise<MEpoch> {
     console.log({
-      currentBlock: currentBlock.number,
       currentEpoch,
     });
 
@@ -59,10 +55,6 @@ export class Epoch {
         type: getType(currentEpoch + 1),
       },
     };
-  }
-
-  currentEpoch(blockNumber: bigint) {
-    return Epoch.getEpochFromBlock(blockNumber);
   }
 
   static getEpochFromBlock(blockNumber: bigint) {

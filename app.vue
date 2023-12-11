@@ -87,12 +87,15 @@ await onSetup(rpc.value).then(async () => {
 
   await Promise.all([
     spog.fetchTokens().catch((e) => trackError(e, "fetchTokens")),
-    spog.fetchEpoch().catch((e) => trackError(e, "fetchEpoch")),
     proposalStore
       .fetchAllProposals()
       .catch((e) => trackError(e, "fetchAllProposals")),
     votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes")),
   ]);
+
+  await spog
+    .fetchEpoch(spog.getValues.clock)
+    .catch((e) => trackError(e, "fetchEpoch"));
 
   watchProposalCreated();
   watchVoteCast();

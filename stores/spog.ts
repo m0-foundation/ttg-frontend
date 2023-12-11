@@ -46,15 +46,16 @@ export const useSpogStore = defineStore("spog", {
         emergencyProposalThresholdRatio:
           state.governors.emergency.thresholdRatio!,
         zeroProposalThresholdRatio: state.governors.zero.thresholdRatio!,
+        clock: state.governors.standard.clock!,
       };
     },
   },
 
   actions: {
-    async fetchEpoch() {
+    async fetchEpoch(_epoch: number) {
       const api = useApiClientStore();
-      const epoch = await api.client.epoch.getEpochState();
-      this.epoch = epoch;
+      const epochState = await api.client.epoch.getEpochState(_epoch);
+      this.epoch = epochState;
     },
     async fetchTokens() {
       console.log("fetchTokens");
@@ -102,7 +103,7 @@ export const useSpogStore = defineStore("spog", {
         // eslint-disable-next-line prettier/prettier
         api.client.standardGovernor!.getParameters<Partial<MStandardGovernorValues>>([
           // eslint-disable-next-line prettier/prettier
-          "proposalFee", "cashToken", "maxTotalZeroRewardPerActiveEpoch"
+          "proposalFee", "cashToken", "maxTotalZeroRewardPerActiveEpoch", "clock"
         ]),
         api.client.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
           "thresholdRatio",
