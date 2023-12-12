@@ -1,26 +1,26 @@
 describe("Proposals", () => {
-  describe("type action: setProposalFee", () => {
-    const input = "0.001";
-    const description = "Change Proposal Fee to 0.001 $CASH";
+  describe("type action: setKey", () => {
+    const value = "1";
+    const valueName = "INFLATION_RATE";
+    const description = `Add config ${valueName} = ${value}`;
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
-
-      cy.connectWallet();
-
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Fee").click();
-      cy.contains("Change fee").click();
+      cy.contains("Set config").click();
 
-      cy.get("input[data-test='proposalValue']").type(input);
-
+      cy.get("input[data-test='proposalValue']").type(valueName);
+      cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("textarea[data-test='description']").type(description);
+      cy.get("input[data-test='title']").type(description);
 
       cy.contains("Preview proposal").should("exist");
       cy.contains("Preview proposal").click();
+
+      cy.connectWallet();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -31,11 +31,9 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
-      // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
       cy.mineEpochs(2);
 
-      cy.wait(1000);
+      cy.wait(500);
       cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
@@ -48,7 +46,11 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", input);
+      cy.get("#technical-proposal-incoming-change").should(
+        "contain",
+        valueName
+      );
+      cy.get("#technical-proposal-incoming-change").should("contain", value);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -66,7 +68,6 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
-      cy.get("#technical-proposal-current").should("contain", input);
     });
   });
 });

@@ -3,9 +3,9 @@ import { Hash } from "viem";
 import { ApiModule } from "../../api-module";
 import { ApiContext } from "../../api-context";
 import { ProtocolConfigs } from "./protocol-configs";
-import { MRegistrarState } from "./registrar.types";
 
 import { List } from "./modules/list";
+import { MRegistrarValues } from "./registrar.types";
 import { registrarABI } from "~/lib/sdk";
 
 export class Registrar extends ApiModule {
@@ -25,7 +25,14 @@ export class Registrar extends ApiModule {
     });
   }
 
-  getContracts(): Promise<Partial<MRegistrarState>> {
-    return this.getParameters<Partial<MRegistrarState>>(["governor"]);
+  getValues(): Promise<MRegistrarValues> {
+    return this.getParameters<MRegistrarValues>([
+      "standardGovernor",
+      "zeroGovernor",
+      "emergencyGovernor",
+      "powerToken",
+      "zeroToken",
+      "vault",
+    ]);
   }
 }

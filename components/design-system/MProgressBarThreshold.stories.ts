@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import MProgressBarQuorum from "./MProgressBarQuorum.vue";
+import MProgressBarThreshold from "./MProgressBarThreshold.vue";
 
 // More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 const meta = {
-  title: "DS/MProgressBarQuorum",
-  component: MProgressBarQuorum,
+  title: "DS/MProgressBarThreshold",
+  component: MProgressBarThreshold,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/vue/writing-docs/autodocs
   tags: ["autodocs"],
   argTypes: {
@@ -15,22 +15,22 @@ const meta = {
     no: {
       control: "number",
     },
-    quorum: {
+    threshold: {
       control: "number",
     },
   },
   render: (args) => ({
     components: {
-      MProgressBarQuorum,
+      MProgressBarThreshold,
     },
     setup() {
       return { args };
     },
     template: `
-      <MProgressBarQuorum v-bind="args" />
+      <MProgressBarThreshold v-bind="args" />
     `,
   }),
-} satisfies Meta<typeof MProgressBarQuorum>;
+} satisfies Meta<typeof MProgressBarThreshold>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -46,6 +46,6 @@ export const Yes100: Story = {
   args: {
     yes: 1000,
     no: 0,
-    quorum: 0.5,
+    threshold: 0.5,
   },
 };

@@ -23,9 +23,9 @@
           v-if="proposal?.state !== 'Pending'"
           :tallies="proposal?.tallies"
           :version="proposal?.votingType"
-          :power-quorum="powerQuorum"
+          :power-threshold="powerThreshold"
           :power-total-supply="totalSupplyAt[0]"
-          :zero-quorum="zeroQuorum"
+          :zero-threshold="zeroThreshold"
           :zero-total-supply="totalSupplyAt[1]"
         />
       </div>
@@ -60,9 +60,9 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useAccount, useContractRead } from "use-wagmi";
+import { useAccount } from "use-wagmi";
 import { Hash } from "viem";
-import { dualGovernorABI, readPowerToken, readZeroToken } from "@/lib/sdk";
+import { readPowerToken, readZeroToken } from "@/lib/sdk";
 
 export interface ProposalDetailsProps {
   proposalId: string;
@@ -87,31 +87,16 @@ useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,
 });
 
-const {
-  data: hasVoted,
-  isError: hasVotedError,
-  isLoading: hasVotedLoading,
-} = useContractRead({
-  address: spog.contracts.governor as Hash,
-  abi: dualGovernorABI,
-  functionName: "hasVoted",
-  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
-  watch: true,
-  onSuccess(hasVoted) {
-    console.log({ hasVoted });
-  },
-});
-
 console.log({ currentProposalValuesFormatted });
 
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
-const zeroQuorum = computed(() =>
-  basisPointsToDecimal(spog.values.zeroTokenQuorumRatio!)
+const zeroThreshold = computed(() =>
+  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!)
 );
-const powerQuorum = computed(() =>
-  basisPointsToDecimal(spog.values.powerTokenQuorumRatio!)
+const powerThreshold = computed(() =>
+  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!)
 );
 
 const votesStore = useVotesStore();
@@ -125,13 +110,12 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
     readPowerToken({
       address: spog!.contracts!.powerToken! as Hash,
-      functionName: "totalSupplyAt",
+      functionName: "pastTotalSupply",
       args: [BigInt(proposal.value!.epoch!)],
     }),
     readZeroToken({
       address: spog!.contracts!.zeroToken! as Hash,
-      functionName: "totalSupplyAt",
-      args: [BigInt(proposal.value!.epoch!)],
+      functionName: "totalSupply",
     }),
   ]),
   [0n, 0n]

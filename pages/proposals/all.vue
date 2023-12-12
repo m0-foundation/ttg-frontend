@@ -37,7 +37,6 @@ const tableConfig = {
       id: "proposal",
       name: "Proposal",
       sort: true,
-      width: "40%",
       formatter: (cell: string, row: any) => {
         const { title } = useParsedDescriptionTitle(cell);
         return html(
@@ -51,7 +50,9 @@ const tableConfig = {
       name: "Action",
       sort: true,
       formatter: (cell: string) =>
-        html(`<span class="text-xs text-grey-400">${cell}</span>`),
+        html(
+          `<span class="text-xs text-grey-400 whitespace-nowrap">${cell}</span>`
+        ),
     },
 
     {
@@ -67,21 +68,12 @@ const tableConfig = {
           class: "h-5 w-5 ml-1",
         }).html;
 
-        if (["Power", "Emergency"].includes(cell)) {
+        if (["Standard", "Emergency"].includes(cell)) {
           return html(PowerIcon);
         }
 
         if (["Zero"].includes(cell)) {
           return html(ZeroIcon);
-        }
-
-        if (["Double"].includes(cell)) {
-          return html(`
-            <div class="flex">
-             ${PowerIcon}
-             ${ZeroIcon}
-            </div>
-          `);
         }
       },
     },
