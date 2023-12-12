@@ -1,22 +1,25 @@
 describe("Proposals", () => {
-  describe("type action: setPowerTokenQuorumRatio", () => {
+  describe("type action: setZeroProposalThresholdRatio", () => {
     const input1 = "15";
-    const description = "Set Power Token Quorum Ratio to 15";
+    const description = "Set Zero Token Threshold Ratio to 15";
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
+      // zero proposals cant be created on first epoch
+      cy.mineEpochs(2);
+
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Quorums").should("exist");
-      cy.contains("Quorums").click();
+      cy.contains("Thresholds").should("exist");
+      cy.contains("Thresholds").click();
 
-      cy.contains("Power quorum").should("exist");
-      cy.contains("Power quorum").click();
+      cy.contains("Zero threshold").should("exist");
+      cy.contains("Zero threshold").click();
 
       cy.get("input[data-test='proposalValue']").type(input1);
-
+      cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
@@ -32,9 +35,6 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
-      // forward in time to be able to vote
-      cy.mineEpochs(2);
-
       cy.wait(500);
       cy.visit("http://localhost:3000/proposals/");
 
@@ -56,7 +56,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneProposal(description);
+      cy.castYesOneOptionalProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal", () => {

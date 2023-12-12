@@ -1,4 +1,3 @@
-import { boolean } from "hardhat/internal/core/params/argumentTypes";
 import { Hash } from "viem";
 import { EventLog } from "../../../event/event.types";
 
@@ -15,10 +14,9 @@ export enum ProposalState {
 export type MProposalState = keyof typeof ProposalState;
 
 export enum VotingType {
-  Power = 0,
-  Double = 1,
+  Standard = 0,
+  Emergency = 1,
   Zero = 2,
-  Emergency = 3,
 }
 export type MVotingType = keyof typeof VotingType;
 
@@ -28,14 +26,16 @@ export interface ProposalEventLog extends EventLog {
   proposer: string;
   timestamp: number;
   description: string;
+  voteStart: number;
+  voteEnd: number;
 }
 
 export interface MProposalTallies {
-  power: {
+  power?: {
     yes: string;
     no: string;
   };
-  zero: {
+  zero?: {
     yes: string;
     no: string;
   };
@@ -48,10 +48,8 @@ export interface GetProposalOutput {
   executed: boolean;
   state: MProposalState;
   votingType: MVotingType;
-  noPowerTokenVotes: bigint;
-  yesPowerTokenVotes: bigint;
-  noZeroTokenVotes: bigint;
-  yesZeroTokenVotes: bigint;
+  noVotes: bigint;
+  yesVotes: bigint;
 }
 
 export interface MProposal extends ProposalEventLog {
@@ -60,18 +58,17 @@ export interface MProposal extends ProposalEventLog {
   proposalLabel: string;
   proposalParams: any[];
   proposer: string;
-  voteStart?: number;
-  voteEnd?: number;
   executed?: boolean;
   state?: MProposalState;
   tallies?: MProposalTallies;
   votingType?: MVotingType;
   epoch?: number;
+  governor: Hash; // governor address where it is stored
 }
 
 export interface MProposalsActionTypes {
-  setPowerTokenQuorumRatio: string;
-  setZeroTokenQuorumRatio: string;
+  setEmergencyProposalThresholdRatio: string;
+  setZeroProposalThresholdRatio: string;
   setProposalFee: string;
-  setProposalFeeRange: string[];
+  setCashToken: string;
 }

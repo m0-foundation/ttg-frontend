@@ -1,23 +1,25 @@
 describe("Proposals", () => {
-  describe("type action: setProposalFeeRange", () => {
-    const newFee = "0.002";
-    const minFee = "0.001";
-    const maxFee = "0.008";
-    const description = `Set proposal fee range to ${minFee}-${maxFee} and new fee = ${newFee} $CASH`;
+  describe("type action: setThresholdRatio for Power Token", () => {
+    const input1 = "15";
+    const description = "Set Power Token Threshold Ratio to 15";
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
+      // zero proposals cant be created on first epoch
+      cy.mineEpochs(2);
+
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Fee").click();
-      cy.contains("Change fee range").click();
+      cy.contains("Thresholds").should("exist");
+      cy.contains("Thresholds").click();
 
-      cy.get("input[data-test='proposalValue']").type(minFee);
-      cy.get("input[data-test='proposalValue2']").type(maxFee);
-      cy.get("input[data-test='proposalValue3']").type(newFee);
+      cy.contains("Power threshold").should("exist");
+      cy.contains("Power threshold").click();
 
+      cy.get("input[data-test='proposalValue']").type(input1);
+      cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
@@ -33,9 +35,6 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
-      // forward in time to be able to vote
-      cy.mineEpochs(2);
-
       cy.wait(500);
       cy.visit("http://localhost:3000/proposals/");
 
@@ -49,9 +48,7 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", minFee);
-      cy.get("#technical-proposal-incoming-change").should("contain", maxFee);
-      cy.get("#technical-proposal-incoming-change").should("contain", newFee);
+      cy.get("#technical-proposal-incoming-change").should("contain", input1);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -59,7 +56,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneProposal(description);
+      cy.castYesOneOptionalProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
@@ -69,9 +66,7 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
-      cy.get("#technical-proposal-current").should("contain", minFee);
-      cy.get("#technical-proposal-current").should("contain", maxFee);
-      cy.get("#technical-proposal-current").should("contain", newFee);
+      cy.get("#technical-proposal-current").should("contain", input1);
     });
   });
 });
