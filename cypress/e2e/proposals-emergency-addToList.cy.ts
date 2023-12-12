@@ -31,7 +31,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue']").type(input1);
       // address to append
       cy.get("input[data-test='proposalValue2']").type(input2);
-
+      cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");

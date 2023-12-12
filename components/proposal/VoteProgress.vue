@@ -2,15 +2,15 @@
   <div>
     <div class="my-4">
       <!-- Power or Emergency -->
-      <div v-if="version === 'Power'">
+      <div v-if="version === 'Standard'">
         <VoteProgressPower :votes="powerVotes" />
       </div>
 
       <div v-else-if="version === 'Emergency'">
         <VoteProgressPower
           :votes="powerVotes"
-          :quorum="props.powerQuorum"
-          :quorum-formatted="quorumFormattedPower"
+          :threshold="props.powerThreshold"
+          :threshold-formatted="thresholdFormattedPower"
         />
       </div>
 
@@ -18,28 +18,9 @@
       <div v-else-if="version === 'Zero'">
         <VoteProgressZero
           :votes="zeroVotes"
-          :quorum="props.zeroQuorum"
-          :quorum-formatted="quorumFormattedZero"
+          :threshold="props.zeroThreshold"
+          :threshold-formatted="thresholdFormattedZero"
         />
-      </div>
-
-      <!-- Double -->
-      <div v-else-if="version === 'Double'">
-        <div class="mb-8">
-          <VoteProgressPower
-            :votes="powerVotes"
-            :quorum="props.powerQuorum"
-            :quorum-formatted="quorumFormattedPower"
-          />
-        </div>
-
-        <div>
-          <VoteProgressZero
-            :votes="zeroVotes"
-            :quorum="props.zeroQuorum"
-            :quorum-formatted="quorumFormattedZero"
-          />
-        </div>
       </div>
     </div>
   </div>
@@ -51,8 +32,8 @@ import { MProposalTallies, MVotingType } from "@/lib/api/types";
 interface Props {
   tallies: MProposalTallies;
   version: MVotingType;
-  zeroQuorum?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
-  powerQuorum?: number;
+  zeroThreshold?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
+  powerThreshold?: number;
   powerTotalSupply?: bigint;
   zeroTotalSupply?: bigint;
 }
@@ -67,9 +48,9 @@ const props = withDefaults(defineProps<Props>(), {
       no: "0",
     },
   }),
-  version: "Power",
-  zeroQuorum: undefined,
-  powerQuorum: undefined,
+  version: "Standard",
+  zeroThreshold: undefined,
+  powerThreshold: undefined,
   powerTotalSupply: () => 0n,
   zeroTotalSupply: () => 0n,
 });
@@ -136,24 +117,24 @@ function parseVotesForQuorom(
 }
 
 const powerVotes = computed(() => {
-  return props.version === "Power"
-    ? parseVotesForMajority(props.tallies.power)
-    : parseVotesForQuorom(props.tallies.power, props.powerTotalSupply!);
+  return props.version === "Standard"
+    ? parseVotesForMajority(props.tallies.power!)
+    : parseVotesForQuorom(props.tallies.power!, props.powerTotalSupply!);
 });
 
 const zeroVotes = computed(() =>
-  parseVotesForQuorom(props.tallies.zero, props.zeroTotalSupply!)
+  parseVotesForQuorom(props.tallies.zero!, props.zeroTotalSupply!)
 );
 
-const quorumFormattedPower = computed(() =>
+const thresholdFormattedPower = computed(() =>
   useNumberFormatter(
-    (props.powerTotalSupply * BigInt(props.powerQuorum! * 100)) / 100n
+    (props.powerTotalSupply * BigInt(props.powerThreshold! * 100)) / 100n
   )
 );
 
-const quorumFormattedZero = computed(() =>
+const thresholdFormattedZero = computed(() =>
   useNumberFormatter(
-    (props.zeroTotalSupply * BigInt(props.zeroQuorum! * 100)) / 100n
+    (props.zeroTotalSupply * BigInt(props.zeroThreshold! * 100)) / 100n
   )
 );
 </script>

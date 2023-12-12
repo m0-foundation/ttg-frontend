@@ -82,7 +82,7 @@
         <div class="uppercase text-xs text-grey-400 whitespace-nowrap">
           <div
             v-if="
-              proposal?.votingType === 'Power' ||
+              proposal?.votingType === 'Standard' ||
               proposal?.votingType === 'Emergency'
             "
             class="flex gap-2"
@@ -94,18 +94,6 @@
           <div v-if="proposal?.votingType === 'Zero'" class="flex gap-2">
             <MIconZero class="h-4 w-4 ml-1" />
             vote with zero tokens
-          </div>
-
-          <div v-if="proposal?.votingType === 'Double'" class="flex gap-2">
-            <div class="flex">
-              power tokens
-              <MIconPower class="h-4 w-4 ml-1" />
-            </div>
-
-            <div class="flex">
-              zero tokens
-              <MIconZero class="h-4 w-4 ml-1" />
-            </div>
           </div>
         </div>
       </div>
@@ -132,8 +120,7 @@
 <script setup lang="ts">
 import truncate from "lodash/truncate";
 import { useAccount, useContractRead } from "use-wagmi";
-import { Hash } from "viem";
-import { dualGovernorABI } from "@/lib/sdk";
+import { Hash, Abi } from "viem";
 import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
 
@@ -149,8 +136,8 @@ const emit = defineEmits<{
   (e: "on-execute", proposal: MProposal): void;
 }>();
 
-const spog = useSpogStore();
 const apiStore = useApiClientStore();
+
 const { address: userAccount, isDisconnected } = useAccount();
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
@@ -188,11 +175,15 @@ function onCastSelected(vote: number) {
   }
 }
 
+const proposalId = computed(() => props.proposal.proposalId);
+const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
+console.log({ governor });
+
 const { data: hasVoted } = useContractRead({
-  address: spog.contracts.governor as Hash,
-  abi: dualGovernorABI,
+  address: governor?.value?.address as Hash,
+  abi: governor?.value?.abi as Abi,
   functionName: "hasVoted",
-  args: [BigInt(props.proposal.proposalId), userAccount as Ref<Hash>],
+  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
   watch: true,
 });
 
@@ -200,14 +191,10 @@ const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
   useMVotingPower(userAccount);
 
 const canVote = computed(() => {
-  if (props.proposal?.votingType === "Power") {
+  if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
     return hasPowerTokensVotingPower.value;
   } else if (props.proposal?.votingType === "Zero") {
     return hasZeroTokenVotingPower.value;
-  } else if (props.proposal?.votingType === "Double") {
-    return hasPowerTokensVotingPower.value && hasZeroTokenVotingPower.value;
-  } else if (props.proposal?.votingType === "Emergency") {
-    return hasPowerTokensVotingPower.value;
   }
 });
 

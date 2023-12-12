@@ -7,12 +7,13 @@ export const useVotesStore = defineStore("votes", () => {
   const votes = ref<Array<MVote>>([]);
 
   async function fetchAllVotes() {
-    await api.client
-      .governor!.voting!.getAllVotes()
-      .then((data) => (votes.value = data))
-      .catch((e) => {
-        console.error(e);
-      });
+    const [standardVotes, emergencyVotes, zeroVotes] = await Promise.all([
+      api.client!.standardGovernor!.voting!.getAllVotes(),
+      api.client.emergencyGovernor!.voting!.getAllVotes(),
+      api.client.zeroGovernor!.voting!.getAllVotes(),
+    ]);
+
+    votes.value = [...standardVotes, ...emergencyVotes, ...zeroVotes];
   }
 
   function getBy(key: keyof MVote, value: string) {
