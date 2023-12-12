@@ -1,6 +1,6 @@
 import { parseAbiItem } from "viem";
 import { GovernorModule } from "../GovernorModule";
-import { Epoch } from "../epoch";
+import { Epoch } from "../../../epoch";
 import { MVote } from "./voting.types";
 
 export class Voting extends GovernorModule {

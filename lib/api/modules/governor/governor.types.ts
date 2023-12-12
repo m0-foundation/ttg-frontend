@@ -1,20 +1,16 @@
-export interface MGovernorContracts {
-  cashToken: string;
-  zeroToken: string;
-  powerToken: string;
-  governor?: string;
-  registrar?: string;
-}
+import { MVotingType } from "./modules/proposal/proposal.types";
 
 export interface MGovernorValues {
-  powerTokenQuorumRatio: string;
-  zeroTokenQuorumRatio: string;
-  proposalFee: string;
-  minProposalFee: string;
-  maxProposalFee: string;
-  clock?: number;
-  votingDelay?: string;
-  votingPeriod?: string;
+  thresholdRatio: string;
 }
 
-export type MGovernorState = MGovernorContracts & MGovernorValues;
+export interface MStandardGovernorValues {
+  cashToken: string;
+  proposalFee: string;
+  maxTotalZeroRewardPerActiveEpoch: string;
+  clock: number; // epoch
+}
+
+export type GovernanceType = MVotingType;
+
+export type MGovernorState = MGovernorValues;

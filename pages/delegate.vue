@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-20 w-full xl:w-1/2 mx-auto">
+  <div class="mb-20 w-full mx-auto">
     <h1 class="text-white text-2xl p-8 text-center">Delegate Tokens</h1>
     <p class="text-grey-400 text-center">
       You can delegate your voting power to any address. The tokens will remain

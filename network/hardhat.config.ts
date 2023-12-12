@@ -2,8 +2,8 @@ import { NetworkConfig } from "./types.d";
 
 export default {
   contracts: {
-    registrar: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-    multicall3: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+    registrar: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+    multicall3: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
     deploymentBlock: 0,
   },
   rpc: {

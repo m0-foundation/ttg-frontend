@@ -2,33 +2,54 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
 import { ContractFactory, utils } from "ethers";
 
-import DualGovernorDeployerAbi from "../modules/spog/abi/DualGovernorDeployer.json";
-import DualGovernorAbi from "../modules/spog/abi/DualGovernor.json";
+import StandardGovernorDeployerAbi from "../modules/spog/abi/StandardGovernorDeployer.json";
+import EmergencyGovernorDeployerAbi from "../modules/spog/abi/EmergencyGovernorDeployer.json";
+import ZeroGovernorAbi from "../modules/spog/abi/ZeroGovernor.json";
+
 import PowerBootstrapTokenAbi from "../modules/spog/abi/PowerBootstrapToken.json";
 import PowerTokenDeployerAbi from "../modules/spog/abi/PowerTokenDeployer.json";
 import RegistrarAbi from "../modules/spog/abi/Registrar.json";
 import ZeroTokenAbi from "../modules/spog/abi/ZeroToken.json";
-import MockERC20PermitAbi from "../modules/spog/abi/MockERC20Permit.json";
+import ERC20PermitHarnessAbi from "../modules/spog/abi/ERC20PermitHarness.json";
+import DistributionVaultAbi from "../modules/spog/abi/DistributionVault.json";
 
-import { bytecode as DualGovernorDeployerBytecode } from "../modules/spog/bytecode/DualGovernorDeployer.json";
-import { bytecode as DualGovernorBytecode } from "../modules/spog/bytecode/DualGovernor.json";
+import { bytecode as StandardGovernorDeployerBytecode } from "../modules/spog/bytecode/StandardGovernorDeployer.json";
+import { bytecode as EmergencyGovernorDeployerBytecode } from "../modules/spog/bytecode/EmergencyGovernorDeployer.json";
+import { bytecode as ZeroGovernorBytecode } from "../modules/spog/bytecode/ZeroGovernor.json";
+
 import { bytecode as PowerBootstrapTokenBytecode } from "../modules/spog/bytecode/PowerBootstrapToken.json";
 import { bytecode as PowerTokenDeployerBytecode } from "../modules/spog/bytecode/PowerTokenDeployer.json";
 import { bytecode as RegistrarBytecode } from "../modules/spog/bytecode/Registrar.json";
 import { bytecode as ZeroTokenBytecode } from "../modules/spog/bytecode/ZeroToken.json";
-import { bytecode as MockERC20PermitBytecode } from "../modules/spog/bytecode/MockERC20Permit.json";
+import { bytecode as ERC20PermitHarnessBytecode } from "../modules/spog/bytecode/ERC20PermitHarness.json";
+import { bytecode as DistributionVaultBytecode } from "../modules/spog/bytecode/DistributionVault.json";
 
 import multicall3 from "./contracts/Multicall3.json";
 import { Network } from "./setup";
 
 export default async function deploySpog(network: Network) {
-  const initialZeroAccounts: string[] = [
-    network.accounts[0].address,
-    network.accounts[1].address,
-    network.accounts[2].address,
-  ];
+  console.log({ network });
 
-  const initialZeroBalances: string[] = ["60000000", "30000000", "10000000"];
+  const STANDARD_PROPOSAL_FEE = BigInt(1e16); // 0.001 WETH
+
+  const EMERGENCY_PROPOSAL_THRESHOLD_RATIO = BigInt(5000); // 50%
+  const ZERO_PROPOSAL_THRESHOLD_RATIO = BigInt(5000); // 50%
+
+  const provider = new JsonRpcProvider(network.url);
+  const wallet = new Wallet(network.accounts[0].privateKey, provider);
+
+  const mockERC20Factory = new ContractFactory(
+    ERC20PermitHarnessAbi,
+    ERC20PermitHarnessBytecode,
+    wallet
+  );
+
+  const cashToken = await mockERC20Factory.deploy("CASH", "Cash Token", 18);
+  // const cashToken2 = await mockERC20Factory.deploy("CASH2", "Cash Token2", 18);
+  const MToken = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+  const allowedCashTokens = [cashToken.address, MToken];
+  // NOTE: Ensure this is the current nonce (transaction count) of the deploying address.
+  // const DEPLOYER_NONCE = 0;
 
   const initialPowerAccounts: string[] = [
     network.accounts[0].address,
@@ -37,36 +58,47 @@ export default async function deploySpog(network: Network) {
   ];
 
   //  initPowerSupply = 1_000_000_000;
-
   const initialPowerBalances: string[] = [
     "60", // 60% of supply => 600_000_000 POWER tokens
     "30", // 30% of supply => 300_000_000 POWER tokens
     "10", // 10% of supply => 100_000_000 POWER tokens
   ];
 
+  const initialZeroAccounts: string[] = [
+    network.accounts[0].address,
+    network.accounts[1].address,
+    network.accounts[2].address,
+  ];
+
+  const initialZeroBalances: string[] = ["60000000", "30000000", "10000000"];
+
   /*
   hardhat network block number starts at 1, but PureEpochs makes the assumption that its being deployed to the mainnet when Ethereum went POS
   Thus epochs are counted from the block number 15_537_393
   Hardhat network must start with a block number and timestamp relatively recent
   */
-  console.log({ network });
-
-  const provider = new JsonRpcProvider(network.url);
-  const wallet = new Wallet(network.accounts[0].privateKey, provider);
 
   const mine = (blocks: number) =>
     provider.send("hardhat_mine", ["0x" + blocks.toString(16)]);
 
-  const dualGovernorDeployerFactory = new ContractFactory(
-    DualGovernorDeployerAbi,
-    DualGovernorDeployerBytecode,
+  const emergencyGovernorDeployerFactory = new ContractFactory(
+    EmergencyGovernorDeployerAbi,
+    EmergencyGovernorDeployerBytecode,
     wallet
   );
-  const dualGovernorFactory = new ContractFactory(
-    DualGovernorAbi,
-    DualGovernorBytecode,
+
+  const standardGovernorDeployerFactory = new ContractFactory(
+    StandardGovernorDeployerAbi,
+    StandardGovernorDeployerBytecode,
     wallet
   );
+
+  const zeroGovernorFactory = new ContractFactory(
+    ZeroGovernorAbi,
+    ZeroGovernorBytecode,
+    wallet
+  );
+
   const powerBootstrapTokenFactory = new ContractFactory(
     PowerBootstrapTokenAbi,
     PowerBootstrapTokenBytecode,
@@ -88,9 +120,10 @@ export default async function deploySpog(network: Network) {
     ZeroTokenBytecode,
     wallet
   );
-  const mockERC20PermitFactory = new ContractFactory(
-    MockERC20PermitAbi,
-    MockERC20PermitBytecode,
+
+  const DistributionVaultFactory = new ContractFactory(
+    DistributionVaultAbi,
+    DistributionVaultBytecode,
     wallet
   );
 
@@ -100,28 +133,32 @@ export default async function deploySpog(network: Network) {
     wallet
   );
 
-  const transactionCount = await wallet.getTransactionCount();
+  // Deployment
 
-  const expectedRegistrarAddress = utils.getContractAddress({
-    from: wallet.address,
-    nonce: transactionCount + 5,
-  });
+  const DEPLOYER_NONCE = await wallet.getTransactionCount();
 
-  const zeroToken = await zeroTokenFactory.deploy(
-    expectedRegistrarAddress,
-    initialZeroAccounts,
-    initialZeroBalances
-  );
+  const getExpectedAddress = (nounce: number) =>
+    utils.getContractAddress({
+      from: wallet.address,
+      nonce: nounce,
+    });
 
-  const governorDeployer = await dualGovernorDeployerFactory.deploy(
-    expectedRegistrarAddress,
-    zeroToken.address
-  );
+  const emergencyGovernorDeployer =
+    await emergencyGovernorDeployerFactory.deploy(
+      getExpectedAddress(DEPLOYER_NONCE + 4), // ZeroGovernor deployment nonce
+      getExpectedAddress(DEPLOYER_NONCE + 7) // Registrar deployment nonce
+    );
 
-  // NOTE: For now, cash is sent to the main wallet, instead of some vault or treasury. Will change.
   const powerTokenDeployer = await powerTokenDeployerFactory.deploy(
-    expectedRegistrarAddress,
-    wallet.address
+    getExpectedAddress(DEPLOYER_NONCE + 4), // ZeroGovernor deployment nonce
+    getExpectedAddress(DEPLOYER_NONCE + 6) // DistributionVault deployment nonce
+  );
+
+  const standardGovernorDeployer = await standardGovernorDeployerFactory.deploy(
+    getExpectedAddress(DEPLOYER_NONCE + 4), // ZeroGovernor deployment nonce
+    getExpectedAddress(DEPLOYER_NONCE + 7), // Registrar deployment nonce
+    getExpectedAddress(DEPLOYER_NONCE + 6), // DistributionVault deployment nonce
+    getExpectedAddress(DEPLOYER_NONCE + 5) // ZeroToken deployment nonce
   );
 
   const bootstrapToken = await powerBootstrapTokenFactory.deploy(
@@ -129,26 +166,32 @@ export default async function deploySpog(network: Network) {
     initialPowerBalances
   );
 
-  const cashToken = await mockERC20PermitFactory.deploy(
-    "CASH",
-    "Cash Token",
-    18
-  );
-
-  const registrar = await registrarFactory.deploy(
-    governorDeployer.address,
+  const zeroGovernor = await zeroGovernorFactory.deploy(
+    getExpectedAddress(DEPLOYER_NONCE + 5), // ZeroToken deployment nonce
+    emergencyGovernorDeployer.address,
     powerTokenDeployer.address,
+    standardGovernorDeployer.address,
     bootstrapToken.address,
-    cashToken.address,
-    {
-      gasLimit: 20000000,
-    }
+    STANDARD_PROPOSAL_FEE,
+    EMERGENCY_PROPOSAL_THRESHOLD_RATIO,
+    ZERO_PROPOSAL_THRESHOLD_RATIO,
+    allowedCashTokens
   );
 
-  const governorAddress = await registrar.governor();
-  const powerTokenAddress = await dualGovernorFactory
-    .attach(governorAddress)
-    .powerToken();
+  const zeroToken = await zeroTokenFactory.deploy(
+    getExpectedAddress(DEPLOYER_NONCE + 2), // StandardGovernorDeployer deployment nonce
+    initialZeroAccounts,
+    initialZeroBalances
+  );
+
+  // DistributionVault needs zeroToken address.
+  const vault = await DistributionVaultFactory.deploy(
+    getExpectedAddress(DEPLOYER_NONCE + 5)
+  ); // ZeroToken deployment nonce
+
+  const registrar = await registrarFactory.deploy(zeroGovernor.address, {
+    gasLimit: 20000000,
+  });
 
   const multicall3Contract = await multicallFactory.deploy();
 
@@ -160,10 +203,20 @@ export default async function deploySpog(network: Network) {
     );
   }
 
+  console.log("Registrar Address:", registrar.address);
+
+  console.log("Power Token Address:", await registrar.powerToken());
   console.log("Zero Token Address:", zeroToken.address);
-  console.log("Registrar address:", registrar.address);
-  console.log("DualGovernor Address:", governorAddress);
-  console.log("Power Token Address:", powerTokenAddress);
+
+  console.log("Standard Governor Address:", await registrar.standardGovernor());
+  console.log(
+    "Emergency Governor Address:",
+    await registrar.emergencyGovernor()
+  );
+  console.log("Zero Governor Address:", zeroGovernor.address);
+
+  console.log("Distribution Vault Address:", vault.address);
+
   console.log("Cash address:", cashToken.address);
   console.log("Multicall3 address: ", multicall3Contract.address);
 }

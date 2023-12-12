@@ -1,24 +1,40 @@
 describe("Proposals", () => {
-  describe("type action: Emergency update config", () => {
-    const value = "1";
-    const valueName = "INFLATION_RATE";
-    const description = `Add config ${valueName} = ${value}`;
-    let proposalUrl = "";
+  let proposalUrl = "";
+  describe("Emergency Add and remove from list", () => {
+    const input1 = "CollateralManagers";
+    const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+    const input3 = "0x388c818ca8b9251b393131c08a736a67ccb19297";
+    const title = "Emergency Add and remove from list";
+    const description = `Add ${input2} and remove ${input3} from list: ${input1}`;
 
-    it("I should be able to CREATE a proposal", () => {
+    it("I should be able to CREATE a proposal to ADD an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Update config").click();
+      cy.contains("Emergency").click({ force: true });
+      cy.contains("Emergency Remove from and Add to list").click({
+        force: true,
+      });
 
-      cy.contains("Emergency").should("exist").click({ force: true });
-      cy.contains("Emergency Update config")
-        .should("exist")
-        .click({ force: true });
+      cy.get("input[data-test='proposalValue']").should(
+        "have.attr",
+        "type",
+        "text"
+      );
+      cy.get("input[data-test='proposalValue2']").should(
+        "have.attr",
+        "type",
+        "text"
+      );
 
-      cy.get("input[data-test='proposalValue']").type(valueName);
-      cy.get("input[data-test='proposalValue2']").type(value);
+      // list address
+      cy.get("input[data-test='proposalValue']").type(input1);
+      // address to append
+      cy.get("input[data-test='proposalValue2']").type(input2);
+      cy.get("input[data-test='proposalValue3']").type(input3);
+
+      cy.get("input[data-test='title']").type(title);
       cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
@@ -34,11 +50,10 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the EMERGENCY proposal", () => {
-      // cy.mineEpochs(2);
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
-
-      cy.visit("http://localhost:3000/proposals/");
+      // cy.task("mine", 10);
       cy.reload();
+      cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
 
@@ -50,11 +65,8 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should(
-        "contain",
-        valueName
-      );
-      cy.get("#technical-proposal-incoming-change").should("contain", value);
+      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", input2);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -75,7 +87,7 @@ describe("Proposals", () => {
       cy.reload();
     });
 
-    it("I should be able to EXECUTE the proposal", () => {
+    it("I should be able to EXECUTE the proposal of ADD to a list", () => {
       cy.visit("http://localhost:3000/proposals/succeeded");
       cy.connectWallet();
 
@@ -89,25 +101,6 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
-    });
-
-    it("I should be able to see lists", () => {
-      cy.visit("http://localhost:3000/config/protocol");
-
-      cy.get("table > tbody > tr").should("have.length", 1);
-
-      const rowCells = (row) =>
-        Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
-
-      cy.get("table tbody tr").then((rows) => {
-        const mapped = Cypress._.map(rows, rowCells)
-          .map((row) => row.slice(0, 2))
-          .sort();
-
-        const should = [[valueName.toLowerCase(), value.toLowerCase()]].sort();
-
-        expect(mapped).to.deep.equal(should);
-      });
     });
   });
 });
