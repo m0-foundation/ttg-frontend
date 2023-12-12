@@ -29,6 +29,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue']").type(LIST);
       // address to append
       cy.get("input[data-test='proposalValue2']").type(input1);
+      cy.get("input[data-test='title']").type(description);
 
       cy.get("textarea[data-test='description']").type(description);
 
@@ -111,6 +112,7 @@ describe("Proposals", () => {
       // address to remove
       cy.get("input[data-test='proposalValue2']").type(input1);
 
+      cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");

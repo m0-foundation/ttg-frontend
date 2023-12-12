@@ -16,6 +16,10 @@ export async function setupHardhatEvents(on, config) {
   on("task", {
     mine: (blocks) => env.mine(blocks),
   });
+
+  on("task", {
+    deployCashToken: () => env.deployCashToken(),
+  });
 }
 
 export default defineConfig({

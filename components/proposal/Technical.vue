@@ -22,7 +22,8 @@
     >
       <div v-if="showParsed">
         <div v-for="(param, index) in incomingValuesParsed" :key="param">
-          {{ param }} ({{ incomingValues[index] }})
+          <span v-if="param.includes('0x')">{{ param }}</span>
+          <span v-else>{{ param }} ({{ incomingValues[index] }})</span>
         </div>
       </div>
 
@@ -40,9 +41,9 @@ export interface ProposalProps {
   proposal: MProposal;
   currentProposalValues: {
     setProposalFee: string;
-    setProposalFeeRange: string[];
-    setPowerTokenQuorumRatio: string;
-    setZeroTokenQuorumRatio: string;
+    setEmergencyProposalThresholdRatio: string;
+    setZeroProposalThresholdRatio: string;
+    setCashToken: string;
   };
 }
 
@@ -51,15 +52,22 @@ const props = defineProps<ProposalProps>();
 const parsedValue = (value: string, type: string) => {
   const formatFee = (value: string) => useFormatCash(value);
 
-  if (type === "setProposalFee") {
-    return formatFee(value);
-  }
-  if (type === "setProposalFeeRange") {
+  if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
     return formatFee(value);
   }
 
-  if (["setPowerTokenQuorumRatio", "setZeroTokenQuorumRatio"].includes(type)) {
+  if (
+    [
+      "setEmergencyProposalThresholdRatio",
+      "setZeroProposalThresholdRatio",
+    ].includes(type)
+  ) {
     return `${basisPointsToPercentage(value)}%`;
+  }
+
+  if (["setCashToken"].includes(type)) {
+    // when is the address or is the fee
+    return value.includes("0x") ? value : formatFee(value);
   }
 
   return value;
@@ -68,9 +76,10 @@ const parsedValue = (value: string, type: string) => {
 const showParsed = computed(() =>
   [
     "setProposalFee",
-    "setProposalFeeRange",
-    "setPowerTokenQuorumRatio",
-    "setZeroTokenQuorumRatio",
+    "setStandardProposalFee",
+    "setEmergencyProposalThresholdRatio",
+    "setZeroProposalThresholdRatio",
+    "setCashToken",
   ].includes(props.proposal?.proposalType)
 );
 

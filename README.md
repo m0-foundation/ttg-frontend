@@ -17,6 +17,13 @@ This will download the SPOG contracts and all of their submodules recursively
 git submodule update --init --recursive
 ```
 
+If you need to update the module with the latest commit from remote SPOG use this instead:
+
+```bash
+git submodule update --init --recursive --remote
+```
+
+
 Note: Run `git submodule status` on root / of this repo to find the commit hash of the code based placed in contracts/ folder.
 
 
@@ -25,7 +32,7 @@ Note: Run `git submodule status` on root / of this repo to find the commit hash 
 
 1. Do steps on (1.2) item
 5. then run `yarn wagmi generate`
-6. Finally, update the sdk.js file replace the import `"wagmi/actions";` to `"@wagmi/core"`
+6. Finally, update the lib/sdk.ts file replace the import `"wagmi/actions";` to `"@wagmi/core"`
 
 Depending on contract changes this file must be also updated with correct import dependencies of contracts:
 `/wagmi.config.ts`
@@ -57,7 +64,7 @@ See file `/hardhat.config.js` for configs.
 
 
 
-#### 2.1.3 Env vars: `.env` file
+#### 2.1.3 Env vars
 
 This app uses an environment variables locally (not in docker-compose). For local development: See package.json.
 
@@ -121,7 +128,7 @@ In metamask, import a wallet using the seed phrase
 12. junk
 ```
 
-Afterward, in metamask, each time you create a new account, for up to 5 accounts, they will all have ETH, CASH, VOTE, VALUE and can participate in governance. You can switch between accounts and vote on proposals to achieve a quorum.
+Afterward, in metamask, each time you create a new account, for up to 5 accounts, they will all have ETH, CASH, VOTE, VALUE and can participate in governance. You can switch between accounts and vote on proposals to achieve a threshold.
 
 ### Note
 
@@ -138,6 +145,12 @@ We use cypress that on every .cy.ts file deploys the spog contract found on `har
 
 To Run specific test or debug:
 
+In one terminal tab:
+```bash
+yarn dev
+```
+
+In a second terminal tab:
 ```bash
 yarn cy:open
 ```

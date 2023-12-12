@@ -49,7 +49,7 @@ export class ProtocolConfigs extends ApiModule {
       address: this.config.registrar as Hash,
       fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
-        "event ConfigUpdated(bytes32 indexed key, bytes32 indexed value)"
+        "event KeySet(bytes32 indexed key, bytes32 indexed value)"
       ),
     });
 

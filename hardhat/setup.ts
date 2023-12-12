@@ -13,8 +13,12 @@ import {
 } from "hardhat/types";
 import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
 
+import { ContractFactory } from "ethers";
+import { JsonRpcProvider } from "@ethersproject/providers";
+import { Wallet } from "@ethersproject/wallet";
+import ERC20PermitHarnessAbi from "../modules/spog/abi/ERC20PermitHarness.json";
+import { bytecode as ERC20PermitHarnessBytecode } from "../modules/spog/bytecode/ERC20PermitHarness.json";
 import { toExternallyOwnedAccounts } from "./accounts";
-
 export interface Network {
   /** The network's JSON-RPC address. */
   url: string;
@@ -33,6 +37,8 @@ export default async function setup(): Promise<
     reset: () => Promise<void>;
     /** Tears down the hardhat environment. Call after a run to clean up the environment. */
     close: () => Promise<void>;
+
+    deployCashToken: () => Promise<string>;
   }
 > {
   const hardhatConfig = hre.config.networks.hardhat;
@@ -78,6 +84,23 @@ export default async function setup(): Promise<
       return hre.network.provider.send("hardhat_mine", [
         "0x" + blocks.toString(16),
       ]);
+    },
+    deployCashToken: async () => {
+      const provider = new JsonRpcProvider(url);
+      const wallet = new Wallet(accounts[0].privateKey, provider);
+
+      const mockERC20Factory = new ContractFactory(
+        ERC20PermitHarnessAbi,
+        ERC20PermitHarnessBytecode,
+        wallet
+      );
+
+      const cashToken = await mockERC20Factory.deploy(
+        "CASH",
+        "New Cash Token",
+        18
+      );
+      return cashToken.address;
     },
     accounts,
     reset: () =>

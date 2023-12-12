@@ -35,6 +35,8 @@ import {
   watchForExecutedResetProposal,
 } from "@/lib/watchers";
 
+import { MStandardGovernorValues, MGovernorValues } from "@/lib/api/types";
+
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
 
@@ -43,50 +45,6 @@ const spog = useSpogStore();
 
 const { rpc } = storeToRefs(apiStore);
 const isLoading = ref(true);
-
-const fetchGovernorData = async (api: Api) => {
-  try {
-    const [contracts, values] = await Promise.all([
-      api.governor!.getContracts(),
-      api.governor!.getValues(),
-    ]);
-
-    await spog.setContracts({
-      ...contracts,
-      governor: api.governor!.contract as string,
-    });
-    spog.setValues(values);
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const fetchProposals = async (api: Api) => {
-  try {
-    const data = await api.governor!.proposals.getProposals();
-    const proposalStore = useProposalsStore();
-    proposalStore.setProposals(data);
-    console.log("fetched Proposals", { data });
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const fetchEpoch = async (api: Api) => {
-  try {
-    const data = await api.governor!.epoch.getEpochState();
-    const store = useSpogStore();
-    store.setEpoch(data);
-    console.log("fetched Epoch", { data });
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const fetchVotes = () => {
-  const votes = useVotesStore();
-  return votes.fetchAllVotes();
-};
 
 async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
@@ -100,21 +58,44 @@ async function onSetup(rpc: string) {
     deploymentBlock: BigInt(network.value.contracts.deploymentBlock),
   });
 
-  const { governor } = await api.registrar.getContracts();
-  api.setGovernor(governor as Hash);
+  const registrarContracts = await api.registrar.getValues();
+  spog.setContracts(registrarContracts);
+
+  api.setGovernors({
+    standardGovernor: registrarContracts.standardGovernor,
+    zeroGovernor: registrarContracts.zeroGovernor,
+    emergencyGovernor: registrarContracts.emergencyGovernor,
+  });
   apiStore.setClient(api);
 
   return api;
 }
 
-await onSetup(rpc.value).then(async (api) => {
+await onSetup(rpc.value).then(async () => {
   isLoading.value = true;
+  const proposalStore = useProposalsStore();
+  const votes = useVotesStore();
+
+  const trackError = (error: Error, label: string) => {
+    console.error(label, { error });
+  };
+
+  // this must go first
+  await spog
+    .fetchGovernorsValues()
+    .catch((e) => trackError(e, "fetchGovernorsValues"));
+
   await Promise.all([
-    fetchGovernorData(api),
-    fetchProposals(api),
-    fetchEpoch(api),
-    fetchVotes(),
+    spog.fetchTokens().catch((e) => trackError(e, "fetchTokens")),
+    proposalStore
+      .fetchAllProposals()
+      .catch((e) => trackError(e, "fetchAllProposals")),
+    votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes")),
   ]);
+
+  await spog
+    .fetchEpoch(spog.getValues.clock)
+    .catch((e) => trackError(e, "fetchEpoch"));
 
   watchProposalCreated();
   watchVoteCast();

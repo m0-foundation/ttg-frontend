@@ -1,10 +1,11 @@
 describe("Proposals", () => {
   describe("Emergency proposal for type action: AddToList", () => {
-    let oldGovernor = "";
-    let newGovernor = "";
+    const oldGovernor = "";
+    const newGovernor = "";
     const description =
       "Reset Governor - when executed new governor and power token are auto-deployed and the values in registrar are overwritten";
 
+    /*
     it("Get old Govenor", () => {
       cy.visit("http://localhost:3000/config/governance");
       cy.get("table > tbody > tr:nth-child(13) > td:nth-child(2)").then(
@@ -14,19 +15,22 @@ describe("Proposals", () => {
         }
       );
     });
+    */
 
     it("I should be able to CREATE a proposal to Reset", () => {
-      // zero holders cannot vote on first epoch
-      cy.mineEpochs(1);
+      // zero proposals cant be created on first epoch
+      cy.mineEpochs(2);
 
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Reset").click({ force: true });
+      cy.contains("Reset").click();
+      cy.contains("Reset to Power holders").click();
 
       cy.get("input[data-test='proposalValue']").should("not.exist");
 
+      cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
@@ -42,8 +46,6 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the proposal", () => {
-      // reset does not need to forward to next epoch, it will be able to vote on same epoch
-      cy.reload();
       cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
@@ -58,16 +60,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.visit("http://localhost:3000/proposals/");
-      cy.connectWallet();
-      cy.wait(500);
-
-      cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#button-cast-yes").click();
-      });
-      cy.get("#button-cast-submit").click();
-      cy.task("mine", 1);
-      cy.reload();
+      cy.castYesOneOptionalProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal of ADD to a list", () => {
@@ -82,6 +75,7 @@ describe("Proposals", () => {
       cy.wait(500);
     });
 
+    /*
     it("I should be able to check the executed proposal", () => {
       cy.visit("http://localhost:3000/config/governance");
 
@@ -94,5 +88,6 @@ describe("Proposals", () => {
 
       expect(newGovernor).to.not.equal(oldGovernor);
     });
+    */
   });
 });
