@@ -7,6 +7,10 @@ export default () => {
   const { chain: connectedChain } = useNetwork();
   const { switchNetworkAsync } = useSwitchNetwork();
 
+  const isCorrectChain = computed(() => {
+    return connectedChain?.value?.id === chainId.value;
+  });
+
   function forceSwitchChain() {
     console.log({
       connectedChain: connectedChain?.value,
@@ -24,5 +28,5 @@ export default () => {
     }
   }
 
-  return { forceSwitchChain };
+  return { forceSwitchChain, isCorrectChain };
 };
