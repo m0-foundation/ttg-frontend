@@ -20,9 +20,9 @@
           v-if="proposal?.state !== 'Pending'"
           :tallies="proposal?.tallies"
           :version="proposal?.votingType"
-          :power-quorum="powerQuorum"
+          :power-threshold="powerThreshold"
           :power-total-supply="totalSupplyAt[0]"
-          :zero-quorum="zeroQuorum"
+          :zero-threshold="zeroThreshold"
           :zero-total-supply="totalSupplyAt[1]"
         />
       </div>
@@ -86,11 +86,11 @@ useHead({
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
-const zeroQuorum = computed(() =>
-  basisPointsToDecimal(spog.values.zeroTokenQuorumRatio!)
+const zeroThreshold = computed(() =>
+  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!)
 );
-const powerQuorum = computed(() =>
-  basisPointsToDecimal(spog.values.powerTokenQuorumRatio!)
+const powerThreshold = computed(() =>
+  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!)
 );
 
 const votesStore = useVotesStore();
@@ -104,13 +104,12 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
     readPowerToken({
       address: spog!.contracts!.powerToken! as Hash,
-      functionName: "totalSupplyAt",
+      functionName: "pastTotalSupply",
       args: [BigInt(proposal.value!.epoch!)],
     }),
     readZeroToken({
       address: spog!.contracts!.zeroToken! as Hash,
-      functionName: "totalSupplyAt",
-      args: [BigInt(proposal.value!.epoch!)],
+      functionName: "totalSupply",
     }),
   ]),
   [0n, 0n]

@@ -4,7 +4,7 @@ import { NetworkConfig, getNetworkConfig } from "@/network";
 export const useNetworkStore = defineStore("network", () => {
   const networkConfig: NetworkConfig = getNetworkConfig();
 
-  const network = useLocalStorage("m0.network", {
+  const network = useLocalStorage("mzero.network", {
     rpc: { ...networkConfig.rpc },
     contracts: { ...networkConfig.contracts },
   });

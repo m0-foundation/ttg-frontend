@@ -2,7 +2,11 @@ import { Hash } from "viem";
 import { storeToRefs } from "pinia";
 import { useVotesStore } from "@/stores/votes";
 import { useSpogStore } from "@/stores/spog";
-import { watchDualGovernorEvent } from "@/lib/sdk";
+import {
+  watchStandardGovernorEvent,
+  watchEmergencyGovernorEvent,
+  watchZeroGovernorEvent,
+} from "@/lib/sdk";
 import { MVote } from "@/lib/api/types";
 
 async function updateProposalsStore(newVotes: MVote[]) {
@@ -16,33 +20,59 @@ async function updateProposalsStore(newVotes: MVote[]) {
   );
 
   newVotes.forEach((vote) => {
-    const { tallies } = newTallies.find(
-      (t) => t?.proposalId === vote.proposalId
-    );
-    proposals.updateProposalByKey(vote.proposalId!, "tallies", tallies);
+    const proposal = newTallies.find((t) => t?.proposalId === vote.proposalId);
+    if (proposal) {
+      proposals.updateProposalByKey(
+        vote.proposalId!,
+        "tallies",
+        proposal.tallies
+      );
+    }
   });
 }
 
 export const watchVoteCast = () => {
   const spog = storeToRefs(useSpogStore());
   const network = useNetworkStore().getNetwork();
-  const apiStore = useApiClientStore();
+  const api = useApiClientStore();
   const votesStore = useVotesStore();
 
-  watchDualGovernorEvent(
+  const onEvent = async (logs, governor) => {
+    console.log("newVoteCast", logs);
+
+    const newVotes = await Promise.all(
+      logs.map((log) => governor.voting.decodeVote(log))
+    );
+
+    votesStore.push(newVotes);
+
+    return updateProposalsStore(newVotes);
+  };
+
+  watchStandardGovernorEvent(
     {
-      address: spog.contracts.value.governor as Hash,
+      address: spog.contracts.value.standardGovernor as Hash,
       eventName: "VoteCast",
       chainId: network.value.rpc.chainId,
     },
-    async (logs) => {
-      const newVotes = await Promise.all(
-        logs.map((log) => apiStore.client.governor!.voting.decodeVote(log))
-      );
+    (logs) => onEvent(logs, api.client.standardGovernor)
+  );
 
-      votesStore.push(newVotes);
+  watchEmergencyGovernorEvent(
+    {
+      address: spog.contracts.value.emergencyGovernor as Hash,
+      eventName: "VoteCast",
+      chainId: network.value.rpc.chainId,
+    },
+    (logs) => onEvent(logs, api.client.emergencyGovernor)
+  );
 
-      return updateProposalsStore(newVotes);
-    }
+  watchZeroGovernorEvent(
+    {
+      address: spog.contracts.value.zeroGovernor as Hash,
+      eventName: "VoteCast",
+      chainId: network.value.rpc.chainId,
+    },
+    (logs) => onEvent(logs, api.client.zeroGovernor)
   );
 };

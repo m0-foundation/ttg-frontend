@@ -70,11 +70,10 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { Hash } from "viem";
+import { Abi, Hash } from "viem";
 import { useAccount, useContractRead } from "use-wagmi";
-import { waitForTransaction } from "@wagmi/core";
-import { writeDualGovernor, powerTokenABI } from "@/lib/sdk";
+import { waitForTransaction, writeContract } from "@wagmi/core";
+import { standardGovernorABI, writeStandardGovernor } from "@/lib/sdk";
 
 interface CastedProposal {
   vote: number;
@@ -87,16 +86,12 @@ const isLoading = ref(false);
 const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 
-const { epoch } = storeToRefs(spog);
-
 const activeProposals = computed(() =>
   proposalsStore.getProposalsByState("Active")
 );
 
 const mandatoryToVoteProposals = computed(() =>
-  activeProposals.value.filter(
-    (p) => p.votingType === "Power" || p.votingType === "Double"
-  )
+  activeProposals.value.filter((p) => p.votingType === "Standard")
 );
 
 const optionalToVoteProposals = computed(() =>
@@ -140,6 +135,7 @@ function onUncast(proposalId: string) {
   );
 }
 
+// batch is only for standard proposals
 async function onCastBatchVotes() {
   await forceSwitchChain();
 
@@ -150,8 +146,8 @@ async function onCastBatchVotes() {
   );
   const votes = selectedCastProposals.value.map((p) => p.vote);
 
-  const { hash } = await writeDualGovernor({
-    address: spog.contracts.governor as Hash,
+  const { hash } = await writeStandardGovernor({
+    address: spog.contracts.standardGovernor as Hash,
     functionName: "castVotes",
     args: [proposalIds, votes], // uint256 proposalId, uint8 support
     account: userAccount.value,
@@ -166,18 +162,22 @@ async function onCastBatchVotes() {
 }
 
 const { data: hasFinishedVoting } = useContractRead({
-  address: spog.contracts.powerToken as Hash,
-  abi: powerTokenABI,
-  functionName: "hasParticipatedAt",
-  args: [userAccount as Ref<Hash>, BigInt(epoch.value.current?.asNumber)],
+  address: spog.contracts.standardGovernor as Hash,
+  abi: standardGovernorABI,
+  functionName: "hasVotedOnAllProposals",
+  args: [userAccount as Ref<Hash>, BigInt(spog.epoch.current.asNumber)],
   watch: true,
 });
 
 async function onCastOptional(vote: number, proposalId: string) {
   await forceSwitchChain();
 
-  return writeDualGovernor({
-    address: spog.contracts.governor as Hash,
+  const governor = useGovernor({ proposalId });
+  console.log("cast", { vote, proposalId, governor });
+
+  return writeContract({
+    address: governor!.address as Hash,
+    abi: governor!.abi as Abi,
     functionName: "castVote",
     args: [BigInt(proposalId), vote],
     account: userAccount.value,

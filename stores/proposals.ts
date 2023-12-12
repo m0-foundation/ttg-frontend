@@ -7,7 +7,7 @@ import { MProposal, ProposalState } from "@/lib/api/types";
 
 export const useProposalsStore = defineStore("proposals", {
   state: () => ({
-    data: useLocalStorage("m0.proposals", [] as MProposal[]),
+    data: useLocalStorage("mzero.proposals", [] as MProposal[]),
   }),
 
   getters: {
@@ -74,6 +74,18 @@ export const useProposalsStore = defineStore("proposals", {
           this.update(newProposal);
         }
       }
+    },
+
+    async fetchAllProposals() {
+      const api = useApiClientStore();
+
+      const [standard, emergency, zero] = await Promise.all([
+        api.client.standardGovernor!.proposals.getProposals(),
+        api.client.emergencyGovernor!.proposals.getProposals(),
+        api.client.zeroGovernor!.proposals.getProposals(),
+      ]);
+      const allProposals = [...standard, ...emergency, ...zero];
+      this.setProposals(allProposals);
     },
   },
 });

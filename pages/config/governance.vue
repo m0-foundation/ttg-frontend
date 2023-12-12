@@ -23,7 +23,7 @@ import { storeToRefs } from "pinia";
 import pick from "lodash/pick";
 
 const spog = useSpogStore();
-const { values, contracts } = storeToRefs(spog);
+const { getValues, contracts } = storeToRefs(spog);
 
 useHead({
   titleTemplate: "%s - Configurations",
@@ -37,13 +37,14 @@ const mapToArray = (obj: object) =>
 
 const immutable = computed(() => {
   return [
-    ...mapToArray(pick(values.value, ["clock", "votingDelay", "votingPeriod"])),
     ...mapToArray(
       pick(contracts.value, [
-        "cashToken",
-        "zeroToken",
+        "standardGovernor",
+        "emergencyGovernor",
         "powerToken",
-        "registrar",
+        "zeroGovernor",
+        "zeroToken",
+        "vault",
       ])
     ),
   ];
@@ -52,25 +53,15 @@ const immutable = computed(() => {
 const mutable = computed(() => {
   return [
     ...mapToArray(
-      pick(values.value, [
-        "powerTokenQuorumRatio",
-        "zeroTokenQuorumRatio",
+      pick(getValues.value, [
+        "emergencyProposalThresholdRatio",
+        "zeroProposalThresholdRatio",
         "proposalFee",
-        "minProposalFee",
-        "maxProposalFee",
       ])
     ),
-    ...mapToArray(
-      pick(contracts.value, [
-        "cashToken",
-        "zeroToken",
-        "powerToken",
-        "registrar",
-      ])
-    ),
+    ...mapToArray(pick(contracts.value, ["cashToken"])),
   ];
 });
-
 
 const mutableTable = computed(() => {
   return {
