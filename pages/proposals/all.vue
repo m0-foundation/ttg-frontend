@@ -37,7 +37,6 @@ const tableConfig = {
       id: "proposal",
       name: "Proposal",
       sort: true,
-      width: "40%",
       formatter: (cell: string, row: any) => {
         const { title } = useParsedDescriptionTitle(cell);
         return html(
@@ -51,7 +50,9 @@ const tableConfig = {
       name: "Action",
       sort: true,
       formatter: (cell: string) =>
-        html(`<span class="text-xs text-grey-400">${cell}</span>`),
+        html(
+          `<span class="text-xs text-grey-400 whitespace-nowrap">${cell}</span>`
+        ),
     },
 
     {
