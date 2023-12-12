@@ -59,7 +59,7 @@ const tableConfig = {
       name: "Tokens",
       sort: true,
       width: "10%",
-      formatter: (cell: string, row: any) => {
+      formatter: (cell: string) => {
         const PowerIcon = useComponentToHtml(MIconPower, {
           class: "h-5 w-5 ml-1",
         }).html;

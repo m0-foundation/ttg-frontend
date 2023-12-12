@@ -25,9 +25,7 @@ import {
   MProposalTallies,
   ProposalEventLog,
   ProposalState,
-  VotingType,
 } from "./proposal.types";
-import { readDualGovernor } from "@/lib/sdk";
 import { ApiContext } from "@/lib/api/api-context";
 import { Epoch } from "~/lib/api/modules/epoch/epoch";
 

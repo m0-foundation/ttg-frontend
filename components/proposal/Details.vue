@@ -57,7 +57,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useAccount } from "use-wagmi";
 import { Hash } from "viem";
 import { readPowerToken, readZeroToken } from "@/lib/sdk";
 
