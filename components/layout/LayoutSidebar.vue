@@ -44,7 +44,7 @@
       <NuxtLink to="/profile/me/">MY PROFILE</NuxtLink>
     </div>
 
-    <div class="mb-6">
+    <div v-if="isCorrectChain" class="mb-6">
       <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
       <div class="flex justify-between mb-4">
         <div class="text-gray-400 flex items-center">
@@ -60,7 +60,7 @@
     </div>
 
     <div
-      v-show="hasDelegatedPower || hasDelegatedZero"
+      v-show="(hasDelegatedPower || hasDelegatedZero) && isCorrectChain"
       class="p-3 bg-green-900 text-white"
     >
       <div class="mb-2">
@@ -106,6 +106,7 @@ import { useMVotingPower } from "@/lib/hooks";
 
 const { address: userAccount, isConnected } = useAccount();
 const { disconnect } = useDisconnect();
+const { isCorrectChain } = useCorrectChain();
 
 const { powerTokenVotingPower, zeroTokenVotingPower } =
   useMVotingPower(userAccount);
