@@ -13,7 +13,7 @@
               name="Eth"
               image="/img/tokens/eth.svg"
               :size="30"
-              :amount="balancePowerToken?.data.value?.formatted"
+              :amount="Number(purchasePrice)"
             />
           </div>
           <div>
@@ -57,7 +57,7 @@
           class="text-zinc-500"
           image="/img/tokens/eth.svg"
           :size="36"
-          :amount="purchaseCost + ''"
+          :amount="purchaseCost"
         />
         <MButton
           :disabled="!purchaseAmount || !userAccount"
@@ -110,6 +110,7 @@ const spog = storeToRefs(useSpogStore());
 
 const purchaseAmount = ref();
 const purchaseCost = ref(0n);
+const purchasePrice = ref(0n);
 const lastEpochTotalSupply = ref();
 const amountLeftToAuction = ref();
 const isLoadingTransaction = ref(false);
@@ -142,6 +143,17 @@ function getPurchaseCost() {
   );
 }
 
+watch(
+  () => lastEpochTotalSupply.value,
+  (newValue) => {
+    purchasePrice.value = getAuctionPurchaseCost(
+      1n,
+      blockNumber.value,
+      newValue
+    );
+  }
+);
+
 async function getAmountLeftToAuction() {
   try {
     amountLeftToAuction.value = await readPowerToken({
@@ -162,7 +174,7 @@ async function auctionBuy() {
       functionName: "buy",
       args: [
         BigInt(purchaseAmount.value),
-        BigInt(purchaseAmount.value + 10),
+        BigInt(purchaseAmount.value),
         userAccount.value,
       ],
       account: userAccount.value,
