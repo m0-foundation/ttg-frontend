@@ -51,7 +51,7 @@
 </template>
 <script setup lang="ts">
 import { MProposal } from "@/lib/api";
-import { copyToClipboard } from "~/utils/misc";
+import { copyToClipboard } from "@/utils/misc";
 
 export interface ProposalProps {
   proposal: MProposal;
