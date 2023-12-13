@@ -13,7 +13,9 @@
         <h2 class="text-2xl break-all">
           {{ title }}
         </h2>
-        <span v-if="proposal?.isEmergency" class="text-xs text-grey-400"
+        <span
+          v-if="proposal?.isEmergency && proposal?.state !== 'Succeeded'"
+          class="text-xs text-grey-400"
           >Voting ends {{ voteEnds }}
         </span>
       </div>
@@ -198,10 +200,9 @@ const canVote = computed(() => {
   }
 });
 
-voteEndTimestamp.value =
-  await apiStore.client.governor!.epoch.getTimestampToEpoch(
-    props.proposal!.voteEnd!
-  );
+voteEndTimestamp.value = await apiStore.client.epoch.getTimestampFromEpoch(
+  props.proposal.voteEnd
+);
 
 const { timeAgo: voteEnds } = useDate(voteEndTimestamp.value);
 </script>
