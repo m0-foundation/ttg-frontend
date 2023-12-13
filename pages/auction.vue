@@ -98,12 +98,8 @@
 import { storeToRefs } from "pinia";
 import { useBlockNumber, useAccount } from "use-wagmi";
 import { Hash } from "viem";
-import { use } from "chai";
-import {
-  readPowerBootstrapToken,
-  readPowerToken,
-  writePowerToken,
-} from "@/lib/sdk";
+import { waitForTransaction } from "@wagmi/core";
+import { readPowerToken, writePowerToken } from "@/lib/sdk";
 import { useMBalances } from "@/lib/hooks";
 
 const { address: userAccount } = useAccount();
@@ -112,7 +108,7 @@ const { powerToken: balancePowerToken } = useMBalances(userAccount?.value);
 
 const spog = storeToRefs(useSpogStore());
 
-const purchaseAmount = ref("");
+const purchaseAmount = ref();
 const purchaseCost = ref(0n);
 const lastEpochTotalSupply = ref();
 const amountLeftToAuction = ref();
@@ -122,9 +118,9 @@ const { epoch } = storeToRefs(spog);
 
 async function getLastEpochTotalSupply() {
   try {
-    lastEpochTotalSupply.value = await readPowerBootstrapToken({
+    lastEpochTotalSupply.value = await readPowerToken({
       address: spog.contracts.value.powerToken as Hash,
-      functionName: "totalSupplyAt",
+      functionName: "pastTotalSupply",
       args: [BigInt(epoch.value.current?.asNumber - 1)],
     });
   } catch (error) {
@@ -135,7 +131,7 @@ async function getLastEpochTotalSupply() {
 function setMaxPossiblePurchase() {
   getAmountLeftToAuction();
   getPurchaseCost();
-  purchaseAmount.value = amountLeftToAuction.value;
+  purchaseAmount.value = Number(amountLeftToAuction.value);
 }
 
 function getPurchaseCost() {
@@ -161,11 +157,21 @@ async function auctionBuy() {
   if (!userAccount.value) return;
   isLoadingTransaction.value = true;
   try {
-    amountLeftToAuction.value = await writePowerToken({
+    const { hash } = await writePowerToken({
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
-      args: [BigInt(purchaseAmount.value), userAccount.value],
+      args: [
+        BigInt(purchaseAmount.value),
+        BigInt(purchaseAmount.value + 10),
+        userAccount.value,
+      ],
+      account: userAccount.value,
     });
+
+    const txReceipt = await waitForTransaction({ confirmations: 1, hash });
+    if (txReceipt.status !== "success") {
+      throw new Error("Transaction was rejected");
+    }
   } catch (error) {
     console.log(error);
   } finally {
