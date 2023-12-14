@@ -1,14 +1,7 @@
 <template>
   <div class="w-full flex justify-between items-center space-x-4">
     <div class="block w-1/2">
-      <MInput
-        v-model="list"
-        class="input"
-        type="text"
-        placeholder="List"
-        data-test="proposalValue"
-        :errors="props.modelValueErrors"
-      />
+      <SelectList v-model="list" :errors="props.modelValueErrors" />
     </div>
 
     <div class="block w-1/2">
@@ -27,6 +20,8 @@
 <script setup lang="ts">
 import { ErrorObject } from "@vuelidate/core";
 
+const options = ["minters", "validators", "earners"];
+
 export interface InputProps {
   modelValue: string;
   modelValue2: string;
@@ -39,4 +34,21 @@ const emit = defineEmits(["update:modelValue", "update:modelValue2"]);
 
 const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const address = useVModelWrapper<InputProps>(props, emit, "modelValue2");
+
+const hasErrors = computed(() => props.modelValueErrors?.length);
+
+const isOtherList = ref(false);
+
+function handleChangeList(e: any) {
+  if (e.target.value === "otherList") {
+    list.value = "";
+    isOtherList.value = true;
+  }
+}
 </script>
+
+<style>
+.error {
+  @apply border border-red-500;
+}
+</style>

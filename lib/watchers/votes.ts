@@ -1,5 +1,6 @@
-import { Hash } from "viem";
+import { Hash, Log } from "viem";
 import { storeToRefs } from "pinia";
+import { Governor } from "../api/modules/governor";
 import { useVotesStore } from "@/stores/votes";
 import { useSpogStore } from "@/stores/spog";
 import {
@@ -9,13 +10,12 @@ import {
 } from "@/lib/sdk";
 import { MVote } from "@/lib/api/types";
 
-async function updateProposalsStore(newVotes: MVote[]) {
-  const apiStore = useApiClientStore();
+async function updateProposalsStore(newVotes: MVote[], governor: Governor) {
   const proposals = useProposalsStore();
 
   const newTallies = await Promise.all(
     newVotes.map((vote) =>
-      apiStore.client.governor?.proposals!.getProposalTallies(vote.proposalId!)
+      governor.proposals!.getProposalTallies(vote.proposalId!)
     )
   );
 
@@ -38,7 +38,7 @@ export const watchVoteCast = () => {
   const api = useApiClientStore();
   const votesStore = useVotesStore();
 
-  const onEvent = async (logs, governor) => {
+  const onEvent = async (logs: Log[], governor: Governor) => {
     console.log("newVoteCast", logs);
 
     const newVotes = await Promise.all(
@@ -47,7 +47,7 @@ export const watchVoteCast = () => {
 
     votesStore.push(newVotes);
 
-    return updateProposalsStore(newVotes);
+    return updateProposalsStore(newVotes, governor);
   };
 
   watchStandardGovernorEvent(
@@ -56,7 +56,7 @@ export const watchVoteCast = () => {
       eventName: "VoteCast",
       chainId: network.value.rpc.chainId,
     },
-    (logs) => onEvent(logs, api.client.standardGovernor)
+    (logs) => onEvent(logs, api.client.standardGovernor as Governor)
   );
 
   watchEmergencyGovernorEvent(
@@ -65,7 +65,7 @@ export const watchVoteCast = () => {
       eventName: "VoteCast",
       chainId: network.value.rpc.chainId,
     },
-    (logs) => onEvent(logs, api.client.emergencyGovernor)
+    (logs) => onEvent(logs, api.client.emergencyGovernor as Governor)
   );
 
   watchZeroGovernorEvent(
@@ -74,6 +74,6 @@ export const watchVoteCast = () => {
       eventName: "VoteCast",
       chainId: network.value.rpc.chainId,
     },
-    (logs) => onEvent(logs, api.client.zeroGovernor)
+    (logs) => onEvent(logs, api.client.zeroGovernor as Governor)
   );
 };

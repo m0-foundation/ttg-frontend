@@ -21,6 +21,7 @@ export class Voting extends GovernorModule {
       blockNumber: Number(log.blockNumber),
       eventName: log.eventName,
       timestamp: Number(block.timestamp),
+      data: log.data,
       epoch,
     } as MVote;
 

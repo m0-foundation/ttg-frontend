@@ -59,6 +59,7 @@
         >
           <ProposalButtonCastVote
             id="button-cast-yes"
+            data-test="button-cast-yes"
             :disabled="
               isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
             "
@@ -68,6 +69,7 @@
           </ProposalButtonCastVote>
           <ProposalButtonCastVote
             id="button-cast-no"
+            data-test="button-cast-no"
             :disabled="
               isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
             "

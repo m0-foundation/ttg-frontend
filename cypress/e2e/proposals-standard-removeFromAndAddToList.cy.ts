@@ -1,11 +1,11 @@
-const LIST = "minters";
-
 describe("Proposals", () => {
   let proposalUrl = "";
+  const LIST = "minters";
+  const add1 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+  const add2 = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 
   describe("Add an Address to the list: minters", () => {
-    const input1 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-    const description = `Add ${input1} to list: ${LIST}`;
+    const description = `Add ${add1} to list: ${LIST}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
@@ -17,7 +17,7 @@ describe("Proposals", () => {
       cy.get("[data-test='proposalValue']").select(LIST);
 
       // address to append
-      cy.get("input[data-test='proposalValue2']").type(input1);
+      cy.get("input[data-test='proposalValue2']").type(add1);
       cy.get("input[data-test='title']").type(description);
 
       cy.get("textarea[data-test='description']").type(description);
@@ -52,7 +52,7 @@ describe("Proposals", () => {
       cy.wait(500); // wait to load props values
 
       cy.get("#technical-proposal-incoming-change").should("contain", LIST);
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", add1);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -70,26 +70,28 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", add1);
     });
   });
 
-  describe("Remove the Address from the list", () => {
-    const input1 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-    const description = `Remove address ${input1} from list: ${LIST}`;
+  describe("removeFromAndAddToList", () => {
+    const title = "swap addresses";
+    const description = `remove From ${add1} and add ${add2} to list: ${LIST}`;
 
-    it("I should be able to CREATE a proposal to REMOVE an address to a list", () => {
+    it("I should be able to CREATE a proposal to ADD an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Remove from a list").should("exist").click({ force: true });
+      cy.contains("Remove from and Add to list").click({ force: true });
 
+      // list address
       cy.get("[data-test='proposalValue']").select(LIST);
-      // address to remove
-      cy.get("input[data-test='proposalValue2']").type(input1);
+      // address to append
+      cy.get("input[data-test='proposalValue2']").type(add1);
+      cy.get("input[data-test='proposalValue3']").type(add2);
+      cy.get("input[data-test='title']").type(title);
 
-      cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
       cy.contains("Preview proposal").should("exist");
@@ -113,7 +115,6 @@ describe("Proposals", () => {
 
       cy.contains(description).should("exist");
 
-      // from active page go to proposal page
       cy.contains("article", description).then(($proposal) => {
         cy.wrap($proposal).find("#show-details").click({ force: true });
       });
@@ -123,14 +124,15 @@ describe("Proposals", () => {
       cy.wait(500); // wait to load props values
 
       cy.get("#technical-proposal-incoming-change").should("contain", LIST);
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", add1);
+      cy.get("#technical-proposal-incoming-change").should("contain", add2);
 
       cy.url().then((url) => {
         proposalUrl = url;
       });
     });
 
-    it("I should be able to CAST vote YES for the proposal of Remove from a list", () => {
+    it("I should be able to CAST vote YES for the proposal of Append to a list", () => {
       cy.castYesOneProposal(description);
     });
 
@@ -141,7 +143,26 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("#proposal-state").should("contain", "executed");
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", add2);
+    });
+
+    it("I should be able to see lists", () => {
+      cy.visit("http://localhost:3000/lists");
+
+      cy.get("table > tbody > tr").should("have.length", 1);
+
+      const rowCells = (row) =>
+        Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
+
+      cy.get("table tbody tr").then((rows) => {
+        const mapped = Cypress._.map(rows, rowCells)
+          .map((row) => row.slice(0, 2))
+          .sort();
+
+        const should = [[add2.toLowerCase(), LIST.toLowerCase()]];
+        console.log({ mapped, should });
+        expect(mapped).to.deep.equal(should);
+      });
     });
   });
 });
