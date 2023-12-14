@@ -9,27 +9,25 @@
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="text-white bg-grey-800 p-6 mb-4"
     >
-      <h2 class="text-2xl mb-4 break-all">
-        {{ title }}
-      </h2>
-      <div class="text-xs xl:text-sm mb-6 flex justify-between text-gray-400">
-        <div>
-          Proposed by
-          <NuxtLink :to="`/profile/${proposal.proposer}/`">
-            <MAddressAvatar :address="proposal.proposer" />
-          </NuxtLink>
-        </div>
-        <div>{{ timeAgo }} | {{ formatedDate }}</div>
+      <div class="mb-4">
+        <h2 class="text-2xl break-all">
+          {{ title }}
+        </h2>
+        <span
+          v-if="proposal?.isEmergency && proposal?.state !== 'Succeeded'"
+          class="text-xs text-grey-400"
+          >Voting ends {{ voteEnds }}
+        </span>
       </div>
 
-      <div class="text-grey-400 text-sm">
+      <div class="text-grey-400 font-inter mb-4">
         {{ truncatedDescriptionText }}
       </div>
 
       <button
         id="show-details"
         type="button"
-        class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full py-2 px-4 my-4"
+        class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full p-3 my-4"
         @click="onViewProposal"
       >
         <span>show details </span>
@@ -61,6 +59,7 @@
         >
           <ProposalButtonCastVote
             id="button-cast-yes"
+            data-test="button-cast-yes"
             :disabled="
               isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
             "
@@ -70,6 +69,7 @@
           </ProposalButtonCastVote>
           <ProposalButtonCastVote
             id="button-cast-no"
+            data-test="button-cast-no"
             :disabled="
               isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
             "
@@ -89,15 +89,15 @@
               proposal?.votingType === 'Standard' ||
               proposal?.votingType === 'Emergency'
             "
-            class="flex"
+            class="flex gap-2"
           >
-            power tokens
             <MIconPower class="h-4 w-4 ml-1" />
+            vote with power tokens
           </div>
 
-          <div v-if="proposal?.votingType === 'Zero'" class="flex">
-            zero tokens
+          <div v-if="proposal?.votingType === 'Zero'" class="flex gap-2">
             <MIconZero class="h-4 w-4 ml-1" />
+            vote with zero tokens
           </div>
         </div>
       </div>
@@ -140,20 +140,21 @@ const emit = defineEmits<{
   (e: "on-execute", proposal: MProposal): void;
 }>();
 
+const apiStore = useApiClientStore();
+
 const { address: userAccount, isDisconnected } = useAccount();
-const { toFormat, timeAgo } = useDate(props.proposal.timestamp);
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
 const isVoteSelected = ref(false);
 const selectedVote = ref<null | number>(null);
-const formatedDate = computed(() => toFormat("LLL"));
 const isCastVoteYesDisabled = computed(() => selectedVote.value === 0);
 const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
 const isLoading = ref(false);
+const voteEndTimestamp = ref();
 
 const { text: truncatedDescriptionText } = useParsedDescription(
   truncate(props.proposal.description, {
-    length: 300,
+    length: 450,
   })
 );
 
@@ -200,4 +201,10 @@ const canVote = computed(() => {
     return hasZeroTokenVotingPower.value;
   }
 });
+
+voteEndTimestamp.value = await apiStore.client.epoch.getTimestampFromEpoch(
+  props.proposal.voteEnd
+);
+
+const { timeAgo: voteEnds } = useDate(voteEndTimestamp.value);
 </script>

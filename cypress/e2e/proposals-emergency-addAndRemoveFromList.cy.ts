@@ -1,7 +1,7 @@
 describe("Proposals", () => {
   let proposalUrl = "";
   describe("Emergency Add and remove from list", () => {
-    const input1 = "CollateralManagers";
+    const input1 = "minters";
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
     const input3 = "0x388c818ca8b9251b393131c08a736a67ccb19297";
     const title = "Emergency Add and remove from list";
@@ -17,19 +17,8 @@ describe("Proposals", () => {
         force: true,
       });
 
-      cy.get("input[data-test='proposalValue']").should(
-        "have.attr",
-        "type",
-        "text"
-      );
-      cy.get("input[data-test='proposalValue2']").should(
-        "have.attr",
-        "type",
-        "text"
-      );
-
+      cy.get("[data-test='proposalValue']").select(input1);
       // list address
-      cy.get("input[data-test='proposalValue']").type(input1);
       // address to append
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='proposalValue3']").type(input3);

@@ -767,14 +767,14 @@ function buildCalldatas(formData) {
   if (["removeFromAndAddToList"].includes(type)) {
     const encondeInputsListAddRemoveOperation = ({
       input1: list,
-      input2: accountToAdd,
-      input3: accountToRemove,
+      input2: remove,
+      input3: add,
     }: {
       input1: string;
       input2: string;
       input3: string;
     }) => {
-      return [stringToHexWith32Bytes(list), accountToAdd, accountToRemove];
+      return [stringToHexWith32Bytes(list), remove, add];
     };
 
     return buildCalldatasSpog(

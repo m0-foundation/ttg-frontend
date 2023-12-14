@@ -1,22 +1,15 @@
 <template>
   <div class="w-full flex justify-between items-center space-x-4">
     <div class="block w-1/3">
-      <MInput
-        v-model="list"
-        class="input"
-        type="text"
-        placeholder="List"
-        data-test="proposalValue"
-        :errors="props.modelValueErrors"
-      />
+      <SelectList v-model="list" :errors="props.modelValueErrors" />
     </div>
 
     <div class="block w-1/3">
       <MInput
-        v-model="accountToAdd"
+        v-model="remove"
         class="input"
         type="text"
-        placeholder="Address"
+        placeholder="Remove address"
         data-test="proposalValue2"
         :errors="props.modelValue2Errors"
       />
@@ -24,10 +17,10 @@
 
     <div class="block w-1/3">
       <MInput
-        v-model="accountToRemove"
+        v-model="add"
         class="input"
         type="text"
-        placeholder="Address"
+        placeholder="Add address"
         data-test="proposalValue3"
         :errors="props.modelValue3Errors"
       />
@@ -55,10 +48,6 @@ const emit = defineEmits([
 ]);
 
 const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
-const accountToAdd = useVModelWrapper<InputProps>(props, emit, "modelValue2");
-const accountToRemove = useVModelWrapper<InputProps>(
-  props,
-  emit,
-  "modelValue3"
-);
+const remove = useVModelWrapper<InputProps>(props, emit, "modelValue2");
+const add = useVModelWrapper<InputProps>(props, emit, "modelValue3");
 </script>
