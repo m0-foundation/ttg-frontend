@@ -2,7 +2,7 @@ describe("Proposals", () => {
   let proposalUrl = "";
 
   describe("Emergency proposal for type action: AddToList", () => {
-    const input1 = "CollateralManagers";
+    const input1 = "minters";
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
     const description = `Emergency Add ${input2} to list ${input1}`;
 
@@ -16,19 +16,7 @@ describe("Proposals", () => {
       cy.contains("Emergency Add to a list").should("exist");
       cy.contains("Emergency Add to a list").click({ force: true });
 
-      cy.get("input[data-test='proposalValue']").should(
-        "have.attr",
-        "type",
-        "text"
-      );
-      cy.get("input[data-test='proposalValue2']").should(
-        "have.attr",
-        "type",
-        "text"
-      );
-
-      // list address
-      cy.get("input[data-test='proposalValue']").type(input1);
+      cy.get("[data-test='proposalValue']").select(input1);
       // address to append
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(description);
