@@ -88,6 +88,18 @@ Cypress.Commands.add("castYesOneProposal", (description: string) => {
   cy.get("[data-test='voted']").should("have.length", 1);
 });
 
+Cypress.Commands.add("castYesAllProposals", () => {
+  cy.visit("http://localhost:3000/proposals/");
+  cy.connectWallet();
+  cy.wait(500);
+
+  cy.get("[data-test='button-cast-yes']").each(($btn) => {
+    cy.wrap($btn).click();
+  });
+
+  cy.get("#button-cast-submit").click();
+});
+
 Cypress.Commands.add("castYesOneOptionalProposal", (description: string) => {
   cy.visit("http://localhost:3000/proposals/");
   cy.connectWallet();

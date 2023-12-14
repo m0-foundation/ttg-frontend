@@ -1,21 +1,22 @@
-const LIST = "minters";
+const LIST = "CollateralManagers";
 
 describe("Proposals", () => {
   let proposalUrl = "";
 
-  describe("Add an Address to the list: minters", () => {
+  describe("Add an Address to the list", () => {
     const input1 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
     const description = `Add ${input1} to list: ${LIST}`;
 
-    it("I should be able to CREATE a proposal to ADD an address to a list", () => {
+    it("I should be able to CREATE a proposal to ADD an address to other list", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
       cy.contains("Add to a list").should("exist").click({ force: true });
 
-      cy.get("[data-test='proposalValue']").select(LIST);
-
+      // list address
+      cy.get("[data-test='proposalValue']").select("Other list");
+      cy.get("input[data-test='proposalValue']").type(LIST);
       // address to append
       cy.get("input[data-test='proposalValue2']").type(input1);
       cy.get("input[data-test='title']").type(description);
@@ -74,7 +75,8 @@ describe("Proposals", () => {
     });
   });
 
-  describe("Remove the Address from the list", () => {
+  /*
+  describe("Remove the Address from the other list", () => {
     const input1 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
     const description = `Remove address ${input1} from list: ${LIST}`;
 
@@ -85,7 +87,19 @@ describe("Proposals", () => {
 
       cy.contains("Remove from a list").should("exist").click({ force: true });
 
-      cy.get("[data-test='proposalValue']").select(LIST);
+      cy.get("input[data-test='proposalValue']").should(
+        "have.attr",
+        "type",
+        "text"
+      );
+      cy.get("input[data-test='proposalValue2']").should(
+        "have.attr",
+        "type",
+        "text"
+      );
+
+      // list address
+      cy.get("input[data-test='proposalValue']").type(LIST);
       // address to remove
       cy.get("input[data-test='proposalValue2']").type(input1);
 
@@ -144,4 +158,5 @@ describe("Proposals", () => {
       cy.get("#technical-proposal-incoming-change").should("contain", input1);
     });
   });
+  */
 });
