@@ -414,6 +414,32 @@ export class Proposals extends GovernorModule {
     return this.governanceType === "Emergency";
   }
 
+  async getRawExecutedLogs() {
+    return await this.client.getLogs({
+      address: this.contract as Hash,
+      fromBlock: this.fromBlock,
+      event: parseAbiItem("event ProposalExecuted(uint256 proposalId)"),
+    });
+  }
+
+  async findExecutedEvent(proposalId: string, logs: Log[]) {
+    const executedEvent = logs.find(
+      (p) => String(p.args.proposalId) === proposalId
+    );
+
+    if (executedEvent) {
+      const block = await this.client.getBlock({
+        blockNumber: executedEvent.blockNumber as bigint,
+      });
+
+      return {
+        ...executedEvent,
+        timestamp: Number(block?.timestamp),
+      };
+    }
+    return null;
+  }
+
   async getProposals(): Promise<Array<MProposal>> {
     const rawLogs = await this.client.getLogs({
       address: this.contract as Hash,
@@ -427,11 +453,7 @@ export class Proposals extends GovernorModule {
       return [];
     }
 
-    const rawExecutedLogs = await this.client.getLogs({
-      address: this.contract as Hash,
-      fromBlock: this.fromBlock,
-      event: parseAbiItem("event ProposalExecuted(uint256 proposalId)"),
-    });
+    const rawExecutedLogs = await this.getRawExecutedLogs();
 
     console.log({ rawLogs });
     const proposals = rawLogs.map((log: Log) =>
@@ -471,20 +493,15 @@ export class Proposals extends GovernorModule {
           readGetProposal: proposalData,
         });
 
-        const executedEvent = rawExecutedLogs.filter(
-          (p) => String(p.args.proposalId) === proposal?.proposalId
-        )[0];
+        const executedEvent = await this.findExecutedEvent(
+          proposal?.proposalId,
+          rawExecutedLogs
+        );
 
         if (executedEvent) {
-          const block = await this.client.getBlock({
-            blockNumber: executedEvent?.blockNumber,
-          });
           return {
             ...proposalPresented,
-            executedEvent: {
-              ...executedEvent,
-              timestamp: Number(block?.timestamp),
-            },
+            executedEvent,
           };
         } else {
           return proposalPresented;
