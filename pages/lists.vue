@@ -27,7 +27,7 @@
       </template>
     </PageTitle>
 
-    <div>
+    <div class="px-6">
       <div v-if="isLoading">
         <span class="text-xs text-grey-400">Loading...</span>
       </div>
