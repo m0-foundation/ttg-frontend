@@ -224,6 +224,7 @@ import ProposalInputListOperation from "@/components/proposal/InputListOperation
 import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
+import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
 import ProposalInputAddressFee from "@/components/proposal/InputAddressFee.vue";
 import ProposalInputFee from "@/components/proposal/InputFee.vue";
 
@@ -405,8 +406,8 @@ const proposalTypes = [
 
   {
     value: "setKey",
-    label: "Set config",
-    component: ProposalInputUpdateConfig,
+    label: "Set Protocol config",
+    component: ProposalInputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,

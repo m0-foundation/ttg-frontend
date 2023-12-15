@@ -1,8 +1,8 @@
 describe("Proposals", () => {
   describe("type action: setKey", () => {
     const value = "1";
-    const valueName = "INFLATION_RATE";
-    const description = `Add config ${valueName} = ${value}`;
+    const key = "updateCollateral_interval";
+    const description = `Add protocol config ${key} = ${value}`;
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
@@ -10,9 +10,9 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").should("exist");
       cy.contains("Select a proposal type").click();
 
-      cy.contains("Set config").click();
+      cy.contains("Set Protocol config").click();
 
-      cy.get("input[data-test='proposalValue']").type(valueName);
+      cy.get("[data-test='proposalValue']").select(key);
       cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("textarea[data-test='description']").type(description);
       cy.get("input[data-test='title']").type(description);
@@ -46,10 +46,7 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should(
-        "contain",
-        valueName
-      );
+      cy.get("#technical-proposal-incoming-change").should("contain", key);
       cy.get("#technical-proposal-incoming-change").should("contain", value);
 
       cy.url().then((url) => {
