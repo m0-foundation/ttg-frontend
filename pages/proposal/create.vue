@@ -534,9 +534,9 @@ const proposalTypes = [
 
       {
         value: "setKey",
-        label: "Emergency Set config",
+        label: "Emergency Set Protocol config",
         isEmergency: true,
-        component: ProposalInputUpdateConfig,
+        component: ProposalInputProtocolConfigOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,

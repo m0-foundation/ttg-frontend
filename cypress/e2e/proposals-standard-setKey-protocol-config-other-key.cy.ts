@@ -11,7 +11,7 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").click();
 
       cy.contains("Set Protocol config").click();
-      cy.get("[data-test='proposalValue']").select("Other key");
+      cy.get("[data-test='proposalValue']").select("Other config");
       cy.get("input[data-test='proposalValue']").type(key);
       cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("textarea[data-test='description']").type(description);
