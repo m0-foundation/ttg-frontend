@@ -1,4 +1,5 @@
 @import './github-markdown.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 @tailwind base;
 @tailwind components;

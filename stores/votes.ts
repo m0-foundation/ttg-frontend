@@ -21,9 +21,8 @@ export const useVotesStore = defineStore("votes", () => {
   }
 
   function push(addVotes: MVote[]) {
-    votes.value = [
-      ..._.uniqBy([...votes.value, ...addVotes], "transactionHash"),
-    ];
+    console.log({ addVotes });
+    votes.value = [..._.uniqBy([...votes.value, ...addVotes], "data")];
   }
 
   return { votes, fetchAllVotes, getBy, push };

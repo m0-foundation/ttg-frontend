@@ -8,6 +8,7 @@ export interface MVote extends EventLog {
   weight?: BigInt;
   timestamp?: number;
   epoch?: number;
+  data?: string;
 }
 
 export enum MVotingTokens {
