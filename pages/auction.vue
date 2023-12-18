@@ -31,12 +31,12 @@
           <span>{{ dataRead }}</span>
         </div>
         <div class="mt-4">
-          <AuctionChart />
+          <AuctionChart :show-data="userCanBuy" />
         </div>
       </div>
 
       <div
-        v-if="epoch.type === 'TRANFER' && amountLeftToAuction > 0n"
+        v-if="userCanBuy"
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-neutral-800 p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">Value for purchase:</p>
@@ -73,7 +73,7 @@
       </div>
 
       <div
-        v-else-if="epoch.current.type === 'TRANSFER'"
+        v-else-if="isTransferEpoch"
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">No power tokens</p>
@@ -132,6 +132,13 @@ const lastEpochTotalSupply = ref();
 const amountLeftToAuction = ref();
 const isLoadingTransaction = ref(false);
 const { epoch } = storeToRefs(spog);
+
+const isTransferEpoch = computed(
+  () => epoch?.value.current?.type === "TRANSFER"
+);
+const userCanBuy = computed(() => {
+  return isTransferEpoch.value && Number(amountLeftToAuction) > 0n;
+});
 
 async function getLastEpochTotalSupply() {
   try {

@@ -10,10 +10,18 @@
   </div>
 </template>
 <script setup lang="ts">
+const props = defineProps({
+  showData: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+});
+
 const series = ref([
   {
     name: "RP",
-    data: getPricePoints(),
+    data: props.showData ? getPricePoints() : [],
   },
 ]);
 
