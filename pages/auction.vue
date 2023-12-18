@@ -137,7 +137,7 @@ const isTransferEpoch = computed(
   () => epoch?.value.current?.type === "TRANSFER"
 );
 const userCanBuy = computed(() => {
-  return isTransferEpoch.value && Number(amountLeftToAuction) > 0n;
+  return isTransferEpoch.value && Number(amountLeftToAuction.value) > 0n;
 });
 
 async function getLastEpochTotalSupply() {
