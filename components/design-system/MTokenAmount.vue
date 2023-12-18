@@ -17,11 +17,13 @@
       }}</span>
     </div>
     <span
+      v-if="amount"
       v-bind="$attrs"
       class="text-white"
       :style="`font-size: ${size}px; line-height: normal`"
       >{{ amount }}</span
     >
+    <span v-else class="text-grey-400">-</span>
   </div>
 </template>
 
