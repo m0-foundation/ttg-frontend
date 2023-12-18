@@ -6,22 +6,24 @@
       <div
         class="col-span-3 lg:col-span-2 order-2 lg:order-1 bg-neutral-900 p-8 py-10"
       >
-        <div class="flex gap-8 text-grey-400">
+        <div class="flex gap-12 text-grey-400">
           <div>
-            <p class="mb-2 text-xs uppercase">WETH / Power token</p>
+            <p class="mb-2 text-xxs uppercase">WETH/POWER Rate</p>
             <MTokenAmount
               name="Eth"
               image="/img/tokens/eth.svg"
               :size="30"
               :amount="Number(purchasePrice)"
+              data-test="cash-token-amount"
             />
           </div>
           <div>
-            <p class="mb-2 text-xs uppercase">Total available</p>
+            <p class="mb-2 text-xxs uppercase">Power Tokens Available</p>
             <MTokenAmount
               name="Power"
               :size="30"
               :amount="amountLeftToAuction"
+              data-test="power-tokens-amount-to-auction"
             />
           </div>
         </div>
@@ -34,7 +36,7 @@
       </div>
 
       <div
-        v-if="transferEpoch"
+        v-if="epoch.type === 'TRANFER' && amountLeftToAuction > 0n"
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-neutral-800 p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">Value for purchase:</p>
@@ -69,13 +71,28 @@
           Buy
         </MButton>
       </div>
+
+      <div
+        v-else-if="epoch.current.type === 'TRANSFER'"
+        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
+      >
+        <p class="text-gray-200 text-xs uppercase mb-2">No power tokens</p>
+        <div class="flex items-start gap-2">
+          <img src="/img/icon-info.svg" alt="" />
+          <p>
+            No power tokens available for the auction. Please, check again in
+            the next transfer epoch.
+          </p>
+        </div>
+      </div>
+
       <div
         v-else
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
       >
-        <p class="text-gray-200 text-xs uppercase mb-2">Warning</p>
+        <p class="text-gray-200 text-xs uppercase mb-2">Auction unavailable</p>
         <div class="flex items-start gap-2">
-          <img src="/img/icon-warning.svg" alt="" />
+          <img src="/img/icon-info.svg" alt="" />
           <p>
             The transfer epoch has concluded. You will be able to participate in
             the auction in the next transfer epoch.
@@ -114,7 +131,6 @@ const purchasePrice = ref(0n);
 const lastEpochTotalSupply = ref();
 const amountLeftToAuction = ref();
 const isLoadingTransaction = ref(false);
-const transferEpoch = isTransferEpoch(blockNumber.value || 0n);
 const { epoch } = storeToRefs(spog);
 
 async function getLastEpochTotalSupply() {
@@ -138,7 +154,7 @@ function setMaxPossiblePurchase() {
 function getPurchaseCost() {
   purchaseCost.value = getAuctionPurchaseCost(
     BigInt(purchaseAmount.value),
-    blockNumber.value,
+    epoch.value,
     lastEpochTotalSupply.value
   );
 }
@@ -146,11 +162,7 @@ function getPurchaseCost() {
 watch(
   () => lastEpochTotalSupply.value,
   (newValue) => {
-    purchasePrice.value = getAuctionPurchaseCost(
-      1n,
-      blockNumber.value,
-      newValue
-    );
+    purchasePrice.value = getAuctionPurchaseCost(1n, epoch.value, newValue);
   }
 );
 
@@ -173,7 +185,7 @@ async function auctionBuy() {
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
       args: [
-        BigInt(purchaseAmount.value),
+        BigInt(purchaseAmount.value / 2), // TODO: Check what number is better here
         BigInt(purchaseAmount.value),
         userAccount.value,
       ],

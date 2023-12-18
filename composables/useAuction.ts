@@ -1,3 +1,5 @@
+import { MEpoch } from "@/lib/api/modules/epoch/epoch.types";
+
 const ONE = 10_000n;
 const START_BLOCK = 15_537_393n;
 const EPOCH_PERIOD = 108_000n;
@@ -6,15 +8,14 @@ const SECONDS_PER_BLOCK = 12n;
 
 // totalSupplyOfPreviousEpoch is the total supply of Power in the previous epoch
 export const getAuctionPurchaseCost = (
-  amount,
-  blockNumber,
-  totalSupplyOfPreviousEpoch
+  amount: bigint,
+  epoch: MEpoch,
+  totalSupplyOfPreviousEpoch: bigint
 ) => {
-  const currentEpoch = getCurrentEpoch(blockNumber);
-
-  const blocksRemaining = isVotingEpoch(currentEpoch)
-    ? EPOCH_PERIOD
-    : getBlocksRemainingInEpoch(blockNumber);
+  const blocksRemaining =
+    epoch.current.type === "VOTING"
+      ? EPOCH_PERIOD
+      : getBlocksRemainingInEpoch(epoch);
 
   const blocksPerPeriod = EPOCH_PERIOD / AUCTION_PERIODS;
   const leftPoint = 1n << (blocksRemaining / blocksPerPeriod);
@@ -33,23 +34,9 @@ export const getAuctionPurchaseCost = (
 export const getCurrentEpoch = (blockNumber: bigint) =>
   (blockNumber - START_BLOCK) / EPOCH_PERIOD;
 
-export const isVotingEpoch = (blockNumber: bigint) =>
-  getCurrentEpoch(blockNumber) % 2n === 1n;
-
-export const isTransferEpoch = (blockNumber: bigint) =>
-  getCurrentEpoch(blockNumber) % 2n !== 1n;
-
-const getBlocksRemainingInEpoch = (blockNumber) => {
-  return (
-    getBlockNumberOfEpochStart(getCurrentEpoch(blockNumber) + 1n) - blockNumber
-  );
+const getBlocksRemainingInEpoch = (epoch: MEpoch) => {
+  return BigInt(epoch.current.asNumber - epoch.next.asNumber);
 };
-
-const getBlockNumberOfEpochStart = (epoch) =>
-  START_BLOCK + epoch * EPOCH_PERIOD;
-
-const totalSupplyAt = async (contract, epoch) =>
-  contract.getTotalSupplyAt(epoch);
 
 export const getPricePoints = () => {
   const blocksPerPeriod = EPOCH_PERIOD / AUCTION_PERIODS;
@@ -65,4 +52,4 @@ export const getPricePoints = () => {
   });
 };
 
-const toSeconds = (blocks) => blocks * SECONDS_PER_BLOCK;
+const toSeconds = (blocks: bigint) => blocks * SECONDS_PER_BLOCK;
