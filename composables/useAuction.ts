@@ -1,12 +1,10 @@
 import { MEpoch } from "@/lib/api/modules/epoch/epoch.types";
 
-const ONE = 10_000n;
-const START_BLOCK = 15_537_393n;
+const ONE = 400n;
 const EPOCH_PERIOD = 108_000n;
-const AUCTION_PERIODS = 10n;
-const SECONDS_PER_BLOCK = 12n;
+const AUCTION_PERIODS = 100n;
+const SECONDS_PER_BLOCK = 8n;
 
-// totalSupplyOfPreviousEpoch is the total supply of Power in the previous epoch
 export const getAuctionPurchaseCost = (
   amount: bigint,
   epoch: MEpoch,
@@ -31,11 +29,8 @@ export const getAuctionPurchaseCost = (
   return cost;
 };
 
-export const getCurrentEpoch = (blockNumber: bigint) =>
-  (blockNumber - START_BLOCK) / EPOCH_PERIOD;
-
 const getBlocksRemainingInEpoch = (epoch: MEpoch) => {
-  return BigInt(epoch.current.asNumber - epoch.next.asNumber);
+  return BigInt(epoch.next.asBlockNumber - epoch.current.asBlockNumber);
 };
 
 export const getPricePoints = () => {

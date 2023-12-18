@@ -113,16 +113,12 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { useBlockNumber, useAccount } from "use-wagmi";
+import { useAccount } from "use-wagmi";
 import { Hash } from "viem";
 import { waitForTransaction } from "@wagmi/core";
 import { readPowerToken, writePowerToken } from "@/lib/sdk";
-import { useMBalances } from "@/lib/hooks";
 
 const { address: userAccount } = useAccount();
-const { data: blockNumber } = useBlockNumber();
-const { powerToken: balancePowerToken } = useMBalances(userAccount?.value);
-
 const spog = storeToRefs(useSpogStore());
 
 const purchaseAmount = ref();
