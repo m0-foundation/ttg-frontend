@@ -1,8 +1,12 @@
 <template>
   <div>
-    <MButton id="button-connect-wallet" @click="open = true"
-      >Connect Wallet</MButton
+    <MButton
+      id="button-connect-wallet"
+      data-test="modal-web3-button-connect-wallet"
+      @click="open = true"
     >
+      Connect Wallet
+    </MButton>
 
     <Teleport to="body">
       <div
@@ -29,6 +33,7 @@
                     :disabled="
                       !cc.ready || isReconnecting || connector?.id === cc.id
                     "
+                    :data-test="`modal-web3-connect-button-${cc.name.toLowerString()}`"
                     @click="connect({ connector: cc })"
                   >
                     <div class="flex justify-between">
@@ -45,6 +50,7 @@
                 <div class="flex justify-center">
                   <button
                     class="p-4 text-white mb-2 self-end text-3xl"
+                    data-test="modal-web3-connect-button-close"
                     @click="open = false"
                   >
                     x

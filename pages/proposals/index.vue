@@ -39,6 +39,7 @@
             !isSelectedCastProposalsFull || hasFinishedVoting || isLoading
           "
           :is-loading="isLoading"
+          data-test="proposal-button-submit-votes"
           @click="onCastBatchVotes"
         >
           submit votes

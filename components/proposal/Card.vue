@@ -28,6 +28,7 @@
         id="show-details"
         type="button"
         class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full p-3 my-4"
+        data-test="proposal-button-show-details"
         @click="onViewProposal"
       >
         <span>show details </span>
@@ -109,6 +110,7 @@
         <div class="inline-flex gap-1" role="group">
           <MButton
             id="button-proposal-execute"
+            data-test="proposal-button-execute"
             :disabled="isDisconnected || isLoading"
             :is-loading="isLoading"
             @click="onExecuteProposal()"

@@ -12,10 +12,11 @@
           <MButton
             class="w-full justify-center mt-4 lg:mt-0"
             :disabled="!canDelegate"
+            data-test="profile-button-redelegate"
           >
             re-delegate
-          </MButton></NuxtLink
-        >
+          </MButton>
+        </NuxtLink>
       </template>
     </PageTitle>
 

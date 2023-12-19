@@ -8,7 +8,11 @@
       <div class="flex items-start justify-center min-h-screen pt-24">
         <div class="p-8 w-full md:w-1/2 lg:w-1/3 xl:w-1/2">
           <div class="flex flex-wrap flex-col shadow-xl">
-            <button class="p-4 border text-white mb-2 self-end" @click="close">
+            <button
+              class="p-4 border text-white mb-2 self-end"
+              data-test="modal-button-close"
+              @click="close"
+            >
               x
             </button>
 
