@@ -33,7 +33,7 @@
                     :disabled="
                       !cc.ready || isReconnecting || connector?.id === cc.id
                     "
-                    :data-test="`modal-web3-connect-button-${cc.name.toLowerString()}`"
+                    :data-test="`modal-web3-connect-button-${cc.name}`"
                     @click="connect({ connector: cc })"
                   >
                     <div class="flex justify-between">
