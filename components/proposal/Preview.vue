@@ -2,7 +2,11 @@
 <template>
   <div>
     <div>
-      <button class="text-green-800 uppercase mb-4" @click="onBack">
+      <button
+        class="text-green-800 uppercase mb-4"
+        data-test="create-proposal-button-back-top"
+        @click="onBack"
+      >
         &#60; back
       </button>
     </div>

@@ -20,7 +20,13 @@
           (excluding inflation) Zero token holders.
         </span>
         <NuxtLink :to="`/proposal/${proposal.proposalId}`">
-          <MButton version="outline-light" class="my-2">view proposal</MButton>
+          <MButton
+            version="outline-light"
+            class="my-2"
+            data-test="reset-alert-button-view-proposal"
+          >
+            view proposal
+          </MButton>
         </NuxtLink>
       </div>
     </div>

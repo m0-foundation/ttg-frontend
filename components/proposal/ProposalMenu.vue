@@ -5,6 +5,7 @@
       aria-expanded="true"
       aria-controls="headlessui-menu-items-117"
       class="w-8 h-8 relative"
+      data-test="proposal-button-extra-menu"
     >
       <div class="w-8 h-8 left-0 top-0 absolute hover:bg-gray-200"></div>
       <div
@@ -29,20 +30,24 @@
         <ul class="menu-items">
           <li>
             <a
+              data-test="proposal-link-copy-url"
               @click="
                 copyToClipboard(
                   useBlockExplorer('tx', props?.proposal?.transactionHash)
                 )
               "
-              >Copy url</a
             >
+              Copy url
+            </a>
           </li>
           <li>
             <a
               target="_blank"
               :href="useBlockExplorer('tx', props?.proposal?.transactionHash)"
-              >View on Block Explorer</a
+              data-test="proposal-link-view-block-explorer"
             >
+              View on Block Explorer
+            </a>
           </li>
         </ul>
       </div>
@@ -50,7 +55,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { MProposal } from "@/lib/api";
+import { MProposal } from "@/lib/api/types";
 import { copyToClipboard } from "@/utils/misc";
 
 export interface ProposalProps {

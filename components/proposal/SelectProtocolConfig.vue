@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div v-if="isOtherList" class="flex">
+    <div v-if="isOther" class="flex">
       <button
         class="input px-4 inline-flex items-center min-w-fit border border-e-0 border-gray-700 bg-gray-200 text-sm text-gray-500"
-        @click="isOtherList = false"
+        data-test="create-proposal-button-close-other-config"
+        @click="isOther = false"
       >
         X
       </button>
@@ -38,7 +39,7 @@
           {{ option }}
         </option>
         <option disabled value=""></option>
-        <option value="otherList">Other config</option>
+        <option value="other">Other config</option>
       </select>
     </div>
     <div class="text-red-500 text-xs my-2 h-4">
@@ -78,12 +79,12 @@ const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 
 const hasErrors = computed(() => props.errors?.length);
 
-const isOtherList = ref(false);
+const isOther = ref(false);
 
 function handleChangeList(e: any) {
-  if (e.target.value === "otherList") {
+  if (e.target.value === "other") {
     list.value = "";
-    isOtherList.value = true;
+    isOther.value = true;
   }
 }
 </script>

@@ -108,6 +108,7 @@
                 v-model="formData.ipfsURL"
                 type="text"
                 placeholder="https://"
+                data-test="create-proposal-input-url-ipfs"
               />
             </div>
 
@@ -118,6 +119,7 @@
                 v-model="formData.discussionURL"
                 type="text"
                 placeholder="https://"
+                data-test="create-proposal-input-url-discussion"
               />
             </div>
           </div>
@@ -144,15 +146,29 @@
       </p>
 
       <div v-if="isPreview" class="flex justify-end mt-12">
-        <button class="text-green-800 uppercase mx-4" @click="onBack">
+        <button
+          class="text-green-800 uppercase mx-4"
+          data-test="create-proposal-button-back-bottom"
+          @click="onBack"
+        >
           &#60; back
         </button>
-        <MButton v-if="isPreview" type="submit" :disabled="isDisconnected">
+        <MButton
+          v-if="isPreview"
+          type="submit"
+          :disabled="isDisconnected"
+          data-test="create-proposal-button-submit"
+        >
           Submit proposal
         </MButton>
       </div>
       <div v-else class="flex justify-end mt-12">
-        <MButton type="button" @click="onPreview">Preview proposal</MButton>
+        <MButton
+          type="button"
+          data-test="create-proposal-button-preview"
+          @click="onPreview"
+          >Preview proposal</MButton
+        >
       </div>
 
       <p
@@ -221,7 +237,6 @@ import {
   zeroGovernorABI,
 } from "@/lib/sdk";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
-import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
 import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";

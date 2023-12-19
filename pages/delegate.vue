@@ -40,12 +40,14 @@
           placeholder="0x..."
           type="text"
           class="w-full bg-secondary-dark text-white border border-1 border-gray-500 rounded p-4 mb-4"
+          data-test="delegate-power-input-address"
         />
         <div class="flex justify-between">
           <button
             id="button-use-my-address-power"
             type="button"
             class="underline text-grey-400"
+            data-test="delegate-button-power-use-my-address"
             @click="onUseMyAddressVote"
           >
             Use my address
@@ -63,6 +65,7 @@
           id="button-delegate-power"
           type="submit"
           :disabled="!isConnected || !canDelegate"
+          data-test="delegate-button-power-submit"
         >
           delegate
         </MButton>
@@ -87,12 +90,14 @@
           placeholder="0x..."
           type="text"
           class="w-full bg-secondary-dark text-white border border-1 border-gray-500 rounded p-4 mb-4"
+          data-test="delegate-zero-input-address"
         />
         <div class="flex justify-between">
           <button
             id="button-use-my-address-zero"
             type="button"
             class="underline text-grey-400"
+            data-test="delegate-button-zero-use-my-address"
             @click="onUseMyAddressValue"
           >
             Use my address
@@ -115,6 +120,7 @@
           id="button-delegate-zero"
           type="submit"
           :disabled="!isConnected || !canDelegate"
+          data-test="delegate-button-zero-submit"
         >
           delegate
         </MButton>

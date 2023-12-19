@@ -3,6 +3,7 @@
     <div v-if="isOtherList" class="flex">
       <button
         class="input px-4 inline-flex items-center min-w-fit border border-e-0 border-gray-700 bg-gray-200 text-sm text-gray-500"
+        data-test="create-proposal-button-close-other-list"
         @click="isOtherList = false"
       >
         X
