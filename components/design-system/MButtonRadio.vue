@@ -31,7 +31,7 @@ withDefaults(defineProps<MButtonProps>(), {
 }
 
 button:disabled {
-  @apply border border-grey-500 text-grey-500 bg-transparent  opacity-50 cursor-not-allowed;
+  @apply border border-grey-500   opacity-50 cursor-not-allowed;
 }
 
 button:disabled .outside-circle {
