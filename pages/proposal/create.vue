@@ -136,9 +136,15 @@
 
       <div class="flex justify-end">
         <div class="flex items-center gap-2 text-lg">
-          Proposal fee:
-          <MIconWeth />
-          {{ spogValuesFormatted.setProposalFee }}
+          proposal fee:
+          <div v-if="hasToPayFee" class="flex items-center gap-2">
+            {{ spogValuesFormatted.setProposalFee }}
+            <MIconWeth />
+          </div>
+          <div v-else class="flex items-center gap-2">
+            0
+            <MIconWeth />
+          </div>
         </div>
       </div>
       <p class="text-grey-400 text-xs flex justify-end">
@@ -374,7 +380,7 @@ const rules = computed(() => {
 });
 
 const hasToPayFee = computed(() => {
-  return selectedProposalType.value.hasToPayFee;
+  return selectedProposalType?.value?.hasToPayFee;
 });
 
 const $validation = useVuelidate(rules, formData);
