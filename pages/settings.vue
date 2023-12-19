@@ -28,7 +28,12 @@
             <!-- with custom RPC -->
             <div v-if="isWithCustomRPC">
               <label> Custom RPC URL: </label>
-              <input v-model="customRPC" type="text" placeholder="http://..." />
+              <input
+                v-model="customRPC"
+                type="text"
+                placeholder="http://..."
+                data-test="settings-input-url-rpc"
+              />
 
               <p class="text-grey-400">
                 <button

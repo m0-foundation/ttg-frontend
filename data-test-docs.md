@@ -17,6 +17,10 @@
   - data-test="create-proposal-button-back-top"
   - data-test="create-proposal-button-close-other-list"
   - data-test="create-proposal-button-close-other-config"
+  - data-test="create-proposal-input-url-ipfs"
+  - data-test="create-proposal-input-url-discussion"
+
+
 
 /profile/me OR /profile/:address
   - data-test="profile-button-redelegate"
@@ -27,12 +31,18 @@
   - data-test="settings-button-return-to-list"
   - data-test="settings-button-custom-rpc"
   - data-test="settings-button-submit"
+  - data-test="settings-input-url-rpc"
+
 
 /delegate
   - data-test="delegate-button-power-use-my-address"
   - data-test="delegate-button-power-submit"
   - data-test="delegate-button-zero-use-my-address"
   - data-test="delegate-button-zero-submit"
+  - data-test="delegate-power-input-address"
+  - data-test="delegate-zero-input-address"
+
+
 
 
 ## Components

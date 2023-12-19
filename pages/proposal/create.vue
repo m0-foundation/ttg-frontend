@@ -108,6 +108,7 @@
                 v-model="formData.ipfsURL"
                 type="text"
                 placeholder="https://"
+                data-test="create-proposal-input-url-ipfs"
               />
             </div>
 
@@ -118,6 +119,7 @@
                 v-model="formData.discussionURL"
                 type="text"
                 placeholder="https://"
+                data-test="create-proposal-input-url-discussion"
               />
             </div>
           </div>

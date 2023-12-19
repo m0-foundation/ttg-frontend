@@ -40,6 +40,7 @@
           placeholder="0x..."
           type="text"
           class="w-full bg-secondary-dark text-white border border-1 border-gray-500 rounded p-4 mb-4"
+          data-test="delegate-power-input-address"
         />
         <div class="flex justify-between">
           <button
@@ -89,6 +90,7 @@
           placeholder="0x..."
           type="text"
           class="w-full bg-secondary-dark text-white border border-1 border-gray-500 rounded p-4 mb-4"
+          data-test="delegate-zero-input-address"
         />
         <div class="flex justify-between">
           <button
