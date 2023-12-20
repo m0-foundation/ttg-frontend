@@ -64,6 +64,7 @@
             :disabled="
               isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
             "
+            :version="voteEvent?.support ? 'active' : 'default'"
             @click="onCastSelected(1)"
           >
             YES
@@ -74,6 +75,7 @@
             :disabled="
               isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
             "
+            :version="!voteEvent?.support ? 'active' : 'default'"
             @click="onCastSelected(0)"
           >
             NO
@@ -209,4 +211,11 @@ voteEndTimestamp.value = await apiStore.client.epoch.getTimestampFromEpoch(
 );
 
 const { timeAgo: voteEnds } = useDate(voteEndTimestamp.value);
+
+const votesStore = useVotesStore();
+const voteEvent = computed(() => {
+  return votesStore
+    .getBy("proposalId", proposalId.value)
+    .value.find((v) => v.voter === userAccount.value);
+});
 </script>
