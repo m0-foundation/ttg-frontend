@@ -15,4 +15,3 @@ cypress/videos/
 auto-imports.d.ts
 components.d.ts
 modules/spog/
-yarn.lock
