@@ -21,6 +21,7 @@
       v-bind="$attrs"
       class="text-white"
       :style="`font-size: ${size}px; line-height: normal`"
+      :data-test="`${name?.toLocaleLowerCase()}-token-available`"
       >{{ amount }}</span
     >
     <span v-else class="text-grey-400">-</span>

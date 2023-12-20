@@ -10,20 +10,18 @@
           <div>
             <p class="mb-2 text-xxs uppercase">WETH/POWER Rate</p>
             <MTokenAmount
-              name="Eth"
+              name="eth"
               image="/img/tokens/eth.svg"
               :size="30"
               :amount="Number(purchasePrice)"
-              data-test="cash-token-amount"
             />
           </div>
           <div>
             <p class="mb-2 text-xxs uppercase">Power Tokens Available</p>
             <MTokenAmount
-              name="Power"
+              name="power"
               :size="30"
               :amount="amountLeftToAuction"
-              data-test="power-tokens-amount-to-auction"
             />
           </div>
         </div>
@@ -66,6 +64,7 @@
           class="mt-4 w-full flex justify-center"
           type="submit"
           :is-loading="isLoadingTransaction"
+          data-test="button-submit-buy"
           @click="auctionBuy()"
         >
           Buy
@@ -148,10 +147,10 @@ async function getLastEpochTotalSupply() {
   }
 }
 
-function setMaxPossiblePurchase() {
-  getAmountLeftToAuction();
-  getPurchaseCost();
+async function setMaxPossiblePurchase() {
+  await getAmountLeftToAuction();
   purchaseAmount.value = Number(amountLeftToAuction.value);
+  getPurchaseCost();
 }
 
 function getPurchaseCost() {

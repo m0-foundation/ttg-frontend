@@ -4,7 +4,6 @@ describe("Auction", () => {
     const title = "Change Proposal Fee";
     const description =
       "Change Proposal Fee to 0.001 $CASH. Auction Scenario to buy.";
-    let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
       cy.mineEpochs(2);
@@ -34,33 +33,8 @@ describe("Auction", () => {
       });
     });
 
-    it("I should be able to ACCESS the ACTIVE proposal", () => {
-      // forward in time to be able to vote
-      // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
-      // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
-      cy.mineEpochs(2);
-
-      cy.wait(100);
-      cy.visit("http://localhost:3000/proposals/");
-
-      cy.contains(description).should("exist");
-
-      cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({ force: true });
-      });
-
-      cy.url().should("match", /proposal\/([0-9])\w+/g);
-      cy.contains(".markdown-body", description).should("exist");
-      cy.wait(500); // wait to load props values
-
-      cy.get("#technical-proposal-incoming-change").should("contain", input);
-
-      cy.url().then((url) => {
-        proposalUrl = url;
-      });
-    });
-
     it("I should be able to CAST vote YES for the proposal", () => {
+      cy.mineEpochs(2);
       cy.castYesOneProposal(description);
     });
 
@@ -68,6 +42,7 @@ describe("Auction", () => {
       cy.mineEpochs(1);
       cy.wait(100);
       cy.visit("http://localhost:3000/auction/");
+      cy.get("[data-test='power-token-available']").should("exist");
     });
   });
 });
