@@ -10,7 +10,7 @@
     <form class="p-6" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
       <div v-else>
-        <div v-if="!isPreview">
+        <div v-show="!isPreview">
           <h1>Create a proposal</h1>
 
           <div class="mb-6">
@@ -125,7 +125,7 @@
           </div>
         </div>
 
-        <div v-else>
+        <div v-if="isPreview">
           <ProposalPreview
             :address="userAccount"
             :description="previewDescription"
