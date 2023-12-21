@@ -1,11 +1,12 @@
 import { MEpoch } from "@/lib/api/modules/epoch/epoch.types";
 
-const ONE = 400n;
+const ONE_EPOCH = 400n;
 const EPOCH_PERIOD = 108_000n;
 const AUCTION_PERIODS = 100n;
 const SECONDS_PER_BLOCK = 8n;
 
 export const getAuctionPurchaseCost = (
+  // Same func as "getCost" from PowerToken.sol, calculated in the frontend to save requests
   amount: bigint,
   epoch: MEpoch,
   totalSupplyOfPreviousEpoch: bigint
@@ -20,7 +21,7 @@ export const getAuctionPurchaseCost = (
   const remainder = blocksRemaining % blocksPerPeriod;
 
   const cost =
-    (ONE *
+    (ONE_EPOCH *
       amount *
       (remainder * leftPoint +
         (blocksPerPeriod - remainder) * (leftPoint >> 1n))) /

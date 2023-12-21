@@ -38,7 +38,7 @@ describe("Auction", () => {
       cy.castYesOneProposal(description);
     });
 
-    it("I should be able to see power tokens available on auction", () => {
+    it("I should be able to SEE Power Tokens available on auction", () => {
       cy.mineEpochs(1);
       cy.wait(100);
       cy.visit("http://localhost:3000/auction/");

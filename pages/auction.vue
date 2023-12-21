@@ -20,6 +20,7 @@
             <p class="mb-2 text-xxs uppercase">Power Tokens Available</p>
             <MTokenAmount
               name="power"
+              image="/img/tokens/power.svg"
               :size="30"
               :amount="amountLeftToAuction"
             />
