@@ -13,7 +13,7 @@
               name="eth"
               image="/img/tokens/eth.svg"
               :size="30"
-              :amount="Number(purchasePrice)"
+              :amount="isTransferEpoch ? Number(purchasePrice) : 0"
             />
           </div>
           <div>
