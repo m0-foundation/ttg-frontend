@@ -60,7 +60,7 @@
           :amount="purchaseCost"
         />
         <MButton
-          :disabled="!purchaseAmount || !userAccount"
+          :disabled="!purchaseAmount || !userAccount || !userAgreeMinAmount"
           class="mt-4 w-full flex justify-center"
           type="submit"
           :is-loading="isLoadingTransaction"
@@ -69,6 +69,9 @@
         >
           Buy
         </MButton>
+        <MCheckbox v-model="userAgreeMinAmount" class="text-xs mt-3"
+          >Buy any amount up to specified limit for purchase</MCheckbox
+        >
       </div>
 
       <div
@@ -123,6 +126,7 @@ const spog = storeToRefs(useSpogStore());
 const purchaseAmount = ref();
 const purchaseCost = ref(0n);
 const purchasePrice = ref(0n);
+const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
 const amountLeftToAuction = ref();
 const isLoadingTransaction = ref(false);
@@ -186,11 +190,7 @@ async function auctionBuy() {
     const { hash } = await writePowerToken({
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
-      args: [
-        BigInt(purchaseAmount.value / 2), // TODO: Check what number is better here
-        BigInt(purchaseAmount.value),
-        userAccount.value,
-      ],
+      args: [BigInt(0), BigInt(purchaseAmount.value), userAccount.value],
       account: userAccount.value,
     });
 
