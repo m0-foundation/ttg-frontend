@@ -49,6 +49,8 @@ export const useSpogStore = defineStore("spog", {
         clock: state.governors.standard.clock!,
       };
     },
+
+    getTokens: (state) => state.tokens,
   },
 
   actions: {
