@@ -42,7 +42,7 @@
         v-if="userCanBuy"
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-neutral-800 p-8 py-10"
       >
-        <p class="text-gray-200 text-xs uppercase mb-2">Value for purchase:</p>
+        <p class="text-gray-200 text-xs uppercase mb-2">Amount for purchase:</p>
         <MInput
           v-model="purchaseAmount"
           class="input"
@@ -57,7 +57,7 @@
           Max: {{ amountLeftToAuction }}
         </button>
         <div class="my-12"></div>
-        <p class="text-gray-200 text-xs uppercase mb-2">Value for purchase:</p>
+        <p class="text-gray-200 text-xs uppercase mb-2">Total price:</p>
         <MTokenAmount
           class="text-zinc-500"
           image="/img/tokens/eth.svg"
