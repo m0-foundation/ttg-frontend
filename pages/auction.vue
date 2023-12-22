@@ -30,7 +30,11 @@
           <span>{{ dataRead }}</span>
         </div>
         <div class="mt-4">
-          <AuctionChart :show-data="userCanBuy" />
+          <p v-if="!userCanBuy" class="text-xs text-grey-400 uppercase">
+            Rate projection
+          </p>
+          <AuctionChart v-if="userCanBuy" />
+          <div v-else class="h-48 lg:h-96 border-b border-grey-500"></div>
         </div>
       </div>
 
@@ -104,7 +108,7 @@
       </div>
     </div>
 
-    <div class="py-4 lg:p-6">
+    <div class="p-6 py-4">
       <p class="text-xs">Rate projection description</p>
       <p class="text-xs text-zinc-500">
         This is a Dutch auction, the chart below illustrates the price
