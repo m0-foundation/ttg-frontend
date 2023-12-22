@@ -2,7 +2,7 @@ import { MEpoch } from "@/lib/api/modules/epoch/epoch.types";
 
 const ONE_EPOCH = 400n;
 const EPOCH_PERIOD = 108_000n;
-const AUCTION_PERIODS = 100n;
+const AUCTION_PERIODS = 30n;
 const SECONDS_PER_BLOCK = 8n;
 
 export const getAuctionPurchaseCost = (

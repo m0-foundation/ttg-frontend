@@ -21,7 +21,7 @@ const options = ref({
   annotations: {
     xaxis: [
       {
-        x: +new Date(),
+        x: +new Date() + 20000,
         strokeDashArray: 4,
         borderColor: "#627EEA",
       },
@@ -29,7 +29,7 @@ const options = ref({
 
     points: [
       {
-        x: +new Date(),
+        x: +new Date() + 20000,
         y: 256,
         marker: {
           size: 6,
@@ -57,7 +57,7 @@ const options = ref({
         },
       },
       {
-        x: +new Date(),
+        x: +new Date() + 20000,
         y: 0,
         marker: {
           size: 6,
@@ -136,6 +136,7 @@ const options = ref({
     },
   },
   tooltip: {
+    enabled: false,
     x: {
       show: false,
     },
