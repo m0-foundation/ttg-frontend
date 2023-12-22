@@ -13,6 +13,7 @@
             {{ balancePowerToken?.data.value?.formatted }}
           </p>
         </div>
+        <ProfileTokenMenu :token="getTokens?.power" />
       </div>
       <!-- zero tokens -->
       <div class="flex gap-2">
@@ -25,6 +26,7 @@
             {{ balanceZeroToken?.data.value?.formatted }}
           </p>
         </div>
+        <ProfileTokenMenu :token="getTokens?.zero" />
       </div>
     </div>
   </div>
@@ -32,6 +34,7 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
+import { storeToRefs } from "pinia";
 import { useMBalances, useMVotingPower } from "@/lib/hooks";
 
 const props = defineProps<{
@@ -45,4 +48,7 @@ const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
 
 const { powerTokenVotingPower, zeroTokenVotingPower } =
   useMVotingPower(address);
+
+const spog = useSpogStore();
+const { getTokens } = storeToRefs(spog);
 </script>
