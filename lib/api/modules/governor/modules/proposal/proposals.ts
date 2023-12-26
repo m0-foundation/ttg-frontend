@@ -435,6 +435,10 @@ export class Proposals extends GovernorModule {
       return {
         ...executedEvent,
         timestamp: Number(block?.timestamp),
+        blockNumber: Number(executedEvent.blockNumber),
+        args: {
+          proposalId: String(executedEvent.args.proposalId),
+        },
       };
     }
     return null;
