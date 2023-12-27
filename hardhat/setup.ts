@@ -1,61 +1,123 @@
-/* eslint-disable import/namespace */
-/* eslint-disable require-await */
-import * as hre from "hardhat";
+import http from "node:http";
+import hre from "hardhat";
 import {
   TASK_NODE,
   TASK_NODE_GET_PROVIDER,
   TASK_NODE_SERVER_READY,
 } from "hardhat/builtin-tasks/task-names";
-import {
-  EthereumProvider,
-  HardhatNetworkAccountsConfig,
-  JsonRpcServer,
-} from "hardhat/types";
-import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
+import { EthereumProvider, HardhatNetworkAccountsConfig } from "hardhat/types";
 
-import { ContractFactory } from "ethers";
-import { JsonRpcProvider } from "@ethersproject/providers";
-import { Wallet } from "@ethersproject/wallet";
-import ERC20PermitHarnessAbi from "../modules/spog/abi/ERC20PermitHarness.json";
-import { bytecode as ERC20PermitHarnessBytecode } from "../modules/spog/bytecode/ERC20PermitHarness.json";
+import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
 import { toExternallyOwnedAccounts } from "./accounts";
+
 export interface Network {
   /** The network's JSON-RPC address. */
   url: string;
-  /** The chainId of the network. */
-  chainId: number;
   /** Accounts configured via hardhat's {@link https://hardhat.org/hardhat-network/reference/#accounts}. */
   accounts: ExternallyOwnedAccount[];
+}
 
+const PORT = 8545;
+
+/* istanbul ignore next */
+// extendConfig((config, userConfig) => {
+//   config.forks = userConfig.forks || {};
+// });
+
+type ChainServer = {
+  address: string;
+  port: number;
+  close: () => Promise<void>;
+  provider: EthereumProvider;
   mine: (blocks: number) => Promise<void>;
+};
+const chainServers: ChainServer[] = [];
+
+/**
+ * Initializes a chain server.
+ * The provider *must* be configured for the chainId before calling runChainServer.
+ */
+function runChainServer(chainId: number): Promise<ChainServer> {
+  if (chainServers[chainId]) return Promise.resolve(chainServers[chainId]);
+
+  const run = hre.run(TASK_NODE, { port: PORT });
+  return new Promise((resolve) =>
+    hre.tasks[TASK_NODE_SERVER_READY].setAction(
+      async ({ address, port, provider, server }) => {
+        const close = async () => {
+          await Promise.all([server.close(), run]);
+        };
+        chainServers[chainId] = { address, port, close, provider };
+        resolve(chainServers[chainId]);
+      }
+    )
+  );
 }
 
 /** Sets up the hardhat environment for use with cypress. */
 export default async function setup(): Promise<
   Network & {
     /** Resets the hardhat environment. Call before a spec to reset the environment. */
-    reset: () => Promise<void>;
+    reset: (chainId?: number) => Promise<void>;
     /** Tears down the hardhat environment. Call after a run to clean up the environment. */
     close: () => Promise<void>;
-
-    deployCashToken: () => Promise<string>;
+    mine: (blocks: number) => Promise<void>;
   }
 > {
   const hardhatConfig = hre.config.networks.hardhat;
+  const defaultChainId = hardhatConfig.chainId;
 
-  // Overrides the GET_PROVIDER task to avoid unnecessary time-intensive evm calls.
-  hre.tasks[TASK_NODE_GET_PROVIDER].setAction(async () => hre.network.provider);
-  const port = 8545;
-  const run = hre.run(TASK_NODE, { port });
-  const serverReady = new Promise<{ url: string; server: JsonRpcServer }>(
-    (resolve) =>
-      hre.tasks[TASK_NODE_SERVER_READY].setAction(
-        async ({ address, port, server }) => {
-          const url = "http://" + address + ":" + port;
-          resolve({ url, server });
+  async function reset(chainId?: number) {
+    chainId = chainId ?? defaultChainId;
+
+    if (hre.network.config.chainId !== chainId) {
+      hre.config.networks.hardhat.chainId = chainId;
+
+      server = await runChainServer(chainId);
+    } else {
+      return hre.network.provider.send("hardhat_reset", [
+        {
+          hardhat: { mining: hardhatConfig.mining },
+        },
+      ]);
+    }
+  }
+
+  hre.tasks[TASK_NODE_GET_PROVIDER].setAction(async () => {
+    // Use the network provider, which was redefined as part of reset(chainId).
+    const provider = hre.network.provider;
+
+    const request = provider.request;
+    provider.request = (...args) => {
+      return request.call(provider, ...args);
+    };
+    return provider;
+  });
+
+  // Initializes the servers.
+  const forwardingServer = http.createServer((req, res) => {
+    // Forward responses to the active server.
+    req.pipe(
+      http.request(
+        {
+          ...req,
+          hostname: server.address,
+          port: server.port,
+          joinDuplicateHeaders: true,
+        },
+        (response) => {
+          for (const header in response.headers) {
+            res.setHeader(header, response.headers[header]!);
+          }
+          response.pipe(res);
         }
       )
+    );
+  });
+  const listen = new Promise<void>((resolve) =>
+    forwardingServer.listen(PORT, resolve)
   );
+  const run = runChainServer(defaultChainId);
 
   // Deriving ExternallyOwnedAccounts is computationally intensive, so we do it while waiting for the server to come up.
   const accounts = toExternallyOwnedAccounts(
@@ -69,51 +131,23 @@ export default async function setup(): Promise<
       "Specifying multiple hardhat accounts will noticeably slow your test startup time.\n\n"
     );
   }
+  let [server] = await Promise.all([run, listen]);
 
-  // Enables logging if it was enabled in the hardhat config.
-  if (hre.config.networks.hardhat.loggingEnabled) {
-    await hre.network.provider.send("hardhat_setLoggingEnabled", [true]);
-  }
-
-  const { url, server } = await serverReady;
   return {
-    url,
-    chainId: hre.config.networks.hardhat.chainId,
+    url: "http://" + server.address + ":" + PORT,
+    accounts,
+    reset,
+    close: async () => {
+      await Promise.all([
+        new Promise((resolve) => forwardingServer.close(resolve)),
+        ...chainServers.map((server) => server.close()),
+      ]);
+    },
     mine: (blocks = 100) => {
       console.log("mine", { blocks });
       return hre.network.provider.send("hardhat_mine", [
         "0x" + blocks.toString(16),
       ]);
-    },
-    deployCashToken: async () => {
-      const provider = new JsonRpcProvider(url);
-      const wallet = new Wallet(accounts[0].privateKey, provider);
-
-      const mockERC20Factory = new ContractFactory(
-        ERC20PermitHarnessAbi,
-        ERC20PermitHarnessBytecode,
-        wallet
-      );
-
-      const cashToken = await mockERC20Factory.deploy(
-        "CASH",
-        "New Cash Token",
-        18
-      );
-      return cashToken.address;
-    },
-    accounts,
-    reset: () =>
-      hre.network.provider.send("hardhat_reset", [
-        {
-          hardhat: {
-            mining: hardhatConfig.mining,
-          },
-        },
-      ]),
-    close: async () => {
-      await server.close();
-      await run;
     },
   };
 }
