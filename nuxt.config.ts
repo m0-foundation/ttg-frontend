@@ -1,4 +1,8 @@
+import { URL, fileURLToPath } from "node:url";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
 
 export default defineNuxtConfig({
   alias: {
@@ -15,7 +19,6 @@ export default defineNuxtConfig({
     },
   },
   ssr: false,
-  buildModules: ["@nuxtjs/pwa"],
   components: [
     "~/components/design-system",
     "~/components/layout",
@@ -26,7 +29,6 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
     "@pinia/nuxt",
-    "@vueuse/nuxt",
     "@nuxt/devtools",
   ],
   imports: {
@@ -37,7 +39,27 @@ export default defineNuxtConfig({
     autoImports: ["defineStore"],
   },
   vite: {
+    resolve: {
+      alias: {
+        "~": fileURLToPath(new URL("./", import.meta.url)),
+        // Add any other aliases you use in your code base
+        // https://nuxt.com/docs/api/configuration/nuxt-config/#alias
+      },
+    },
     plugins: [
+      AutoImport({
+        imports: ["vue", "vue-router"],
+        dirs: ["./composables"],
+        vueTemplate: true,
+      }),
+      Components({
+        dirs: [
+          "./components/**/*",
+          // Component folders that should be auto-imported
+        ],
+        dts: true,
+        directoryAsNamespace: true,
+      }),
       nodePolyfills({
         // To exclude specific polyfills, add them to this list.
         exclude: [
@@ -54,6 +76,13 @@ export default defineNuxtConfig({
       options: {
         target: "esnext",
       },
+    },
+  },
+
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
     },
   },
 });
