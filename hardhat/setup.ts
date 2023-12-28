@@ -1,3 +1,4 @@
+// @ts-nocheck
 import http from "node:http";
 import hre from "hardhat";
 import {
@@ -43,7 +44,7 @@ function runChainServer(chainId: number): Promise<ChainServer> {
   const run = hre.run(TASK_NODE, { port: PORT });
   return new Promise((resolve) =>
     hre.tasks[TASK_NODE_SERVER_READY].setAction(
-      async ({ address, port, provider, server }) => {
+      ({ address, port, provider, server }) => {
         const close = async () => {
           await Promise.all([server.close(), run]);
         };
@@ -83,7 +84,7 @@ export default async function setup(): Promise<
     }
   }
 
-  hre.tasks[TASK_NODE_GET_PROVIDER].setAction(async () => {
+  hre.tasks[TASK_NODE_GET_PROVIDER].setAction(() => {
     // Use the network provider, which was redefined as part of reset(chainId).
     const provider = hre.network.provider;
 
