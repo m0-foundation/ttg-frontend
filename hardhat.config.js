@@ -4,6 +4,7 @@ module.exports = {
 
   networks: {
     hardhat: {
+      loggingEnabled: true,
       allowUnlimitedContractSize: true,
       hardfork: "shanghai",
       mining: {

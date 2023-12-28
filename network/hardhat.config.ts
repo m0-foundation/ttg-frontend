@@ -9,6 +9,6 @@ export default {
   rpc: {
     chainId: 31337,
     default: "http://localhost:8545/",
-    values: ["http://localhost:8545/", "http://localhost:8080/"],
+    values: ["http://localhost:8545/"],
   },
 } as NetworkConfig;
