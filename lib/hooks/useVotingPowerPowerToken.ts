@@ -16,7 +16,8 @@ export default (
   // keep the reactivity alive
   const account = ref(userAccount);
 
-  const token = useMTokenPower();
+  const token = spog.tokens.value.power;
+  const totalSupply = spog.tokens.value.power!.totalSupply!.value;
 
   return useContractRead({
     address: spog.contracts.value.powerToken as Hash,
@@ -26,14 +27,11 @@ export default (
     watch: true,
     select: (data) => {
       const votingPower = BigInt(data as string);
-      const totalSupply = BigInt(
-        (token?.data?.value?.totalSupply?.value as bigint) || 1n
-      );
 
       return {
         relative: Number((votingPower * 100n * 100n) / totalSupply) / 100,
         value: votingPower,
-        formatted: formatUnits(votingPower, token?.data?.value?.decimals || 0),
+        formatted: formatUnits(votingPower, token?.decimals || 0),
       };
     },
   });
