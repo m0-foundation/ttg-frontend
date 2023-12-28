@@ -1,7 +1,6 @@
 import { storeToRefs } from "pinia";
 import { Hash, formatEther } from "viem";
 import { useContractRead } from "use-wagmi";
-import useMTokenZero from "./useMTokenZero";
 import { zeroTokenABI } from "@/lib/sdk";
 import { useSpogStore } from "@/stores/spog";
 

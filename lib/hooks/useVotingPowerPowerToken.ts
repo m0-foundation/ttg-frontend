@@ -1,7 +1,6 @@
 import { storeToRefs } from "pinia";
 import { Hash, formatUnits } from "viem";
 import { useContractRead } from "use-wagmi";
-import useMTokenPower from "./useMTokenPower";
 import { powerTokenABI } from "@/lib/sdk";
 import { useSpogStore } from "@/stores/spog";
 
