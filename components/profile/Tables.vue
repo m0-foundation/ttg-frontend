@@ -7,6 +7,7 @@
           'uppercase hover:underline text-xs ',
           selectedTab === 0 ? 'text-white' : 'text-zinc-500',
         ]"
+        data-test="profile-button-voting-history"
         @click="selectedTab = 0"
       >
         voting history
@@ -16,6 +17,7 @@
           'uppercase hover:underline text-xs',
           selectedTab === 1 ? 'text-white' : 'text-zinc-500',
         ]"
+        data-test="profile-button-submitted-proposals"
         @click="selectedTab = 1"
       >
         submitted proposals

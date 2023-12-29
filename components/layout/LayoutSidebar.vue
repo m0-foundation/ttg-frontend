@@ -1,24 +1,41 @@
 <template>
   <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6">
     <NuxtLink to="/">
-      <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt=""
-    /></NuxtLink>
+      <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
+    </NuxtLink>
     <span class="lg:hidden">Gov</span>
     <span class="hidden lg:block text-gray-400">Governance</span>
   </div>
 
   <NuxtLink class="block" to="/proposal/create/">
-    <MButton class="mb-6 w-full flex justify-center">Create Proposal</MButton>
+    <MButton
+      class="mb-6 w-full flex justify-center"
+      data-test="sidebar-button-create-proposal"
+    >
+      Create Proposal
+    </MButton>
   </NuxtLink>
 
   <nav class="text-grey-100 text-xl mb-6">
     <ul>
       <li>
-        <NuxtLink to="/proposals/" active-class="active"> proposals </NuxtLink>
+        <NuxtLink
+          to="/proposals/"
+          active-class="active"
+          data-test="sidebar-link-proposals"
+        >
+          proposals
+        </NuxtLink>
       </li>
 
       <li>
-        <NuxtLink to="/lists/" active-class="active">lists</NuxtLink>
+        <NuxtLink
+          to="/lists/"
+          active-class="active"
+          data-test="sidebar-link-lists"
+        >
+          lists
+        </NuxtLink>
       </li>
 
       <li>
@@ -26,13 +43,21 @@
       </li>
 
       <li>
-        <NuxtLink to="/config/governance/" active-class="active">
+        <NuxtLink
+          to="/config/governance/"
+          active-class="active"
+          data-test="sidebar-link-governance"
+        >
           governance config
         </NuxtLink>
       </li>
 
       <li>
-        <NuxtLink to="/config/protocol/" active-class="active">
+        <NuxtLink
+          to="/config/protocol/"
+          active-class="active"
+          data-test="sidebar-link-protocol"
+        >
           M0 Protocol config
         </NuxtLink>
       </li>
@@ -41,7 +66,9 @@
 
   <div v-if="isConnected" class="text-grey-100">
     <div class="mb-4 text-sm">
-      <NuxtLink to="/profile/me/">MY PROFILE</NuxtLink>
+      <NuxtLink to="/profile/me/" data-test="sidebar-link-my-profile">
+        MY PROFILE
+      </NuxtLink>
     </div>
 
     <div v-if="isCorrectChain" class="mb-6">
@@ -80,8 +107,12 @@
           </p>
         </div>
       </div>
-      <MButton version="outline-light" class="w-full">
-        <NuxtLink to="/delegate/">re-delegate</NuxtLink>
+      <MButton
+        version="outline-light"
+        class="w-full"
+        data-test="sidebar-link-delegate"
+      >
+        <NuxtLink to="/delegate/"> re-delegate </NuxtLink>
       </MButton>
     </div>
 
@@ -89,6 +120,7 @@
       id="button-disconnect-wallet"
       type="button"
       class="block w-full py-2 hover:underline text-left uppercase text-xs"
+      data-test="sidebar-button-disconnect"
       @click="() => disconnect()"
     >
       Disconnect

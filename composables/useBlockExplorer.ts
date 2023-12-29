@@ -1,7 +1,7 @@
 import { useNetwork } from "use-wagmi";
 import { Hash } from "viem";
 
-export const useBlockExplorer = (type: string, hash: Hash) => {
+export const useBlockExplorer = (type: string, hash: Hash | string) => {
   const network = useNetworkStore().getNetwork();
   const { chains } = useNetwork();
 

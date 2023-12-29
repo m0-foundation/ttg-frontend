@@ -25,9 +25,8 @@ import {
   MProposalTallies,
   ProposalEventLog,
   ProposalState,
-  VotingType,
 } from "./proposal.types";
-import { readDualGovernor } from "@/lib/sdk";
+
 import { ApiContext } from "@/lib/api/api-context";
 import { Epoch } from "~/lib/api/modules/epoch/epoch";
 
@@ -264,7 +263,6 @@ export class Proposals extends GovernorModule {
       topics: log?.topics,
     });
 
-    console.log({ eventName, args });
     const event = args as ProposalEventLog;
 
     if (event) {
@@ -414,6 +412,36 @@ export class Proposals extends GovernorModule {
     return this.governanceType === "Emergency";
   }
 
+  async getRawExecutedLogs() {
+    return await this.client.getLogs({
+      address: this.contract as Hash,
+      fromBlock: this.fromBlock,
+      event: parseAbiItem("event ProposalExecuted(uint256 proposalId)"),
+    });
+  }
+
+  async findExecutedEvent(proposalId: string, logs: Log[]) {
+    const executedEvent = logs.find(
+      (p) => String(p.args.proposalId) === proposalId
+    );
+
+    if (executedEvent) {
+      const block = await this.client.getBlock({
+        blockNumber: executedEvent.blockNumber as bigint,
+      });
+
+      return {
+        ...executedEvent,
+        timestamp: Number(block?.timestamp),
+        blockNumber: Number(executedEvent.blockNumber),
+        args: {
+          proposalId: String(executedEvent.args.proposalId),
+        },
+      };
+    }
+    return null;
+  }
+
   async getProposals(): Promise<Array<MProposal>> {
     const rawLogs = await this.client.getLogs({
       address: this.contract as Hash,
@@ -427,7 +455,8 @@ export class Proposals extends GovernorModule {
       return [];
     }
 
-    console.log({ rawLogs });
+    const rawExecutedLogs = await this.getRawExecutedLogs();
+
     const proposals = rawLogs.map((log: Log) =>
       this.decodeProposalLog(log, this.abi)
     );
@@ -465,7 +494,19 @@ export class Proposals extends GovernorModule {
           readGetProposal: proposalData,
         });
 
-        return proposalPresented;
+        const executedEvent = await this.findExecutedEvent(
+          proposal?.proposalId,
+          rawExecutedLogs
+        );
+
+        if (executedEvent) {
+          return {
+            ...proposalPresented,
+            executedEvent,
+          };
+        } else {
+          return proposalPresented;
+        }
       })
     );
 

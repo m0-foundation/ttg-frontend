@@ -1,8 +1,8 @@
 describe("Proposals", () => {
   describe("type action: Emergency setKey", () => {
     const value = "1";
-    const valueName = "INFLATION_RATE";
-    const description = `Add config ${valueName} = ${value}`;
+    const key = "OTHER_KEY";
+    const description = `Add config ${key} = ${value}`;
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
@@ -11,11 +11,13 @@ describe("Proposals", () => {
       cy.contains("Select a proposal type").click();
 
       cy.contains("Emergency").should("exist").click({ force: true });
-      cy.contains("Emergency Set config")
+      cy.contains("Emergency Set Protocol config")
         .should("exist")
         .click({ force: true });
 
-      cy.get("input[data-test='proposalValue']").type(valueName);
+      cy.get("[data-test='proposalValue']").select("Other config");
+      cy.get("input[data-test='proposalValue']").type(key);
+
       cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
@@ -49,10 +51,7 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should(
-        "contain",
-        valueName
-      );
+      cy.get("#technical-proposal-incoming-change").should("contain", key);
       cy.get("#technical-proposal-incoming-change").should("contain", value);
 
       cy.url().then((url) => {
@@ -103,7 +102,7 @@ describe("Proposals", () => {
           .map((row) => row.slice(0, 2))
           .sort();
 
-        const should = [[valueName.toLowerCase(), value.toLowerCase()]].sort();
+        const should = [[key.toLowerCase(), value.toLowerCase()]].sort();
 
         expect(mapped).to.deep.equal(should);
       });

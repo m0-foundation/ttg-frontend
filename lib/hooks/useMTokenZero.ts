@@ -13,5 +13,7 @@ export default () => {
   return useToken({
     address: spog.contracts.value.zeroToken as Hash,
     chainId: network.value.rpc.chainId,
+    cacheTime: 0,
+    staleTime: 1_000, // 1s
   });
 };

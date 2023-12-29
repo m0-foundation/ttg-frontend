@@ -8,7 +8,10 @@
       <span class="hidden lg:block text-gray-400">Governance</span>
     </div>
     <div class="flex lg:hidden">
-      <button @click="emits('toggle-sidebar')">
+      <button
+        data-test="header-button-toggle-sidebar"
+        @click="emits('toggle-sidebar')"
+      >
         <span class="sr-only">Toggle main manu</span>
         <span aria-hidden="true">
           <svg

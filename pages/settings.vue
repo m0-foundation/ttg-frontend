@@ -28,11 +28,17 @@
             <!-- with custom RPC -->
             <div v-if="isWithCustomRPC">
               <label> Custom RPC URL: </label>
-              <input v-model="customRPC" type="text" placeholder="http://..." />
+              <input
+                v-model="customRPC"
+                type="text"
+                placeholder="http://..."
+                data-test="settings-input-url-rpc"
+              />
 
               <p class="text-grey-400">
                 <button
                   class="border-b border-white border-dashed"
+                  data-test="settings-button-return-to-list"
                   @click="onSwitchInput(false)"
                 >
                   return to list
@@ -54,6 +60,7 @@
                 or enter
                 <button
                   class="border-b border-white border-dashed"
+                  data-test="settings-button-custom-rpc"
                   @click="onSwitchInput(true)"
                 >
                   your Custom RPC
@@ -63,7 +70,13 @@
           </div>
 
           <div class="flex justify-center">
-            <MButton type="submit" version="secondary-dark">Connect</MButton>
+            <MButton
+              type="submit"
+              version="secondary-dark"
+              data-test="settings-button-submit"
+            >
+              Connect
+            </MButton>
           </div>
         </div>
       </form>

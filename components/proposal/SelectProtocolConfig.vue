@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="isOtherList" class="flex">
+    <div v-if="isOther" class="flex">
       <button
         class="input px-4 inline-flex items-center min-w-fit border border-e-0 border-gray-700 bg-gray-200 text-sm text-gray-500"
-        data-test="create-proposal-button-close-other-list"
-        @click="isOtherList = false"
+        data-test="create-proposal-button-close-other-config"
+        @click="isOther = false"
       >
         X
       </button>
@@ -13,7 +13,7 @@
         v-model="list"
         :class="{ input: true, error: hasErrors }"
         data-test="proposalValue"
-        placeholder="My other list"
+        placeholder="My other config"
         type="text"
       />
     </div>
@@ -25,12 +25,21 @@
         :class="{ error: hasErrors }"
         @change="handleChangeList"
       >
-        <option disabled value="" selected>Select list</option>
-        <option v-for="option in options" :key="option" :value="option">
+        <option disabled selected :value="null">Select config</option>
+        <option disabled value="">General</option>
+        <option v-for="option in generalOptions" :key="option" :value="option">
+          {{ option }}
+        </option>
+        <option disabled value="">Mint</option>
+        <option v-for="option in mintOptions" :key="option" :value="option">
+          {{ option }}
+        </option>
+        <option disabled value="">Interest rates</option>
+        <option v-for="option in interestOptions" :key="option" :value="option">
           {{ option }}
         </option>
         <option disabled value=""></option>
-        <option value="otherList">Other list</option>
+        <option value="other">Other config</option>
       </select>
     </div>
     <div class="text-red-500 text-xs my-2 h-4">
@@ -44,7 +53,19 @@
 <script setup lang="ts">
 import { ErrorObject } from "@vuelidate/core";
 
-const options = ["minters", "validators", "earners"];
+const generalOptions = [
+  "updateCollateral_interval",
+  "updateCollateral_threshold",
+  "penalty_rate",
+];
+const mintOptions = [
+  "mint_delay",
+  "mint_ttl",
+  "mint_ratio",
+  "minter_freeze_time",
+];
+// Interest rates - call rate()
+const interestOptions = ["minter_rate_model", "earner_rate_model"];
 
 export interface InputProps {
   modelValue: string;
@@ -58,12 +79,12 @@ const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 
 const hasErrors = computed(() => props.errors?.length);
 
-const isOtherList = ref(false);
+const isOther = ref(false);
 
 function handleChangeList(e: any) {
-  if (e.target.value === "otherList") {
+  if (e.target.value === "other") {
     list.value = "";
-    isOtherList.value = true;
+    isOther.value = true;
   }
 }
 </script>

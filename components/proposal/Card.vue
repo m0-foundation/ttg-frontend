@@ -28,6 +28,7 @@
         id="show-details"
         type="button"
         class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full p-3 my-4"
+        data-test="proposal-button-show-details"
         @click="onViewProposal"
       >
         <span>show details </span>
@@ -63,6 +64,7 @@
             :disabled="
               isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
             "
+            :version="voteEvent?.support ? 'active' : 'default'"
             @click="onCastSelected(1)"
           >
             YES
@@ -73,6 +75,7 @@
             :disabled="
               isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
             "
+            :version="!voteEvent?.support ? 'active' : 'default'"
             @click="onCastSelected(0)"
           >
             NO
@@ -109,6 +112,7 @@
         <div class="inline-flex gap-1" role="group">
           <MButton
             id="button-proposal-execute"
+            data-test="proposal-button-execute"
             :disabled="isDisconnected || isLoading"
             :is-loading="isLoading"
             @click="onExecuteProposal()"
@@ -207,4 +211,11 @@ voteEndTimestamp.value = await apiStore.client.epoch.getTimestampFromEpoch(
 );
 
 const { timeAgo: voteEnds } = useDate(voteEndTimestamp.value);
+
+const votesStore = useVotesStore();
+const voteEvent = computed(() => {
+  return votesStore
+    .getBy("proposalId", proposalId.value)
+    .value.find((v) => v.voter === userAccount.value);
+});
 </script>

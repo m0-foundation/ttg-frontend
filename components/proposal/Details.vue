@@ -8,7 +8,10 @@
 
     <article class="bg-white text-black px-4 py-4">
       <div class="flex justify-between">
-        <ProposalStatusTimeline :version="proposal?.state" />
+        <ProposalStatusTimeline
+          :proposal="proposal"
+          :version="proposal?.state"
+        />
         <div>
           <ProposalMenu :proposal="proposal" />
         </div>

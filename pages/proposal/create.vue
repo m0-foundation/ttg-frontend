@@ -10,7 +10,7 @@
     <form class="p-6" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
       <div v-else>
-        <div v-if="!isPreview">
+        <div v-show="!isPreview">
           <h1>Create a proposal</h1>
 
           <div class="mb-6">
@@ -108,6 +108,7 @@
                 v-model="formData.ipfsURL"
                 type="text"
                 placeholder="https://"
+                data-test="create-proposal-input-url-ipfs"
               />
             </div>
 
@@ -118,12 +119,13 @@
                 v-model="formData.discussionURL"
                 type="text"
                 placeholder="https://"
+                data-test="create-proposal-input-url-discussion"
               />
             </div>
           </div>
         </div>
 
-        <div v-else>
+        <div v-if="isPreview">
           <ProposalPreview
             :address="userAccount"
             :description="previewDescription"
@@ -134,9 +136,15 @@
 
       <div class="flex justify-end">
         <div class="flex items-center gap-2 text-lg">
-          Proposal fee:
-          <MIconWeth />
-          {{ spogValuesFormatted.setProposalFee }}
+          proposal fee:
+          <div v-if="hasToPayFee" class="flex items-center gap-2">
+            {{ spogValuesFormatted.setProposalFee }}
+            <MIconWeth />
+          </div>
+          <div v-else class="flex items-center gap-2">
+            0
+            <MIconWeth />
+          </div>
         </div>
       </div>
       <p class="text-grey-400 text-xs flex justify-end">
@@ -144,15 +152,29 @@
       </p>
 
       <div v-if="isPreview" class="flex justify-end mt-12">
-        <button class="text-green-800 uppercase mx-4" @click="onBack">
+        <button
+          class="text-green-800 uppercase mx-4"
+          data-test="create-proposal-button-back-bottom"
+          @click="onBack"
+        >
           &#60; back
         </button>
-        <MButton v-if="isPreview" type="submit" :disabled="isDisconnected">
+        <MButton
+          v-if="isPreview"
+          type="submit"
+          :disabled="isDisconnected"
+          data-test="create-proposal-button-submit"
+        >
           Submit proposal
         </MButton>
       </div>
       <div v-else class="flex justify-end mt-12">
-        <MButton type="button" @click="onPreview">Preview proposal</MButton>
+        <MButton
+          type="button"
+          data-test="create-proposal-button-preview"
+          @click="onPreview"
+          >Preview proposal</MButton
+        >
       </div>
 
       <p
@@ -221,9 +243,9 @@ import {
   zeroGovernorABI,
 } from "@/lib/sdk";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
-import ProposalInputUpdateConfig from "@/components/proposal/InputUpdateConfig.vue";
 import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
+import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
 import ProposalInputAddressFee from "@/components/proposal/InputAddressFee.vue";
 import ProposalInputFee from "@/components/proposal/InputFee.vue";
 
@@ -358,7 +380,7 @@ const rules = computed(() => {
 });
 
 const hasToPayFee = computed(() => {
-  return selectedProposalType.value.hasToPayFee;
+  return selectedProposalType?.value?.hasToPayFee;
 });
 
 const $validation = useVuelidate(rules, formData);
@@ -405,8 +427,8 @@ const proposalTypes = [
 
   {
     value: "setKey",
-    label: "Set config",
-    component: ProposalInputUpdateConfig,
+    label: "Set Protocol config",
+    component: ProposalInputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
@@ -533,9 +555,9 @@ const proposalTypes = [
 
       {
         value: "setKey",
-        label: "Emergency Set config",
+        label: "Emergency Set Protocol config",
         isEmergency: true,
-        component: ProposalInputUpdateConfig,
+        component: ProposalInputProtocolConfigOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
