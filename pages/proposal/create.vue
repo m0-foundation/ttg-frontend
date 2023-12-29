@@ -55,8 +55,6 @@
                 </div>
               </div>
 
-              <label for="type-value">{{ selectedProposalType?.label }}</label>
-
               <component
                 :is="selectedProposalType.component"
                 v-if="selectedProposalType"
@@ -79,6 +77,7 @@
                 type="text"
                 placeholder="Title"
                 :errors="$validation.title.$errors"
+                @focus="generateTitle"
               />
             </div>
 
@@ -398,7 +397,7 @@ const proposalTypes = [
   },
   {
     value: "addToList",
-    label: "Add to a list",
+    label: "Add address",
     component: ProposalInputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -407,7 +406,7 @@ const proposalTypes = [
   },
   {
     value: "removeFromList",
-    label: "Remove from a list",
+    label: "Remove address",
     component: ProposalInputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -417,7 +416,7 @@ const proposalTypes = [
 
   {
     value: "removeFromAndAddToList",
-    label: "Remove from and Add to list",
+    label: "Update address",
     component: ProposalInputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -427,7 +426,7 @@ const proposalTypes = [
 
   {
     value: "setKey",
-    label: "Set Protocol config",
+    label: "Update protocol config",
     component: ProposalInputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -440,54 +439,118 @@ const proposalTypes = [
   },
 
   {
-    value: "Thresholds",
-    label: "Thresholds",
-    children: [
-      {
-        value: "setEmergencyProposalThresholdRatio",
-        label: "Power threshold",
-        component: ProposalInputThreshold,
-        modelValue: formData.proposalValue,
-        tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
-        hasToPayFee: false,
-      },
-      {
-        value: "setZeroProposalThresholdRatio",
-        label: "Zero threshold",
-        component: ProposalInputThreshold,
-        tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
-        hasToPayFee: false,
-      },
-    ],
-  },
-  {
-    value: "fee",
-    label: "Fee",
-    children: [
-      {
-        value: "setProposalFee",
-        label: "Change fee",
-        component: ProposalInputFee,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.standardGovernor,
-        abi: standardGovernorABI,
-        hasToPayFee: true,
-      },
-    ],
+    value: "update",
+    label: "Update governance config",
   },
 
+  // {
+  //   value: "Thresholds",
+  //   label: "Thresholds",
+  //   children: [
+  //     {
+  //       value: "setEmergencyProposalThresholdRatio",
+  //       label: "Power threshold",
+  //       component: ProposalInputThreshold,
+  //       modelValue: formData.proposalValue,
+  //       tokens: [MVotingTokens.Zero],
+  //       governor: spog.contracts.zeroGovernor,
+  //       abi: zeroGovernorABI,
+  //       hasToPayFee: false,
+  //     },
+  //     {
+  //       value: "setZeroProposalThresholdRatio",
+  //       label: "Zero threshold",
+  //       component: ProposalInputThreshold,
+  //       tokens: [MVotingTokens.Zero],
+  //       governor: spog.contracts.zeroGovernor,
+  //       abi: zeroGovernorABI,
+  //       hasToPayFee: false,
+  //     },
+  //   ],
+  // },
+  // {
+  //   value: "fee",
+  //   label: "Fee",
+  //   children: [
+  //     {
+  //       value: "setProposalFee",
+  //       label: "Change fee",
+  //       component: ProposalInputFee,
+  //       tokens: [MVotingTokens.Power],
+  //       governor: spog.contracts.standardGovernor,
+  //       abi: standardGovernorABI,
+  //       hasToPayFee: true,
+  //     },
+  //   ],
+  // },
+
+  // {
+  //   value: "setCashToken",
+  //   label: "Set Cash Token",
+  //   component: ProposalInputAddressFee,
+  //   tokens: [MVotingTokens.Zero],
+  //   governor: spog.contracts.zeroGovernor,
+  //   abi: zeroGovernorABI,
+  //   hasToPayFee: false,
+  // },
+
   {
-    value: "setCashToken",
-    label: "Set Cash Token",
-    component: ProposalInputAddressFee,
-    tokens: [MVotingTokens.Zero],
-    governor: spog.contracts.zeroGovernor,
-    abi: zeroGovernorABI,
-    hasToPayFee: false,
+    value: "emergency",
+    label: "Emergency",
+    isEmergency: true,
+    children: [
+      {
+        value: "addToList",
+        label: "Add address",
+        isEmergency: true,
+        component: ProposalInputListOperation,
+        tokens: [MVotingTokens.Power],
+        governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
+      },
+      {
+        value: "removeFromList",
+        label: "Remove address",
+        isEmergency: true,
+        component: ProposalInputListOperation,
+        tokens: [MVotingTokens.Power],
+        governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
+      },
+
+      {
+        value: "removeFromAndAddToList",
+        label: "Update address",
+        isEmergency: true,
+        component: ProposalInputListRemoveAddOperation,
+        tokens: [MVotingTokens.Power],
+        governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
+      },
+      {
+        value: "setStandardProposalFee",
+        label: "Proposal fee",
+        isEmergency: true,
+        component: ProposalInputFee,
+        tokens: [MVotingTokens.Power],
+        governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
+      },
+      {
+        value: "setKey",
+        label: "Update protocol config",
+        isEmergency: true,
+        component: ProposalInputProtocolConfigOperation,
+        tokens: [MVotingTokens.Power],
+        governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
+      },
+    ],
   },
 
   {
@@ -511,66 +574,6 @@ const proposalTypes = [
         tokens: [MVotingTokens.Zero],
         governor: spog.contracts.zeroGovernor,
         abi: zeroGovernorABI,
-        hasToPayFee: false,
-      },
-    ],
-  },
-
-  {
-    value: "emergency",
-    label: "Emergency",
-    isEmergency: true,
-    children: [
-      {
-        value: "addToList",
-        label: "Emergency Add to a list",
-        isEmergency: true,
-        component: ProposalInputListOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
-        hasToPayFee: false,
-      },
-      {
-        value: "removeFromList",
-        label: "Emergency Remove from a list",
-        isEmergency: true,
-        component: ProposalInputListOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
-        hasToPayFee: false,
-      },
-
-      {
-        value: "removeFromAndAddToList",
-        label: "Emergency Remove from and Add to list",
-        isEmergency: true,
-        component: ProposalInputListRemoveAddOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
-        hasToPayFee: false,
-      },
-
-      {
-        value: "setKey",
-        label: "Emergency Set Protocol config",
-        isEmergency: true,
-        component: ProposalInputProtocolConfigOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
-        hasToPayFee: false,
-      },
-      {
-        value: "setStandardProposalFee",
-        label: "Emergency Change fee",
-        isEmergency: true,
-        component: ProposalInputFee,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
         hasToPayFee: false,
       },
     ],
@@ -866,15 +869,23 @@ function onBack() {
   isPreview.value = false;
   previewDescription.value = null;
 }
+
+function generateTitle() {
+  if (!selectedProposalType.value.label || !formData.proposalValue2) return;
+  formData.title = `${selectedProposalType.value.label} ${formData.proposalValue2} - ${formData.proposalValue} list`;
+  console.log("ASDASD", { selectedProposalType });
+}
 </script>
+
+<style>
+label {
+  @apply text-grey-400 block mb-2 font-medium text-sm font-inter;
+}
+</style>
 
 <style scoped>
 h1 {
   @apply text-3xl font-light mb-12;
-}
-
-label {
-  @apply text-grey-400 block mb-2 text-sm font-medium;
 }
 
 hr {

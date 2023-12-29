@@ -1,10 +1,12 @@
 <template>
-  <div class="w-full flex justify-between items-center space-x-4">
-    <div class="block w-1/2">
+  <div class="flex-col gap-3">
+    <label>List</label>
+
+    <div class="block">
       <SelectList v-model="list" :errors="props.modelValueErrors" />
     </div>
 
-    <div class="block w-1/2">
+    <div class="block w-full">
       <MInput
         v-model="address"
         class="input"
@@ -12,6 +14,7 @@
         placeholder="Address"
         data-test="proposalValue2"
         :errors="props.modelValue2Errors"
+        data-1p-ignore
       />
     </div>
   </div>

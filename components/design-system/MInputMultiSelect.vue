@@ -1,5 +1,5 @@
 <template>
-  <div ref="target" class="dropdown inline-block relative w-full">
+  <div ref="target" class="dropdown inline-block relative w-full font-inter">
     <button
       type="button"
       class="bg-transparent border border-1-white text-white py-2 px-4 inline-flex justify-between w-full items-center"
@@ -28,24 +28,16 @@
           <button
             v-if="opt.children"
             type="button"
-            :class="[{ '!pt-8 !pb-4': opt.isEmergency }, 'button']"
+            class="button"
             @click="onShowSubmenu(opt)"
           >
             {{ opt.label }} &rsaquo;
-
-            <div
-              v-show="opt.isEmergency"
-              class="text-grey-400 text-xs w-72 py-2"
-            >
-              The emergency proposal will be executed immediately when the
-              threshold is reached.
-            </div>
           </button>
 
           <button
             v-else
             type="button"
-            class="flex justify-between items-center button"
+            class="flex justify-between items-center button gap-12"
             @click="onSelect(opt)"
           >
             {{ opt.label }}
