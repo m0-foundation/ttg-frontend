@@ -16,9 +16,8 @@ jobs:
   publish-static-to-S3-bucket-job:
     runs-on: ubuntu-latest
     container:
-      image: node:18
+      image: node:20
     steps:
-
       - name: checkout repo
         uses: actions/checkout@v2
 
@@ -42,4 +41,4 @@ jobs:
           args: --follow-symlinks --delete --exclude '.git/*' --exclude '.github/*'
         env:
           AWS_S3_BUCKET: "thething-publish-spog-frontend-dev-p14y"
-          SOURCE_DIR: './.output/public'
+          SOURCE_DIR: "./.output/public"
