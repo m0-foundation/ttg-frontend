@@ -5,6 +5,7 @@ on:
     branches:
       - 'main'
       - 'feature/**'
+      - 'bugfix/**'
   workflow_dispatch:
 
 jobs:
