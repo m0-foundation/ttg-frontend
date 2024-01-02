@@ -2,8 +2,7 @@ describe("Auction", () => {
   describe("Create Sceneario to buy in Auction", () => {
     const input = "0.001";
     const title = "Change Proposal Fee";
-    const description =
-      "Change Proposal Fee to 0.001 $CASH. Auction Scenario to buy.";
+    const description = "Auction Scenario to buy.";
 
     it("I should be able to CREATE a proposal", () => {
       cy.mineEpochs(2);
@@ -34,13 +33,12 @@ describe("Auction", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.mineEpochs(2);
+      cy.mineEpochs(4);
       cy.castYesOneProposal(description);
     });
 
     it("I should be able to SEE Power Tokens available on auction", () => {
       cy.mineEpochs(1);
-      cy.wait(100);
       cy.visit("http://localhost:3000/auction/");
       cy.get("[data-test='power-token-available']").should("exist");
     });

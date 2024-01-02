@@ -13,7 +13,7 @@
               name="eth"
               image="/img/tokens/eth.svg"
               :size="30"
-              :amount="isTransferEpoch ? Number(purchasePrice) : 0"
+              :amount="purchasePrice"
             />
           </div>
           <div>
@@ -48,7 +48,7 @@
           class="input"
           type="text"
           placeholder="0"
-          @update:model-value="getPurchaseCost"
+          @update:model-value="getPurchaseCost(purchaseAmount)"
         />
         <button
           class="text text-xs text-grey-400"
@@ -62,7 +62,7 @@
           class="text-zinc-500"
           image="/img/tokens/eth.svg"
           :size="36"
-          :amount="purchaseCost"
+          :amount="Number(purchasePrice) * Number(purchaseAmount)"
         />
         <MButton
           :disabled="!purchaseAmount || !userAccount || !userAgreeMinAmount"
@@ -121,7 +121,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
-import { Hash } from "viem";
+import { Hash, formatEther } from "viem";
 import { waitForTransaction } from "@wagmi/core";
 import { readPowerToken, writePowerToken } from "@/lib/sdk";
 
@@ -129,17 +129,15 @@ const { address: userAccount } = useAccount();
 const spog = storeToRefs(useSpogStore());
 
 const purchaseAmount = ref();
-const purchaseCost = ref(0n);
-const purchasePrice = ref(0n);
+const purchasePrice = ref();
 const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
 const amountLeftToAuction = ref();
 const isLoadingTransaction = ref(false);
 const { epoch } = storeToRefs(spog);
 
-const isTransferEpoch = computed(
-  () => epoch?.value.current?.type === "TRANSFER"
-);
+const isTransferEpoch = computed(() => true);
+
 const userCanBuy = computed(() => {
   return isTransferEpoch.value && Number(amountLeftToAuction.value) > 0n;
 });
@@ -159,21 +157,37 @@ async function getLastEpochTotalSupply() {
 async function setMaxPossiblePurchase() {
   await getAmountLeftToAuction();
   purchaseAmount.value = Number(amountLeftToAuction.value);
-  getPurchaseCost();
 }
 
-function getPurchaseCost() {
-  purchaseCost.value = getAuctionPurchaseCost(
-    BigInt(purchaseAmount.value),
-    epoch.value,
-    lastEpochTotalSupply.value
-  );
+// function getPurchaseCost() {
+//   purchaseCost.value = getAuctionPurchaseCost(
+//     BigInt(purchaseAmount.value),
+//     epoch.value,
+//     lastEpochTotalSupply.value
+//   );
+// }
+
+async function getPurchaseCost(amount: bigint) {
+  if (!amount) return 0n;
+  try {
+    return await readPowerToken({
+      address: spog.contracts.value.powerToken as Hash,
+      functionName: "getCost",
+      args: [amount],
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
+
+setInterval(async () => {
+  purchasePrice.value = await getPurchaseCost(1n);
+}, 5000);
 
 watch(
   () => lastEpochTotalSupply.value,
-  (newValue) => {
-    purchasePrice.value = getAuctionPurchaseCost(1n, epoch.value, newValue);
+  async () => {
+    purchasePrice.value = await getPurchaseCost(1n);
   }
 );
 
