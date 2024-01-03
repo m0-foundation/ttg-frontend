@@ -19,30 +19,14 @@
     </div>
 
     <div v-else>
-      <select
-        v-model="list"
-        data-test="proposalValue"
-        :class="{ error: hasErrors }"
-        @change="handleChangeList"
-      >
-        <option disabled selected :value="null">Select config</option>
-        <option disabled value="">General</option>
-        <option v-for="option in generalOptions" :key="option" :value="option">
-          {{ option }}
-        </option>
-        <option disabled value="">Mint</option>
-        <option v-for="option in mintOptions" :key="option" :value="option">
-          {{ option }}
-        </option>
-        <option disabled value="">Interest rates</option>
-        <option v-for="option in interestOptions" :key="option" :value="option">
-          {{ option }}
-        </option>
-        <option disabled value=""></option>
-        <option value="other">Other config</option>
-      </select>
+      <MInputMultiSelect
+        :options="configParams"
+        label="Select configuration parameter"
+        @on-change="handleChangeList"
+      />
     </div>
-    <div class="text-red-500 text-xs my-2 h-4">
+
+    <div v-if="props.errors.length > 0" class="text-red-500 text-xs my-2 h-4">
       <p v-for="error of props.errors" :key="error.$uid">
         {{ error.$message }}
       </p>
@@ -52,20 +36,6 @@
 
 <script setup lang="ts">
 import { ErrorObject } from "@vuelidate/core";
-
-const generalOptions = [
-  "updateCollateral_interval",
-  "updateCollateral_threshold",
-  "penalty_rate",
-];
-const mintOptions = [
-  "mint_delay",
-  "mint_ttl",
-  "mint_ratio",
-  "minter_freeze_time",
-];
-// Interest rates - call rate()
-const interestOptions = ["minter_rate_model", "earner_rate_model"];
 
 export interface InputProps {
   modelValue: string;
@@ -81,10 +51,83 @@ const hasErrors = computed(() => props.errors?.length);
 
 const isOther = ref(false);
 
+const configParams = [
+  {
+    header: "protocol",
+  },
+  {
+    value: "updateCollateral_interval",
+    label: "Update collateral interval",
+    shortDescription:
+      "Update the period of time between which Update Collateral must be called by a Minter.",
+    description:
+      "The length of time in seconds that Minter has to call updateCollateral, from the previous time it was called by that minter, before they will incur the penalty.",
+  },
+  {
+    value: "updateCollateral_threshold",
+    label: "Update collateral threshold",
+    shortDescription:
+      "Update the minimum number of signatures required to execute Update Collateral.",
+  },
+  {
+    value: "penalty_rate",
+    label: "Penalty rate",
+    shortDescription:
+      "Update the fee charged on Owed M that in case of insufficient reserve.",
+  },
+  {
+    header: "mint",
+  },
+  {
+    value: "mint_delay",
+    label: "Mint delay",
+    shortDescription:
+      "Update the amount of time between when a Minter has called Propose Mint and when they can call Mint M.",
+  },
+  {
+    value: "mint_ttl",
+    label: "Mint TTL",
+    shortDescription: "Placeholder",
+  },
+  {
+    value: "mint_ratio",
+    label: "Mint ratio",
+    shortDescription:
+      "Update the fraction size of a Minter’s on-chain Collateral Value that they can generate in M.",
+  },
+  {
+    value: "minter_freeze_time",
+    label: "Propose mint time to live",
+    shortDescription:
+      "Update the amount of time that Mint has to be called before Propose Mint expires.",
+  },
+  {
+    header: "interest rates",
+  },
+  {
+    value: "minter_rate_model",
+    label: "Minter rate",
+    shortDescription:
+      "Update the annualized percentage charged to Minters on their Owed M.",
+  },
+  {
+    value: "earner_rate_model",
+    label: "Earner rate",
+    shortDescription:
+      "Update the annualized percentage paid to M in the Earn Mechanism.",
+  },
+  {
+    value: "custom_parameter",
+    label: "Create new parameter",
+  },
+];
+
 function handleChangeList(e: any) {
-  if (e.target.value === "other") {
+  if (e.target?.value === "other") {
     list.value = "";
     isOther.value = true;
+  } else {
+    list.value = e;
   }
 }
 </script>

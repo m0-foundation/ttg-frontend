@@ -1,26 +1,27 @@
 <template>
-  <div class="w-full flex justify-between items-center space-x-4">
-    <div class="block w-1/3">
+  <div>
+    <div>
+      <label>List</label>
       <SelectList v-model="list" :errors="props.modelValueErrors" />
     </div>
 
-    <div class="block w-1/3">
+    <div>
+      <label>Remove address*</label>
       <MInput
         v-model="remove"
         class="input"
         type="text"
-        placeholder="Remove address"
         data-test="proposalValue2"
         :errors="props.modelValue2Errors"
       />
     </div>
 
-    <div class="block w-1/3">
+    <div>
+      <label>Add address*</label>
       <MInput
         v-model="add"
         class="input"
         type="text"
-        placeholder="Add address"
         data-test="proposalValue3"
         :errors="props.modelValue3Errors"
       />

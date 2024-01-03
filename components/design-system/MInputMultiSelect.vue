@@ -5,12 +5,12 @@
       class="bg-transparent border border-1-white text-white py-2 px-4 inline-flex justify-between w-full items-center"
       @click="onOpen"
     >
-      {{ selected?.label || "Select a proposal type" }}
+      {{ selected?.label || props.label || "Select proposal type" }}
       <span
-        v-if="selected?.isEmergency"
-        class="text-xs text-[#5d605d] bg-red-500 text-white p-2"
+        v-if="selected?.isEmergency || selected?.isReset"
+        class="text-xs bg-red-500 text-grey-100 p-1 uppercase"
       >
-        emergency
+        {{ selected.isEmergency ? "Emergency" : "Reset" }} proposal
       </span>
 
       <span v-else class="text-xs text-[#5d605d]">change</span>
@@ -40,7 +40,12 @@
             class="flex justify-between items-center button gap-12"
             @click="onSelect(opt)"
           >
-            {{ opt.label }}
+            <div class="flex flex-col">
+              <span>{{ opt.label }}</span>
+              <span class="text-xs text-grey-400">{{
+                opt.shortDescription
+              }}</span>
+            </div>
 
             <div v-for="token in opt.tokens" :key="token">
               <MIconPower v-if="token === MVotingTokens.Power" />
@@ -53,6 +58,9 @@
             class="flex justify-between items-center sub-menu"
             :class="{ 'fix-when-emergency': opt.isEmergency }"
           >
+            <li v-if="opt.submenuText" class="bg-red-700 p-4 text-xs">
+              {{ opt.submenuText }}
+            </li>
             <li v-for="child in opt.children" :key="child.value">
               <button
                 type="button"
@@ -60,7 +68,6 @@
                 @click="onSelect(child)"
               >
                 <span class="mr-8">{{ child.label }}</span>
-
                 <div class="flex">
                   <div v-for="token in child.tokens" :key="token">
                     <MIconPower v-if="token === MVotingTokens.Power" />
@@ -84,9 +91,12 @@ export interface OptionItem {
   value: string;
   label: string;
   component: any;
+  description: string;
+  shortDescription: string;
   tokens: string[];
   header?: string;
   isEmergency?: boolean;
+  isReset?: boolean;
   children?: Array<{
     value: string;
     label: string;
@@ -94,10 +104,12 @@ export interface OptionItem {
     component: any;
     tokens: string[];
   }>;
+  submenuText?: string;
 }
 
 export interface Props {
   options: Array<OptionItem>;
+  label: string;
 }
 
 const props = defineProps<Props>();
@@ -146,7 +158,7 @@ onClickOutside(target, onOut);
 }
 
 .sub-menu {
-  @apply bg-[#2a2d2a] absolute block text-white left-full -mt-10 w-max;
+  @apply bg-[#2a2d2a] absolute block text-white left-full -mt-10 w-max max-w-80;
 }
 
 .fix-when-emergency {

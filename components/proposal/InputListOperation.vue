@@ -1,17 +1,16 @@
 <template>
   <div class="flex-col gap-3">
-    <label>List</label>
-
-    <div class="block">
+    <div>
+      <label>List *</label>
       <SelectList v-model="list" :errors="props.modelValueErrors" />
     </div>
 
-    <div class="block w-full">
+    <div>
+      <label>Address *</label>
       <MInput
         v-model="address"
         class="input"
         type="text"
-        placeholder="Address"
         data-test="proposalValue2"
         :errors="props.modelValue2Errors"
         data-1p-ignore
