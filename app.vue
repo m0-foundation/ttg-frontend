@@ -27,15 +27,12 @@
 <script lang="ts" setup>
 import { UseWagmiPlugin } from "use-wagmi";
 import { storeToRefs } from "pinia";
-import { Hash } from "viem";
 import { Api } from "@/lib/api";
 import {
   watchProposalCreated,
   watchVoteCast,
   watchForExecutedResetProposal,
 } from "@/lib/watchers";
-
-import { MStandardGovernorValues, MGovernorValues } from "@/lib/api/types";
 
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();

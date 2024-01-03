@@ -32,6 +32,7 @@ const tableConfig = {
       id: "epoch",
       name: "Epoch",
       sort: true,
+      width: "100px",
     },
     {
       id: "proposal",
@@ -49,6 +50,7 @@ const tableConfig = {
       id: "action",
       name: "Action",
       sort: true,
+      width: "20%",
       formatter: (cell: string) =>
         html(
           `<span class="text-xs text-grey-400 whitespace-nowrap">${cell}</span>`
@@ -57,9 +59,9 @@ const tableConfig = {
 
     {
       id: "votingType",
-      name: "Tokens",
+      name: "Token",
       sort: true,
-      width: "10%",
+      width: "120px",
       formatter: (cell: string, row: any) => {
         const PowerIcon = useComponentToHtml(MIconPower, {
           class: "h-5 w-5 ml-1",
