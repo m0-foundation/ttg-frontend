@@ -1,15 +1,11 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
-import { useContractRead } from "use-wagmi";
+import { useContractRead, useAccount } from "use-wagmi";
 import { zeroTokenABI } from "@/lib/sdk";
 import { useSpogStore } from "@/stores/spog";
 
-export default (
-  userAccount:
-    | globalThis.Ref<undefined>
-    | globalThis.Ref<`0x${string}`>
-    | globalThis.Ref<`0x${string}` | undefined>
-) => {
+export default () => {
+  const { address, isConnected } = useAccount();
   const store = useSpogStore();
   const spog = storeToRefs(store);
 
@@ -17,8 +13,8 @@ export default (
     address: spog.contracts.value.zeroToken as Hash,
     abi: zeroTokenABI,
     functionName: "delegates",
-    args: [userAccount as Ref<Hash>],
-    enabled: !!userAccount.value,
+    args: [address as Ref<Hash>],
+    enabled: isConnected,
     watch: true,
     select: (data) => {
       console.log("delegates", data);

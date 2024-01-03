@@ -168,7 +168,7 @@ const { data: hasFinishedVoting } = useContractRead({
   functionName: "hasVotedOnAllProposals",
   args: [userAccount as Ref<Hash>, BigInt(spog.epoch?.current?.asNumber || 0)],
   watch: true,
-  enabled: !!userAccount.value,
+  enabled: isConnected,
 });
 
 async function onCastOptional(vote: number, proposalId: string) {

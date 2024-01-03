@@ -132,12 +132,11 @@
 import { useAccount, useDisconnect } from "use-wagmi";
 import { useMVotingPower } from "@/lib/hooks";
 
-const { address: userAccount, isConnected } = useAccount();
+const { isConnected } = useAccount();
 const { disconnect } = useDisconnect();
 const { isCorrectChain } = useCorrectChain();
 
-const { powerTokenVotingPower, zeroTokenVotingPower } =
-  useMVotingPower(userAccount);
+const { powerTokenVotingPower, zeroTokenVotingPower } = useMVotingPower();
 
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
