@@ -12,6 +12,12 @@ import {
 } from "@/lib/sdk";
 export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
+const batchConfig = {
+  batch: {
+    wait: 200, // this is an eprical value, tested and it seems like 200 miliseconds is good to run all requests from multicall
+  },
+};
+
 export class Api {
   context: ApiContext;
   registrar: Registrar;
@@ -21,7 +27,9 @@ export class Api {
   epoch: Epoch;
 
   constructor(rpcUrl: string, config: IApiConfig) {
-    const client = createPublicClient({ transport: http(rpcUrl) });
+    const client = createPublicClient({
+      transport: http(rpcUrl, batchConfig),
+    });
 
     this.context = new ApiContext(client, config);
 
@@ -31,7 +39,9 @@ export class Api {
   }
 
   setRpc(rpcUrl: string) {
-    this.context.client = createPublicClient({ transport: http(rpcUrl) });
+    this.context.client = createPublicClient({
+      transport: http(rpcUrl, batchConfig),
+    });
   }
 
   addConfig(config: Partial<IApiConfig>): void {
