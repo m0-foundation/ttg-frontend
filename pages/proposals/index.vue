@@ -166,8 +166,9 @@ const { data: hasFinishedVoting } = useContractRead({
   address: spog.contracts.standardGovernor as Hash,
   abi: standardGovernorABI,
   functionName: "hasVotedOnAllProposals",
-  args: [userAccount as Ref<Hash>, BigInt(spog.epoch.current.asNumber)],
+  args: [userAccount as Ref<Hash>, BigInt(spog.epoch?.current?.asNumber || 0)],
   watch: true,
+  enabled: !!userAccount.value,
 });
 
 async function onCastOptional(vote: number, proposalId: string) {

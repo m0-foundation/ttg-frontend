@@ -12,8 +12,6 @@ export default (
 ) => {
   const store = useSpogStore();
   const spog = storeToRefs(store);
-  // keep the reactivity alive
-  const account = ref(userAccount);
 
   const totalSupply = spog.tokens.value.zero!.totalSupply!.value;
 
@@ -21,7 +19,8 @@ export default (
     address: spog.contracts.value.zeroToken as Hash,
     abi: zeroTokenABI,
     functionName: "getVotes",
-    args: [account as Ref<Hash>],
+    args: [userAccount as Ref<Hash>],
+    enabled: !!userAccount.value,
     watch: true,
     select: (data) => {
       const votingPower = BigInt(data as string);

@@ -12,14 +12,13 @@ export default (
 ) => {
   const store = useSpogStore();
   const spog = storeToRefs(store);
-  // keep the reactive from the prop alive
-  const account = ref(userAccount);
 
   return useContractRead({
     address: spog.contracts.value.zeroToken as Hash,
     abi: zeroTokenABI,
     functionName: "delegates",
-    args: [account as Ref<Hash>],
+    args: [userAccount as Ref<Hash>],
+    enabled: !!userAccount.value,
     watch: true,
     select: (data) => {
       console.log("delegates", data);
