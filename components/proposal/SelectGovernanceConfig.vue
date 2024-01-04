@@ -1,5 +1,6 @@
 <template>
   <div>
+    <label>Configuration parameter *</label>
     <div v-if="customConfig" class="flex">
       <button
         class="input px-4 inline-flex items-center min-w-fit border border-e-0 border-gray-700 bg-gray-200 text-sm text-gray-500"
@@ -32,6 +33,16 @@
         {{ error.$message }}
       </p>
     </div>
+
+    <div
+      v-show="parameter?.description || parameter?.shortDescription"
+      class="bg-green-1000 flex flex-col gap-3 p-4 mt-2"
+    >
+      <span class="uppercase text-xxs">Parameter description</span>
+      <p class="font-inter">
+        {{ parameter?.description || parameter?.shortDescription }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -47,6 +58,7 @@ const props = defineProps<InputProps>();
 const emit = defineEmits(["update:modelValue"]);
 
 const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
+const parameter = ref();
 
 const hasErrors = computed(() => props.errors?.length);
 
@@ -82,6 +94,7 @@ const configParams = [
 ];
 
 function handleChangeList(e: any) {
+  parameter.value = e;
   if (e?.value?.value === "custom_parameter") {
     list.value = "";
     customConfig.value = true;

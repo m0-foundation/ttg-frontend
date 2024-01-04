@@ -1,20 +1,10 @@
 <template>
   <div class="w-full">
-    <div class="mb-6">
-      <div>
-        <label>Configuration parameter *</label>
-        <SelectProtocolConfig v-model="key" :errors="props.modelValueErrors" />
-      </div>
-      <div
-        v-show="key?.description || key?.shortDescription"
-        class="bg-green-1000 flex flex-col gap-3 p-4 mt-2"
-      >
-        <span class="uppercase text-xxs">Parameter description</span>
-        <p class="font-inter">
-          {{ key?.description || key?.shortDescription }}
-        </p>
-      </div>
-    </div>
+    <SelectProtocolConfig
+      v-model="key"
+      class="mb-6"
+      :errors="props.modelValueErrors"
+    />
 
     <div>
       <label for="protocol-config-input">Value *</label>
