@@ -14,9 +14,9 @@
     </div>
 
     <div>
-      <label for="protocol-config-input">Value *</label>
+      <label for="governance-config-input">Value *</label>
       <MInput
-        id="protocol-config-input"
+        id="governance-config-input"
         v-model="value"
         class="input"
         type="text"

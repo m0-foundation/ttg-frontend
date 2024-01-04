@@ -46,6 +46,7 @@
             :version="version"
             name="Executed"
             :show-arrow="true"
+            data-test="executed-badge"
           />
         </template>
         <template #content>

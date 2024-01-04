@@ -127,6 +127,11 @@ Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.wait(500);
 });
 
+Cypress.Commands.add("clickPreviewProposal", (quantity: number) => {
+  cy.get("[data-test='create-proposal-button-preview']").should("exist");
+  cy.get("[data-test='create-proposal-button-preview']").click();
+});
+
 Cypress.Commands.add("mineEpochs", (quantity: number) => {
   const _EPOCH_PERIOD = 50;
   const blocks = _EPOCH_PERIOD * quantity;

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="isOther" class="flex">
+    <div v-if="customConfig" class="flex">
       <button
         class="input px-4 inline-flex items-center min-w-fit border border-e-0 border-gray-700 bg-gray-200 text-sm text-gray-500"
         data-test="create-proposal-button-close-other-config"
-        @click="isOther = false"
+        @click="customConfig = false"
       >
         X
       </button>
@@ -13,7 +13,7 @@
         v-model="list"
         :class="{ input: true, error: hasErrors }"
         data-test="proposalValue"
-        placeholder="My other config"
+        placeholder="Custom parameter name"
         type="text"
       />
     </div>
@@ -22,6 +22,7 @@
       <MInputMultiSelect
         :options="configParams"
         label="Select configuration parameter"
+        data-test="protocolConfigSelect"
         @on-change="handleChangeList"
       />
     </div>
@@ -49,7 +50,7 @@ const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 
 const hasErrors = computed(() => props.errors?.length);
 
-const isOther = ref(false);
+const customConfig = ref(false);
 
 const configParams = [
   {
@@ -123,9 +124,9 @@ const configParams = [
 ];
 
 function handleChangeList(e: any) {
-  if (e.target?.value === "other") {
+  if (e?.value === "custom_parameter") {
     list.value = "";
-    isOther.value = true;
+    customConfig.value = true;
   } else {
     list.value = e;
   }

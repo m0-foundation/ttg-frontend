@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div v-if="key?.value">
+    <div>
       <label for="protocol-config-input">Value *</label>
       <MInput
         id="protocol-config-input"

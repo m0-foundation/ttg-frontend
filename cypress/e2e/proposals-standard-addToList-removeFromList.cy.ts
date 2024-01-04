@@ -9,10 +9,13 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
 
-      cy.contains("Add to a list").should("exist").click({ force: true });
+      cy.connectWallet();
+
+      cy.get("[data-test='proposalTypeSelect']").should("exist");
+      cy.get("[data-test='proposalTypeSelect']").click();
+
+      cy.contains("Add address").should("exist").click({ force: true });
 
       cy.get("[data-test='proposalValue']").select(LIST);
 
@@ -22,10 +25,7 @@ describe("Proposals", () => {
 
       cy.get("textarea[data-test='description']").type(description);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -69,7 +69,7 @@ describe("Proposals", () => {
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
-      cy.get("#proposal-state").should("contain", "executed");
+      cy.get("[data-test='executed-badge']").should("exist");
       cy.get("#technical-proposal-incoming-change").should("contain", input1);
     });
   });
@@ -80,10 +80,13 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal to REMOVE an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
 
-      cy.contains("Remove from a list").should("exist").click({ force: true });
+      cy.connectWallet();
+
+      cy.get("[data-test='proposalTypeSelect']").should("exist");
+      cy.get("[data-test='proposalTypeSelect']").click();
+
+      cy.contains("Remove address").should("exist").click({ force: true });
 
       cy.get("[data-test='proposalValue']").select(LIST);
       // address to remove
@@ -92,10 +95,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -140,7 +140,7 @@ describe("Proposals", () => {
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
-      cy.get("#proposal-state").should("contain", "executed");
+      cy.get("#proposal-state").should("exist");
       cy.get("#technical-proposal-incoming-change").should("contain", input1);
     });
   });

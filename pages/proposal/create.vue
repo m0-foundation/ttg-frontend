@@ -22,6 +22,7 @@
             <label for="proposal-type">Proposal type</label>
             <MInputMultiSelect
               :options="proposalTypes"
+              data-test="proposalTypeSelect"
               @on-change="onChangeProposalType"
             />
           </div>
@@ -109,7 +110,6 @@
                 placeholder="Title"
                 :errors="$validation.title.$errors"
                 class="font-inter"
-                @focus="generateTitle"
               />
             </div>
 
@@ -295,7 +295,6 @@ Two spaces at the end of a line produce a line break.
 Text attributes _italic_, **bold**
 
 Horizontal rule:
-
 ---
 
 Bullet lists nested within numbered list:
@@ -835,12 +834,6 @@ function buildCalldatasSpog(functionName: any, args: any) {
 function onBack() {
   isPreview.value = false;
   previewDescription.value = null;
-}
-
-function generateTitle() {
-  if (!selectedProposalType.value.label || !formData.proposalValue2) return;
-  formData.title = `${selectedProposalType.value.label} ${formData.proposalValue2} - ${formData.proposalValue} list`;
-  console.log("ASDASD", { selectedProposalType });
 }
 </script>
 

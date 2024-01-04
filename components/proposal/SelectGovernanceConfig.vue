@@ -22,6 +22,7 @@
       <MInputMultiSelect
         :options="configParams"
         label="Select configuration parameter"
+        data-test="governanceConfigSelect"
         @on-change="handleChangeList"
       />
     </div>

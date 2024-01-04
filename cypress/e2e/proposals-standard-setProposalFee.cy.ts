@@ -9,19 +9,22 @@ describe("Proposals", () => {
 
       cy.connectWallet();
 
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist");
+      cy.get("[data-test='proposalTypeSelect']").click();
 
-      cy.contains("Fee").click();
-      cy.contains("Change fee").click();
+      cy.contains("Update governance config").click();
 
-      cy.get("input[data-test='proposalValue']").type(input);
+      cy.get("[data-test='governanceConfigSelect']").should("exist");
+      cy.get("[data-test='governanceConfigSelect']").click();
+
+      cy.contains("Proposal Fee").click();
+
+      cy.get("input[data-test='proposalValue2']").type(input);
       cy.get("input[data-test='title']").type(description);
 
       cy.get("textarea[data-test='description']").type(description);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
