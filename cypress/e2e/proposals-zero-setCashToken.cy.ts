@@ -15,22 +15,23 @@ describe("Proposals", () => {
       description = `Change cash token to ${newCashTokenAddress} with fee to ${fee}`;
 
       cy.visit("http://localhost:3000/proposal/create");
-
       cy.connectWallet();
 
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Set Cash Token").click();
+      cy.contains("Update governance config").click();
 
-      cy.get("input[data-test='proposalValue']").type(newCashTokenAddress);
-      cy.get("input[data-test='proposalValue2']").type(fee);
+      cy.get("[data-test='governanceConfigSelect']").should("exist");
+      cy.get("[data-test='governanceConfigSelect']").click();
+
+      cy.get("[data-test='setCashToken']").click();
+
+      cy.get("input[data-test='proposalValue2']").type(newCashTokenAddress);
 
       cy.get("input[data-test='title']").type(title);
       cy.get("textarea[data-test='description']").type(description);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {

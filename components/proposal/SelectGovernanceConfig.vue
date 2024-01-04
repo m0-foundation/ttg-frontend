@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="isOther" class="flex">
+    <div v-if="customConfig" class="flex">
       <button
         class="input px-4 inline-flex items-center min-w-fit border border-e-0 border-gray-700 bg-gray-200 text-sm text-gray-500"
         data-test="create-proposal-button-close-other-config"
-        @click="isOther = false"
+        @click="customConfig = false"
       >
         X
       </button>
@@ -13,7 +13,7 @@
         v-model="list"
         :class="{ input: true, error: hasErrors }"
         data-test="proposalValue"
-        placeholder="My other config"
+        placeholder="Custom parameter name"
         type="text"
       />
     </div>
@@ -27,7 +27,7 @@
       />
     </div>
 
-    <div class="text-red-500 text-xs my-2 h-4">
+    <div v-if="props.errors?.length > 0" class="text-red-500 text-xs my-2 h-4">
       <p v-for="error of props.errors" :key="error.$uid">
         {{ error.$message }}
       </p>
@@ -50,37 +50,41 @@ const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 
 const hasErrors = computed(() => props.errors?.length);
 
-const isOther = ref(false);
+const customConfig = ref(false);
 
 const configParams = [
   {
     value: "setProposalFee",
     label: "Proposal Fee",
     shortDescription: "Update the fee charged for submitting proposals.",
+    id: "setProposalFee",
   },
   {
     value: "setCashToken",
     label: "Cash Token",
     shortDescription: "Update the currency used for payment in auctions.",
+    id: "setCashToken",
   },
   {
     value: "setZeroProposalThresholdRatio",
     label: "ZERO Threshold",
     shortDescription:
       "Update the number of yes votes required to pass Zero proposals.",
+    id: "setZeroProposalThresholdRatio",
   },
   {
     value: "setEmergencyProposalThresholdRatio",
     label: "Power Threshold",
     shortDescription:
       "Update the number of yes votes required to pass Power proposals.",
+    id: "setEmergencyProposalThresholdRatio",
   },
 ];
 
 function handleChangeList(e: any) {
-  if (e.target?.value === "other") {
+  if (e?.value?.value === "custom_parameter") {
     list.value = "";
-    isOther.value = true;
+    customConfig.value = true;
   } else {
     list.value = e;
   }

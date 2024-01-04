@@ -1,16 +1,23 @@
 <template>
   <div class="w-full">
-    <div>
-      <label>Configuration parameter *</label>
-      <SelectGovernanceConfig v-model="key" :errors="props.modelValueErrors" />
-    </div>
+    <div class="mb-6">
+      <div>
+        <label>Configuration parameter *</label>
+        <SelectGovernanceConfig
+          v-model="key"
+          :errors="props.modelValueErrors"
+        />
+      </div>
 
-    <div
-      v-show="key?.description || key?.shortDescription"
-      class="bg-green-1000 flex flex-col gap-3 p-4 mb-6"
-    >
-      <span class="uppercase text-xxs">Parameter description</span>
-      <p class="font-inter">{{ key?.description || key?.shortDescription }}</p>
+      <div
+        v-show="key?.description || key?.shortDescription"
+        class="bg-green-1000 flex flex-col gap-3 p-4 mt-2"
+      >
+        <span class="uppercase text-xxs">Parameter description</span>
+        <p class="font-inter">
+          {{ key?.description || key?.shortDescription }}
+        </p>
+      </div>
     </div>
 
     <div>

@@ -525,6 +525,7 @@ const proposalTypes = [
     isReset: true,
     submenuText:
       "Reset resets... I want a hero: an uncommon want, When every year and month sends forth a new one.",
+    id: "resetMenu",
     children: [
       {
         value: "resetToPowerHolders",
@@ -535,6 +536,7 @@ const proposalTypes = [
         governor: spog.contracts.zeroGovernor,
         abi: zeroGovernorABI,
         hasToPayFee: false,
+        id: "resetToPowerHolders",
       },
 
       {
@@ -546,6 +548,7 @@ const proposalTypes = [
         governor: spog.contracts.zeroGovernor,
         abi: zeroGovernorABI,
         hasToPayFee: false,
+        id: "resetToZeroHolders",
       },
     ],
   },

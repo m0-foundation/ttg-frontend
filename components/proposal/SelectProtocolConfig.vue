@@ -124,11 +124,11 @@ const configParams = [
 ];
 
 function handleChangeList(e: any) {
-  if (e?.value === "custom_parameter") {
+  if (e?.value.value === "custom_parameter") {
     list.value = "";
     customConfig.value = true;
   } else {
-    list.value = e.value;
+    list.value = e;
   }
 }
 </script>

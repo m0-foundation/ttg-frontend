@@ -22,21 +22,19 @@ describe("Proposals", () => {
       cy.mineEpochs(2);
 
       cy.visit("http://localhost:3000/proposal/create");
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.connectWallet();
 
-      cy.contains("Reset").click();
-      cy.contains("Reset to Power holders").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
+
+      cy.get("[data-test='resetMenu']").click();
+      cy.get("[data-test='resetToPowerHolders']").click();
 
       cy.get("input[data-test='proposalValue']").should("not.exist");
 
       cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
