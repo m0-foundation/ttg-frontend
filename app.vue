@@ -31,8 +31,6 @@ import {
   watchForExecutedResetProposal,
 } from "@/lib/watchers";
 
-console.log("Global middleware");
-
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
 
@@ -73,8 +71,6 @@ const trackError = (error: Error, label: string) =>
   console.error(label, { error });
 
 onMounted(async () => {
-  console.log("mounted");
-
   await onSetup(rpc.value);
 
   // this must go first
