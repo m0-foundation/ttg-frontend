@@ -67,7 +67,7 @@ describe("Proposals", () => {
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
-      cy.get("#proposal-state").should("contain", "executed");
+      cy.get("[data-test='executed-badge']").should("exist");
     });
   });
 });

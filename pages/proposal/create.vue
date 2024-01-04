@@ -64,7 +64,7 @@
                   <p class="uppercase text-xxs">Standard Proposal</p>
                 </div>
                 <div class="flex gap-4">
-                  <MIconPower class="w-6 h-6" />
+                  <MIconZero class="w-6 h-6" />
                   <div>
                     <span class="font-inter text-grey-100">
                       Only holders who possess active

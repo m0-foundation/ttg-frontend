@@ -95,11 +95,11 @@ const configParams = [
 
 function handleChangeList(e: any) {
   parameter.value = e;
-  if (e?.value?.value === "custom_parameter") {
+  if (e?.value === "custom_parameter") {
     list.value = "";
     customConfig.value = true;
   } else {
-    list.value = e;
+    list.value = e?.value;
   }
 }
 </script>
