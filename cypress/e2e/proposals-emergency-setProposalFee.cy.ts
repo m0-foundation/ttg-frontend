@@ -6,22 +6,23 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
-
       cy.connectWallet();
 
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.get("[data-test='proposalTypeSelect']")
+        .should("exist")
+        .click({ force: true });
 
-      cy.contains("Emergency").click();
-      cy.contains("Emergency Change fee").click();
+      cy.contains("Emergency").should("exist").click({ force: true });
+
+      cy.get("[data-test='emergencySetStandardProposalFee']").click({
+        force: true,
+      });
 
       cy.get("input[data-test='proposalValue']").type(input);
       cy.get("input[data-test='title']").type(description);
-
       cy.get("textarea[data-test='description']").type(description);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {

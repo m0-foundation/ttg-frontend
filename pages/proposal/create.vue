@@ -469,6 +469,7 @@ const proposalTypes = [
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
+        id: "emergencyAddToList",
       },
       {
         value: "removeFromList",
@@ -479,6 +480,7 @@ const proposalTypes = [
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
+        id: "emergencyRemoveFromList",
       },
 
       {
@@ -490,6 +492,7 @@ const proposalTypes = [
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
+        id: "emergencyRemoveFromAndAddToList",
       },
       {
         value: "setStandardProposalFee",
@@ -500,6 +503,7 @@ const proposalTypes = [
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
+        id: "emergencySetStandardProposalFee",
       },
       {
         value: "setKey",
@@ -510,6 +514,7 @@ const proposalTypes = [
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
+        id: "emergencySetKey",
       },
     ],
   },

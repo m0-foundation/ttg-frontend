@@ -65,6 +65,7 @@
               <button
                 type="button"
                 class="flex justify-between items-center button sub-button"
+                :data-test="child.id"
                 @click="onSelect(child)"
               >
                 <span class="mr-8">{{ child.label }}</span>
@@ -103,6 +104,7 @@ export interface OptionItem {
     isEmergency: boolean;
     component: any;
     tokens: string[];
+    id: string;
   }>;
   submenuText?: string;
 }

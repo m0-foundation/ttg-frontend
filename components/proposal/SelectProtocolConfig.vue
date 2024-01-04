@@ -128,7 +128,7 @@ function handleChangeList(e: any) {
     list.value = "";
     customConfig.value = true;
   } else {
-    list.value = e;
+    list.value = e.value;
   }
 }
 </script>
