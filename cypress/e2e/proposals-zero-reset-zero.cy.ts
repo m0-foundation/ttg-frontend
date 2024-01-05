@@ -12,7 +12,7 @@ describe("Proposals", () => {
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='resetMenu']").click();
+      cy.get("[data-test='menuReset']").click();
       cy.get("[data-test='resetToZeroHolders']").click();
 
       cy.get("input[data-test='proposalValue']").should("not.exist");

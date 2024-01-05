@@ -9,11 +9,9 @@ describe("Proposals", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']")
-        .should("exist")
-        .click({ force: true });
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Emergency").should("exist").click({ force: true });
+      cy.get("[data-test='menuEmergency']").click();
 
       cy.get("[data-test='emergencySetKey']").click({ force: true });
 

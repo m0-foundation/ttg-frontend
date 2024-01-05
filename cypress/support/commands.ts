@@ -128,8 +128,9 @@ Cypress.Commands.add("executeOneProposal", (description: string) => {
 });
 
 Cypress.Commands.add("clickPreviewProposal", (quantity: number) => {
-  cy.get("[data-test='create-proposal-button-preview']").should("exist");
-  cy.get("[data-test='create-proposal-button-preview']").click();
+  cy.get("[data-test='create-proposal-button-preview']")
+    .should("exist")
+    .click();
 });
 
 Cypress.Commands.add("mineEpochs", (quantity: number) => {

@@ -408,6 +408,7 @@ const proposalTypes = [
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "addToList",
   },
   {
     value: "removeFromList",
@@ -417,6 +418,7 @@ const proposalTypes = [
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "removeFromList",
   },
 
   {
@@ -427,6 +429,7 @@ const proposalTypes = [
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "removeFromAndAddToList",
   },
 
   {
@@ -437,6 +440,7 @@ const proposalTypes = [
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "protocolSetKey",
   },
 
   {
@@ -451,11 +455,13 @@ const proposalTypes = [
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "governanceSetKey",
   },
 
   {
     value: "emergency",
     label: "Emergency",
+    id: "menuEmergency",
     isEmergency: true,
     submenuText:
       "An emergency proposal requires a simple Yes quorum and will be executable immediately when quorum is reached. ",
@@ -525,7 +531,7 @@ const proposalTypes = [
     isReset: true,
     submenuText:
       "Reset resets... I want a hero: an uncommon want, When every year and month sends forth a new one.",
-    id: "resetMenu",
+    id: "menuReset",
     children: [
       {
         value: "resetToPowerHolders",

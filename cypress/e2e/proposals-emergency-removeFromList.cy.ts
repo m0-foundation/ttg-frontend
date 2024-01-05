@@ -9,13 +9,10 @@ describe("Proposals", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']")
-        .should("exist")
-        .click({ force: true });
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Emergency").should("exist").click({ force: true });
-
-      cy.get("[data-test='emergencyAddToList']").click({ force: true });
+      cy.get("[data-test='menuEmergency']").click();
+      cy.get("[data-test='emergencyAddToList']").click();
 
       cy.get("[data-test='proposalValue']").select(input1);
 
@@ -97,10 +94,9 @@ describe("Proposals", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Emergency").should("exist").click({ force: true });
+      cy.get("[data-test='menuEmergency']").click();
 
       cy.get("[data-test='emergencyRemoveFromList']").click({ force: true });
 

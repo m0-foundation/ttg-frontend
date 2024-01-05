@@ -12,10 +12,9 @@ describe("Proposals", () => {
 
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Add address").should("exist").click({ force: true });
+      cy.get("[data-test='addToList']").click();
 
       cy.get("[data-test='proposalValue']").select(LIST);
 
@@ -83,10 +82,9 @@ describe("Proposals", () => {
 
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Update address").click({ force: true });
+      cy.get("[data-test='removeFromAndAddToList']").click();
 
       // list address
       cy.get("[data-test='proposalValue']").select(LIST);

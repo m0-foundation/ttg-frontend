@@ -9,10 +9,9 @@ describe("Proposals", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Update protocol config").click();
+      cy.get("[data-test='protocolSetKey']").click();
 
       cy.get("[data-test='protocolConfigSelect']").should("exist");
       cy.get("[data-test='protocolConfigSelect']").click();

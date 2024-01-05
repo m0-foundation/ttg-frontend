@@ -14,10 +14,9 @@ describe("Proposals", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Add address").should("exist").click({ force: true });
+      cy.get("[data-test='addToList']").click();
 
       cy.get("[data-test='proposalValue']").select(LIST1);
 
@@ -40,10 +39,9 @@ describe("Proposals", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Add address").should("exist").click({ force: true });
+      cy.get("[data-test='addToList']").click();
 
       cy.get("[data-test='proposalValue']").select(LIST2);
 
@@ -66,10 +64,9 @@ describe("Proposals", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Add address").should("exist").click({ force: true });
+      cy.get("[data-test='addToList']").click();
 
       cy.get("[data-test='proposalValue']").select(LIST3);
 
@@ -147,8 +144,8 @@ describe("Proposals", () => {
 
           const should = [
             [LIST1.toLowerCase(), input1.toLowerCase()],
-            [LIST1.toLowerCase(), input1.toLowerCase()],
             [LIST2.toLowerCase(), input1.toLowerCase()],
+            [LIST3.toLowerCase(), input1.toLowerCase()],
           ].sort();
 
           expect(mapped).to.deep.equal(should);

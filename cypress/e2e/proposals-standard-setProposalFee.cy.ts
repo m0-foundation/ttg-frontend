@@ -9,10 +9,9 @@ describe("Proposals", () => {
 
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Update governance config").click();
+      cy.get("[data-test='governanceSetKey']").click();
 
       cy.get("[data-test='governanceConfigSelect']").should("exist");
       cy.get("[data-test='governanceConfigSelect']").click();

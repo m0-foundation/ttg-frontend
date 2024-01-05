@@ -10,10 +10,9 @@ describe("Proposals", () => {
 
       cy.connectWallet();
 
-      cy.get("[data-test='proposalTypeSelect']").should("exist");
-      cy.get("[data-test='proposalTypeSelect']").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Update protocol config").click();
+      cy.get("[data-test='setKey']").click();
 
       cy.get("[data-test='protocolConfigSelect']").should("exist");
       cy.get("[data-test='protocolConfigSelect']").click();
@@ -22,8 +21,8 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue']").type(key);
       cy.get("input[data-test='proposalValue2']").type(value);
-      cy.get("textarea[data-test='description']").type(description);
       cy.get("input[data-test='title']").type(description);
+      cy.get("textarea[data-test='description']").type(description);
 
       cy.clickPreviewProposal();
 
