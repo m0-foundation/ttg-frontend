@@ -100,7 +100,8 @@ const configParams = [
   {
     value: "mint_ttl",
     label: "Mint TTL",
-    shortDescription: "Placeholder",
+    shortDescription:
+      "Update the amount of time that mint request can remain live before it can no longer be executed",
   },
   {
     value: "mint_ratio",
