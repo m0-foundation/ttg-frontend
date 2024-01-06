@@ -464,7 +464,7 @@ const proposalTypes = [
     id: "menuEmergency",
     isEmergency: true,
     submenuText:
-      "An emergency proposal requires a simple Yes quorum and will be executable immediately when quorum is reached. ",
+      "Emergency proposals it requires a POWER Threshold and is immediately votable and subsequently immediately executable rather than only being votable and executable in the future epochs.",
     children: [
       {
         value: "addToList",
@@ -530,7 +530,7 @@ const proposalTypes = [
     label: "Reset",
     isReset: true,
     submenuText:
-      "Reset resets... I want a hero: an uncommon want, When every year and month sends forth a new one.",
+      "The Reset proposals allows a yes threshold of ZERO holders to change the current governor of the system to a new version with a new POWER token.",
     id: "menuReset",
     children: [
       {
