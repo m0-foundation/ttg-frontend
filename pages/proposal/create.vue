@@ -49,7 +49,10 @@
                   </div>
                 </div>
 
-                <div class="flex gap-4 mt-3">
+                <div
+                  v-if="selectedProposalType?.hasToPayFee"
+                  class="flex gap-4 mt-3"
+                >
                   <img src="/img/vote.svg" class="w-[24px] h-[24px]" alt="" />
                   <div>
                     <span class="font-inter text-grey-100"
