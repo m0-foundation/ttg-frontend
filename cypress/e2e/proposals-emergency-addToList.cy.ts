@@ -15,8 +15,9 @@ describe("Proposals", () => {
       cy.get("[data-test='menuEmergency']").click();
       cy.get("[data-test='emergencyAddToList']").click({ force: true });
 
-      cy.get("[data-test='proposalValue']").select(input1);
-      // address to append
+      cy.get("[data-test='listSelect']").click();
+      cy.get(`[data-test='list_${input1}']`).click();
+
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);

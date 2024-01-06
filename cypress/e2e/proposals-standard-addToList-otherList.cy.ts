@@ -15,8 +15,9 @@ describe("Proposals", () => {
 
       cy.get("[data-test='addToList']").click();
 
-      // list address
-      cy.get("[data-test='proposalValue']").select("Other list");
+      cy.get("[data-test='listSelect']").click();
+      cy.get("[data-test='list_custom']").click();
+
       cy.get("input[data-test='proposalValue']").type(LIST);
       // address to append
       cy.get("input[data-test='proposalValue2']").type(input1);
@@ -85,7 +86,9 @@ describe("Proposals", () => {
 
       cy.get("[data-test='removeFromList']").click();
 
-      cy.get("[data-test='proposalValue']").select("Other list");
+      cy.get("[data-test='listSelect']").click();
+      cy.get("[data-test='list_custom']").click();
+
       cy.get("input[data-test='proposalValue']").type(LIST);
       // address to remove
       cy.get("input[data-test='proposalValue2']").type(input1);

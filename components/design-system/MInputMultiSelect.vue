@@ -5,7 +5,7 @@
       class="bg-transparent border border-1-white text-white py-2 px-4 inline-flex justify-between w-full items-center"
       @click="onOpen"
     >
-      {{ selected?.label || props.label || "Select proposal type" }}
+      {{ selected?.label || props.label || "Select" }}
       <span
         v-if="selected?.isEmergency || selected?.isReset"
         class="text-xs bg-red-500 text-grey-100 p-1 uppercase"
@@ -16,7 +16,12 @@
       <span v-else class="text-xs text-[#5d605d]">change</span>
     </button>
     <ul v-show="isMenuOpen" class="absolute z-50 text-white pt-4 bg-grey-600">
-      <li v-for="opt in options" :key="opt.value" class="" :data-test="opt.id">
+      <li
+        v-for="opt in options"
+        :key="opt.value"
+        :data-test="opt.id"
+        class="min-w-[220px]"
+      >
         <div
           v-show="opt.header"
           class="uppercase text-xs text-grey-400 px-4 py-2"

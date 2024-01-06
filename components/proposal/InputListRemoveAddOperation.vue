@@ -2,7 +2,11 @@
   <div>
     <div>
       <label>List</label>
-      <SelectList v-model="list" :errors="props.modelValueErrors" />
+      <ProposalSelectList
+        v-model="list"
+        data-test="listSelect"
+        :errors="props.modelValueErrors"
+      />
     </div>
 
     <div>

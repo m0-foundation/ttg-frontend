@@ -2,7 +2,11 @@
   <div class="flex-col gap-3">
     <div>
       <label>List *</label>
-      <SelectList v-model="list" :errors="props.modelValueErrors" />
+      <ProposalSelectList
+        v-model="list"
+        data-test="listSelect"
+        :errors="props.modelValueErrors"
+      />
     </div>
 
     <div>
@@ -22,8 +26,6 @@
 <script setup lang="ts">
 import { ErrorObject } from "@vuelidate/core";
 
-const options = ["minters", "validators", "earners"];
-
 export interface InputProps {
   modelValue: string;
   modelValue2: string;
@@ -36,17 +38,6 @@ const emit = defineEmits(["update:modelValue", "update:modelValue2"]);
 
 const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const address = useVModelWrapper<InputProps>(props, emit, "modelValue2");
-
-const hasErrors = computed(() => props.modelValueErrors?.length);
-
-const isOtherList = ref(false);
-
-function handleChangeList(e: any) {
-  if (e.target.value === "otherList") {
-    list.value = "";
-    isOtherList.value = true;
-  }
-}
 </script>
 
 <style>

@@ -1,9 +1,10 @@
 describe("Proposals", () => {
+  const LIST = "minters";
   let proposalUrl = "";
+
   describe("Append an Address to the list", () => {
-    const input1 = "minters";
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-    const description = `Add ${input2} to list ${input1}`;
+    const description = `Add ${input2} to list ${LIST}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
@@ -14,9 +15,9 @@ describe("Proposals", () => {
       cy.get("[data-test='menuEmergency']").click();
       cy.get("[data-test='emergencyAddToList']").click();
 
-      cy.get("[data-test='proposalValue']").select(input1);
+      cy.get("[data-test='listSelect']").click();
+      cy.get(`[data-test='list_${LIST}']`).click();
 
-      // address to append
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
@@ -46,7 +47,7 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", LIST);
       cy.get("#technical-proposal-incoming-change").should("contain", input2);
 
       cy.url().then((url) => {
@@ -86,9 +87,8 @@ describe("Proposals", () => {
   });
 
   describe("Emergency Remove the Address from the list", () => {
-    const input1 = "minters";
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-    const description = `Emergency Remove ${input2} from list ${input1}`;
+    const description = `Emergency Remove ${input2} from list ${LIST}`;
 
     it("I should be able to CREATE a proposal to REMOVE an address from a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
@@ -100,8 +100,9 @@ describe("Proposals", () => {
 
       cy.get("[data-test='emergencyRemoveFromList']").click({ force: true });
 
-      cy.get("[data-test='proposalValue']").select(input1);
-      // address to remove
+      cy.get("[data-test='listSelect']").click();
+      cy.get(`[data-test='list_${LIST}']`).click();
+
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
@@ -131,7 +132,7 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", LIST);
       cy.get("#technical-proposal-incoming-change").should("contain", input2);
 
       cy.url().then((url) => {
