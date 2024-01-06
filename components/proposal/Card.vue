@@ -146,7 +146,7 @@ const emit = defineEmits<{
 
 const apiStore = useApiClientStore();
 
-const { address: userAccount, isDisconnected } = useAccount();
+const { address: userAccount, isConnected, isDisconnected } = useAccount();
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
 const isVoteSelected = ref(false);
@@ -193,10 +193,11 @@ const { data: hasVoted } = useContractRead({
   functionName: "hasVoted",
   args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
   watch: true,
+  enabled: isConnected,
 });
 
 const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
-  useMVotingPower(userAccount);
+  useMVotingPower();
 
 const canVote = computed(() => {
   if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {

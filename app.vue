@@ -11,23 +11,19 @@
       <Link href="/favicon.jpg" rel="apple-touch-icon" />
     </Head>
 
-    <NuxtLayout>
-      <Suspense>
-        <template #default>
-          <NuxtPage />
-        </template>
-        <template #fallback>
-          <div>Loading...</div>
-        </template>
-      </Suspense>
-    </NuxtLayout>
+    <div v-if="isLoading" class="flex h-screen">
+      <div class="m-auto inline-flex">
+        <div>Loading</div>
+        <div class="loader-dots"></div>
+      </div>
+    </div>
+    <NuxtLayout v-else />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { UseWagmiPlugin } from "use-wagmi";
 import { storeToRefs } from "pinia";
-import { Hash } from "viem";
 import { Api } from "@/lib/api";
 import {
   watchProposalCreated,
@@ -35,13 +31,13 @@ import {
   watchForExecutedResetProposal,
 } from "@/lib/watchers";
 
-import { MStandardGovernorValues, MGovernorValues } from "@/lib/api/types";
-
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
 
 const apiStore = useApiClientStore();
 const spog = useSpogStore();
+const proposalStore = useProposalsStore();
+const votes = useVotesStore();
 
 const { rpc } = storeToRefs(apiStore);
 const isLoading = ref(true);
@@ -71,14 +67,11 @@ async function onSetup(rpc: string) {
   return api;
 }
 
-await onSetup(rpc.value).then(async () => {
-  isLoading.value = true;
-  const proposalStore = useProposalsStore();
-  const votes = useVotesStore();
+const trackError = (error: Error, label: string) =>
+  console.error(label, { error });
 
-  const trackError = (error: Error, label: string) => {
-    console.error(label, { error });
-  };
+onMounted(async () => {
+  await onSetup(rpc.value);
 
   // this must go first
   await spog
@@ -114,3 +107,22 @@ watch(
   { deep: true }
 );
 </script>
+
+<style>
+.loader-dots {
+  width: 18px;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side, #fff 90%, #0000) 0 /
+    calc(100% / 3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: l1 1s steps(4) infinite;
+
+  margin-top: 10px;
+  margin-left: 2px;
+}
+@keyframes l1 {
+  to {
+    clip-path: inset(0 -34% 0 0);
+  }
+}
+</style>

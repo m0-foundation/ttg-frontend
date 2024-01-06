@@ -4,7 +4,7 @@
     :class="[{ active: name === version }, 'item']"
     class="status-button group"
   >
-    {{ name }}
+    {{ name.toLowerCase() }}
 
     <svg
       v-if="showArrow"

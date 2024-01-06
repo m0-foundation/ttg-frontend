@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6">
-    <NuxtLink to="/">
+    <NuxtLink to="/proposals">
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
     <span class="lg:hidden">Gov</span>
@@ -132,12 +132,11 @@
 import { useAccount, useDisconnect } from "use-wagmi";
 import { useMVotingPower } from "@/lib/hooks";
 
-const { address: userAccount, isConnected } = useAccount();
+const { isConnected } = useAccount();
 const { disconnect } = useDisconnect();
 const { isCorrectChain } = useCorrectChain();
 
-const { powerTokenVotingPower, zeroTokenVotingPower } =
-  useMVotingPower(userAccount);
+const { powerTokenVotingPower, zeroTokenVotingPower } = useMVotingPower();
 
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
