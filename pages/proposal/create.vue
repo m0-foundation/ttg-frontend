@@ -13,50 +13,76 @@
         <div v-show="!isPreview">
           <h1>Create a proposal</h1>
 
-          <div class="mb-6">
+          <div class="create-steps">
+            <div class="number">[1]</div>
+            <span>Define the action to be executed if proposal succeeds</span>
+          </div>
+
+          <div>
             <label for="proposal-type">Proposal type</label>
             <MInputMultiSelect
               :options="proposalTypes"
+              data-test="proposalTypeSelect"
               @on-change="onChangeProposalType"
             />
           </div>
 
-          <div :class="{ disabled: selectedProposalType === undefined }">
-            <div v-show="formData.proposalType" class="mb-6">
-              <div class="gap-4 flex my-4">
-                <div v-for="token in selectedProposalType?.tokens" :key="token">
-                  <div
-                    v-if="token === MVotingTokens.Power"
-                    class="p-4 bg-green-900"
-                  >
-                    <div class="flex items-center gap-2 mb-2">
-                      <p class="uppercase text-xs">Vote type</p>
-                      <MIconPower class="w-6 h-6" />
-                    </div>
-                    Only holders who possess active
-                    <u>{{ MVotingTokens.Power }} tokens</u> will be eligible to
-                    participate in voting for or against the selected proposal
-                    type.
-                  </div>
+          <div class="gap-4 flex mt-2 mb-4">
+            <div v-for="token in selectedProposalType?.tokens" :key="token">
+              <div
+                v-if="token === MVotingTokens.Power"
+                class="p-4 bg-green-900"
+              >
+                <div class="mb-2">
+                  <p class="uppercase text-xxs">Standard Proposal</p>
+                </div>
 
-                  <div
-                    v-if="token === MVotingTokens.Zero"
-                    class="p-4 bg-green-900"
-                  >
-                    <div class="flex items-center gap-2 mb-2">
-                      <p class="uppercase text-xs">Vote type</p>
-                      <MIconZero class="w-6 h-6" />
-                    </div>
-                    Only holders who possess active
-                    <u>{{ MVotingTokens.Zero }} tokens</u> will be eligible to
-                    participate in voting for or against the selected proposal
-                    type.
+                <div class="flex gap-4">
+                  <MIconPower class="w-[24px] h-[24px]" />
+                  <div>
+                    <span class="font-inter text-grey-100">
+                      Only holders who possess active
+                      <u>{{ MVotingTokens.Power }} tokens</u> will be eligible
+                      to participate in voting for or against the selected
+                      proposal type.
+                    </span>
+                  </div>
+                </div>
+
+                <div
+                  v-if="selectedProposalType?.hasToPayFee"
+                  class="flex gap-4 mt-3"
+                >
+                  <img src="/img/vote.svg" class="w-[24px] h-[24px]" alt="" />
+                  <div>
+                    <span class="font-inter text-grey-100"
+                      >Simple majority wins</span
+                    >
                   </div>
                 </div>
               </div>
 
-              <label for="type-value">{{ selectedProposalType?.label }}</label>
+              <div v-if="token === MVotingTokens.Zero" class="p-4 bg-green-900">
+                <div class="mb-2">
+                  <p class="uppercase text-xxs">Standard Proposal</p>
+                </div>
+                <div class="flex gap-4">
+                  <MIconZero class="w-6 h-6" />
+                  <div>
+                    <span class="font-inter text-grey-100">
+                      Only holders who possess active
+                      <u>{{ MVotingTokens.Zero }} tokens</u> will be eligible to
+                      participate in voting for or against the selected proposal
+                      type.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <div :class="{ disabled: selectedProposalType === undefined }">
+            <div v-show="formData.proposalType">
               <component
                 :is="selectedProposalType.component"
                 v-if="selectedProposalType"
@@ -68,25 +94,35 @@
                 :model-value3-errors="$validation.proposalValue3?.$errors"
                 :placeholder="selectedProposalType.placeholder"
                 :current-value="currentValue"
+                :selected-proposal-type="selectedProposalType"
               />
             </div>
 
+            <div class="create-steps">
+              <div class="number">[2]</div>
+              <span>Name your proposal and add description</span>
+            </div>
+
             <div class="mb-6">
-              <label for="type-value">Title*</label>
+              <label for="title-input">Title*</label>
               <MInput
+                id="title-input"
                 v-model="formData.title"
                 data-test="title"
                 type="text"
                 placeholder="Title"
                 :errors="$validation.title.$errors"
+                class="font-inter"
               />
             </div>
 
             <div class="mb-6">
               <div class="flex justify-between mb-2">
                 <label for="description">Description*</label>
-                <div class="text-sm text-gray-400 flex">
-                  <img src="/img/icon-markdown.svg" class="h-6 mx-2" />
+                <div
+                  class="text-sm text-grey-400 flex items-center gap-1 font-inter"
+                >
+                  <img src="/img/icon-markdown.svg" class="h-[14px]" />
                   Markdown supported
                 </div>
               </div>
@@ -96,7 +132,7 @@
                 data-test="description"
                 name="description"
                 :errors="$validation.description.$errors"
-                class="h-80"
+                class="h-80 font-inter"
                 :placeholder="descriptionPlaceHolder"
               />
             </div>
@@ -109,6 +145,7 @@
                 type="text"
                 placeholder="https://"
                 data-test="create-proposal-input-url-ipfs"
+                class="font-inter"
               />
             </div>
 
@@ -120,6 +157,7 @@
                 type="text"
                 placeholder="https://"
                 data-test="create-proposal-input-url-discussion"
+                class="font-inter"
               />
             </div>
           </div>
@@ -134,9 +172,9 @@
         </div>
       </div>
 
-      <div class="flex justify-end">
+      <div class="flex justify-end font-inter">
         <div class="flex items-center gap-2 text-lg">
-          proposal fee:
+          Submission tax:
           <div v-if="hasToPayFee" class="flex items-center gap-2">
             {{ spogValuesFormatted.setProposalFee }}
             <MIconWeth />
@@ -147,7 +185,7 @@
           </div>
         </div>
       </div>
-      <p class="text-grey-400 text-xs flex justify-end">
+      <p class="text-grey-400 text-xs flex justify-end font-inter">
         You will be prompted to pay the tax for submitting the proposal.
       </p>
 
@@ -173,7 +211,7 @@
           type="button"
           data-test="create-proposal-button-preview"
           @click="onPreview"
-          >Preview proposal</MButton
+          >Preview and submit</MButton
         >
       </div>
 
@@ -183,37 +221,6 @@
       >
         Please connect wallet
       </p>
-
-      <hr class="my-12" />
-
-      <div id="info-text" class="mb-6">
-        <h2 class="text-white">
-          What is the standard for Governor proposal descriptions?
-        </h2>
-        <div class="text-sm text-grey-400">
-          <p>
-            Ever since Governor proposals have had an on-chain, human-readable
-            description field. Governor front ends like Tally, Compound and
-            others follow this de-facto standard:
-          </p>
-          <ul>
-            <li>• Proposal descriptions should be markdown text</li>
-            <li>
-              • The first line of the description, regardless of format, is the
-              title
-            </li>
-            <li>
-              • Everything after the first newline is the body of the proposal.
-              Frontends should renderer it as markdown
-            </li>
-          </ul>
-          <p>
-            If a proposal description does not follow this standard, Tally's
-            frontend will make a best-effort to render it, but it might look
-            weird.
-          </p>
-        </div>
-      </div>
     </form>
   </div>
 </template>
@@ -246,6 +253,7 @@ import ProposalInputListOperation from "@/components/proposal/InputListOperation
 import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
 import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
+import ProposalInputGovernanceConfigOperation from "@/components/proposal/InputGovernanceConfigOperation.vue";
 import ProposalInputAddressFee from "@/components/proposal/InputAddressFee.vue";
 import ProposalInputFee from "@/components/proposal/InputFee.vue";
 
@@ -283,21 +291,20 @@ const formData = reactive({
   discussionURL: null,
 });
 
-const descriptionPlaceHolder = `## Heading2
+const descriptionPlaceHolder = ` Paragraphs are separated by a blank line.
 
-### Heading3
+Two spaces at the end of a line produce a line break.
 
-List:  
-- **Bold**
-- _Italic_  
-- ~~Strikethrough~~
-- \`Code\` 
-- [Link](https://m0.xyz/)
+Text attributes _italic_, **bold**
 
-Delimiter:
-
+Horizontal rule:
 ---
 
+Bullet lists nested within numbered list:
+
+  1. fruits
+     * apple
+     * banana
 `;
 
 const rules = computed(() => {
@@ -398,41 +405,45 @@ const proposalTypes = [
   },
   {
     value: "addToList",
-    label: "Add to a list",
+    label: "Add address",
     component: ProposalInputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "addToList",
   },
   {
     value: "removeFromList",
-    label: "Remove from a list",
+    label: "Remove address",
     component: ProposalInputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "removeFromList",
   },
 
   {
     value: "removeFromAndAddToList",
-    label: "Remove from and Add to list",
+    label: "Update address",
     component: ProposalInputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "removeFromAndAddToList",
   },
 
   {
     value: "setKey",
-    label: "Set Protocol config",
+    label: "Update protocol config",
     component: ProposalInputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
+    id: "protocolSetKey",
   },
 
   {
@@ -440,138 +451,113 @@ const proposalTypes = [
   },
 
   {
-    value: "Thresholds",
-    label: "Thresholds",
-    children: [
-      {
-        value: "setEmergencyProposalThresholdRatio",
-        label: "Power threshold",
-        component: ProposalInputThreshold,
-        modelValue: formData.proposalValue,
-        tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
-        hasToPayFee: false,
-      },
-      {
-        value: "setZeroProposalThresholdRatio",
-        label: "Zero threshold",
-        component: ProposalInputThreshold,
-        tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
-        hasToPayFee: false,
-      },
-    ],
-  },
-  {
-    value: "fee",
-    label: "Fee",
-    children: [
-      {
-        value: "setProposalFee",
-        label: "Change fee",
-        component: ProposalInputFee,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.standardGovernor,
-        abi: standardGovernorABI,
-        hasToPayFee: true,
-      },
-    ],
-  },
-
-  {
-    value: "setCashToken",
-    label: "Set Cash Token",
-    component: ProposalInputAddressFee,
-    tokens: [MVotingTokens.Zero],
-    governor: spog.contracts.zeroGovernor,
-    abi: zeroGovernorABI,
-    hasToPayFee: false,
-  },
-
-  {
-    value: "reset",
-    label: "Reset",
-    children: [
-      {
-        value: "resetToPowerHolders",
-        label: "Reset to Power holders",
-        component: undefined,
-        tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
-        hasToPayFee: false,
-      },
-
-      {
-        value: "resetToZeroHolders",
-        label: "Reset to Zero holders",
-        component: undefined,
-        tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
-        hasToPayFee: false,
-      },
-    ],
+    value: "setKey",
+    label: "Update governance config",
+    component: ProposalInputGovernanceConfigOperation,
+    tokens: [MVotingTokens.Power],
+    governor: spog.contracts.standardGovernor,
+    abi: standardGovernorABI,
+    hasToPayFee: true,
+    id: "governanceSetKey",
   },
 
   {
     value: "emergency",
     label: "Emergency",
+    id: "menuEmergency",
     isEmergency: true,
+    submenuText:
+      "Emergency proposals it requires a POWER Threshold and is immediately votable and subsequently immediately executable rather than only being votable and executable in the future epochs.",
     children: [
       {
         value: "addToList",
-        label: "Emergency Add to a list",
+        label: "Add address",
         isEmergency: true,
         component: ProposalInputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
+        id: "emergencyAddToList",
       },
       {
         value: "removeFromList",
-        label: "Emergency Remove from a list",
+        label: "Remove address",
         isEmergency: true,
         component: ProposalInputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
+        id: "emergencyRemoveFromList",
       },
 
       {
         value: "removeFromAndAddToList",
-        label: "Emergency Remove from and Add to list",
+        label: "Update address",
         isEmergency: true,
         component: ProposalInputListRemoveAddOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
-      },
-
-      {
-        value: "setKey",
-        label: "Emergency Set Protocol config",
-        isEmergency: true,
-        component: ProposalInputProtocolConfigOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
-        hasToPayFee: false,
+        id: "emergencyRemoveFromAndAddToList",
       },
       {
         value: "setStandardProposalFee",
-        label: "Emergency Change fee",
+        label: "Proposal fee",
         isEmergency: true,
         component: ProposalInputFee,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
         hasToPayFee: false,
+        id: "emergencySetStandardProposalFee",
+      },
+      {
+        value: "setKey",
+        label: "Update protocol config",
+        isEmergency: true,
+        component: ProposalInputProtocolConfigOperation,
+        tokens: [MVotingTokens.Power],
+        governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorABI,
+        hasToPayFee: false,
+        id: "emergencySetKey",
+      },
+    ],
+  },
+
+  {
+    value: "reset",
+    label: "Reset",
+    isReset: true,
+    submenuText:
+      "The Reset proposals allows a yes threshold of ZERO holders to change the current governor of the system to a new version with a new POWER token.",
+    id: "menuReset",
+    children: [
+      {
+        value: "resetToPowerHolders",
+        label: "Reset to Power holders",
+        isReset: true,
+        component: undefined,
+        tokens: [MVotingTokens.Zero],
+        governor: spog.contracts.zeroGovernor,
+        abi: zeroGovernorABI,
+        hasToPayFee: false,
+        id: "resetToPowerHolders",
+      },
+
+      {
+        value: "resetToZeroHolders",
+        label: "Reset to Zero holders",
+        isReset: true,
+        component: undefined,
+        tokens: [MVotingTokens.Zero],
+        governor: spog.contracts.zeroGovernor,
+        abi: zeroGovernorABI,
+        hasToPayFee: false,
+        id: "resetToZeroHolders",
       },
     ],
   },
@@ -604,7 +590,7 @@ const currentValue = computed(() => {
 });
 
 function onChangeProposalType(option) {
-  console.log("onChangeProposalType", { option });
+  console.log("onChangeProposalType", option);
   formData.proposalType = option.value;
   selectedProposalType.value = option;
   $validation.value.$reset();
@@ -868,13 +854,15 @@ function onBack() {
 }
 </script>
 
+<style>
+label {
+  @apply text-grey-400 block mb-2 font-medium text-xs font-inter;
+}
+</style>
+
 <style scoped>
 h1 {
   @apply text-3xl font-light mb-12;
-}
-
-label {
-  @apply text-grey-400 block mb-2 text-sm font-medium;
 }
 
 hr {
@@ -887,6 +875,14 @@ hr {
 
 .error {
   @apply border border-red-500;
+}
+
+.create-steps {
+  @apply flex items-center mb-6;
+}
+
+.create-steps .number {
+  @apply text-green-700 text-xs tracking-[8px];
 }
 
 .disabled {

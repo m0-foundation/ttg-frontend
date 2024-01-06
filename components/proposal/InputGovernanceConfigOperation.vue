@@ -1,15 +1,15 @@
 <template>
   <div class="w-full">
-    <SelectProtocolConfig
+    <SelectGovernanceConfig
       v-model="key"
       class="mb-6"
       :errors="props.modelValueErrors"
     />
 
     <div>
-      <label for="protocol-config-input">Value *</label>
+      <label for="governance-config-input">Value *</label>
       <MInput
-        id="protocol-config-input"
+        id="governance-config-input"
         v-model="value"
         class="input"
         type="text"
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { ErrorObject } from "@vuelidate/core";
+import { MVotingTokens } from "@/lib/api";
 
 export interface InputProps {
   modelValue: string;

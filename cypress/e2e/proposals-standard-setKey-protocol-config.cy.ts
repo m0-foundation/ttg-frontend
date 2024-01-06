@@ -7,20 +7,22 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
-
-      cy.contains("Set Protocol config").click();
-
-      cy.get("[data-test='proposalValue']").select(key);
-      cy.get("input[data-test='proposalValue2']").type(value);
-      cy.get("textarea[data-test='description']").type(description);
-      cy.get("input[data-test='title']").type(description);
-
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
-
       cy.connectWallet();
+
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
+
+      cy.get("[data-test='protocolSetKey']").click();
+
+      cy.get("[data-test='protocolConfigSelect']").should("exist");
+      cy.get("[data-test='protocolConfigSelect']").click();
+
+      cy.contains("Update collateral interval").click();
+
+      cy.get("input[data-test='proposalValue2']").type(value);
+      cy.get("input[data-test='title']").type(description);
+      cy.get("textarea[data-test='description']").type(description);
+
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -64,7 +66,7 @@ describe("Proposals", () => {
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
-      cy.get("#proposal-state").should("contain", "executed");
+      cy.get("[data-test='executed-badge']").should("exist");
     });
   });
 });

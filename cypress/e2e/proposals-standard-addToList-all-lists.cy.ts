@@ -12,12 +12,14 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal to ADD an address to a list: minters", () => {
       cy.visit("http://localhost:3000/proposal/create");
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.connectWallet();
 
-      cy.contains("Add to a list").should("exist").click({ force: true });
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='proposalValue']").select(LIST1);
+      cy.get("[data-test='addToList']").click();
+
+      cy.get("[data-test='listSelect']").click();
+      cy.get(`[data-test='list_${LIST1}']`).click();
 
       // address to append
       cy.get("input[data-test='proposalValue2']").type(input1);
@@ -25,10 +27,7 @@ describe("Proposals", () => {
 
       cy.get("textarea[data-test='description']").type(description1);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -39,23 +38,21 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal to ADD an address to a list: validators", () => {
       cy.visit("http://localhost:3000/proposal/create");
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.connectWallet();
 
-      cy.contains("Add to a list").should("exist").click({ force: true });
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='proposalValue']").select(LIST2);
+      cy.get("[data-test='addToList']").click();
 
-      // address to append
+      cy.get("[data-test='listSelect']").click();
+      cy.get(`[data-test='list_${LIST2}']`).click();
+
       cy.get("input[data-test='proposalValue2']").type(input1);
       cy.get("input[data-test='title']").type(description2);
 
       cy.get("textarea[data-test='description']").type(description2);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -66,23 +63,21 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal to ADD an address to a list: earners", () => {
       cy.visit("http://localhost:3000/proposal/create");
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.connectWallet();
 
-      cy.contains("Add to a list").should("exist").click({ force: true });
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='proposalValue']").select(LIST3);
+      cy.get("[data-test='addToList']").click();
 
-      // address to append
+      cy.get("[data-test='listSelect']").click();
+      cy.get(`[data-test='list_${LIST3}']`).click();
+
       cy.get("input[data-test='proposalValue2']").type(input1);
       cy.get("input[data-test='title']").type(description3);
 
       cy.get("textarea[data-test='description']").type(description3);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -150,8 +145,8 @@ describe("Proposals", () => {
 
           const should = [
             [LIST1.toLowerCase(), input1.toLowerCase()],
-            [LIST1.toLowerCase(), input1.toLowerCase()],
             [LIST2.toLowerCase(), input1.toLowerCase()],
+            [LIST3.toLowerCase(), input1.toLowerCase()],
           ].sort();
 
           expect(mapped).to.deep.equal(should);
