@@ -3,7 +3,7 @@ import { EpochTypes, MEpoch } from "./epoch.types";
 
 export const _STARTING_BLOCK =
   process.env.NODE_ENV === "development" ? 0 : 4847639;
-export const _SECONDS_PER_BLOCK = 8;
+export const _SECONDS_PER_BLOCK = 12;
 export const _EPOCH_PERIOD = 50;
 
 export class Epoch {
