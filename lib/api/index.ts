@@ -12,12 +12,6 @@ import {
 } from "@/lib/sdk";
 export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
-const batchConfig = {
-  batch: {
-    wait: 500, // this is an empirical value, tested and it seems like is good to run all requests in a single batch
-  },
-};
-
 export class Api {
   context: ApiContext;
   registrar: Registrar;
@@ -28,7 +22,7 @@ export class Api {
 
   constructor(rpcUrl: string, config: IApiConfig) {
     const client = createPublicClient({
-      transport: http(rpcUrl, batchConfig),
+      transport: http(rpcUrl),
     });
 
     this.context = new ApiContext(client, config);
@@ -40,7 +34,7 @@ export class Api {
 
   setRpc(rpcUrl: string) {
     this.context.client = createPublicClient({
-      transport: http(rpcUrl, batchConfig),
+      transport: http(rpcUrl),
     });
   }
 

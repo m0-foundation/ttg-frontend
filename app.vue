@@ -42,6 +42,8 @@ const votes = useVotesStore();
 const { rpc } = storeToRefs(apiStore);
 const isLoading = ref(true);
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
@@ -78,14 +80,14 @@ onMounted(async () => {
     .fetchGovernorsValues()
     .catch((e) => trackError(e, "fetchGovernorsValues"));
 
-  await Promise.all([
-    spog.fetchTokens().catch((e) => trackError(e, "fetchTokens")),
-    proposalStore
-      .fetchAllProposals()
-      .catch((e) => trackError(e, "fetchAllProposals")),
-    votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes")),
-  ]);
+  await spog.fetchTokens().catch((e) => trackError(e, "fetchTokens"));
+  await proposalStore
+    .fetchAllProposals()
+    .catch((e) => trackError(e, "fetchAllProposals"));
 
+  await wait(200);
+
+  await votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes"));
   await spog
     .fetchEpoch(spog.getValues.clock)
     .catch((e) => trackError(e, "fetchEpoch"));
