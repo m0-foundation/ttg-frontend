@@ -13,11 +13,11 @@
         <h2 class="text-2xl break-all">
           {{ title }}
         </h2>
-        <span
+        <!-- <span
           v-if="proposal?.isEmergency && proposal?.state !== 'Succeeded'"
           class="text-xs text-grey-400"
           >Voting ends {{ voteEnds }}
-        </span>
+        </span> -->
       </div>
 
       <div class="text-grey-400 font-inter mb-4">
