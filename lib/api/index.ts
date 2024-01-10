@@ -14,7 +14,7 @@ export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
 const batchConfig = {
   batch: {
-    wait: 300, // this is an empirical value, tested and it seems like 200 miliseconds is good to run all requests from multicall
+    wait: 500, // this is an empirical value, tested and it seems like is good to run all requests in a single batch
   },
 };
 
