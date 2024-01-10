@@ -111,7 +111,7 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
     readPowerToken({
       address: spog!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
-      args: [BigInt(proposal.value!.epoch!)],
+      args: [BigInt(proposal.value!.epoch!) - 1n],
     }),
     readZeroToken({
       address: spog!.contracts!.zeroToken! as Hash,
