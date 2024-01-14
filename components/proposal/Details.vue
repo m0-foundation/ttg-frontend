@@ -54,6 +54,10 @@
       </div>
 
       <ProposalTableVotes :votes="votes?.value" />
+
+      <p class="text-xxs text-grey-300 mt-3">
+        Proposal ID: {{ proposal?.proposalId }}
+      </p>
     </article>
   </div>
 </template>
