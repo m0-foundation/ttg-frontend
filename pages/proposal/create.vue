@@ -250,7 +250,6 @@ import {
   zeroGovernorABI,
 } from "@/lib/sdk";
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
-import ProposalInputThreshold from "@/components/proposal/InputThreshold.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
 import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
 import ProposalInputGovernanceConfigOperation from "@/components/proposal/InputGovernanceConfigOperation.vue";
@@ -426,7 +425,7 @@ const proposalTypes = [
 
   {
     value: "removeFromAndAddToList",
-    label: "Update address",
+    label: "Replace address",
     component: ProposalInputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,

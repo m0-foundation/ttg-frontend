@@ -1,25 +1,6 @@
 <template>
   <div>
-    <div v-if="isCustomList" class="flex">
-      <button
-        class="input px-4 inline-flex items-center min-w-fit border border-e-0 border-gray-700 bg-gray-200 text-sm text-gray-500"
-        data-test="create-proposal-button-close-other-list"
-        @click="isCustomList = false"
-      >
-        X
-      </button>
-
-      <input
-        v-model="list"
-        :class="{ input: true, error: hasErrors }"
-        data-test="proposalValue"
-        placeholder="Custom list"
-        type="text"
-        data-1p-ignore
-      />
-    </div>
-
-    <div v-else>
+    <div>
       <MInputMultiSelect
         v-model="list"
         :options="options"
@@ -55,11 +36,6 @@ const options = [
     label: "Earners",
     id: "list_earners",
   },
-  {
-    value: "custom",
-    label: "Create new list",
-    id: "list_custom",
-  },
 ];
 
 export interface InputProps {
@@ -74,15 +50,8 @@ const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 
 const hasErrors = computed(() => props.errors?.length);
 
-const isCustomList = ref(false);
-
 function handleChangeList(e: any) {
-  if (e.value === "custom") {
-    list.value = "";
-    isCustomList.value = true;
-  } else {
-    list.value = e.value;
-  }
+  list.value = e.value;
 }
 </script>
 

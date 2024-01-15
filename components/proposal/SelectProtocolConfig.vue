@@ -1,25 +1,7 @@
 <template>
   <div>
     <label>Configuration parameter *</label>
-    <div v-if="customConfig" class="flex">
-      <button
-        class="input px-4 inline-flex items-center min-w-fit border border-e-0 border-gray-700 bg-gray-200 text-sm text-gray-500"
-        data-test="create-proposal-button-close-other-config"
-        @click="customConfig = false"
-      >
-        X
-      </button>
-
-      <input
-        v-model="list"
-        :class="{ input: true, error: hasErrors }"
-        data-test="proposalValue"
-        placeholder="Custom parameter name"
-        type="text"
-      />
-    </div>
-
-    <div v-else>
+    <div>
       <MInputMultiSelect
         :options="configParams"
         label="Select configuration parameter"
@@ -28,7 +10,7 @@
       />
     </div>
 
-    <div v-if="props.errors.length > 0" class="text-red-500 text-xs my-2 h-4">
+    <div v-if="hasErrors" class="text-red-500 text-xs my-2 h-4">
       <p v-for="error of props.errors" :key="error.$uid">
         {{ error.$message }}
       </p>
@@ -61,8 +43,6 @@ const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const parameter = ref();
 
 const hasErrors = computed(() => props.errors?.length);
-
-const customConfig = ref(false);
 
 const configParams = [
   {
@@ -130,20 +110,11 @@ const configParams = [
     shortDescription:
       "Update the annualized percentage paid to M in the Earn Mechanism.",
   },
-  {
-    value: "custom_parameter",
-    label: "Create new parameter",
-  },
 ];
 
 function handleChangeList(e: any) {
   parameter.value = e;
-  if (e?.value === "custom_parameter") {
-    list.value = "";
-    customConfig.value = true;
-  } else {
-    list.value = e.value;
-  }
+  list.value = e.value;
 }
 </script>
 
