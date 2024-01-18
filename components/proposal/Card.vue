@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-4">
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="text-white bg-grey-800 p-8"

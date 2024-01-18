@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 pt-2 lg:pt-6 w-full lg:flex justify-between">
+  <div class="p-8 pt-2 lg:pt-6 w-full lg:flex justify-between">
     <div>
       <h1
         class="text-white text-lg font-normal font-['IBM Plex Mono'] uppercase"
