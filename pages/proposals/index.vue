@@ -4,22 +4,26 @@
       v-if="!hasFinishedVoting"
       class="p-8 py-6 bg-green-1000 font-inter flex flex-col gap-3"
     >
-      <div class="flex gap-3">
-        <img src="/img/icon-inflation.svg" alt="" />
+      <div class="flex flex-col lg:flex-row gap-3">
+        <img class="w-8" src="/img/icon-inflation.svg" alt="" />
         <div>
           <h5>
             Vote on all standard proposals to save your voting power and get
             <span class="text-green-700">+Z100 of inflation</span>
           </h5>
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
-            <span class="text-xxs lg:text-xs text-green-700 uppercase">
+            <span
+              class="text-xxs lg:text-xs text-green-700 uppercase flex gap-3"
+            >
               Votes submitted:
-              {{ selectedCastProposals.length }}
-              / {{ mandatoryToVoteProposals.length }}
+              <span>
+                {{ selectedCastProposals.length }} /
+                {{ mandatoryToVoteProposals.length }}</span
+              >
             </span>
-            <div class="w-1/4 lg:w-1/3 bg-grey-800 rounded-sm h-1.5">
+            <div class="w-1/4 lg:h-1/3 bg-grey-800 rounded-sm h-1.5">
               <div
-                class="bg-green-700 h-1.5 rounded-ful"
+                class="bg-green-700 h-1.5 rounded-sm"
                 :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
               ></div>
             </div>

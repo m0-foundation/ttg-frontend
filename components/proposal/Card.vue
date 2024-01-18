@@ -56,17 +56,21 @@
           >
             <ProposalButtonCastVote
               id="button-cast-yes"
+              :batch="proposal?.votingType === 'Standard'"
               data-test="button-cast-yes"
               :disabled="
                 isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
               "
               :version="voteEvent?.support ? 'active' : 'default'"
+              class="cast-vote-button"
               @click="onCastSelected(1)"
             >
               YES
             </ProposalButtonCastVote>
             <ProposalButtonCastVote
               id="button-cast-no"
+              :batch="proposal?.votingType === 'Standard'"
+              class="cast-vote-button"
               data-test="button-cast-no"
               :disabled="
                 isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
@@ -218,3 +222,9 @@ const voteEvent = computed(() => {
     .value.find((v) => v.voter === userAccount.value);
 });
 </script>
+
+<style>
+.cast-vote-button {
+  @apply grow lg:grow-0 min-w-[62px] flex justify-center items-center;
+}
+</style>
