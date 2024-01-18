@@ -13,7 +13,7 @@
           </h5>
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
             <span
-              class="text-xxs lg:text-xs text-green-700 uppercase flex gap-3"
+              class="text-xxs lg:text-xs text-green-700 text-nowrap uppercase flex gap-3"
             >
               Votes submitted:
               <span>
@@ -21,7 +21,7 @@
                 {{ mandatoryToVoteProposals.length }}</span
               >
             </span>
-            <div class="w-1/4 lg:h-1/3 bg-grey-800 rounded-sm h-1.5">
+            <div class="w-full max-w-48 lg:h-1/3 bg-grey-800 rounded-sm h-1.5">
               <div
                 class="bg-green-700 h-1.5 rounded-sm"
                 :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
