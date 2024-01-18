@@ -100,17 +100,20 @@ Cypress.Commands.add("castYesAllProposals", () => {
   cy.get("#button-cast-submit").click();
 });
 
-Cypress.Commands.add("castYesOneOptionalProposal", (description: string) => {
-  cy.visit("http://localhost:3000/proposals/");
-  cy.connectWallet();
-  cy.wait(500);
+Cypress.Commands.add(
+  "castYesOneOptionalProposal",
+  (description: string, page: string) => {
+    cy.visit("http://localhost:3000/proposals/" + page);
+    cy.connectWallet();
+    cy.wait(500);
 
-  cy.contains("article", description).then(($proposal) => {
-    cy.wrap($proposal).find("#button-cast-yes").click();
-  });
+    cy.contains("article", description).then(($proposal) => {
+      cy.wrap($proposal).find("#button-cast-yes").click();
+    });
 
-  cy.get("[data-test='voted']").should("have.length", 1);
-});
+    cy.get("[data-test='voted']").should("have.length", 1);
+  }
+);
 
 Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.visit("http://localhost:3000/proposals/succeeded");
