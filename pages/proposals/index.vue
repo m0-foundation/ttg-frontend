@@ -1,36 +1,74 @@
 <template>
   <NuxtLayout name="proposals">
-    <ProposalList
-      :proposals="standardProposals"
-      @on-cast="onCast"
-      @on-uncast="onUncast"
-    >
-      <template #emptyState>
-        <ProposalListEmptyState>
-          No active standard proposals
-        </ProposalListEmptyState>
-      </template>
-    </ProposalList>
-
     <div
-      v-show="hasProposals && isConnected"
-      class="lg:flex justify-end items-center uppercase gap-4 mt-6"
+      v-if="!hasFinishedVoting"
+      class="p-8 py-6 bg-green-1000 font-inter flex flex-col gap-3"
     >
-      <span v-if="!isSelectedCastProposalsFull" class="text-grey-400 text-xxs"
-        >Select YES or NO to submit your vote</span
+      <div class="flex gap-3">
+        <img src="/img/icon-inflation.svg" alt="" />
+        <div>
+          <h5>
+            Vote on all standard proposals to save your voting power and get
+            <span class="text-green-700">+Z100 of inflation</span>
+          </h5>
+          <div class="grow flex items-center gap-2 my-2 lg:mb-0">
+            <span class="text-xxs lg:text-xs text-green-700 uppercase">
+              Votes submitted:
+              {{ selectedCastProposals.length }}
+              / {{ mandatoryToVoteProposals.length }}
+            </span>
+            <div class="w-1/4 lg:w-1/3 bg-grey-800 rounded-sm h-1.5">
+              <div
+                class="bg-green-700 h-1.5 rounded-ful"
+                :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-green-800 text-xs">
+        Standard Proposals are voteable only by POWER holders and require a
+        simple majority to pass. In each epoch the supply of POWER is inflated
+        and this inflation is claimed pro rata among participating POWER
+        holders.
+        <a class="underline" href="#" target="_blank" rel="noopener noreferrer"
+          >Learn more.</a
+        >
+      </p>
+    </div>
+    <div class="p-8">
+      <ProposalList
+        :proposals="standardProposals"
+        @on-cast="onCast"
+        @on-uncast="onUncast"
       >
-      <MButton
-        id="button-cast-submit"
-        class="w-full lg:w-40 flex justify-center"
-        :disabled="
-          !isSelectedCastProposalsFull || hasFinishedVoting || isLoading
-        "
-        :is-loading="isLoading"
-        data-test="proposal-button-submit-votes"
-        @click="onCastBatchVotes"
+        <template #emptyState>
+          <ProposalListEmptyState>
+            No active standard proposals
+          </ProposalListEmptyState>
+        </template>
+      </ProposalList>
+
+      <div
+        v-show="hasProposals && isConnected"
+        class="lg:flex justify-end items-center uppercase gap-4 mt-6"
       >
-        submit
-      </MButton>
+        <span v-if="!isSelectedCastProposalsFull" class="text-grey-400 text-xxs"
+          >Select YES or NO to submit your vote</span
+        >
+        <MButton
+          id="button-cast-submit"
+          class="w-full lg:w-40 flex justify-center"
+          :disabled="
+            !isSelectedCastProposalsFull || hasFinishedVoting || isLoading
+          "
+          :is-loading="isLoading"
+          data-test="proposal-button-submit-votes"
+          @click="onCastBatchVotes"
+        >
+          submit
+        </MButton>
+      </div>
     </div>
   </NuxtLayout>
 </template>

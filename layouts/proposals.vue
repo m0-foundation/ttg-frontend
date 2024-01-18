@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="text-white p-8 py-4 pt-0">
+    <div class="text-white p-8 p-6 pt-0">
       <h5 class="text-xxs uppercase text-grey-400 mb-2">Proposals:</h5>
 
       <div
@@ -61,7 +61,8 @@
         </NuxtLink>
       </div>
     </div>
-    <div class="bg-[#1c1c1c] p-8">
+
+    <div class="bg-[#1c1c1c]">
       <slot />
     </div>
   </div>

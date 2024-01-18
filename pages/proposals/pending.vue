@@ -1,14 +1,10 @@
 <template>
   <NuxtLayout name="proposals">
-    <div class="mb-10">
-      <ProposalList :proposals="proposals">
-        <template #emptyState>
-          <ProposalListEmptyState>
-            No pending proposals
-          </ProposalListEmptyState>
-        </template>
-      </ProposalList>
-    </div>
+    <ProposalList :proposals="proposals">
+      <template #emptyState>
+        <ProposalListEmptyState> No pending proposals </ProposalListEmptyState>
+      </template>
+    </ProposalList>
   </NuxtLayout>
 </template>
 
