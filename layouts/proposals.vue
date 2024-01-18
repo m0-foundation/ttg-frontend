@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="text-white p-8 p-6 pt-0">
+    <div class="text-white p-8 pb-6 pt-0">
       <h5 class="text-xxs uppercase text-grey-400 mb-2">Proposals:</h5>
 
       <div
@@ -39,7 +39,7 @@
 
         <NuxtLink v-if="zero" to="/proposals/zero/">
           <MNavButton class="proposals-nav-button">
-            Zero <MBadge version="error">{{ zero }}</MBadge>
+            Zero <MBadge>{{ zero }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
@@ -74,10 +74,6 @@ import { storeToRefs } from "pinia";
 const store = useProposalsStore();
 const spog = useSpogStore();
 
-const active = computed(
-  () => store.getProposalsByState("Active").filter((p) => !p.isEmergency).length
-);
-
 const pendingExecution = computed(
   () => store.getProposalsByState("Succeeded").length
 );
@@ -88,7 +84,7 @@ const emergency = computed(
 
 const zero = computed(
   () =>
-    store.getProposalsByState("Active").filter((p) => p.proposalType === "Zero")
+    store.getProposalsByState("Active").filter((p) => p.votingType === "Zero")
       .length
 );
 
@@ -104,11 +100,6 @@ const currentEpochAsDate = computed(() => {
 const nextEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
   return toFormat("D MMM");
-});
-
-const timeLeft = computed(() => {
-  const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
-  return timeAgo;
 });
 </script>
 

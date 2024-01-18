@@ -29,7 +29,7 @@ export const useProposalsStore = defineStore("proposals", {
     },
 
     getProposalsTypeZero: (state) => {
-      return state.data.filter((p) => p.proposalType === "Zero");
+      return state.data.filter((p) => p.votingType === "Zero");
     },
 
     getProposalsByProposer: (state) => {

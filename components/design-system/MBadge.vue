@@ -22,6 +22,6 @@ span {
   @apply bg-green-700 text-green-900;
 }
 .error {
-  @apply bg-red-500 text-white;
+  @apply bg-red-700 text-white;
 }
 </style>

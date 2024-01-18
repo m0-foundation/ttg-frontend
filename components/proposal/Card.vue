@@ -5,7 +5,7 @@
       class="text-white bg-grey-800 p-8"
     >
       <div v-if="proposal?.isEmergency" class="flex mb-3">
-        <p class="text-xxs bg-red-500 uppercase leading-3 p-1.5">
+        <p class="text-xxs bg-red-700 uppercase leading-3 p-1.5">
           Emergency Proposal
         </p>
       </div>
