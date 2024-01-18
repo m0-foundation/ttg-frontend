@@ -28,6 +28,10 @@ export const useProposalsStore = defineStore("proposals", {
       return state.data.filter((p) => p.isEmergency);
     },
 
+    getProposalsTypeZero: (state) => {
+      return state.data.filter((p) => p.proposalType === "Zero");
+    },
+
     getProposalsByProposer: (state) => {
       return (proposer: string) =>
         state.data.filter(

@@ -2,7 +2,7 @@
   <div>
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="text-white bg-grey-800 p-6 mb-4"
+      class="text-white bg-grey-800 p-6"
     >
       <div v-if="proposal?.isEmergency" class="flex mb-3">
         <p class="text-xxs bg-red-500 uppercase leading-3 p-1.5">
