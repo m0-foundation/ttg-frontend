@@ -1,30 +1,23 @@
 <template>
   <div>
-    <div class="p-6 pt-2 lg:pt-6 uppercase">
-      <p class="text-xs text-grey-400">Proposals</p>
+    <div class="p-8 pt-2 lg:pt-6 uppercase">
       <div class="lg:flex justify-between">
         <p class="text-lg text-white">
           {{ epoch?.current?.type }} epoch:
           <span class="text-green-700">#{{ epoch?.current?.asNumber }}_</span>
+          <span class="text-grey-400 text-xxs lg:text-xs ml-2">
+            {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
+          </span>
         </p>
         <div class="hidden lg:block">
           <NuxtLink to="/proposals/all/">
-            <MNavButton class="underline text-xs text-white">
-              all proposals
-            </MNavButton>
+            <MNavButton class="text-xs"> all proposals </MNavButton>
           </NuxtLink>
         </div>
       </div>
-
-      <p class="text-grey-400 text-xxs lg:text-xs mt-1">
-        {{ currentEpochAsDate }} - {{ nextEpochAsDate }} *
-        <span>
-          ENDS {{ timeLeft }} at block #{{ epoch?.next?.asBlockNumber }}
-        </span>
-      </p>
     </div>
 
-    <div class="text-white p-8 pb-4">
+    <div class="text-white p-8 py-4 pt-0">
       <h5 class="text-xxs uppercase text-grey-400 mb-2">Proposals:</h5>
 
       <div
