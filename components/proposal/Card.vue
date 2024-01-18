@@ -1,14 +1,14 @@
 <template>
   <div>
-    <MTextLoop
-      v-show="proposal?.isEmergency"
-      class="text-white bg-[#CC0000] text-xs"
-      text="EMERGENCY_VOTING"
-    />
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="text-white bg-grey-800 p-6 mb-4"
     >
+      <div v-if="proposal?.isEmergency" class="flex mb-3">
+        <p class="text-xxs bg-red-500 uppercase leading-3 p-1.5">
+          Emergency Proposal
+        </p>
+      </div>
       <div class="mb-4">
         <h2 class="text-2xl break-all">
           {{ title }}
