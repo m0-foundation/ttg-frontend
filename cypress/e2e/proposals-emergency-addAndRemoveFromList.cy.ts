@@ -38,7 +38,7 @@ describe("Proposals", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
       // cy.task("mine", 10);
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/emergency");
 
       cy.contains(description).should("exist");
 
@@ -59,7 +59,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/emergency");
       cy.connectWallet();
       cy.wait(500);
 

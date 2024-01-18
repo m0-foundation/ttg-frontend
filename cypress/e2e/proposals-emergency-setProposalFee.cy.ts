@@ -37,7 +37,7 @@ describe("Proposals", () => {
 
       // cy.wait(1000);
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/emergency");
 
       cy.contains(description).should("exist");
 
@@ -57,7 +57,17 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description);
+      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.connectWallet();
+      cy.wait(500);
+
+      cy.contains("article", description).then(($proposal) => {
+        cy.wrap($proposal).find("#button-cast-yes").click();
+      });
+
+      cy.get("[data-test='voted']").should("have.length", 1);
+      cy.task("mine", 1);
+      cy.reload();
     });
 
     it("I should be able to EXECUTE the proposal", () => {
