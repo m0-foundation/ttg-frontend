@@ -55,7 +55,7 @@ export interface InputProps {
 }
 
 const props = defineProps<InputProps>();
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "handleChangeList"]);
 
 const list = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const parameter = ref();
@@ -101,6 +101,7 @@ function handleChangeList(e: any) {
   } else {
     list.value = e?.value;
   }
+  emit("handleChangeList", e.value);
 }
 </script>
 
