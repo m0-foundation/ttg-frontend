@@ -2,7 +2,7 @@ import { sepolia } from "@wagmi/core/chains";
 import { NetworkConfig } from "./types.d";
 
 const alchemy =
-  "https://eth-sepolia.g.alchemy.com/v2/B60--jGVtrkIkYtB_uJ81RoNf4qfk3II";
+  "https://eth-sepolia.g.alchemy.com/v2/tKIhNojMKZzkva4HxAEuuoalYnUjMvAI";
 
 const infura = "https://sepolia.infura.io/v3/78c7c2ca91dc493c9c4389de0cf351c4";
 
