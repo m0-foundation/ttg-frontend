@@ -1,10 +1,7 @@
 describe("Proposals", () => {
-  const proposalUrl = "";
-
   describe("Create showcase proposals", () => {
     const input1 = "minters";
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-    const description = `Add ${input2} to list ${input1}`;
 
     const titleEmergency = "Emergency proposal";
     const titlePending = "Pending proposal";
@@ -13,7 +10,7 @@ describe("Proposals", () => {
     const titleExecutable = "Executable proposal";
     const descriptionTest = "test proposal description";
 
-    it("Standard proposal add to list", () => {
+    it("CREATE Standard proposal add to list", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
@@ -39,14 +36,14 @@ describe("Proposals", () => {
       });
     });
 
-    it("Vote standard proposal to show in active proposals", () => {
+    it("MINE Epochs", () => {
       // forward in time to be able to vote
       cy.mineEpochs(2);
 
       cy.wait(500);
     });
 
-    it("Zero proposal reset", () => {
+    it("CREATE Zero proposal reset", () => {
       // zero proposals cant be created on first epoch
 
       cy.visit("http://localhost:3000/proposal/create");
@@ -71,7 +68,7 @@ describe("Proposals", () => {
       });
     });
 
-    it("Standard proposal add to list for pending", () => {
+    it("CREATE Standard proposal to show in pending proposals", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
@@ -97,7 +94,7 @@ describe("Proposals", () => {
       });
     });
 
-    it("Emergency proposal add to list", () => {
+    it("CREATE Emergency proposal add to list", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
@@ -122,7 +119,7 @@ describe("Proposals", () => {
       });
     });
 
-    it("Vote YES to proposal to be executable", () => {
+    it("VOTE YES to proposal to be executable", () => {
       cy.visit("http://localhost:3000/proposals/emergency");
       cy.connectWallet();
       cy.wait(500);
@@ -134,7 +131,7 @@ describe("Proposals", () => {
       cy.reload();
     });
 
-    it("Emergency proposal add to list", () => {
+    it("CREATE Emergency proposal add to list", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
