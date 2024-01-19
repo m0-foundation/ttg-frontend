@@ -3,14 +3,27 @@ import orderBy from "lodash/orderBy";
 
 import { MUpdateConfigEvent, MProtocolConfig } from "./protocol-configs.types";
 
-import { registrarABI } from "~/lib/sdk";
+import { readRegistrar, registrarABI } from "~/lib/sdk";
 import {
   hexWith32BytesToString,
   hexWith32BytesToAddress,
+  stringToHexWith32Bytes,
 } from "~/lib/api/utils";
 import { ApiModule } from "~/lib/api/api-module";
 
 export class ProtocolConfigs extends ApiModule {
+  keysInBytes32 = [
+    "update_collateral_interval",
+    "update_collateral_threshold",
+    "penalty_rate",
+    "mint_delay",
+    "mint_ttl",
+    "mint_ratio",
+    "minter_freeze_time",
+  ];
+
+  keysInAddress = ["earner_rate_model", "earner_rate_model"];
+
   async decodeProtocolConfigLog(
     log: Log,
     abi: Abi
@@ -78,5 +91,33 @@ export class ProtocolConfigs extends ApiModule {
     }
 
     return finalConfig;
+  }
+
+  async getAllProtocolKeysAndValues(): Promise<
+    Array<{ key: string; value: any }>
+  > {
+    const valuesBytes = await readRegistrar({
+      address: this.config.registrar as Hash,
+      functionName: "get",
+      args: [this.keysInBytes32.map(stringToHexWith32Bytes)],
+    });
+
+    const keyValuesBytes = this.keysInBytes32.map((key, index) => ({
+      key: hexWith32BytesToString(key),
+      value: hexWith32BytesToString(valuesBytes[index]),
+    }));
+
+    const valuesAddress = await readRegistrar({
+      address: this.config.registrar as Hash,
+      functionName: "get",
+      args: [this.keysInAddress.map(stringToHexWith32Bytes)],
+    });
+
+    const keyValuesAddress = this.keysInAddress.map((key, index) => ({
+      key: hexWith32BytesToString(key),
+      value: hexWith32BytesToAddress(valuesAddress[index] as Hash),
+    }));
+
+    return [...keyValuesBytes, ...keyValuesAddress];
   }
 }
