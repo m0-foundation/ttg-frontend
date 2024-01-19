@@ -3,13 +3,13 @@ import orderBy from "lodash/orderBy";
 
 import { MUpdateConfigEvent, MProtocolConfig } from "./protocol-configs.types";
 
-import { readRegistrar, registrarABI } from "~/lib/sdk";
+import { readRegistrar, registrarABI } from "@/lib/sdk";
 import {
   hexWith32BytesToString,
   hexWith32BytesToAddress,
   stringToHexWith32Bytes,
-} from "~/lib/api/utils";
-import { ApiModule } from "~/lib/api/api-module";
+} from "@/lib/api/utils";
+import { ApiModule } from "@/lib/api/api-module";
 
 export class ProtocolConfigs extends ApiModule {
   keysInBytes32 = [
