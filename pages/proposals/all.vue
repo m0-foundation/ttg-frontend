@@ -1,6 +1,13 @@
 <template>
   <div>
     <PageTitle>
+      <template #pretitle>
+        <NuxtLink
+          class="text-green-700 hover:text-green-600 text-sm uppercase cursor-pointer"
+          @click="$router.back()"
+          >Back</NuxtLink
+        >
+      </template>
       <template #default>All proposals</template>
       <template #side>
         <div class="flex gap-3 mt-2 lg:mt-0">
