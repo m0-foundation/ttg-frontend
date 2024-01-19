@@ -234,13 +234,7 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import {
-  encodeFunctionData,
-  encodeAbiParameters,
-  toHex,
-  stringToBytes,
-  Hash,
-} from "viem";
+import { encodeFunctionData, encodeAbiParameters, Hash } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -259,6 +253,10 @@ import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
 
 import { MVotingTokens } from "@/lib/api";
+import {
+  stringToHexWith32Bytes,
+  addressToHexWith32Bytes,
+} from "@/lib/api/utils";
 
 /* control stepper */
 let steps = reactive([]);
@@ -776,10 +774,6 @@ async function onSubmit() {
   }
 }
 
-function stringToHexWith32Bytes(data) {
-  return toHex(stringToBytes(data, { size: 32 }));
-}
-
 function buildCalldatas(formData) {
   const {
     proposalType: type,
@@ -827,13 +821,12 @@ function buildCalldatas(formData) {
   if (["setKey"].includes(type)) {
     const key = input1;
     const value = ["penalty_rate", "mint_ratio"].includes(key)
-      ? BigInt(percentageToBasispoints(input2))
-      : input2;
+      ? stringToHexWith32Bytes(String(percentageToBasispoints(input2)))
+      : ["minter_rate_model", "earner_rate_model"].includes(key)
+      ? addressToHexWith32Bytes(input2)
+      : stringToHexWith32Bytes(input2);
 
-    return buildCalldatasSpog(type, [
-      stringToHexWith32Bytes(key),
-      stringToHexWith32Bytes(value),
-    ]);
+    return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {

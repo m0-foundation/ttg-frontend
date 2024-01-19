@@ -4,7 +4,10 @@ import orderBy from "lodash/orderBy";
 import { MUpdateConfigEvent, MProtocolConfig } from "./protocol-configs.types";
 
 import { registrarABI } from "~/lib/sdk";
-import { hexToBytes32String } from "~/lib/api/utils";
+import {
+  hexWith32BytesToString,
+  hexWith32BytesToAddress,
+} from "~/lib/api/utils";
 import { ApiModule } from "~/lib/api/api-module";
 
 export class ProtocolConfigs extends ApiModule {
@@ -28,13 +31,18 @@ export class ProtocolConfigs extends ApiModule {
         blockNumber: log.blockNumber!,
       });
 
+      const key = hexWith32BytesToString(event.key);
+      const value = ["minter_rate_model", "earner_rate_model"].includes(key)
+        ? hexWith32BytesToAddress(event.value)
+        : hexWith32BytesToString(event.value);
+
       const updateConfigEvent: MUpdateConfigEvent = {
         ...event,
         eventName,
+        key,
+        value,
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
-        key: hexToBytes32String(event.key),
-        value: hexToBytes32String(event.value),
         timestamp: Number(block.timestamp),
       };
 

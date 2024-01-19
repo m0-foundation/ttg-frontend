@@ -269,6 +269,82 @@ describe("Proposals", () => {
       });
     });
 
+    it("I should be able to CREATE a proposal - Minter rate model ", () => {
+      cy.visit("http://localhost:3000/proposal/create");
+      cy.connectWallet();
+
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
+
+      cy.get("[data-test='menuEmergency']").click();
+
+      cy.get("[data-test='emergencySetKey']").click({ force: true });
+
+      cy.contains("Update protocol config").click();
+
+      cy.get("[data-test='protocolConfigSelect']").should("exist");
+      cy.get("[data-test='protocolConfigSelect']").click();
+
+      // config
+      cy.contains("Minter rate").click();
+
+      const value = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+      const key = "minter_rate_model";
+      const description = `Add protocol config ${key} = ${value}`;
+      descriptions.push(description);
+      keys.push(key);
+      values.push(value);
+
+      cy.get("input[data-test='proposalValue2']").type(value);
+      cy.get("input[data-test='title']").type(description);
+      cy.get("textarea[data-test='description']").type(description);
+
+      cy.clickPreviewProposal();
+
+      cy.contains("Submit proposal").should("exist");
+      cy.contains("Submit proposal").then(($el) => {
+        $el.click();
+        cy.get(".complete").should("have.length", 3);
+      });
+    });
+
+    it("I should be able to CREATE a proposal - earner rate model ", () => {
+      cy.visit("http://localhost:3000/proposal/create");
+      cy.connectWallet();
+
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
+
+      cy.get("[data-test='menuEmergency']").click();
+
+      cy.get("[data-test='emergencySetKey']").click({ force: true });
+
+      cy.contains("Update protocol config").click();
+
+      cy.get("[data-test='protocolConfigSelect']").should("exist");
+      cy.get("[data-test='protocolConfigSelect']").click();
+
+      // config
+      cy.contains("Earner rate").click();
+
+      const value = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+      const key = "earner_rate_model";
+      const description = `Add protocol config ${key} = ${value}`;
+      descriptions.push(description);
+      keys.push(key);
+      values.push(value);
+
+      cy.get("input[data-test='proposalValue2']").type(value);
+      cy.get("input[data-test='title']").type(description);
+      cy.get("textarea[data-test='description']").type(description);
+
+      cy.clickPreviewProposal();
+
+      cy.contains("Submit proposal").should("exist");
+      cy.contains("Submit proposal").then(($el) => {
+        $el.click();
+        cy.get(".complete").should("have.length", 3);
+      });
+    });
+
     it("I should be able to CAST vote YES for the proposal", () => {
       cy.castYesOneOptionalProposal(descriptions[0]);
       cy.castYesOneOptionalProposal(descriptions[1]);
@@ -277,6 +353,8 @@ describe("Proposals", () => {
       cy.castYesOneOptionalProposal(descriptions[4]);
       cy.castYesOneOptionalProposal(descriptions[5]);
       cy.castYesOneOptionalProposal(descriptions[6]);
+      cy.castYesOneOptionalProposal(descriptions[7]);
+      cy.castYesOneOptionalProposal(descriptions[8]);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
@@ -300,6 +378,8 @@ describe("Proposals", () => {
       execute(descriptions[4]);
       execute(descriptions[5]);
       execute(descriptions[6]);
+      execute(descriptions[7]);
+      execute(descriptions[8]);
 
       cy.mineEpochs(1);
     });
@@ -325,6 +405,8 @@ describe("Proposals", () => {
           [keys[4].toLowerCase(), values[4]],
           [keys[5].toLowerCase(), values[5]],
           [keys[6].toLowerCase(), values[6]],
+          [keys[7].toLowerCase(), values[7].toLowerCase()],
+          [keys[8].toLowerCase(), values[8].toLowerCase()],
         ].sort();
 
         expect(mapped).to.deep.equal(should);
