@@ -5,7 +5,8 @@
     :current-value="currentValue"
     decorator="%"
     :maska="masks.percentage"
-    :description="description"
+    description="Update the number of Yes votes required to pass Power proposals."
+    data-test="proposalValue"
   />
 </template>
 
@@ -16,7 +17,6 @@ import { masks } from "@/utils/masks";
 
 export interface InputProps {
   currentValue?: string;
-  description?: string;
   modelValue: any;
   modelValueErrors?: ErrorObject[];
 }

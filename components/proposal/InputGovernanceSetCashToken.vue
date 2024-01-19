@@ -1,37 +1,33 @@
 <template>
   <div class="w-full flex justify-between items-center space-x-4">
     <div class="block w-1/2">
-      <MInput
+      <InputDynamic
         v-model="address"
-        class="input"
-        type="text"
-        placeholder="Address"
+        :model-value-errors="modelValueErrors"
+        :maska="masks.ethereumAddress"
+        description="Update the currency used for payment when submitting proposal"
+        placeholder="Token Address"
         data-test="proposalValue"
-        :errors="props.modelValueErrors"
       />
     </div>
 
     <div class="block w-1/2">
-      <input
+      <InputDynamic
         v-model="fee"
-        v-maska:[maskEth]
-        :class="{ error: hasErrorsFee }"
+        :model-value-errors="modelValue2Errors"
+        :maska="masks.eth"
+        description="Update the fee charged for submitting proposals based on the new Token."
+        placeholder="New Proposal Fee"
         data-test="proposalValue2"
-        class="input"
-        placeholder="From"
+        decorator="WETH"
       />
-
-      <div class="error--message">
-        <p v-for="error of props.modelValue2Errors" :key="error.$uid">
-          {{ error.$message }}
-        </p>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ErrorObject } from "@vuelidate/core";
+import { masks } from "@/utils/masks";
 
 export interface InputProps {
   modelValue: string;
@@ -45,12 +41,6 @@ const emit = defineEmits(["update:modelValue", "update:modelValue2"]);
 
 const address = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const fee = useVModelWrapper<InputProps>(props, emit, "modelValue2");
-const hasErrorsFee = computed(() => props.modelValue2Errors?.length);
-
-const maskEth = {
-  mask: "999999999999999999.999999999999999999",
-  tokens: "9:[0-9]:optional",
-};
 </script>
 
 <style scoped>

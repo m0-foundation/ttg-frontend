@@ -11,14 +11,9 @@ describe("Proposals", () => {
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='governanceSetKey']").click();
-
-      cy.get("[data-test='governanceConfigSelect']").should("exist");
-      cy.get("[data-test='governanceConfigSelect']").click();
-
       cy.contains("Proposal Fee").click();
 
-      cy.get("input[data-test='proposalValue2']").type(input);
+      cy.get("input[data-test='proposalValue']").type(input);
       cy.get("input[data-test='title']").type(description);
 
       cy.get("textarea[data-test='description']").type(description);
