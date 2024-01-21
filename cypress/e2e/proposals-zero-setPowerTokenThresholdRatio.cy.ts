@@ -13,7 +13,7 @@ describe("Proposals", () => {
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='governanceSetKey']").click();
+      cy.contains("Power threshold").click();
 
       cy.get("[data-test='governanceConfigSelect']").should("exist");
       cy.get("[data-test='governanceConfigSelect']").click();

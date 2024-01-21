@@ -15,14 +15,13 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { html } from "gridjs";
 
 const apiStore = useApiClientStore();
 
 const fetchProtocolConfigs = async () => {
   try {
     const data =
-      await apiStore.client.registrar!.protocolConfigs.getProtocolConfigs();
+      await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues();
     const store = useProtocolConfigsStore();
     store.setProtocolConfigs(data);
     console.log("fetched configs", { data });
@@ -54,24 +53,10 @@ const tableConfig = computed(() => {
         name: "Value",
         sort: true,
       },
-
-      {
-        id: "timestamp",
-        name: "Updated",
-        sort: true,
-        formatter: (cell: string) => {
-          const { toFormat } = useDate(Number(cell));
-          const formatedDate = toFormat("LLL");
-          return html(
-            `<span class="text-xs text-grey-400">${formatedDate}</span>`
-          );
-        },
-      },
     ],
     data: data.value.map((p) => ({
       value: p.value,
       key: p.key,
-      timestamp: p.timestamp,
     })),
     search: true,
   };

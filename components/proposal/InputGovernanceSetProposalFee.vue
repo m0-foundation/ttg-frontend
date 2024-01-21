@@ -3,9 +3,10 @@
     v-model="value"
     :model-value-errors="modelValueErrors"
     :current-value="currentValue"
-    decorator="%"
-    :maska="masks.percentage"
-    :description="description"
+    decorator="WETH"
+    :maska="masks.eth"
+    description="Update the fee charged for submitting proposals."
+    data-test="proposalValue"
   />
 </template>
 
@@ -16,7 +17,6 @@ import { masks } from "@/utils/masks";
 
 export interface InputProps {
   currentValue?: string;
-  description?: string;
   modelValue: any;
   modelValueErrors?: ErrorObject[];
 }
@@ -25,9 +25,3 @@ const props = defineProps<InputProps>();
 const emit = defineEmits(["update:modelValue"]);
 const value = useVModelWrapper<InputProps>(props, emit, "modelValue");
 </script>
-
-<style>
-.error {
-  @apply border border-red-500;
-}
-</style>
