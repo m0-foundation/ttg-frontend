@@ -11,7 +11,7 @@
         v-else
         class="flex items-center"
         :address="props?.address"
-        diameter="16"
+        :diameter="16"
       />
     </div>
     <span :class="{ 'ml-[22px]': showAvatar }">

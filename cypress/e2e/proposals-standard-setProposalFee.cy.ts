@@ -9,19 +9,16 @@ describe("Proposals", () => {
 
       cy.connectWallet();
 
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Fee").click();
-      cy.contains("Change fee").click();
+      cy.contains("Proposal Fee").click();
 
       cy.get("input[data-test='proposalValue']").type(input);
       cy.get("input[data-test='title']").type(description);
 
       cy.get("textarea[data-test='description']").type(description);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -66,8 +63,8 @@ describe("Proposals", () => {
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
-      cy.get("#proposal-state").should("contain", "executed");
-      cy.get("#technical-proposal-current").should("contain", input);
+      cy.get("[data-test='executed-badge']").should("exist");
+      cy.get("#technical-proposal-incoming-change").should("contain", input);
     });
   });
 });

@@ -23,28 +23,9 @@
           <div class="text-grey-600 text-xs hidden lg:block">|</div>
           <a href="#" class="footer-link">Join our community</a>
           <ul class="flex items-center gap-4">
-            <li>
-              <a href="#" class="">
-                <img
-                  src="/img/socials/discord.svg"
-                  alt="Discord svg logo white"
-                />
-              </a>
-            </li>
-            <li>
-              <a href="#" class="">
-                <img
-                  src="/img/socials/twitter.svg"
-                  alt="Twitter svg logo white"
-                />
-              </a>
-            </li>
-            <li>
-              <a href="#" class="">
-                <img
-                  src="/img/socials/linkedin.svg"
-                  alt="LinkedIn svg logo white"
-                />
+            <li v-for="social in socialLinks" :key="social.name">
+              <a :href="social.url" class="">
+                <img :src="social.icon" :alt="`${social.name} logo white`" />
               </a>
             </li>
           </ul>
@@ -53,6 +34,26 @@
     </div>
   </footer>
 </template>
+
+<script setup>
+const socialLinks = [
+  {
+    name: "Discord",
+    url: "#",
+    icon: "/img/socials/discord.svg",
+  },
+  {
+    name: "Twitter",
+    url: "https://twitter.com/m0labs",
+    icon: "/img/socials/twitter.svg",
+  },
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/company/m-zero-labs/",
+    icon: "/img/socials/linkedin.svg",
+  },
+];
+</script>
 
 <style>
 .footer-link {

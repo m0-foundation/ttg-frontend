@@ -4,7 +4,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ include "spog-frontend.fullname" . }}
+  name: {{ include "ttg-frontend.fullname" . }}
   namespace: default
 spec:
   type: ExternalName

@@ -143,8 +143,7 @@ const inputZeroDelegates = ref();
 
 const { address: userAccount, isConnected } = useAccount();
 
-const { powerTokenVotingPower, zeroTokenVotingPower } =
-  useMVotingPower(userAccount);
+const { powerTokenVotingPower, zeroTokenVotingPower } = useMVotingPower();
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
 

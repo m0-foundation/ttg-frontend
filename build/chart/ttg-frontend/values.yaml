@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: "ghcr.io/mzero-labs/spog-frontend"
+  repository: "ghcr.io/mzero-labs/ttg-frontend"
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -13,7 +13,7 @@ image:
 imagePullSecrets: {}
 
 nameOverride: ""
-fullnameOverride: "spog-frontend"
+fullnameOverride: "ttg-frontend"
 
 serviceAccount:
   # Specifies whether a service account should be created

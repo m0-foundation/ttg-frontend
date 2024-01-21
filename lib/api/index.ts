@@ -1,4 +1,4 @@
-import { createPublicClient, Hash, http } from "viem";
+import { createPublicClient, Hash, http, fallback } from "viem";
 import { IApiConfig } from "./types";
 import { ApiContext } from "./api-context";
 import { Registrar } from "./modules/registrar";
@@ -20,8 +20,20 @@ export class Api {
   emergencyGovernor?: Governor;
   epoch: Epoch;
 
-  constructor(rpcUrl: string, config: IApiConfig) {
-    const client = createPublicClient({ transport: http(rpcUrl) });
+  constructor({
+    rpcUrl,
+    fallbackRpcUrl,
+    config,
+  }: {
+    rpcUrl: string;
+    fallbackRpcUrl?: string;
+    config: IApiConfig;
+  }) {
+    const client = createPublicClient({
+      transport: fallbackRpcUrl
+        ? fallback([http(rpcUrl), http(fallbackRpcUrl)])
+        : http(rpcUrl),
+    });
 
     this.context = new ApiContext(client, config);
 
@@ -31,7 +43,9 @@ export class Api {
   }
 
   setRpc(rpcUrl: string) {
-    this.context.client = createPublicClient({ transport: http(rpcUrl) });
+    this.context.client = createPublicClient({
+      transport: http(rpcUrl),
+    });
   }
 
   addConfig(config: Partial<IApiConfig>): void {

@@ -3,7 +3,7 @@ import { useMDelegates } from "@/lib/hooks";
 
 export default () => {
   const { address: userAccount } = useAccount();
-  const { powerDelegates, zeroDelegates } = useMDelegates(userAccount);
+  const { powerDelegates, zeroDelegates } = useMDelegates();
 
   // has Delegated if the connected wallet is not the same as the delegates
   const hasDelegatedPower = computed(

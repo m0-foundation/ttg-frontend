@@ -3,6 +3,7 @@ import { configureChains, InjectedConnector } from "@wagmi/core";
 // connectors
 import { CoinbaseWalletConnector } from "@wagmi/core/connectors/coinbaseWallet";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
+import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
 
 // RPCs providers
 import { publicProvider } from "@wagmi/core/providers/public";
@@ -36,6 +37,8 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
 
     if (config.public.env.node === "production") {
       // need to skip the code to avoid calling wallet connect server
+      const metaMaskConnector = new MetaMaskConnector({ chains });
+
       const walletConnectConnector = new WalletConnectConnector({
         chains,
         options: {
@@ -52,7 +55,7 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
       });
 
       return [
-        injectedConnector,
+        metaMaskConnector,
         walletConnectConnector,
         coinbaseWalletConnector,
       ];

@@ -8,24 +8,21 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
-      cy.contains("Select a proposal type").should("exist");
-      cy.contains("Select a proposal type").click();
+      cy.connectWallet();
 
-      cy.contains("Emergency").should("exist").click({ force: true });
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Emergency Add to a list").should("exist");
-      cy.contains("Emergency Add to a list").click({ force: true });
+      cy.get("[data-test='menuEmergency']").click();
+      cy.get("[data-test='emergencyAddToList']").click({ force: true });
 
-      cy.get("[data-test='proposalValue']").select(input1);
-      // address to append
+      cy.get("[data-test='listSelect']").click();
+      cy.get(`[data-test='list_${input1}']`).click();
+
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
-      cy.contains("Preview proposal").should("exist");
-      cy.contains("Preview proposal").click();
-
-      cy.connectWallet();
+      cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
@@ -83,7 +80,7 @@ describe("Proposals", () => {
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
-      cy.get("#proposal-state").should("contain", "executed");
+      cy.get("[data-test='executed-badge']").should("exist");
     });
   });
 });

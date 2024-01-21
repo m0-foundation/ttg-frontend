@@ -8,9 +8,10 @@
     <div class="flex flex-col app-content">
       <div class="flex grow xl:gap-6">
         <aside :class="{ '!block': isSidebarOpen }">
-          <LayoutSidebar class="h-screen w-full" />
+          <LayoutSidebar />
         </aside>
         <main
+          :class="{ '!hidden': isSidebarOpen }"
           class="w-full lg:max-w-[1100px] overflow-x-hidden lg:p-6 pt-24 lg:pt-12"
         >
           <LayoutAlerts />
@@ -38,7 +39,7 @@ watch(
 
 <style scoped>
 aside {
-  @apply z-30 fixed lg:static w-full h-screen lg:h-auto lg:min-w-[280px] lg:w-auto overflow-y-scroll lg:overflow-y-visible p-6 pt-0 lg:pl-16 hidden lg:block bg-grey-900;
+  @apply z-40 fixed lg:static w-full h-screen lg:h-auto lg:min-w-[280px] lg:w-auto overflow-hidden  p-6 pt-0 lg:pl-16 hidden lg:block bg-grey-900;
 }
 .app-content {
   height: calc(100vh);

@@ -54,6 +54,10 @@
       </div>
 
       <ProposalTableVotes :votes="votes?.value" />
+
+      <p class="text-xxs text-grey-300 mt-3">
+        Proposal ID: {{ proposal?.proposalId }}
+      </p>
     </article>
   </div>
 </template>
@@ -111,7 +115,7 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
     readPowerToken({
       address: spog!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
-      args: [BigInt(proposal.value!.epoch!)],
+      args: [BigInt(proposal.value!.epoch!) - 1n],
     }),
     readZeroToken({
       address: spog!.contracts!.zeroToken! as Hash,

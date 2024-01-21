@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "spog-frontend.fullname" . }}
+  name: {{ include "ttg-frontend.fullname" . }}
   labels:
-    {{- include "spog-frontend.labels" . | nindent 4 }}
+    {{- include "ttg-frontend.labels" . | nindent 4 }}
 spec:
   # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
   strategy:
@@ -18,7 +18,7 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      {{- include "spog-frontend.selectorLabels" . | nindent 6 }}
+      {{- include "ttg-frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{ if or .Values.config .Values.secrets .Values.podAnnotations .Values.files }}
@@ -52,7 +52,7 @@ spec:
         {{- end }}
 
       labels:
-        {{- include "spog-frontend.selectorLabels" . | nindent 8 }}
+        {{- include "ttg-frontend.selectorLabels" . | nindent 8 }}
     spec:
       affinity:
         podAntiAffinity:
@@ -64,14 +64,14 @@ spec:
                 - key: app.kubernetes.io/name
                   operator: In
                   values:
-                  - spog-frontend
+                  - ttg-frontend
               topologyKey: "kubernetes.io/hostname"
 
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "spog-frontend.serviceAccountName" . }}
+      serviceAccountName: {{ include "ttg-frontend.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 

@@ -13,11 +13,11 @@
         <h2 class="text-2xl break-all">
           {{ title }}
         </h2>
-        <span
+        <!-- <span
           v-if="proposal?.isEmergency && proposal?.state !== 'Succeeded'"
           class="text-xs text-grey-400"
           >Voting ends {{ voteEnds }}
-        </span>
+        </span> -->
       </div>
 
       <div class="text-grey-400 font-inter mb-4">
@@ -64,7 +64,9 @@
             :disabled="
               isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
             "
-            :version="voteEvent?.support ? 'active' : 'default'"
+            :version="
+              voteEvent && voteEvent.support === true ? 'active' : 'default'
+            "
             @click="onCastSelected(1)"
           >
             YES
@@ -75,7 +77,9 @@
             :disabled="
               isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
             "
-            :version="!voteEvent?.support ? 'active' : 'default'"
+            :version="
+              voteEvent && voteEvent.support === false ? 'active' : 'default'
+            "
             @click="onCastSelected(0)"
           >
             NO
@@ -146,7 +150,7 @@ const emit = defineEmits<{
 
 const apiStore = useApiClientStore();
 
-const { address: userAccount, isDisconnected } = useAccount();
+const { address: userAccount, isConnected, isDisconnected } = useAccount();
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
 const isVoteSelected = ref(false);
@@ -193,10 +197,11 @@ const { data: hasVoted } = useContractRead({
   functionName: "hasVoted",
   args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
   watch: true,
+  enabled: isConnected,
 });
 
 const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
-  useMVotingPower(userAccount);
+  useMVotingPower();
 
 const canVote = computed(() => {
   if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
