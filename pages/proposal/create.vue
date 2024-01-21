@@ -67,7 +67,7 @@
                   <p class="uppercase text-xxs">Standard Proposal</p>
                 </div>
                 <div class="flex gap-4">
-                  <MIconZero class="w-6 h-6" />
+                  <MIconZero class="w-[24px] h-[24px]" />
                   <div>
                     <span class="font-inter text-grey-100">
                       Only holders who possess active
@@ -211,8 +211,9 @@
           type="button"
           data-test="create-proposal-button-preview"
           @click="onPreview"
-          >Preview and submit</MButton
         >
+          Preview and submit
+        </MButton>
       </div>
 
       <p
@@ -233,13 +234,7 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import {
-  encodeFunctionData,
-  encodeAbiParameters,
-  toHex,
-  stringToBytes,
-  Hash,
-} from "viem";
+import { encodeFunctionData, encodeAbiParameters, Hash } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -252,11 +247,16 @@ import {
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
 import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
-import ProposalInputGovernanceConfigOperation from "@/components/proposal/InputGovernanceConfigOperation.vue";
-import ProposalInputAddressFee from "@/components/proposal/InputAddressFee.vue";
-import ProposalInputFee from "@/components/proposal/InputFee.vue";
+import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSetCashToken.vue";
+import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
+import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
+import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
 
 import { MVotingTokens } from "@/lib/api";
+import {
+  stringToHexWith32Bytes,
+  addressToHexWith32Bytes,
+} from "@/lib/api/utils";
 
 /* control stepper */
 let steps = reactive([]);
@@ -450,14 +450,43 @@ const proposalTypes = [
   },
 
   {
-    value: "setKey",
-    label: "Update governance config",
-    component: ProposalInputGovernanceConfigOperation,
+    value: "setProposalFee",
+    label: "Proposal Fee",
+    component: InputGovernanceSetProposalFee,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorABI,
     hasToPayFee: true,
-    id: "governanceSetKey",
+  },
+
+  {
+    value: "setCashToken",
+    label: "Cash Token",
+    component: InputGovernanceSetCashToken,
+    tokens: [MVotingTokens.Zero],
+    governor: spog.contracts.zeroGovernor,
+    abi: zeroGovernorABI,
+    hasToPayFee: false,
+  },
+
+  {
+    value: "setEmergencyProposalThresholdRatio",
+    label: "Power threshold",
+    component: InputGovernanceSetEmergencyProposalThreshold,
+    modelValue: formData.proposalValue,
+    tokens: [MVotingTokens.Zero],
+    governor: spog.contracts.zeroGovernor,
+    abi: zeroGovernorABI,
+    hasToPayFee: false,
+  },
+  {
+    value: "setZeroProposalThresholdRatio",
+    label: "Zero threshold",
+    component: InputGovernanceSetZeroProposalThreshold,
+    tokens: [MVotingTokens.Zero],
+    governor: spog.contracts.zeroGovernor,
+    abi: zeroGovernorABI,
+    hasToPayFee: false,
   },
 
   {
@@ -506,7 +535,7 @@ const proposalTypes = [
         value: "setStandardProposalFee",
         label: "Proposal fee",
         isEmergency: true,
-        component: ProposalInputFee,
+        component: InputGovernanceSetProposalFee,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorABI,
@@ -593,6 +622,9 @@ function onChangeProposalType(option) {
   formData.proposalType = option.value;
   selectedProposalType.value = option;
   $validation.value.$reset();
+  formData.proposalValue = null;
+  formData.proposalValue2 = null;
+  formData.proposalValue3 = null;
 }
 
 function buildDescriptionPayload() {
@@ -742,10 +774,6 @@ async function onSubmit() {
   }
 }
 
-function stringToHexWith32Bytes(data) {
-  return toHex(stringToBytes(data, { size: 32 }));
-}
-
 function buildCalldatas(formData) {
   const {
     proposalType: type,
@@ -791,17 +819,14 @@ function buildCalldatas(formData) {
   }
 
   if (["setKey"].includes(type)) {
-    const encondeInputsSetKey = ({
-      input1: key,
-      input2: value,
-    }: {
-      input1: string;
-      input2: any;
-    }) => {
-      return [stringToHexWith32Bytes(key), stringToHexWith32Bytes(value)];
-    };
+    const key = input1;
+    const value = ["penalty_rate", "mint_ratio"].includes(key)
+      ? stringToHexWith32Bytes(String(percentageToBasispoints(input2)))
+      : ["minter_rate_model", "earner_rate_model"].includes(key)
+      ? addressToHexWith32Bytes(input2)
+      : stringToHexWith32Bytes(input2);
 
-    return buildCalldatasSpog(type, encondeInputsSetKey({ input1, input2 }));
+    return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {

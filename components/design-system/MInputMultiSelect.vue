@@ -53,8 +53,14 @@
             </div>
 
             <div v-for="token in opt.tokens" :key="token">
-              <MIconPower v-if="token === MVotingTokens.Power" />
-              <MIconZero v-if="token === MVotingTokens.Zero" />
+              <MIconPower
+                v-if="token === MVotingTokens.Power"
+                class="w-[24px] h-[24px]"
+              />
+              <MIconZero
+                v-if="token === MVotingTokens.Zero"
+                class="w-[24px] h-[24px]"
+              />
             </div>
           </button>
 

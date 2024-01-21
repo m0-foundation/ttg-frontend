@@ -8,14 +8,11 @@ import {
   fromHex,
   getFunctionSelector,
   parseAbiItem,
+  trim,
 } from "viem";
 
 import pick from "lodash/pick";
 import { readContract } from "@wagmi/core";
-import {
-  hexToBytes32String,
-  removeSelectorFromCallData,
-} from "../../../../utils";
 
 import { GovernorModule } from "../GovernorModule";
 import { GovernanceType } from "../../governor.types";
@@ -26,6 +23,11 @@ import {
   ProposalEventLog,
   ProposalState,
 } from "./proposal.types";
+import {
+  hexWith32BytesToString,
+  removeSelectorFromCallData,
+  hexWith32BytesToAddress,
+} from "@/lib/api/utils";
 
 import { ApiContext } from "@/lib/api/api-context";
 import { Epoch } from "~/lib/api/modules/epoch/epoch";
@@ -103,7 +105,7 @@ export class Proposals extends GovernorModule {
     );
     return {
       proposalType,
-      params: [hexToBytes32String(params[0]), params[1]],
+      params: [hexWith32BytesToString(params[0]), params[1]],
     };
   }
 
@@ -117,7 +119,7 @@ export class Proposals extends GovernorModule {
     );
     return {
       proposalType,
-      params: [hexToBytes32String(params[0]), params[1]],
+      params: [hexWith32BytesToString(params[0]), params[1]],
     };
   }
 
@@ -132,7 +134,7 @@ export class Proposals extends GovernorModule {
     );
     return {
       proposalType,
-      params: [hexToBytes32String(params[0]), params[1], params[2]],
+      params: [hexWith32BytesToString(params[0]), params[1], params[2]],
     };
   }
 
@@ -143,8 +145,13 @@ export class Proposals extends GovernorModule {
         { name: "value_", type: "bytes32" },
       ],
       removeSelectorFromCallData(calldata)
-    ).map(hexToBytes32String);
-    return { proposalType, params };
+    );
+    const key = hexWith32BytesToString(params[0]);
+    const value = ["minter_rate_model", "earner_rate_model"].includes(key)
+      ? hexWith32BytesToAddress(params[1])
+      : hexWith32BytesToString(params[1]);
+
+    return { proposalType, params: [key, value] };
   }
 
   decodeProposalTypeReset(proposalType: string) {

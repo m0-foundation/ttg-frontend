@@ -3,11 +3,10 @@ import orderBy from "lodash/orderBy";
 import groupBy from "lodash/groupBy";
 import forEach from "lodash/forEach";
 
-import { hexToBytes32String } from "../../../../utils";
 import { MListDecoded, MListEvent, MLists } from "./list.types";
-
-import { registrarABI } from "~/lib/sdk";
-import { ApiModule } from "~/lib/api/api-module";
+import { hexWith32BytesToString } from "@/lib/api/utils";
+import { registrarABI } from "@/lib/sdk";
+import { ApiModule } from "@/lib/api/api-module";
 
 export class List extends ApiModule {
   async decodeListLog(log: Log, abi: Abi): Promise<MListEvent> {
@@ -27,7 +26,7 @@ export class List extends ApiModule {
         eventName: eventName as "AddressAddedToList" | "AddressRemovedFromList",
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
-        list: hexToBytes32String(event.list),
+        list: hexWith32BytesToString(event.list),
         account: event.account,
         timestamp: Number(block.timestamp),
       };
@@ -77,7 +76,7 @@ export class List extends ApiModule {
     const lists: MLists[] = [];
 
     forEach(listGrouped, (events, key) => {
-      let list = new Array<MListEvent>();
+      let list = [];
 
       events.forEach((event: MListEvent) => {
         if (event.eventName === "AddressAddedToList") {

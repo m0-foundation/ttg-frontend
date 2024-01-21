@@ -47,13 +47,18 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
-  const { client: wagmiClient } = useWagmi(rpc, network.value.rpc.values[1]);
+  const fallbackRpc = network.value.rpc.values[1];
+  const { client: wagmiClient } = useWagmi(rpc, fallbackRpc);
   nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
   /* setup spog client */
-  const api = new Api(rpc, {
-    registrar: network.value.contracts.registrar,
-    multicall3: network.value.contracts.multicall3,
-    deploymentBlock: BigInt(network.value.contracts.deploymentBlock),
+  const api = new Api({
+    rpcUrl: rpc,
+    fallbackRpcUrl: fallbackRpc,
+    config: {
+      registrar: network.value.contracts.registrar,
+      multicall3: network.value.contracts.multicall3,
+      deploymentBlock: BigInt(network.value.contracts.deploymentBlock),
+    },
   });
 
   const registrarContracts = await api.registrar.getValues();
@@ -81,6 +86,9 @@ onMounted(async () => {
     .catch((e) => trackError(e, "fetchGovernorsValues"));
 
   await spog.fetchTokens().catch((e) => trackError(e, "fetchTokens"));
+
+  await wait(200);
+
   await proposalStore
     .fetchAllProposals()
     .catch((e) => trackError(e, "fetchAllProposals"));
