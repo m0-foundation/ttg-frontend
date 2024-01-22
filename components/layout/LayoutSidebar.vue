@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6">
+  <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6 z-50">
     <NuxtLink to="/proposals">
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
