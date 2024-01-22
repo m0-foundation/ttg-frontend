@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       walletConnectProjectId: "4b34af2e9148b5a50056cf1894e88bf3",
+      auctionActive: process.env.AUCTION_ACTIVE === "true",
       env: {
         node: process.env.NODE_ENV,
         network: process.env.NETWORK,
@@ -31,6 +32,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxt/devtools",
   ],
+  ignore: [process.env.AUCTION_ACTIVE === "true" ? "" : "pages/auction.vue"],
   imports: {
     dirs: ["./stores"],
   },
