@@ -13,8 +13,8 @@ import { ApiModule } from "@/lib/api/api-module";
 
 export class ProtocolConfigs extends ApiModule {
   keysInBytes32 = [
-    "update_collateral_interval",
-    "update_collateral_threshold",
+    "updateCollateral_interval",
+    "updateCollateral_threshold",
     "penalty_rate",
     "mint_delay",
     "mint_ttl",
@@ -22,7 +22,7 @@ export class ProtocolConfigs extends ApiModule {
     "minter_freeze_time",
   ];
 
-  keysInAddress = ["earner_rate_model", "earner_rate_model"];
+  keysInAddress = ["minter_rate_model", "earner_rate_model"];
 
   async decodeProtocolConfigLog(
     log: Log,
@@ -102,10 +102,12 @@ export class ProtocolConfigs extends ApiModule {
       args: [this.keysInBytes32.map(stringToHexWith32Bytes)],
     });
 
-    const keyValuesBytes = this.keysInBytes32.map((key, index) => ({
-      key: hexWith32BytesToString(key),
-      value: hexWith32BytesToString(valuesBytes[index]),
-    }));
+    const keyValuesBytes = this.keysInBytes32
+      .map((key, index) => ({
+        key,
+        value: hexWith32BytesToString(valuesBytes[index]),
+      }))
+      .filter((obj) => obj.value !== "\x00");
 
     const valuesAddress = await readRegistrar({
       address: this.config.registrar as Hash,
@@ -113,10 +115,12 @@ export class ProtocolConfigs extends ApiModule {
       args: [this.keysInAddress.map(stringToHexWith32Bytes)],
     });
 
-    const keyValuesAddress = this.keysInAddress.map((key, index) => ({
-      key: hexWith32BytesToString(key),
-      value: hexWith32BytesToAddress(valuesAddress[index] as Hash),
-    }));
+    const keyValuesAddress = this.keysInAddress
+      .map((key, index) => ({
+        key,
+        value: hexWith32BytesToAddress(valuesAddress[index] as Hash),
+      }))
+      .filter((obj) => obj.value !== "0x00");
 
     return [...keyValuesBytes, ...keyValuesAddress];
   }

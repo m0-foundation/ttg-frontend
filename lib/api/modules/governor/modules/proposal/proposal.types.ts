@@ -45,7 +45,6 @@ export interface GetProposalOutput {
   proposer: string;
   voteStart: number;
   voteEnd: number;
-  executed: boolean;
   state: MProposalState;
   votingType: MVotingType;
   noVotes: bigint;
@@ -58,7 +57,6 @@ export interface MProposal extends ProposalEventLog {
   proposalLabel: string;
   proposalParams: any[];
   proposer: string;
-  executed?: boolean;
   executedEvent?: ProposalEventLog;
   state?: MProposalState;
   tallies?: MProposalTallies;
