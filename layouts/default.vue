@@ -39,7 +39,7 @@ watch(
 
 <style scoped>
 aside {
-  @apply z-40 fixed lg:static w-full h-screen lg:h-auto lg:min-w-[280px] lg:w-auto overflow-hidden  p-6 pt-0 lg:pl-16 hidden lg:block bg-grey-900;
+  @apply fixed lg:static w-full h-screen lg:h-auto lg:min-w-[280px] lg:w-auto overflow-hidden  p-6 pt-0 lg:pl-16 hidden lg:block bg-grey-900;
 }
 .app-content {
   height: calc(100vh);

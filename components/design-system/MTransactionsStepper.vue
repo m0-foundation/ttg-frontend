@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-grey-1000">
+  <div class="bg-grey-900">
     <div class="p-4">
       <h2 class="text-white text-2xl text-center">{{ title }}</h2>
     </div>
     <ol class="space-y-4 m-8">
       <li v-for="(step, index) in currentSteps" :key="index">
         <div :class="['step', step.status]" role="alert">
-          <div class="flex items-center justify-between">
+          <div class="flex gap-6">
             <div>
               <h3 class="font-medium flex">
                 <span v-if="step.status === 'complete'">[⎷]</span>
@@ -37,13 +37,18 @@
                   ]</span
                 >
                 <span v-else> [{{ index + 1 }}] </span>
-
+              </h3>
+            </div>
+            <div>
+              <h3>
                 {{ step.title }}
               </h3>
-
-              <span class="text-sm text-grey-400">
+              <p
+                v-if="step.status !== 'complete'"
+                class="text-sm text-grey-100 font-inter mb-0"
+              >
                 {{ messages[step.status] }}
-              </span>
+              </p>
             </div>
           </div>
         </div>
@@ -102,7 +107,7 @@ h3 {
   @apply text-xl;
 }
 .step {
-  @apply w-full p-4;
+  @apply w-full p-2;
 }
 
 .complete {
