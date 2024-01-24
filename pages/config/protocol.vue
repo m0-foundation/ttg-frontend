@@ -33,7 +33,7 @@ const fetchProtocolConfigs = async () => {
 const { isLoading } = useAsyncState(fetchProtocolConfigs(), null);
 
 const store = useProtocolConfigsStore();
-const { getConfigsAsArray: data } = storeToRefs(store);
+const { configs: data } = storeToRefs(store);
 
 useHead({
   titleTemplate: "%s - Protocol configurations",

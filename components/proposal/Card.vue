@@ -211,7 +211,7 @@ const canVote = computed(() => {
   }
 });
 
-voteEndTimestamp.value = await apiStore.client.epoch.getTimestampFromEpoch(
+voteEndTimestamp.value = await apiStore.client.epoch.getTimestampOfEpochStart(
   props.proposal.voteEnd
 );
 

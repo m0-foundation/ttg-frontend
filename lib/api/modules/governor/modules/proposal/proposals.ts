@@ -319,14 +319,12 @@ export class Proposals extends GovernorModule {
   }
 
   decodeReadGetProposal(proposal: any) {
-    const [voteStart, voteEnd, executed, state, noVotes, yesVotes, proposer] =
-      proposal;
+    const [voteStart, voteEnd, state, noVotes, yesVotes, proposer] = proposal;
 
     return {
       proposer: proposer as Hash,
       voteStart,
       voteEnd,
-      executed,
       state: ProposalState[state] as keyof typeof ProposalState,
       votingType: this.governanceType,
       yesVotes,
@@ -360,7 +358,7 @@ export class Proposals extends GovernorModule {
       blockNumber: BigInt(proposal.blockNumber),
     });
 
-    const epoch = Epoch.getEpochFromBlock(BigInt(proposal.blockNumber));
+    const epoch = Epoch.getEpochFromTimestamp(Number(block.timestamp));
 
     return {
       ...proposal,
@@ -368,7 +366,6 @@ export class Proposals extends GovernorModule {
         "proposer",
         "voteStart",
         "voteEnd",
-        "executed",
         "state",
         "votingType",
       ]),
