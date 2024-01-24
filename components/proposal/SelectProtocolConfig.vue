@@ -49,15 +49,15 @@ const configParams = [
     header: "protocol",
   },
   {
-    value: "update_collateral_interval",
+    value: "updateCollateral_interval",
     label: "Update collateral interval",
     shortDescription:
       "Update the period of time between which Update Collateral must be called by a Minter.",
     description:
-      "The length of time in seconds that Minter has to call update_collateral, from the previous time it was called by that minter, before they will incur the penalty.",
+      "The length of time in seconds that Minter has to call updateCollateral, from the previous time it was called by that minter, before they will incur the penalty.",
   },
   {
-    value: "update_collateral_threshold",
+    value: "updateCollateral_threshold",
     label: "Update collateral threshold",
     shortDescription:
       "Update the minimum number of signatures required to execute Update Collateral.",

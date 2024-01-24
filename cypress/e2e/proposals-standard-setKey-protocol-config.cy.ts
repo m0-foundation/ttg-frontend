@@ -1,7 +1,7 @@
 describe("Proposals", () => {
   describe("type action: setKey", () => {
     const value = "1";
-    const key = "update_collateral_interval";
+    const key = "updateCollateral_interval";
     const description = `Add protocol config ${key} = ${value}`;
     let proposalUrl = "";
 

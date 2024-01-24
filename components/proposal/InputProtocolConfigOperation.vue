@@ -35,7 +35,7 @@ export interface InputProps {
 }
 
 const inputs = {
-  update_collateral_interval: {
+  updateCollateral_interval: {
     component: InputDynamic,
     props: {
       decorator: "seconds",
@@ -43,7 +43,7 @@ const inputs = {
     },
   },
 
-  update_collateral_threshold: {
+  updateCollateral_threshold: {
     component: InputDynamic,
     props: {
       maska: masks.interger,
