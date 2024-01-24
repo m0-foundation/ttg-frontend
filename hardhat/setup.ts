@@ -157,7 +157,9 @@ export default async function setup(): Promise<
     mine: async (blocks) => {
       console.log("mine", { blocks, increse: blocks * _BLOCK_TIME });
       const currentTimestamp = await time.latest();
-      await time.setNextBlockTimestamp(currentTimestamp + blocks * _BLOCK_TIME);
+      const newTimestamp = currentTimestamp + blocks * _BLOCK_TIME;
+      console.log({ currentTimestamp, newTimestamp });
+      await time.setNextBlockTimestamp(newTimestamp);
       return hre.network.provider.send("hardhat_mine", [
         "0x" + blocks.toString(16),
       ]);
