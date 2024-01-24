@@ -19,7 +19,7 @@
       <p class="text-grey-400 text-xxs lg:text-xs mt-1">
         {{ currentEpochAsDate }} - {{ nextEpochAsDate }} *
         <span>
-          ENDS {{ timeLeft }} at block #{{ epoch?.next?.asBlockNumber }}
+          ENDS {{ timeLeft }} at block timestamp #{{ epoch?.next?.asTimestamp }}
         </span>
       </p>
     </div>
