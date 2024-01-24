@@ -1,27 +1,14 @@
 import { defineStore } from "pinia";
-import { MProtocolConfig } from "@/lib/api";
+import { MProtocolConfig } from "@/lib/api/types";
 
 export const useProtocolConfigsStore = defineStore("protocol", {
   state: () => ({
-    configs: {} as MProtocolConfig,
+    configs: [] as MProtocolConfig[],
   }),
 
-  getters: {
-    getConfigsAsArray(state) {
-      return Object.keys(state.configs).map((key) => {
-        const event = state.configs[key];
-        return {
-          key,
-          value: event.value,
-          timestamp: event.timestamp,
-        };
-      });
-    },
-  },
-
   actions: {
-    setProtocolConfigs(configs: MProtocolConfig) {
-      this.configs = configs;
+    setProtocolConfigs(configs: MProtocolConfig[]) {
+      this.configs = [...configs];
     },
   },
 });

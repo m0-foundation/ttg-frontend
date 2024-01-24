@@ -36,7 +36,7 @@ export const distributionVaultABI = [
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
-    outputs: [{ name: "clockMode_", internalType: "string", type: "string" }],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "view",
@@ -55,7 +55,7 @@ export const distributionVaultABI = [
       { name: "destination_", internalType: "address", type: "address" },
     ],
     name: "claim",
-    outputs: [{ name: "claimed_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -70,14 +70,14 @@ export const distributionVaultABI = [
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "claimBySig",
-    outputs: [{ name: "claimed", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "clock",
-    outputs: [{ name: "clock_", internalType: "uint48", type: "uint48" }],
+    outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
   },
   {
     stateMutability: "nonpayable",
@@ -95,6 +95,20 @@ export const distributionVaultABI = [
     ],
     name: "distributionOfAt",
     outputs: [{ name: "amount", internalType: "uint256", type: "uint256" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [
+      { name: "token_", internalType: "address", type: "address" },
+      { name: "startEpoch_", internalType: "uint256", type: "uint256" },
+      { name: "endEpoch_", internalType: "uint256", type: "uint256" },
+      { name: "destination_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "uint256", type: "uint256" },
+      { name: "deadline_", internalType: "uint256", type: "uint256" },
+    ],
+    name: "getClaimDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
     stateMutability: "view",
@@ -124,14 +138,14 @@ export const distributionVaultABI = [
     type: "function",
     inputs: [],
     name: "name",
-    outputs: [{ name: "name_", internalType: "string", type: "string" }],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "view",
     type: "function",
-    inputs: [{ name: "account_", internalType: "address", type: "address" }],
+    inputs: [{ name: "account", internalType: "address", type: "address" }],
     name: "nonces",
-    outputs: [{ name: "nonce_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "nonce", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -217,7 +231,7 @@ export const distributionVaultABI = [
     type: "error",
     inputs: [
       { name: "nonce", internalType: "uint256", type: "uint256" },
-      { name: "currentNonce", internalType: "uint256", type: "uint256" },
+      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
     ],
     name: "ReusedNonce",
   },
@@ -268,16 +282,14 @@ export const emergencyGovernorABI = [
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
-    outputs: [{ name: "clockMode_", internalType: "string", type: "string" }],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "COUNTING_MODE",
-    outputs: [
-      { name: "countingMode_", internalType: "string", type: "string" },
-    ],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "view",
@@ -354,7 +366,7 @@ export const emergencyGovernorABI = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
@@ -365,7 +377,7 @@ export const emergencyGovernorABI = [
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
@@ -376,7 +388,7 @@ export const emergencyGovernorABI = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
@@ -389,7 +401,7 @@ export const emergencyGovernorABI = [
     type: "function",
     inputs: [],
     name: "clock",
-    outputs: [{ name: "clock_", internalType: "uint48", type: "uint48" }],
+    outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
   },
   {
     stateMutability: "payable",
@@ -408,12 +420,31 @@ export const emergencyGovernorABI = [
   {
     stateMutability: "view",
     type: "function",
+    inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+    ],
+    name: "getBallotDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+    ],
+    name: "getBallotsDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "getProposal",
     outputs: [
       { name: "voteStart_", internalType: "uint48", type: "uint48" },
       { name: "voteEnd_", internalType: "uint48", type: "uint48" },
-      { name: "executed_", internalType: "bool", type: "bool" },
       {
         name: "state_",
         internalType: "enum IGovernor.ProposalState",
@@ -433,7 +464,7 @@ export const emergencyGovernorABI = [
       { name: "timepoint_", internalType: "uint256", type: "uint256" },
     ],
     name: "getVotes",
-    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -450,9 +481,7 @@ export const emergencyGovernorABI = [
     type: "function",
     inputs: [{ name: "callData_", internalType: "bytes", type: "bytes" }],
     name: "hashProposal",
-    outputs: [
-      { name: "proposalId_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -464,44 +493,42 @@ export const emergencyGovernorABI = [
       { name: "", internalType: "bytes32", type: "bytes32" },
     ],
     name: "hashProposal",
-    outputs: [
-      { name: "proposalId_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "name",
-    outputs: [{ name: "name_", internalType: "string", type: "string" }],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalDeadline",
-    outputs: [{ name: "deadline_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalProposer",
-    outputs: [{ name: "proposer_", internalType: "address", type: "address" }],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalSnapshot",
-    outputs: [{ name: "snapshot_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "proposalThreshold",
-    outputs: [{ name: "threshold_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -622,22 +649,18 @@ export const emergencyGovernorABI = [
     outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingDelay",
-    outputs: [
-      { name: "votingDelay_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingPeriod",
-    outputs: [
-      { name: "votingPeriod_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -780,7 +803,16 @@ export const emergencyGovernorABI = [
   { type: "error", inputs: [], name: "InvalidStandardGovernorAddress" },
   { type: "error", inputs: [], name: "InvalidTarget" },
   { type: "error", inputs: [], name: "InvalidTargetsLength" },
-  { type: "error", inputs: [], name: "InvalidThresholdRatio" },
+  {
+    type: "error",
+    inputs: [
+      { name: "thresholdRatio", internalType: "uint256", type: "uint256" },
+      { name: "minThresholdRatio", internalType: "uint256", type: "uint256" },
+      { name: "maxThresholdRatio", internalType: "uint256", type: "uint256" },
+    ],
+    name: "InvalidThresholdRatio",
+  },
+  { type: "error", inputs: [], name: "InvalidUInt16" },
   { type: "error", inputs: [], name: "InvalidValue" },
   { type: "error", inputs: [], name: "InvalidValuesLength" },
   { type: "error", inputs: [], name: "InvalidVoteTokenAddress" },
@@ -828,6 +860,13 @@ export const powerTokenABI = [
     ],
   },
   {
+    stateMutability: "view",
+    type: "function",
+    inputs: [],
+    name: "CANCEL_AUTHORIZATION_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
     stateMutability: "pure",
     type: "function",
     inputs: [],
@@ -853,20 +892,34 @@ export const powerTokenABI = [
     type: "function",
     inputs: [],
     name: "INITIAL_SUPPLY",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint240", type: "uint240" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "ONE",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "PERMIT_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [],
+    name: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [],
+    name: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
@@ -884,9 +937,7 @@ export const powerTokenABI = [
     type: "function",
     inputs: [],
     name: "amountToAuction",
-    outputs: [
-      { name: "amountToAuction_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint240", type: "uint240" }],
   },
   {
     stateMutability: "nonpayable",
@@ -901,16 +952,26 @@ export const powerTokenABI = [
   {
     stateMutability: "view",
     type: "function",
+    inputs: [
+      { name: "authorizer", internalType: "address", type: "address" },
+      { name: "nonce", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "authorizationState",
+    outputs: [{ name: "isNonceUsed", internalType: "bool", type: "bool" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "balanceOf",
-    outputs: [{ name: "balance_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "bootstrapEpoch",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
   },
   {
     stateMutability: "view",
@@ -929,16 +990,52 @@ export const powerTokenABI = [
     ],
     name: "buy",
     outputs: [
-      { name: "amount_", internalType: "uint256", type: "uint256" },
+      { name: "amount_", internalType: "uint240", type: "uint240" },
       { name: "cost_", internalType: "uint256", type: "uint256" },
     ],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "authorizer_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "vs_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "cancelAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "authorizer_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "cancelAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "authorizer_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "cancelAuthorization",
+    outputs: [],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "cashToken",
-    outputs: [{ name: "cashToken_", internalType: "address", type: "address" }],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
@@ -953,16 +1050,6 @@ export const powerTokenABI = [
     inputs: [],
     name: "decimals",
     outputs: [{ name: "", internalType: "uint8", type: "uint8" }],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    inputs: [
-      { name: "spender_", internalType: "address", type: "address" },
-      { name: "subtractedAmount_", internalType: "uint256", type: "uint256" },
-    ],
-    name: "decreaseAllowance",
-    outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
   },
   {
     stateMutability: "nonpayable",
@@ -1003,14 +1090,25 @@ export const powerTokenABI = [
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "delegates",
-    outputs: [{ name: "delegatee_", internalType: "address", type: "address" }],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "amount_", internalType: "uint256", type: "uint256" }],
     name: "getCost",
-    outputs: [{ name: "cost_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [
+      { name: "delegatee_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "uint256", type: "uint256" },
+      { name: "expiry_", internalType: "uint256", type: "uint256" },
+    ],
+    name: "getDelegationDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
     stateMutability: "view",
@@ -1020,18 +1118,14 @@ export const powerTokenABI = [
       { name: "epoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "getPastVotes",
-    outputs: [
-      { name: "votingPower_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "getVotes",
-    outputs: [
-      { name: "votingPower_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -1041,17 +1135,7 @@ export const powerTokenABI = [
       { name: "epoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "hasParticipatedAt",
-    outputs: [{ name: "participated_", internalType: "bool", type: "bool" }],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    inputs: [
-      { name: "spender_", internalType: "address", type: "address" },
-      { name: "addedAmount_", internalType: "uint256", type: "uint256" },
-    ],
-    name: "increaseAllowance",
-    outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
     stateMutability: "nonpayable",
@@ -1077,16 +1161,16 @@ export const powerTokenABI = [
   {
     stateMutability: "view",
     type: "function",
-    inputs: [{ name: "account_", internalType: "address", type: "address" }],
+    inputs: [{ name: "account", internalType: "address", type: "address" }],
     name: "nonces",
-    outputs: [{ name: "nonce_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "nonce", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "participationInflation",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
   },
   {
     stateMutability: "view",
@@ -1096,7 +1180,7 @@ export const powerTokenABI = [
       { name: "epoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "pastBalanceOf",
-    outputs: [{ name: "balance_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -1106,16 +1190,14 @@ export const powerTokenABI = [
       { name: "epoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "pastDelegates",
-    outputs: [{ name: "delegatee_", internalType: "address", type: "address" }],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "epoch_", internalType: "uint256", type: "uint256" }],
     name: "pastTotalSupply",
-    outputs: [
-      { name: "totalSupply_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -1149,6 +1231,54 @@ export const powerTokenABI = [
     stateMutability: "nonpayable",
     type: "function",
     inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "receiveWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "vs_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "receiveWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "receiveWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
       { name: "nextCashToken_", internalType: "address", type: "address" },
     ],
     name: "setNextCashToken",
@@ -1173,18 +1303,14 @@ export const powerTokenABI = [
     type: "function",
     inputs: [],
     name: "targetSupply",
-    outputs: [
-      { name: "targetSupply_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "totalSupply",
-    outputs: [
-      { name: "totalSupply_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -1206,6 +1332,54 @@ export const powerTokenABI = [
     ],
     name: "transferFrom",
     outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "vs_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "transferWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "transferWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "transferWithAuthorization",
+    outputs: [],
   },
   {
     stateMutability: "view",
@@ -1244,6 +1418,44 @@ export const powerTokenABI = [
     anonymous: false,
     inputs: [
       {
+        name: "authorizer",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "nonce",
+        internalType: "bytes32",
+        type: "bytes32",
+        indexed: true,
+      },
+    ],
+    name: "AuthorizationCanceled",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "authorizer",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "nonce",
+        internalType: "bytes32",
+        type: "bytes32",
+        indexed: true,
+      },
+    ],
+    name: "AuthorizationUsed",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
         name: "buyer",
         internalType: "address",
         type: "address",
@@ -1251,8 +1463,8 @@ export const powerTokenABI = [
       },
       {
         name: "amount",
-        internalType: "uint256",
-        type: "uint256",
+        internalType: "uint240",
+        type: "uint240",
         indexed: false,
       },
       {
@@ -1320,8 +1532,8 @@ export const powerTokenABI = [
     inputs: [
       {
         name: "startingEpoch",
-        internalType: "uint256",
-        type: "uint256",
+        internalType: "uint16",
+        type: "uint16",
         indexed: true,
       },
       {
@@ -1339,14 +1551,14 @@ export const powerTokenABI = [
     inputs: [
       {
         name: "targetEpoch",
-        internalType: "uint256",
-        type: "uint256",
+        internalType: "uint16",
+        type: "uint16",
         indexed: true,
       },
       {
         name: "targetSupply",
-        internalType: "uint256",
-        type: "uint256",
+        internalType: "uint240",
+        type: "uint240",
         indexed: true,
       },
     ],
@@ -1382,8 +1594,44 @@ export const powerTokenABI = [
   {
     type: "error",
     inputs: [
-      { name: "amountToAuction", internalType: "uint256", type: "uint256" },
-      { name: "minAmountRequested", internalType: "uint256", type: "uint256" },
+      { name: "authorizer", internalType: "address", type: "address" },
+      { name: "nonce", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "AuthorizationAlreadyUsed",
+  },
+  {
+    type: "error",
+    inputs: [
+      { name: "timestamp", internalType: "uint256", type: "uint256" },
+      { name: "validBefore", internalType: "uint256", type: "uint256" },
+    ],
+    name: "AuthorizationExpired",
+  },
+  {
+    type: "error",
+    inputs: [
+      { name: "timestamp", internalType: "uint256", type: "uint256" },
+      { name: "validAfter", internalType: "uint256", type: "uint256" },
+    ],
+    name: "AuthorizationNotYetValid",
+  },
+  { type: "error", inputs: [], name: "BootstrapSupplyTooLarge" },
+  {
+    type: "error",
+    inputs: [
+      { name: "caller", internalType: "address", type: "address" },
+      { name: "payee", internalType: "address", type: "address" },
+    ],
+    name: "CallerMustBePayee",
+  },
+  { type: "error", inputs: [], name: "DivideUpOverflow" },
+  { type: "error", inputs: [], name: "DivisionByZero" },
+  { type: "error", inputs: [], name: "InflationTooHigh" },
+  {
+    type: "error",
+    inputs: [
+      { name: "amountToAuction", internalType: "uint240", type: "uint240" },
+      { name: "minAmountRequested", internalType: "uint240", type: "uint240" },
     ],
     name: "InsufficientAuctionSupply",
   },
@@ -1392,12 +1640,14 @@ export const powerTokenABI = [
   { type: "error", inputs: [], name: "InvalidSignature" },
   { type: "error", inputs: [], name: "InvalidSignatureLength" },
   { type: "error", inputs: [], name: "InvalidStandardGovernorAddress" },
+  { type: "error", inputs: [], name: "InvalidUInt16" },
+  { type: "error", inputs: [], name: "InvalidUInt240" },
   { type: "error", inputs: [], name: "InvalidVaultAddress" },
   {
     type: "error",
     inputs: [
-      { name: "timepoint", internalType: "uint256", type: "uint256" },
-      { name: "clock", internalType: "uint256", type: "uint256" },
+      { name: "timepoint", internalType: "uint48", type: "uint48" },
+      { name: "clock", internalType: "uint48", type: "uint48" },
     ],
     name: "NotPastTimepoint",
   },
@@ -1407,7 +1657,7 @@ export const powerTokenABI = [
     type: "error",
     inputs: [
       { name: "nonce", internalType: "uint256", type: "uint256" },
-      { name: "currentNonce", internalType: "uint256", type: "uint256" },
+      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
     ],
     name: "ReusedNonce",
   },
@@ -1451,9 +1701,7 @@ export const registrarABI = [
     type: "function",
     inputs: [],
     name: "emergencyGovernor",
-    outputs: [
-      { name: "emergencyGovernor_", internalType: "address", type: "address" },
-    ],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
@@ -1467,7 +1715,7 @@ export const registrarABI = [
     type: "function",
     inputs: [{ name: "key_", internalType: "bytes32", type: "bytes32" }],
     name: "get",
-    outputs: [{ name: "value_", internalType: "bytes32", type: "bytes32" }],
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
     stateMutability: "view",
@@ -1486,7 +1734,7 @@ export const registrarABI = [
       { name: "accounts_", internalType: "address[]", type: "address[]" },
     ],
     name: "listContains",
-    outputs: [{ name: "contains_", internalType: "bool", type: "bool" }],
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
     stateMutability: "view",
@@ -1496,16 +1744,14 @@ export const registrarABI = [
       { name: "account_", internalType: "address", type: "address" },
     ],
     name: "listContains",
-    outputs: [{ name: "contains_", internalType: "bool", type: "bool" }],
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "powerToken",
-    outputs: [
-      { name: "powerToken_", internalType: "address", type: "address" },
-    ],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
@@ -1539,9 +1785,7 @@ export const registrarABI = [
     type: "function",
     inputs: [],
     name: "standardGovernor",
-    outputs: [
-      { name: "standardGovernor_", internalType: "address", type: "address" },
-    ],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
@@ -1669,16 +1913,14 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
-    outputs: [{ name: "clockMode_", internalType: "string", type: "string" }],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "COUNTING_MODE",
-    outputs: [
-      { name: "countingMode_", internalType: "string", type: "string" },
-    ],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "view",
@@ -1762,7 +2004,7 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
@@ -1773,7 +2015,7 @@ export const standardGovernorABI = [
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
@@ -1784,7 +2026,7 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
@@ -1797,7 +2039,7 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [],
     name: "clock",
-    outputs: [{ name: "clock_", internalType: "uint48", type: "uint48" }],
+    outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
   },
   {
     stateMutability: "view",
@@ -1823,12 +2065,31 @@ export const standardGovernorABI = [
   {
     stateMutability: "view",
     type: "function",
+    inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+    ],
+    name: "getBallotDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+    ],
+    name: "getBallotsDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "getProposal",
     outputs: [
       { name: "voteStart_", internalType: "uint48", type: "uint48" },
       { name: "voteEnd_", internalType: "uint48", type: "uint48" },
-      { name: "executed_", internalType: "bool", type: "bool" },
       {
         name: "state_",
         internalType: "enum IGovernor.ProposalState",
@@ -1847,7 +2108,7 @@ export const standardGovernorABI = [
       { name: "timepoint_", internalType: "uint256", type: "uint256" },
     ],
     name: "getVotes",
-    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -1867,16 +2128,14 @@ export const standardGovernorABI = [
       { name: "epoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "hasVotedOnAllProposals",
-    outputs: [{ name: "hasVoted_", internalType: "bool", type: "bool" }],
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "callData_", internalType: "bytes", type: "bytes" }],
     name: "hashProposal",
-    outputs: [
-      { name: "proposalId_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -1888,9 +2147,7 @@ export const standardGovernorABI = [
       { name: "", internalType: "bytes32", type: "bytes32" },
     ],
     name: "hashProposal",
-    outputs: [
-      { name: "proposalId_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -1904,7 +2161,7 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [],
     name: "name",
-    outputs: [{ name: "name_", internalType: "string", type: "string" }],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "view",
@@ -1928,7 +2185,7 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalDeadline",
-    outputs: [{ name: "deadline_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -1942,21 +2199,21 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalProposer",
-    outputs: [{ name: "proposer_", internalType: "address", type: "address" }],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalSnapshot",
-    outputs: [{ name: "snapshot_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "proposalThreshold",
-    outputs: [{ name: "threshold_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -1977,14 +2234,14 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [],
     name: "quorum",
-    outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "pure",
     type: "function",
     inputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     name: "quorum",
-    outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -2056,11 +2313,7 @@ export const standardGovernorABI = [
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "state",
     outputs: [
-      {
-        name: "state_",
-        internalType: "enum IGovernor.ProposalState",
-        type: "uint8",
-      },
+      { name: "", internalType: "enum IGovernor.ProposalState", type: "uint8" },
     ],
   },
   {
@@ -2082,18 +2335,14 @@ export const standardGovernorABI = [
     type: "function",
     inputs: [],
     name: "votingDelay",
-    outputs: [
-      { name: "votingDelay_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingPeriod",
-    outputs: [
-      { name: "votingPeriod_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -2412,16 +2661,14 @@ export const zeroGovernorABI = [
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
-    outputs: [{ name: "clockMode_", internalType: "string", type: "string" }],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "COUNTING_MODE",
-    outputs: [
-      { name: "countingMode_", internalType: "string", type: "string" },
-    ],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "view",
@@ -2488,7 +2735,7 @@ export const zeroGovernorABI = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
@@ -2499,7 +2746,7 @@ export const zeroGovernorABI = [
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
@@ -2510,7 +2757,7 @@ export const zeroGovernorABI = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "supports_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
@@ -2523,16 +2770,14 @@ export const zeroGovernorABI = [
     type: "function",
     inputs: [],
     name: "clock",
-    outputs: [{ name: "clock_", internalType: "uint48", type: "uint48" }],
+    outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "emergencyGovernor",
-    outputs: [
-      { name: "emergencyGovernor_", internalType: "address", type: "address" },
-    ],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
@@ -2558,12 +2803,31 @@ export const zeroGovernorABI = [
   {
     stateMutability: "view",
     type: "function",
+    inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+    ],
+    name: "getBallotDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+    ],
+    name: "getBallotsDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "getProposal",
     outputs: [
       { name: "voteStart_", internalType: "uint48", type: "uint48" },
       { name: "voteEnd_", internalType: "uint48", type: "uint48" },
-      { name: "executed_", internalType: "bool", type: "bool" },
       {
         name: "state_",
         internalType: "enum IGovernor.ProposalState",
@@ -2583,7 +2847,7 @@ export const zeroGovernorABI = [
       { name: "timepoint_", internalType: "uint256", type: "uint256" },
     ],
     name: "getVotes",
-    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -2600,9 +2864,7 @@ export const zeroGovernorABI = [
     type: "function",
     inputs: [{ name: "callData_", internalType: "bytes", type: "bytes" }],
     name: "hashProposal",
-    outputs: [
-      { name: "proposalId_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -2614,23 +2876,21 @@ export const zeroGovernorABI = [
       { name: "", internalType: "bytes32", type: "bytes32" },
     ],
     name: "hashProposal",
-    outputs: [
-      { name: "proposalId_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "token_", internalType: "address", type: "address" }],
     name: "isAllowedCashToken",
-    outputs: [{ name: "isAllowed_", internalType: "bool", type: "bool" }],
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "name",
-    outputs: [{ name: "name_", internalType: "string", type: "string" }],
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
     stateMutability: "view",
@@ -2644,28 +2904,28 @@ export const zeroGovernorABI = [
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalDeadline",
-    outputs: [{ name: "deadline_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalProposer",
-    outputs: [{ name: "proposer_", internalType: "address", type: "address" }],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalSnapshot",
-    outputs: [{ name: "snapshot_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "proposalThreshold",
-    outputs: [{ name: "threshold_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -2742,9 +3002,7 @@ export const zeroGovernorABI = [
     type: "function",
     inputs: [],
     name: "standardGovernor",
-    outputs: [
-      { name: "standardGovernor_", internalType: "address", type: "address" },
-    ],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
@@ -2781,22 +3039,18 @@ export const zeroGovernorABI = [
     outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingDelay",
-    outputs: [
-      { name: "votingDelay_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingPeriod",
-    outputs: [
-      { name: "votingPeriod_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     type: "event",
@@ -2970,7 +3224,16 @@ export const zeroGovernorABI = [
   { type: "error", inputs: [], name: "InvalidStandardGovernorDeployerAddress" },
   { type: "error", inputs: [], name: "InvalidTarget" },
   { type: "error", inputs: [], name: "InvalidTargetsLength" },
-  { type: "error", inputs: [], name: "InvalidThresholdRatio" },
+  {
+    type: "error",
+    inputs: [
+      { name: "thresholdRatio", internalType: "uint256", type: "uint256" },
+      { name: "minThresholdRatio", internalType: "uint256", type: "uint256" },
+      { name: "maxThresholdRatio", internalType: "uint256", type: "uint256" },
+    ],
+    name: "InvalidThresholdRatio",
+  },
+  { type: "error", inputs: [], name: "InvalidUInt16" },
   { type: "error", inputs: [], name: "InvalidValue" },
   { type: "error", inputs: [], name: "InvalidValuesLength" },
   { type: "error", inputs: [], name: "InvalidVoteTokenAddress" },
@@ -3044,6 +3307,13 @@ export const zeroTokenABI = [
     ],
   },
   {
+    stateMutability: "view",
+    type: "function",
+    inputs: [],
+    name: "CANCEL_AUTHORIZATION_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
     stateMutability: "pure",
     type: "function",
     inputs: [],
@@ -3074,6 +3344,20 @@ export const zeroTokenABI = [
   {
     stateMutability: "view",
     type: "function",
+    inputs: [],
+    name: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [],
+    name: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [
       { name: "account", internalType: "address", type: "address" },
       { name: "spender", internalType: "address", type: "address" },
@@ -3094,9 +3378,55 @@ export const zeroTokenABI = [
   {
     stateMutability: "view",
     type: "function",
+    inputs: [
+      { name: "authorizer", internalType: "address", type: "address" },
+      { name: "nonce", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "authorizationState",
+    outputs: [{ name: "isNonceUsed", internalType: "bool", type: "bool" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "balanceOf",
-    outputs: [{ name: "balance_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "authorizer_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "vs_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "cancelAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "authorizer_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "cancelAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "authorizer_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "cancelAuthorization",
+    outputs: [],
   },
   {
     stateMutability: "view",
@@ -3111,16 +3441,6 @@ export const zeroTokenABI = [
     inputs: [],
     name: "decimals",
     outputs: [{ name: "", internalType: "uint8", type: "uint8" }],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    inputs: [
-      { name: "spender_", internalType: "address", type: "address" },
-      { name: "subtractedAmount_", internalType: "uint256", type: "uint256" },
-    ],
-    name: "decreaseAllowance",
-    outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
   },
   {
     stateMutability: "nonpayable",
@@ -3161,7 +3481,18 @@ export const zeroTokenABI = [
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "delegates",
-    outputs: [{ name: "delegatee_", internalType: "address", type: "address" }],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [
+      { name: "delegatee_", internalType: "address", type: "address" },
+      { name: "nonce_", internalType: "uint256", type: "uint256" },
+      { name: "expiry_", internalType: "uint256", type: "uint256" },
+    ],
+    name: "getDelegationDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
     stateMutability: "view",
@@ -3171,9 +3502,7 @@ export const zeroTokenABI = [
       { name: "epoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "getPastVotes",
-    outputs: [
-      { name: "votingPower_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -3184,28 +3513,14 @@ export const zeroTokenABI = [
       { name: "endEpoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "getPastVotes",
-    outputs: [
-      { name: "votingPowers_", internalType: "uint256[]", type: "uint256[]" },
-    ],
+    outputs: [{ name: "", internalType: "uint256[]", type: "uint256[]" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "getVotes",
-    outputs: [
-      { name: "votingPower_", internalType: "uint256", type: "uint256" },
-    ],
-  },
-  {
-    stateMutability: "nonpayable",
-    type: "function",
-    inputs: [
-      { name: "spender_", internalType: "address", type: "address" },
-      { name: "addedAmount_", internalType: "uint256", type: "uint256" },
-    ],
-    name: "increaseAllowance",
-    outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -3227,9 +3542,9 @@ export const zeroTokenABI = [
   {
     stateMutability: "view",
     type: "function",
-    inputs: [{ name: "account_", internalType: "address", type: "address" }],
+    inputs: [{ name: "account", internalType: "address", type: "address" }],
     name: "nonces",
-    outputs: [{ name: "nonce_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "nonce", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -3239,7 +3554,7 @@ export const zeroTokenABI = [
       { name: "epoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "pastBalanceOf",
-    outputs: [{ name: "balance_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "view",
@@ -3250,9 +3565,7 @@ export const zeroTokenABI = [
       { name: "endEpoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "pastBalancesOf",
-    outputs: [
-      { name: "balances_", internalType: "uint256[]", type: "uint256[]" },
-    ],
+    outputs: [{ name: "", internalType: "uint256[]", type: "uint256[]" }],
   },
   {
     stateMutability: "view",
@@ -3262,7 +3575,7 @@ export const zeroTokenABI = [
       { name: "epoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "pastDelegates",
-    outputs: [{ name: "delegatee_", internalType: "address", type: "address" }],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
@@ -3273,9 +3586,7 @@ export const zeroTokenABI = [
       { name: "endEpoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "pastDelegates",
-    outputs: [
-      { name: "delegatees_", internalType: "address[]", type: "address[]" },
-    ],
+    outputs: [{ name: "", internalType: "address[]", type: "address[]" }],
   },
   {
     stateMutability: "view",
@@ -3285,18 +3596,14 @@ export const zeroTokenABI = [
       { name: "endEpoch_", internalType: "uint256", type: "uint256" },
     ],
     name: "pastTotalSupplies",
-    outputs: [
-      { name: "totalSupplies_", internalType: "uint256[]", type: "uint256[]" },
-    ],
+    outputs: [{ name: "", internalType: "uint256[]", type: "uint256[]" }],
   },
   {
     stateMutability: "view",
     type: "function",
     inputs: [{ name: "epoch_", internalType: "uint256", type: "uint256" }],
     name: "pastTotalSupply",
-    outputs: [
-      { name: "totalSupply_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -3327,13 +3634,59 @@ export const zeroTokenABI = [
     outputs: [],
   },
   {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "receiveWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "vs_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "receiveWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "receiveWithAuthorization",
+    outputs: [],
+  },
+  {
     stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernor",
-    outputs: [
-      { name: "standardGovernor_", internalType: "address", type: "address" },
-    ],
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
   {
     stateMutability: "view",
@@ -3354,9 +3707,7 @@ export const zeroTokenABI = [
     type: "function",
     inputs: [],
     name: "totalSupply",
-    outputs: [
-      { name: "totalSupply_", internalType: "uint256", type: "uint256" },
-    ],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
     stateMutability: "nonpayable",
@@ -3378,6 +3729,54 @@ export const zeroTokenABI = [
     ],
     name: "transferFrom",
     outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "vs_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "transferWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "transferWithAuthorization",
+    outputs: [],
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      { name: "from_", internalType: "address", type: "address" },
+      { name: "to_", internalType: "address", type: "address" },
+      { name: "value_", internalType: "uint256", type: "uint256" },
+      { name: "validAfter_", internalType: "uint256", type: "uint256" },
+      { name: "validBefore_", internalType: "uint256", type: "uint256" },
+      { name: "nonce_", internalType: "bytes32", type: "bytes32" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "transferWithAuthorization",
+    outputs: [],
   },
   {
     type: "event",
@@ -3403,6 +3802,44 @@ export const zeroTokenABI = [
       },
     ],
     name: "Approval",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "authorizer",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "nonce",
+        internalType: "bytes32",
+        type: "bytes32",
+        indexed: true,
+      },
+    ],
+    name: "AuthorizationCanceled",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "authorizer",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "nonce",
+        internalType: "bytes32",
+        type: "bytes32",
+        indexed: true,
+      },
+    ],
+    name: "AuthorizationUsed",
   },
   {
     type: "event",
@@ -3480,9 +3917,43 @@ export const zeroTokenABI = [
     name: "Transfer",
   },
   { type: "error", inputs: [], name: "AmountExceedsUint240" },
+  {
+    type: "error",
+    inputs: [
+      { name: "authorizer", internalType: "address", type: "address" },
+      { name: "nonce", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "AuthorizationAlreadyUsed",
+  },
+  {
+    type: "error",
+    inputs: [
+      { name: "timestamp", internalType: "uint256", type: "uint256" },
+      { name: "validBefore", internalType: "uint256", type: "uint256" },
+    ],
+    name: "AuthorizationExpired",
+  },
+  {
+    type: "error",
+    inputs: [
+      { name: "timestamp", internalType: "uint256", type: "uint256" },
+      { name: "validAfter", internalType: "uint256", type: "uint256" },
+    ],
+    name: "AuthorizationNotYetValid",
+  },
+  {
+    type: "error",
+    inputs: [
+      { name: "caller", internalType: "address", type: "address" },
+      { name: "payee", internalType: "address", type: "address" },
+    ],
+    name: "CallerMustBePayee",
+  },
   { type: "error", inputs: [], name: "InvalidSignature" },
   { type: "error", inputs: [], name: "InvalidSignatureLength" },
   { type: "error", inputs: [], name: "InvalidStandardGovernorDeployerAddress" },
+  { type: "error", inputs: [], name: "InvalidUInt16" },
+  { type: "error", inputs: [], name: "InvalidUInt240" },
   {
     type: "error",
     inputs: [
@@ -3494,8 +3965,8 @@ export const zeroTokenABI = [
   {
     type: "error",
     inputs: [
-      { name: "timepoint", internalType: "uint256", type: "uint256" },
-      { name: "clock", internalType: "uint256", type: "uint256" },
+      { name: "timepoint", internalType: "uint48", type: "uint48" },
+      { name: "clock", internalType: "uint48", type: "uint48" },
     ],
     name: "NotPastTimepoint",
   },
@@ -3504,7 +3975,7 @@ export const zeroTokenABI = [
     type: "error",
     inputs: [
       { name: "nonce", internalType: "uint256", type: "uint256" },
-      { name: "currentNonce", internalType: "uint256", type: "uint256" },
+      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
     ],
     name: "ReusedNonce",
   },

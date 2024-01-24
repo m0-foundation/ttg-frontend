@@ -9,7 +9,7 @@ export class Voting extends GovernorModule {
       blockNumber: BigInt(log.blockNumber),
     });
 
-    const epoch = Epoch.getEpochFromBlock(log.blockNumber);
+    const epoch = Epoch.getEpochFromTimestamp(Number(block.timestamp));
 
     const vote = {
       proposalId: log?.args?.proposalId?.toString(),

@@ -4,12 +4,12 @@ module.exports = {
 
   networks: {
     hardhat: {
-      loggingEnabled: true,
+      // loggingEnabled: true,
       allowUnlimitedContractSize: true,
       hardfork: "shanghai",
       mining: {
         auto: true,
-        interval: 8000,
+        interval: 12000,
       },
       accounts: {
         mnemonic: "test test test test test test test test test test test junk",
