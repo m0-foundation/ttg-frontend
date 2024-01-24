@@ -1,94 +1,75 @@
 import { PublicClient } from "viem";
 import { EpochTypes, MEpoch } from "./epoch.types";
 
-export const _STARTING_BLOCK =
-  process.env.NODE_ENV === "development" ? 0 : 4847639;
-export const _SECONDS_PER_BLOCK = 12;
-export const _EPOCH_PERIOD = 50;
+/*
+unused vars but usefull to control hardhat and cypress
+_EPOCH_PERIOD = 34; //  _EPOCH_PERIOD_SECONDS/_SECONDS_PER_BLOCK 400/12
+_SECONDS_PER_BLOCK = 12;
+see files:
+- cypress/support/commands.ts#L136
+- hardhat.config.js#L12
+*/
 
 export class Epoch {
   client: PublicClient;
+
+  static _STARTING_TIMESTAMP = 1_704_809_636;
+  static _EPOCH_PERIOD_SECONDS = 400;
 
   constructor(client: PublicClient) {
     this.client = client;
   }
 
-  async getBlockNumber(): Promise<bigint> {
-    return await this.client.getBlock().then((block) => block.number);
+  async getCurrentBlockTimestamp(): Promise<bigint> {
+    return await this.client.getBlock().then((block) => block.timestamp);
   }
 
-  async getEpochState(currentEpoch: number): Promise<MEpoch> {
-    console.log({
-      currentEpoch,
-    });
+  getEpochState(currentEpoch: number): MEpoch {
+    const currentEpochStartAsTimestamp =
+      this.getTimestampOfEpochStart(currentEpoch);
 
-    const currentEpochStartAsBlockNumber =
-      this.getBlockNumberOfEpochStart(currentEpoch);
-
-    const currentEpochStartAsBlock = await this.client.getBlock({
-      blockNumber: BigInt(currentEpochStartAsBlockNumber),
-    });
-
-    console.log({
-      currentEpochStartAsBlockNumber,
-      currentEpochStartAsBlock,
-    });
-
-    const nextEpochAsBlockNumber = this.getBlockNumberOfEpochEnd(currentEpoch);
-
-    const nextEpochAsTimestamp =
-      Number(currentEpochStartAsBlock.timestamp) +
-      _EPOCH_PERIOD * _SECONDS_PER_BLOCK;
+    const currentEpochEndAsTimestamp =
+      this.getTimestampOfEpochEnd(currentEpoch);
 
     const getType = (epoch: number) =>
       epoch % 2 === 0 ? EpochTypes.TRANSFER : EpochTypes.VOTING;
 
+    console.log({
+      currentEpoch,
+      currentEpochStart: currentEpochStartAsTimestamp,
+      currentEpochEnd: currentEpochEndAsTimestamp,
+      type: getType(currentEpoch),
+    });
+
     return {
       current: {
         asNumber: currentEpoch,
-        asBlockNumber: currentEpochStartAsBlockNumber,
-        asTimestamp: Number(currentEpochStartAsBlock.timestamp),
+        asTimestamp: currentEpochStartAsTimestamp,
         type: getType(currentEpoch),
       },
       next: {
         asNumber: currentEpoch + 1,
-        asBlockNumber: nextEpochAsBlockNumber,
-        asTimestamp: nextEpochAsTimestamp,
+        asTimestamp: currentEpochEndAsTimestamp,
         type: getType(currentEpoch + 1),
       },
     };
   }
 
-  static getEpochFromBlock(blockNumber: bigint) {
+  static getEpochFromTimestamp(timestamp: number) {
     return (
-      Math.floor((Number(blockNumber) - _STARTING_BLOCK) / _EPOCH_PERIOD) + 1
+      Math.floor(
+        (timestamp - Epoch._STARTING_TIMESTAMP) / Epoch._EPOCH_PERIOD_SECONDS
+      ) + 1
     );
   }
 
-  getBlockNumberOfEpochStart(epoch: number) {
-    return (epoch - 1) * _EPOCH_PERIOD + _STARTING_BLOCK;
-  }
-
-  getBlockNumberOfEpochEnd(epoch: number) {
-    return this.getBlockNumberOfEpochStart(epoch + 1);
-  }
-
-  toSeconds(blockNumber: number) {
-    return blockNumber * _SECONDS_PER_BLOCK;
-  }
-
-  async getTimestampFromEpoch(epoch: number) {
-    const epochBlockNumber = epoch * _EPOCH_PERIOD;
-    const currentBlockNumber = await this.getBlockNumber();
-
-    const currentEpochAsBlock = await this.client.getBlock({
-      blockNumber: BigInt(currentBlockNumber),
-    });
-
+  getTimestampOfEpochStart(epoch: number) {
     return (
-      Number(currentEpochAsBlock.timestamp) +
-      (this.toSeconds(epochBlockNumber) -
-        this.toSeconds(Number(currentBlockNumber)))
+      (epoch - 1) * Epoch._EPOCH_PERIOD_SECONDS + Epoch._STARTING_TIMESTAMP
     );
+  }
+
+  getTimestampOfEpochEnd(epoch: number) {
+    return this.getTimestampOfEpochStart(epoch + 1);
   }
 }
