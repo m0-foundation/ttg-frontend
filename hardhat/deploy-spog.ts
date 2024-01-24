@@ -10,7 +10,7 @@ import PowerBootstrapTokenAbi from "../modules/spog/abi/PowerBootstrapToken.json
 import PowerTokenDeployerAbi from "../modules/spog/abi/PowerTokenDeployer.json";
 import RegistrarAbi from "../modules/spog/abi/Registrar.json";
 import ZeroTokenAbi from "../modules/spog/abi/ZeroToken.json";
-import ERC20PermitHarnessAbi from "../modules/spog/abi/ERC20PermitHarness.json";
+import ERC20ExtendedHarnessAbi from "../modules/spog/abi/ERC20ExtendedHarness.json";
 import DistributionVaultAbi from "../modules/spog/abi/DistributionVault.json";
 
 import { bytecode as StandardGovernorDeployerBytecode } from "../modules/spog/bytecode/StandardGovernorDeployer.json";
@@ -21,7 +21,7 @@ import { bytecode as PowerBootstrapTokenBytecode } from "../modules/spog/bytecod
 import { bytecode as PowerTokenDeployerBytecode } from "../modules/spog/bytecode/PowerTokenDeployer.json";
 import { bytecode as RegistrarBytecode } from "../modules/spog/bytecode/Registrar.json";
 import { bytecode as ZeroTokenBytecode } from "../modules/spog/bytecode/ZeroToken.json";
-import { bytecode as ERC20PermitHarnessBytecode } from "../modules/spog/bytecode/ERC20PermitHarness.json";
+import { bytecode as ERC20ExtendedHarnessBytecode } from "../modules/spog/bytecode/ERC20ExtendedHarness.json";
 import { bytecode as DistributionVaultBytecode } from "../modules/spog/bytecode/DistributionVault.json";
 
 import multicall3 from "./contracts/Multicall3.json";
@@ -39,14 +39,16 @@ export default async function deploySpog(network: Network) {
   const wallet = new Wallet(network.accounts[0].privateKey, provider);
 
   const mockERC20Factory = new ContractFactory(
-    ERC20PermitHarnessAbi,
-    ERC20PermitHarnessBytecode,
+    ERC20ExtendedHarnessAbi,
+    ERC20ExtendedHarnessBytecode,
     wallet
   );
 
   const cashToken = await mockERC20Factory.deploy("CASH", "Cash Token", 18);
   // const cashToken2 = await mockERC20Factory.deploy("CASH2", "Cash Token2", 18);
+  // console.log("Cash Token2 Address:", cashToken2.address);
   const MToken = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+  // TODO check on latest version of TTG if this is not a bug on allowedCashTokens
   const allowedCashTokens = [cashToken.address, MToken];
   // NOTE: Ensure this is the current nonce (transaction count) of the deploying address.
   // const DEPLOYER_NONCE = 0;
@@ -196,7 +198,7 @@ export default async function deploySpog(network: Network) {
   const multicall3Contract = await multicallFactory.deploy();
 
   for (const account of network.accounts) {
-    console.log("Minting tokens for account: ", account.address);
+    // console.log("Minting tokens for account: ", account.address);
     await cashToken.mint(
       account.address,
       1000000000000000000000n // 1000
