@@ -42,47 +42,8 @@ describe("Proposals", () => {
       });
     });
 
-    // it("I should be able to CREATE a proposal - earner rate model ", () => {
-    //   cy.visit("http://localhost:3000/proposal/create");
-    //   cy.connectWallet();
-
-    //   cy.get("[data-test='proposalTypeSelect']").should("exist").click();
-
-    //   cy.get("[data-test='menuEmergency']").click();
-
-    //   cy.get("[data-test='emergencySetKey']").click({ force: true });
-
-    //   cy.contains("Update protocol config").click();
-
-    //   cy.get("[data-test='protocolConfigSelect']").should("exist");
-    //   cy.get("[data-test='protocolConfigSelect']").click();
-
-    //   // config
-    //   cy.contains("Earner rate").click();
-
-    //   const value = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
-    //   const key = "earner_rate_model";
-    //   const description = `Add protocol config ${key} = ${value}`;
-    //   descriptions.push(description);
-    //   keys.push(key);
-    //   values.push(value);
-
-    //   cy.get("input[data-test='proposalValue2']").type(value);
-    //   cy.get("input[data-test='title']").type(description);
-    //   cy.get("textarea[data-test='description']").type(description);
-
-    //   cy.clickPreviewProposal();
-
-    //   cy.contains("Submit proposal").should("exist");
-    //   cy.contains("Submit proposal").then(($el) => {
-    //     $el.click();
-    //     cy.get(".complete").should("have.length", 3);
-    //   });
-    // });
-
     it("I should be able to CAST vote YES for the proposal", () => {
       cy.castYesOneOptionalProposal(descriptions[0]);
-      // cy.castYesOneOptionalProposal(descriptions[1]);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
@@ -100,7 +61,6 @@ describe("Proposals", () => {
       };
 
       execute(descriptions[0]);
-      // execute(descriptions[1]);
 
       cy.mineEpochs(1);
     });
@@ -120,7 +80,6 @@ describe("Proposals", () => {
 
         const should = [
           [keys[0].toLowerCase(), values[0].toLowerCase()],
-          // [keys[1].toLowerCase(), values[1]],
         ].sort();
 
         expect(mapped).to.deep.equal(should);
