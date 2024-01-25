@@ -15,12 +15,7 @@ describe("Proposals", () => {
 
       cy.contains("Power threshold").click();
 
-      cy.get("[data-test='governanceConfigSelect']").should("exist");
-      cy.get("[data-test='governanceConfigSelect']").click();
-
-      cy.contains("Power Threshold").click();
-
-      cy.get("input[data-test='proposalValue2']").type(input1);
+      cy.get("input[data-test='proposalValue']").type(input1);
       cy.get("input[data-test='title']").type(description);
       cy.get("textarea[data-test='description']").type(description);
 
@@ -35,7 +30,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       cy.wait(500);
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/zero");
 
       cy.contains(description).should("exist");
 
@@ -55,7 +50,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description);
+      cy.castYesOneOptionalProposal(description, "zero");
     });
 
     it("I should be able to EXECUTE the proposal", () => {

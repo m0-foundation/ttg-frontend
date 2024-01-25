@@ -29,7 +29,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       cy.wait(500);
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/zero");
 
       cy.contains(description).should("exist");
 
@@ -49,7 +49,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description);
+      cy.castYesOneOptionalProposal(description, "zero");
     });
 
     it("I should be able to EXECUTE the proposal", () => {
