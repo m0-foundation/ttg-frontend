@@ -18,7 +18,9 @@
         >Emergency Proposal</MBadge
       >
 
-      <h1 class="text-[28px] mt-2 text-grey-1000 font-light">{{ title }}</h1>
+      <h1 class="text-[28px] my-2 text-grey-1000 font-light leading-10">
+        {{ title }}
+      </h1>
 
       <div class="text-grey-400 font-light text-xs truncate w-52 lg:w-full">
         Proposed by
@@ -41,16 +43,15 @@
         />
       </div>
 
-      <div class="markdown-body mb-6" v-html="description"></div>
+      <div class="markdown-body mb-6" v-html="onlyDescription"></div>
 
       <ProposalTechnical
         :proposal="proposal"
         :current-proposal-values="currentProposalValuesFormatted"
-        class="mb-6"
       />
 
-      <div v-if="votes?.value.length">
-        <div class="text-grey-900 mb-2">
+      <div v-if="votes?.value.length" class="mt-8">
+        <div class="text-grey-900">
           <h2 class="text-xl">Voters</h2>
         </div>
 
@@ -76,7 +77,7 @@ const store = useProposalsStore();
 const proposal = computed(() => store.getProposalById(props.proposalId));
 const proposalId = computed(() => props.proposalId);
 
-const { descriptionNoTitle: description, title } = useParsedDescriptionTitle(
+const { onlyDescription, title } = useParsedDescriptionTitle(
   proposal?.value?.description || ""
 );
 

@@ -15,7 +15,7 @@ export const useParsedDescriptionTitle = (description: string) => {
     return "";
   });
 
-  const descriptionNoTitle = computed(() => {
+  const onlyDescription = computed(() => {
     const dom = domParser.parseFromString(html, "text/html");
     const titleHtml = dom.getElementsByTagName("h1")[0];
     if (titleHtml) {
@@ -27,6 +27,6 @@ export const useParsedDescriptionTitle = (description: string) => {
   return {
     html,
     title: title.value,
-    descriptionNoTitle: descriptionNoTitle.value,
+    onlyDescription: onlyDescription.value,
   };
 };
