@@ -35,9 +35,10 @@
         simple majority to pass. In each epoch the supply of POWER is inflated
         and this inflation is claimed pro rata among participating POWER
         holders.
-        <a class="underline" href="#" target="_blank" rel="noopener noreferrer"
-          >Learn more.</a
-        >
+        <!-- TODO learn more -->
+        <!-- <a class="underline" href="#" target="_blank" rel="noopener noreferrer">
+          Learn more.
+        </a> -->
       </p>
     </div>
     <div class="p-8">
