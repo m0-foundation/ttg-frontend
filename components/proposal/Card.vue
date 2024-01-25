@@ -61,7 +61,9 @@
               :disabled="
                 isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
               "
-              :version="voteEvent?.support ? 'active' : 'default'"
+              :version="
+                voteEvent && voteEvent.support === true ? 'active' : 'default'
+              "
               class="cast-vote-button"
               @click="onCastSelected(1)"
             >
@@ -75,7 +77,9 @@
               :disabled="
                 isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
               "
-              :version="voteEvent?.support ? 'active' : 'default'"
+              :version="
+                voteEvent && voteEvent.support === false ? 'active' : 'default'
+              "
               @click="onCastSelected(0)"
             >
               NO
