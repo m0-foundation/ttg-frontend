@@ -8,8 +8,9 @@
         <img class="w-8" src="/img/icon-inflation.svg" alt="" />
         <div>
           <h5>
-            Vote on all standard proposals to save your voting power and get
-            <span class="text-green-700">+Z100 of inflation</span>
+            Vote on all standard proposals to save your voting power
+            <!-- TODO: find how much inflation power user would get -->
+            <!-- and get <span class="text-green-700">+Z100 of inflation</span> -->
           </h5>
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
             <span
