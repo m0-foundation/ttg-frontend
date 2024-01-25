@@ -3,7 +3,7 @@
     <MTextLoop
       v-show="proposal?.isEmergency"
       class="text-white bg-[#CC0000] text-xs"
-      text="EMERGENCY_VOTING"
+      text="EMERGENCY_PROPOSAL"
     />
 
     <article class="bg-white text-black px-4 py-4">
