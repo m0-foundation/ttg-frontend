@@ -130,7 +130,6 @@ describe("Proposals", () => {
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
       cy.contains(".markdown-body", description).should("exist");
-      cy.wait(500); // wait to load props values
 
       cy.get("#technical-proposal-incoming-change").should("contain", LIST);
       cy.get("#technical-proposal-incoming-change").should("contain", input2);
@@ -143,8 +142,6 @@ describe("Proposals", () => {
     it("I should be able to CAST vote YES for the proposal of Remove from a list", () => {
       cy.visit("http://localhost:3000/proposals/emergency");
       cy.connectWallet();
-      cy.wait(500);
-
       cy.contains("article", description).then(($proposal) => {
         cy.wrap($proposal).find("#button-cast-yes").click();
       });

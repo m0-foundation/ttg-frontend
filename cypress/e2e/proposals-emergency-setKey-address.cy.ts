@@ -43,7 +43,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(descriptions[0]);
+      cy.castYesOneOptionalProposal(descriptions[0], "emergency");
     });
 
     it("I should be able to EXECUTE the proposal", () => {

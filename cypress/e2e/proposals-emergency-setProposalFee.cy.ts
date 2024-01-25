@@ -66,7 +66,6 @@ describe("Proposals", () => {
       });
 
       cy.get("[data-test='voted']").should("have.length", 1);
-      cy.task("mine", 1);
       cy.reload();
     });
 

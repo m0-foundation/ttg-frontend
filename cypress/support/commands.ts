@@ -102,8 +102,8 @@ Cypress.Commands.add("castYesAllProposals", () => {
 
 Cypress.Commands.add(
   "castYesOneOptionalProposal",
-  (description: string, page: string) => {
-    cy.visit("http://localhost:3000/proposals/" + page);
+  (description: string, page?: string) => {
+    cy.visit(`http://localhost:3000/proposals/${page}`);
     cy.connectWallet();
     cy.wait(500);
 
@@ -119,8 +119,6 @@ Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.visit("http://localhost:3000/proposals/succeeded");
   cy.connectWallet();
 
-  cy.mineEpochs(1);
-  cy.wait(500);
   cy.reload();
 
   cy.contains("article", description).then(($proposal) => {
