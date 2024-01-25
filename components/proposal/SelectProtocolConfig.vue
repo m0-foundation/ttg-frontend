@@ -91,7 +91,7 @@ const configParams = [
   },
   {
     value: "minter_freeze_time",
-    label: "Propose mint time to live",
+    label: "Minter freeze time",
     shortDescription:
       "Update the amount of time that Mint has to be called before Propose Mint expires.",
   },
