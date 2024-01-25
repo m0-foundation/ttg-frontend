@@ -33,7 +33,6 @@ describe("Proposals", () => {
       // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
       cy.mineEpochs(2);
 
-      cy.wait(1000);
       cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
@@ -58,6 +57,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
+      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 
