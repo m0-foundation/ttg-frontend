@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="proposals">
-    <div class="mb-10">
+    <div class="p-8">
       <ProposalList :proposals="proposals" @on-execute="onExecute">
         <template #emptyState>
           <ProposalListEmptyState>

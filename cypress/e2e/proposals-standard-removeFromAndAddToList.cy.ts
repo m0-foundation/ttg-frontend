@@ -35,9 +35,8 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.mineEpochs(2);
+      cy.mineEpochs(1);
 
-      cy.wait(500);
       cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
@@ -48,7 +47,6 @@ describe("Proposals", () => {
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
       cy.contains(".markdown-body", description).should("exist");
-      cy.wait(500); // wait to load props values
 
       cy.get("#technical-proposal-incoming-change").should("contain", LIST);
       cy.get("#technical-proposal-incoming-change").should("contain", add1);
@@ -63,6 +61,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
+      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 
@@ -108,7 +107,6 @@ describe("Proposals", () => {
       // forward in time to be able to vote
       cy.mineEpochs(1);
 
-      cy.wait(500);
       cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
@@ -135,6 +133,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
+      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 

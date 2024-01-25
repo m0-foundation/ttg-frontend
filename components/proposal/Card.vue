@@ -1,23 +1,18 @@
 <template>
-  <div>
-    <MTextLoop
-      v-show="proposal?.isEmergency"
-      class="text-white bg-[#CC0000] text-xs"
-      text="EMERGENCY_VOTING"
-    />
+  <div class="mb-4">
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="text-white bg-grey-800 p-6 mb-4"
+      class="text-white bg-grey-800 p-8"
     >
+      <div v-if="proposal?.isEmergency" class="flex mb-3">
+        <p class="text-xxs bg-red-700 uppercase leading-3 p-1.5">
+          Emergency Proposal
+        </p>
+      </div>
       <div class="mb-4">
         <h2 class="text-2xl break-all">
           {{ title }}
         </h2>
-        <!-- <span
-          v-if="proposal?.isEmergency && proposal?.state !== 'Succeeded'"
-          class="text-xs text-grey-400"
-          >Voting ends {{ voteEnds }}
-        </span> -->
       </div>
 
       <div class="text-grey-400 font-inter mb-4">
@@ -54,39 +49,46 @@
         v-if="proposal?.state === 'Active'"
         class="lg:flex justify-between items-center"
       >
-        <div
-          class="inline-flex gap-1 items-center w-full mb-4 lg:mb-0"
-          role="group"
-        >
-          <ProposalButtonCastVote
-            id="button-cast-yes"
-            data-test="button-cast-yes"
-            :disabled="
-              isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
-            "
-            :version="
-              voteEvent && voteEvent.support === true ? 'active' : 'default'
-            "
-            @click="onCastSelected(1)"
+        <div>
+          <div
+            class="inline-flex gap-1 items-center w-full mb-4 lg:mb-0"
+            role="group"
           >
-            YES
-          </ProposalButtonCastVote>
-          <ProposalButtonCastVote
-            id="button-cast-no"
-            data-test="button-cast-no"
-            :disabled="
-              isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
-            "
-            :version="
-              voteEvent && voteEvent.support === false ? 'active' : 'default'
-            "
-            @click="onCastSelected(0)"
-          >
-            NO
-          </ProposalButtonCastVote>
+            <ProposalButtonCastVote
+              id="button-cast-yes"
+              :batch="proposal?.votingType === 'Standard'"
+              data-test="button-cast-yes"
+              :disabled="
+                isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
+              "
+              :version="
+                voteEvent && voteEvent.support === true ? 'active' : 'default'
+              "
+              class="cast-vote-button"
+              @click="onCastSelected(1)"
+            >
+              YES
+            </ProposalButtonCastVote>
+            <ProposalButtonCastVote
+              id="button-cast-no"
+              :batch="proposal?.votingType === 'Standard'"
+              class="cast-vote-button"
+              data-test="button-cast-no"
+              :disabled="
+                isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
+              "
+              :version="
+                voteEvent && voteEvent.support === false ? 'active' : 'default'
+              "
+              @click="onCastSelected(0)"
+            >
+              NO
+            </ProposalButtonCastVote>
+          </div>
 
-          <div v-show="!canVote" class="uppercase text-xs text-grey-400 mx-4">
-            not enought voting power
+          <div class="text-xxs text-grey-400 uppercase">
+            <p v-show="!canVote" class="mt-3">Not enought voting power</p>
+            <p v-show="hasVoted" class="mt-3">Your vote has been submitted</p>
           </div>
         </div>
 
@@ -224,3 +226,9 @@ const voteEvent = computed(() => {
     .value.find((v) => v.voter === userAccount.value);
 });
 </script>
+
+<style>
+.cast-vote-button {
+  @apply grow lg:grow-0 min-w-[62px] flex justify-center items-center;
+}
+</style>

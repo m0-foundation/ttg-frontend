@@ -211,7 +211,7 @@ describe("Proposals", () => {
       // config
       cy.contains("Mint ratio").click();
 
-      const value = "9000";
+      const value = "90";
       const key = "mint_ratio";
       const description = `Add protocol config ${key} = ${value}`;
       descriptions.push(description);
@@ -247,7 +247,7 @@ describe("Proposals", () => {
       cy.get("[data-test='protocolConfigSelect']").click();
 
       // config
-      cy.contains("Propose mint time to live").click();
+      cy.contains("Minter freeze time").click();
 
       const value = "43200";
       const key = "minter_freeze_time";
