@@ -1,11 +1,11 @@
 <template>
   <div data-test="technical-proposal">
-    <h1 class="text-[#00664E] text-lg">
+    <h1 class="font-bold font-inter">
       Technical Proposal: {{ proposal?.proposalLabel }}
     </h1>
-    <h2 class="text-sm pt-2 pb-6">
+    <p class="text-xs font-inter mb-4">
       Agree or deny the following incoming change
-    </h2>
+    </p>
     <div class="uppercase bg-[#353835] text-[#AEAFAE] py-2 pl-6">Current</div>
     <div
       id="technical-proposal-current"

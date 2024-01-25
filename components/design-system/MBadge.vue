@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<MBadgeProps>(), {
 </script>
 <style scoped>
 span {
-  @apply text-center text-xs font-medium mr-2 px-1.5 py-0.5;
+  @apply text-center text-xs font-medium px-2 py-1;
 }
 
 .success {

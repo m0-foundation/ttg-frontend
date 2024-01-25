@@ -1,13 +1,7 @@
 <template>
   <div>
-    <MTextLoop
-      v-show="proposal?.isEmergency"
-      class="text-white bg-[#CC0000] text-xs"
-      text="EMERGENCY_PROPOSAL"
-    />
-
     <article class="bg-white text-black px-4 py-4">
-      <div class="flex justify-between">
+      <div class="flex justify-between mb-2">
         <ProposalStatusTimeline
           :proposal="proposal"
           :version="proposal?.state"
@@ -17,7 +11,24 @@
         </div>
       </div>
 
-      <div v-if="isLoading">Loading...</div>
+      <MBadge
+        v-if="proposal?.isEmergency"
+        class="uppercase text-[10px]"
+        version="error"
+        >Emergency Proposal</MBadge
+      >
+
+      <h1 class="text-[28px] mt-2 text-grey-1000 font-light">{{ title }}</h1>
+
+      <div class="text-grey-400 font-light text-xs truncate w-52 lg:w-full">
+        Proposed by
+        <NuxtLink :to="`/profile/${proposal?.proposer}/`">
+          <u><MAddressAvatar :address="proposal?.proposer" /></u>
+        </NuxtLink>
+        at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
+      </div>
+
+      <div v-if="isLoading" class="h-4">Loading...</div>
       <div v-else>
         <ProposalVoteProgress
           v-if="proposal?.state !== 'Pending'"
@@ -30,15 +41,7 @@
         />
       </div>
 
-      <div class="text-grey-400 text-xs mt-8 mb-2 truncate w-52 lg:w-full">
-        Proposed by
-        <NuxtLink :to="`/profile/${proposal?.proposer}/`">
-          <u><MAddressAvatar :address="proposal?.proposer" /></u>
-        </NuxtLink>
-        at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
-      </div>
-
-      <div class="markdown-body mb-6" v-html="html"></div>
+      <div class="markdown-body mb-6" v-html="description"></div>
 
       <ProposalTechnical
         :proposal="proposal"
@@ -46,25 +49,19 @@
         class="mb-6"
       />
 
-      <div class="text-green-900 mb-2">
-        <h2>Result details</h2>
-        <p class="text-xs">
-          List of addresses that have voted for or against the current proposal.
-        </p>
+      <div v-if="votes?.value.length">
+        <div class="text-grey-900 mb-2">
+          <h2 class="text-xl">Voters</h2>
+        </div>
+
+        <ProposalTableVotes :votes="votes?.value" />
       </div>
-
-      <ProposalTableVotes :votes="votes?.value" />
-
-      <p class="text-xxs text-grey-300 mt-3">
-        Proposal ID: {{ proposal?.proposalId }}
-      </p>
     </article>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useAccount } from "use-wagmi";
 import { Hash } from "viem";
 import { readPowerToken, readZeroToken } from "@/lib/sdk";
 
@@ -79,9 +76,10 @@ const store = useProposalsStore();
 const proposal = computed(() => store.getProposalById(props.proposalId));
 const proposalId = computed(() => props.proposalId);
 
-const { html } = useParsedDescription(proposal?.value?.description || "");
+const { descriptionNoTitle: description, title } = useParsedDescriptionTitle(
+  proposal?.value?.description || ""
+);
 
-const { address: userAccount } = useAccount();
 const spog = useSpogStore();
 
 const { getValuesFormatted: currentProposalValuesFormatted } =
@@ -90,8 +88,6 @@ const { getValuesFormatted: currentProposalValuesFormatted } =
 useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,
 });
-
-console.log({ currentProposalValuesFormatted });
 
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
@@ -109,6 +105,8 @@ const votes = computed(() => {
     return votesStore.getBy("proposalId", proposalId.value);
   }
 });
+
+console.log("VOTES", votes.value?.value);
 
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([

@@ -48,7 +48,7 @@ const config = computed(() => {
 
       {
         id: "vote",
-        name: "support",
+        name: "voted",
         sort: true,
         formatter: (cell: boolean, row: any) => {
           const vote = cell
