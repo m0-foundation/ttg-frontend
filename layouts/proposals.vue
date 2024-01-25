@@ -6,12 +6,15 @@
           {{ epoch?.current?.type }} epoch:
           <span class="text-green-700">#{{ epoch?.current?.asNumber }}_</span>
           <span class="text-grey-400 text-xxs lg:text-xs ml-2">
-            {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
+            {{ currentEpochAsDate }} - {{ nextEpochAsDate }} |
+            <span class="text-xxs">
+              Ends at Block Timestamp #{{ epoch?.next?.asTimestamp }}
+            </span>
           </span>
         </p>
         <div class="hidden lg:block">
           <NuxtLink to="/proposals/all/">
-            <MNavButton class="text-xs"> all proposals </MNavButton>
+            <MNavButton class="text-xs underline"> all proposals </MNavButton>
           </NuxtLink>
         </div>
       </div>
