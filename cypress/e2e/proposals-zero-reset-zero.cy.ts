@@ -1,7 +1,7 @@
 describe("Proposals", () => {
   describe("Emergency proposal for type action: AddToList", () => {
-    const description =
-      "Reset Zero - when executed new governor and power token are auto-deployed and the values in registrar are overwritten";
+    const title = "Reset Zero";
+    const description = "Test proposal to reset zero governor";
 
     it("I should be able to CREATE a proposal to Reset", () => {
       // zero proposals cant be created on first epoch
@@ -17,7 +17,7 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue']").should("not.exist");
 
-      cy.get("input[data-test='title']").type(description);
+      cy.get("input[data-test='title']").type(title);
       cy.get("textarea[data-test='description']").type(description);
 
       cy.clickPreviewProposal();
@@ -31,7 +31,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the proposal", () => {
       // reset does not need to forward to next epoch, it will be able to vote on same epoch
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/zero");
 
       cy.contains(description).should("exist");
 
@@ -45,7 +45,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description);
+      cy.castYesOneOptionalProposal(description, "zero");
     });
 
     it("I should be able to EXECUTE the proposal of ADD to a list", () => {

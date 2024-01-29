@@ -46,6 +46,7 @@ module.exports = {
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
+        mono: ["IBM Plex Mono", "monospace"],
       },
       fontSize: {
         xxs: ["0.65rem"],

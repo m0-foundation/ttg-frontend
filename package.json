@@ -61,6 +61,7 @@
     "vite-plugin-node-polyfills": "^0.8.2"
   },
   "dependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@pinia/nuxt": "^0.4.11",
     "@types/lodash": "^4.14.194",
     "@vuelidate/core": "^2.0.3",

@@ -9,6 +9,7 @@ import {
 import { EthereumProvider, HardhatNetworkAccountsConfig } from "hardhat/types";
 
 import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
+import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { toExternallyOwnedAccounts } from "./accounts";
 
 export interface Network {
@@ -20,10 +21,12 @@ export interface Network {
 
 const PORT = 8545;
 
-/* istanbul ignore next */
-// extendConfig((config, userConfig) => {
-//   config.forks = userConfig.forks || {};
-// });
+// see file hardhat.config.js#L12
+const _BLOCK_TIME = 12;
+
+// see file lib/api/modules/epoch/epoch.ts#L17
+const _STARTING_TIMESTAMP = 1_704_809_636;
+const _EPOCH_PERIOD_SECONDS = 400;
 
 type ChainServer = {
   address: string;
@@ -55,11 +58,24 @@ function runChainServer(chainId: number): Promise<ChainServer> {
   );
 }
 
+async function moveToVotingEpoch() {
+  const getEpochFromTimestamp = (timestamp: number) =>
+    Math.floor((timestamp - _STARTING_TIMESTAMP) / _EPOCH_PERIOD_SECONDS) + 1;
+
+  const currentTimestamp = await time.latest();
+  const currentEpoch = getEpochFromTimestamp(currentTimestamp);
+  console.log({ currentTimestamp, currentEpoch });
+  if (currentEpoch % 2 === 0) {
+    console.log("epoch is transfer");
+    await time.setNextBlockTimestamp(currentTimestamp + 400); // move to voting epoch
+  }
+}
+
 /** Sets up the hardhat environment for use with cypress. */
 export default async function setup(): Promise<
   Network & {
     /** Resets the hardhat environment. Call before a spec to reset the environment. */
-    reset: (chainId?: number) => Promise<void>;
+    reset: () => Promise<void>;
     /** Tears down the hardhat environment. Call after a run to clean up the environment. */
     close: () => Promise<void>;
     mine: (blocks: number) => Promise<void>;
@@ -68,20 +84,12 @@ export default async function setup(): Promise<
   const hardhatConfig = hre.config.networks.hardhat;
   const defaultChainId = hardhatConfig.chainId;
 
-  async function reset(chainId?: number) {
-    chainId = chainId ?? defaultChainId;
-
-    if (hre.network.config.chainId !== chainId) {
-      hre.config.networks.hardhat.chainId = chainId;
-
-      server = await runChainServer(chainId);
-    } else {
-      return hre.network.provider.send("hardhat_reset", [
-        {
-          hardhat: { mining: hardhatConfig.mining },
-        },
-      ]);
-    }
+  function reset() {
+    return hre.network.provider.send("hardhat_reset", [
+      {
+        hardhat: { mining: hardhatConfig.mining },
+      },
+    ]);
   }
 
   hre.tasks[TASK_NODE_GET_PROVIDER].setAction(() => {
@@ -132,7 +140,9 @@ export default async function setup(): Promise<
       "Specifying multiple hardhat accounts will noticeably slow your test startup time.\n\n"
     );
   }
-  let [server] = await Promise.all([run, listen]);
+  const [server] = await Promise.all([run, listen]);
+
+  await moveToVotingEpoch();
 
   return {
     url: "http://" + server.address + ":" + PORT,
@@ -144,8 +154,12 @@ export default async function setup(): Promise<
         ...chainServers.map((server) => server.close()),
       ]);
     },
-    mine: (blocks = 100) => {
-      console.log("mine", { blocks });
+    mine: async (blocks) => {
+      console.log("mine", { blocks, increse: blocks * _BLOCK_TIME });
+      const currentTimestamp = await time.latest();
+      const newTimestamp = currentTimestamp + blocks * _BLOCK_TIME;
+      console.log({ currentTimestamp, newTimestamp });
+      await time.setNextBlockTimestamp(newTimestamp);
       return hre.network.provider.send("hardhat_mine", [
         "0x" + blocks.toString(16),
       ]);

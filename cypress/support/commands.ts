@@ -100,24 +100,25 @@ Cypress.Commands.add("castYesAllProposals", () => {
   cy.get("#button-cast-submit").click();
 });
 
-Cypress.Commands.add("castYesOneOptionalProposal", (description: string) => {
-  cy.visit("http://localhost:3000/proposals/");
-  cy.connectWallet();
-  cy.wait(500);
+Cypress.Commands.add(
+  "castYesOneOptionalProposal",
+  (description: string, page?: string) => {
+    cy.visit(`http://localhost:3000/proposals/${page}`);
+    cy.connectWallet();
+    cy.wait(500);
 
-  cy.contains("article", description).then(($proposal) => {
-    cy.wrap($proposal).find("#button-cast-yes").click();
-  });
+    cy.contains("article", description).then(($proposal) => {
+      cy.wrap($proposal).find("#button-cast-yes").click();
+    });
 
-  cy.get("[data-test='voted']").should("have.length", 1);
-});
+    cy.get("[data-test='voted']").should("have.length", 1);
+  }
+);
 
 Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.visit("http://localhost:3000/proposals/succeeded");
   cy.connectWallet();
 
-  cy.mineEpochs(1);
-  cy.wait(500);
   cy.reload();
 
   cy.contains("article", description).then(($proposal) => {
@@ -134,7 +135,7 @@ Cypress.Commands.add("clickPreviewProposal", (quantity: number) => {
 });
 
 Cypress.Commands.add("mineEpochs", (quantity: number) => {
-  const _EPOCH_PERIOD = 50;
+  const _EPOCH_PERIOD = 33;
   const blocks = _EPOCH_PERIOD * quantity;
   cy.task("mine", blocks).then((obj) => {
     console.log("mined", blocks);

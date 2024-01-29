@@ -35,7 +35,7 @@ describe("Proposals", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
       // cy.task("mine", 10);
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/emergency");
 
       cy.contains(description).should("exist");
 
@@ -56,7 +56,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/emergency");
       cy.connectWallet();
       cy.wait(500);
 
@@ -119,7 +119,7 @@ describe("Proposals", () => {
     it("I should be able to ACCESS the EMERGENCY proposal", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/emergency");
 
       cy.contains(description).should("exist");
 
@@ -130,7 +130,6 @@ describe("Proposals", () => {
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
       cy.contains(".markdown-body", description).should("exist");
-      cy.wait(500); // wait to load props values
 
       cy.get("#technical-proposal-incoming-change").should("contain", LIST);
       cy.get("#technical-proposal-incoming-change").should("contain", input2);
@@ -141,10 +140,8 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal of Remove from a list", () => {
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("http://localhost:3000/proposals/emergency");
       cy.connectWallet();
-      cy.wait(500);
-
       cy.contains("article", description).then(($proposal) => {
         cy.wrap($proposal).find("#button-cast-yes").click();
       });

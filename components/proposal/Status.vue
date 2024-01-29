@@ -1,6 +1,9 @@
 <template>
-  <div :class="version?.toLowerCase()">
-    {{ version?.toLowerCase() }}
+  <div class="flex gap-2">
+    <img :src="`/img/status/${version.toLowerCase()}.svg`" alt="" />
+    <span class="text-nowrap">
+      {{ replaceVersionWord(version)?.toLowerCase() }}</span
+    >
   </div>
 </template>
 
@@ -18,17 +21,28 @@ export interface ProposalStatusProps {
 const props = withDefaults(defineProps<ProposalStatusProps>(), {
   version: "Pending",
 });
+
+function replaceVersionWord(version: string): string {
+  switch (version) {
+    case "Succeeded":
+      return "Pending execution";
+    case "Pending":
+      return "Scheduled";
+    default:
+      return version;
+  }
+}
 </script>
 <style scoped>
 div {
-  @apply uppercase w-fit font-medium text-sm px-4 py-2 text-center;
+  @apply capitalize w-fit font-medium text-sm text-center;
 }
 
 .pending {
   @apply border border-grey-400 text-grey-400;
 }
 .active {
-  @apply border border-green-700 text-green-800;
+  @apply border  text-green-800;
 }
 .defeated {
   @apply bg-red-500 text-white;

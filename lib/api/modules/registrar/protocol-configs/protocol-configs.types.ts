@@ -8,8 +8,6 @@ export interface MUpdateConfigEvent extends EventLog {
 }
 
 export interface MProtocolConfig {
-  [key: string]: {
-    value: string | number | bigint | Hash | object;
-    timestamp: number;
-  };
+  key: string;
+  value: string | number | bigint | Hash | object;
 }
