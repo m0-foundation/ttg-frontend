@@ -22,8 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { html } from "gridjs";
-import { MProposal, MVote } from "@/lib/api/types";
+import { MVote } from "@/lib/api/types";
 
 interface Props {
   votes: MVote[];

@@ -70,7 +70,6 @@
     "@vueuse/nuxt": "^10.1.2",
     "@wagmi/core": "^1.4.12",
     "dayjs": "^1.11.7",
-    "gridjs": "^6.0.6",
     "identicon.js": "^2.3.3",
     "lodash": "^4.17.21",
     "marked": "^5.0.1",
