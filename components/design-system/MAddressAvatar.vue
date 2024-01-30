@@ -1,5 +1,5 @@
 <template>
-  <span class="inline-flex items-center">
+  <span class="inline-flex items-center relative">
     <div v-if="showAvatar" class="absolute flex items-center">
       <img
         v-if="ensAvatar"

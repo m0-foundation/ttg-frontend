@@ -50,7 +50,7 @@
         :current-proposal-values="currentProposalValuesFormatted"
       />
 
-      <div v-if="votes?.value.length" class="mt-8">
+      <div class="mt-8">
         <div class="text-grey-900">
           <h2 class="text-xl">Voters</h2>
         </div>

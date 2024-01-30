@@ -1,17 +1,29 @@
 <template>
-  <div>
-    <div
-      v-if="!votes || !votes.length"
-      class="flex flex-col items-center justify-center h-20 text-grey-300"
-    >
-      No voting history to show.
-    </div>
-    <MTable v-else :config="config" />
-  </div>
+  <MSimpleTable :items="votes" :fields="votesTableHeaders">
+    <template #cell(voter)="{ value }">
+      <NuxtLink :to="`/profile/${value}`">
+        <MAddressAvatar :address="value" class="hover:underline" />
+      </NuxtLink>
+    </template>
+
+    <template #cell(vote)="{ value, item }">
+      <a
+        class="flex items-center cursor-pointer"
+        :href="useBlockExplorer('tx', item.transactionHash)"
+      >
+        <div
+          class="w-2.5 h-2.5"
+          :class="value ? 'bg-green-800' : 'bg-red-800'"
+        ></div>
+        <span class="text-xs px-2 py-1 uppercase">{{
+          value ? "Yes" : "No"
+        }}</span>
+      </a>
+    </template>
+  </MSimpleTable>
 </template>
 
 <script setup lang="ts">
-import { html } from "gridjs";
 import orderBy from "lodash/orderBy";
 import { MVote } from "@/lib/api/types";
 
@@ -21,68 +33,21 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const config = computed(() => {
+const votesTableHeaders = ref([
+  { key: "voter", label: "Address" },
+  { key: "votes", label: "Votes", sortable: true },
+  { key: "vote", label: "Voted" },
+]);
+
+const votes = computed(() => {
   const votesOrdered = orderBy(props.votes, "weight", "desc");
 
-  return {
-    columns: [
-      {
-        id: "voter",
-        name: "Address",
-        sort: false,
-        width: 350,
-        formatter: (voter: string) => {
-          return html(
-            `<a href="/profile/${voter}/" class="underline text-xs">${shortenAddress(
-              voter
-            )}</a>`
-          );
-        },
-      },
-
-      {
-        id: "votes",
-        name: "Votes",
-        sort: true,
-      },
-
-      {
-        id: "vote",
-        name: "voted",
-        sort: true,
-        formatter: (cell: boolean, row: any) => {
-          const vote = cell
-            ? "<span class='bg-green-700 text-white px-2 py-1'>YES</span>"
-            : "<span class='bg-red-500 text-white px-2 py-1'>NO</span>";
-
-          const transactionHash = row.cells[3].data;
-
-          return html(
-            `<a href="${useBlockExplorer(
-              "tx",
-              transactionHash
-            )}" target="_blank" class="text-xs" >${vote}</a>`
-          );
-        },
-      },
-
-      {
-        id: "transactionHash",
-        hidden: true,
-      },
-    ],
-    className: {
-      container: "bg-transparent text-grey-400",
-      td: "text-grey-400",
-    },
-    data: votesOrdered.map((v: MVote) => ({
-      voter: v.voter,
-      vote: v.support,
-      castedAt: v.timestamp,
-      // hidden
-      votes: useNumberFormatter(String(v.weight)),
-      transactionHash: v.transactionHash,
-    })),
-  };
+  return votesOrdered.map((v: MVote) => ({
+    voter: v.voter,
+    vote: v.support,
+    castedAt: v.timestamp,
+    votes: useNumberFormatter(String(v.weight)),
+    transactionHash: v.transactionHash,
+  }));
 });
 </script>
