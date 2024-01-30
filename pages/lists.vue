@@ -1,53 +1,40 @@
 <template>
   <div>
-    <PageTitle class="lg:p-0 lg:mb-6">
-      <template #default>Lists</template>
-      <template #side>
-        <div class="flex gap-3 mt-2 lg:mt-0">
-          <select
-            v-model="selectedList"
-            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
-          >
-            <option value="all" default>All lists</option>
-            <option
-              v-for="option in listsOptions"
-              :key="option"
-              :value="option"
-            >
-              {{ option }}
-            </option>
-          </select>
-          <MInput
-            v-model="inputSearch"
-            class="h-[32px] w-[170px] text-xxs border-grey-600 text-grey-400 placeholder:text-grey-400 bg-transparent font-inter"
-            placeholder="ENS or address"
-            type="text"
-          />
-        </div>
+    <PageTitle class="px-6 lg:px-0"> Lists </PageTitle>
+
+    <MSimpleTable
+      :search="true"
+      :items="filteredLists"
+      :fields="listTableHeaders"
+      :loading="isLoading"
+    >
+      <template #header-right>
+        <select
+          v-model="selectedList"
+          class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
+        >
+          <option value="all" default>All lists</option>
+          <option v-for="option in listsOptions" :key="option" :value="option">
+            {{ option }}
+          </option>
+        </select>
       </template>
-    </PageTitle>
-
-    <div class="px-6">
-      <div v-if="isLoading">
-        <span class="text-xs text-grey-400">Loading...</span>
-      </div>
-
-      <div v-else>
-        <div v-if="!lists || !lists.length">No Lists to show.</div>
-        <MTable
-          v-else
-          :key="filteredLists"
-          class="bg-transparent"
-          :config="tableConfig"
-        />
-      </div>
-    </div>
+      <template #cell(account)="{ value }">
+        <NuxtLink :to="`/profile/${value}`">
+          <MAddressAvatar class="hover:underline" :address="value" />
+        </NuxtLink>
+      </template>
+      <template #cell(timestamp)="{ value }">
+        <span class="text-grey-400">{{
+          useDate(value).toFormat("DD.MM.YYYY")
+        }}</span>
+      </template>
+    </MSimpleTable>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { html } from "gridjs";
 
 const apiStore = useApiClientStore();
 const listsStore = useListsStore();
@@ -69,61 +56,24 @@ const fetchLists = async () => {
 const { isLoading } = useAsyncState(fetchLists(), null);
 const { getFlattenLists: lists } = storeToRefs(listsStore);
 
+const listTableHeaders = [
+  {
+    key: "account",
+    label: "Name or Address",
+    sortable: true,
+  },
+  { key: "list", label: "List", sortable: true },
+  { key: "timestamp", label: "Updated", sortable: true },
+];
+
 const listsOptions = computed(() => [
   ...new Set(lists.value.map((obj) => obj.list)),
 ]);
 
 const selectedList = ref("all");
-const inputSearch = ref("");
 
 const filteredLists = computed(() => {
-  const searchResults = lists.value.filter((list) =>
-    list.account.toLowerCase().includes(inputSearch.value.toLowerCase())
-  );
-
-  if (selectedList.value === "all") return searchResults;
-  return searchResults.filter((obj) => obj.list === selectedList.value);
-});
-
-const tableConfig = computed(() => {
-  return {
-    columns: [
-      {
-        id: "account",
-        name: "Name or Address",
-        sort: true,
-        formatter: (cell: string) => {
-          return html(`<span class="text-xs text-grey-100">${cell}</span>`);
-        },
-      },
-
-      {
-        id: "list",
-        name: "List",
-        sort: true,
-        formatter: (cell: string) => {
-          return html(`<span class="text-xs text-grey-100">${cell}</span>`);
-        },
-      },
-
-      {
-        id: "timestamp",
-        name: "Added",
-        sort: true,
-        formatter: (cell: string) => {
-          const { toFormat } = useDate(Number(cell));
-          const formatedDate = toFormat("LLL");
-          return html(
-            `<span class="text-xs text-grey-400">${formatedDate}</span>`
-          );
-        },
-      },
-    ],
-    data: filteredLists.value.map((p) => ({
-      account: p.account,
-      list: p.list,
-      timestamp: p.timestamp,
-    })),
-  };
+  if (selectedList.value === "all") return lists.value;
+  return lists.value.filter((obj) => obj.list === selectedList.value);
 });
 </script>
