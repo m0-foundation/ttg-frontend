@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="my-4">
+    <div class="my-6">
       <!-- Power or Emergency -->
       <div v-if="version === 'Standard'">
         <VoteProgressPower :votes="powerVotes" />

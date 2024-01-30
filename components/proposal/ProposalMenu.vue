@@ -42,6 +42,14 @@
           </li>
           <li>
             <a
+              data-test="menu-proposal-id"
+              @click="copyToClipboard(props?.proposal?.proposalId)"
+            >
+              Copy Proposal ID
+            </a>
+          </li>
+          <li>
+            <a
               target="_blank"
               :href="useBlockExplorer('tx', props?.proposal?.transactionHash)"
               data-test="proposal-link-view-block-explorer"

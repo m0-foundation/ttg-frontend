@@ -1,10 +1,5 @@
 <template>
   <div class="flex justify-between gap-2 items-center">
-    <div class="flex items-start mr-2 w-12">
-      <MIconPower class="h-4 w-4 mr-1" />
-      <span class="flex uppercase text-xxs text-grey-400">power</span>
-    </div>
-
     <div class="bg-green-800 h-2 w-2"></div>
 
     <span id="vote-yes-percentage" class="text-green-800 text-xs">
