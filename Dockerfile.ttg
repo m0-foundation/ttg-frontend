@@ -1,0 +1,11 @@
+FROM node:20-alpine as build
+
+RUN mkdir /project
+WORKDIR /project
+
+COPY . .
+
+RUN yarn install
+RUN yarn build
+
+CMD ["yarn", "run", "serve"]
