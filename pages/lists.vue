@@ -20,9 +20,7 @@
         </select>
       </template>
       <template #cell(account)="{ value }">
-        <NuxtLink :to="`/profile/${value}`">
-          <MAddressAvatar class="hover:underline" :address="value" />
-        </NuxtLink>
+        <MAddressAvatar :short-address="false" show-copy :address="value" />
       </template>
       <template #cell(timestamp)="{ value }">
         <span class="text-grey-400">{{

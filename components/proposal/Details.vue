@@ -24,9 +24,7 @@
 
       <div class="text-grey-400 font-light text-xs truncate w-52 lg:w-full">
         Proposed by
-        <NuxtLink :to="`/profile/${proposal?.proposer}/`">
-          <u><MAddressAvatar :address="proposal?.proposer" /></u>
-        </NuxtLink>
+        <u><MAddressAvatar :address="proposal?.proposer" /></u>
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
 
