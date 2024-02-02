@@ -15,4 +15,12 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - "3000:3000"
+      - "80:3000"
+    networks:
+      - ttg-network
+    hostname: governance.m0.local
+
+networks:
+  ttg-network:
+    name: ttg-network
+    driver: bridge

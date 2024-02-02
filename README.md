@@ -110,6 +110,24 @@ Just need run this command
 ```bash
 docker compose -f docker-compose.sepolia.yml up
 ```
+You can access now type `https://localhost:3000` in your browser to access.
+
+### 2.3 Local URL (optinal)
+
+```bash
+nano /etc/hosts
+```
+add this line
+```bash
+127.0.0.1 governance.m0.local
+```
+or
+
+```bash
+sudo bash -c 'echo "127.0.0.1 governance.m0.local" >>  /etc/hosts'
+```
+
+Thus, just need to type `governance.m0.local` in your browser to access the governance app.
 
 ## Testing with Metamask
 

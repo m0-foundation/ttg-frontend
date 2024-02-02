@@ -7,7 +7,7 @@ services:
     image: m0/ttg-frontend
     container_name: ttg-frontend
     restart: always
-    command: [ "yarn", "run", "build-start" ]
+    command: ["yarn", "run", "build-start"]
     environment:
       - NETWORK=mainnet
       - NODE_ENV=production
@@ -18,7 +18,7 @@ services:
       - "80:3000"
     networks:
       - ttg-network
-    hostname: ttg-frontend.local
+    hostname: governance.m0.local
 
 networks:
   ttg-network:
