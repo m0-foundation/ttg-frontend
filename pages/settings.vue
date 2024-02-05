@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
     <PageTitle class="mb-6">Settings</PageTitle>
 
     <div>

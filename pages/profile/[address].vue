@@ -1,6 +1,6 @@
 <template>
-  <div v-if="address">
-    <div class="flex justify-between pt-6 mb-6">
+  <div v-if="address" class="px-6 lg:p-0">
+    <div class="flex justify-between mb-6">
       <div>
         <p class="text-grey-600 text-xs">Voting address</p>
         <p class="text-white text-md">
@@ -8,7 +8,7 @@
         </p>
       </div>
     </div>
-    <ProfileBalances class="mb-6" :address="address" />
+    <ProfileBalances class="px-6 lg:p-0 mb-6" :address="address" />
     <!-- tables -->
     <ProfileTables :address="address" />
   </div>

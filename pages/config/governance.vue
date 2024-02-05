@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="px-6 lg:p-0">
     <PageTitle>Governance Config</PageTitle>
 
-    <section class="flex flex-col gap-8 p-6 lg:p-0">
+    <section class="flex flex-col gap-8">
       <MSimpleTable
         :search="true"
         :items="mutableTableData"

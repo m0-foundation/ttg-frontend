@@ -8,7 +8,7 @@
       />
     </MModal>
 
-    <PageTitle class="mb-3">Create a proposal</PageTitle>
+    <PageTitle class="px-6 lg:p-0 mb-3">Create a proposal</PageTitle>
 
     <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>

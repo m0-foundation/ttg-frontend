@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="p-8 pt-2 lg:pt-6">
+    <div class="p-6 pt-2 lg:pt-6">
       <div class="lg:flex justify-between">
         <h1>
           <span class="capitalize">{{
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="text-grey-600 p-8 pb-6 pt-0">
+    <div class="text-grey-600 p-6 pt-0">
       <h5 class="text-xxs mb-1">Proposals:</h5>
 
       <div

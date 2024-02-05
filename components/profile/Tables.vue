@@ -1,7 +1,7 @@
 <template>
   <div class="my-2">
     <!-- tabs -->
-    <div class="flex justify-start gap-12 px-6 py-8">
+    <div class="flex justify-start gap-12 p-6">
       <button
         :class="[
           'uppercase hover:underline text-xs ',
@@ -24,11 +24,11 @@
       </button>
     </div>
 
-    <div v-if="selectedTab === 0" class="p-4">
+    <div v-if="selectedTab === 0" class="p-6 lg:p-0">
       <ProfileTableVotes :votes="votes" />
     </div>
 
-    <div v-if="selectedTab === 1" class="p-4">
+    <div v-if="selectedTab === 1" class="p-6">
       <ProfileTableProposals :proposals="proposalsCreated" />
     </div>
   </div>

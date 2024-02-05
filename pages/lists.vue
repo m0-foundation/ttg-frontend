@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="px-6 lg:p-0">
     <MSimpleTable
       :search="true"
       :items="filteredLists"
