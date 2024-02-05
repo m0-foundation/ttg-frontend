@@ -9,7 +9,7 @@ import {
   watchZeroGovernorEvent,
 } from "@/lib/sdk";
 
-export const watchProposalCreated = () => {
+export const watchProposalCreated = (callbackOnEvent: Function) => {
   console.log("watchProposalCreated");
   const spog = storeToRefs(useSpogStore());
   const network = useNetworkStore().getNetwork();
@@ -24,9 +24,11 @@ export const watchProposalCreated = () => {
     );
 
     proposals.push(newProposals as Array<MProposal>);
+
+    callbackOnEvent(newProposals);
   };
 
-  watchStandardGovernorEvent(
+  const unwatchStandard = watchStandardGovernorEvent(
     {
       address: spog.contracts.value.standardGovernor as Hash,
       eventName: "ProposalCreated",
@@ -35,7 +37,7 @@ export const watchProposalCreated = () => {
     (logs) => onEvent(logs, api.client.standardGovernor)
   );
 
-  watchEmergencyGovernorEvent(
+  const unwatchEmergency = watchEmergencyGovernorEvent(
     {
       address: spog.contracts.value.emergencyGovernor as Hash,
       eventName: "ProposalCreated",
@@ -44,7 +46,7 @@ export const watchProposalCreated = () => {
     (logs) => onEvent(logs, api.client.emergencyGovernor)
   );
 
-  watchZeroGovernorEvent(
+  const unwatchZero = watchZeroGovernorEvent(
     {
       address: spog.contracts.value.zeroGovernor as Hash,
       eventName: "ProposalCreated",
@@ -52,4 +54,12 @@ export const watchProposalCreated = () => {
     },
     (logs) => onEvent(logs, api.client.zeroGovernor)
   );
+
+  return {
+    unwatchAll: () => {
+      unwatchStandard();
+      unwatchEmergency();
+      unwatchZero();
+    },
+  };
 };

@@ -258,6 +258,8 @@ import {
   addressToHexWith32Bytes,
 } from "@/lib/api/utils";
 
+import { watchProposalCreated } from "@/lib/watchers";
+
 /* control stepper */
 let steps = reactive([]);
 
@@ -758,16 +760,20 @@ async function onSubmit() {
     await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
 
     stepper.value.nextStep();
-    stepper.value.changeCurrentStep("complete");
 
-    await wait(1000);
+    const { unwatchAll } = watchProposalCreated(
+      async (newProposals: Array<MProposal>) => {
+        console.log({ newProposals });
 
-    const isEmergency = selectedProposalType?.value?.isEmergency;
-    if (isEmergency) {
-      return navigateTo("/proposals/");
-    }
+        stepper.value.changeCurrentStep("complete");
 
-    return navigateTo("/proposals/pending/");
+        await wait(1000);
+
+        unwatchAll();
+
+        return navigateTo(`/proposal/${newProposals[0].proposalId}`);
+      }
+    );
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);
