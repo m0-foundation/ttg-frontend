@@ -9782,13 +9782,6 @@ graphemer@^1.4.0:
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
 
-gridjs@^6.0.6:
-  version "6.0.6"
-  resolved "https://registry.yarnpkg.com/gridjs/-/gridjs-6.0.6.tgz#7983f08d4bc9d4a9616ee2c7bbfc01ef6bf4ddd2"
-  integrity sha512-TZ20nY+weE/wlyXOd3A9FJyJlsJ/MrHr6frMgUHFN29RmWZCYtnyfF0zuspXC81oePwSJeSZ8HY651aeyX8+rQ==
-  dependencies:
-    preact "^10.11.3"
-
 gunzip-maybe@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/gunzip-maybe/-/gunzip-maybe-1.4.2.tgz#b913564ae3be0eda6f3de36464837a9cd94b98ac"
@@ -13323,7 +13316,7 @@ postcss@^8.4.23, postcss@^8.4.29, postcss@^8.4.31, postcss@^8.4.32:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-preact@^10.11.3, preact@^10.12.0, preact@^10.5.9:
+preact@^10.12.0, preact@^10.5.9:
   version "10.19.3"
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.19.3.tgz#7a7107ed2598a60676c943709ea3efb8aaafa899"
   integrity sha512-nHHTeFVBTHRGxJXKkKu5hT8C/YWBkPso4/Gad6xuj5dbptt9iF9NZr9pHbPhBrnT2klheu7mHTxTZ/LjwJiEiQ==

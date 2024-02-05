@@ -3,7 +3,7 @@
     <div class="flex justify-between pt-6 mb-6">
       <div>
         <p class="text-grey-300 text-xs uppercase">voting address</p>
-        <p class="text-white text-md uppercase">
+        <p class="text-white text-md">
           {{ address }}
         </p>
       </div>

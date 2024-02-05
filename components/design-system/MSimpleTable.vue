@@ -56,7 +56,7 @@
             <template v-for="key in displayedFieldKeys" :key="key">
               <Component
                 :is="cellElement(key as string)"
-                class="p-3 text-sm border-b border-dashed border-grey-500"
+                class="p-3 text-sm border-b border-dashed border-grey-500 font-inter"
                 :class="{
                   'p-2': dense,
                 }"
