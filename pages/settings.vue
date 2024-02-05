@@ -141,6 +141,6 @@ input {
 }
 
 label {
-  @apply text-grey-400 text-sm block mb-2;
+  @apply text-grey-600 text-sm block mb-2;
 }
 </style>
