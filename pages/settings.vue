@@ -1,87 +1,63 @@
 <template>
-  <LayoutPage>
+  <div>
+    <PageTitle class="mb-6">Settings</PageTitle>
+
     <div>
-      <form @submit.prevent="onSubmit">
-        <h1 class="text-center text-2xl">Connect to M&#94;ZERO network</h1>
-        <p class="text-center text-grey-400 mb-8">
-          Add from a list of popular networks or add a network manually. Only
-          interact with the entities you trust.
-        </p>
-        <div>
-          <div class="mb-8">
-            <div class="flex justify-between mb-2">
-              <label>Current network:</label>
-              <span class="text-xs border-b border-dashed">
-                Chain Id: {{ chainId }}
-              </span>
-            </div>
-            <select v-model="selectedNetworkId">
-              <option
-                v-for="chain in networks"
-                :key="chain.name"
-                :value="chain.id"
-              >
-                {{ chain.name }}
-              </option>
-            </select>
-
-            <!-- with custom RPC -->
-            <div v-if="isWithCustomRPC">
-              <label> Custom RPC URL: </label>
-              <input
-                v-model="customRPC"
-                type="text"
-                placeholder="http://..."
-                data-test="settings-input-url-rpc"
-              />
-
-              <p class="text-grey-400">
-                <button
-                  class="border-b border-white border-dashed"
-                  data-test="settings-button-return-to-list"
-                  @click="onSwitchInput(false)"
-                >
-                  return to list
-                </button>
-              </p>
-            </div>
-
-            <!-- with predefined RPC -->
-            <div v-else>
-              <label>Current RPC URL:</label>
-
-              <select v-model="selectedRPC">
-                <option v-for="rpc in rpcs" :key="rpc" :value="rpc">
-                  {{ rpc }}
-                </option>
-              </select>
-
-              <p class="text-grey-400">
-                or enter
-                <button
-                  class="border-b border-white border-dashed"
-                  data-test="settings-button-custom-rpc"
-                  @click="onSwitchInput(true)"
-                >
-                  your Custom RPC
-                </button>
-              </p>
-            </div>
-          </div>
-
-          <div class="flex justify-center">
-            <MButton
-              type="submit"
-              version="secondary-dark"
-              data-test="settings-button-submit"
-            >
-              Connect
-            </MButton>
-          </div>
+      <div class="mb-6">
+        <div class="flex justify-between text-sm">
+          <label>Network</label>
+          <label>Chain Id: {{ chainId }}</label>
         </div>
-      </form>
+        <select v-model="selectedNetworkId">
+          <option v-for="chain in networks" :key="chain.name" :value="chain.id">
+            {{ chain.name }}
+          </option>
+        </select>
+      </div>
+
+      <div v-if="isWithCustomRPC">
+        <label>Custom RPC URL</label>
+        <input
+          v-model="customRPC"
+          type="text"
+          placeholder="http://..."
+          data-test="settings-input-url-rpc"
+        />
+
+        <button
+          class="rpc-button"
+          data-test="settings-button-return-to-list"
+          @click="onSwitchInput(false)"
+        >
+          return to list
+        </button>
+      </div>
+
+      <div v-else>
+        <label>RPC URL</label>
+
+        <select v-model="selectedRPC" class="h-[42px]">
+          <option v-for="rpc in rpcs" :key="rpc" :value="rpc">
+            {{ rpc }}
+          </option>
+        </select>
+
+        <button
+          class="rpc-button"
+          data-test="settings-button-custom-rpc"
+          @click="onSwitchInput(true)"
+        >
+          Custom RPC
+        </button>
+      </div>
+
+      <div class="flex justify-end">
+        <MButton type="submit" data-test="settings-button-submit">
+          Connect
+        </MButton>
+      </div>
     </div>
-  </LayoutPage>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -134,7 +110,7 @@ function onSwitchInput(version: boolean) {
 }
 </script>
 
-<style scoped>
+<!-- <style scoped>
 select,
 input {
   @apply p-4 bg-transparent border border-white mb-2 block w-full;
@@ -142,5 +118,11 @@ input {
 
 label {
   @apply text-grey-600 text-sm block mb-2;
+}
+</style> -->
+
+<style>
+.rpc-button {
+  @apply underline text-grey-600 text-xs mt-2;
 }
 </style>
