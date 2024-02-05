@@ -9,7 +9,7 @@
         tabindex="-1"
         aria-labelledby="drawer-label"
       >
-        <div class="w-full inline-flex items-center mb-4 justify-end">
+        <div class="w-full inline-flex items-center mb-2 justify-end">
           <button
             type="button"
             data-drawer-hide="drawer-example"
