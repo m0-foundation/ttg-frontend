@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <form @submit.prevent="onSubmit">
     <PageTitle class="mb-6">Settings</PageTitle>
 
     <div>
@@ -57,7 +57,7 @@
         </MButton>
       </div>
     </div>
-  </div>
+  </form>
 </template>
 
 <script setup lang="ts">
@@ -109,17 +109,6 @@ function onSwitchInput(version: boolean) {
   customRPC.value = "";
 }
 </script>
-
-<!-- <style scoped>
-select,
-input {
-  @apply p-4 bg-transparent border border-white mb-2 block w-full;
-}
-
-label {
-  @apply text-grey-600 text-sm block mb-2;
-}
-</style> -->
 
 <style>
 .rpc-button {
