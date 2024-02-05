@@ -70,14 +70,32 @@
     <div v-if="isCorrectChain" class="mb-6 bg-grey-800 p-4">
       <p class="text-xs mb-4 text-grey-600">Current voting power</p>
       <div class="flex justify-between">
-        <div class="flex items-center">
+        <div class="flex">
           <MIconPower class="h-6 w-6" />
-          {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(0) }}%
+          <div class="flex flex-col">
+            <span
+              >{{
+                powerTokenVotingPower?.data?.value?.relative?.toFixed(0)
+              }}%</span
+            >
+            <span class="text-grey-600 text-xxs">{{
+              balancePowerToken?.data?.value?.formatted
+            }}</span>
+          </div>
         </div>
 
-        <div class="flex items-center">
+        <div class="flex">
           <MIconZero class="h-6 w-6" />
-          {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(0) }}%
+          <div class="flex flex-col">
+            <span
+              >{{
+                zeroTokenVotingPower?.data?.value?.relative?.toFixed(0)
+              }}%</span
+            >
+            <span class="text-grey-600 text-xxs">{{
+              balanceZeroToken?.data?.value?.formatted
+            }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -130,9 +148,9 @@
 
 <script lang="ts" setup>
 import { useAccount, useDisconnect } from "use-wagmi";
-import { useMVotingPower } from "@/lib/hooks";
+import { useMVotingPower, useMBalances } from "@/lib/hooks";
 
-const { isConnected } = useAccount();
+const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
 const { isCorrectChain } = useCorrectChain();
 
@@ -140,6 +158,9 @@ const { powerTokenVotingPower, zeroTokenVotingPower } = useMVotingPower();
 
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
+
+const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
+  useMBalances(address);
 </script>
 
 <style scoped>
