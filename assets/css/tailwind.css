@@ -1,6 +1,12 @@
 @import './github-markdown.css';
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
+
+@font-face {
+  font-family: "PPFormula";
+  src: url("../fonts/PPFormula-SemiCondensedRegular.woff") format('woff');
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,12 +14,12 @@
 
 @layer base {
   html {
-    @apply bg-grey-900 text-white font-mono;
+    @apply bg-grey-900 text-grey-100 font-ppformula;
   }
 
 input,
 select,
 textarea {
-  @apply bg-secondary-dark border border-grey-600 text-gray-100 text-sm focus:ring-green-500 focus:border-green-100 block w-full p-2.5;
+  @apply bg-secondary-dark border border-grey-600 text-grey-100 text-sm focus:ring-green-500 focus:border-green-100 block w-full p-2.5;
 }
 }
