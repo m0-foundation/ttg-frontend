@@ -25,11 +25,7 @@
 import { UseWagmiPlugin } from "use-wagmi";
 import { storeToRefs } from "pinia";
 import { Api } from "@/lib/api";
-import {
-  watchProposalCreated,
-  watchVoteCast,
-  watchForExecutedResetProposal,
-} from "@/lib/watchers";
+import { watchForExecutedResetProposal } from "@/lib/watchers";
 
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
@@ -100,8 +96,6 @@ onMounted(async () => {
     .fetchEpoch(spog.getValues.clock)
     .catch((e) => trackError(e, "fetchEpoch"));
 
-  watchProposalCreated();
-  watchVoteCast();
   watchForExecutedResetProposal();
 
   isLoading.value = false;

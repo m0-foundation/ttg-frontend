@@ -63,6 +63,7 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { readPowerToken, readZeroToken } from "@/lib/sdk";
+import { watchVoteCast } from "@/lib/watchers";
 
 export interface ProposalDetailsProps {
   proposalId: string;
@@ -121,4 +122,11 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
   ]),
   [0n, 0n]
 );
+
+const { unwatchAll } = watchVoteCast();
+
+onUnmounted(() => {
+  console.log("unwatching all votes");
+  unwatchAll();
+});
 </script>
