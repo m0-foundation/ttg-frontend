@@ -7,12 +7,13 @@
         :steps="steps"
       />
     </MModal>
-    <form class="p-6" @submit.prevent="onSubmit">
+
+    <PageTitle class="mb-3">Create a proposal</PageTitle>
+
+    <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
       <div v-else>
         <div v-show="!isPreview">
-          <h1>Create a proposal</h1>
-
           <div class="create-steps">
             <div class="number">[1]</div>
             <span>Define the action to be executed if proposal succeeds</span>
@@ -902,11 +903,11 @@ hr {
 }
 
 .create-steps {
-  @apply flex items-center mb-6 font-mono text-xs uppercase;
+  @apply flex items-center mb-6 font-mono text-xxs lg:text-xs uppercase;
 }
 
 .create-steps .number {
-  @apply text-accent-mint text-xs tracking-[8px];
+  @apply text-accent-mint text-xxs lg:text-xs tracking-[8px];
 }
 
 .disabled {
