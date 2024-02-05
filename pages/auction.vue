@@ -13,7 +13,7 @@
               name="eth"
               image="/img/tokens/eth.svg"
               :size="30"
-              :amount="purchasePrice"
+              :amount="userCanBuy ? formatEther(purchasePrice) : 0"
             />
           </div>
           <div>
@@ -182,7 +182,7 @@ async function getPurchaseCost(amount: bigint) {
 
 setInterval(async () => {
   purchasePrice.value = await getPurchaseCost(1n);
-}, 5000);
+}, 2000);
 
 watch(
   () => lastEpochTotalSupply.value,
