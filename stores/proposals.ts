@@ -7,7 +7,7 @@ import { MProposal, ProposalState } from "@/lib/api/types";
 
 export const useProposalsStore = defineStore("proposals", {
   state: () => ({
-    data: useLocalStorage("mzero.proposals", [] as MProposal[]),
+    data: [] as MProposal[],
   }),
 
   getters: {
