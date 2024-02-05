@@ -11,12 +11,14 @@
     </template>
     <template #cell(vote)="{ value }">
       <span class="text-grey-400">
-        <span v-if="value" class="bg-green-700 text-white px-2 py-1">YES</span>
-        <span v-else class="bg-red-700 text-white px-2 py-1">NO</span>
+        <span v-if="value" class="bg-green-700 text-grey-600 px-2 py-1"
+          >YES</span
+        >
+        <span v-else class="bg-red-700 text-grey-600 px-2 py-1">NO</span>
       </span>
     </template>
     <template #cell(castedAt)="{ value }">
-      <span class="text-grey-400"> {{ useDate(value).toFormat("LLL") }}</span>
+      <span class="text-grey-600"> {{ useDate(value).toFormat("LLL") }}</span>
     </template>
   </MSimpleTable>
 </template>

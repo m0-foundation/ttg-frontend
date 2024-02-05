@@ -23,7 +23,7 @@ withDefaults(defineProps<MButtonProps>(), {
 
 <style>
 .default {
-  @apply text-grey-100 bg-grey-600 hover:bg-grey-500;
+  @apply text-grey-100 bg-grey-600 hover:bg-grey-700;
 }
 
 .active {

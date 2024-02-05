@@ -1,11 +1,11 @@
 <template>
   <div class="my-2">
     <!-- tabs -->
-    <div class="flex justify-start gap-12 bg-[#1b1c1b] px-6 py-8">
+    <div class="flex justify-start gap-12 px-6 py-8">
       <button
         :class="[
           'uppercase hover:underline text-xs ',
-          selectedTab === 0 ? 'text-white' : 'text-zinc-500',
+          selectedTab === 0 ? 'text-white' : 'text-grey-600',
         ]"
         data-test="profile-button-voting-history"
         @click="selectedTab = 0"
@@ -15,7 +15,7 @@
       <button
         :class="[
           'uppercase hover:underline text-xs',
-          selectedTab === 1 ? 'text-white' : 'text-zinc-500',
+          selectedTab === 1 ? 'text-white' : 'text-grey-600',
         ]"
         data-test="profile-button-submitted-proposals"
         @click="selectedTab = 1"

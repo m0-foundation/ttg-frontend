@@ -23,3 +23,7 @@ textarea {
   @apply bg-secondary-dark border border-grey-600 text-grey-100 text-sm focus:ring-green-500 focus:border-green-100 block w-full p-2.5;
 }
 }
+
+h1 {
+  @apply text-lg lg:text-[28px]
+}

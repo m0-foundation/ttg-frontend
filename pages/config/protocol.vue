@@ -1,13 +1,15 @@
 <template>
   <div>
-    <PageTitle class="px-6 lg:px-0">M^0 Protocol Configurations</PageTitle>
-
     <MSimpleTable
       :search="true"
       :items="protocolTableData"
       :fields="protocolTableHeaders"
       :loading="isLoading"
-    />
+    >
+      <template #header-left>
+        <PageTitle>M^0 Protocol Configurations</PageTitle>
+      </template>
+    </MSimpleTable>
   </div>
 </template>
 

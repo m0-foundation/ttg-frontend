@@ -10,10 +10,10 @@
       }}</NuxtLink>
     </template>
     <template #cell(action)="{ value }">
-      <span class="text-grey-400">{{ value }}</span>
+      <span class="text-grey-600">{{ value }}</span>
     </template>
     <template #cell(created)="{ value }">
-      <span class="text-grey-400"> {{ useDate(value).toFormat("LLL") }}</span>
+      <span class="text-grey-600"> {{ useDate(value).toFormat("LLL") }}</span>
     </template>
     <template #cell(status)="{ value }">
       <ProposalStatus :version="value" />

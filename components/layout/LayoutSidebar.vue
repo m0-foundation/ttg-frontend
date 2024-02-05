@@ -4,7 +4,7 @@
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
     <span class="lg:hidden">Gov</span>
-    <span class="hidden lg:block text-gray-400">Governance</span>
+    <span class="hidden lg:block text-grey-600">[ Governance ]</span>
   </div>
 
   <NuxtLink class="block" to="/proposal/create/">
@@ -16,7 +16,7 @@
     </MButton>
   </NuxtLink>
 
-  <nav class="text-grey-100 text-xl mb-6">
+  <nav class="text-grey-100 mb-6">
     <ul>
       <li>
         <NuxtLink
@@ -24,7 +24,7 @@
           active-class="active"
           data-test="sidebar-link-proposals"
         >
-          proposals
+          Home
         </NuxtLink>
       </li>
 
@@ -34,7 +34,7 @@
           active-class="active"
           data-test="sidebar-link-lists"
         >
-          lists
+          Lists
         </NuxtLink>
       </li>
 
@@ -44,7 +44,7 @@
           active-class="active"
           data-test="sidebar-link-governance"
         >
-          governance config
+          Governance Config
         </NuxtLink>
       </li>
 
@@ -54,7 +54,7 @@
           active-class="active"
           data-test="sidebar-link-protocol"
         >
-          M0 Protocol config
+          M0 Protocol Config
         </NuxtLink>
       </li>
     </ul>
@@ -63,21 +63,21 @@
   <div v-if="isConnected" class="text-grey-100">
     <div class="mb-4 text-sm">
       <NuxtLink to="/profile/me/" data-test="sidebar-link-my-profile">
-        MY PROFILE
+        My Profile
       </NuxtLink>
     </div>
 
-    <div v-if="isCorrectChain" class="mb-6">
-      <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
-      <div class="flex justify-between mb-4">
-        <div class="text-gray-400 flex items-center">
-          <MIconPower class="h-6 w-6 mr-2" />
-          {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+    <div v-if="isCorrectChain" class="mb-6 bg-grey-800 p-4">
+      <p class="text-xs mb-4 text-grey-600">Current voting power</p>
+      <div class="flex justify-between">
+        <div class="flex items-center">
+          <MIconPower class="h-6 w-6" />
+          {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(0) }}%
         </div>
 
-        <div class="text-gray-400 flex items-center">
-          <MIconZero class="h-6 w-6 mr-2" />
-          {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+        <div class="flex items-center">
+          <MIconZero class="h-6 w-6" />
+          {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(0) }}%
         </div>
       </div>
     </div>
@@ -108,14 +108,14 @@
         class="w-full"
         data-test="sidebar-link-delegate"
       >
-        <NuxtLink to="/delegate/"> re-delegate </NuxtLink>
+        <NuxtLink to="/delegate/"> Re-delegate </NuxtLink>
       </MButton>
     </div>
 
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full py-2 hover:underline text-left uppercase text-xs"
+      class="block w-full py-2 hover:underline text-left text-xs"
       data-test="sidebar-button-disconnect"
       @click="() => disconnect()"
     >
@@ -145,13 +145,14 @@ const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
 <style scoped>
 li {
   list-style-type: none;
-  @apply text-grey-100 text-sm py-2 uppercase hover:underline;
+  @apply text-grey-100 py-1 hover:text-green-700;
 }
 .active {
   @apply text-green-700 bg-transparent;
 }
 
-.active::before {
-  content: "[> ";
+.active::after {
+  content: "_";
+  margin-left: -3px;
 }
 </style>

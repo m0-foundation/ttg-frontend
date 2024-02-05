@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<MButtonProps>(), {
 </script>
 <style scoped>
 button {
-  @apply uppercase font-medium text-sm px-4 py-2 text-center mr-3 md:mr-0 flex items-center;
+  @apply uppercase font-mono text-sm px-4 py-2 text-center mr-3 md:mr-0 flex items-center;
 }
 button:disabled {
   @apply opacity-50 cursor-not-allowed bg-green-800;

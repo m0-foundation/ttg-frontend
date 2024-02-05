@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4">
+  <div class="mb-4 bg-transparent">
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="text-white bg-grey-800 p-8"
@@ -15,7 +15,7 @@
         </h2>
       </div>
 
-      <div class="text-grey-400 font-inter mb-4">
+      <div class="text-grey-600 font-inter mb-4">
         {{ truncatedDescriptionText }}
       </div>
 

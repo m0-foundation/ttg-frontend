@@ -3,9 +3,10 @@
     <PageTitle class="lg:p-0 lg:mb-6">
       My Profile<template #subtitle
         ><MAddressAvatar
-          class="text-grey-300 normal-case"
+          class="text-grey-600 normal-case"
           :short-address="false"
           :address="address"
+          :show-avatar="false"
       /></template>
       <template #side>
         <NuxtLink to="/delegate/">
@@ -46,9 +47,9 @@
   </div>
   <div
     v-else
-    class="flex flex-col items-center justify-center h-80 text-grey-400"
+    class="flex flex-col items-center justify-center h-80 text-grey-600"
   >
-    User not conntecd
+    User not connected
   </div>
 </template>
 
