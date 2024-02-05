@@ -60,9 +60,15 @@
     </ul>
   </nav>
 
+  <hr class="border-grey-800 my-6" />
+
   <div v-if="isConnected" class="text-grey-100">
-    <div class="mb-4 text-sm">
-      <NuxtLink to="/profile/me/" data-test="sidebar-link-my-profile">
+    <div class="mb-4">
+      <NuxtLink
+        to="/profile/me/"
+        data-test="sidebar-link-my-profile"
+        active-class="active"
+      >
         My Profile
       </NuxtLink>
     </div>
