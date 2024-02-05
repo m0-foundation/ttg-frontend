@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-grey-600 whitespace-nowrap">
+  <div class="bg-grey-800 whitespace-nowrap">
     <div class="p-6 py-3 text-xxs">
-      <p class="text-grey-300">Status updated</p>
+      <p class="text-grey-600">Status updated</p>
       <p v-if="updated" class="text-grey-100">{{ toFormat("LLL") }}</p>
     </div>
     <hr class="border-grey-1000" />
@@ -14,7 +14,7 @@
       <li v-if="statusBlock">
         <a @click="copyToClipboard(statusBlock)">
           <p>Copy Ethereum Block</p>
-          <p class="text-grey-400 text-xxs">{{ statusBlock }}</p></a
+          <p class="text-grey-100 text-xxs">{{ statusBlock }}</p></a
         >
       </li>
     </ul>
@@ -37,10 +37,10 @@ const { toFormat } = useDate(Number(props?.updated));
 
 <style>
 .status-menu-items {
-  @apply bg-grey-600;
+  @apply bg-grey-800;
 }
 .status-menu-items li a {
-  @apply p-6 py-4 block hover:bg-grey-800 whitespace-nowrap cursor-pointer;
+  @apply p-6 py-4 block hover:bg-grey-600 text-grey-100 whitespace-nowrap cursor-pointer;
 }
 
 .dropdown:focus-within .dropdown-menu {

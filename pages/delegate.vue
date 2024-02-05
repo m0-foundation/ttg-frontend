@@ -135,7 +135,7 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useAccount } from "use-wagmi";
-import { useMVotingPower, useMBalances } from "@/lib/hooks";
+import { useMBalances } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
 const spog = storeToRefs(useSpogStore());

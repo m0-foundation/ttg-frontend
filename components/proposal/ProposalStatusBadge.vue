@@ -42,7 +42,7 @@ defineProps({
   @apply flex items-center py-1 px-2 lg:px-3;
 }
 .status-button {
-  @apply text-grey-400 uppercase;
+  @apply text-grey-600 uppercase;
 }
 .status-chevron {
   @apply ml-1;
