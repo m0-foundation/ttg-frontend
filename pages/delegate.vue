@@ -1,17 +1,19 @@
 <template>
   <div>
-    <PageTitle class="mb-3">Delegate voting power</PageTitle>
+    <div class="px-6 lg:p-0">
+      <PageTitle class="mb-3">Delegate voting power</PageTitle>
 
-    <p class="text-grey-600 mb-6">
-      You can delegate your voting power to any address. The tokens will remain
-      in your balance, and you can re-delegate them in the future.
-    </p>
+      <p class="text-grey-600 text-sm lg:text-base mb-6">
+        You can delegate your voting power to any address. The tokens will
+        remain in your balance, and you can re-delegate them in the future.
+      </p>
+    </div>
 
-    <div v-show="!canDelegate" class="bg-accent-blue px-4 py-5 my-6">
+    <div v-show="!canDelegate" class="bg-accent-blue p-6 mb-6">
       <span class="uppercase mb-2 text-xs">Warning</span>
 
       <div class="flex items-center gap-3">
-        <MIconWarning />
+        <MIconWarning class="w-12" />
         <p>
           The transfer epoch has concluded. You will be able to delegate in the
           next
@@ -21,11 +23,11 @@
     </div>
 
     <form
-      class="my-4 bg-grey-800 p-8 py-6 font-inter"
+      class="my-4 bg-grey-800 p-6 font-inter"
       @submit.prevent="delegateVote"
     >
       <div>
-        <div class="flex justify-between items-center my-3">
+        <div class="flex justify-between items-center mb-3">
           <div>$POWER tokens</div>
           <div class="flex gap-1 items-center">
             <MIconPower class="h-6 w-6" />
@@ -55,7 +57,7 @@
         </div>
       </div>
 
-      <div class="flex justify-between items-center gap-2 my-4">
+      <div class="flex justify-between items-center gap-2">
         <NuxtLink
           class="text-grey-600 underline text-xs cursor-pointer"
           @click="onUseMyAddressVote"
@@ -73,7 +75,7 @@
     </form>
 
     <form
-      class="my-4 bg-grey-800 p-8 py-6 font-inter"
+      class="my-4 bg-grey-800 p-6 font-inter"
       @submit.prevent="delegateValue"
     >
       <div>
@@ -107,7 +109,7 @@
         </div>
       </div>
 
-      <div class="flex justify-between items-center gap-2 my-4">
+      <div class="flex justify-between items-center gap-2">
         <NuxtLink
           class="text-grey-600 underline text-xs cursor-pointer"
           @click="onUseMyAddressValue"
@@ -124,7 +126,7 @@
       </div>
     </form>
 
-    <p class="text-grey-600 text-sm font-mono text-end mt-6">
+    <p class="px-6 text-grey-600 text-xxs lg:text-sm font-mono text-end mt-6">
       /* The delegated tokens will be available for voting starting from the
       next epoch. */
     </p>

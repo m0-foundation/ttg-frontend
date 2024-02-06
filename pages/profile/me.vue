@@ -23,25 +23,32 @@
 
     <ProfileBalances class="mb-6" :address="address" />
 
-    <div v-if="hasDelegatedPower" class="p-4 bg-green-900 text-white my-2">
-      <p class="uppercase text-xs mb-6">
-        Your POWER tokens <u>voting power</u> is delegated to the address:
+    <div v-if="hasDelegatedPower" class="p-4 bg-accent-blue my-6">
+      <p class="uppercase text-xs font-mono mb-2">
+        $POWER Tokens are DELEGATED to address:
       </p>
-      <p class="text-xl underline">{{ powerDelegates }}</p>
-      <p class="text-xs uppercase text-[#5CC99E]">
-        Voting power will be available to delegatee starting next epoch
-      </p>
+      <div class="flex items-center gap-3">
+        <MIconPower class="h-6 w-6" />
+        <span class="hidden lg:block">-></span>
+        <span class="underline font-inter text-xxs lg:text-base">
+          {{ powerDelegates }}</span
+        >
+      </div>
     </div>
 
-    <div v-if="hasDelegatedZero" class="p-4 bg-green-900 text-white my-2">
-      <p class="uppercase text-xs mb-6">
-        Your ZERO tokens <u>voting power</u> is delegated to the address:
+    <div v-if="hasDelegatedZero" class="p-4 bg-accent-blue my-6">
+      <p class="uppercase text-xs font-mono mb-2">
+        $ZERO Tokens are DELEGATED to address:
       </p>
-      <p class="text-xl underline">{{ zeroDelegates }}</p>
-      <p class="text-xs uppercase text-[#5CC99E]">
-        Voting power will be available to delegatee starting next epoch
-      </p>
+      <div class="flex items-center gap-3">
+        <MIconZero class="h-6 w-6" />
+        <span class="hidden lg:block">-></span>
+        <span class="underline font-inter text-xxs lg:text-base">
+          {{ zeroDelegates }}</span
+        >
+      </div>
     </div>
+
     <!-- tables -->
     <ProfileTables :address="address" />
   </div>

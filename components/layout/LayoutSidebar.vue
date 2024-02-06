@@ -75,7 +75,7 @@
       </NuxtLink>
     </div>
 
-    <div v-if="isCorrectChain" class="mb-6 bg-grey-800 p-4">
+    <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
       <p class="text-xs mb-4 text-grey-600">Current voting power</p>
       <div class="flex justify-between">
         <div class="flex">
@@ -110,10 +110,10 @@
 
     <div
       v-show="(hasDelegatedPower || hasDelegatedZero) && isCorrectChain"
-      class="p-3 bg-green-900 text-white"
+      class="p-4 bg-accent-teal text-white"
     >
       <div class="mb-2">
-        <p class="uppercase mb-2 text-xxs">Voting power is delegated to:</p>
+        <p class="uppercase mb-2 text-xxs">Tokens delegated to:</p>
 
         <div v-show="hasDelegatedPower" class="flex items-center">
           <MIconPower class="h-6 w-6 mr-1" />
@@ -141,7 +141,7 @@
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full py-2 hover:underline text-left text-xs"
+      class="block w-full my-4 hover:underline text-left text-xs"
       data-test="sidebar-button-disconnect"
       @click="() => disconnect()"
     >
