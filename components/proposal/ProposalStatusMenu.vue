@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-grey-800 whitespace-nowrap">
-    <div class="p-6 py-3 text-xxs">
-      <p class="text-grey-600">Status updated</p>
+  <div class="bg-grey-800 whitespace-nowrap font-inter">
+    <div class="p-6 py-3 text-xs">
+      <p class="text-grey-600 font-ppformula">Status updated</p>
       <p v-if="updated" class="text-grey-100">{{ toFormat("LLL") }}</p>
     </div>
     <hr class="border-grey-1000" />
@@ -14,7 +14,7 @@
       <li v-if="statusBlock">
         <a @click="copyToClipboard(statusBlock)">
           <p>Copy Ethereum Block</p>
-          <p class="text-grey-100 text-xxs">{{ statusBlock }}</p></a
+          <p class="text-grey-100 text-sm">{{ statusBlock }}</p></a
         >
       </li>
     </ul>

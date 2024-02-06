@@ -39,7 +39,7 @@ defineProps({
 
 <style scoped>
 .item {
-  @apply flex items-center py-1 px-2 lg:px-3;
+  @apply text-xs lg:text-sm flex items-center font-mono py-1 px-2 lg:px-3;
 }
 .status-button {
   @apply text-grey-600 uppercase;
@@ -48,7 +48,7 @@ defineProps({
   @apply ml-1;
 }
 .active {
-  @apply bg-[#00664E] text-[#5CC99E];
+  @apply bg-green-900 text-accent-mint;
 }
 .active .status-chevron path {
   @apply stroke-grey-700;

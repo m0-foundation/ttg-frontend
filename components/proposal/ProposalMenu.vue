@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="relative inline-block text-left dropdown text-white">
+  <div class="relative inline-block text-left dropdown font-inter">
     <button
       aria-haspopup="true"
       aria-expanded="true"
