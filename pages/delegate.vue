@@ -1,19 +1,19 @@
 <template>
-  <div class="mb-20 w-full mx-auto">
-    <h1 class="text-white text-2xl p-8 text-center">Delegate Tokens</h1>
-    <p class="text-grey-400 text-center">
-      You can delegate your voting power to any address. The tokens will remain
-      in your balance, and you can re-delegate them in the future.
-    </p>
+  <div>
+    <div class="px-6 lg:p-0">
+      <PageTitle class="mb-3">Delegate voting power</PageTitle>
 
-    <div
-      v-show="!canDelegate"
-      class="bg-green-900 text-white text-xs px-4 py-5 my-4"
-    >
-      <p class="uppercase mb-2">Warning</p>
+      <p class="text-grey-600 text-sm lg:text-base mb-6">
+        You can delegate your voting power to any address. The tokens will
+        remain in your balance, and you can re-delegate them in the future.
+      </p>
+    </div>
 
-      <div class="flex items-center">
-        <MIconWarning class="mr-2" />
+    <div v-show="!canDelegate" class="bg-accent-blue p-6 mb-6">
+      <span class="uppercase mb-2 text-xs">Warning</span>
+
+      <div class="flex items-center gap-3">
+        <MIconWarning class="w-12" />
         <p>
           The transfer epoch has concluded. You will be able to delegate in the
           next
@@ -22,49 +22,51 @@
       </div>
     </div>
 
-    <form class="my-4" @submit.prevent="delegateVote">
-      <div class="bg-secondary-dark p-8">
-        <div class="flex justify-between my-4">
-          <div class="text-2xl">Delegate Power tokens</div>
-          <div class="flex">
-            <MIconPower class="h-8 w-8 mr-4" />
-            <span class="mx-2 flex items-center text-2xl text-green-700">
-              {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+    <form
+      class="my-4 bg-grey-800 p-6 font-inter"
+      @submit.prevent="delegateVote"
+    >
+      <div>
+        <div class="flex justify-between items-center mb-3">
+          <div>$POWER tokens</div>
+          <div class="flex gap-1 items-center">
+            <MIconPower class="h-6 w-6" />
+            <span
+              class="flex items-center text-2xl"
+              :class="{
+                'text-accent-mint': !canDelegate,
+              }"
+            >
+              {{ balancePowerToken?.data.value?.formatted }}
             </span>
           </div>
         </div>
-        <label class="text-grey-400">Enter address</label>
+        <label class="text-grey-600">Delegation address</label>
         <input
           id="input-delegate-power"
           v-model="inputPowerDelegates"
           placeholder="0x..."
           type="text"
-          class="w-full bg-secondary-dark text-white border border-1 border-gray-500 rounded p-4 mb-4"
+          class="w-full border border-gray-600 rounded p-4 mb-4"
           data-test="delegate-power-input-address"
         />
-        <div class="flex justify-between">
-          <button
-            id="button-use-my-address-power"
-            type="button"
-            class="underline text-grey-400"
-            data-test="delegate-button-power-use-my-address"
-            @click="onUseMyAddressVote"
-          >
-            Use my address
-          </button>
-        </div>
 
-        <div v-if="hasDelegatedPower" class="my-4 text-xs text-grey-400">
+        <div v-if="hasDelegatedPower" class="my-4 text-xs text-grey-600">
           <p>Current Delegatee:</p>
           <p class="underline">{{ powerDelegates }}</p>
         </div>
       </div>
 
-      <div class="flex justify-end gap-2 my-4">
+      <div class="flex justify-between items-center gap-2">
+        <NuxtLink
+          class="text-grey-600 underline text-xs cursor-pointer"
+          @click="onUseMyAddressVote"
+          >Use my address</NuxtLink
+        >
         <MButton
           id="button-delegate-power"
           type="submit"
-          :disabled="!isConnected || !canDelegate"
+          :disabled="!isConnected || !canDelegate || !inputPowerDelegates"
           data-test="delegate-button-power-submit"
         >
           delegate
@@ -72,60 +74,62 @@
       </div>
     </form>
 
-    <form class="my-4" @submit.prevent="delegateValue">
-      <div class="bg-secondary-dark p-8 my-8">
-        <div class="flex justify-between my-4">
-          <div class="text-2xl">Delegate Zero tokens</div>
-          <div class="flex">
-            <MIconZero class="h-8 w-8 mr-4" />
-            <span class="mx-2 flex items-center text-2xl text-green-700">
-              {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+    <form
+      class="my-4 bg-grey-800 p-6 font-inter"
+      @submit.prevent="delegateValue"
+    >
+      <div>
+        <div class="flex justify-between items-center my-3">
+          <div>Value tokens</div>
+          <div class="flex gap-1 items-center">
+            <MIconZero class="h-6 w-6" />
+            <span
+              :class="{
+                'text-accent-mint': !canDelegate,
+              }"
+              class="mx-2 flex items-center text-2xl"
+            >
+              {{ balanceZeroToken?.data?.value?.formatted }}
             </span>
           </div>
         </div>
-        <label class="text-grey-400">Enter address</label>
+        <label class="text-grey-600">Delegation address</label>
         <input
           id="input-delegate-zero"
           v-model="inputZeroDelegates"
           placeholder="0x..."
           type="text"
-          class="w-full bg-secondary-dark text-white border border-1 border-gray-500 rounded p-4 mb-4"
+          class="w-full border border-gray-600 rounded p-4 mb-4"
           data-test="delegate-zero-input-address"
         />
-        <div class="flex justify-between">
-          <button
-            id="button-use-my-address-zero"
-            type="button"
-            class="underline text-grey-400"
-            data-test="delegate-button-zero-use-my-address"
-            @click="onUseMyAddressValue"
-          >
-            Use my address
-          </button>
-        </div>
 
-        <div v-if="hasDelegatedZero" class="my-4 text-xs text-grey-400">
+        <div v-if="hasDelegatedZero" class="my-4 text-xs text-grey-600">
           <p>Current Delegatee:</p>
           <p class="underline">{{ zeroDelegates }}</p>
         </div>
       </div>
 
-      <p class="text-green-700 my-4">
-        /* The delegated tokens will be available for voting starting from the
-        next <b>Voting</b> epoch. */
-      </p>
-
-      <div class="flex justify-end gap-2">
+      <div class="flex justify-between items-center gap-2">
+        <NuxtLink
+          class="text-grey-600 underline text-xs cursor-pointer"
+          @click="onUseMyAddressValue"
+          >Use my address</NuxtLink
+        >
         <MButton
           id="button-delegate-zero"
           type="submit"
-          :disabled="!isConnected || !canDelegate"
+          :disabled="!isConnected || !canDelegate || !inputZeroDelegates"
           data-test="delegate-button-zero-submit"
         >
           delegate
         </MButton>
       </div>
     </form>
+
+    <p class="px-6 text-grey-600 text-xxs lg:text-sm font-mono text-end mt-6">
+      /* The delegated tokens will be available for voting starting from the
+      next epoch. */
+    </p>
   </div>
 </template>
 
@@ -133,7 +137,7 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useAccount } from "use-wagmi";
-import { useMVotingPower } from "@/lib/hooks";
+import { useMBalances } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
 const spog = storeToRefs(useSpogStore());
@@ -143,9 +147,11 @@ const inputZeroDelegates = ref();
 
 const { address: userAccount, isConnected } = useAccount();
 
-const { powerTokenVotingPower, zeroTokenVotingPower } = useMVotingPower();
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
+
+const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
+  useMBalances(userAccount);
 
 function onUseMyAddress(refAddress: Ref<string | undefined>) {
   refAddress.value = userAccount.value!;

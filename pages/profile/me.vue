@@ -1,11 +1,12 @@
 <template>
-  <div v-if="address">
-    <PageTitle class="lg:p-0 lg:mb-6">
+  <div v-if="address" class="px-6 lg:p-0">
+    <PageTitle class="mb-6">
       My Profile<template #subtitle
         ><MAddressAvatar
-          class="text-grey-300 normal-case"
+          class="text-grey-600 normal-case"
           :short-address="false"
           :address="address"
+          :show-avatar="false"
       /></template>
       <template #side>
         <NuxtLink to="/delegate/">
@@ -20,35 +21,42 @@
       </template>
     </PageTitle>
 
-    <ProfileBalances class="p-6 pt-0 lg:p-0 mb-6" :address="address" />
+    <ProfileBalances class="mb-6" :address="address" />
 
-    <div v-if="hasDelegatedPower" class="p-4 bg-green-900 text-white my-2">
-      <p class="uppercase text-xs mb-6">
-        Your POWER tokens <u>voting power</u> is delegated to the address:
+    <div v-if="hasDelegatedPower" class="p-4 bg-accent-blue my-6">
+      <p class="uppercase text-xs font-mono mb-2">
+        $POWER Tokens are DELEGATED to address:
       </p>
-      <p class="text-xl underline">{{ powerDelegates }}</p>
-      <p class="text-xs uppercase text-[#5CC99E]">
-        Voting power will be available to delegatee starting next epoch
-      </p>
+      <div class="flex items-center gap-3">
+        <MIconPower class="h-6 w-6" />
+        <span class="hidden lg:block">-></span>
+        <span class="underline font-inter text-xxs lg:text-base">
+          {{ powerDelegates }}</span
+        >
+      </div>
     </div>
 
-    <div v-if="hasDelegatedZero" class="p-4 bg-green-900 text-white my-2">
-      <p class="uppercase text-xs mb-6">
-        Your ZERO tokens <u>voting power</u> is delegated to the address:
+    <div v-if="hasDelegatedZero" class="p-4 bg-accent-blue my-6">
+      <p class="uppercase text-xs font-mono mb-2">
+        $ZERO Tokens are DELEGATED to address:
       </p>
-      <p class="text-xl underline">{{ zeroDelegates }}</p>
-      <p class="text-xs uppercase text-[#5CC99E]">
-        Voting power will be available to delegatee starting next epoch
-      </p>
+      <div class="flex items-center gap-3">
+        <MIconZero class="h-6 w-6" />
+        <span class="hidden lg:block">-></span>
+        <span class="underline font-inter text-xxs lg:text-base">
+          {{ zeroDelegates }}</span
+        >
+      </div>
     </div>
+
     <!-- tables -->
     <ProfileTables :address="address" />
   </div>
   <div
     v-else
-    class="flex flex-col items-center justify-center h-80 text-grey-400"
+    class="flex flex-col items-center justify-center h-80 text-grey-600"
   >
-    User not conntecd
+    User not connected
   </div>
 </template>
 

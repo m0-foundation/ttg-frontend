@@ -1,17 +1,18 @@
 <template>
-  <div>
-    <PageTitle class="px-6 lg:px-0"> Lists </PageTitle>
-
+  <div class="px-6 lg:p-0">
     <MSimpleTable
       :search="true"
       :items="filteredLists"
       :fields="listTableHeaders"
       :loading="isLoading"
     >
+      <template #header-left>
+        <PageTitle>Lists</PageTitle>
+      </template>
       <template #header-right>
         <select
           v-model="selectedList"
-          class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
+          class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2 font-inter"
         >
           <option value="all" default>All lists</option>
           <option v-for="option in listsOptions" :key="option" :value="option">
@@ -23,7 +24,7 @@
         <MAddressAvatar :short-address="false" show-copy :address="value" />
       </template>
       <template #cell(timestamp)="{ value }">
-        <span class="text-grey-400">{{
+        <span class="text-grey-600">{{
           useDate(value).toFormat("DD.MM.YYYY")
         }}</span>
       </template>
@@ -73,5 +74,9 @@ const selectedList = ref("all");
 const filteredLists = computed(() => {
   if (selectedList.value === "all") return lists.value;
   return lists.value.filter((obj) => obj.list === selectedList.value);
+});
+
+onBeforeUnmount(() => {
+  listsStore.setLists([]);
 });
 </script>

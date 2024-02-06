@@ -1,12 +1,10 @@
 <template>
   <NuxtLayout name="proposals">
-    <div class="p-8">
-      <ProposalList :proposals="proposals" @on-cast="castVote">
-        <template #emptyState>
-          <ProposalListEmptyState> No Zero proposals </ProposalListEmptyState>
-        </template>
-      </ProposalList>
-    </div>
+    <ProposalList :proposals="proposals" @on-cast="castVote">
+      <template #emptyState>
+        <ProposalListEmptyState> No Zero proposals </ProposalListEmptyState>
+      </template>
+    </ProposalList>
   </NuxtLayout>
 </template>
 

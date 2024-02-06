@@ -1,48 +1,39 @@
 <template>
   <NuxtLayout name="proposals">
     <div
-      v-if="!hasFinishedVoting"
-      class="p-8 py-6 bg-green-1000 font-inter flex flex-col gap-3"
+      v-if="!hasFinishedVoting && isConnected && hasProposals"
+      class="p-8 py-6 bg-grey-200 font-inter flex flex-col gap-3 text-grey-600 mb-6"
     >
-      <div class="flex flex-col lg:flex-row gap-3">
-        <img class="w-8" src="/img/icon-inflation.svg" alt="" />
+      <div class="flex flex-col lg:flex-row gap-3 items-start">
         <div>
-          <h5>
-            Vote on all standard proposals to save your voting power
+          <h5 class="text-grey-800 lg:text-xl tracking-tightest">
+            <span class="text-accent-blue">Save your voting power</span> and get
+            tokens if you vote on all standard proposals in the
+            current epoch
             <!-- TODO: find how much inflation power user would get -->
             <!-- and get <span class="text-green-700">+Z100 of inflation</span> -->
           </h5>
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
-            <span
-              class="text-xxs lg:text-xs text-green-700 text-nowrap uppercase flex gap-3"
-            >
+            <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
               Votes submitted:
               <span>
                 {{ selectedCastProposals.length }} /
                 {{ mandatoryToVoteProposals.length }}</span
               >
             </span>
-            <div class="w-full max-w-48 lg:h-1/3 bg-grey-800 rounded-sm h-1.5">
+            <div class="w-full lg:h-1/3 bg-white rounded-sm h-1.5">
               <div
-                class="bg-green-700 h-1.5 rounded-sm"
+                class="bg-accent-blue h-1.5 rounded-sm"
                 :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
               ></div>
             </div>
           </div>
+          <NuxtLink class="text-xs underline">Learn more</NuxtLink>
         </div>
+        <img class="w-8 hidden lg:block" src="/img/icon-inflation.svg" alt="" />
       </div>
-      <p class="text-green-800 text-xs">
-        Standard Proposals are voteable only by POWER holders and require a
-        simple majority to pass. In each epoch the supply of POWER is inflated
-        and this inflation is claimed pro rata among participating POWER
-        holders.
-        <!-- TODO learn more -->
-        <!-- <a class="underline" href="#" target="_blank" rel="noopener noreferrer">
-          Learn more.
-        </a> -->
-      </p>
     </div>
-    <div class="p-8">
+    <div>
       <ProposalList
         :proposals="standardProposals"
         @on-cast="onCast"
@@ -57,9 +48,12 @@
 
       <div
         v-show="hasProposals && isConnected"
-        class="lg:flex justify-end items-center uppercase gap-4 mt-6"
+        class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8 border border-grey-700"
+        :class="{
+          'bg-grey-700': isSelectedCastProposalsFull,
+        }"
       >
-        <span v-if="!isSelectedCastProposalsFull" class="text-grey-400 text-xxs"
+        <span v-if="!isSelectedCastProposalsFull" class="text-xxs"
           >Select YES or NO to submit your vote</span
         >
         <MButton

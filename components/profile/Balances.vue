@@ -1,15 +1,17 @@
 <template>
   <div>
-    <p class="uppercase text-xs text-grey-300 mb-1">Token Balance</p>
+    <p class="text-xs text-grey-600 mb-1">Token balance</p>
     <div class="flex gap-12">
       <!-- power tokens -->
       <div class="flex gap-2">
         <MIconPower class="h-8 w-8" />
         <div>
-          <p class="text-2xl lg:text-3xl inline-flex items-center">
+          <p
+            class="text-2xl lg:text-3xl inline-flex items-center text-grey-100"
+          >
             {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
           </p>
-          <p class="text-xs text-grey-400">
+          <p class="text-xs text-grey-600">
             {{ balancePowerToken?.data.value?.formatted }}
           </p>
         </div>
@@ -19,10 +21,12 @@
       <div class="flex gap-2">
         <MIconZero class="h-8 w-8" />
         <div>
-          <p class="text-2xl lg:text-3xl inline-flex items-center">
+          <p
+            class="text-2xl lg:text-3xl inline-flex items-center text-grey-100"
+          >
             {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
           </p>
-          <p class="text-xs text-grey-400">
+          <p class="text-xs text-grey-600">
             {{ balanceZeroToken?.data.value?.formatted }}
           </p>
         </div>

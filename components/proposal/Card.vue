@@ -1,21 +1,20 @@
 <template>
-  <div class="mb-4">
+  <div class="mb-4 bg-transparent">
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="text-white bg-grey-800 p-8"
     >
-      <div v-if="proposal?.isEmergency" class="flex mb-3">
-        <p class="text-xxs bg-red-700 uppercase leading-3 p-1.5">
-          Emergency Proposal
-        </p>
+      <div v-if="proposal?.isEmergency" class="flex mb-4">
+        <MBadge version="error">Emergency Proposal</MBadge>
       </div>
+
       <div class="mb-4">
         <h2 class="text-2xl break-all">
           {{ title }}
         </h2>
       </div>
 
-      <div class="text-grey-400 font-inter mb-4">
+      <div class="text-grey-600 font-inter mb-4">
         {{ truncatedDescriptionText }}
       </div>
 
@@ -86,13 +85,13 @@
             </ProposalButtonCastVote>
           </div>
 
-          <div class="text-xxs text-grey-400 uppercase">
+          <div class="text-xxs text-grey-600 uppercase">
             <p v-show="!canVote" class="mt-3">Not enought voting power</p>
             <p v-show="hasVoted" class="mt-3">Your vote has been submitted</p>
           </div>
         </div>
 
-        <div class="uppercase text-xs text-grey-400 whitespace-nowrap">
+        <div class="uppercase text-xs text-grey-600 whitespace-nowrap">
           <div
             v-if="
               proposal?.votingType === 'Standard' ||

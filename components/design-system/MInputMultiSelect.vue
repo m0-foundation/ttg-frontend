@@ -2,7 +2,7 @@
   <div ref="target" class="dropdown inline-block relative w-full font-inter">
     <button
       type="button"
-      class="bg-transparent border border-1-white text-white py-2 px-4 inline-flex justify-between w-full items-center"
+      class="bg-transparent border border-1-white py-2 px-4 inline-flex justify-between w-full items-center"
       @click="onOpen"
     >
       {{ selected?.label || props.label || "Select" }}
@@ -15,7 +15,7 @@
 
       <span v-else class="text-xs text-[#5d605d]">change</span>
     </button>
-    <ul v-show="isMenuOpen" class="absolute z-50 text-white pt-4 bg-grey-600">
+    <ul v-show="isMenuOpen" class="absolute z-50 pt-4 bg-grey-800">
       <li
         v-for="opt in options"
         :key="opt.value"
@@ -24,7 +24,7 @@
       >
         <div
           v-show="opt.header"
-          class="uppercase text-xs text-grey-400 px-4 py-2"
+          class="uppercase text-xs text-grey-600 px-4 py-2"
         >
           {{ opt.header }}
         </div>
@@ -47,7 +47,7 @@
           >
             <div class="flex flex-col">
               <span>{{ opt.label }}</span>
-              <span class="text-xs text-grey-400">{{
+              <span class="text-xs text-grey-600">{{
                 opt.shortDescription
               }}</span>
             </div>
@@ -164,15 +164,15 @@ onClickOutside(target, onOut);
 </script>
 <style scoped>
 .button {
-  @apply text-left w-full py-2 px-4 hover:bg-[#202220];
+  @apply text-left w-full py-2 px-4 hover:bg-grey-600;
 }
 
 .sub-button {
-  @apply hover:bg-[#202220] px-4 py-2;
+  @apply hover:bg-grey-600 px-4 py-2;
 }
 
 .sub-menu {
-  @apply bg-[#2a2d2a] absolute block text-white left-full -mt-10 w-max max-w-80;
+  @apply bg-grey-800 absolute block text-white left-full -mt-10 w-max max-w-80;
 }
 
 .fix-when-emergency {
