@@ -9,6 +9,8 @@
     "build": "nuxt generate",
     "build:sepolia": "NETWORK=sepolia yarn build",
     "build:test": "npx http-server .output/public",
+    "build-start": "yarn build && yarn start",
+    "start": "npx serve .output/public",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare && husky install",
     "lint": "eslint .",
