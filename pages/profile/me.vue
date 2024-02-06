@@ -3,7 +3,7 @@
     <PageTitle class="lg:p-0 lg:mb-6">
       My Profile<template #subtitle
         ><MAddressAvatar
-          class="text-grey-300"
+          class="text-grey-300 normal-case"
           :short-address="false"
           :address="address"
       /></template>
