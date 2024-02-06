@@ -8,7 +8,7 @@
         <div>
           <h5 class="text-grey-800 lg:text-xl tracking-tightest">
             <span class="text-accent-blue">Save your voting power</span> and get
-            $Z100 of inflation if you vote on all standard proposals in the
+            tokens if you vote on all standard proposals in the
             current epoch
             <!-- TODO: find how much inflation power user would get -->
             <!-- and get <span class="text-green-700">+Z100 of inflation</span> -->
