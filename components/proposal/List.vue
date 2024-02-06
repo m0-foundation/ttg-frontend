@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { MProposal } from "~/lib/api";
+import { MProposal } from "@/lib/api/types";
 
 export interface ProposalListProps {
   proposals: MProposal[];

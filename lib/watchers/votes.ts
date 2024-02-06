@@ -50,7 +50,7 @@ export const watchVoteCast = () => {
     return updateProposalsStore(newVotes, governor);
   };
 
-  watchStandardGovernorEvent(
+  const unwatchStandard = watchStandardGovernorEvent(
     {
       address: spog.contracts.value.standardGovernor as Hash,
       eventName: "VoteCast",
@@ -59,7 +59,7 @@ export const watchVoteCast = () => {
     (logs) => onEvent(logs, api.client.standardGovernor as Governor)
   );
 
-  watchEmergencyGovernorEvent(
+  const unwatchEmergency = watchEmergencyGovernorEvent(
     {
       address: spog.contracts.value.emergencyGovernor as Hash,
       eventName: "VoteCast",
@@ -68,7 +68,7 @@ export const watchVoteCast = () => {
     (logs) => onEvent(logs, api.client.emergencyGovernor as Governor)
   );
 
-  watchZeroGovernorEvent(
+  const unwatchZero = watchZeroGovernorEvent(
     {
       address: spog.contracts.value.zeroGovernor as Hash,
       eventName: "VoteCast",
@@ -76,4 +76,12 @@ export const watchVoteCast = () => {
     },
     (logs) => onEvent(logs, api.client.zeroGovernor as Governor)
   );
+
+  return {
+    unwatchAll: () => {
+      unwatchStandard();
+      unwatchEmergency();
+      unwatchZero();
+    },
+  };
 };

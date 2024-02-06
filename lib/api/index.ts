@@ -30,6 +30,7 @@ export class Api {
     config: IApiConfig;
   }) {
     const client = createPublicClient({
+      cacheTime: 2_000,
       transport: fallbackRpcUrl
         ? fallback([http(rpcUrl), http(fallbackRpcUrl)])
         : http(rpcUrl),
