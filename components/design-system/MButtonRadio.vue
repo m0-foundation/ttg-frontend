@@ -23,19 +23,19 @@ withDefaults(defineProps<MButtonProps>(), {
 
 <style>
 .default {
-  @apply text-grey-100 bg-grey-600 hover:bg-grey-700;
+  @apply text-grey-100 border border-grey-700 bg-grey-700 hover:bg-grey-600;
 }
 
 .active {
-  @apply text-grey-900 bg-green-700;
+  @apply text-grey-900 bg-accent-mint;
 }
 
 button:disabled {
-  @apply border border-grey-500   opacity-50 cursor-not-allowed;
+  @apply border border-grey-600   opacity-50 cursor-not-allowed;
 }
 
 button:disabled .outside-circle {
-  @apply border border-grey-400 text-grey-500 bg-transparent  opacity-50 cursor-not-allowed;
+  @apply border border-grey-100 text-grey-100 bg-transparent cursor-not-allowed;
 }
 
 .outside-circle {

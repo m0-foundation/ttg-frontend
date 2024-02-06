@@ -11,10 +11,7 @@
         </div>
       </div>
 
-      <MBadge
-        v-if="proposal?.isEmergency"
-        class="uppercase text-[10px]"
-        version="error"
+      <MBadge v-if="proposal?.isEmergency" version="error"
         >Emergency Proposal</MBadge
       >
 

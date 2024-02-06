@@ -8,7 +8,7 @@
         </p>
       </div>
     </div>
-    <ProfileBalances class="px-6 lg:p-0 mb-6" :address="address" />
+    <ProfileBalances class="mb-6" :address="address" />
     <!-- tables -->
     <ProfileTables :address="address" />
   </div>

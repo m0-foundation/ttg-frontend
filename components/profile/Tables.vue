@@ -1,10 +1,10 @@
 <template>
   <div class="my-2">
     <!-- tabs -->
-    <div class="flex justify-start gap-12 p-6">
+    <div class="flex justify-start gap-12 my-2">
       <button
         :class="[
-          'uppercase hover:underline text-xs ',
+          'uppercase hover:underline ',
           selectedTab === 0 ? 'text-white' : 'text-grey-600',
         ]"
         data-test="profile-button-voting-history"
@@ -14,7 +14,7 @@
       </button>
       <button
         :class="[
-          'uppercase hover:underline text-xs',
+          'uppercase hover:underline',
           selectedTab === 1 ? 'text-white' : 'text-grey-600',
         ]"
         data-test="profile-button-submitted-proposals"
@@ -24,11 +24,11 @@
       </button>
     </div>
 
-    <div v-if="selectedTab === 0" class="p-6 lg:p-0">
+    <div v-if="selectedTab === 0">
       <ProfileTableVotes :votes="votes" />
     </div>
 
-    <div v-if="selectedTab === 1" class="p-6">
+    <div v-if="selectedTab === 1">
       <ProfileTableProposals :proposals="proposalsCreated" />
     </div>
   </div>

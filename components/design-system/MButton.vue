@@ -23,10 +23,10 @@ const props = withDefaults(defineProps<MButtonProps>(), {
 </script>
 <style scoped>
 button {
-  @apply uppercase font-mono text-sm px-4 py-2 text-center mr-3 md:mr-0 flex items-center;
+  @apply uppercase font-mono text-sm px-4 py-2 text-center flex items-center;
 }
 button:disabled {
-  @apply opacity-50 cursor-not-allowed bg-green-800;
+  @apply cursor-not-allowed bg-transparent border border-grey-700 text-grey-600 hover:bg-transparent;
 }
 .primary {
   @apply text-black bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300;

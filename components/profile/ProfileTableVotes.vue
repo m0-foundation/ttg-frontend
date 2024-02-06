@@ -1,20 +1,14 @@
 <template>
-  <MSimpleTable
-    :search="true"
-    :items="votesTableData"
-    :fields="votesTableHeaders"
-  >
+  <MSimpleTable :items="votesTableData" :fields="votesTableHeaders">
     <template #cell(proposal)="{ item }">
       <NuxtLink class="underline" :to="`/proposal/${item?.proposalId}`">{{
         useParsedDescriptionTitle(item.proposal?.description).title
       }}</NuxtLink>
     </template>
     <template #cell(vote)="{ value }">
-      <span class="text-grey-400">
-        <span v-if="value" class="bg-green-700 text-grey-600 px-2 py-1"
-          >YES</span
-        >
-        <span v-else class="bg-red-700 text-grey-600 px-2 py-1">NO</span>
+      <span class="text-grey-600">
+        <span v-if="value" class="bg-green-700 px-2 py-1">YES</span>
+        <span v-else class="bg-red-700 px-2 py-1">NO</span>
       </span>
     </template>
     <template #cell(castedAt)="{ value }">

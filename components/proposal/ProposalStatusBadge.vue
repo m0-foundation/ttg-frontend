@@ -37,7 +37,7 @@ defineProps({
 });
 </script>
 
-<style>
+<style scoped>
 .item {
   @apply flex items-center py-1 px-2 lg:px-3;
 }

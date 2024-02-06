@@ -1,6 +1,6 @@
 <template>
-  <div v-if="address">
-    <PageTitle class="px-6 lg:p-0 mb-6">
+  <div v-if="address" class="px-6 lg:p-0">
+    <PageTitle class="mb-6">
       My Profile<template #subtitle
         ><MAddressAvatar
           class="text-grey-600 normal-case"
@@ -21,7 +21,7 @@
       </template>
     </PageTitle>
 
-    <ProfileBalances class="px-6 lg:p-0 mb-6" :address="address" />
+    <ProfileBalances class="mb-6" :address="address" />
 
     <div v-if="hasDelegatedPower" class="p-4 bg-green-900 text-white my-2">
       <p class="uppercase text-xs mb-6">

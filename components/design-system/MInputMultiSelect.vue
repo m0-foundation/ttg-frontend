@@ -47,7 +47,7 @@
           >
             <div class="flex flex-col">
               <span>{{ opt.label }}</span>
-              <span class="text-xs text-grey-400">{{
+              <span class="text-xs text-grey-600">{{
                 opt.shortDescription
               }}</span>
             </div>
@@ -172,7 +172,7 @@ onClickOutside(target, onOut);
 }
 
 .sub-menu {
-  @apply bg-[#2a2d2a] absolute block text-white left-full -mt-10 w-max max-w-80;
+  @apply bg-grey-800 absolute block text-white left-full -mt-10 w-max max-w-80;
 }
 
 .fix-when-emergency {

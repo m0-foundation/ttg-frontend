@@ -6,7 +6,7 @@
     >
       <div class="flex flex-col lg:flex-row gap-3 items-start">
         <div>
-          <h5 class="text-grey-800 text-xl tracking-tightest">
+          <h5 class="text-grey-800 lg:text-xl tracking-tightest">
             <span class="text-accent-blue">Save your voting power</span> and get
             $Z100 of inflation if you vote on all standard proposals in the
             current epoch
@@ -30,7 +30,7 @@
           </div>
           <NuxtLink class="text-xs underline">Learn more</NuxtLink>
         </div>
-        <img class="w-8" src="/img/icon-inflation.svg" alt="" />
+        <img class="w-8 hidden lg:block" src="/img/icon-inflation.svg" alt="" />
       </div>
     </div>
     <div>
@@ -48,12 +48,12 @@
 
       <div
         v-show="hasProposals && isConnected"
-        class="lg:flex justify-end items-center uppercase gap-4 mt-6 py-4 px-8 border border-grey-700"
+        class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8 border border-grey-700"
         :class="{
           'bg-grey-700': isSelectedCastProposalsFull,
         }"
       >
-        <span v-if="!isSelectedCastProposalsFull" class="text-grey-400 text-xxs"
+        <span v-if="!isSelectedCastProposalsFull" class="text-xxs"
           >Select YES or NO to submit your vote</span
         >
         <MButton

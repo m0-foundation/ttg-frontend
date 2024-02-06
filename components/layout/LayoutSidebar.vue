@@ -4,7 +4,9 @@
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
     <span class="lg:hidden">Gov</span>
-    <span class="hidden lg:block text-grey-600">[ Governance ]</span>
+    <span class="hidden lg:block text-grey-600 text-nowrap"
+      >[ Governance ]</span
+    >
   </div>
 
   <NuxtLink class="block" to="/proposal/create/">
