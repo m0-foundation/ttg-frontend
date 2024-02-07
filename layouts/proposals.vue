@@ -1,27 +1,29 @@
 <template>
   <div>
-    <div class="p-8 pt-2 lg:pt-6 uppercase">
+    <div class="p-6 pt-2 lg:pt-6">
       <div class="lg:flex justify-between">
-        <p class="text-lg text-white">
-          {{ epoch?.current?.type }} epoch:
+        <h1>
+          <span class="capitalize">{{
+            epoch?.current?.type.toLowerCase()
+          }}</span>
+          Epoch:
           <span class="text-green-700">#{{ epoch?.current?.asNumber }}_</span>
-          <span class="text-grey-400 text-xxs lg:text-xs ml-2">
-            {{ currentEpochAsDate }} - {{ nextEpochAsDate }} |
-            <span class="text-xxs">
-              Ends at Block Timestamp #{{ epoch?.next?.asTimestamp }}
-            </span>
+          <span class="text-grey-600 text-xxs lg:text-xs ml-2">
+            {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
           </span>
-        </p>
+        </h1>
         <div class="hidden lg:block">
           <NuxtLink to="/proposals/all/">
-            <MNavButton class="text-xs underline"> all proposals </MNavButton>
+            <MNavButton class="text-sm underline normal-case text-grey-600">
+              All proposals
+            </MNavButton>
           </NuxtLink>
         </div>
       </div>
     </div>
 
-    <div class="text-white p-8 pb-6 pt-0">
-      <h5 class="text-xxs uppercase text-grey-400 mb-2">Proposals:</h5>
+    <div class="text-grey-600 p-6 pt-0">
+      <h5 class="text-xxs mb-1">Proposals:</h5>
 
       <div
         class="flex justify-between items-center lg:justify-start gap-6 whitespace-nowrap overflow-x-auto text-sm"
@@ -65,7 +67,7 @@
       </div>
     </div>
 
-    <div class="bg-[#1c1c1c]">
+    <div>
       <slot />
     </div>
   </div>
@@ -111,6 +113,6 @@ const nextEpochAsDate = computed(() => {
   @apply text-white;
 }
 .proposals-nav-button {
-  @apply text-grey-400 flex items-center gap-1 capitalize font-inter;
+  @apply text-grey-600 flex items-center gap-1 capitalize font-inter;
 }
 </style>

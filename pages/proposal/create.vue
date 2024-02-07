@@ -7,12 +7,13 @@
         :steps="steps"
       />
     </MModal>
-    <form class="p-6" @submit.prevent="onSubmit">
+
+    <PageTitle class="px-6 lg:p-0 mb-3">Create a proposal</PageTitle>
+
+    <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
       <div v-else>
         <div v-show="!isPreview">
-          <h1>Create a proposal</h1>
-
           <div class="create-steps">
             <div class="number">[1]</div>
             <span>Define the action to be executed if proposal succeeds</span>
@@ -31,7 +32,7 @@
             <div v-for="token in selectedProposalType?.tokens" :key="token">
               <div
                 v-if="token === MVotingTokens.Power"
-                class="p-4 bg-green-900"
+                class="p-4 bg-accent-teal"
               >
                 <div class="mb-2">
                   <p class="uppercase text-xxs">Standard Proposal</p>
@@ -120,7 +121,7 @@
               <div class="flex justify-between mb-2">
                 <label for="description">Description*</label>
                 <div
-                  class="text-sm text-grey-400 flex items-center gap-1 font-inter"
+                  class="text-sm text-grey-600 flex items-center gap-1 font-inter"
                 >
                   <img src="/img/icon-markdown.svg" class="h-[14px]" />
                   Markdown supported
@@ -185,7 +186,7 @@
           </div>
         </div>
       </div>
-      <p class="text-grey-400 text-xs flex justify-end font-inter">
+      <p class="text-grey-600 text-xs flex justify-end font-inter">
         You will be prompted to pay the tax for submitting the proposal.
       </p>
 
@@ -262,6 +263,8 @@ import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernance
 
 /* wagmi */
 const wagmiConfig = useWagmiConfig();
+
+import { watchProposalCreated } from "@/lib/watchers";
 
 /* control stepper */
 let steps = reactive([]);
@@ -889,7 +892,7 @@ function onBack() {
 
 <style>
 label {
-  @apply text-grey-400 block mb-2 font-medium text-xs font-inter;
+  @apply text-grey-600 block mb-2 font-medium text-xs font-inter;
 }
 </style>
 
@@ -911,11 +914,11 @@ hr {
 }
 
 .create-steps {
-  @apply flex items-center mb-6;
+  @apply flex items-center mb-6 font-mono text-xxs lg:text-xs uppercase;
 }
 
 .create-steps .number {
-  @apply text-green-700 text-xs tracking-[8px];
+  @apply text-accent-mint text-xxs lg:text-xs tracking-[8px];
 }
 
 .disabled {

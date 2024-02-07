@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex justify-between items-center">
+    <div class="lg:flex justify-between items-center mb-1">
       <div class="w-full">
         <slot name="header-left" />
       </div>
@@ -9,14 +9,14 @@
         <input
           v-if="search"
           v-model="inputSearch"
-          class="h-[32px] w-[170px] text-xxs border-grey-600 text-grey-400 placeholder:text-grey-400 bg-transparent font-inter"
+          class="h-[32px] w-[170px] text-xxs border-grey-600 text-grey-600 placeholder:text-grey-600 bg-transparent font-inter"
           placeholder="Search"
           type="text"
         />
       </div>
     </div>
     <div class="overflow-x-auto">
-      <table class="text-left w-full">
+      <table class="text-left w-full font-inter">
         <colgroup>
           <template v-for="field in displayedFields" :key="field.key">
             <slot :name="`col(${field.key})`">
@@ -25,7 +25,7 @@
           </template>
         </colgroup>
         <thead
-          class="text-grey-400 uppercase text-xs font-light border-b-2 border-grey-500"
+          class="text-grey-600 text-xs font-light border-b-2 border-grey-600"
         >
           <tr>
             <th
@@ -33,7 +33,7 @@
               :key="field.key"
               class="p-3"
               :class="{
-                'cursor-pointer hover:text-grey-500': field.sortable,
+                'cursor-pointer hover:text-grey-700': field.sortable,
                 'p-2': dense,
               }"
               @click="sort(field.key)"
@@ -56,7 +56,7 @@
             <template v-for="key in displayedFieldKeys" :key="key">
               <Component
                 :is="cellElement(key as string)"
-                class="p-3 text-sm border-b border-dashed border-grey-500 font-inter"
+                class="p-3 text-sm border-b border-dashed border-grey-600"
                 :class="{
                   'p-2': dense,
                 }"
@@ -72,10 +72,10 @@
               </Component>
             </template>
           </tr>
-          <tr v-if="loading || !items.length">
+          <tr v-if="loading || !searchedItems.length">
             <td
               :colspan="displayedFields.length"
-              class="p-3 text-grey-300 text-sm border-b border-dashed border-grey-500"
+              class="p-3 text-grey-600 text-sm border-b border-dashed border-grey-600"
             >
               <div v-if="loading" class="flex items-center justify-center">
                 <MIconLoading /> Loading data...

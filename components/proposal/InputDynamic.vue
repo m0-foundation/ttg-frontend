@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="props.description"
-    class="bg-green-1000 flex flex-col gap-3 p-4 my-2"
+    class="bg-accent-teal flex flex-col gap-3 p-4 my-2"
   >
     <span class="uppercase text-xxs">Parameter description</span>
     <p class="font-inter">
@@ -23,19 +23,22 @@
     />
     <span
       v-if="props.decorator"
-      class="inline-flex items-center px-3 bg-secondary-dark border border-l-0 border-grey-600"
+      class="inline-flex items-center px-3 bg-grey-800 border border-l-0 border-grey-600"
     >
-      <div class="text-gray-400 text-lg">{{ props.decorator }}</div>
+      <div class="text-gray-600">{{ props.decorator }}</div>
     </span>
   </div>
 
-  <div class="text-red-500 text-xs my-2 h-4">
+  <div
+    v-if="props.modelValueErrors.length"
+    class="text-red-500 text-xs my-2 h-4"
+  >
     <p v-for="error of props.modelValueErrors" :key="error.$uid">
       {{ error.$message }}
     </p>
   </div>
 
-  <div v-if="props.currentValue" class="text-xs text-grey-400 my-2">
+  <div v-if="props.currentValue" class="text-xs text-grey-600 my-2">
     Current: {{ props.currentValue }}
   </div>
 </template>

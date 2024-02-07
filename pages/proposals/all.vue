@@ -1,23 +1,24 @@
 <template>
   <div>
-    <PageTitle class="px-6 lg:px-0">
-      <template #pretitle>
-        <NuxtLink
-          class="text-green-700 hover:text-green-600 text-sm uppercase cursor-pointer"
-          @click="$router.back()"
-          >Back</NuxtLink
-        >
-      </template>
-      <template #default>All proposals</template>
-    </PageTitle>
-
     <MSimpleTable
       class="px-6 lg:px-0"
       :items="filteredProposals"
       :fields="proposalsTableHeader"
     >
+      <template #header-left>
+        <PageTitle class="px-6 lg:px-0">
+          <template #pretitle>
+            <NuxtLink
+              class="text-green-700 hover:text-green-600 text-sm uppercase cursor-pointer"
+              @click="$router.back()"
+              >Back</NuxtLink
+            >
+          </template>
+          <template #default>All proposals</template>
+        </PageTitle>
+      </template>
       <template #header-right>
-        <div class="flex gap-3 mt-2 lg:mt-0">
+        <div class="flex gap-3 mt-2 lg:mt-0 font-inter">
           <select
             v-model="selectedType"
             class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
@@ -55,7 +56,7 @@
         <NuxtLink :href="`/proposal/${item?.proposalId}/`" class="underline">{{
           useParsedDescriptionTitle(item?.description).title
         }}</NuxtLink>
-        <p class="text-xs text-grey-400 mt-1">
+        <p class="text-xs text-grey-600 mt-1">
           {{ item?.proposalLabel }} · Created:
           {{ useDate(item?.timestamp).toFormat("DD.MM.YY") }}
         </p>

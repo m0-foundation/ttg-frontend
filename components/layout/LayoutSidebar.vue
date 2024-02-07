@@ -4,7 +4,9 @@
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
     <span class="lg:hidden">Gov</span>
-    <span class="hidden lg:block text-gray-400">Governance</span>
+    <span class="hidden lg:block text-grey-600 text-nowrap"
+      >[ Governance ]</span
+    >
   </div>
 
   <NuxtLink class="block" to="/proposal/create/">
@@ -16,7 +18,7 @@
     </MButton>
   </NuxtLink>
 
-  <nav class="text-grey-100 text-xl mb-6">
+  <nav class="text-grey-100 mb-6">
     <ul>
       <li>
         <NuxtLink
@@ -24,7 +26,7 @@
           active-class="active"
           data-test="sidebar-link-proposals"
         >
-          proposals
+          Home
         </NuxtLink>
       </li>
 
@@ -34,7 +36,7 @@
           active-class="active"
           data-test="sidebar-link-lists"
         >
-          lists
+          Lists
         </NuxtLink>
       </li>
 
@@ -44,7 +46,7 @@
           active-class="active"
           data-test="sidebar-link-governance"
         >
-          governance config
+          Governance Config
         </NuxtLink>
       </li>
 
@@ -54,40 +56,64 @@
           active-class="active"
           data-test="sidebar-link-protocol"
         >
-          M0 Protocol config
+          M0 Protocol Config
         </NuxtLink>
       </li>
     </ul>
   </nav>
 
+  <hr class="border-grey-800 my-6" />
+
   <div v-if="isConnected" class="text-grey-100">
-    <div class="mb-4 text-sm">
-      <NuxtLink to="/profile/me/" data-test="sidebar-link-my-profile">
-        MY PROFILE
+    <div class="mb-4">
+      <NuxtLink
+        to="/profile/me/"
+        data-test="sidebar-link-my-profile"
+        active-class="active"
+      >
+        My Profile
       </NuxtLink>
     </div>
 
-    <div v-if="isCorrectChain" class="mb-6">
-      <p class="uppercase text-xxs mb-4 text-gray-400">current voting power</p>
-      <div class="flex justify-between mb-4">
-        <div class="text-gray-400 flex items-center">
-          <MIconPower class="h-6 w-6 mr-2" />
-          {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+    <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
+      <p class="text-xs mb-4 text-grey-600">Current voting power</p>
+      <div class="flex justify-between">
+        <div class="flex">
+          <MIconPower class="h-6 w-6" />
+          <div class="flex flex-col">
+            <span
+              >{{
+                powerTokenVotingPower?.data?.value?.relative?.toFixed(0)
+              }}%</span
+            >
+            <span class="text-grey-600 text-xxs">{{
+              balancePowerToken?.data?.value?.formatted
+            }}</span>
+          </div>
         </div>
 
-        <div class="text-gray-400 flex items-center">
-          <MIconZero class="h-6 w-6 mr-2" />
-          {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+        <div class="flex">
+          <MIconZero class="h-6 w-6" />
+          <div class="flex flex-col">
+            <span
+              >{{
+                zeroTokenVotingPower?.data?.value?.relative?.toFixed(0)
+              }}%</span
+            >
+            <span class="text-grey-600 text-xxs">{{
+              balanceZeroToken?.data?.value?.formatted
+            }}</span>
+          </div>
         </div>
       </div>
     </div>
 
     <div
       v-show="(hasDelegatedPower || hasDelegatedZero) && isCorrectChain"
-      class="p-3 bg-green-900 text-white"
+      class="p-4 bg-accent-teal text-white"
     >
       <div class="mb-2">
-        <p class="uppercase mb-2 text-xxs">Voting power is delegated to:</p>
+        <p class="uppercase mb-2 text-xxs">Tokens delegated to:</p>
 
         <div v-show="hasDelegatedPower" class="flex items-center">
           <MIconPower class="h-6 w-6 mr-1" />
@@ -108,14 +134,14 @@
         class="w-full"
         data-test="sidebar-link-delegate"
       >
-        <NuxtLink to="/delegate/"> re-delegate </NuxtLink>
+        <NuxtLink to="/delegate/"> Re-delegate </NuxtLink>
       </MButton>
     </div>
 
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full py-2 hover:underline text-left uppercase text-xs"
+      class="block w-full my-4 hover:underline text-left text-xs"
       data-test="sidebar-button-disconnect"
       @click="() => disconnect()"
     >
@@ -130,9 +156,9 @@
 
 <script lang="ts" setup>
 import { useAccount, useDisconnect } from "use-wagmi";
-import { useMVotingPower } from "@/lib/hooks";
+import { useMVotingPower, useMBalances } from "@/lib/hooks";
 
-const { isConnected } = useAccount();
+const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
 const { isCorrectChain } = useCorrectChain();
 
@@ -140,18 +166,22 @@ const { powerTokenVotingPower, zeroTokenVotingPower } = useMVotingPower();
 
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
+
+const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
+  useMBalances(address);
 </script>
 
 <style scoped>
 li {
   list-style-type: none;
-  @apply text-grey-100 text-sm py-2 uppercase hover:underline;
+  @apply text-grey-100 py-1 hover:text-green-700;
 }
 .active {
   @apply text-green-700 bg-transparent;
 }
 
-.active::before {
-  content: "[> ";
+.active::after {
+  content: "_";
+  margin-left: -3px;
 }
 </style>

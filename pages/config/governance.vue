@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <PageTitle class="px-6 lg:px-0">Governance Config</PageTitle>
+  <div class="px-6 lg:p-0">
+    <PageTitle>Governance Config</PageTitle>
 
-    <section class="flex flex-col gap-8 p-6 lg:p-0">
+    <section class="flex flex-col gap-8">
       <MSimpleTable
         :search="true"
         :items="mutableTableData"
@@ -93,6 +93,6 @@ const inmutableTableData = computed(() => {
 
 <style>
 .gov-table-title {
-  @apply text-sm lg:text-base font-inter text-grey-400 my-2;
+  @apply text-sm lg:text-lg text-grey-600 my-2;
 }
 </style>
