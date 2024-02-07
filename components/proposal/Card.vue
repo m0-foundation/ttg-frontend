@@ -133,7 +133,7 @@
 
 <script setup lang="ts">
 import truncate from "lodash/truncate";
-import { useAccount, useContractRead } from "use-wagmi";
+import { useAccount, useReadContract, useBlockNumber } from "use-wagmi";
 import { Hash, Abi } from "viem";
 import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
@@ -193,15 +193,6 @@ const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
 console.log({ governor });
 
-const { data: hasVoted } = useContractRead({
-  address: governor?.value?.address as Hash,
-  abi: governor?.value?.abi as Abi,
-  functionName: "hasVoted",
-  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
-  watch: true,
-  enabled: isConnected,
-});
-
 const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
   useMVotingPower();
 
@@ -224,6 +215,21 @@ const voteEvent = computed(() => {
   return votesStore
     .getBy("proposalId", proposalId.value)
     .value.find((v) => v.voter === userAccount.value);
+});
+
+const { data: blockNumber } = useBlockNumber({ watch: true });
+const { data: hasVoted, refetch } = useReadContract({
+  address: governor?.value?.address as Hash,
+  abi: governor?.value?.abi as Abi,
+  functionName: "hasVoted",
+  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
+  query: {
+    enabled: isConnected,
+  },
+});
+
+watch(blockNumber, () => {
+  refetch();
 });
 </script>
 

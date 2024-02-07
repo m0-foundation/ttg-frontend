@@ -68,7 +68,7 @@
 <script setup>
 import { ref } from "vue";
 
-import { useAccount, useConnect, useSwitchNetwork } from "use-wagmi";
+import { useAccount, useConnect, useSwitchChain } from "use-wagmi";
 
 const images = {
   MetaMask: "/img/icon-metamask.svg",
@@ -81,11 +81,11 @@ const network = useNetworkStore().getNetwork();
 const chainId = computed(() => network.value.rpc.chainId);
 
 const { connector, isReconnecting } = useAccount();
-const { switchNetwork } = useSwitchNetwork();
+const { switchChain } = useSwitchChain();
 const { connect, connectors } = useConnect({
   onError: (e) => console.error("error", e.message),
   onSuccess: () => {
-    switchNetwork(chainId);
+    switchChain({ chainId });
   },
 });
 </script>
