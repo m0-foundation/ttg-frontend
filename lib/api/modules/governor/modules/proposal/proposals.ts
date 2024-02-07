@@ -6,13 +6,11 @@ import {
   decodeAbiParameters,
   decodeEventLog,
   fromHex,
-  getFunctionSelector,
+  toFunctionSelector,
   parseAbiItem,
-  trim,
 } from "viem";
 
 import pick from "lodash/pick";
-import { readContract } from "@wagmi/core";
 
 import { GovernorModule } from "../GovernorModule";
 import { GovernanceType } from "../../governor.types";
@@ -33,24 +31,22 @@ import { ApiContext } from "@/lib/api/api-context";
 import { Epoch } from "~/lib/api/modules/epoch/epoch";
 
 const ProposalTypesFunctionSelectors = {
-  addToList: getFunctionSelector("addToList(bytes32,address)"),
-  removeFromList: getFunctionSelector("removeFromList(bytes32,address)"),
-  removeFromAndAddToList: getFunctionSelector(
+  addToList: toFunctionSelector("addToList(bytes32,address)"),
+  removeFromList: toFunctionSelector("removeFromList(bytes32,address)"),
+  removeFromAndAddToList: toFunctionSelector(
     "removeFromAndAddToList(bytes32,address,address)"
   ),
-  setKey: getFunctionSelector("setKey(bytes32,bytes32)"),
+  setKey: toFunctionSelector("setKey(bytes32,bytes32)"),
 
-  resetToPowerHolders: getFunctionSelector("resetToPowerHolders()"),
-  resetToZeroHolders: getFunctionSelector("resetToZeroHolders()"),
-  setProposalFee: getFunctionSelector("setProposalFee(uint256)"),
-  setCashToken: getFunctionSelector("setCashToken(address,uint256)"),
-  setStandardProposalFee: getFunctionSelector(
-    "setStandardProposalFee(uint256)"
-  ),
-  setEmergencyProposalThresholdRatio: getFunctionSelector(
+  resetToPowerHolders: toFunctionSelector("resetToPowerHolders()"),
+  resetToZeroHolders: toFunctionSelector("resetToZeroHolders()"),
+  setProposalFee: toFunctionSelector("setProposalFee(uint256)"),
+  setCashToken: toFunctionSelector("setCashToken(address,uint256)"),
+  setStandardProposalFee: toFunctionSelector("setStandardProposalFee(uint256)"),
+  setEmergencyProposalThresholdRatio: toFunctionSelector(
     "setEmergencyProposalThresholdRatio(uint16)"
   ),
-  setZeroProposalThresholdRatio: getFunctionSelector(
+  setZeroProposalThresholdRatio: toFunctionSelector(
     "setZeroProposalThresholdRatio(uint16)"
   ),
 };
@@ -338,7 +334,7 @@ export class Proposals extends GovernorModule {
       contract: this.contract,
       governanceType: this.governanceType,
     });
-    const getProposal = await readContract({
+    const getProposal = await this.client.readContract({
       abi: this.abi,
       address: this.contract,
       functionName: "getProposal",

@@ -6,7 +6,7 @@ import { ProtocolConfigs } from "./protocol-configs";
 
 import { List } from "./modules/list";
 import { MRegistrarValues } from "./registrar.types";
-import { registrarABI } from "~/lib/sdk";
+import { registrarAbi } from "@/lib/sdk";
 
 export class Registrar extends ApiModule {
   protocolConfigs: ProtocolConfigs;
@@ -21,7 +21,7 @@ export class Registrar extends ApiModule {
   getParameters<T>(parameters: string[]): Promise<T> {
     return this.get<T>(parameters, {
       address: this.config.registrar as Hash,
-      abi: registrarABI,
+      abi: registrarAbi,
     });
   }
 
