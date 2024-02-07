@@ -28,7 +28,7 @@
             />
           </div>
 
-          <div class="gap-4 flex my-3">
+          <div class="my-3">
             <div v-for="token in selectedProposalType?.tokens" :key="token">
               <div
                 v-if="token === MVotingTokens.Power"
