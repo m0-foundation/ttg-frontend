@@ -28,7 +28,7 @@
             />
           </div>
 
-          <div class="gap-4 flex mt-2 mb-4">
+          <div class="gap-4 flex my-3">
             <div v-for="token in selectedProposalType?.tokens" :key="token">
               <div
                 v-if="token === MVotingTokens.Power"
@@ -63,7 +63,10 @@
                 </div>
               </div>
 
-              <div v-if="token === MVotingTokens.Zero" class="p-4 bg-green-900">
+              <div
+                v-if="token === MVotingTokens.Zero"
+                class="p-4 bg-accent-teal"
+              >
                 <div class="mb-2">
                   <p class="uppercase text-xxs">Standard Proposal</p>
                 </div>

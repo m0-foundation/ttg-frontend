@@ -22,9 +22,9 @@
         }}</span>
       </NuxtLink>
 
-      <img v-if="justCopied" class="w-5" src="/img/icons/check.svg" />
+      <img v-if="justCopied" class="min-w-5 h-5" src="/img/icons/check.svg" />
       <button v-else-if="showCopy" @click="copy(props.address)">
-        <img class="w-5 hover:opacity-75" src="/img/icons/copy.svg" />
+        <img class="min-w-5 h-5 hover:opacity-75" src="/img/icons/copy.svg" />
       </button>
     </div>
   </span>
