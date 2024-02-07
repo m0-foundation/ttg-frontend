@@ -116,6 +116,8 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("executeOneProposal", (description: string) => {
+  cy.mineEpochs(1);
+
   cy.visit("http://localhost:3000/proposals/succeeded");
   cy.connectWallet();
 

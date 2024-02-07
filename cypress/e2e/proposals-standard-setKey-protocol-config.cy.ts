@@ -59,7 +59,6 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 
