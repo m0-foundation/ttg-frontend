@@ -115,6 +115,32 @@ Cypress.Commands.add(
   }
 );
 
+Cypress.Commands.add("castYesOneEmergencyProposal", (description: string) => {
+  cy.visit("http://localhost:3000/proposals/emergency");
+  cy.connectWallet();
+  cy.wait(500);
+
+  cy.contains("article", description).then(($proposal) => {
+    cy.wrap($proposal).find("#button-cast-yes").click();
+  });
+
+  cy.get("#button-cast-submit").click();
+
+  cy.get("[data-test='voted']").should("have.length", 1);
+});
+
+Cypress.Commands.add("castYesAllEmergencyProposals", () => {
+  cy.visit("http://localhost:3000/proposals/emergency");
+  cy.connectWallet();
+  cy.wait(500);
+
+  cy.get("article").each(($proposal) => {
+    cy.wrap($proposal).find("#button-cast-yes").click();
+    cy.wrap($proposal).contains("Your vote has been submitted");
+    cy.wait(500);
+  });
+});
+
 Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.mineEpochs(1);
 
@@ -137,7 +163,7 @@ Cypress.Commands.add("clickPreviewProposal", (quantity: number) => {
 });
 
 Cypress.Commands.add("mineEpochs", (quantity: number) => {
-  const _EPOCH_PERIOD = 33;
+  const _EPOCH_PERIOD = 30;
   const blocks = _EPOCH_PERIOD * quantity;
   cy.task("mine", blocks).then((obj) => {
     console.log("mined", blocks);
