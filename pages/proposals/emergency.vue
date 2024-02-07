@@ -29,13 +29,15 @@ const proposals = computed(() =>
   proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active")
 );
 
+const wagmiConfig = useWagmiConfig();
+
 async function castVote(vote: number, proposalId: string) {
   await forceSwitchChain();
 
   const governor = useGovernor({ proposalId });
   console.log("cast", { vote, proposalId, governor });
 
-  return writeContract({
+  return writeContract(wagmiConfig, {
     address: governor!.address as Hash,
     abi: governor!.abi as Abi,
     functionName: "castVote",

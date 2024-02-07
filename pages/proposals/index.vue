@@ -81,9 +81,9 @@
 
 <script setup lang="ts">
 import { Abi, Hash } from "viem";
-import { useAccount, useContractRead } from "use-wagmi";
-import { waitForTransaction, writeContract } from "@wagmi/core";
-import { standardGovernorABI, writeStandardGovernor } from "@/lib/sdk";
+import { useAccount, useReadContract } from "use-wagmi";
+import { waitForTransactionReceipt, writeContract } from "@wagmi/core";
+import { standardGovernorAbi, writeStandardGovernor } from "@/lib/sdk";
 
 interface CastedProposal {
   vote: number;
@@ -128,6 +128,7 @@ const progressBarWidth = computed(() => {
 
 const { address: userAccount, isConnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
+const wagmiConfig = useWagmiConfig();
 
 useHead({
   titleTemplate: "%s - Proposals",
@@ -154,14 +155,17 @@ async function onCastBatchVotes() {
   );
   const votes = selectedCastProposals.value.map((p) => p.vote);
 
-  const { hash } = await writeStandardGovernor({
+  const hash = await writeStandardGovernor(wagmiConfig, {
     address: spog.contracts.standardGovernor as Hash,
     functionName: "castVotes",
     args: [proposalIds, votes], // uint256 proposalId, uint8 support
     account: userAccount.value,
   });
 
-  const txReceipt = await waitForTransaction({ confirmations: 1, hash });
+  const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+    confirmations: 1,
+    hash,
+  });
   if (txReceipt.status !== "success") {
     throw new Error("Transaction was rejected");
   }
@@ -169,13 +173,15 @@ async function onCastBatchVotes() {
   isLoading.value = false;
 }
 
-const { data: hasFinishedVoting } = useContractRead({
+const { data: hasFinishedVoting } = useReadContract({
   address: spog.contracts.standardGovernor as Hash,
-  abi: standardGovernorABI,
+  abi: standardGovernorAbi,
   functionName: "hasVotedOnAllProposals",
   args: [userAccount as Ref<Hash>, BigInt(spog.epoch?.current?.asNumber || 0)],
-  watch: true,
-  enabled: isConnected,
+  // watch: true,
+  query: {
+    enabled: isConnected,
+  },
 });
 
 async function onCastOptional(vote: number, proposalId: string) {
@@ -184,7 +190,7 @@ async function onCastOptional(vote: number, proposalId: string) {
   const governor = useGovernor({ proposalId });
   console.log("cast", { vote, proposalId, governor });
 
-  return writeContract({
+  return writeContract(wagmiConfig, {
     address: governor!.address as Hash,
     abi: governor!.abi as Abi,
     functionName: "castVote",

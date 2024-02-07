@@ -16,6 +16,7 @@ import { useAccount } from "use-wagmi";
 import { writeContract } from "@wagmi/core";
 
 const proposalsStore = useProposalsStore();
+const wagmiConfig = useWagmiConfig();
 
 useHead({
   titleTemplate: "%s - Zero proposals",
@@ -33,7 +34,7 @@ async function castVote(vote: number, proposalId: string) {
   const governor = useGovernor({ proposalId });
   console.log("cast", { vote, proposalId, governor });
 
-  return writeContract({
+  return writeContract(wagmiConfig, {
     address: governor!.address as Hash,
     abi: governor!.abi as Abi,
     functionName: "castVote",
