@@ -1,9 +1,9 @@
 import { Hash } from "viem";
 import { MVotingType } from "@/lib/api/types";
 import {
-  standardGovernorABI,
-  emergencyGovernorABI,
-  zeroGovernorABI,
+  standardGovernorAbi,
+  emergencyGovernorAbi,
+  zeroGovernorAbi,
 } from "@/lib/sdk";
 
 export const useGovernor = ({
@@ -30,21 +30,21 @@ export const useGovernor = ({
   if (type === "Standard") {
     return {
       address: spog.contracts.standardGovernor as Hash,
-      abi: standardGovernorABI,
+      abi: standardGovernorAbi,
     };
   }
 
   if (type === "Emergency") {
     return {
       address: spog.contracts.emergencyGovernor as Hash,
-      abi: emergencyGovernorABI,
+      abi: emergencyGovernorAbi,
     };
   }
 
   if (type === "Zero") {
     return {
       address: spog.contracts.zeroGovernor as Hash,
-      abi: zeroGovernorABI,
+      abi: zeroGovernorAbi,
     };
   }
 };
