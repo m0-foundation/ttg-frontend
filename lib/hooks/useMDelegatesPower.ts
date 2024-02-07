@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
-import { useContractRead, useAccount } from "use-wagmi";
-import { powerTokenABI } from "@/lib/sdk";
+import { useReadContract, useAccount } from "use-wagmi";
+import { powerTokenAbi } from "@/lib/sdk";
 import { useSpogStore } from "@/stores/spog";
 
 export default () => {
@@ -10,16 +10,19 @@ export default () => {
   const store = useSpogStore();
   const spog = storeToRefs(store);
 
-  return useContractRead({
+  return useReadContract({
     address: spog.contracts.value.powerToken as Hash,
-    abi: powerTokenABI,
+    abi: powerTokenAbi,
     functionName: "delegates",
     args: [address as Ref<Hash>],
-    enabled: isConnected,
-    watch: true,
-    select: (data) => {
-      console.log("delegates", data);
-      return String(data);
+    // watch: true,
+    query: {
+      watch: true,
+      enabled: isConnected,
+      select: (data) => {
+        console.log("delegates", data);
+        return String(data);
+      },
     },
   });
 };
