@@ -2,7 +2,7 @@
   <div class="w-full">
     <SelectProtocolConfig
       v-model="key"
-      class="mb-6"
+      class="mb-4"
       :errors="props.modelValueErrors"
     />
 
