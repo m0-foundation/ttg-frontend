@@ -231,23 +231,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import {
-  waitForTransaction,
-  erc20ABI,
+  waitForTransactionReceipt,
   writeContract,
   readContract,
 } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters, Hash } from "viem";
+import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
+
+/* custom libs */
+import { MVotingTokens } from "@/lib/api";
 import {
-  standardGovernorABI,
-  emergencyGovernorABI,
-  zeroGovernorABI,
+  stringToHexWith32Bytes,
+  addressToHexWith32Bytes,
+} from "@/lib/api/utils";
+import { watchProposalCreated } from "@/lib/watchers";
+import {
+  standardGovernorAbi,
+  emergencyGovernorAbi,
+  zeroGovernorAbi,
 } from "@/lib/sdk";
+
+/* components */
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
 import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
@@ -256,13 +264,8 @@ import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/Input
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
 
-import { MVotingTokens } from "@/lib/api";
-import {
-  stringToHexWith32Bytes,
-  addressToHexWith32Bytes,
-} from "@/lib/api/utils";
-
-import { watchProposalCreated } from "@/lib/watchers";
+/* wagmi */
+const wagmiConfig = useWagmiConfig();
 
 /* control stepper */
 let steps = reactive([]);
@@ -414,7 +417,7 @@ const proposalTypes = [
     component: ProposalInputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "addToList",
   },
@@ -424,7 +427,7 @@ const proposalTypes = [
     component: ProposalInputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "removeFromList",
   },
@@ -435,7 +438,7 @@ const proposalTypes = [
     component: ProposalInputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "removeFromAndAddToList",
   },
@@ -446,7 +449,7 @@ const proposalTypes = [
     component: ProposalInputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "protocolSetKey",
   },
@@ -461,7 +464,7 @@ const proposalTypes = [
     component: InputGovernanceSetProposalFee,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
   },
 
@@ -471,7 +474,7 @@ const proposalTypes = [
     component: InputGovernanceSetCashToken,
     tokens: [MVotingTokens.Zero],
     governor: spog.contracts.zeroGovernor,
-    abi: zeroGovernorABI,
+    abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
 
@@ -482,7 +485,7 @@ const proposalTypes = [
     modelValue: formData.proposalValue,
     tokens: [MVotingTokens.Zero],
     governor: spog.contracts.zeroGovernor,
-    abi: zeroGovernorABI,
+    abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
   {
@@ -491,7 +494,7 @@ const proposalTypes = [
     component: InputGovernanceSetZeroProposalThreshold,
     tokens: [MVotingTokens.Zero],
     governor: spog.contracts.zeroGovernor,
-    abi: zeroGovernorABI,
+    abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
 
@@ -510,7 +513,7 @@ const proposalTypes = [
         component: ProposalInputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyAddToList",
       },
@@ -521,7 +524,7 @@ const proposalTypes = [
         component: ProposalInputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyRemoveFromList",
       },
@@ -533,7 +536,7 @@ const proposalTypes = [
         component: ProposalInputListRemoveAddOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyRemoveFromAndAddToList",
       },
@@ -544,7 +547,7 @@ const proposalTypes = [
         component: InputGovernanceSetProposalFee,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetStandardProposalFee",
       },
@@ -555,7 +558,7 @@ const proposalTypes = [
         component: ProposalInputProtocolConfigOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetKey",
       },
@@ -577,7 +580,7 @@ const proposalTypes = [
         component: undefined,
         tokens: [MVotingTokens.Zero],
         governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
+        abi: zeroGovernorAbi,
         hasToPayFee: false,
         id: "resetToPowerHolders",
       },
@@ -589,7 +592,7 @@ const proposalTypes = [
         component: undefined,
         tokens: [MVotingTokens.Zero],
         governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
+        abi: zeroGovernorAbi,
         hasToPayFee: false,
         id: "resetToZeroHolders",
       },
@@ -658,8 +661,8 @@ async function onPreview() {
 async function writeAllowance() {
   const account = userAccount.value;
   // It needs approval to pay for fees
-  const allowance = await readContract({
-    abi: erc20ABI,
+  const allowance = await readContract(wagmiConfig, {
+    abi: erc20Abi,
     address: spog.contracts.cashToken as Hash,
     functionName: "allowance",
     args: [account as Hash, selectedProposalType.value.governor as Hash], // address owner, address spender
@@ -669,8 +672,8 @@ async function writeAllowance() {
   const fee = BigInt(spog.getValues.proposalFee!);
   console.log({ allowance, fee });
   if (allowance < fee && hasToPayFee.value) {
-    const { hash } = await writeContract({
-      abi: erc20ABI,
+    const hash = await writeContract(wagmiConfig, {
+      abi: erc20Abi,
       address: spog.contracts.cashToken as Hash,
       functionName: "approve",
       args: [selectedProposalType.value.governor as Hash, fee], // address spender, uint256 amount
@@ -679,7 +682,7 @@ async function writeAllowance() {
 
     stepper.value.changeCurrentStep("pending");
 
-    const txReceipt = await waitForTransaction({
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
       confirmations: 1,
       hash,
     });
@@ -700,7 +703,7 @@ async function writeProposal(calldatas, formData) {
   const description = formData.description;
   const values = [0n]; // do not change
 
-  const { hash } = await writeContract({
+  const hash = await writeContract(wagmiConfig, {
     abi: selectedProposalType.value.abi,
     address: selectedProposalType.value.governor as Hash,
     functionName: "propose",
@@ -710,7 +713,7 @@ async function writeProposal(calldatas, formData) {
 
   stepper.value.changeCurrentStep("pending");
 
-  const txReceipt = await waitForTransaction({
+  const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     confirmations: 1,
     hash,
   });

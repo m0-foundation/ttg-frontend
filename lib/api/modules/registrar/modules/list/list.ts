@@ -5,7 +5,7 @@ import forEach from "lodash/forEach";
 
 import { MListDecoded, MListEvent, MLists } from "./list.types";
 import { hexWith32BytesToString } from "@/lib/api/utils";
-import { registrarABI } from "@/lib/sdk";
+import { registrarAbi } from "@/lib/sdk";
 import { ApiModule } from "@/lib/api/api-module";
 
 export class List extends ApiModule {
@@ -14,7 +14,7 @@ export class List extends ApiModule {
       abi,
       data: log?.data,
       topics: log?.topics,
-    }) as MListDecoded;
+    }) as unknown as MListDecoded;
 
     if (event) {
       const block = await this.client.getBlock({
@@ -57,11 +57,11 @@ export class List extends ApiModule {
     });
 
     const addOperations = await Promise.all(
-      addRawLogs.map((log: Log) => this.decodeListLog(log, registrarABI))
+      addRawLogs.map((log: Log) => this.decodeListLog(log, registrarAbi))
     );
 
     const removeOperations = await Promise.all(
-      removeRawLogs.map((log: Log) => this.decodeListLog(log, registrarABI))
+      removeRawLogs.map((log: Log) => this.decodeListLog(log, registrarAbi))
     );
 
     const listGrouped = groupBy(

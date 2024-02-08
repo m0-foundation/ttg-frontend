@@ -80,6 +80,7 @@ const { onlyDescription, title } = useParsedDescriptionTitle(
 );
 
 const spog = useSpogStore();
+const wagmiConfig = useWagmiConfig();
 
 const { getValuesFormatted: currentProposalValuesFormatted } =
   storeToRefs(spog);
@@ -109,12 +110,12 @@ console.log("VOTES", votes.value?.value);
 
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
-    readPowerToken({
+    readPowerToken(wagmiConfig, {
       address: spog!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
       args: [BigInt(proposal.value!.epoch!) - 1n],
     }),
-    readZeroToken({
+    readZeroToken(wagmiConfig, {
       address: spog!.contracts!.zeroToken! as Hash,
       functionName: "totalSupply",
     }),

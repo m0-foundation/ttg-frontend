@@ -164,6 +164,7 @@ const canDelegate = computed(
 );
 
 const { forceSwitchChain } = useCorrectChain();
+const wagmiConfig = useWagmiConfig();
 
 useHead({
   titleTemplate: "%s - Delegate",
@@ -172,7 +173,7 @@ useHead({
 async function delegateVote() {
   await forceSwitchChain();
 
-  return writePowerToken({
+  return writePowerToken(wagmiConfig, {
     address: spog.contracts.value.powerToken as Hash,
     functionName: "delegate",
     args: [inputPowerDelegates.value! as Hash],
@@ -182,7 +183,7 @@ async function delegateVote() {
 async function delegateValue() {
   await forceSwitchChain();
 
-  return writeZeroToken({
+  return writeZeroToken(wagmiConfig, {
     address: spog.contracts.value.zeroToken as Hash,
     functionName: "delegate",
     args: [inputZeroDelegates.value! as Hash],

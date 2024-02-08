@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { useAccount } from "use-wagmi";
 import { keccak256, toHex, Hash, Abi } from "viem";
-import { waitForTransaction, writeContract } from "@wagmi/core";
+import { waitForTransactionReceipt, writeContract } from "@wagmi/core";
 import { MProposal } from "@/lib/api/types";
 
 const proposalsStore = useProposalsStore();
@@ -23,6 +23,7 @@ const proposals = computed(() =>
 
 const { address: userAccount } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
+const wagmiConfig = useWagmiConfig();
 
 useHead({
   titleTemplate: "%s - Succeeded proposals",
@@ -38,7 +39,7 @@ async function onExecute(proposal: MProposal) {
   const targets = [governor?.address as Hash];
   const values = [BigInt(0)]; // do not change
 
-  const { hash } = await writeContract({
+  const hash = await writeContract(wagmiConfig, {
     abi: governor!.abi as Abi,
     address: governor!.address as Hash,
     functionName: "execute",
@@ -47,7 +48,10 @@ async function onExecute(proposal: MProposal) {
     value: BigInt(0),
   });
 
-  const txReceipt = await waitForTransaction({ confirmations: 1, hash });
+  const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+    confirmations: 1,
+    hash,
+  });
   if (txReceipt.status !== "success") {
     throw new Error("Transaction was rejected");
   }

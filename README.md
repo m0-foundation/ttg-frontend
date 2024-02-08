@@ -24,7 +24,7 @@ Note: Run `git submodule status` on root / of this repo to find the commit hash 
 
 1. Do steps on (1.2) item
 2. then run `yarn wagmi generate`
-3. Finally, update the lib/sdk.ts file replace the import `"wagmi/actions";` to `"@wagmi/core"`
+3. Finally, update the lib/sdk.ts file replace the import `"wagmi/codegen";` to `"@wagmi/core/codegen"`
 
 Depending on contract changes this file must be also updated with correct import dependencies of contracts:
 `/wagmi.config.ts`

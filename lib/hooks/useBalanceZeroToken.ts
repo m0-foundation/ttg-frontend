@@ -17,7 +17,9 @@ export default (
   return useBalance({
     address: account,
     token: spog.contracts.value.zeroToken as Hash,
-    watch: true,
-    enabled: true,
+    //     watch: true,
+    query: {
+      enabled: true,
+    },
   });
 };

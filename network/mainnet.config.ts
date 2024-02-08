@@ -9,9 +9,9 @@ export default {
   },
   rpc: {
     chainId: 1,
-    default: mainnet.rpcUrls.public.http[0],
+    default: mainnet.rpcUrls.default.http[0],
     values: [
-      mainnet.rpcUrls.public.http[0],
+      mainnet.rpcUrls.default.http[0],
       "https://eth-mainnet.g.alchemy.com/v2/demo",
       "https://eth.llamarpc.com",
       "https://eth.rpc.blxrbdn.com",
