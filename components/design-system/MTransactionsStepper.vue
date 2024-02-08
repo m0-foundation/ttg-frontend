@@ -4,7 +4,7 @@
       <h2 class="text-white text-2xl text-center">{{ title }}</h2>
     </div>
     <ol class="space-y-4 m-8">
-      <li v-for="(step, index) in currentSteps" :key="index">
+      <li v-for="(step, index) in steps" :key="index">
         <div :class="['step', step.status]" role="alert">
           <div class="flex gap-6">
             <div>
@@ -44,10 +44,10 @@
                 {{ step.title }}
               </h3>
               <p
-                v-if="step.status !== 'complete'"
+                v-if="index === currentStep"
                 class="text-sm text-grey-100 font-inter mb-0"
               >
-                {{ messages[step.status] }}
+                {{ step.message ? step.message : messages[step.status] }}
               </p>
             </div>
           </div>
@@ -62,6 +62,7 @@ type Status = "complete" | "incomplete" | "current" | "pending" | "error";
 interface Step {
   title: string;
   status: Status;
+  message: string;
 }
 export interface Props {
   title: string;
@@ -71,7 +72,7 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {});
 
 const currentStep = ref(0);
-let currentSteps = computed(() => [...props.steps]);
+let steps = computed(() => [...props.steps]);
 
 const messages = {
   current: "Open your wallet and confirm the transaction...",
@@ -81,17 +82,17 @@ const messages = {
 };
 
 function nextStep() {
-  currentSteps.value[currentStep.value].status = "complete";
+  steps.value[currentStep.value].status = "complete";
   currentStep.value += 1;
-  currentSteps.value[currentStep.value].status = "current";
+  steps.value[currentStep.value].status = "current";
 }
 
 function changeCurrentStep(newStatus: Status) {
-  currentSteps.value[currentStep.value].status = newStatus;
+  steps.value[currentStep.value].status = newStatus;
 }
 
 function reset() {
-  currentSteps = computed(() => [...props.steps]);
+  steps = computed(() => [...props.steps]);
   currentStep.value = 0;
 }
 

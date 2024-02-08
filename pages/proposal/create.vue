@@ -655,8 +655,6 @@ async function onPreview() {
   }
 }
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 async function writeAllowance() {
   const account = userAccount.value;
   // It needs approval to pay for fees
@@ -667,10 +665,10 @@ async function writeAllowance() {
     args: [account as Hash, selectedProposalType.value.governor as Hash], // address owner, address spender
     account,
   });
-  console.log({ allowance });
 
   const fee = BigInt(spog.getValues.proposalFee!);
-  if (allowance <= fee && hasToPayFee.value) {
+  console.log({ allowance, fee });
+  if (allowance < fee && hasToPayFee.value) {
     const { hash } = await writeContract({
       abi: erc20ABI,
       address: spog.contracts.cashToken as Hash,
@@ -746,6 +744,7 @@ async function onSubmit() {
       {
         title: "Confirmation",
         status: "incomplete",
+        message: "Searching for the event of the transaction...",
       },
     ]);
 
@@ -760,17 +759,12 @@ async function onSubmit() {
       description: buildDescriptionPayload(),
     };
 
-    const calldatas = buildCalldatas(formDataWithLinks);
-    await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
-
-    stepper.value.nextStep();
-
+    // start listening for proposal event
     const { unwatchAll } = watchProposalCreated(
       async (newProposals: Array<MProposal>) => {
         console.log({ newProposals });
 
-        stepper.value.changeCurrentStep("complete");
-
+        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         await wait(1000);
 
         unwatchAll();
@@ -778,6 +772,11 @@ async function onSubmit() {
         return navigateTo(`/proposal/${newProposals[0].proposalId}`);
       }
     );
+
+    const calldatas = buildCalldatas(formDataWithLinks);
+    await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
+
+    stepper.value.nextStep();
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);
