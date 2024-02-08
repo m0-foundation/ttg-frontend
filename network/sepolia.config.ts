@@ -8,7 +8,7 @@ const infura = "https://sepolia.infura.io/v3/78c7c2ca91dc493c9c4389de0cf351c4";
 
 export default {
   contracts: {
-    registrar: "0xaAc4688AB7AD2c0CbC51E9674D53Bf394910aF6a",
+    registrar: "0x44031c4B2da545cac1200f53D895DA1BEa3064bC",
     multicall3: sepolia.contracts.multicall3.address,
     deploymentBlock: 5104663,
   },
