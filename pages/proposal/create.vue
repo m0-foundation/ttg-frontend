@@ -264,8 +264,6 @@ import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernance
 /* wagmi */
 const wagmiConfig = useWagmiConfig();
 
-import { watchProposalCreated } from "@/lib/watchers";
-
 /* control stepper */
 let steps = reactive([]);
 
