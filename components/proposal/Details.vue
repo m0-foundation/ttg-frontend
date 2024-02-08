@@ -68,9 +68,11 @@ export interface ProposalDetailsProps {
 
 const props = defineProps<ProposalDetailsProps>();
 
-const store = useProposalsStore();
+const proposalStore = useProposalsStore();
 
-const proposal = computed(() => store.getProposalById(props.proposalId));
+const proposal = computed(() =>
+  proposalStore.getProposalById(props.proposalId)
+);
 const proposalId = computed(() => props.proposalId);
 
 const { onlyDescription, title } = useParsedDescriptionTitle(
@@ -120,6 +122,9 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
   ]),
   [0n, 0n]
 );
+
+votesStore.fetchAllVotes();
+proposalStore.fetchProposalTalliesById(props.proposalId);
 
 const { unwatchAll } = watchVoteCast();
 

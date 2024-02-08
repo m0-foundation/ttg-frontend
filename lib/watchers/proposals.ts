@@ -26,7 +26,7 @@ export const watchProposalCreated = (callbackOnEvent: Function) => {
 
     proposals.push(newProposals as Array<MProposal>);
 
-    callbackOnEvent(newProposals);
+    await callbackOnEvent(newProposals);
   };
 
   const unwatchStandard = watchStandardGovernorEvent(wagmiConfig, {

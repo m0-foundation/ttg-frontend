@@ -17,5 +17,17 @@ export const useApiClientStore = defineStore("api", () => {
     rpc.value = newRpc;
   }
 
-  return { client, rpc, setClient, setRpc, getRpc };
+  function getApiByGovernor(governor: string) {
+    if (governor === "Standard") {
+      return client.value.standardGovernor;
+    }
+    if (governor === "Emergency") {
+      return client.value.emergencyGovernor;
+    }
+    if (governor === "Zero") {
+      return client.value.zeroGovernor;
+    }
+  }
+
+  return { client, rpc, setClient, setRpc, getRpc, getApiByGovernor };
 });

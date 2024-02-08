@@ -356,7 +356,7 @@ export const emergencyGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
@@ -367,7 +367,7 @@ export const emergencyGovernorAbi = [
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
@@ -378,7 +378,7 @@ export const emergencyGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
@@ -422,7 +422,7 @@ export const emergencyGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
@@ -1994,7 +1994,7 @@ export const standardGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
@@ -2005,7 +2005,7 @@ export const standardGovernorAbi = [
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
@@ -2016,7 +2016,7 @@ export const standardGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
@@ -2067,7 +2067,7 @@ export const standardGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
@@ -2725,7 +2725,7 @@ export const zeroGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
@@ -2736,7 +2736,7 @@ export const zeroGovernorAbi = [
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
@@ -2747,7 +2747,7 @@ export const zeroGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
@@ -2805,7 +2805,7 @@ export const zeroGovernorAbi = [
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],

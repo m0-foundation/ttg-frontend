@@ -91,5 +91,16 @@ export const useProposalsStore = defineStore("proposals", {
       const allProposals = [...standard, ...emergency, ...zero];
       this.setProposals(allProposals);
     },
+
+    async fetchProposalTalliesById(proposalId: string) {
+      const api = useApiClientStore();
+
+      const proposal = this.getProposalById(proposalId);
+      const client = api.getApiByGovernor(proposal!.votingType!);
+      const { tallies } = await client!.proposals!.getProposalTallies(
+        proposalId
+      );
+      this.updateProposalByKey(proposalId, "tallies", tallies);
+    },
   },
 });
