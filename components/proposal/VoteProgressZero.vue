@@ -40,17 +40,15 @@ interface Props {
   threshold: number;
   thresholdFormatted: string;
   votes: {
-    total: number;
+    total: bigint;
     yes: {
-      count: number;
+      count: bigint;
       formatted: string;
-      ratio: number;
       percentage: number;
     };
     no: {
-      count: number;
+      count: bigint;
       formatted: string;
-      ratio: number;
       percentage: number;
     };
   };

@@ -8,28 +8,6 @@ import {
   watchEmergencyGovernorEvent,
   watchZeroGovernorEvent,
 } from "@/lib/sdk";
-import { MVote } from "@/lib/api/types";
-
-async function updateProposalsStore(newVotes: MVote[], governor: Governor) {
-  const proposals = useProposalsStore();
-
-  const newTallies = await Promise.all(
-    newVotes.map((vote) =>
-      governor.proposals!.getProposalTallies(vote.proposalId!)
-    )
-  );
-
-  newVotes.forEach((vote) => {
-    const proposal = newTallies.find((t) => t?.proposalId === vote.proposalId);
-    if (proposal) {
-      proposals.updateProposalByKey(
-        vote.proposalId!,
-        "tallies",
-        proposal.tallies
-      );
-    }
-  });
-}
 
 export const watchVoteCast = () => {
   console.log("watchVoteCast");
@@ -37,6 +15,7 @@ export const watchVoteCast = () => {
   const network = useNetworkStore().getNetwork();
   const api = useApiClientStore();
   const votesStore = useVotesStore();
+  const proposalStore = useProposalsStore();
   const wagmiConfig = useWagmiConfig();
 
   const onEvent = async (logs: Log[], governor: Governor) => {
@@ -48,7 +27,9 @@ export const watchVoteCast = () => {
 
     votesStore.push(newVotes);
 
-    return updateProposalsStore(newVotes, governor);
+    await Promise.all(
+      newVotes.map((vote) => proposalStore.updateProposalById(vote.proposalId!))
+    );
   };
 
   const unwatchStandard = watchStandardGovernorEvent(wagmiConfig, {
