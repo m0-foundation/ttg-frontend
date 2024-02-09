@@ -216,7 +216,7 @@ describe("Proposals", () => {
       const description = `Add protocol config ${key} = ${value}`;
       descriptions.push(description);
       keys.push(key);
-      values.push("900000"); // in bps
+      values.push("90000"); // in bps
 
       cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("input[data-test='title']").type(description);
