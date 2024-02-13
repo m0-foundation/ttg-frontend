@@ -1,9 +1,7 @@
 <template>
   <div class="flex justify-between">
-    <div
-      class="inline-flex uppercase text-grey-400 text-xs gap-1 lg:gap-2 items-center"
-    >
-      <div class="text-grey-primary hidden lg:block">status:</div>
+    <div class="inline-flex text-grey-600 gap-1 lg:gap-2 items-center">
+      <div class="text-grey-primary hidden lg:block text-xs">Status:</div>
 
       <MDropdown>
         <template #activator>

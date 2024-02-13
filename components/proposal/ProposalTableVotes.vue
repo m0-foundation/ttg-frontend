@@ -1,9 +1,7 @@
 <template>
   <MSimpleTable :items="votes" :fields="votesTableHeaders">
     <template #cell(voter)="{ value }">
-      <NuxtLink :to="`/profile/${value}`">
-        <MAddressAvatar :address="value" class="hover:underline" />
-      </NuxtLink>
+      <MAddressAvatar show-copy :address="value" />
     </template>
 
     <template #cell(vote)="{ value, item }">

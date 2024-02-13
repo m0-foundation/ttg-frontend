@@ -11,10 +11,7 @@
         </div>
       </div>
 
-      <MBadge
-        v-if="proposal?.isEmergency"
-        class="uppercase text-[10px]"
-        version="error"
+      <MBadge v-if="proposal?.isEmergency" version="error"
         >Emergency Proposal</MBadge
       >
 
@@ -24,9 +21,7 @@
 
       <div class="text-grey-400 font-light text-xs truncate w-52 lg:w-full">
         Proposed by
-        <NuxtLink :to="`/profile/${proposal?.proposer}/`">
-          <u><MAddressAvatar :address="proposal?.proposer" /></u>
-        </NuxtLink>
+        <u><MAddressAvatar :address="proposal?.proposer" /></u>
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
 
@@ -34,7 +29,8 @@
       <div v-else>
         <ProposalVoteProgress
           v-if="proposal?.state !== 'Pending'"
-          :tallies="proposal?.tallies"
+          :yes-votes="proposal?.yesVotes"
+          :no-votes="proposal?.noVotes"
           :version="proposal?.votingType"
           :power-threshold="powerThreshold"
           :power-total-supply="totalSupplyAt[0]"
@@ -65,6 +61,7 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { readPowerToken, readZeroToken } from "@/lib/sdk";
+import { watchVoteCast } from "@/lib/watchers";
 
 export interface ProposalDetailsProps {
   proposalId: string;
@@ -72,9 +69,11 @@ export interface ProposalDetailsProps {
 
 const props = defineProps<ProposalDetailsProps>();
 
-const store = useProposalsStore();
+const proposalStore = useProposalsStore();
 
-const proposal = computed(() => store.getProposalById(props.proposalId));
+const proposal = computed(() =>
+  proposalStore.getProposalById(props.proposalId)
+);
 const proposalId = computed(() => props.proposalId);
 
 const { onlyDescription, title } = useParsedDescriptionTitle(
@@ -82,6 +81,7 @@ const { onlyDescription, title } = useParsedDescriptionTitle(
 );
 
 const spog = useSpogStore();
+const wagmiConfig = useWagmiConfig();
 
 const { getValuesFormatted: currentProposalValuesFormatted } =
   storeToRefs(spog);
@@ -111,16 +111,26 @@ console.log("VOTES", votes.value?.value);
 
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
-    readPowerToken({
+    readPowerToken(wagmiConfig, {
       address: spog!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
       args: [BigInt(proposal.value!.epoch!) - 1n],
     }),
-    readZeroToken({
+    readZeroToken(wagmiConfig, {
       address: spog!.contracts!.zeroToken! as Hash,
       functionName: "totalSupply",
     }),
   ]),
   [0n, 0n]
 );
+
+votesStore.fetchAllVotes();
+proposalStore.updateProposalById(props.proposalId);
+
+const { unwatchAll } = watchVoteCast();
+
+onUnmounted(() => {
+  console.log("unwatching all votes");
+  unwatchAll();
+});
 </script>

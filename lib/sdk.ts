@@ -1,52 +1,42 @@
 import {
-  getContract,
-  GetContractArgs,
-  readContract,
-  ReadContractConfig,
-  writeContract,
-  WriteContractArgs,
-  WriteContractPreparedArgs,
-  WriteContractUnpreparedArgs,
-  prepareWriteContract,
-  PrepareWriteContractConfig,
-  watchContractEvent,
-  WatchContractEventConfig,
-  WatchContractEventCallback,
-} from "@wagmi/core";
+  createReadContract,
+  createWriteContract,
+  createSimulateContract,
+  createWatchContractEvent,
+} from "@wagmi/core/codegen";
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // DistributionVault
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const distributionVaultABI = [
+export const distributionVaultAbi = [
   {
-    stateMutability: "nonpayable",
     type: "constructor",
     inputs: [{ name: "zeroToken_", internalType: "address", type: "address" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "CLAIM_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "DOMAIN_SEPARATOR",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "token_", internalType: "address", type: "address" },
@@ -56,9 +46,9 @@ export const distributionVaultABI = [
     ],
     name: "claim",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -71,23 +61,23 @@ export const distributionVaultABI = [
     ],
     name: "claimBySig",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [{ name: "token_", internalType: "address", type: "address" }],
     name: "distribute",
     outputs: [{ name: "amount_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "token", internalType: "address", type: "address" },
@@ -95,9 +85,9 @@ export const distributionVaultABI = [
     ],
     name: "distributionOfAt",
     outputs: [{ name: "amount", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "token_", internalType: "address", type: "address" },
@@ -109,9 +99,9 @@ export const distributionVaultABI = [
     ],
     name: "getClaimDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "token_", internalType: "address", type: "address" },
@@ -121,9 +111,9 @@ export const distributionVaultABI = [
     ],
     name: "getClaimable",
     outputs: [{ name: "claimable_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "token", internalType: "address", type: "address" },
@@ -132,27 +122,28 @@ export const distributionVaultABI = [
     ],
     name: "hasClaimed",
     outputs: [{ name: "claimed", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "name",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account", internalType: "address", type: "address" }],
     name: "nonces",
     outputs: [{ name: "nonce", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "zeroToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
     type: "event",
@@ -251,9 +242,8 @@ export const distributionVaultABI = [
 // EmergencyGovernor
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const emergencyGovernorABI = [
+export const emergencyGovernorAbi = [
   {
-    stateMutability: "nonpayable",
     type: "constructor",
     inputs: [
       { name: "voteToken_", internalType: "address", type: "address" },
@@ -262,51 +252,51 @@ export const emergencyGovernorABI = [
       { name: "standardGovernor_", internalType: "address", type: "address" },
       { name: "thresholdRatio_", internalType: "uint16", type: "uint16" },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "BALLOTS_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "BALLOT_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "COUNTING_MODE",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "DOMAIN_SEPARATOR",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "ONE",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -314,9 +304,9 @@ export const emergencyGovernorABI = [
     ],
     name: "addToList",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -324,9 +314,9 @@ export const emergencyGovernorABI = [
     ],
     name: "castVote",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -337,9 +327,9 @@ export const emergencyGovernorABI = [
     ],
     name: "castVoteBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
@@ -349,9 +339,9 @@ export const emergencyGovernorABI = [
     ],
     name: "castVoteBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -360,51 +350,51 @@ export const emergencyGovernorABI = [
     ],
     name: "castVoteWithReason",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
     ],
     name: "castVotesBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "payable",
     type: "function",
     inputs: [
       { name: "", internalType: "address[]", type: "address[]" },
@@ -416,9 +406,9 @@ export const emergencyGovernorABI = [
     outputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
     ],
+    stateMutability: "payable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -426,19 +416,19 @@ export const emergencyGovernorABI = [
     ],
     name: "getBallotDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "getProposal",
@@ -455,9 +445,9 @@ export const emergencyGovernorABI = [
       { name: "proposer_", internalType: "address", type: "address" },
       { name: "thresholdRatio_", internalType: "uint16", type: "uint16" },
     ],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -465,9 +455,9 @@ export const emergencyGovernorABI = [
     ],
     name: "getVotes",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalId", internalType: "uint256", type: "uint256" },
@@ -475,16 +465,16 @@ export const emergencyGovernorABI = [
     ],
     name: "hasVoted",
     outputs: [{ name: "hasVoted", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "callData_", internalType: "bytes", type: "bytes" }],
     name: "hashProposal",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "", internalType: "address[]", type: "address[]" },
@@ -494,44 +484,44 @@ export const emergencyGovernorABI = [
     ],
     name: "hashProposal",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "name",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalDeadline",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalProposer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalSnapshot",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "proposalThreshold",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "targets_", internalType: "address[]", type: "address[]" },
@@ -543,30 +533,30 @@ export const emergencyGovernorABI = [
     outputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "quorum",
     outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "timepoint_", internalType: "uint256", type: "uint256" }],
     name: "quorum",
     outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "registrar",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -575,9 +565,9 @@ export const emergencyGovernorABI = [
     ],
     name: "removeFromAndAddToList",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -585,9 +575,9 @@ export const emergencyGovernorABI = [
     ],
     name: "removeFromList",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "key_", internalType: "bytes32", type: "bytes32" },
@@ -595,34 +585,34 @@ export const emergencyGovernorABI = [
     ],
     name: "setKey",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "newProposalFee_", internalType: "uint256", type: "uint256" },
     ],
     name: "setStandardProposalFee",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "newThresholdRatio_", internalType: "uint16", type: "uint16" },
     ],
     name: "setThresholdRatio",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "state",
@@ -633,41 +623,42 @@ export const emergencyGovernorABI = [
         type: "uint8",
       },
     ],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "thresholdRatio",
     outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "voteToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingDelay",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingPeriod",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "zeroGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
     type: "event",
@@ -848,9 +839,8 @@ export const emergencyGovernorABI = [
 // PowerToken
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const powerTokenABI = [
+export const powerTokenAbi = [
   {
-    stateMutability: "nonpayable",
     type: "constructor",
     inputs: [
       { name: "bootstrapToken_", internalType: "address", type: "address" },
@@ -858,72 +848,72 @@ export const powerTokenABI = [
       { name: "cashToken_", internalType: "address", type: "address" },
       { name: "vault_", internalType: "address", type: "address" },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "CANCEL_AUTHORIZATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
     outputs: [{ name: "clockMode_", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "DELEGATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "DOMAIN_SEPARATOR",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "INITIAL_SUPPLY",
     outputs: [{ name: "", internalType: "uint240", type: "uint240" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "ONE",
     outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "PERMIT_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account", internalType: "address", type: "address" },
@@ -931,16 +921,16 @@ export const powerTokenABI = [
     ],
     name: "allowance",
     outputs: [{ name: "allowance", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "amountToAuction",
     outputs: [{ name: "", internalType: "uint240", type: "uint240" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "spender_", internalType: "address", type: "address" },
@@ -948,9 +938,9 @@ export const powerTokenABI = [
     ],
     name: "approve",
     outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "authorizer", internalType: "address", type: "address" },
@@ -958,30 +948,30 @@ export const powerTokenABI = [
     ],
     name: "authorizationState",
     outputs: [{ name: "isNonceUsed", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "balanceOf",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "bootstrapEpoch",
     outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "bootstrapToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "minAmount_", internalType: "uint256", type: "uint256" },
@@ -993,9 +983,9 @@ export const powerTokenABI = [
       { name: "amount_", internalType: "uint240", type: "uint240" },
       { name: "cost_", internalType: "uint256", type: "uint256" },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "authorizer_", internalType: "address", type: "address" },
@@ -1005,9 +995,9 @@ export const powerTokenABI = [
     ],
     name: "cancelAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "authorizer_", internalType: "address", type: "address" },
@@ -1018,9 +1008,9 @@ export const powerTokenABI = [
     ],
     name: "cancelAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "authorizer_", internalType: "address", type: "address" },
@@ -1029,37 +1019,37 @@ export const powerTokenABI = [
     ],
     name: "cancelAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "cashToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "clock_", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "decimals",
     outputs: [{ name: "", internalType: "uint8", type: "uint8" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [{ name: "delegatee_", internalType: "address", type: "address" }],
     name: "delegate",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "delegatee_", internalType: "address", type: "address" },
@@ -1071,9 +1061,9 @@ export const powerTokenABI = [
     ],
     name: "delegateBySig",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -1084,23 +1074,23 @@ export const powerTokenABI = [
     ],
     name: "delegateBySig",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "delegates",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "amount_", internalType: "uint256", type: "uint256" }],
     name: "getCost",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "delegatee_", internalType: "address", type: "address" },
@@ -1109,9 +1099,9 @@ export const powerTokenABI = [
     ],
     name: "getDelegationDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -1119,16 +1109,16 @@ export const powerTokenABI = [
     ],
     name: "getPastVotes",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "getVotes",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "delegatee_", internalType: "address", type: "address" },
@@ -1136,44 +1126,44 @@ export const powerTokenABI = [
     ],
     name: "hasParticipatedAt",
     outputs: [{ name: "", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [],
     name: "markNextVotingEpochAsActive",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [{ name: "delegatee_", internalType: "address", type: "address" }],
     name: "markParticipation",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "name",
     outputs: [{ name: "name_", internalType: "string", type: "string" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account", internalType: "address", type: "address" }],
     name: "nonces",
     outputs: [{ name: "nonce", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "participationInflation",
     outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -1181,9 +1171,9 @@ export const powerTokenABI = [
     ],
     name: "pastBalanceOf",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -1191,16 +1181,16 @@ export const powerTokenABI = [
     ],
     name: "pastDelegates",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "epoch_", internalType: "uint256", type: "uint256" }],
     name: "pastTotalSupply",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "owner_", internalType: "address", type: "address" },
@@ -1211,9 +1201,9 @@ export const powerTokenABI = [
     ],
     name: "permit",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "owner_", internalType: "address", type: "address" },
@@ -1226,9 +1216,9 @@ export const powerTokenABI = [
     ],
     name: "permit",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -1241,9 +1231,9 @@ export const powerTokenABI = [
     ],
     name: "receiveWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -1257,9 +1247,9 @@ export const powerTokenABI = [
     ],
     name: "receiveWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -1274,46 +1264,46 @@ export const powerTokenABI = [
     ],
     name: "receiveWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "nextCashToken_", internalType: "address", type: "address" },
     ],
     name: "setNextCashToken",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "symbol",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "targetSupply",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "totalSupply",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "recipient_", internalType: "address", type: "address" },
@@ -1321,9 +1311,9 @@ export const powerTokenABI = [
     ],
     name: "transfer",
     outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "sender_", internalType: "address", type: "address" },
@@ -1332,9 +1322,9 @@ export const powerTokenABI = [
     ],
     name: "transferFrom",
     outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -1348,9 +1338,9 @@ export const powerTokenABI = [
     ],
     name: "transferWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -1363,9 +1353,9 @@ export const powerTokenABI = [
     ],
     name: "transferWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -1380,13 +1370,14 @@ export const powerTokenABI = [
     ],
     name: "transferWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "vault",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
     type: "event",
@@ -1678,16 +1669,15 @@ export const powerTokenABI = [
 // Registrar
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const registrarABI = [
+export const registrarAbi = [
   {
-    stateMutability: "nonpayable",
     type: "constructor",
     inputs: [
       { name: "zeroGovernor_", internalType: "address", type: "address" },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -1695,39 +1685,39 @@ export const registrarABI = [
     ],
     name: "addToList",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "emergencyGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "emergencyGovernorDeployer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "key_", internalType: "bytes32", type: "bytes32" }],
     name: "get",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "keys_", internalType: "bytes32[]", type: "bytes32[]" }],
     name: "get",
     outputs: [
       { name: "values_", internalType: "bytes32[]", type: "bytes32[]" },
     ],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -1735,9 +1725,9 @@ export const registrarABI = [
     ],
     name: "listContains",
     outputs: [{ name: "", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -1745,23 +1735,23 @@ export const registrarABI = [
     ],
     name: "listContains",
     outputs: [{ name: "", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "powerToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "powerTokenDeployer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -1769,9 +1759,9 @@ export const registrarABI = [
     ],
     name: "removeFromList",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "key_", internalType: "bytes32", type: "bytes32" },
@@ -1779,41 +1769,42 @@ export const registrarABI = [
     ],
     name: "setKey",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernorDeployer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "vault",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "zeroGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "zeroToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
     type: "event",
@@ -1874,9 +1865,8 @@ export const registrarABI = [
 // StandardGovernor
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const standardGovernorABI = [
+export const standardGovernorAbi = [
   {
-    stateMutability: "nonpayable",
     type: "constructor",
     inputs: [
       { name: "voteToken_", internalType: "address", type: "address" },
@@ -1893,51 +1883,51 @@ export const standardGovernorABI = [
         type: "uint256",
       },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "BALLOTS_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "BALLOT_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "COUNTING_MODE",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "DOMAIN_SEPARATOR",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "ONE",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -1945,16 +1935,16 @@ export const standardGovernorABI = [
     ],
     name: "addToList",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "cashToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -1962,9 +1952,9 @@ export const standardGovernorABI = [
     ],
     name: "castVote",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -1975,9 +1965,9 @@ export const standardGovernorABI = [
     ],
     name: "castVoteBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
@@ -1987,9 +1977,9 @@ export const standardGovernorABI = [
     ],
     name: "castVoteBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -1998,58 +1988,58 @@ export const standardGovernorABI = [
     ],
     name: "castVoteWithReason",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
     ],
     name: "castVotesBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "emergencyGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "payable",
     type: "function",
     inputs: [
       { name: "", internalType: "address[]", type: "address[]" },
@@ -2061,9 +2051,9 @@ export const standardGovernorABI = [
     outputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
     ],
+    stateMutability: "payable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -2071,19 +2061,19 @@ export const standardGovernorABI = [
     ],
     name: "getBallotDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "getProposal",
@@ -2099,9 +2089,9 @@ export const standardGovernorABI = [
       { name: "yesVotes_", internalType: "uint256", type: "uint256" },
       { name: "proposer_", internalType: "address", type: "address" },
     ],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -2109,9 +2099,9 @@ export const standardGovernorABI = [
     ],
     name: "getVotes",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalId", internalType: "uint256", type: "uint256" },
@@ -2119,9 +2109,9 @@ export const standardGovernorABI = [
     ],
     name: "hasVoted",
     outputs: [{ name: "hasVoted", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
@@ -2129,16 +2119,16 @@ export const standardGovernorABI = [
     ],
     name: "hasVotedOnAllProposals",
     outputs: [{ name: "", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "callData_", internalType: "bytes", type: "bytes" }],
     name: "hashProposal",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "", internalType: "address[]", type: "address[]" },
@@ -2148,30 +2138,30 @@ export const standardGovernorABI = [
     ],
     name: "hashProposal",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "maxTotalZeroRewardPerActiveEpoch",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "name",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "epoch", internalType: "uint256", type: "uint256" }],
     name: "numberOfProposalsAt",
     outputs: [{ name: "count", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "voter", internalType: "address", type: "address" },
@@ -2179,44 +2169,44 @@ export const standardGovernorABI = [
     ],
     name: "numberOfProposalsVotedOnAt",
     outputs: [{ name: "count", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalDeadline",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "proposalFee",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalProposer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalSnapshot",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "proposalThreshold",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "targets_", internalType: "address[]", type: "address[]" },
@@ -2228,30 +2218,30 @@ export const standardGovernorABI = [
     outputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "quorum",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     name: "quorum",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "registrar",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -2260,9 +2250,9 @@ export const standardGovernorABI = [
     ],
     name: "removeFromAndAddToList",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
@@ -2270,16 +2260,16 @@ export const standardGovernorABI = [
     ],
     name: "removeFromList",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "sendProposalFeeToVault",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "newCashToken_", internalType: "address", type: "address" },
@@ -2287,9 +2277,9 @@ export const standardGovernorABI = [
     ],
     name: "setCashToken",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "key_", internalType: "bytes32", type: "bytes32" },
@@ -2297,66 +2287,67 @@ export const standardGovernorABI = [
     ],
     name: "setKey",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "newProposalFee_", internalType: "uint256", type: "uint256" },
     ],
     name: "setProposalFee",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "state",
     outputs: [
       { name: "", internalType: "enum IGovernor.ProposalState", type: "uint8" },
     ],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "vault",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "voteToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingDelay",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingPeriod",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "zeroGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "zeroToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
     type: "event",
@@ -2602,9 +2593,8 @@ export const standardGovernorABI = [
 // ZeroGovernor
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const zeroGovernorABI = [
+export const zeroGovernorAbi = [
   {
-    stateMutability: "nonpayable",
     type: "constructor",
     inputs: [
       { name: "voteToken_", internalType: "address", type: "address" },
@@ -2641,51 +2631,51 @@ export const zeroGovernorABI = [
         type: "address[]",
       },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "BALLOTS_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "BALLOT_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "COUNTING_MODE",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "DOMAIN_SEPARATOR",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "ONE",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -2693,9 +2683,9 @@ export const zeroGovernorABI = [
     ],
     name: "castVote",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -2706,9 +2696,9 @@ export const zeroGovernorABI = [
     ],
     name: "castVoteBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
@@ -2718,9 +2708,9 @@ export const zeroGovernorABI = [
     ],
     name: "castVoteBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -2729,65 +2719,65 @@ export const zeroGovernorABI = [
     ],
     name: "castVoteWithReason",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "castVotes",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "voter_", internalType: "address", type: "address" },
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "castVotesBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
       { name: "v_", internalType: "uint8", type: "uint8" },
       { name: "r_", internalType: "bytes32", type: "bytes32" },
       { name: "s_", internalType: "bytes32", type: "bytes32" },
     ],
     name: "castVotesBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "emergencyGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "emergencyGovernorDeployer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "payable",
     type: "function",
     inputs: [
       { name: "", internalType: "address[]", type: "address[]" },
@@ -2799,9 +2789,9 @@ export const zeroGovernorABI = [
     outputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
     ],
+    stateMutability: "payable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
@@ -2809,19 +2799,19 @@ export const zeroGovernorABI = [
     ],
     name: "getBallotDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
-      { name: "support_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "getProposal",
@@ -2838,9 +2828,9 @@ export const zeroGovernorABI = [
       { name: "proposer_", internalType: "address", type: "address" },
       { name: "thresholdRatio_", internalType: "uint16", type: "uint16" },
     ],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -2848,9 +2838,9 @@ export const zeroGovernorABI = [
     ],
     name: "getVotes",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "proposalId", internalType: "uint256", type: "uint256" },
@@ -2858,16 +2848,16 @@ export const zeroGovernorABI = [
     ],
     name: "hasVoted",
     outputs: [{ name: "hasVoted", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "callData_", internalType: "bytes", type: "bytes" }],
     name: "hashProposal",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "", internalType: "address[]", type: "address[]" },
@@ -2877,58 +2867,58 @@ export const zeroGovernorABI = [
     ],
     name: "hashProposal",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "token_", internalType: "address", type: "address" }],
     name: "isAllowedCashToken",
     outputs: [{ name: "", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "name",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "powerTokenDeployer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalDeadline",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalProposer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalSnapshot",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "proposalThreshold",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "targets_", internalType: "address[]", type: "address[]" },
@@ -2940,37 +2930,37 @@ export const zeroGovernorABI = [
     outputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "quorum",
     outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "timepoint_", internalType: "uint256", type: "uint256" }],
     name: "quorum",
     outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [],
     name: "resetToPowerHolders",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [],
     name: "resetToZeroHolders",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "newCashToken_", internalType: "address", type: "address" },
@@ -2978,41 +2968,41 @@ export const zeroGovernorABI = [
     ],
     name: "setCashToken",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "newThresholdRatio_", internalType: "uint16", type: "uint16" },
     ],
     name: "setEmergencyProposalThresholdRatio",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "newThresholdRatio_", internalType: "uint16", type: "uint16" },
     ],
     name: "setZeroProposalThresholdRatio",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernorDeployer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "state",
@@ -3023,34 +3013,35 @@ export const zeroGovernorABI = [
         type: "uint8",
       },
     ],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "thresholdRatio",
     outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "voteToken",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingDelay",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "votingPeriod",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
     type: "event",
@@ -3284,9 +3275,8 @@ export const zeroGovernorABI = [
 // ZeroToken
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const zeroTokenABI = [
+export const zeroTokenAbi = [
   {
-    stateMutability: "nonpayable",
     type: "constructor",
     inputs: [
       {
@@ -3305,58 +3295,58 @@ export const zeroTokenABI = [
         type: "uint256[]",
       },
     ],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "CANCEL_AUTHORIZATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "pure",
     type: "function",
     inputs: [],
     name: "CLOCK_MODE",
     outputs: [{ name: "clockMode_", internalType: "string", type: "string" }],
+    stateMutability: "pure",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "DELEGATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "DOMAIN_SEPARATOR",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "PERMIT_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account", internalType: "address", type: "address" },
@@ -3364,9 +3354,9 @@ export const zeroTokenABI = [
     ],
     name: "allowance",
     outputs: [{ name: "allowance", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "spender_", internalType: "address", type: "address" },
@@ -3374,9 +3364,9 @@ export const zeroTokenABI = [
     ],
     name: "approve",
     outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "authorizer", internalType: "address", type: "address" },
@@ -3384,16 +3374,16 @@ export const zeroTokenABI = [
     ],
     name: "authorizationState",
     outputs: [{ name: "isNonceUsed", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "balanceOf",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "authorizer_", internalType: "address", type: "address" },
@@ -3403,9 +3393,9 @@ export const zeroTokenABI = [
     ],
     name: "cancelAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "authorizer_", internalType: "address", type: "address" },
@@ -3416,9 +3406,9 @@ export const zeroTokenABI = [
     ],
     name: "cancelAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "authorizer_", internalType: "address", type: "address" },
@@ -3427,30 +3417,30 @@ export const zeroTokenABI = [
     ],
     name: "cancelAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "clock_", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "decimals",
     outputs: [{ name: "", internalType: "uint8", type: "uint8" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [{ name: "delegatee_", internalType: "address", type: "address" }],
     name: "delegate",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "delegatee_", internalType: "address", type: "address" },
@@ -3462,9 +3452,9 @@ export const zeroTokenABI = [
     ],
     name: "delegateBySig",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -3475,16 +3465,16 @@ export const zeroTokenABI = [
     ],
     name: "delegateBySig",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "delegates",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "delegatee_", internalType: "address", type: "address" },
@@ -3493,9 +3483,9 @@ export const zeroTokenABI = [
     ],
     name: "getDelegationDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -3503,9 +3493,9 @@ export const zeroTokenABI = [
     ],
     name: "getPastVotes",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -3514,16 +3504,16 @@ export const zeroTokenABI = [
     ],
     name: "getPastVotes",
     outputs: [{ name: "", internalType: "uint256[]", type: "uint256[]" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "getVotes",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "recipient_", internalType: "address", type: "address" },
@@ -3531,23 +3521,23 @@ export const zeroTokenABI = [
     ],
     name: "mint",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "name",
     outputs: [{ name: "name_", internalType: "string", type: "string" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "account", internalType: "address", type: "address" }],
     name: "nonces",
     outputs: [{ name: "nonce", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -3555,9 +3545,9 @@ export const zeroTokenABI = [
     ],
     name: "pastBalanceOf",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -3566,9 +3556,9 @@ export const zeroTokenABI = [
     ],
     name: "pastBalancesOf",
     outputs: [{ name: "", internalType: "uint256[]", type: "uint256[]" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -3576,9 +3566,9 @@ export const zeroTokenABI = [
     ],
     name: "pastDelegates",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "account_", internalType: "address", type: "address" },
@@ -3587,9 +3577,9 @@ export const zeroTokenABI = [
     ],
     name: "pastDelegates",
     outputs: [{ name: "", internalType: "address[]", type: "address[]" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [
       { name: "startEpoch_", internalType: "uint256", type: "uint256" },
@@ -3597,16 +3587,16 @@ export const zeroTokenABI = [
     ],
     name: "pastTotalSupplies",
     outputs: [{ name: "", internalType: "uint256[]", type: "uint256[]" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [{ name: "epoch_", internalType: "uint256", type: "uint256" }],
     name: "pastTotalSupply",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "owner_", internalType: "address", type: "address" },
@@ -3617,9 +3607,9 @@ export const zeroTokenABI = [
     ],
     name: "permit",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "owner_", internalType: "address", type: "address" },
@@ -3632,9 +3622,9 @@ export const zeroTokenABI = [
     ],
     name: "permit",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -3647,9 +3637,9 @@ export const zeroTokenABI = [
     ],
     name: "receiveWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -3663,9 +3653,9 @@ export const zeroTokenABI = [
     ],
     name: "receiveWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -3680,37 +3670,37 @@ export const zeroTokenABI = [
     ],
     name: "receiveWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernor",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "standardGovernorDeployer",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "symbol",
     outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "view",
     type: "function",
     inputs: [],
     name: "totalSupply",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "recipient_", internalType: "address", type: "address" },
@@ -3718,9 +3708,9 @@ export const zeroTokenABI = [
     ],
     name: "transfer",
     outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "sender_", internalType: "address", type: "address" },
@@ -3729,9 +3719,9 @@ export const zeroTokenABI = [
     ],
     name: "transferFrom",
     outputs: [{ name: "success_", internalType: "bool", type: "bool" }],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -3745,9 +3735,9 @@ export const zeroTokenABI = [
     ],
     name: "transferWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -3760,9 +3750,9 @@ export const zeroTokenABI = [
     ],
     name: "transferWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
-    stateMutability: "nonpayable",
     type: "function",
     inputs: [
       { name: "from_", internalType: "address", type: "address" },
@@ -3777,6 +3767,7 @@ export const zeroTokenABI = [
     ],
     name: "transferWithAuthorization",
     outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "event",
@@ -3992,503 +3983,3242 @@ export const zeroTokenABI = [
 ] as const;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Core
+// Action
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link distributionVaultABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__
  */
-export function getDistributionVault(config: Omit<GetContractArgs, "abi">) {
-  return getContract({ abi: distributionVaultABI, ...config });
-}
+export const readDistributionVault = /* #__PURE__ */ createReadContract({
+  abi: distributionVaultAbi,
+});
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"CLAIM_TYPEHASH"`
  */
-export function readDistributionVault<
-  TAbi extends readonly unknown[] = typeof distributionVaultABI,
-  TFunctionName extends string = string
->(config: Omit<ReadContractConfig<TAbi, TFunctionName>, "abi">) {
-  return readContract({
-    abi: distributionVaultABI,
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>);
-}
+export const readDistributionVaultClaimTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "CLAIM_TYPEHASH",
+  });
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"CLOCK_MODE"`
  */
-export function writeDistributionVault<TFunctionName extends string>(
-  config:
-    | Omit<
-        WriteContractPreparedArgs<typeof distributionVaultABI, TFunctionName>,
-        "abi"
-      >
-    | Omit<
-        WriteContractUnpreparedArgs<typeof distributionVaultABI, TFunctionName>,
-        "abi"
-      >
-) {
-  return writeContract({
-    abi: distributionVaultABI,
-    ...config,
-  } as unknown as WriteContractArgs<typeof distributionVaultABI, TFunctionName>);
-}
+export const readDistributionVaultClockMode =
+  /* #__PURE__ */ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "CLOCK_MODE",
+  });
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link distributionVaultABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
  */
-export function prepareWriteDistributionVault<
-  TAbi extends readonly unknown[] = typeof distributionVaultABI,
-  TFunctionName extends string = string
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, "abi">) {
-  return prepareWriteContract({
-    abi: distributionVaultABI,
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>);
-}
+export const readDistributionVaultDomainSeparator =
+  /* #__PURE__ */ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "DOMAIN_SEPARATOR",
+  });
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link distributionVaultABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"clock"`
  */
-export function watchDistributionVaultEvent<
-  TAbi extends readonly unknown[] = typeof distributionVaultABI,
-  TEventName extends string = string
->(
-  config: Omit<WatchContractEventConfig<TAbi, TEventName>, "abi">,
-  callback: WatchContractEventCallback<TAbi, TEventName>
-) {
-  return watchContractEvent(
-    { abi: distributionVaultABI, ...config } as WatchContractEventConfig<
-      TAbi,
-      TEventName
-    >,
-    callback
-  );
-}
+export const readDistributionVaultClock = /* #__PURE__ */ createReadContract({
+  abi: distributionVaultAbi,
+  functionName: "clock",
+});
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link emergencyGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"distributionOfAt"`
  */
-export function getEmergencyGovernor(config: Omit<GetContractArgs, "abi">) {
-  return getContract({ abi: emergencyGovernorABI, ...config });
-}
+export const readDistributionVaultDistributionOfAt =
+  /* #__PURE__ */ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "distributionOfAt",
+  });
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"getClaimDigest"`
  */
-export function readEmergencyGovernor<
-  TAbi extends readonly unknown[] = typeof emergencyGovernorABI,
-  TFunctionName extends string = string
->(config: Omit<ReadContractConfig<TAbi, TFunctionName>, "abi">) {
-  return readContract({
-    abi: emergencyGovernorABI,
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>);
-}
+export const readDistributionVaultGetClaimDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "getClaimDigest",
+  });
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"getClaimable"`
  */
-export function writeEmergencyGovernor<TFunctionName extends string>(
-  config:
-    | Omit<
-        WriteContractPreparedArgs<typeof emergencyGovernorABI, TFunctionName>,
-        "abi"
-      >
-    | Omit<
-        WriteContractUnpreparedArgs<typeof emergencyGovernorABI, TFunctionName>,
-        "abi"
-      >
-) {
-  return writeContract({
-    abi: emergencyGovernorABI,
-    ...config,
-  } as unknown as WriteContractArgs<typeof emergencyGovernorABI, TFunctionName>);
-}
+export const readDistributionVaultGetClaimable =
+  /* #__PURE__ */ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "getClaimable",
+  });
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link emergencyGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"hasClaimed"`
  */
-export function prepareWriteEmergencyGovernor<
-  TAbi extends readonly unknown[] = typeof emergencyGovernorABI,
-  TFunctionName extends string = string
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, "abi">) {
-  return prepareWriteContract({
-    abi: emergencyGovernorABI,
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>);
-}
+export const readDistributionVaultHasClaimed =
+  /* #__PURE__ */ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "hasClaimed",
+  });
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"name"`
  */
-export function watchEmergencyGovernorEvent<
-  TAbi extends readonly unknown[] = typeof emergencyGovernorABI,
-  TEventName extends string = string
->(
-  config: Omit<WatchContractEventConfig<TAbi, TEventName>, "abi">,
-  callback: WatchContractEventCallback<TAbi, TEventName>
-) {
-  return watchContractEvent(
-    { abi: emergencyGovernorABI, ...config } as WatchContractEventConfig<
-      TAbi,
-      TEventName
-    >,
-    callback
-  );
-}
+export const readDistributionVaultName = /* #__PURE__ */ createReadContract({
+  abi: distributionVaultAbi,
+  functionName: "name",
+});
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link powerTokenABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"nonces"`
  */
-export function getPowerToken(config: Omit<GetContractArgs, "abi">) {
-  return getContract({ abi: powerTokenABI, ...config });
-}
+export const readDistributionVaultNonces = /* #__PURE__ */ createReadContract({
+  abi: distributionVaultAbi,
+  functionName: "nonces",
+});
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"zeroToken"`
  */
-export function readPowerToken<
-  TAbi extends readonly unknown[] = typeof powerTokenABI,
-  TFunctionName extends string = string
->(config: Omit<ReadContractConfig<TAbi, TFunctionName>, "abi">) {
-  return readContract({
-    abi: powerTokenABI,
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>);
-}
+export const readDistributionVaultZeroToken =
+  /* #__PURE__ */ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "zeroToken",
+  });
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenABI}__.
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultAbi}__
  */
-export function writePowerToken<TFunctionName extends string>(
-  config:
-    | Omit<
-        WriteContractPreparedArgs<typeof powerTokenABI, TFunctionName>,
-        "abi"
-      >
-    | Omit<
-        WriteContractUnpreparedArgs<typeof powerTokenABI, TFunctionName>,
-        "abi"
-      >
-) {
-  return writeContract({
-    abi: powerTokenABI,
-    ...config,
-  } as unknown as WriteContractArgs<typeof powerTokenABI, TFunctionName>);
-}
+export const writeDistributionVault = /* #__PURE__ */ createWriteContract({
+  abi: distributionVaultAbi,
+});
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link powerTokenABI}__.
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"claim"`
  */
-export function prepareWritePowerToken<
-  TAbi extends readonly unknown[] = typeof powerTokenABI,
-  TFunctionName extends string = string
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, "abi">) {
-  return prepareWriteContract({
-    abi: powerTokenABI,
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>);
-}
+export const writeDistributionVaultClaim = /* #__PURE__ */ createWriteContract({
+  abi: distributionVaultAbi,
+  functionName: "claim",
+});
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenABI}__.
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"claimBySig"`
  */
-export function watchPowerTokenEvent<
-  TAbi extends readonly unknown[] = typeof powerTokenABI,
-  TEventName extends string = string
->(
-  config: Omit<WatchContractEventConfig<TAbi, TEventName>, "abi">,
-  callback: WatchContractEventCallback<TAbi, TEventName>
-) {
-  return watchContractEvent(
-    { abi: powerTokenABI, ...config } as WatchContractEventConfig<
-      TAbi,
-      TEventName
-    >,
-    callback
-  );
-}
+export const writeDistributionVaultClaimBySig =
+  /* #__PURE__ */ createWriteContract({
+    abi: distributionVaultAbi,
+    functionName: "claimBySig",
+  });
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link registrarABI}__.
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"distribute"`
  */
-export function getRegistrar(config: Omit<GetContractArgs, "abi">) {
-  return getContract({ abi: registrarABI, ...config });
-}
+export const writeDistributionVaultDistribute =
+  /* #__PURE__ */ createWriteContract({
+    abi: distributionVaultAbi,
+    functionName: "distribute",
+  });
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link registrarABI}__.
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link distributionVaultAbi}__
  */
-export function readRegistrar<
-  TAbi extends readonly unknown[] = typeof registrarABI,
-  TFunctionName extends string = string
->(config: Omit<ReadContractConfig<TAbi, TFunctionName>, "abi">) {
-  return readContract({
-    abi: registrarABI,
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>);
-}
+export const simulateDistributionVault = /* #__PURE__ */ createSimulateContract(
+  {
+    abi: distributionVaultAbi,
+  }
+);
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarABI}__.
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"claim"`
  */
-export function writeRegistrar<TFunctionName extends string>(
-  config:
-    | Omit<WriteContractPreparedArgs<typeof registrarABI, TFunctionName>, "abi">
-    | Omit<
-        WriteContractUnpreparedArgs<typeof registrarABI, TFunctionName>,
-        "abi"
-      >
-) {
-  return writeContract({
-    abi: registrarABI,
-    ...config,
-  } as unknown as WriteContractArgs<typeof registrarABI, TFunctionName>);
-}
+export const simulateDistributionVaultClaim =
+  /* #__PURE__ */ createSimulateContract({
+    abi: distributionVaultAbi,
+    functionName: "claim",
+  });
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link registrarABI}__.
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"claimBySig"`
  */
-export function prepareWriteRegistrar<
-  TAbi extends readonly unknown[] = typeof registrarABI,
-  TFunctionName extends string = string
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, "abi">) {
-  return prepareWriteContract({
-    abi: registrarABI,
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>);
-}
+export const simulateDistributionVaultClaimBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: distributionVaultAbi,
+    functionName: "claimBySig",
+  });
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarABI}__.
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"distribute"`
  */
-export function watchRegistrarEvent<
-  TAbi extends readonly unknown[] = typeof registrarABI,
-  TEventName extends string = string
->(
-  config: Omit<WatchContractEventConfig<TAbi, TEventName>, "abi">,
-  callback: WatchContractEventCallback<TAbi, TEventName>
-) {
-  return watchContractEvent(
-    { abi: registrarABI, ...config } as WatchContractEventConfig<
-      TAbi,
-      TEventName
-    >,
-    callback
-  );
-}
+export const simulateDistributionVaultDistribute =
+  /* #__PURE__ */ createSimulateContract({
+    abi: distributionVaultAbi,
+    functionName: "distribute",
+  });
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link standardGovernorABI}__.
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link distributionVaultAbi}__
  */
-export function getStandardGovernor(config: Omit<GetContractArgs, "abi">) {
-  return getContract({ abi: standardGovernorABI, ...config });
-}
+export const watchDistributionVaultEvent =
+  /* #__PURE__ */ createWatchContractEvent({ abi: distributionVaultAbi });
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorABI}__.
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link distributionVaultAbi}__ and `eventName` set to `"Claim"`
  */
-export function readStandardGovernor<
-  TAbi extends readonly unknown[] = typeof standardGovernorABI,
-  TFunctionName extends string = string
->(config: Omit<ReadContractConfig<TAbi, TFunctionName>, "abi">) {
-  return readContract({
-    abi: standardGovernorABI,
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>);
-}
+export const watchDistributionVaultClaimEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: distributionVaultAbi,
+    eventName: "Claim",
+  });
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorABI}__.
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link distributionVaultAbi}__ and `eventName` set to `"Distribution"`
  */
-export function writeStandardGovernor<TFunctionName extends string>(
-  config:
-    | Omit<
-        WriteContractPreparedArgs<typeof standardGovernorABI, TFunctionName>,
-        "abi"
-      >
-    | Omit<
-        WriteContractUnpreparedArgs<typeof standardGovernorABI, TFunctionName>,
-        "abi"
-      >
-) {
-  return writeContract({
-    abi: standardGovernorABI,
-    ...config,
-  } as unknown as WriteContractArgs<typeof standardGovernorABI, TFunctionName>);
-}
+export const watchDistributionVaultDistributionEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: distributionVaultAbi,
+    eventName: "Distribution",
+  });
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link standardGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__
  */
-export function prepareWriteStandardGovernor<
-  TAbi extends readonly unknown[] = typeof standardGovernorABI,
-  TFunctionName extends string = string
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, "abi">) {
-  return prepareWriteContract({
-    abi: standardGovernorABI,
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>);
-}
+export const readEmergencyGovernor = /* #__PURE__ */ createReadContract({
+  abi: emergencyGovernorAbi,
+});
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"BALLOTS_TYPEHASH"`
  */
-export function watchStandardGovernorEvent<
-  TAbi extends readonly unknown[] = typeof standardGovernorABI,
-  TEventName extends string = string
->(
-  config: Omit<WatchContractEventConfig<TAbi, TEventName>, "abi">,
-  callback: WatchContractEventCallback<TAbi, TEventName>
-) {
-  return watchContractEvent(
-    { abi: standardGovernorABI, ...config } as WatchContractEventConfig<
-      TAbi,
-      TEventName
-    >,
-    callback
-  );
-}
+export const readEmergencyGovernorBallotsTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "BALLOTS_TYPEHASH",
+  });
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link zeroGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"BALLOT_TYPEHASH"`
  */
-export function getZeroGovernor(config: Omit<GetContractArgs, "abi">) {
-  return getContract({ abi: zeroGovernorABI, ...config });
-}
+export const readEmergencyGovernorBallotTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "BALLOT_TYPEHASH",
+  });
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"CLOCK_MODE"`
  */
-export function readZeroGovernor<
-  TAbi extends readonly unknown[] = typeof zeroGovernorABI,
-  TFunctionName extends string = string
->(config: Omit<ReadContractConfig<TAbi, TFunctionName>, "abi">) {
-  return readContract({
-    abi: zeroGovernorABI,
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>);
-}
+export const readEmergencyGovernorClockMode =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "CLOCK_MODE",
+  });
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"COUNTING_MODE"`
  */
-export function writeZeroGovernor<TFunctionName extends string>(
-  config:
-    | Omit<
-        WriteContractPreparedArgs<typeof zeroGovernorABI, TFunctionName>,
-        "abi"
-      >
-    | Omit<
-        WriteContractUnpreparedArgs<typeof zeroGovernorABI, TFunctionName>,
-        "abi"
-      >
-) {
-  return writeContract({
-    abi: zeroGovernorABI,
-    ...config,
-  } as unknown as WriteContractArgs<typeof zeroGovernorABI, TFunctionName>);
-}
+export const readEmergencyGovernorCountingMode =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "COUNTING_MODE",
+  });
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link zeroGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
  */
-export function prepareWriteZeroGovernor<
-  TAbi extends readonly unknown[] = typeof zeroGovernorABI,
-  TFunctionName extends string = string
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, "abi">) {
-  return prepareWriteContract({
-    abi: zeroGovernorABI,
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>);
-}
+export const readEmergencyGovernorDomainSeparator =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "DOMAIN_SEPARATOR",
+  });
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"ONE"`
  */
-export function watchZeroGovernorEvent<
-  TAbi extends readonly unknown[] = typeof zeroGovernorABI,
-  TEventName extends string = string
->(
-  config: Omit<WatchContractEventConfig<TAbi, TEventName>, "abi">,
-  callback: WatchContractEventCallback<TAbi, TEventName>
-) {
-  return watchContractEvent(
-    { abi: zeroGovernorABI, ...config } as WatchContractEventConfig<
-      TAbi,
-      TEventName
-    >,
-    callback
-  );
-}
+export const readEmergencyGovernorOne = /* #__PURE__ */ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "ONE",
+});
 
 /**
- * Wraps __{@link getContract}__ with `abi` set to __{@link zeroTokenABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"clock"`
  */
-export function getZeroToken(config: Omit<GetContractArgs, "abi">) {
-  return getContract({ abi: zeroTokenABI, ...config });
-}
+export const readEmergencyGovernorClock = /* #__PURE__ */ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "clock",
+});
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getBallotDigest"`
  */
-export function readZeroToken<
-  TAbi extends readonly unknown[] = typeof zeroTokenABI,
-  TFunctionName extends string = string
->(config: Omit<ReadContractConfig<TAbi, TFunctionName>, "abi">) {
-  return readContract({
-    abi: zeroTokenABI,
-    ...config,
-  } as unknown as ReadContractConfig<TAbi, TFunctionName>);
-}
+export const readEmergencyGovernorGetBallotDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "getBallotDigest",
+  });
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getBallotsDigest"`
  */
-export function writeZeroToken<TFunctionName extends string>(
-  config:
-    | Omit<WriteContractPreparedArgs<typeof zeroTokenABI, TFunctionName>, "abi">
-    | Omit<
-        WriteContractUnpreparedArgs<typeof zeroTokenABI, TFunctionName>,
-        "abi"
-      >
-) {
-  return writeContract({
-    abi: zeroTokenABI,
-    ...config,
-  } as unknown as WriteContractArgs<typeof zeroTokenABI, TFunctionName>);
-}
+export const readEmergencyGovernorGetBallotsDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "getBallotsDigest",
+  });
 
 /**
- * Wraps __{@link prepareWriteContract}__ with `abi` set to __{@link zeroTokenABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getProposal"`
  */
-export function prepareWriteZeroToken<
-  TAbi extends readonly unknown[] = typeof zeroTokenABI,
-  TFunctionName extends string = string
->(config: Omit<PrepareWriteContractConfig<TAbi, TFunctionName>, "abi">) {
-  return prepareWriteContract({
-    abi: zeroTokenABI,
-    ...config,
-  } as unknown as PrepareWriteContractConfig<TAbi, TFunctionName>);
-}
+export const readEmergencyGovernorGetProposal =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "getProposal",
+  });
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenABI}__.
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getVotes"`
  */
-export function watchZeroTokenEvent<
-  TAbi extends readonly unknown[] = typeof zeroTokenABI,
-  TEventName extends string = string
->(
-  config: Omit<WatchContractEventConfig<TAbi, TEventName>, "abi">,
-  callback: WatchContractEventCallback<TAbi, TEventName>
-) {
-  return watchContractEvent(
-    { abi: zeroTokenABI, ...config } as WatchContractEventConfig<
-      TAbi,
-      TEventName
-    >,
-    callback
-  );
-}
+export const readEmergencyGovernorGetVotes = /* #__PURE__ */ createReadContract(
+  {
+    abi: emergencyGovernorAbi,
+    functionName: "getVotes",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"hasVoted"`
+ */
+export const readEmergencyGovernorHasVoted = /* #__PURE__ */ createReadContract(
+  {
+    abi: emergencyGovernorAbi,
+    functionName: "hasVoted",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"hashProposal"`
+ */
+export const readEmergencyGovernorHashProposal =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "hashProposal",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"name"`
+ */
+export const readEmergencyGovernorName = /* #__PURE__ */ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "name",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalDeadline"`
+ */
+export const readEmergencyGovernorProposalDeadline =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "proposalDeadline",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalProposer"`
+ */
+export const readEmergencyGovernorProposalProposer =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "proposalProposer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalSnapshot"`
+ */
+export const readEmergencyGovernorProposalSnapshot =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "proposalSnapshot",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalThreshold"`
+ */
+export const readEmergencyGovernorProposalThreshold =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "proposalThreshold",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"quorum"`
+ */
+export const readEmergencyGovernorQuorum = /* #__PURE__ */ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "quorum",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"registrar"`
+ */
+export const readEmergencyGovernorRegistrar =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "registrar",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"standardGovernor"`
+ */
+export const readEmergencyGovernorStandardGovernor =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "standardGovernor",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"state"`
+ */
+export const readEmergencyGovernorState = /* #__PURE__ */ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "state",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"thresholdRatio"`
+ */
+export const readEmergencyGovernorThresholdRatio =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "thresholdRatio",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"voteToken"`
+ */
+export const readEmergencyGovernorVoteToken =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "voteToken",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"votingDelay"`
+ */
+export const readEmergencyGovernorVotingDelay =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "votingDelay",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"votingPeriod"`
+ */
+export const readEmergencyGovernorVotingPeriod =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "votingPeriod",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"zeroGovernor"`
+ */
+export const readEmergencyGovernorZeroGovernor =
+  /* #__PURE__ */ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "zeroGovernor",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__
+ */
+export const writeEmergencyGovernor = /* #__PURE__ */ createWriteContract({
+  abi: emergencyGovernorAbi,
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"addToList"`
+ */
+export const writeEmergencyGovernorAddToList =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "addToList",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVote"`
+ */
+export const writeEmergencyGovernorCastVote =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVote",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
+ */
+export const writeEmergencyGovernorCastVoteBySig =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVoteBySig",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
+ */
+export const writeEmergencyGovernorCastVoteWithReason =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotes"`
+ */
+export const writeEmergencyGovernorCastVotes =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVotes",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
+ */
+export const writeEmergencyGovernorCastVotesBySig =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVotesBySig",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"execute"`
+ */
+export const writeEmergencyGovernorExecute =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "execute",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"propose"`
+ */
+export const writeEmergencyGovernorPropose =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "propose",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"removeFromAndAddToList"`
+ */
+export const writeEmergencyGovernorRemoveFromAndAddToList =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "removeFromAndAddToList",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"removeFromList"`
+ */
+export const writeEmergencyGovernorRemoveFromList =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "removeFromList",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setKey"`
+ */
+export const writeEmergencyGovernorSetKey = /* #__PURE__ */ createWriteContract(
+  {
+    abi: emergencyGovernorAbi,
+    functionName: "setKey",
+  }
+);
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setStandardProposalFee"`
+ */
+export const writeEmergencyGovernorSetStandardProposalFee =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "setStandardProposalFee",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setThresholdRatio"`
+ */
+export const writeEmergencyGovernorSetThresholdRatio =
+  /* #__PURE__ */ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "setThresholdRatio",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__
+ */
+export const simulateEmergencyGovernor = /* #__PURE__ */ createSimulateContract(
+  {
+    abi: emergencyGovernorAbi,
+  }
+);
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"addToList"`
+ */
+export const simulateEmergencyGovernorAddToList =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "addToList",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVote"`
+ */
+export const simulateEmergencyGovernorCastVote =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVote",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
+ */
+export const simulateEmergencyGovernorCastVoteBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVoteBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
+ */
+export const simulateEmergencyGovernorCastVoteWithReason =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotes"`
+ */
+export const simulateEmergencyGovernorCastVotes =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVotes",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
+ */
+export const simulateEmergencyGovernorCastVotesBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVotesBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"execute"`
+ */
+export const simulateEmergencyGovernorExecute =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "execute",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"propose"`
+ */
+export const simulateEmergencyGovernorPropose =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "propose",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"removeFromAndAddToList"`
+ */
+export const simulateEmergencyGovernorRemoveFromAndAddToList =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "removeFromAndAddToList",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"removeFromList"`
+ */
+export const simulateEmergencyGovernorRemoveFromList =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "removeFromList",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setKey"`
+ */
+export const simulateEmergencyGovernorSetKey =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "setKey",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setStandardProposalFee"`
+ */
+export const simulateEmergencyGovernorSetStandardProposalFee =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "setStandardProposalFee",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setThresholdRatio"`
+ */
+export const simulateEmergencyGovernorSetThresholdRatio =
+  /* #__PURE__ */ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "setThresholdRatio",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__
+ */
+export const watchEmergencyGovernorEvent =
+  /* #__PURE__ */ createWatchContractEvent({ abi: emergencyGovernorAbi });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"ProposalCreated"`
+ */
+export const watchEmergencyGovernorProposalCreatedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: emergencyGovernorAbi,
+    eventName: "ProposalCreated",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"ProposalExecuted"`
+ */
+export const watchEmergencyGovernorProposalExecutedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: emergencyGovernorAbi,
+    eventName: "ProposalExecuted",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"ThresholdRatioSet"`
+ */
+export const watchEmergencyGovernorThresholdRatioSetEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: emergencyGovernorAbi,
+    eventName: "ThresholdRatioSet",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"VoteCast"`
+ */
+export const watchEmergencyGovernorVoteCastEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: emergencyGovernorAbi,
+    eventName: "VoteCast",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__
+ */
+export const readPowerToken = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"CANCEL_AUTHORIZATION_TYPEHASH"`
+ */
+export const readPowerTokenCancelAuthorizationTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "CANCEL_AUTHORIZATION_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"CLOCK_MODE"`
+ */
+export const readPowerTokenClockMode = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "CLOCK_MODE",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"DELEGATION_TYPEHASH"`
+ */
+export const readPowerTokenDelegationTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "DELEGATION_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
+ */
+export const readPowerTokenDomainSeparator = /* #__PURE__ */ createReadContract(
+  {
+    abi: powerTokenAbi,
+    functionName: "DOMAIN_SEPARATOR",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"INITIAL_SUPPLY"`
+ */
+export const readPowerTokenInitialSupply = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "INITIAL_SUPPLY",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"ONE"`
+ */
+export const readPowerTokenOne = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "ONE",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"PERMIT_TYPEHASH"`
+ */
+export const readPowerTokenPermitTypehash = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "PERMIT_TYPEHASH",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"RECEIVE_WITH_AUTHORIZATION_TYPEHASH"`
+ */
+export const readPowerTokenReceiveWithAuthorizationTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"TRANSFER_WITH_AUTHORIZATION_TYPEHASH"`
+ */
+export const readPowerTokenTransferWithAuthorizationTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"allowance"`
+ */
+export const readPowerTokenAllowance = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "allowance",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"amountToAuction"`
+ */
+export const readPowerTokenAmountToAuction = /* #__PURE__ */ createReadContract(
+  {
+    abi: powerTokenAbi,
+    functionName: "amountToAuction",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"authorizationState"`
+ */
+export const readPowerTokenAuthorizationState =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "authorizationState",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const readPowerTokenBalanceOf = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "balanceOf",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"bootstrapEpoch"`
+ */
+export const readPowerTokenBootstrapEpoch = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "bootstrapEpoch",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"bootstrapToken"`
+ */
+export const readPowerTokenBootstrapToken = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "bootstrapToken",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"cashToken"`
+ */
+export const readPowerTokenCashToken = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "cashToken",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"clock"`
+ */
+export const readPowerTokenClock = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "clock",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"decimals"`
+ */
+export const readPowerTokenDecimals = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "decimals",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegates"`
+ */
+export const readPowerTokenDelegates = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "delegates",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"getCost"`
+ */
+export const readPowerTokenGetCost = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "getCost",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"getDelegationDigest"`
+ */
+export const readPowerTokenGetDelegationDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "getDelegationDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"getPastVotes"`
+ */
+export const readPowerTokenGetPastVotes = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "getPastVotes",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"getVotes"`
+ */
+export const readPowerTokenGetVotes = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "getVotes",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"hasParticipatedAt"`
+ */
+export const readPowerTokenHasParticipatedAt =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "hasParticipatedAt",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"name"`
+ */
+export const readPowerTokenName = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "name",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"nonces"`
+ */
+export const readPowerTokenNonces = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "nonces",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"participationInflation"`
+ */
+export const readPowerTokenParticipationInflation =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "participationInflation",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"pastBalanceOf"`
+ */
+export const readPowerTokenPastBalanceOf = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "pastBalanceOf",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"pastDelegates"`
+ */
+export const readPowerTokenPastDelegates = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "pastDelegates",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"pastTotalSupply"`
+ */
+export const readPowerTokenPastTotalSupply = /* #__PURE__ */ createReadContract(
+  {
+    abi: powerTokenAbi,
+    functionName: "pastTotalSupply",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"standardGovernor"`
+ */
+export const readPowerTokenStandardGovernor =
+  /* #__PURE__ */ createReadContract({
+    abi: powerTokenAbi,
+    functionName: "standardGovernor",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"symbol"`
+ */
+export const readPowerTokenSymbol = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "symbol",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"targetSupply"`
+ */
+export const readPowerTokenTargetSupply = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "targetSupply",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"totalSupply"`
+ */
+export const readPowerTokenTotalSupply = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "totalSupply",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"vault"`
+ */
+export const readPowerTokenVault = /* #__PURE__ */ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "vault",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__
+ */
+export const writePowerToken = /* #__PURE__ */ createWriteContract({
+  abi: powerTokenAbi,
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"approve"`
+ */
+export const writePowerTokenApprove = /* #__PURE__ */ createWriteContract({
+  abi: powerTokenAbi,
+  functionName: "approve",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"buy"`
+ */
+export const writePowerTokenBuy = /* #__PURE__ */ createWriteContract({
+  abi: powerTokenAbi,
+  functionName: "buy",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"cancelAuthorization"`
+ */
+export const writePowerTokenCancelAuthorization =
+  /* #__PURE__ */ createWriteContract({
+    abi: powerTokenAbi,
+    functionName: "cancelAuthorization",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegate"`
+ */
+export const writePowerTokenDelegate = /* #__PURE__ */ createWriteContract({
+  abi: powerTokenAbi,
+  functionName: "delegate",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegateBySig"`
+ */
+export const writePowerTokenDelegateBySig = /* #__PURE__ */ createWriteContract(
+  {
+    abi: powerTokenAbi,
+    functionName: "delegateBySig",
+  }
+);
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"markNextVotingEpochAsActive"`
+ */
+export const writePowerTokenMarkNextVotingEpochAsActive =
+  /* #__PURE__ */ createWriteContract({
+    abi: powerTokenAbi,
+    functionName: "markNextVotingEpochAsActive",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"markParticipation"`
+ */
+export const writePowerTokenMarkParticipation =
+  /* #__PURE__ */ createWriteContract({
+    abi: powerTokenAbi,
+    functionName: "markParticipation",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"permit"`
+ */
+export const writePowerTokenPermit = /* #__PURE__ */ createWriteContract({
+  abi: powerTokenAbi,
+  functionName: "permit",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"receiveWithAuthorization"`
+ */
+export const writePowerTokenReceiveWithAuthorization =
+  /* #__PURE__ */ createWriteContract({
+    abi: powerTokenAbi,
+    functionName: "receiveWithAuthorization",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"setNextCashToken"`
+ */
+export const writePowerTokenSetNextCashToken =
+  /* #__PURE__ */ createWriteContract({
+    abi: powerTokenAbi,
+    functionName: "setNextCashToken",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transfer"`
+ */
+export const writePowerTokenTransfer = /* #__PURE__ */ createWriteContract({
+  abi: powerTokenAbi,
+  functionName: "transfer",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const writePowerTokenTransferFrom = /* #__PURE__ */ createWriteContract({
+  abi: powerTokenAbi,
+  functionName: "transferFrom",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transferWithAuthorization"`
+ */
+export const writePowerTokenTransferWithAuthorization =
+  /* #__PURE__ */ createWriteContract({
+    abi: powerTokenAbi,
+    functionName: "transferWithAuthorization",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__
+ */
+export const simulatePowerToken = /* #__PURE__ */ createSimulateContract({
+  abi: powerTokenAbi,
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"approve"`
+ */
+export const simulatePowerTokenApprove = /* #__PURE__ */ createSimulateContract(
+  {
+    abi: powerTokenAbi,
+    functionName: "approve",
+  }
+);
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"buy"`
+ */
+export const simulatePowerTokenBuy = /* #__PURE__ */ createSimulateContract({
+  abi: powerTokenAbi,
+  functionName: "buy",
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"cancelAuthorization"`
+ */
+export const simulatePowerTokenCancelAuthorization =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "cancelAuthorization",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegate"`
+ */
+export const simulatePowerTokenDelegate =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "delegate",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegateBySig"`
+ */
+export const simulatePowerTokenDelegateBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "delegateBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"markNextVotingEpochAsActive"`
+ */
+export const simulatePowerTokenMarkNextVotingEpochAsActive =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "markNextVotingEpochAsActive",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"markParticipation"`
+ */
+export const simulatePowerTokenMarkParticipation =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "markParticipation",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"permit"`
+ */
+export const simulatePowerTokenPermit = /* #__PURE__ */ createSimulateContract({
+  abi: powerTokenAbi,
+  functionName: "permit",
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"receiveWithAuthorization"`
+ */
+export const simulatePowerTokenReceiveWithAuthorization =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "receiveWithAuthorization",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"setNextCashToken"`
+ */
+export const simulatePowerTokenSetNextCashToken =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "setNextCashToken",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transfer"`
+ */
+export const simulatePowerTokenTransfer =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "transfer",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const simulatePowerTokenTransferFrom =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "transferFrom",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transferWithAuthorization"`
+ */
+export const simulatePowerTokenTransferWithAuthorization =
+  /* #__PURE__ */ createSimulateContract({
+    abi: powerTokenAbi,
+    functionName: "transferWithAuthorization",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__
+ */
+export const watchPowerTokenEvent = /* #__PURE__ */ createWatchContractEvent({
+  abi: powerTokenAbi,
+});
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"Approval"`
+ */
+export const watchPowerTokenApprovalEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "Approval",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"AuthorizationCanceled"`
+ */
+export const watchPowerTokenAuthorizationCanceledEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "AuthorizationCanceled",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"AuthorizationUsed"`
+ */
+export const watchPowerTokenAuthorizationUsedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "AuthorizationUsed",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"Buy"`
+ */
+export const watchPowerTokenBuyEvent = /* #__PURE__ */ createWatchContractEvent(
+  {
+    abi: powerTokenAbi,
+    eventName: "Buy",
+  }
+);
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"DelegateChanged"`
+ */
+export const watchPowerTokenDelegateChangedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "DelegateChanged",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"DelegateVotesChanged"`
+ */
+export const watchPowerTokenDelegateVotesChangedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "DelegateVotesChanged",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"NextCashTokenSet"`
+ */
+export const watchPowerTokenNextCashTokenSetEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "NextCashTokenSet",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"TargetSupplyInflated"`
+ */
+export const watchPowerTokenTargetSupplyInflatedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "TargetSupplyInflated",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"Transfer"`
+ */
+export const watchPowerTokenTransferEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "Transfer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__
+ */
+export const readRegistrar = /* #__PURE__ */ createReadContract({
+  abi: registrarAbi,
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"emergencyGovernor"`
+ */
+export const readRegistrarEmergencyGovernor =
+  /* #__PURE__ */ createReadContract({
+    abi: registrarAbi,
+    functionName: "emergencyGovernor",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"emergencyGovernorDeployer"`
+ */
+export const readRegistrarEmergencyGovernorDeployer =
+  /* #__PURE__ */ createReadContract({
+    abi: registrarAbi,
+    functionName: "emergencyGovernorDeployer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"get"`
+ */
+export const readRegistrarGet = /* #__PURE__ */ createReadContract({
+  abi: registrarAbi,
+  functionName: "get",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"listContains"`
+ */
+export const readRegistrarListContains = /* #__PURE__ */ createReadContract({
+  abi: registrarAbi,
+  functionName: "listContains",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"powerToken"`
+ */
+export const readRegistrarPowerToken = /* #__PURE__ */ createReadContract({
+  abi: registrarAbi,
+  functionName: "powerToken",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"powerTokenDeployer"`
+ */
+export const readRegistrarPowerTokenDeployer =
+  /* #__PURE__ */ createReadContract({
+    abi: registrarAbi,
+    functionName: "powerTokenDeployer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"standardGovernor"`
+ */
+export const readRegistrarStandardGovernor = /* #__PURE__ */ createReadContract(
+  {
+    abi: registrarAbi,
+    functionName: "standardGovernor",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"standardGovernorDeployer"`
+ */
+export const readRegistrarStandardGovernorDeployer =
+  /* #__PURE__ */ createReadContract({
+    abi: registrarAbi,
+    functionName: "standardGovernorDeployer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"vault"`
+ */
+export const readRegistrarVault = /* #__PURE__ */ createReadContract({
+  abi: registrarAbi,
+  functionName: "vault",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"zeroGovernor"`
+ */
+export const readRegistrarZeroGovernor = /* #__PURE__ */ createReadContract({
+  abi: registrarAbi,
+  functionName: "zeroGovernor",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"zeroToken"`
+ */
+export const readRegistrarZeroToken = /* #__PURE__ */ createReadContract({
+  abi: registrarAbi,
+  functionName: "zeroToken",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarAbi}__
+ */
+export const writeRegistrar = /* #__PURE__ */ createWriteContract({
+  abi: registrarAbi,
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"addToList"`
+ */
+export const writeRegistrarAddToList = /* #__PURE__ */ createWriteContract({
+  abi: registrarAbi,
+  functionName: "addToList",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"removeFromList"`
+ */
+export const writeRegistrarRemoveFromList = /* #__PURE__ */ createWriteContract(
+  {
+    abi: registrarAbi,
+    functionName: "removeFromList",
+  }
+);
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"setKey"`
+ */
+export const writeRegistrarSetKey = /* #__PURE__ */ createWriteContract({
+  abi: registrarAbi,
+  functionName: "setKey",
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link registrarAbi}__
+ */
+export const simulateRegistrar = /* #__PURE__ */ createSimulateContract({
+  abi: registrarAbi,
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"addToList"`
+ */
+export const simulateRegistrarAddToList =
+  /* #__PURE__ */ createSimulateContract({
+    abi: registrarAbi,
+    functionName: "addToList",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"removeFromList"`
+ */
+export const simulateRegistrarRemoveFromList =
+  /* #__PURE__ */ createSimulateContract({
+    abi: registrarAbi,
+    functionName: "removeFromList",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"setKey"`
+ */
+export const simulateRegistrarSetKey = /* #__PURE__ */ createSimulateContract({
+  abi: registrarAbi,
+  functionName: "setKey",
+});
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarAbi}__
+ */
+export const watchRegistrarEvent = /* #__PURE__ */ createWatchContractEvent({
+  abi: registrarAbi,
+});
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarAbi}__ and `eventName` set to `"AddressAddedToList"`
+ */
+export const watchRegistrarAddressAddedToListEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: registrarAbi,
+    eventName: "AddressAddedToList",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarAbi}__ and `eventName` set to `"AddressRemovedFromList"`
+ */
+export const watchRegistrarAddressRemovedFromListEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: registrarAbi,
+    eventName: "AddressRemovedFromList",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarAbi}__ and `eventName` set to `"KeySet"`
+ */
+export const watchRegistrarKeySetEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: registrarAbi,
+    eventName: "KeySet",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__
+ */
+export const readStandardGovernor = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"BALLOTS_TYPEHASH"`
+ */
+export const readStandardGovernorBallotsTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "BALLOTS_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"BALLOT_TYPEHASH"`
+ */
+export const readStandardGovernorBallotTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "BALLOT_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"CLOCK_MODE"`
+ */
+export const readStandardGovernorClockMode = /* #__PURE__ */ createReadContract(
+  {
+    abi: standardGovernorAbi,
+    functionName: "CLOCK_MODE",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"COUNTING_MODE"`
+ */
+export const readStandardGovernorCountingMode =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "COUNTING_MODE",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
+ */
+export const readStandardGovernorDomainSeparator =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "DOMAIN_SEPARATOR",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"ONE"`
+ */
+export const readStandardGovernorOne = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "ONE",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"cashToken"`
+ */
+export const readStandardGovernorCashToken = /* #__PURE__ */ createReadContract(
+  {
+    abi: standardGovernorAbi,
+    functionName: "cashToken",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"clock"`
+ */
+export const readStandardGovernorClock = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "clock",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"emergencyGovernor"`
+ */
+export const readStandardGovernorEmergencyGovernor =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "emergencyGovernor",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getBallotDigest"`
+ */
+export const readStandardGovernorGetBallotDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "getBallotDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getBallotsDigest"`
+ */
+export const readStandardGovernorGetBallotsDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "getBallotsDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getProposal"`
+ */
+export const readStandardGovernorGetProposal =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "getProposal",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getVotes"`
+ */
+export const readStandardGovernorGetVotes = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "getVotes",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"hasVoted"`
+ */
+export const readStandardGovernorHasVoted = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "hasVoted",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"hasVotedOnAllProposals"`
+ */
+export const readStandardGovernorHasVotedOnAllProposals =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "hasVotedOnAllProposals",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"hashProposal"`
+ */
+export const readStandardGovernorHashProposal =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "hashProposal",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"maxTotalZeroRewardPerActiveEpoch"`
+ */
+export const readStandardGovernorMaxTotalZeroRewardPerActiveEpoch =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "maxTotalZeroRewardPerActiveEpoch",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"name"`
+ */
+export const readStandardGovernorName = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "name",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"numberOfProposalsAt"`
+ */
+export const readStandardGovernorNumberOfProposalsAt =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "numberOfProposalsAt",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"numberOfProposalsVotedOnAt"`
+ */
+export const readStandardGovernorNumberOfProposalsVotedOnAt =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "numberOfProposalsVotedOnAt",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalDeadline"`
+ */
+export const readStandardGovernorProposalDeadline =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "proposalDeadline",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalFee"`
+ */
+export const readStandardGovernorProposalFee =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "proposalFee",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalProposer"`
+ */
+export const readStandardGovernorProposalProposer =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "proposalProposer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalSnapshot"`
+ */
+export const readStandardGovernorProposalSnapshot =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "proposalSnapshot",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalThreshold"`
+ */
+export const readStandardGovernorProposalThreshold =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "proposalThreshold",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"quorum"`
+ */
+export const readStandardGovernorQuorum = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "quorum",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"registrar"`
+ */
+export const readStandardGovernorRegistrar = /* #__PURE__ */ createReadContract(
+  {
+    abi: standardGovernorAbi,
+    functionName: "registrar",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"state"`
+ */
+export const readStandardGovernorState = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "state",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"vault"`
+ */
+export const readStandardGovernorVault = /* #__PURE__ */ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "vault",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"voteToken"`
+ */
+export const readStandardGovernorVoteToken = /* #__PURE__ */ createReadContract(
+  {
+    abi: standardGovernorAbi,
+    functionName: "voteToken",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"votingDelay"`
+ */
+export const readStandardGovernorVotingDelay =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "votingDelay",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"votingPeriod"`
+ */
+export const readStandardGovernorVotingPeriod =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "votingPeriod",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"zeroGovernor"`
+ */
+export const readStandardGovernorZeroGovernor =
+  /* #__PURE__ */ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "zeroGovernor",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"zeroToken"`
+ */
+export const readStandardGovernorZeroToken = /* #__PURE__ */ createReadContract(
+  {
+    abi: standardGovernorAbi,
+    functionName: "zeroToken",
+  }
+);
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__
+ */
+export const writeStandardGovernor = /* #__PURE__ */ createWriteContract({
+  abi: standardGovernorAbi,
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"addToList"`
+ */
+export const writeStandardGovernorAddToList =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "addToList",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVote"`
+ */
+export const writeStandardGovernorCastVote =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "castVote",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
+ */
+export const writeStandardGovernorCastVoteBySig =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "castVoteBySig",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
+ */
+export const writeStandardGovernorCastVoteWithReason =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotes"`
+ */
+export const writeStandardGovernorCastVotes =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "castVotes",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
+ */
+export const writeStandardGovernorCastVotesBySig =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "castVotesBySig",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"execute"`
+ */
+export const writeStandardGovernorExecute = /* #__PURE__ */ createWriteContract(
+  {
+    abi: standardGovernorAbi,
+    functionName: "execute",
+  }
+);
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"propose"`
+ */
+export const writeStandardGovernorPropose = /* #__PURE__ */ createWriteContract(
+  {
+    abi: standardGovernorAbi,
+    functionName: "propose",
+  }
+);
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"removeFromAndAddToList"`
+ */
+export const writeStandardGovernorRemoveFromAndAddToList =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "removeFromAndAddToList",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"removeFromList"`
+ */
+export const writeStandardGovernorRemoveFromList =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "removeFromList",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"sendProposalFeeToVault"`
+ */
+export const writeStandardGovernorSendProposalFeeToVault =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "sendProposalFeeToVault",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setCashToken"`
+ */
+export const writeStandardGovernorSetCashToken =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "setCashToken",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setKey"`
+ */
+export const writeStandardGovernorSetKey = /* #__PURE__ */ createWriteContract({
+  abi: standardGovernorAbi,
+  functionName: "setKey",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setProposalFee"`
+ */
+export const writeStandardGovernorSetProposalFee =
+  /* #__PURE__ */ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "setProposalFee",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__
+ */
+export const simulateStandardGovernor = /* #__PURE__ */ createSimulateContract({
+  abi: standardGovernorAbi,
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"addToList"`
+ */
+export const simulateStandardGovernorAddToList =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "addToList",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVote"`
+ */
+export const simulateStandardGovernorCastVote =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "castVote",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
+ */
+export const simulateStandardGovernorCastVoteBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "castVoteBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
+ */
+export const simulateStandardGovernorCastVoteWithReason =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotes"`
+ */
+export const simulateStandardGovernorCastVotes =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "castVotes",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
+ */
+export const simulateStandardGovernorCastVotesBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "castVotesBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"execute"`
+ */
+export const simulateStandardGovernorExecute =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "execute",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"propose"`
+ */
+export const simulateStandardGovernorPropose =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "propose",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"removeFromAndAddToList"`
+ */
+export const simulateStandardGovernorRemoveFromAndAddToList =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "removeFromAndAddToList",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"removeFromList"`
+ */
+export const simulateStandardGovernorRemoveFromList =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "removeFromList",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"sendProposalFeeToVault"`
+ */
+export const simulateStandardGovernorSendProposalFeeToVault =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "sendProposalFeeToVault",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setCashToken"`
+ */
+export const simulateStandardGovernorSetCashToken =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "setCashToken",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setKey"`
+ */
+export const simulateStandardGovernorSetKey =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "setKey",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setProposalFee"`
+ */
+export const simulateStandardGovernorSetProposalFee =
+  /* #__PURE__ */ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "setProposalFee",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__
+ */
+export const watchStandardGovernorEvent =
+  /* #__PURE__ */ createWatchContractEvent({ abi: standardGovernorAbi });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"CashTokenSet"`
+ */
+export const watchStandardGovernorCashTokenSetEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: standardGovernorAbi,
+    eventName: "CashTokenSet",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"HasVotedOnAllProposals"`
+ */
+export const watchStandardGovernorHasVotedOnAllProposalsEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: standardGovernorAbi,
+    eventName: "HasVotedOnAllProposals",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"ProposalCreated"`
+ */
+export const watchStandardGovernorProposalCreatedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: standardGovernorAbi,
+    eventName: "ProposalCreated",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"ProposalExecuted"`
+ */
+export const watchStandardGovernorProposalExecutedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: standardGovernorAbi,
+    eventName: "ProposalExecuted",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"ProposalFeeSentToVault"`
+ */
+export const watchStandardGovernorProposalFeeSentToVaultEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: standardGovernorAbi,
+    eventName: "ProposalFeeSentToVault",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"ProposalFeeSet"`
+ */
+export const watchStandardGovernorProposalFeeSetEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: standardGovernorAbi,
+    eventName: "ProposalFeeSet",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"VoteCast"`
+ */
+export const watchStandardGovernorVoteCastEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: standardGovernorAbi,
+    eventName: "VoteCast",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__
+ */
+export const readZeroGovernor = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"BALLOTS_TYPEHASH"`
+ */
+export const readZeroGovernorBallotsTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "BALLOTS_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"BALLOT_TYPEHASH"`
+ */
+export const readZeroGovernorBallotTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "BALLOT_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"CLOCK_MODE"`
+ */
+export const readZeroGovernorClockMode = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "CLOCK_MODE",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"COUNTING_MODE"`
+ */
+export const readZeroGovernorCountingMode = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "COUNTING_MODE",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
+ */
+export const readZeroGovernorDomainSeparator =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "DOMAIN_SEPARATOR",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"ONE"`
+ */
+export const readZeroGovernorOne = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "ONE",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"clock"`
+ */
+export const readZeroGovernorClock = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "clock",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"emergencyGovernor"`
+ */
+export const readZeroGovernorEmergencyGovernor =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "emergencyGovernor",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"emergencyGovernorDeployer"`
+ */
+export const readZeroGovernorEmergencyGovernorDeployer =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "emergencyGovernorDeployer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getBallotDigest"`
+ */
+export const readZeroGovernorGetBallotDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "getBallotDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getBallotsDigest"`
+ */
+export const readZeroGovernorGetBallotsDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "getBallotsDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getProposal"`
+ */
+export const readZeroGovernorGetProposal = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "getProposal",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getVotes"`
+ */
+export const readZeroGovernorGetVotes = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "getVotes",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"hasVoted"`
+ */
+export const readZeroGovernorHasVoted = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "hasVoted",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"hashProposal"`
+ */
+export const readZeroGovernorHashProposal = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "hashProposal",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"isAllowedCashToken"`
+ */
+export const readZeroGovernorIsAllowedCashToken =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "isAllowedCashToken",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"name"`
+ */
+export const readZeroGovernorName = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "name",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"powerTokenDeployer"`
+ */
+export const readZeroGovernorPowerTokenDeployer =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "powerTokenDeployer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalDeadline"`
+ */
+export const readZeroGovernorProposalDeadline =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "proposalDeadline",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalProposer"`
+ */
+export const readZeroGovernorProposalProposer =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "proposalProposer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalSnapshot"`
+ */
+export const readZeroGovernorProposalSnapshot =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "proposalSnapshot",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalThreshold"`
+ */
+export const readZeroGovernorProposalThreshold =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "proposalThreshold",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"quorum"`
+ */
+export const readZeroGovernorQuorum = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "quorum",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"standardGovernor"`
+ */
+export const readZeroGovernorStandardGovernor =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "standardGovernor",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"standardGovernorDeployer"`
+ */
+export const readZeroGovernorStandardGovernorDeployer =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "standardGovernorDeployer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"state"`
+ */
+export const readZeroGovernorState = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "state",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"thresholdRatio"`
+ */
+export const readZeroGovernorThresholdRatio =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "thresholdRatio",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"voteToken"`
+ */
+export const readZeroGovernorVoteToken = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "voteToken",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"votingDelay"`
+ */
+export const readZeroGovernorVotingDelay = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "votingDelay",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"votingPeriod"`
+ */
+export const readZeroGovernorVotingPeriod = /* #__PURE__ */ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "votingPeriod",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__
+ */
+export const writeZeroGovernor = /* #__PURE__ */ createWriteContract({
+  abi: zeroGovernorAbi,
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVote"`
+ */
+export const writeZeroGovernorCastVote = /* #__PURE__ */ createWriteContract({
+  abi: zeroGovernorAbi,
+  functionName: "castVote",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
+ */
+export const writeZeroGovernorCastVoteBySig =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVoteBySig",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
+ */
+export const writeZeroGovernorCastVoteWithReason =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotes"`
+ */
+export const writeZeroGovernorCastVotes = /* #__PURE__ */ createWriteContract({
+  abi: zeroGovernorAbi,
+  functionName: "castVotes",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
+ */
+export const writeZeroGovernorCastVotesBySig =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVotesBySig",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"execute"`
+ */
+export const writeZeroGovernorExecute = /* #__PURE__ */ createWriteContract({
+  abi: zeroGovernorAbi,
+  functionName: "execute",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"propose"`
+ */
+export const writeZeroGovernorPropose = /* #__PURE__ */ createWriteContract({
+  abi: zeroGovernorAbi,
+  functionName: "propose",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"resetToPowerHolders"`
+ */
+export const writeZeroGovernorResetToPowerHolders =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "resetToPowerHolders",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"resetToZeroHolders"`
+ */
+export const writeZeroGovernorResetToZeroHolders =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "resetToZeroHolders",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setCashToken"`
+ */
+export const writeZeroGovernorSetCashToken =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "setCashToken",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setEmergencyProposalThresholdRatio"`
+ */
+export const writeZeroGovernorSetEmergencyProposalThresholdRatio =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "setEmergencyProposalThresholdRatio",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setZeroProposalThresholdRatio"`
+ */
+export const writeZeroGovernorSetZeroProposalThresholdRatio =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "setZeroProposalThresholdRatio",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__
+ */
+export const simulateZeroGovernor = /* #__PURE__ */ createSimulateContract({
+  abi: zeroGovernorAbi,
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVote"`
+ */
+export const simulateZeroGovernorCastVote =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVote",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
+ */
+export const simulateZeroGovernorCastVoteBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVoteBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
+ */
+export const simulateZeroGovernorCastVoteWithReason =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotes"`
+ */
+export const simulateZeroGovernorCastVotes =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVotes",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
+ */
+export const simulateZeroGovernorCastVotesBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVotesBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"execute"`
+ */
+export const simulateZeroGovernorExecute =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "execute",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"propose"`
+ */
+export const simulateZeroGovernorPropose =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "propose",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"resetToPowerHolders"`
+ */
+export const simulateZeroGovernorResetToPowerHolders =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "resetToPowerHolders",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"resetToZeroHolders"`
+ */
+export const simulateZeroGovernorResetToZeroHolders =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "resetToZeroHolders",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setCashToken"`
+ */
+export const simulateZeroGovernorSetCashToken =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "setCashToken",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setEmergencyProposalThresholdRatio"`
+ */
+export const simulateZeroGovernorSetEmergencyProposalThresholdRatio =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "setEmergencyProposalThresholdRatio",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setZeroProposalThresholdRatio"`
+ */
+export const simulateZeroGovernorSetZeroProposalThresholdRatio =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "setZeroProposalThresholdRatio",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__
+ */
+export const watchZeroGovernorEvent = /* #__PURE__ */ createWatchContractEvent({
+  abi: zeroGovernorAbi,
+});
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"ProposalCreated"`
+ */
+export const watchZeroGovernorProposalCreatedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroGovernorAbi,
+    eventName: "ProposalCreated",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"ProposalExecuted"`
+ */
+export const watchZeroGovernorProposalExecutedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroGovernorAbi,
+    eventName: "ProposalExecuted",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"ResetExecuted"`
+ */
+export const watchZeroGovernorResetExecutedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroGovernorAbi,
+    eventName: "ResetExecuted",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"ThresholdRatioSet"`
+ */
+export const watchZeroGovernorThresholdRatioSetEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroGovernorAbi,
+    eventName: "ThresholdRatioSet",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"VoteCast"`
+ */
+export const watchZeroGovernorVoteCastEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroGovernorAbi,
+    eventName: "VoteCast",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__
+ */
+export const readZeroToken = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"CANCEL_AUTHORIZATION_TYPEHASH"`
+ */
+export const readZeroTokenCancelAuthorizationTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroTokenAbi,
+    functionName: "CANCEL_AUTHORIZATION_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"CLOCK_MODE"`
+ */
+export const readZeroTokenClockMode = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "CLOCK_MODE",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"DELEGATION_TYPEHASH"`
+ */
+export const readZeroTokenDelegationTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroTokenAbi,
+    functionName: "DELEGATION_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
+ */
+export const readZeroTokenDomainSeparator = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "DOMAIN_SEPARATOR",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"PERMIT_TYPEHASH"`
+ */
+export const readZeroTokenPermitTypehash = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "PERMIT_TYPEHASH",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"RECEIVE_WITH_AUTHORIZATION_TYPEHASH"`
+ */
+export const readZeroTokenReceiveWithAuthorizationTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroTokenAbi,
+    functionName: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"TRANSFER_WITH_AUTHORIZATION_TYPEHASH"`
+ */
+export const readZeroTokenTransferWithAuthorizationTypehash =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroTokenAbi,
+    functionName: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"allowance"`
+ */
+export const readZeroTokenAllowance = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "allowance",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"authorizationState"`
+ */
+export const readZeroTokenAuthorizationState =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroTokenAbi,
+    functionName: "authorizationState",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const readZeroTokenBalanceOf = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "balanceOf",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"clock"`
+ */
+export const readZeroTokenClock = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "clock",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"decimals"`
+ */
+export const readZeroTokenDecimals = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "decimals",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegates"`
+ */
+export const readZeroTokenDelegates = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "delegates",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"getDelegationDigest"`
+ */
+export const readZeroTokenGetDelegationDigest =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroTokenAbi,
+    functionName: "getDelegationDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"getPastVotes"`
+ */
+export const readZeroTokenGetPastVotes = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "getPastVotes",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"getVotes"`
+ */
+export const readZeroTokenGetVotes = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "getVotes",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"name"`
+ */
+export const readZeroTokenName = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "name",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"nonces"`
+ */
+export const readZeroTokenNonces = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "nonces",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastBalanceOf"`
+ */
+export const readZeroTokenPastBalanceOf = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "pastBalanceOf",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastBalancesOf"`
+ */
+export const readZeroTokenPastBalancesOf = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "pastBalancesOf",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastDelegates"`
+ */
+export const readZeroTokenPastDelegates = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "pastDelegates",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastTotalSupplies"`
+ */
+export const readZeroTokenPastTotalSupplies =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroTokenAbi,
+    functionName: "pastTotalSupplies",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastTotalSupply"`
+ */
+export const readZeroTokenPastTotalSupply = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "pastTotalSupply",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"standardGovernor"`
+ */
+export const readZeroTokenStandardGovernor = /* #__PURE__ */ createReadContract(
+  {
+    abi: zeroTokenAbi,
+    functionName: "standardGovernor",
+  }
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"standardGovernorDeployer"`
+ */
+export const readZeroTokenStandardGovernorDeployer =
+  /* #__PURE__ */ createReadContract({
+    abi: zeroTokenAbi,
+    functionName: "standardGovernorDeployer",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"symbol"`
+ */
+export const readZeroTokenSymbol = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "symbol",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"totalSupply"`
+ */
+export const readZeroTokenTotalSupply = /* #__PURE__ */ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "totalSupply",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__
+ */
+export const writeZeroToken = /* #__PURE__ */ createWriteContract({
+  abi: zeroTokenAbi,
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"approve"`
+ */
+export const writeZeroTokenApprove = /* #__PURE__ */ createWriteContract({
+  abi: zeroTokenAbi,
+  functionName: "approve",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"cancelAuthorization"`
+ */
+export const writeZeroTokenCancelAuthorization =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroTokenAbi,
+    functionName: "cancelAuthorization",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegate"`
+ */
+export const writeZeroTokenDelegate = /* #__PURE__ */ createWriteContract({
+  abi: zeroTokenAbi,
+  functionName: "delegate",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegateBySig"`
+ */
+export const writeZeroTokenDelegateBySig = /* #__PURE__ */ createWriteContract({
+  abi: zeroTokenAbi,
+  functionName: "delegateBySig",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"mint"`
+ */
+export const writeZeroTokenMint = /* #__PURE__ */ createWriteContract({
+  abi: zeroTokenAbi,
+  functionName: "mint",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"permit"`
+ */
+export const writeZeroTokenPermit = /* #__PURE__ */ createWriteContract({
+  abi: zeroTokenAbi,
+  functionName: "permit",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"receiveWithAuthorization"`
+ */
+export const writeZeroTokenReceiveWithAuthorization =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroTokenAbi,
+    functionName: "receiveWithAuthorization",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transfer"`
+ */
+export const writeZeroTokenTransfer = /* #__PURE__ */ createWriteContract({
+  abi: zeroTokenAbi,
+  functionName: "transfer",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const writeZeroTokenTransferFrom = /* #__PURE__ */ createWriteContract({
+  abi: zeroTokenAbi,
+  functionName: "transferFrom",
+});
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transferWithAuthorization"`
+ */
+export const writeZeroTokenTransferWithAuthorization =
+  /* #__PURE__ */ createWriteContract({
+    abi: zeroTokenAbi,
+    functionName: "transferWithAuthorization",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__
+ */
+export const simulateZeroToken = /* #__PURE__ */ createSimulateContract({
+  abi: zeroTokenAbi,
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"approve"`
+ */
+export const simulateZeroTokenApprove = /* #__PURE__ */ createSimulateContract({
+  abi: zeroTokenAbi,
+  functionName: "approve",
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"cancelAuthorization"`
+ */
+export const simulateZeroTokenCancelAuthorization =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroTokenAbi,
+    functionName: "cancelAuthorization",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegate"`
+ */
+export const simulateZeroTokenDelegate = /* #__PURE__ */ createSimulateContract(
+  {
+    abi: zeroTokenAbi,
+    functionName: "delegate",
+  }
+);
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegateBySig"`
+ */
+export const simulateZeroTokenDelegateBySig =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroTokenAbi,
+    functionName: "delegateBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"mint"`
+ */
+export const simulateZeroTokenMint = /* #__PURE__ */ createSimulateContract({
+  abi: zeroTokenAbi,
+  functionName: "mint",
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"permit"`
+ */
+export const simulateZeroTokenPermit = /* #__PURE__ */ createSimulateContract({
+  abi: zeroTokenAbi,
+  functionName: "permit",
+});
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"receiveWithAuthorization"`
+ */
+export const simulateZeroTokenReceiveWithAuthorization =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroTokenAbi,
+    functionName: "receiveWithAuthorization",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transfer"`
+ */
+export const simulateZeroTokenTransfer = /* #__PURE__ */ createSimulateContract(
+  {
+    abi: zeroTokenAbi,
+    functionName: "transfer",
+  }
+);
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const simulateZeroTokenTransferFrom =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroTokenAbi,
+    functionName: "transferFrom",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transferWithAuthorization"`
+ */
+export const simulateZeroTokenTransferWithAuthorization =
+  /* #__PURE__ */ createSimulateContract({
+    abi: zeroTokenAbi,
+    functionName: "transferWithAuthorization",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__
+ */
+export const watchZeroTokenEvent = /* #__PURE__ */ createWatchContractEvent({
+  abi: zeroTokenAbi,
+});
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"Approval"`
+ */
+export const watchZeroTokenApprovalEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroTokenAbi,
+    eventName: "Approval",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"AuthorizationCanceled"`
+ */
+export const watchZeroTokenAuthorizationCanceledEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroTokenAbi,
+    eventName: "AuthorizationCanceled",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"AuthorizationUsed"`
+ */
+export const watchZeroTokenAuthorizationUsedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroTokenAbi,
+    eventName: "AuthorizationUsed",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"DelegateChanged"`
+ */
+export const watchZeroTokenDelegateChangedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroTokenAbi,
+    eventName: "DelegateChanged",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"DelegateVotesChanged"`
+ */
+export const watchZeroTokenDelegateVotesChangedEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroTokenAbi,
+    eventName: "DelegateVotesChanged",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"Transfer"`
+ */
+export const watchZeroTokenTransferEvent =
+  /* #__PURE__ */ createWatchContractEvent({
+    abi: zeroTokenAbi,
+    eventName: "Transfer",
+  });

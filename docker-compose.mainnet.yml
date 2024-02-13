@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  ttg-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.ttg
+    image: m0/ttg-frontend
+    container_name: ttg-frontend
+    restart: always
+    command: ["yarn", "run", "build-start"]
+    environment:
+      - NETWORK=mainnet
+      - NODE_ENV=production
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "80:3000"
+    networks:
+      - ttg-network
+    hostname: governance.m0.local
+
+networks:
+  ttg-network:
+    name: ttg-network
+    driver: bridge

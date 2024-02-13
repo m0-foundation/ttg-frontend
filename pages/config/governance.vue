@@ -1,20 +1,28 @@
 <template>
-  <div>
-    <PageTitle>mutable governance configurations</PageTitle>
-    <LayoutPage>
-      <div v-if="!mutable || !mutable.length">
-        No mutable config data to show.
-      </div>
-      <MTable v-else :config="mutableTable" />
-    </LayoutPage>
+  <div class="px-6 lg:p-0">
+    <PageTitle>Governance Config</PageTitle>
 
-    <PageTitle>immutable governance configurations</PageTitle>
-    <LayoutPage>
-      <div v-if="!immutable || !immutable.length">
-        No immutable config data to show.
-      </div>
-      <MTable v-else :config="immutableTable" />
-    </LayoutPage>
+    <section class="flex flex-col gap-8">
+      <MSimpleTable
+        :search="true"
+        :items="mutableTableData"
+        :fields="governanceTablesHeaders"
+      >
+        <template #header-left>
+          <h2 class="gov-table-title">Changeable parameters</h2>
+        </template>
+      </MSimpleTable>
+
+      <MSimpleTable
+        :search="true"
+        :items="inmutableTableData"
+        :fields="governanceTablesHeaders"
+      >
+        <template #header-left>
+          <h2 class="gov-table-title">Non-changeable parameters</h2>
+        </template>
+      </MSimpleTable>
+    </section>
   </div>
 </template>
 
@@ -63,49 +71,28 @@ const mutable = computed(() => {
   ];
 });
 
-const mutableTable = computed(() => {
-  return {
-    columns: [
-      {
-        id: "key",
-        name: "Name",
-        sort: true,
-      },
+const governanceTablesHeaders = ref([
+  { key: "key", label: "Name", sortable: true },
+  { key: "value", label: "Value", sortable: true },
+]);
 
-      {
-        id: "value",
-        name: "Value",
-        sort: true,
-      },
-    ],
-    data: mutable.value.map((p) => ({
-      key: p.key,
-      value: p.value,
-    })),
-    search: true,
-  };
+const mutableTableData = computed(() => {
+  return mutable.value.map((p) => ({
+    key: p.key,
+    value: p.value,
+  }));
 });
 
-const immutableTable = computed(() => {
-  return {
-    columns: [
-      {
-        id: "key",
-        name: "Name",
-        sort: true,
-      },
-
-      {
-        id: "value",
-        name: "Value",
-        sort: true,
-      },
-    ],
-    data: immutable.value.map((p) => ({
-      key: p.key,
-      value: p.value,
-    })),
-    search: true,
-  };
+const inmutableTableData = computed(() => {
+  return immutable.value.map((p) => ({
+    key: p.key,
+    value: p.value,
+  }));
 });
 </script>
+
+<style>
+.gov-table-title {
+  @apply text-sm lg:text-lg text-grey-600 my-2;
+}
+</style>

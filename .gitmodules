@@ -1,4 +1,5 @@
 [submodule "modules/ttg"]
 	path = modules/spog
-	url = git@github.com:MZero-Labs/ttg.git
+	url = git@github.com:MZero-Labs/SPOG.git
 	branch = sepolia-testing
+	# branch = hardhat-testing

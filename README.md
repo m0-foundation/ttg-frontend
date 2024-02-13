@@ -24,7 +24,7 @@ Note: Run `git submodule status` on root / of this repo to find the commit hash 
 
 1. Do steps on (1.2) item
 2. then run `yarn wagmi generate`
-3. Finally, update the lib/sdk.ts file replace the import `"wagmi/actions";` to `"@wagmi/core"`
+3. Finally, update the lib/sdk.ts file replace the import `"wagmi/codegen";` to `"@wagmi/core/codegen"`
 
 Depending on contract changes this file must be also updated with correct import dependencies of contracts:
 `/wagmi.config.ts`
@@ -74,25 +74,60 @@ yarn dev
 This starts the development server on `http://localhost:3000`
 
 ### 2.2 Running with docker-compose
+You need have docker installed, the easiest way is  [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-The easiest way to run everything for development is with docker-compose. Make sure you have SSH access to the `rpc-proxy` repo as well.
+#### 2.2.1 For Development
+
+The easiest way to run everything for DEVELOPMENT is with docker-compose. Make sure you have SSH access to the `rpc-proxy` repo as well.
 
 ```bash
 ssh-add
-docker-compose up
+docker compose up
 ```
 
 To force a rebuild, use
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 This will start:
 
-- a test blockchain on port 8545
+- a test blockchain Hardhat on port 8545
 - an rpc-proxy on port 3005
-- the app on port 3000 with live reloading when files change
+- the Frontend app on port 3000 with live reloading when files change
+  
+#### 2.2.2 For Ethereum Mainnet
+
+Just need run this command 
+```bash
+docker compose -f docker-compose.mainnet.yml up
+```
+
+#### 2.2.3 For Ethereum Sepolia
+
+Just need run this command 
+```bash
+docker compose -f docker-compose.sepolia.yml up
+```
+You can access now type `https://localhost:3000` in your browser to access.
+
+### 2.3 Local URL (optinal)
+
+```bash
+nano /etc/hosts
+```
+add this line
+```bash
+127.0.0.1 governance.m0.local
+```
+or
+
+```bash
+sudo bash -c 'echo "127.0.0.1 governance.m0.local" >>  /etc/hosts'
+```
+
+Thus, just need to type `governance.m0.local` in your browser to access the governance app.
 
 ## Testing with Metamask
 
@@ -163,4 +198,4 @@ Locally preview production build:
 yarn preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Check out the NUXT [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

@@ -1,21 +1,24 @@
 <template>
-  <div>
-    <div
-      v-if="!votes || !votes.length"
-      class="flex flex-col items-center justify-center h-24 text-grey-400"
-    >
-      <span class="text-lg mb-2 opacity-50">No voting history to show.</span>
-      <span class="text-xs font-light opacity-50"
-        >Check later for updates.</span
-      >
-    </div>
-    <MTable v-else :config="votesTableConfig" />
-  </div>
+  <MSimpleTable :items="votesTableData" :fields="votesTableHeaders">
+    <template #cell(proposal)="{ item }">
+      <NuxtLink class="underline" :to="`/proposal/${item?.proposalId}`">{{
+        useParsedDescriptionTitle(item.proposal?.description).title
+      }}</NuxtLink>
+    </template>
+    <template #cell(vote)="{ value }">
+      <span class="text-grey-600">
+        <span v-if="value" class="bg-green-700 px-2 py-1">YES</span>
+        <span v-else class="bg-red-700 px-2 py-1">NO</span>
+      </span>
+    </template>
+    <template #cell(castedAt)="{ value }">
+      <span class="text-grey-600"> {{ useDate(value).toFormat("LLL") }}</span>
+    </template>
+  </MSimpleTable>
 </template>
 
 <script setup lang="ts">
-import { html } from "gridjs";
-import { MProposal, MVote } from "@/lib/api/types";
+import { MVote } from "@/lib/api/types";
 
 interface Props {
   votes: MVote[];
@@ -24,61 +27,20 @@ interface Props {
 const props = defineProps<Props>();
 const proposals = useProposalsStore();
 
-const votesTableConfig = computed(() => {
-  return {
-    columns: [
-      {
-        id: "proposalId",
-        hidden: true,
-      },
+const votesTableHeaders = [
+  { key: "proposal", label: "Proposal", sortable: true },
+  { key: "vote", label: "Vote", sortable: true },
+  { key: "castedAt", label: "Casted at", sortable: true },
+];
 
-      {
-        id: "proposal",
-        name: "Proposal",
-        sort: true,
-        formatter: (proposal: MProposal) => {
-          const { title } = useParsedDescriptionTitle(proposal.description);
-          return html(
-            `<a href="/proposal/${proposal.proposalId}/" class="underline">${title}</a>`
-          );
-        },
-      },
-
-      {
-        id: "vote",
-        name: "vote",
-        sort: true,
-        formatter: (vote: boolean) => {
-          return html(
-            vote
-              ? "<span class='bg-green-700 text-white px-2 py-1'>YES</span>"
-              : "<span class='bg-red-500 text-white px-2 py-1'>NO</span>"
-          );
-        },
-      },
-
-      {
-        id: "castedAt",
-        name: "Casted at",
-        sort: true,
-        formatter: (cell: string) => {
-          const { toFormat } = useDate(Number(cell));
-          const formatedDate = toFormat("LLL");
-          return html(
-            `<span class="text-xs text-grey-400">${formatedDate}</span>`
-          );
-        },
-      },
-    ],
-    data: props.votes.map((v: MVote) => ({
-      proposalId: v.proposalId,
-      proposal: proposals.getProposalById(v.proposalId),
-      vote: v.support,
-      weight: v.weight,
-      transactionHash: v.transactionHash,
-      castedAt: v.timestamp,
-    })),
-    search: true,
-  };
+const votesTableData = computed(() => {
+  return props.votes.map((v: MVote) => ({
+    proposalId: v.proposalId,
+    proposal: proposals.getProposalById(v.proposalId),
+    vote: v.support,
+    weight: v.weight,
+    transactionHash: v.transactionHash,
+    castedAt: v.timestamp,
+  }));
 });
 </script>

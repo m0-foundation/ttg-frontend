@@ -216,7 +216,7 @@ describe("Proposals", () => {
       const description = `Add protocol config ${key} = ${value}`;
       descriptions.push(description);
       keys.push(key);
-      values.push("900000"); // in bps
+      values.push("90000"); // in bps
 
       cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("input[data-test='title']").type(description);
@@ -346,15 +346,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(descriptions[0]);
-      cy.castYesOneOptionalProposal(descriptions[1]);
-      cy.castYesOneOptionalProposal(descriptions[2]);
-      cy.castYesOneOptionalProposal(descriptions[3]);
-      cy.castYesOneOptionalProposal(descriptions[4]);
-      cy.castYesOneOptionalProposal(descriptions[5]);
-      cy.castYesOneOptionalProposal(descriptions[6]);
-      cy.castYesOneOptionalProposal(descriptions[7]);
-      cy.castYesOneOptionalProposal(descriptions[8]);
+      cy.castYesAllEmergencyProposals();
     });
 
     it("I should be able to EXECUTE the proposal", () => {

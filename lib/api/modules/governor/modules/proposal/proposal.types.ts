@@ -30,36 +30,19 @@ export interface ProposalEventLog extends EventLog {
   voteEnd: number;
 }
 
-export interface MProposalTallies {
-  power?: {
-    yes: string;
-    no: string;
-  };
-  zero?: {
-    yes: string;
-    no: string;
-  };
-}
-
-export interface GetProposalOutput {
-  proposer: string;
-  voteStart: number;
-  voteEnd: number;
+export interface MProposalMutable {
   state: MProposalState;
-  votingType: MVotingType;
   noVotes: bigint;
   yesVotes: bigint;
 }
 
-export interface MProposal extends ProposalEventLog {
+export interface MProposal extends ProposalEventLog, MProposalMutable {
   isEmergency: boolean;
   proposalType: string;
   proposalLabel: string;
   proposalParams: any[];
   proposer: string;
   executedEvent?: ProposalEventLog;
-  state?: MProposalState;
-  tallies?: MProposalTallies;
   votingType?: MVotingType;
   epoch?: number;
   governor: Hash; // governor address where it is stored

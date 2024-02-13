@@ -1,22 +1,30 @@
 <template>
-  <div>
-    <PageTitle>M^0 Protocol Configurations</PageTitle>
-
-    <LayoutPage>
-      <div v-if="isLoading">Loading...</div>
-
-      <div v-else>
-        <div v-if="!data || !data.length">No data to show.</div>
-        <MTable v-else :config="tableConfig" />
-      </div>
-    </LayoutPage>
+  <div class="px-6 lg:p-0">
+    <MSimpleTable
+      :search="true"
+      :items="protocolTableData"
+      :fields="protocolTableHeaders"
+      :loading="isLoading"
+    >
+      <template #header-left>
+        <PageTitle>M^0 Protocol Configurations</PageTitle>
+      </template>
+    </MSimpleTable>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 
+useHead({
+  titleTemplate: "%s - Protocol configurations",
+});
+
 const apiStore = useApiClientStore();
+const protocolTableHeaders = ref([
+  { key: "key", label: "Name", sortable: true },
+  { key: "value", label: "Value", sortable: true },
+]);
 
 const fetchProtocolConfigs = async () => {
   try {
@@ -35,30 +43,10 @@ const { isLoading } = useAsyncState(fetchProtocolConfigs(), null);
 const store = useProtocolConfigsStore();
 const { configs: data } = storeToRefs(store);
 
-useHead({
-  titleTemplate: "%s - Protocol configurations",
-});
-
-const tableConfig = computed(() => {
-  return {
-    columns: [
-      {
-        id: "key",
-        name: "Name",
-        sort: true,
-      },
-
-      {
-        id: "value",
-        name: "Value",
-        sort: true,
-      },
-    ],
-    data: data.value.map((p) => ({
-      value: p.value,
-      key: p.key,
-    })),
-    search: true,
-  };
+const protocolTableData = computed(() => {
+  return data.value.map((p) => ({
+    value: p.value,
+    key: p.key,
+  }));
 });
 </script>

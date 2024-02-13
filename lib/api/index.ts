@@ -6,9 +6,9 @@ import { Governor } from "./modules/governor";
 
 import { Epoch } from "./modules/epoch";
 import {
-  zeroGovernorABI,
-  standardGovernorABI,
-  emergencyGovernorABI,
+  zeroGovernorAbi,
+  standardGovernorAbi,
+  emergencyGovernorAbi,
 } from "@/lib/sdk";
 export { MVotingTokens } from "./modules/governor/modules/voting/voting.types";
 
@@ -30,6 +30,7 @@ export class Api {
     config: IApiConfig;
   }) {
     const client = createPublicClient({
+      cacheTime: 2_000,
       transport: fallbackRpcUrl
         ? fallback([http(rpcUrl), http(fallbackRpcUrl)])
         : http(rpcUrl),
@@ -60,21 +61,21 @@ export class Api {
     this.standardGovernor = new Governor(
       governors.standardGovernor as Hash,
       this.context,
-      standardGovernorABI,
+      standardGovernorAbi,
       "Standard"
     );
 
     this.zeroGovernor = new Governor(
       governors.zeroGovernor as Hash,
       this.context,
-      zeroGovernorABI,
+      zeroGovernorAbi,
       "Zero"
     );
 
     this.emergencyGovernor = new Governor(
       governors.emergencyGovernor as Hash,
       this.context,
-      emergencyGovernorABI,
+      emergencyGovernorAbi,
       "Emergency"
     );
   }

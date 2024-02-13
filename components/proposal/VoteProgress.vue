@@ -9,7 +9,7 @@
       <div v-else-if="version === 'Emergency'">
         <VoteProgressPower
           :votes="powerVotes"
-          :threshold="props.powerThreshold"
+          :threshold="props.powerThreshold!"
           :threshold-formatted="thresholdFormattedPower"
         />
       </div>
@@ -18,7 +18,7 @@
       <div v-else-if="version === 'Zero'">
         <VoteProgressZero
           :votes="zeroVotes"
-          :threshold="props.zeroThreshold"
+          :threshold="props.zeroThreshold!"
           :threshold-formatted="thresholdFormattedZero"
         />
       </div>
@@ -27,10 +27,11 @@
 </template>
 
 <script setup lang="ts">
-import { MProposalTallies, MVotingType } from "@/lib/api/types";
+import { MVotingType } from "@/lib/api/types";
 
 interface Props {
-  tallies: MProposalTallies;
+  yesVotes: bigint;
+  noVotes: bigint;
   version: MVotingType;
   zeroThreshold?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
   powerThreshold?: number;
@@ -38,16 +39,8 @@ interface Props {
   zeroTotalSupply?: bigint;
 }
 const props = withDefaults(defineProps<Props>(), {
-  tallies: () => ({
-    power: {
-      yes: "0",
-      no: "0",
-    },
-    zero: {
-      yes: "0",
-      no: "0",
-    },
-  }),
+  yesVotes: () => 0n,
+  noVotes: () => 0n,
   version: "Standard",
   zeroThreshold: undefined,
   powerThreshold: undefined,
@@ -71,12 +64,12 @@ function parseVotesForMajority({ yes, no }: { yes: string; no: string }) {
   return {
     total,
     yes: {
-      count: yes,
+      count: yesBI,
       formatted: useNumberFormatter(yes),
       percentage: yesPercentage,
     },
     no: {
-      count: no,
+      count: noBI,
       formatted: useNumberFormatter(no),
       percentage: noPercentage,
     },
@@ -104,12 +97,12 @@ function parseVotesForQuorom(
   return {
     total,
     yes: {
-      count: yes,
+      count: yesBI,
       formatted: useNumberFormatter(yes),
       percentage: yesPercentage,
     },
     no: {
-      count: no,
+      count: noBI,
       formatted: useNumberFormatter(no),
       percentage: noPercentage, // range 0-100
     },
@@ -118,12 +111,27 @@ function parseVotesForQuorom(
 
 const powerVotes = computed(() => {
   return props.version === "Standard"
-    ? parseVotesForMajority(props.tallies.power!)
-    : parseVotesForQuorom(props.tallies.power!, props.powerTotalSupply!);
+    ? parseVotesForMajority({
+        yes: props.yesVotes.toString(),
+        no: props.noVotes.toString(),
+      })
+    : parseVotesForQuorom(
+        {
+          yes: props.yesVotes.toString(),
+          no: props.noVotes.toString(),
+        },
+        props.powerTotalSupply!
+      );
 });
 
 const zeroVotes = computed(() =>
-  parseVotesForQuorom(props.tallies.zero!, props.zeroTotalSupply!)
+  parseVotesForQuorom(
+    {
+      yes: props.yesVotes.toString(),
+      no: props.noVotes.toString(),
+    },
+    props.zeroTotalSupply!
+  )
 );
 
 const thresholdFormattedPower = computed(() =>

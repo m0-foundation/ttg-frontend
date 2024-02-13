@@ -3,7 +3,7 @@ import orderBy from "lodash/orderBy";
 
 import { MUpdateConfigEvent, MProtocolConfig } from "./protocol-configs.types";
 
-import { readRegistrar, registrarABI } from "@/lib/sdk";
+import { registrarAbi } from "@/lib/sdk";
 import {
   hexWith32BytesToString,
   hexWith32BytesToAddress,
@@ -37,7 +37,7 @@ export class ProtocolConfigs extends ApiModule {
       abi,
       data: log?.data,
       topics: log?.topics,
-    }) as MProtocolConfigDecoded;
+    }) as unknown as MProtocolConfigDecoded;
 
     if (event) {
       const block = await this.client.getBlock({
@@ -75,7 +75,7 @@ export class ProtocolConfigs extends ApiModule {
     });
 
     const decodedLogs = await Promise.all(
-      rawLogs.map((log: Log) => this.decodeProtocolConfigLog(log, registrarABI))
+      rawLogs.map((log: Log) => this.decodeProtocolConfigLog(log, registrarAbi))
     );
 
     const orderedLogs = orderBy([...decodedLogs], ["blockNumber"], ["asc"]);
@@ -96,7 +96,8 @@ export class ProtocolConfigs extends ApiModule {
   async getAllProtocolKeysAndValues(): Promise<
     Array<{ key: string; value: any }>
   > {
-    const valuesBytes = await readRegistrar({
+    const valuesBytes = await this.client.readContract({
+      abi: registrarAbi,
       address: this.config.registrar as Hash,
       functionName: "get",
       args: [this.keysInBytes32.map(stringToHexWith32Bytes)],
@@ -109,7 +110,8 @@ export class ProtocolConfigs extends ApiModule {
       }))
       .filter((obj) => obj.value !== "\x00");
 
-    const valuesAddress = await readRegistrar({
+    const valuesAddress = await this.client.readContract({
+      abi: registrarAbi,
       address: this.config.registrar as Hash,
       functionName: "get",
       args: [this.keysInAddress.map(stringToHexWith32Bytes)],

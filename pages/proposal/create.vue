@@ -7,12 +7,13 @@
         :steps="steps"
       />
     </MModal>
-    <form class="p-6" @submit.prevent="onSubmit">
+
+    <PageTitle class="px-6 lg:p-0 mb-3">Create a proposal</PageTitle>
+
+    <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
       <div v-else>
         <div v-show="!isPreview">
-          <h1>Create a proposal</h1>
-
           <div class="create-steps">
             <div class="number">[1]</div>
             <span>Define the action to be executed if proposal succeeds</span>
@@ -27,11 +28,11 @@
             />
           </div>
 
-          <div class="gap-4 flex mt-2 mb-4">
+          <div class="my-3">
             <div v-for="token in selectedProposalType?.tokens" :key="token">
               <div
                 v-if="token === MVotingTokens.Power"
-                class="p-4 bg-green-900"
+                class="p-4 bg-accent-teal"
               >
                 <div class="mb-2">
                   <p class="uppercase text-xxs">Standard Proposal</p>
@@ -62,7 +63,10 @@
                 </div>
               </div>
 
-              <div v-if="token === MVotingTokens.Zero" class="p-4 bg-green-900">
+              <div
+                v-if="token === MVotingTokens.Zero"
+                class="p-4 bg-accent-teal"
+              >
                 <div class="mb-2">
                   <p class="uppercase text-xxs">Standard Proposal</p>
                 </div>
@@ -120,7 +124,7 @@
               <div class="flex justify-between mb-2">
                 <label for="description">Description*</label>
                 <div
-                  class="text-sm text-grey-400 flex items-center gap-1 font-inter"
+                  class="text-sm text-grey-600 flex items-center gap-1 font-inter"
                 >
                   <img src="/img/icon-markdown.svg" class="h-[14px]" />
                   Markdown supported
@@ -185,7 +189,7 @@
           </div>
         </div>
       </div>
-      <p class="text-grey-400 text-xs flex justify-end font-inter">
+      <p class="text-grey-600 text-xs flex justify-end font-inter">
         You will be prompted to pay the tax for submitting the proposal.
       </p>
 
@@ -227,23 +231,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import {
-  waitForTransaction,
-  erc20ABI,
+  waitForTransactionReceipt,
   writeContract,
   readContract,
 } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters, Hash } from "viem";
+import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
+
+/* custom libs */
+import { MVotingTokens } from "@/lib/api";
 import {
-  standardGovernorABI,
-  emergencyGovernorABI,
-  zeroGovernorABI,
+  stringToHexWith32Bytes,
+  addressToHexWith32Bytes,
+} from "@/lib/api/utils";
+import { watchProposalCreated } from "@/lib/watchers";
+import {
+  standardGovernorAbi,
+  emergencyGovernorAbi,
+  zeroGovernorAbi,
 } from "@/lib/sdk";
+
+/* components */
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
 import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
 import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
@@ -252,11 +264,8 @@ import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/Input
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
 
-import { MVotingTokens } from "@/lib/api";
-import {
-  stringToHexWith32Bytes,
-  addressToHexWith32Bytes,
-} from "@/lib/api/utils";
+/* wagmi */
+const wagmiConfig = useWagmiConfig();
 
 /* control stepper */
 let steps = reactive([]);
@@ -408,7 +417,7 @@ const proposalTypes = [
     component: ProposalInputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "addToList",
   },
@@ -418,7 +427,7 @@ const proposalTypes = [
     component: ProposalInputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "removeFromList",
   },
@@ -429,7 +438,7 @@ const proposalTypes = [
     component: ProposalInputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "removeFromAndAddToList",
   },
@@ -440,7 +449,7 @@ const proposalTypes = [
     component: ProposalInputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "protocolSetKey",
   },
@@ -455,7 +464,7 @@ const proposalTypes = [
     component: InputGovernanceSetProposalFee,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
-    abi: standardGovernorABI,
+    abi: standardGovernorAbi,
     hasToPayFee: true,
   },
 
@@ -465,7 +474,7 @@ const proposalTypes = [
     component: InputGovernanceSetCashToken,
     tokens: [MVotingTokens.Zero],
     governor: spog.contracts.zeroGovernor,
-    abi: zeroGovernorABI,
+    abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
 
@@ -476,7 +485,7 @@ const proposalTypes = [
     modelValue: formData.proposalValue,
     tokens: [MVotingTokens.Zero],
     governor: spog.contracts.zeroGovernor,
-    abi: zeroGovernorABI,
+    abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
   {
@@ -485,7 +494,7 @@ const proposalTypes = [
     component: InputGovernanceSetZeroProposalThreshold,
     tokens: [MVotingTokens.Zero],
     governor: spog.contracts.zeroGovernor,
-    abi: zeroGovernorABI,
+    abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
 
@@ -504,7 +513,7 @@ const proposalTypes = [
         component: ProposalInputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyAddToList",
       },
@@ -515,7 +524,7 @@ const proposalTypes = [
         component: ProposalInputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyRemoveFromList",
       },
@@ -527,7 +536,7 @@ const proposalTypes = [
         component: ProposalInputListRemoveAddOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyRemoveFromAndAddToList",
       },
@@ -538,7 +547,7 @@ const proposalTypes = [
         component: InputGovernanceSetProposalFee,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetStandardProposalFee",
       },
@@ -549,7 +558,7 @@ const proposalTypes = [
         component: ProposalInputProtocolConfigOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
-        abi: emergencyGovernorABI,
+        abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetKey",
       },
@@ -571,7 +580,7 @@ const proposalTypes = [
         component: undefined,
         tokens: [MVotingTokens.Zero],
         governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
+        abi: zeroGovernorAbi,
         hasToPayFee: false,
         id: "resetToPowerHolders",
       },
@@ -583,7 +592,7 @@ const proposalTypes = [
         component: undefined,
         tokens: [MVotingTokens.Zero],
         governor: spog.contracts.zeroGovernor,
-        abi: zeroGovernorABI,
+        abi: zeroGovernorAbi,
         hasToPayFee: false,
         id: "resetToZeroHolders",
       },
@@ -649,24 +658,22 @@ async function onPreview() {
   }
 }
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 async function writeAllowance() {
   const account = userAccount.value;
   // It needs approval to pay for fees
-  const allowance = await readContract({
-    abi: erc20ABI,
+  const allowance = await readContract(wagmiConfig, {
+    abi: erc20Abi,
     address: spog.contracts.cashToken as Hash,
     functionName: "allowance",
     args: [account as Hash, selectedProposalType.value.governor as Hash], // address owner, address spender
     account,
   });
-  console.log({ allowance });
 
   const fee = BigInt(spog.getValues.proposalFee!);
-  if (allowance <= fee && hasToPayFee.value) {
-    const { hash } = await writeContract({
-      abi: erc20ABI,
+  console.log({ allowance, fee });
+  if (allowance < fee && hasToPayFee.value) {
+    const hash = await writeContract(wagmiConfig, {
+      abi: erc20Abi,
       address: spog.contracts.cashToken as Hash,
       functionName: "approve",
       args: [selectedProposalType.value.governor as Hash, fee], // address spender, uint256 amount
@@ -675,7 +682,7 @@ async function writeAllowance() {
 
     stepper.value.changeCurrentStep("pending");
 
-    const txReceipt = await waitForTransaction({
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
       confirmations: 1,
       hash,
     });
@@ -696,7 +703,7 @@ async function writeProposal(calldatas, formData) {
   const description = formData.description;
   const values = [0n]; // do not change
 
-  const { hash } = await writeContract({
+  const hash = await writeContract(wagmiConfig, {
     abi: selectedProposalType.value.abi,
     address: selectedProposalType.value.governor as Hash,
     functionName: "propose",
@@ -706,7 +713,7 @@ async function writeProposal(calldatas, formData) {
 
   stepper.value.changeCurrentStep("pending");
 
-  const txReceipt = await waitForTransaction({
+  const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
     confirmations: 1,
     hash,
   });
@@ -740,6 +747,7 @@ async function onSubmit() {
       {
         title: "Confirmation",
         status: "incomplete",
+        message: "Searching for the event of the transaction...",
       },
     ]);
 
@@ -754,20 +762,24 @@ async function onSubmit() {
       description: buildDescriptionPayload(),
     };
 
+    // start listening for proposal event
+    const { unwatchAll } = watchProposalCreated(
+      async (newProposals: Array<MProposal>) => {
+        console.log({ newProposals });
+
+        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        await wait(1000);
+
+        unwatchAll();
+
+        return navigateTo(`/proposal/${newProposals[0].proposalId}`);
+      }
+    );
+
     const calldatas = buildCalldatas(formDataWithLinks);
     await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
 
     stepper.value.nextStep();
-    stepper.value.changeCurrentStep("complete");
-
-    await wait(1000);
-
-    const isEmergency = selectedProposalType?.value?.isEmergency;
-    if (isEmergency) {
-      return navigateTo("/proposals/");
-    }
-
-    return navigateTo("/proposals/pending/");
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);
@@ -880,7 +892,7 @@ function onBack() {
 
 <style>
 label {
-  @apply text-grey-400 block mb-2 font-medium text-xs font-inter;
+  @apply text-grey-600 block mb-2 font-medium text-xs font-inter;
 }
 </style>
 
@@ -902,11 +914,11 @@ hr {
 }
 
 .create-steps {
-  @apply flex items-center mb-6;
+  @apply flex items-center mb-6 font-mono text-xxs lg:text-xs uppercase;
 }
 
 .create-steps .number {
-  @apply text-green-700 text-xs tracking-[8px];
+  @apply text-accent-mint text-xxs lg:text-xs tracking-[8px];
 }
 
 .disabled {

@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { Hash, formatEther } from "viem";
-import { useContractRead, useAccount } from "use-wagmi";
-import { zeroTokenABI } from "@/lib/sdk";
+import { useReadContract, useAccount } from "use-wagmi";
+import { zeroTokenAbi } from "@/lib/sdk";
 import { useSpogStore } from "@/stores/spog";
 
 export default () => {
@@ -11,21 +11,23 @@ export default () => {
 
   const totalSupply = spog.tokens.value.zero!.totalSupply!.value;
 
-  return useContractRead({
+  return useReadContract({
     address: spog.contracts.value.zeroToken as Hash,
-    abi: zeroTokenABI,
+    abi: zeroTokenAbi,
     functionName: "getVotes",
     args: [address as Ref<Hash>],
-    enabled: isConnected,
-    watch: true,
-    select: (data) => {
-      const votingPower = BigInt(data as string);
+    //     watch: true,
+    query: {
+      enabled: isConnected,
+      select: (data) => {
+        const votingPower = BigInt(data as string);
 
-      return {
-        relative: Number((votingPower * 100n * 100n) / totalSupply) / 100,
-        value: votingPower,
-        formatted: formatEther(votingPower),
-      };
+        return {
+          relative: Number((votingPower * 100n * 100n) / totalSupply) / 100,
+          value: votingPower,
+          formatted: formatEther(votingPower),
+        };
+      },
     },
   });
 };

@@ -1,12 +1,10 @@
 <template>
   <NuxtLayout name="proposals">
-    <div class="p-8">
-      <ProposalList :proposals="proposals" @on-cast="castVote">
-        <template #emptyState>
-          <ProposalListEmptyState> No Zero proposals </ProposalListEmptyState>
-        </template>
-      </ProposalList>
-    </div>
+    <ProposalList :proposals="proposals" @on-cast="castVote">
+      <template #emptyState>
+        <ProposalListEmptyState> No Zero proposals </ProposalListEmptyState>
+      </template>
+    </ProposalList>
   </NuxtLayout>
 </template>
 
@@ -16,6 +14,7 @@ import { useAccount } from "use-wagmi";
 import { writeContract } from "@wagmi/core";
 
 const proposalsStore = useProposalsStore();
+const wagmiConfig = useWagmiConfig();
 
 useHead({
   titleTemplate: "%s - Zero proposals",
@@ -33,7 +32,7 @@ async function castVote(vote: number, proposalId: string) {
   const governor = useGovernor({ proposalId });
   console.log("cast", { vote, proposalId, governor });
 
-  return writeContract({
+  return writeContract(wagmiConfig, {
     address: governor!.address as Hash,
     abi: governor!.abi as Abi,
     functionName: "castVote",

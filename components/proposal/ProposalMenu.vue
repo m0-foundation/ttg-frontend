@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="relative inline-block text-left dropdown text-white">
+  <div class="relative inline-block text-left dropdown font-inter">
     <button
       aria-haspopup="true"
       aria-expanded="true"
@@ -74,10 +74,10 @@ const props = defineProps<ProposalProps>();
 </script>
 <style>
 .menu-items {
-  @apply bg-grey-600;
+  @apply bg-grey-800;
 }
 .menu-items li a {
-  @apply px-6 py-3 block hover:bg-grey-800 whitespace-nowrap cursor-pointer;
+  @apply px-6 py-3 block text-grey-100 hover:bg-grey-600 whitespace-nowrap cursor-pointer;
 }
 
 .dropdown:focus-within .dropdown-menu {

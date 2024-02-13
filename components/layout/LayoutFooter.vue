@@ -1,8 +1,8 @@
 <template>
-  <footer class="bg-grey-900 w-full p-6 lg:px-16">
+  <footer class="w-full p-6 lg:px-16 font-inter">
     <div class="lg:flex items-center">
       <div class="lg:grow">
-        <span class="text-xs text-zinc-500"
+        <span class="text-xs text-grey-600"
           >© 2023
           <a href="/" class="hover:underline">MˆZERO Labs_</a>
         </span>
@@ -57,6 +57,6 @@ const socialLinks = [
 
 <style>
 .footer-link {
-  @apply text-xs text-zinc-500 whitespace-nowrap hover:text-grey-100;
+  @apply text-xs text-grey-600 whitespace-nowrap hover:text-grey-100;
 }
 </style>

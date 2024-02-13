@@ -23,13 +23,10 @@
 
 <script lang="ts" setup>
 import { UseWagmiPlugin } from "use-wagmi";
+import { VueQueryPlugin } from "@tanstack/vue-query";
 import { storeToRefs } from "pinia";
 import { Api } from "@/lib/api";
-import {
-  watchProposalCreated,
-  watchVoteCast,
-  watchForExecutedResetProposal,
-} from "@/lib/watchers";
+import { watchForExecutedResetProposal } from "@/lib/watchers";
 
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
@@ -48,8 +45,9 @@ async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
   const fallbackRpc = network.value.rpc.values[1];
-  const { client: wagmiClient } = useWagmi(rpc, fallbackRpc);
-  nuxtApp.vueApp.use(UseWagmiPlugin, wagmiClient);
+  const wagmiConfig = useWagmi(rpc, fallbackRpc);
+  nuxtApp.vueApp.use(UseWagmiPlugin, { config: wagmiConfig });
+  nuxtApp.vueApp.use(VueQueryPlugin);
   /* setup spog client */
   const api = new Api({
     rpcUrl: rpc,
@@ -100,8 +98,6 @@ onMounted(async () => {
     .fetchEpoch(spog.getValues.clock)
     .catch((e) => trackError(e, "fetchEpoch"));
 
-  watchProposalCreated();
-  watchVoteCast();
   watchForExecutedResetProposal();
 
   isLoading.value = false;

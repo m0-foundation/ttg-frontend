@@ -1,21 +1,20 @@
 <template>
-  <div class="mb-4">
+  <div class="mb-4 bg-transparent">
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="text-white bg-grey-800 p-8"
     >
-      <div v-if="proposal?.isEmergency" class="flex mb-3">
-        <p class="text-xxs bg-red-700 uppercase leading-3 p-1.5">
-          Emergency Proposal
-        </p>
+      <div v-if="proposal?.isEmergency" class="flex mb-4">
+        <MBadge version="error">Emergency Proposal</MBadge>
       </div>
+
       <div class="mb-4">
         <h2 class="text-2xl break-all">
           {{ title }}
         </h2>
       </div>
 
-      <div class="text-grey-400 font-inter mb-4">
+      <div class="text-grey-600 font-inter mb-4">
         {{ truncatedDescriptionText }}
       </div>
 
@@ -59,7 +58,11 @@
               :batch="proposal?.votingType === 'Standard'"
               data-test="button-cast-yes"
               :disabled="
-                isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
+                isCastVoteYesDisabled ||
+                hasVoted ||
+                isDisconnected ||
+                !canVote ||
+                isLoading
               "
               :version="
                 voteEvent && voteEvent.support === true ? 'active' : 'default'
@@ -75,7 +78,11 @@
               class="cast-vote-button"
               data-test="button-cast-no"
               :disabled="
-                isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
+                isCastVoteNoDisabled ||
+                hasVoted ||
+                isDisconnected ||
+                !canVote ||
+                isLoading
               "
               :version="
                 voteEvent && voteEvent.support === false ? 'active' : 'default'
@@ -84,15 +91,15 @@
             >
               NO
             </ProposalButtonCastVote>
-          </div>
 
-          <div class="text-xxs text-grey-400 uppercase">
-            <p v-show="!canVote" class="mt-3">Not enought voting power</p>
-            <p v-show="hasVoted" class="mt-3">Your vote has been submitted</p>
+            <div class="text-xxs text-grey-600 uppercase mx-2">
+              <p v-show="!canVote">Not enought voting power</p>
+              <p v-show="hasVoted">Your vote has been submitted</p>
+            </div>
           </div>
         </div>
 
-        <div class="uppercase text-xs text-grey-400 whitespace-nowrap">
+        <div class="uppercase text-xs text-grey-600 whitespace-nowrap">
           <div
             v-if="
               proposal?.votingType === 'Standard' ||
@@ -133,7 +140,7 @@
 
 <script setup lang="ts">
 import truncate from "lodash/truncate";
-import { useAccount, useContractRead } from "use-wagmi";
+import { useAccount, useReadContract, useBlockNumber } from "use-wagmi";
 import { Hash, Abi } from "viem";
 import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
@@ -178,6 +185,7 @@ function onExecuteProposal() {
 }
 
 function onCastSelected(vote: number) {
+  isLoading.value = true;
   if (isVoteSelected.value) {
     emit("on-uncast", props.proposal.proposalId);
     isVoteSelected.value = false;
@@ -193,15 +201,6 @@ const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
 console.log({ governor });
 
-const { data: hasVoted } = useContractRead({
-  address: governor?.value?.address as Hash,
-  abi: governor?.value?.abi as Abi,
-  functionName: "hasVoted",
-  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
-  watch: true,
-  enabled: isConnected,
-});
-
 const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
   useMVotingPower();
 
@@ -213,7 +212,7 @@ const canVote = computed(() => {
   }
 });
 
-voteEndTimestamp.value = await apiStore.client.epoch.getTimestampOfEpochStart(
+voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
   props.proposal.voteEnd
 );
 
@@ -224,6 +223,21 @@ const voteEvent = computed(() => {
   return votesStore
     .getBy("proposalId", proposalId.value)
     .value.find((v) => v.voter === userAccount.value);
+});
+
+const { data: blockNumber } = useBlockNumber({ watch: true });
+const { data: hasVoted, refetch } = useReadContract({
+  address: governor?.value?.address as Hash,
+  abi: governor?.value?.abi as Abi,
+  functionName: "hasVoted",
+  args: [BigInt(proposalId.value), userAccount as Ref<Hash>],
+  query: {
+    enabled: isConnected,
+  },
+});
+
+watch(blockNumber, () => {
+  refetch();
 });
 </script>
 

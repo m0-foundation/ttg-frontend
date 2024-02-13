@@ -1,6 +1,6 @@
 describe("Delegate", () => {
   it("Mine to Transfer period", () => {
-    cy.mineEpochs(1); // mine 1 epoch until transfer epoch to be able to delegate
+    cy.mineEpochs(2); // mine 1 epoch until transfer epoch to be able to delegate
   });
 
   it("Delegate Power tokens", () => {

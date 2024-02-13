@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="props.description"
-    class="bg-green-1000 flex flex-col gap-3 p-4 my-2"
+    class="bg-accent-teal flex flex-col gap-1 p-4 my-2"
   >
     <span class="uppercase text-xxs">Parameter description</span>
     <p class="font-inter">
@@ -9,34 +9,39 @@
     </p>
   </div>
 
-  <label for="governance-config-input">Value *</label>
+  <div class="my-3 mb-4">
+    <label for="governance-config-input">Value *</label>
 
-  <div class="flex">
-    <input
-      v-bind="$attrs"
-      v-model="value"
-      v-maska
-      :data-maska="props.maska?.mask"
-      :data-maska-tokens="props.maska?.tokens"
-      :class="{ error: hasErrors }"
-      class="input"
-    />
-    <span
-      v-if="props.decorator"
-      class="inline-flex items-center px-3 bg-secondary-dark border border-l-0 border-grey-600"
+    <div class="flex">
+      <input
+        v-bind="$attrs"
+        v-model="value"
+        v-maska
+        :data-maska="props.maska?.mask"
+        :data-maska-tokens="props.maska?.tokens"
+        :class="{ error: hasErrors }"
+        class="input"
+      />
+      <span
+        v-if="props.decorator"
+        class="inline-flex items-center px-3 bg-grey-800 border border-l-0 border-grey-700"
+      >
+        <div class="text-gray-600 font-inter">{{ props.decorator }}</div>
+      </span>
+    </div>
+
+    <div
+      v-if="props.modelValueErrors?.length"
+      class="text-red-500 text-xs my-2 h-4"
     >
-      <div class="text-gray-400 text-lg">{{ props.decorator }}</div>
-    </span>
-  </div>
+      <p v-for="error of props.modelValueErrors" :key="error.$uid">
+        {{ error.$message }}
+      </p>
+    </div>
 
-  <div class="text-red-500 text-xs my-2 h-4">
-    <p v-for="error of props.modelValueErrors" :key="error.$uid">
-      {{ error.$message }}
-    </p>
-  </div>
-
-  <div v-if="props.currentValue" class="text-xs text-grey-400 my-2">
-    Current: {{ props.currentValue }}
+    <div v-else-if="props.currentValue" class="text-xs text-grey-600 my-2">
+      Current: {{ props.currentValue }}
+    </div>
   </div>
 </template>
 

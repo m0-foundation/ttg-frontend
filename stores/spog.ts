@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { Hash } from "viem";
-import { fetchToken, FetchTokenResult } from "@wagmi/core";
 import {
   MGovernorValues,
   MEpoch,
@@ -60,17 +59,12 @@ export const useSpogStore = defineStore("spog", {
       this.epoch = epochState;
     },
     async fetchTokens() {
-      console.log("fetchTokens");
+      const api = useApiClientStore();
+
       const [cashToken, powerToken, zeroToken] = await Promise.all([
-        fetchToken({
-          address: this.contracts.cashToken as Hash,
-        }),
-        fetchToken({
-          address: this.contracts.powerToken as Hash,
-        }),
-        fetchToken({
-          address: this.contracts.zeroToken as Hash,
-        }),
+        api.getToken(this.contracts.cashToken as Hash),
+        api.getToken(this.contracts.powerToken as Hash),
+        api.getToken(this.contracts.zeroToken as Hash),
       ]);
 
       this.tokens.cash = cashToken;
