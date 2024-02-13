@@ -15,9 +15,8 @@ import pick from "lodash/pick";
 import { GovernorModule } from "../GovernorModule";
 import { GovernanceType } from "../../governor.types";
 import {
-  GetProposalOutput,
+  MProposalMutable,
   MProposal,
-  MProposalTallies,
   ProposalEventLog,
   ProposalState,
 } from "./proposal.types";
@@ -259,7 +258,7 @@ export class Proposals extends GovernorModule {
     return array.length > 0 ? array.map((v) => String(v)) : [];
   }
 
-  decodeProposalLog(log: Log, abi: Abi): MProposal {
+  decodeProposalLog(log: Log, abi: Abi): Partial<MProposal> {
     const { eventName, args } = decodeEventLog({
       abi,
       data: log?.data,
@@ -287,17 +286,17 @@ export class Proposals extends GovernorModule {
       const proposalLabel =
         ProposalLabels[proposalType as keyof typeof ProposalLabels];
 
-      const proposal: MProposal = {
+      const proposal: Partial<MProposal> = {
         isEmergency,
-        eventName,
+        eventName: String(eventName),
         blockNumber: Number(log.blockNumber),
         transactionHash: String(log.transactionHash),
         values: this.toString(event.values),
         signatures: this.toString(event.signatures!),
         calldatas: this.toString(event.calldatas),
         targets: this.toString(event.targets!),
-        voteStart: event.voteStart,
-        voteEnd: event.voteEnd,
+        voteStart: Number(event.voteStart),
+        voteEnd: Number(event.voteEnd),
         proposer: event.proposer,
         description: event.description,
         timestamp: event.timestamp,
@@ -318,17 +317,13 @@ export class Proposals extends GovernorModule {
     const [voteStart, voteEnd, state, noVotes, yesVotes, proposer] = proposal;
 
     return {
-      proposer: proposer as Hash,
-      voteStart,
-      voteEnd,
       state: ProposalState[state] as keyof typeof ProposalState,
-      votingType: this.governanceType,
       yesVotes,
       noVotes,
     };
   }
 
-  async readGetProposal(proposalId: string): Promise<GetProposalOutput> {
+  async readGetProposal(proposalId: string): Promise<MProposalMutable> {
     console.log({
       proposalId,
       contract: this.contract,
@@ -345,67 +340,28 @@ export class Proposals extends GovernorModule {
 
   async presenterProposal({
     proposal,
-    readGetProposal,
+    mutableProposal,
   }: {
-    proposal: MProposal;
-    readGetProposal: GetProposalOutput;
+    proposal: Partial<MProposal>;
+    mutableProposal: MProposalMutable;
   }): Promise<MProposal> {
     const block = await this.client.getBlock({
-      blockNumber: BigInt(proposal.blockNumber),
+      blockNumber: BigInt(proposal.blockNumber!),
     });
 
     const epoch = Epoch.getEpochFromTimestamp(Number(block.timestamp));
 
     return {
       ...proposal,
-      ...pick(readGetProposal, [
-        "proposer",
-        "voteStart",
-        "voteEnd",
-        "state",
-        "votingType",
-      ]),
+      ...pick(mutableProposal, ["yesVotes", "noVotes", "state"]),
       epoch,
+      votingType: this.governanceType,
       timestamp: Number(block.timestamp),
-      tallies:
-        readGetProposal.votingType === "Zero"
-          ? {
-              zero: {
-                yes: String(readGetProposal.yesVotes),
-                no: String(readGetProposal.noVotes),
-              },
-            }
-          : {
-              power: {
-                yes: String(readGetProposal.yesVotes),
-                no: String(readGetProposal.noVotes),
-              },
-            },
-    };
+    } as MProposal;
   }
 
-  async getProposalTallies(
-    proposalId: string
-  ): Promise<{ proposalId: string; tallies: MProposalTallies }> {
-    const readGetProposal = await this.readGetProposal(proposalId);
-
-    return {
-      proposalId,
-      tallies:
-        readGetProposal.votingType === "Zero"
-          ? {
-              zero: {
-                yes: String(readGetProposal.yesVotes),
-                no: String(readGetProposal.noVotes),
-              },
-            }
-          : {
-              power: {
-                yes: String(readGetProposal.yesVotes),
-                no: String(readGetProposal.noVotes),
-              },
-            },
-    };
+  getProposalMutableDataById(proposalId: string): Promise<MProposalMutable> {
+    return this.readGetProposal(proposalId);
   }
 
   isEmergencyProposal() {
@@ -467,7 +423,7 @@ export class Proposals extends GovernorModule {
       abi: this.abi,
       address: this.contract,
       functionName: "getProposal",
-      args: [BigInt(p.proposalId)],
+      args: [BigInt(p.proposalId!)],
     }));
 
     const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
@@ -483,19 +439,19 @@ export class Proposals extends GovernorModule {
       proposalsWithGetProposal,
     });
 
-    const proposalsWithTallies = await Promise.all(
+    const proposalsWithAllData = await Promise.all(
       proposals.map(async (proposal, index) => {
-        const proposalData = this.decodeReadGetProposal(
+        const proposalData: MProposalMutable = this.decodeReadGetProposal(
           proposalsWithGetProposal[index]
         );
 
         const proposalPresented = await this.presenterProposal({
           proposal,
-          readGetProposal: proposalData,
+          mutableProposal: proposalData,
         });
 
         const executedEvent = await this.findExecutedEvent(
-          proposal?.proposalId,
+          proposal.proposalId!,
           rawExecutedLogs
         );
 
@@ -510,7 +466,7 @@ export class Proposals extends GovernorModule {
       })
     );
 
-    return proposalsWithTallies;
+    return proposalsWithAllData as MProposal[];
   }
 
   async getProposalFromWatchLog({
@@ -532,7 +488,7 @@ export class Proposals extends GovernorModule {
     const proposalLabel =
       ProposalLabels[proposalType as keyof typeof ProposalLabels];
 
-    const proposal: MProposal = {
+    const proposal: Partial<MProposal> = {
       isEmergency,
       eventName,
       blockNumber: Number(log.blockNumber),
@@ -541,8 +497,8 @@ export class Proposals extends GovernorModule {
       signatures: this.toString(args.signatures!),
       calldatas: this.toString(args.callDatas),
       targets: this.toString(args.targets!),
-      voteStart: args.voteStart,
-      voteEnd: args.voteEnd,
+      voteStart: Number(args.voteStart),
+      voteEnd: Number(args.voteEnd),
       proposer: args.proposer,
       description: args.description,
       timestamp: 0,
@@ -553,13 +509,13 @@ export class Proposals extends GovernorModule {
       governor: this.contract,
     };
 
-    const readGetProposal = await this.readGetProposal(
-      proposal.proposalId.toString()
+    const mutableProposal = await this.readGetProposal(
+      proposal.proposalId!.toString()
     );
 
     const proposalPresented = await this.presenterProposal({
       proposal,
-      readGetProposal,
+      mutableProposal,
     });
 
     return proposalPresented;

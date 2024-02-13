@@ -58,7 +58,11 @@
               :batch="proposal?.votingType === 'Standard'"
               data-test="button-cast-yes"
               :disabled="
-                isCastVoteYesDisabled || hasVoted || isDisconnected || !canVote
+                isCastVoteYesDisabled ||
+                hasVoted ||
+                isDisconnected ||
+                !canVote ||
+                isLoading
               "
               :version="
                 voteEvent && voteEvent.support === true ? 'active' : 'default'
@@ -74,7 +78,11 @@
               class="cast-vote-button"
               data-test="button-cast-no"
               :disabled="
-                isCastVoteNoDisabled || hasVoted || isDisconnected || !canVote
+                isCastVoteNoDisabled ||
+                hasVoted ||
+                isDisconnected ||
+                !canVote ||
+                isLoading
               "
               :version="
                 voteEvent && voteEvent.support === false ? 'active' : 'default'
@@ -83,11 +91,11 @@
             >
               NO
             </ProposalButtonCastVote>
-          </div>
 
-          <div class="text-xxs text-grey-600 uppercase">
-            <p v-show="!canVote" class="mt-3">Not enought voting power</p>
-            <p v-show="hasVoted" class="mt-3">Your vote has been submitted</p>
+            <div class="text-xxs text-grey-600 uppercase mx-2">
+              <p v-show="!canVote">Not enought voting power</p>
+              <p v-show="hasVoted">Your vote has been submitted</p>
+            </div>
           </div>
         </div>
 
@@ -177,6 +185,7 @@ function onExecuteProposal() {
 }
 
 function onCastSelected(vote: number) {
+  isLoading.value = true;
   if (isVoteSelected.value) {
     emit("on-uncast", props.proposal.proposalId);
     isVoteSelected.value = false;
@@ -203,7 +212,7 @@ const canVote = computed(() => {
   }
 });
 
-voteEndTimestamp.value = await apiStore.client.epoch.getTimestampOfEpochStart(
+voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
   props.proposal.voteEnd
 );
 

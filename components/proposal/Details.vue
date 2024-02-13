@@ -29,7 +29,8 @@
       <div v-else>
         <ProposalVoteProgress
           v-if="proposal?.state !== 'Pending'"
-          :tallies="proposal?.tallies"
+          :yes-votes="proposal?.yesVotes"
+          :no-votes="proposal?.noVotes"
           :version="proposal?.votingType"
           :power-threshold="powerThreshold"
           :power-total-supply="totalSupplyAt[0]"
@@ -124,7 +125,7 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
 );
 
 votesStore.fetchAllVotes();
-proposalStore.fetchProposalTalliesById(props.proposalId);
+proposalStore.updateProposalById(props.proposalId);
 
 const { unwatchAll } = watchVoteCast();
 

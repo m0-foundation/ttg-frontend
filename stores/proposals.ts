@@ -92,15 +92,20 @@ export const useProposalsStore = defineStore("proposals", {
       this.setProposals(allProposals);
     },
 
-    async fetchProposalTalliesById(proposalId: string) {
+    async updateProposalById(proposalId: string) {
       const api = useApiClientStore();
+      const proposalStored = this.getProposalById(proposalId);
+      const client = api.getApiByGovernor(proposalStored!.votingType!);
 
-      const proposal = this.getProposalById(proposalId);
-      const client = api.getApiByGovernor(proposal!.votingType!);
-      const { tallies } = await client!.proposals!.getProposalTallies(
-        proposalId
-      );
-      this.updateProposalByKey(proposalId, "tallies", tallies);
+      const proposalMutable =
+        await client!.proposals!.getProposalMutableDataById(proposalId);
+
+      const newProposal = {
+        ...proposalStored,
+        ...proposalMutable,
+      } as MProposal;
+      console.log("newProposal", { newProposal });
+      this.update(newProposal);
     },
   },
 });

@@ -28,21 +28,15 @@
                 <div class="mt-4 flex flex-wrap flex-col items-start">
                   <button
                     v-for="cc in connectors"
-                    :key="cc.id"
+                    :key="cc.uid"
                     class="flex justify-between hover:underline border-b border-dashed border-spacing-4 my-4 w-full text-left pb-4 text-xl"
-                    :disabled="
-                      !cc.ready || isReconnecting || connector?.id === cc.id
-                    "
+                    :disabled="isReconnecting || connector?.uid === cc.uid"
                     :data-test="`modal-web3-connect-button-${cc.name}`"
                     @click="connect({ connector: cc })"
                   >
                     <div class="flex justify-between">
                       <img :src="images[cc.name]" class="mr-2" />
                       <span>{{ cc.name }}</span>
-                    </div>
-                    <div>
-                      <span v-if="!cc.ready"> (unsupported)</span>
-                      <span> > </span>
                     </div>
                   </button>
                 </div>

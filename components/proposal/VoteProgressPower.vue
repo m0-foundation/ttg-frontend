@@ -37,7 +37,7 @@
     </span>
 
     <span
-      v-show="thresholdFormatted"
+      v-if="props.threshold"
       class="text-grey-400 text-xs uppercase whitespace-nowrap ml-2"
     >
       Threshold: {{ props.threshold * 100 }}% ({{ props.thresholdFormatted }})
@@ -47,20 +47,18 @@
 
 <script setup lang="ts">
 interface Props {
-  threshold: number;
+  threshold?: number;
   thresholdFormatted?: string;
   votes: {
-    total: number;
+    total: bigint;
     yes: {
-      count: number;
+      count: bigint;
       formatted: string;
-      ratio: number;
       percentage: number;
     };
     no: {
-      count: number;
+      count: bigint;
       formatted: string;
-      ratio: number;
       percentage: number;
     };
   };
@@ -68,6 +66,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const hasVotes = computed(
-  () => props.votes?.yes?.count > 0 || props.votes?.no?.count > 0
+  () => props.votes?.yes?.count > 0n || props.votes?.no?.count > 0n
 );
 </script>
