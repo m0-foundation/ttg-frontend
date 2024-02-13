@@ -41,7 +41,7 @@
       </li>
 
       <li v-if="$config.public.auctionActive">
-        <NuxtLink to="/auction/" active-class="active">auction</NuxtLink>
+        <NuxtLink to="/auction/" active-class="active">Auction</NuxtLink>
       </li>
 
       <li>

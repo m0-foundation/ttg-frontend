@@ -780,6 +780,7 @@ async function onSubmit() {
     await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
 
     stepper.value.nextStep();
+    stepper.value.changeCurrentStep("complete");
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);

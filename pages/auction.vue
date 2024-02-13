@@ -13,7 +13,7 @@
               name="eth"
               image="/img/tokens/eth.svg"
               :size="30"
-              :amount="userCanBuy ? formatEther(purchasePrice) : 0"
+              :amount="isTransferEpoch ? purchasePrice : 0"
             />
           </div>
           <div>
@@ -26,20 +26,17 @@
             />
           </div>
         </div>
-        <div>
-          <span>{{ dataRead }}</span>
-        </div>
         <div class="mt-4">
-          <p v-if="!userCanBuy" class="text-xs text-grey-400 uppercase">
+          <p v-if="!isTransferEpoch" class="text-xs text-grey-400 uppercase">
             Rate projection
           </p>
-          <AuctionChart v-if="userCanBuy" />
+          <AuctionChart v-if="isTransferEpoch" />
           <div v-else class="h-48 lg:h-96 border-b border-grey-500"></div>
         </div>
       </div>
 
       <div
-        v-if="userCanBuy"
+        v-if="isTransferEpoch && !noPowerTokens"
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-neutral-800 p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">Amount for purchase:</p>
@@ -80,21 +77,7 @@
       </div>
 
       <div
-        v-else-if="isTransferEpoch"
-        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
-      >
-        <p class="text-gray-200 text-xs uppercase mb-2">No power tokens</p>
-        <div class="flex items-start gap-2">
-          <img src="/img/icon-info.svg" alt="" />
-          <p>
-            No power tokens available for the auction. Please, check again in
-            the next transfer epoch.
-          </p>
-        </div>
-      </div>
-
-      <div
-        v-else
+        v-else-if="!isTransferEpoch"
         class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">Auction unavailable</p>
@@ -103,6 +86,20 @@
           <p>
             The transfer epoch has concluded. You will be able to participate in
             the auction in the next transfer epoch.
+          </p>
+        </div>
+      </div>
+
+      <div
+        v-else-if="noPowerTokens"
+        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
+      >
+        <p class="text-gray-200 text-xs uppercase mb-2">No power tokens</p>
+        <div class="flex items-start gap-2">
+          <img src="/img/icon-info.svg" alt="" />
+          <p>
+            No power tokens available for the auction. Please, check again in
+            the next transfer epoch.
           </p>
         </div>
       </div>
@@ -129,22 +126,24 @@ const { address: userAccount } = useAccount();
 const spog = storeToRefs(useSpogStore());
 
 const purchaseAmount = ref();
+const purchaseCost = ref();
 const purchasePrice = ref();
 const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
 const amountLeftToAuction = ref();
 const isLoadingTransaction = ref(false);
 const { epoch } = storeToRefs(spog);
+const wagmiConfig = useWagmiConfig();
 
-const isTransferEpoch = computed(() => true);
+const isTransferEpoch = computed(
+  () => epoch.value.current?.type === "TRANSFER"
+);
 
-const userCanBuy = computed(() => {
-  return isTransferEpoch.value && Number(amountLeftToAuction.value) > 0n;
-});
+const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
 
 async function getLastEpochTotalSupply() {
   try {
-    lastEpochTotalSupply.value = await readPowerToken({
+    lastEpochTotalSupply.value = await readPowerToken(wagmiConfig, {
       address: spog.contracts.value.powerToken as Hash,
       functionName: "pastTotalSupply",
       args: [BigInt(epoch.value.current?.asNumber - 1)],
@@ -159,26 +158,33 @@ async function setMaxPossiblePurchase() {
   purchaseAmount.value = Number(amountLeftToAuction.value);
 }
 
-// function getPurchaseCost() {
-//   purchaseCost.value = getAuctionPurchaseCost(
-//     BigInt(purchaseAmount.value),
-//     epoch.value,
-//     lastEpochTotalSupply.value
-//   );
-// }
+console.log("EPOCH", epoch.value);
 
 async function getPurchaseCost(amount: bigint) {
-  if (!amount) return 0n;
   try {
-    return await readPowerToken({
-      address: spog.contracts.value.powerToken as Hash,
-      functionName: "getCost",
-      args: [amount],
-    });
+    purchaseCost.value = await getAuctionPurchaseCost(
+      amount,
+      epoch.value,
+      lastEpochTotalSupply.value
+    );
+    console.log("PURCHASE COST", purchaseCost.value);
   } catch (error) {
     console.log(error);
   }
 }
+
+// async function getPurchaseCost(amount: bigint) {
+//   if (!amount) return 0n;
+//   try {
+//     return await readPowerToken(wagmiConfig, {
+//       address: spog.contracts.value.powerToken as Hash,
+//       functionName: "getCost",
+//       args: [amount],
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 setInterval(async () => {
   purchasePrice.value = await getPurchaseCost(1n);
@@ -193,8 +199,8 @@ watch(
 
 async function getAmountLeftToAuction() {
   try {
-    amountLeftToAuction.value = await readPowerToken({
-      address: spog.contracts.value.powerToken as Hash,
+    amountLeftToAuction.value = await readPowerToken(wagmiConfig, {
+      address: spog!.contracts!.value.powerToken! as Hash,
       functionName: "amountToAuction",
     });
   } catch (error) {
@@ -206,7 +212,7 @@ async function auctionBuy() {
   if (!userAccount.value) return;
   isLoadingTransaction.value = true;
   try {
-    const { hash } = await writePowerToken({
+    const { hash } = await writePowerToken(wagmiConfig, {
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
       args: [BigInt(0), BigInt(purchaseAmount.value), userAccount.value],

@@ -33,8 +33,11 @@ describe("Auction", () => {
       cy.castYesOneProposal(description);
     });
 
+    it("I should be able to EXECUTE the proposal", () => {
+      cy.executeOneProposal(description);
+    });
+
     it("I should be able to SEE Power Tokens available on auction", () => {
-      cy.mineEpochs(1);
       cy.visit("http://localhost:3000/auction/");
       cy.get("[data-test='power-token-available']").should("exist");
     });

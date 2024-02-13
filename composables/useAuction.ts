@@ -1,8 +1,7 @@
 import { MEpoch } from "@/lib/api/modules/epoch/epoch.types";
 
-const ONE_EPOCH = 400n;
-const EPOCH_PERIOD = 108_000n;
-const AUCTION_PERIODS = 30n;
+const EPOCH_PERIOD = 1296000n;
+const AUCTION_PERIODS = 100n;
 const SECONDS_PER_BLOCK = 8n;
 
 export const getAuctionPurchaseCost = (
@@ -11,6 +10,23 @@ export const getAuctionPurchaseCost = (
   epoch: MEpoch,
   totalSupplyOfPreviousEpoch: bigint
 ) => {
+  const timeRemaining_ =
+    epoch.current.type === "VOTING"
+      ? EPOCH_PERIOD
+      : BigInt(new Date().getTime() - epoch.current.asTimestamp);
+
+  const secondsPerPeriod_ = EPOCH_PERIOD / AUCTION_PERIODS;
+  const leftPoint_ = BigInt(2) ** (timeRemaining_ / secondsPerPeriod_);
+  const remainder_ = timeRemaining_ % secondsPerPeriod_;
+
+  // NOTE: A good amount of this can be done unchecked, but not every step, so it would look messy.
+  return _divideUp(
+    amount *
+      (remainder_ * leftPoint_ +
+        (secondsPerPeriod_ - remainder_) * (leftPoint_ / BigInt(2))),
+    secondsPerPeriod_ * totalSupplyOfPreviousEpoch
+  );
+
   const blocksRemaining =
     epoch.current.type === "VOTING"
       ? EPOCH_PERIOD
@@ -30,10 +46,6 @@ export const getAuctionPurchaseCost = (
   return cost;
 };
 
-const getBlocksRemainingInEpoch = (epoch: MEpoch) => {
-  return BigInt(epoch.next.asBlockNumber - epoch.current.asBlockNumber);
-};
-
 export const getPricePoints = () => {
   const blocksPerPeriod = EPOCH_PERIOD / AUCTION_PERIODS;
 
@@ -49,3 +61,15 @@ export const getPricePoints = () => {
 };
 
 const toSeconds = (blocks: bigint) => blocks * SECONDS_PER_BLOCK;
+
+function _divideUp(x: bigint, y: bigint): bigint {
+  if (y === BigInt(0)) throw new Error("DivisionByZero");
+
+  let z = x * BigInt(1) + y;
+
+  if (z < x) throw new Error("DivideUpOverflow");
+
+  z = (z - BigInt(1)) / y;
+
+  return z;
+}
