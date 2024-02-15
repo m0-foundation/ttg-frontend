@@ -24,6 +24,10 @@ textarea {
 }
 }
 
+button {
+  @apply font-mono;
+}
+
 h1 {
   @apply text-lg lg:text-[28px]
 }

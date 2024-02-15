@@ -21,7 +21,7 @@
       <button
         id="show-details"
         type="button"
-        class="uppercase text-xs flex justify-between hover:underline border border-grey-600 w-full p-3 my-4"
+        class="uppercase text-xs flex justify-between hover:underline border border-grey-700 w-full p-3 my-4"
         data-test="proposal-button-show-details"
         @click="onViewProposal"
       >
@@ -99,7 +99,9 @@
           </div>
         </div>
 
-        <div class="uppercase text-xs text-grey-600 whitespace-nowrap">
+        <div
+          class="uppercase font-inter text-xs text-grey-600 whitespace-nowrap"
+        >
           <div
             v-if="
               proposal?.votingType === 'Standard' ||

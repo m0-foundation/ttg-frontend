@@ -1,24 +1,30 @@
 <template>
   <div data-test="technical-proposal">
-    <h1 class="font-bold font-inter">
-      Technical Proposal: {{ proposal?.proposalLabel }}
-    </h1>
-    <p class="text-xs font-inter mb-4">
+    <h3 class="text-xl">Technical Proposal</h3>
+    <p class="text-sm font-inter mb-4">
       Agree or deny the following incoming change
     </p>
-    <div class="uppercase bg-[#353835] text-[#AEAFAE] py-2 pl-6">Current</div>
-    <div
-      id="technical-proposal-current"
-      class="bg-[#0B0B0B] text-white py-2 pl-6"
-    >
-      {{ currentValue }}
+    <div v-if="currentValue">
+      <div
+        class="uppercase font-mono bg-[#353835] leading-3 text-[#AEAFAE] text-xs py-2 pl-6"
+      >
+        Current
+      </div>
+      <div
+        id="technical-proposal-current"
+        class="bg-[#0B0B0B] text-grey-100 text-sm py-2 pl-6"
+      >
+        {{ currentValue }}
+      </div>
     </div>
-    <div class="uppercase bg-[#00CC9B] text-[#0B0B0B] py-2 pl-6">
+    <div
+      class="uppercase font-mono leading-3 bg-[#00CC9B] text-[#0B0B0B] text-xs py-2 pl-6"
+    >
       Incoming Change
     </div>
     <div
       id="technical-proposal-incoming-change"
-      class="bg-[#003327] text-[#00CC9B] py-2 pl-6"
+      class="bg-[#003327] text-[#00CC9B] text-sm py-2 pl-6"
     >
       <div v-if="showParsed">
         <div v-for="(param, index) in incomingValuesParsed" :key="param">
