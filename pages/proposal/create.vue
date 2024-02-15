@@ -780,6 +780,7 @@ async function onSubmit() {
     await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
 
     stepper.value.nextStep();
+    stepper.value.changeCurrentStep("complete");
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);
@@ -831,12 +832,23 @@ function buildCalldatas(formData) {
   }
 
   if (["setKey"].includes(type)) {
+    const getValueEncoded = (inp: any) => {
+      if (["minter_rate_model", "earner_rate_model"].includes(key)) {
+        return addressToHexWith32Bytes(inp);
+      }
+
+      if (["penalty_rate", "mint_ratio"].includes(key)) {
+        return encodeAbiParameters(
+          [{ type: "uint256" }],
+          [BigInt(percentageToBasispoints(inp))]
+        );
+      }
+
+      return encodeAbiParameters([{ type: "uint256" }], [BigInt(inp)]);
+    };
+
     const key = input1;
-    const value = ["penalty_rate", "mint_ratio"].includes(key)
-      ? stringToHexWith32Bytes(String(percentageToBasispoints(input2)))
-      : ["minter_rate_model", "earner_rate_model"].includes(key)
-      ? addressToHexWith32Bytes(input2)
-      : stringToHexWith32Bytes(input2);
+    const value = getValueEncoded(input2);
 
     return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
   }
