@@ -780,6 +780,7 @@ async function onSubmit() {
     await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
 
     stepper.value.nextStep();
+    stepper.value.changeCurrentStep("complete");
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);
@@ -831,7 +832,7 @@ function buildCalldatas(formData) {
   }
 
   if (["setKey"].includes(type)) {
-    const getValueEnconded = (inp: any) => {
+    const getValueEncoded = (inp: any) => {
       if (["minter_rate_model", "earner_rate_model"].includes(key)) {
         return addressToHexWith32Bytes(inp);
       }
@@ -847,7 +848,7 @@ function buildCalldatas(formData) {
     };
 
     const key = input1;
-    const value = getValueEnconded(input2);
+    const value = getValueEncoded(input2);
 
     return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
   }
