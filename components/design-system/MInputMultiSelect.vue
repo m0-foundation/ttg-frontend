@@ -2,18 +2,20 @@
   <div ref="target" class="dropdown inline-block relative w-full font-inter">
     <button
       type="button"
-      class="bg-transparent border border-1-white py-2 px-4 inline-flex justify-between w-full items-center"
+      class="border border-grey-700 bg-grey-800 py-2 px-4 flex justify-between w-full items-center font-inter"
       @click="onOpen"
     >
-      {{ selected?.label || props.label || "Select" }}
-      <span
-        v-if="selected?.isEmergency || selected?.isReset"
-        class="text-xs bg-red-500 text-grey-100 p-1 uppercase"
-      >
-        {{ selected.isEmergency ? "Emergency" : "Reset" }} proposal
-      </span>
+      <span class="h-6">{{ selected?.label || props.label || " " }}</span>
+      <div class="flex items-center gap-3 h-full">
+        <MBadge
+          v-if="selected?.isEmergency || selected?.isReset"
+          version="error"
+          class="text-xxs"
+          >{{ selected.isEmergency ? "Emergency" : "Reset" }} proposal</MBadge
+        >
 
-      <span v-else class="text-xs text-[#5d605d]">change</span>
+        <img src="/img/icons/arrow.svg" alt="arrow icon" />
+      </div>
     </button>
     <ul
       v-show="isMenuOpen"
