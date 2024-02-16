@@ -23,7 +23,7 @@ describe("Proposals", () => {
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
         $el.click();
-        cy.get(".complete").should("have.length", 3);
+        cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
@@ -31,7 +31,7 @@ describe("Proposals", () => {
       // forward in time to be able to vote
       // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
       // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
-      cy.mineEpochs(2);
+      cy.mineEpochs(1);
 
       cy.visit("http://localhost:3000/proposals/");
 
@@ -57,6 +57,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
+      cy.mineEpochs(2);
       cy.executeOneProposal(description);
     });
 
