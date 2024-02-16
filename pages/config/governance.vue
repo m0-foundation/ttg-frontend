@@ -3,18 +3,13 @@
     <PageTitle>Governance Config</PageTitle>
 
     <section class="flex flex-col gap-8">
-      <MSimpleTable
-        :search="true"
-        :items="mutableTableData"
-        :fields="governanceTablesHeaders"
-      >
+      <MSimpleTable :items="mutableTableData" :fields="governanceTablesHeaders">
         <template #header-left>
           <h2 class="gov-table-title">Changeable parameters</h2>
         </template>
       </MSimpleTable>
 
       <MSimpleTable
-        :search="true"
         :items="inmutableTableData"
         :fields="governanceTablesHeaders"
       >
@@ -72,7 +67,7 @@ const mutable = computed(() => {
 });
 
 const governanceTablesHeaders = ref([
-  { key: "key", label: "Name", sortable: true },
+  { key: "key", label: "Name", sortable: true, expand: true },
   { key: "value", label: "Value", sortable: true },
 ]);
 
@@ -93,6 +88,6 @@ const inmutableTableData = computed(() => {
 
 <style>
 .gov-table-title {
-  @apply text-sm lg:text-lg text-grey-600 my-2;
+  @apply text-sm lg:text-xl text-grey-500 my-2;
 }
 </style>

@@ -45,7 +45,6 @@
         <input
           id="input-delegate-power"
           v-model="inputPowerDelegates"
-          placeholder="0x..."
           type="text"
           class="w-full border border-gray-600 rounded p-4 mb-4"
           data-test="delegate-power-input-address"
@@ -80,7 +79,7 @@
     >
       <div>
         <div class="flex justify-between items-center my-3">
-          <div>Value tokens</div>
+          <div>$ZERO tokens</div>
           <div class="flex gap-1 items-center">
             <MIconZero class="h-6 w-6" />
             <span
@@ -97,7 +96,6 @@
         <input
           id="input-delegate-zero"
           v-model="inputZeroDelegates"
-          placeholder="0x..."
           type="text"
           class="w-full border border-gray-600 rounded p-4 mb-4"
           data-test="delegate-zero-input-address"
