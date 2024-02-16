@@ -14,7 +14,9 @@
         </h1>
         <div class="hidden lg:block">
           <NuxtLink to="/proposals/all/">
-            <MNavButton class="text-sm underline normal-case text-grey-600">
+            <MNavButton
+              class="text-sm font-ppformula underline normal-case text-grey-600"
+            >
               All proposals
             </MNavButton>
           </NuxtLink>
