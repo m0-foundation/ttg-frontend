@@ -25,7 +25,7 @@
           </template>
         </colgroup>
         <thead
-          class="text-grey-600 text-xs font-light border-b-2 border-grey-600"
+          class="text-grey-500 text-xs font-light border-b-2 border-grey-700"
         >
           <tr>
             <th
@@ -33,13 +33,14 @@
               :key="field.key"
               class="p-3"
               :class="{
-                'cursor-pointer hover:text-grey-700': field.sortable,
+                'cursor-pointer hover:text-grey-600': field.sortable,
                 'p-2': dense,
+                'w-full': field.expand,
               }"
               @click="sort(field.key)"
             >
               <slot :name="`head(${field.key})`" :field="field">
-                <div class="flex gap-2">
+                <div class="flex gap-2" :class="`w-${field.width}`">
                   {{ field.label }}
                   <img
                     v-if="field.sortable"
@@ -99,6 +100,7 @@ interface TableField {
   hidden?: boolean;
   header?: boolean;
   sortable?: boolean;
+  expand: string;
 }
 
 interface TableItem {
