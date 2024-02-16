@@ -3,7 +3,7 @@
     <PageTitle class="mb-6">
       My Profile<template #subtitle
         ><MAddressAvatar
-          class="text-grey-600 normal-case"
+          class="text-grey-500 normal-case"
           :short-address="false"
           :address="address"
           :show-avatar="false"
@@ -21,7 +21,7 @@
       </template>
     </PageTitle>
 
-    <ProfileBalances class="mb-6" :address="address" />
+    <ProfileBalances class="mb-6 lg:px-8" :address="address" />
 
     <div v-if="hasDelegatedPower" class="p-4 bg-accent-blue my-6">
       <p class="uppercase text-xs font-mono mb-2">
@@ -50,7 +50,7 @@
     </div>
 
     <!-- tables -->
-    <ProfileTables :address="address" />
+    <ProfileTables class="lg:px-8" :address="address" />
   </div>
   <div
     v-else

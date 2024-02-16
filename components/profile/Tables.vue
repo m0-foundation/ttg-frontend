@@ -1,26 +1,26 @@
 <template>
   <div class="my-2">
     <!-- tabs -->
-    <div class="flex justify-start gap-12 my-2">
+    <div class="flex justify-start gap-12 my-3 font-ppformula">
       <button
         :class="[
-          'uppercase hover:underline ',
+          'hover:underline -tracking-wider',
           selectedTab === 0 ? 'text-white' : 'text-grey-600',
         ]"
         data-test="profile-button-voting-history"
         @click="selectedTab = 0"
       >
-        voting history
+        Voting History
       </button>
       <button
         :class="[
-          'uppercase hover:underline',
+          'hover:underline',
           selectedTab === 1 ? 'text-white' : 'text-grey-600',
         ]"
         data-test="profile-button-submitted-proposals"
         @click="selectedTab = 1"
       >
-        submitted proposals
+        Submitted Proposals
       </button>
     </div>
 

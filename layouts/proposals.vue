@@ -112,9 +112,9 @@ const nextEpochAsDate = computed(() => {
 
 <style scoped>
 .router-link-active button {
-  @apply text-white;
+  @apply text-grey-100;
 }
 .proposals-nav-button {
-  @apply text-grey-600 flex items-center gap-1 capitalize font-inter;
+  @apply text-grey-500 text-base flex items-center gap-1 capitalize font-ppformula;
 }
 </style>
