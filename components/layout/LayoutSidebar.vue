@@ -11,6 +11,7 @@
 
   <NuxtLink class="block" to="/proposal/create/">
     <MButton
+      :disabled="$route.path === '/proposal/create/'"
       class="mb-6 w-full flex justify-center"
       data-test="sidebar-button-create-proposal"
     >
@@ -141,7 +142,7 @@
     <button
       id="button-disconnect-wallet"
       type="button"
-      class="block w-full my-4 hover:underline text-left text-xs"
+      class="block w-full my-4 hover:underline text-left text-xs font-ppformula"
       data-test="sidebar-button-disconnect"
       @click="() => disconnect()"
     >
