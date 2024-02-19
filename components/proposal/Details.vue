@@ -15,11 +15,13 @@
         >Emergency Proposal</MBadge
       >
 
-      <h1 class="text-[28px] my-2 text-grey-1000 font-light leading-10">
+      <h1 class="text-[28px] my-3 text-grey-1000 font-light leading-10">
         {{ title }}
       </h1>
 
-      <div class="text-grey-400 font-light text-xs truncate w-52 lg:w-full">
+      <div
+        class="text-grey-400 my-3 font-inter text-xs truncate w-52 lg:w-full"
+      >
         Proposed by
         <u><MAddressAvatar :address="proposal?.proposer" /></u>
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
@@ -36,10 +38,11 @@
           :power-total-supply="totalSupplyAt[0]"
           :zero-threshold="zeroThreshold"
           :zero-total-supply="totalSupplyAt[1]"
+          class="font-inter"
         />
       </div>
 
-      <div class="markdown-body mb-6" v-html="onlyDescription"></div>
+      <div class="markdown-body mb-3" v-html="onlyDescription"></div>
 
       <ProposalTechnical
         :proposal="proposal"
@@ -48,7 +51,7 @@
 
       <div class="mt-8">
         <div class="text-grey-900">
-          <h2 class="text-xl">Voters</h2>
+          <h3 class="text-xl">Voters</h3>
         </div>
 
         <ProposalTableVotes :votes="votes?.value" />

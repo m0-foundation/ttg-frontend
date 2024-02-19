@@ -14,7 +14,9 @@
         </h1>
         <div class="hidden lg:block">
           <NuxtLink to="/proposals/all/">
-            <MNavButton class="text-sm underline normal-case text-grey-600">
+            <MNavButton
+              class="text-sm font-ppformula underline normal-case text-grey-600"
+            >
               All proposals
             </MNavButton>
           </NuxtLink>
@@ -110,9 +112,9 @@ const nextEpochAsDate = computed(() => {
 
 <style scoped>
 .router-link-active button {
-  @apply text-white;
+  @apply text-grey-100;
 }
 .proposals-nav-button {
-  @apply text-grey-600 flex items-center gap-1 capitalize font-inter;
+  @apply text-grey-500 text-base flex items-center gap-1 capitalize font-ppformula;
 }
 </style>

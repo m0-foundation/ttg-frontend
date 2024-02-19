@@ -22,8 +22,8 @@ const value = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const hasErrors = computed(() => props.errors?.length);
 </script>
 
-<style>
+<style scoped>
 .error {
-  @apply border border-red-500;
+  @apply border border-red-600;
 }
 </style>

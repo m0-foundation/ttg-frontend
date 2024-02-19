@@ -118,6 +118,7 @@
 }
 
 .markdown-body hr {
+  display: none;
   box-sizing: content-box;
   overflow: hidden;
   background: transparent;

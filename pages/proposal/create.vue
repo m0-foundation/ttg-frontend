@@ -19,7 +19,7 @@
             <span>Define the action to be executed if proposal succeeds</span>
           </div>
 
-          <div>
+          <div class="mb-4">
             <label for="proposal-type">Proposal type</label>
             <MInputMultiSelect
               :options="proposalTypes"
@@ -904,7 +904,7 @@ function onBack() {
 
 <style>
 label {
-  @apply text-grey-600 block mb-2 font-medium text-xs font-inter;
+  @apply text-grey-500 block mb-2 font-medium text-xs font-inter;
 }
 </style>
 
@@ -926,7 +926,7 @@ hr {
 }
 
 .create-steps {
-  @apply flex items-center mb-6 font-mono text-xxs lg:text-xs uppercase;
+  @apply flex items-center my-6 font-mono text-xxs lg:text-xs uppercase;
 }
 
 .create-steps .number {
