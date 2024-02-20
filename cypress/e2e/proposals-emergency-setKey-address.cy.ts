@@ -31,7 +31,7 @@ describe("Proposals", () => {
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
         $el.click();
-        cy.get(".complete").should("have.length", 3);
+        cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
@@ -40,16 +40,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("http://localhost:3000/proposals/succeeded");
-      cy.connectWallet();
-
-      cy.reload();
-
-      cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#button-proposal-execute").click();
-      });
-
-      cy.wait(500);
+      cy.executeOneProposal(description);
     });
 
     it("I should be able to check the executed proposal", () => {

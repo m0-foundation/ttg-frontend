@@ -19,7 +19,7 @@
             <span>Define the action to be executed if proposal succeeds</span>
           </div>
 
-          <div>
+          <div class="mb-4">
             <label for="proposal-type">Proposal type</label>
             <MInputMultiSelect
               :options="proposalTypes"
@@ -832,12 +832,23 @@ function buildCalldatas(formData) {
   }
 
   if (["setKey"].includes(type)) {
+    const getValueEncoded = (inp: any) => {
+      if (["minter_rate_model", "earner_rate_model"].includes(key)) {
+        return addressToHexWith32Bytes(inp);
+      }
+
+      if (["penalty_rate", "mint_ratio"].includes(key)) {
+        return encodeAbiParameters(
+          [{ type: "uint256" }],
+          [BigInt(percentageToBasispoints(inp))]
+        );
+      }
+
+      return encodeAbiParameters([{ type: "uint256" }], [BigInt(inp)]);
+    };
+
     const key = input1;
-    const value = ["penalty_rate", "mint_ratio"].includes(key)
-      ? stringToHexWith32Bytes(String(percentageToBasispoints(input2)))
-      : ["minter_rate_model", "earner_rate_model"].includes(key)
-      ? addressToHexWith32Bytes(input2)
-      : stringToHexWith32Bytes(input2);
+    const value = getValueEncoded(input2);
 
     return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
   }
@@ -893,7 +904,7 @@ function onBack() {
 
 <style>
 label {
-  @apply text-grey-600 block mb-2 font-medium text-xs font-inter;
+  @apply text-grey-500 block mb-2 font-medium text-xs font-inter;
 }
 </style>
 
@@ -915,7 +926,7 @@ hr {
 }
 
 .create-steps {
-  @apply flex items-center mb-6 font-mono text-xxs lg:text-xs uppercase;
+  @apply flex items-center my-6 font-mono text-xxs lg:text-xs uppercase;
 }
 
 .create-steps .number {

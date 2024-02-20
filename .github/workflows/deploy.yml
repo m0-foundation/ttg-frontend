@@ -17,3 +17,4 @@ jobs:
       packages: write
     with:
       HELM_COMPONENTS: ${{ github.event.repository.name }}
+      DEPLOY_NAMESPACE: "shared"

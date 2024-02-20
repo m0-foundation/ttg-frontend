@@ -32,7 +32,7 @@ describe("Proposals", () => {
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
         $el.click();
-        cy.get(".complete").should("have.length", 3);
+        cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
@@ -57,7 +57,7 @@ describe("Proposals", () => {
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
         $el.click();
-        cy.get(".complete").should("have.length", 3);
+        cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
@@ -82,7 +82,7 @@ describe("Proposals", () => {
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
         $el.click();
-        cy.get(".complete").should("have.length", 3);
+        cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 

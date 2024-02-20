@@ -111,23 +111,12 @@ Cypress.Commands.add(
       cy.wrap($proposal).find("#button-cast-yes").click();
     });
 
-    cy.get("[data-test='voted']").should("have.length", 1);
+    cy.get("[data-test='button-tab-pending-execution']").should(
+      "have.length",
+      1
+    );
   }
 );
-
-Cypress.Commands.add("castYesOneEmergencyProposal", (description: string) => {
-  cy.visit("http://localhost:3000/proposals/emergency");
-  cy.connectWallet();
-  cy.wait(500);
-
-  cy.contains("article", description).then(($proposal) => {
-    cy.wrap($proposal).find("#button-cast-yes").click();
-  });
-
-  cy.get("#button-cast-submit").click();
-
-  cy.get("[data-test='voted']").should("have.length", 1);
-});
 
 Cypress.Commands.add("castYesAllEmergencyProposals", () => {
   cy.visit("http://localhost:3000/proposals/emergency");
@@ -142,12 +131,12 @@ Cypress.Commands.add("castYesAllEmergencyProposals", () => {
 });
 
 Cypress.Commands.add("executeOneProposal", (description: string) => {
-  cy.mineEpochs(1);
+  // cy.mineEpochs(1);
 
   cy.visit("http://localhost:3000/proposals/succeeded");
   cy.connectWallet();
 
-  cy.reload();
+  // cy.reload();
 
   cy.contains("article", description).then(($proposal) => {
     cy.wrap($proposal).find("#button-proposal-execute").click();

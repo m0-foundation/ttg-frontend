@@ -29,13 +29,13 @@ describe("Proposals", () => {
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
         $el.click();
-        cy.get(".complete").should("have.length", 3);
+        cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.mineEpochs(2);
+      cy.mineEpochs(1);
 
       cy.visit("http://localhost:3000/proposals/");
 
@@ -56,11 +56,12 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to CAST vote YES for the proposal of Append to a list", () => {
+    it("I should be able to CAST vote YES for the proposal", () => {
       cy.castYesOneProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
+      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 
@@ -98,13 +99,13 @@ describe("Proposals", () => {
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
         $el.click();
-        cy.get(".complete").should("have.length", 3);
+        cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.mineEpochs(1);
+      cy.mineEpochs(2);
 
       cy.visit("http://localhost:3000/proposals/");
 
@@ -127,11 +128,12 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to CAST vote YES for the proposal of Append to a list", () => {
+    it("I should be able to CAST vote YES for the proposal", () => {
       cy.castYesOneProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
+      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 

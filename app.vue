@@ -7,8 +7,7 @@
       <Meta content="/open-graph.jpg" property="og:image" />
       <Meta content="/favicon.jpg" property="twitter:image" />
 
-      <Link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-      <Link href="/favicon.jpg" rel="apple-touch-icon" />
+      <Link href="/favicon.png" rel="shortcut icon" type="image/x-icon" />
     </Head>
 
     <div v-if="isLoading" class="flex h-screen">

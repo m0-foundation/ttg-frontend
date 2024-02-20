@@ -14,7 +14,9 @@
         </h1>
         <div class="hidden lg:block">
           <NuxtLink to="/proposals/all/">
-            <MNavButton class="text-sm underline normal-case text-grey-600">
+            <MNavButton
+              class="text-sm font-ppformula underline normal-case text-grey-600"
+            >
               All proposals
             </MNavButton>
           </NuxtLink>
@@ -29,7 +31,10 @@
         class="flex justify-between items-center lg:justify-start gap-6 whitespace-nowrap overflow-x-auto text-sm"
       >
         <NuxtLink to="/proposals/">
-          <MNavButton class="proposals-nav-button">
+          <MNavButton
+            class="proposals-nav-button"
+            data-test="button-tab-standard"
+          >
             <span class="capitalize">Standard</span>
           </MNavButton>
         </NuxtLink>
@@ -37,13 +42,16 @@
         <hr v-if="emergency || zero" class="border-l border-grey-600 h-4" />
 
         <NuxtLink v-if="emergency" to="/proposals/emergency/">
-          <MNavButton class="proposals-nav-button">
+          <MNavButton
+            class="proposals-nav-button"
+            data-test="button-tab-emergency"
+          >
             Emergency <MBadge version="error">{{ emergency }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
         <NuxtLink v-if="zero" to="/proposals/zero/">
-          <MNavButton class="proposals-nav-button">
+          <MNavButton class="proposals-nav-button" data-test="button-tab-zero">
             Zero <MBadge>{{ zero }}</MBadge>
           </MNavButton>
         </NuxtLink>
@@ -54,13 +62,19 @@
         />
 
         <NuxtLink v-if="pendingExecution" to="/proposals/succeeded/">
-          <MNavButton class="proposals-nav-button">
+          <MNavButton
+            class="proposals-nav-button"
+            data-test="button-tab-pending-execution"
+          >
             Pending Execution <MBadge>{{ pendingExecution }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
         <NuxtLink v-if="pending" to="/proposals/pending/">
-          <MNavButton class="proposals-nav-button">
+          <MNavButton
+            class="proposals-nav-button"
+            data-test="button-tab-scheduled"
+          >
             Scheduled <MBadge>{{ pending }}</MBadge>
           </MNavButton>
         </NuxtLink>
@@ -110,9 +124,9 @@ const nextEpochAsDate = computed(() => {
 
 <style scoped>
 .router-link-active button {
-  @apply text-white;
+  @apply text-grey-100;
 }
 .proposals-nav-button {
-  @apply text-grey-600 flex items-center gap-1 capitalize font-inter;
+  @apply text-grey-500 text-base flex items-center gap-1 capitalize font-ppformula;
 }
 </style>

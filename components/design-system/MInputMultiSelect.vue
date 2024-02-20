@@ -2,20 +2,25 @@
   <div ref="target" class="dropdown inline-block relative w-full font-inter">
     <button
       type="button"
-      class="bg-transparent border border-1-white py-2 px-4 inline-flex justify-between w-full items-center"
+      class="border border-grey-700 bg-grey-800 py-2 px-4 flex justify-between w-full items-center font-inter"
       @click="onOpen"
     >
-      {{ selected?.label || props.label || "Select" }}
-      <span
-        v-if="selected?.isEmergency || selected?.isReset"
-        class="text-xs bg-red-500 text-grey-100 p-1 uppercase"
-      >
-        {{ selected.isEmergency ? "Emergency" : "Reset" }} proposal
-      </span>
+      <span class="h-6">{{ selected?.label || props.label || " " }}</span>
+      <div class="flex items-center gap-3 h-full">
+        <MBadge
+          v-if="selected?.isEmergency || selected?.isReset"
+          version="error"
+          class="text-xxs"
+          >{{ selected.isEmergency ? "Emergency" : "Reset" }} proposal</MBadge
+        >
 
-      <span v-else class="text-xs text-[#5d605d]">change</span>
+        <img src="/img/icons/arrow.svg" alt="arrow icon" />
+      </div>
     </button>
-    <ul v-show="isMenuOpen" class="absolute z-50 pt-4 bg-grey-800">
+    <ul
+      v-show="isMenuOpen"
+      class="absolute z-50 pt-4 bg-grey-800 shadow-grey-1000 shadow-md"
+    >
       <li
         v-for="opt in options"
         :key="opt.value"
@@ -42,12 +47,12 @@
           <button
             v-else
             type="button"
-            class="flex justify-between items-center button gap-12"
+            class="flex justify-between items-center button gap-12 group"
             @click="onSelect(opt)"
           >
             <div class="flex flex-col">
               <span>{{ opt.label }}</span>
-              <span class="text-xs text-grey-600">{{
+              <span class="text-xs text-grey-600 group-hover:text-grey-100">{{
                 opt.shortDescription
               }}</span>
             </div>
@@ -164,7 +169,7 @@ onClickOutside(target, onOut);
 </script>
 <style scoped>
 .button {
-  @apply text-left w-full py-2 px-4 hover:bg-grey-600;
+  @apply font-inter text-left w-full py-2 px-4 hover:bg-grey-600;
 }
 
 .sub-button {
@@ -172,7 +177,7 @@ onClickOutside(target, onOut);
 }
 
 .sub-menu {
-  @apply bg-grey-800 absolute block text-white left-full -mt-10 w-max max-w-80;
+  @apply bg-grey-800 absolute block text-grey-100 left-full -mt-10 w-max max-w-80;
 }
 
 .fix-when-emergency {

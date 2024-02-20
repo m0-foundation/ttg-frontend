@@ -4,13 +4,13 @@
       <div class="w-8 h-8 relative hover:bg-grey-700">
         <div class="w-8 h-8 left-0 top-0 absolute"></div>
         <div
-          class="w-0.5 h-0.5 left-[10px] top-[15px] absolute bg-gray-200"
+          class="w-0.5 h-0.5 left-[10px] top-[15px] absolute bg-gray-100"
         ></div>
         <div
-          class="w-0.5 h-0.5 left-[15px] top-[15px] absolute bg-gray-200"
+          class="w-0.5 h-0.5 left-[15px] top-[15px] absolute bg-gray-100"
         ></div>
         <div
-          class="w-0.5 h-0.5 left-[20px] top-[15px] absolute bg-gray-200"
+          class="w-0.5 h-0.5 left-[20px] top-[15px] absolute bg-gray-100"
         ></div>
       </div>
     </template>
@@ -19,7 +19,7 @@
         <li>
           <a @click="copyToClipboard(token?.address)">
             <p>{{ `Copy ${token?.symbol} token address` }}</p>
-            <p class="text-grey-400 text-xxs">{{ token?.address }}</p></a
+            <p class="text-grey-500 text-xxs">{{ token?.address }}</p></a
           >
         </li>
         <li>
@@ -44,10 +44,10 @@ defineProps({
 
 <style scoped>
 .token-menu-items {
-  @apply bg-grey-600;
+  @apply bg-grey-700 shadow-sm shadow-grey-1000 font-inter;
 }
 .token-menu-items li a {
-  @apply p-6 py-4 block hover:bg-grey-800 whitespace-nowrap cursor-pointer;
+  @apply p-6 py-4 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;
 }
 
 .dropdown:focus-within .dropdown-menu {
