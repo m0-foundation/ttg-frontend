@@ -254,6 +254,7 @@ import {
   emergencyGovernorAbi,
   zeroGovernorAbi,
 } from "@/lib/sdk";
+import { wait } from "@/utils/misc";
 
 /* components */
 import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
@@ -767,7 +768,6 @@ async function onSubmit() {
       async (newProposals: Array<MProposal>) => {
         console.log({ newProposals });
 
-        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         await wait(1000);
 
         unwatchAll();

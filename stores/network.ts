@@ -5,7 +5,7 @@ export const useNetworkStore = defineStore("network", () => {
   const networkConfig: NetworkConfig = getNetworkConfig();
   console.log({ networkConfig });
 
-  const network = useLocalStorage("mzero.network", {
+  const network = ref({
     rpc: { ...networkConfig.rpc },
     contracts: { ...networkConfig.contracts },
   });

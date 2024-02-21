@@ -24,6 +24,7 @@
 import { UseWagmiPlugin } from "use-wagmi";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import { storeToRefs } from "pinia";
+import { wait } from "@/utils/misc";
 import { Api } from "@/lib/api";
 import { watchForExecutedResetProposal } from "@/lib/watchers";
 
@@ -38,12 +39,10 @@ const votes = useVotesStore();
 const { rpc } = storeToRefs(apiStore);
 const isLoading = ref(true);
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 async function onSetup(rpc: string) {
   console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
-  const fallbackRpc = network.value.rpc.values[1];
+  const fallbackRpc = network.value.rpc.values![1];
   const wagmiConfig = useWagmi(rpc, fallbackRpc);
   nuxtApp.vueApp.use(UseWagmiPlugin, { config: wagmiConfig });
   nuxtApp.vueApp.use(VueQueryPlugin);
@@ -75,29 +74,31 @@ const trackError = (error: Error, label: string) =>
   console.error(label, { error });
 
 onMounted(async () => {
-  await onSetup(rpc.value);
+  if (rpc.value) {
+    await onSetup(rpc.value!);
 
-  // this must go first
-  await spog
-    .fetchGovernorsValues()
-    .catch((e) => trackError(e, "fetchGovernorsValues"));
+    // this must go first
+    await spog
+      .fetchGovernorsValues()
+      .catch((e) => trackError(e, "fetchGovernorsValues"));
 
-  await spog.fetchTokens().catch((e) => trackError(e, "fetchTokens"));
+    await spog.fetchTokens().catch((e) => trackError(e, "fetchTokens"));
 
-  await wait(200);
+    await wait(200);
 
-  await proposalStore
-    .fetchAllProposals()
-    .catch((e) => trackError(e, "fetchAllProposals"));
+    await proposalStore
+      .fetchAllProposals()
+      .catch((e) => trackError(e, "fetchAllProposals"));
 
-  await wait(200);
+    await wait(200);
 
-  await votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes"));
-  await spog
-    .fetchEpoch(spog.getValues.clock)
-    .catch((e) => trackError(e, "fetchEpoch"));
+    await votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes"));
+    await spog
+      .fetchEpoch(spog.getValues.clock)
+      .catch((e) => trackError(e, "fetchEpoch"));
 
-  watchForExecutedResetProposal();
+    watchForExecutedResetProposal();
+  }
 
   isLoading.value = false;
 });
@@ -107,7 +108,7 @@ watch(
   rpc,
   (newRpc) => {
     console.log("rpc has changed", { newRpc });
-    onSetup(newRpc);
+    onSetup(newRpc!);
   },
   { deep: true }
 );

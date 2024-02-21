@@ -13,3 +13,6 @@ export const copyToClipboard = (text: undefined | string | number) => {
     return Promise.resolve();
   }
 };
+
+export const wait = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
