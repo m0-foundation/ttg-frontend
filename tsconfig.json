@@ -3,6 +3,11 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "types": ["cypress", "node"],
+    "paths": {
+      "@/support/*": [
+        "./cypress/support/*"
+      ]
+    },
     "verbatimModuleSyntax": false,
   },
   

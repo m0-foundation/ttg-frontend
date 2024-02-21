@@ -42,6 +42,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the proposal", () => {
+      // @todo: is this tho correct url?
       cy.visit("http://localhost:3000/proposals/zero");
 
       cy.contains(description).should("exist");

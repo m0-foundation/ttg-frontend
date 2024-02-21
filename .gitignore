@@ -11,6 +11,7 @@ sw.*
 cache/
 cypress/screenshots/
 cypress/videos/
+cypress/downloads/
 ./contracts/
 auto-imports.d.ts
 components.d.ts

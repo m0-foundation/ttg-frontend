@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+//
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -10,6 +12,27 @@
 //
 //
 // -- This is a parent command --
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      connectWallet(): Chainable;
+      delegatePower(delegate?: string): Chainable;
+      delegateZero(delegate?: string): Chainable;
+      executeProposal(proposalUrl: string): Chainable;
+      castYesOneProposal(description: string): Chainable;
+      castYesAllProposals(): Chainable;
+      castYesOneOptionalProposal(description: string, page?: string): Chainable;
+      castYesOneEmergencyProposal(description: string): Chainable;
+      castYesAllEmergencyProposals(): Chainable;
+      executeOneProposal(description: string): Chainable;
+      clickPreviewProposal(quantity: number): Chainable;
+      mineEpochs(quantity: number): Chainable;
+      createProposalAddDescription(description: string): Chainable;
+    }
+  }
+}
+
 Cypress.Commands.add("connectWallet", () => {
   cy.get("aside").then(($body) => {
     if ($body.find("#button-connect-wallet").length > 0) {
@@ -163,15 +186,4 @@ Cypress.Commands.add("createProposalAddDescription", (description: string) => {
   cy.get(".md-editor-input-wrapper").find("[role='textbox']").type(description);
 });
 
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+export {};
