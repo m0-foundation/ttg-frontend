@@ -45,6 +45,9 @@ export class Epoch {
       current: {
         asNumber: currentEpoch,
         asTimestamp: currentEpochStartAsTimestamp,
+        end: {
+          timestamp: currentEpochEndAsTimestamp,
+        },
         type: getType(currentEpoch),
       },
       next: {

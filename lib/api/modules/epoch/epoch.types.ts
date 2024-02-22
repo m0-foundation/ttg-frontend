@@ -10,6 +10,9 @@ export interface MEpoch {
     asNumber: number;
     asTimestamp: number;
     type: EpochType;
+    end: {
+      timestamp: number;
+    };
   };
   next: {
     asNumber: number;

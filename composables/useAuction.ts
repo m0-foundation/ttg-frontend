@@ -1,8 +1,8 @@
+import { storeToRefs } from "pinia";
 import { MEpoch } from "@/lib/api/modules/epoch/epoch.types";
 
 const EPOCH_PERIOD = 1296000n;
 const AUCTION_PERIODS = 100n;
-const SECONDS_PER_BLOCK = 8n;
 
 export const getAuctionPurchaseCost = (
   // Same func as "getCost" from PowerToken.sol, calculated in the frontend to save requests
@@ -26,41 +26,24 @@ export const getAuctionPurchaseCost = (
         (secondsPerPeriod_ - remainder_) * (leftPoint_ / BigInt(2))),
     secondsPerPeriod_ * totalSupplyOfPreviousEpoch
   );
-
-  const blocksRemaining =
-    epoch.current.type === "VOTING"
-      ? EPOCH_PERIOD
-      : getBlocksRemainingInEpoch(epoch);
-
-  const blocksPerPeriod = EPOCH_PERIOD / AUCTION_PERIODS;
-  const leftPoint = 1n << (blocksRemaining / blocksPerPeriod);
-  const remainder = blocksRemaining % blocksPerPeriod;
-
-  const cost =
-    (ONE_EPOCH *
-      amount *
-      (remainder * leftPoint +
-        (blocksPerPeriod - remainder) * (leftPoint >> 1n))) /
-    (blocksPerPeriod * totalSupplyOfPreviousEpoch);
-
-  return cost;
 };
 
 export const getPricePoints = () => {
-  const blocksPerPeriod = EPOCH_PERIOD / AUCTION_PERIODS;
+  const spog = useSpogStore();
+  const { epoch } = storeToRefs(spog);
+
+  const EPOCH_LENGTH =
+    epoch.value.current.end.timestamp - epoch.value.current.asTimestamp;
 
   return Array.from(Array(Number(AUCTION_PERIODS + 1n)).keys()).map((_, i) => {
-    const block = BigInt(i) * blocksPerPeriod;
+    const timeIntoEpoch = (BigInt(EPOCH_LENGTH) / AUCTION_PERIODS) * BigInt(i);
 
     return {
-      block,
-      x: new Date().getTime() + Number(toSeconds(block)),
-      y: Number(1n << (AUCTION_PERIODS - BigInt(i) - 1n)),
+      x: epoch.value.current.asTimestamp + Number(timeIntoEpoch),
+      y: 1n << (AUCTION_PERIODS - BigInt(i) - 1n),
     };
   });
 };
-
-const toSeconds = (blocks: bigint) => blocks * SECONDS_PER_BLOCK;
 
 function _divideUp(x: bigint, y: bigint): bigint {
   if (y === BigInt(0)) throw new Error("DivisionByZero");

@@ -1,19 +1,29 @@
 <template>
   <div>
-    <PageTitle>Auction</PageTitle>
+    <PageTitle class="mb-8 px-6 lg:p-0">
+      <template #default>Auction</template>
+      <template #subtitle>
+        <p class="text-grey-500 font-inter">
+          This is a Dutch auction, the chart below illustrates the price
+          decreasing over time once the auction begins.
+        </p>
+      </template>
+    </PageTitle>
 
-    <div class="grid grid-cols-3">
+    <div class="grid grid-cols-3 font-inter">
       <div
-        class="col-span-3 lg:col-span-2 order-2 lg:order-1 bg-neutral-900 p-8 py-10"
+        class="col-span-3 lg:col-span-2 order-2 lg:order-1 bg-grey-800 p-6 lg:p-8 py-10"
       >
-        <div class="flex gap-12 text-grey-400">
+        <div class="flex flex-wrap gap-8 text-grey-500">
           <div>
             <p class="mb-2 text-xxs uppercase">WETH/POWER Rate</p>
             <MTokenAmount
               name="eth"
               image="/img/tokens/eth.svg"
               :size="30"
-              :amount="isTransferEpoch ? purchasePrice : 0"
+              :amount="
+                isTransferEpoch ? formatNumber(formatEther(purchasePrice)) : 0
+              "
             />
           </div>
           <div>
@@ -26,21 +36,23 @@
             />
           </div>
         </div>
-        <div class="mt-4">
-          <p v-if="!isTransferEpoch" class="text-xs text-grey-400 uppercase">
-            Rate projection
-          </p>
-          <AuctionChart v-if="isTransferEpoch" />
-          <div v-else class="h-48 lg:h-96 border-b border-grey-500"></div>
+        <div class="mt-8 min-h-48 lg:min-h-72">
+          <p class="text-xs text-grey-500">Rate projection</p>
+          <AuctionChart :cost="cost" />
         </div>
       </div>
 
       <div
         v-if="isTransferEpoch && !noPowerTokens"
-        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-neutral-800 p-8 py-10"
+        class="col-span-3 lg:col-span-1 order-1 lg:order-2 p-6 lg:p-8 py-10 form-column"
       >
-        <p class="text-gray-200 text-xs uppercase mb-2">Amount for purchase:</p>
+        <div class="flex items-center justify-between mb-1">
+          <label for="buy-input" class="text-gray-100 text-xs"
+            >Amount for purchase:</label
+          >
+        </div>
         <MInput
+          id="buy-input"
           v-model="purchaseAmount"
           class="input"
           type="text"
@@ -48,18 +60,25 @@
           @update:model-value="getPurchaseCost(purchaseAmount)"
         />
         <button
-          class="text text-xs text-grey-400"
+          class="text text-xs text-grey-500"
           @click="setMaxPossiblePurchase"
         >
           Max: {{ amountLeftToAuction }}
         </button>
-        <div class="my-12"></div>
+
+        <div class="my-2 lg:my-12"></div>
         <p class="text-gray-200 text-xs uppercase mb-2">Total price:</p>
         <MTokenAmount
-          class="text-zinc-500"
+          class="text-grey-500"
           image="/img/tokens/eth.svg"
-          :size="36"
-          :amount="Number(purchasePrice) * Number(purchaseAmount)"
+          :size="20"
+          :amount="
+            purchasePrice && purchaseAmount
+              ? formatNumber(
+                  formatEther(BigInt(purchasePrice) * BigInt(purchaseAmount))
+                )
+              : 0
+          "
         />
         <MButton
           :disabled="!purchaseAmount || !userAccount || !userAgreeMinAmount"
@@ -78,7 +97,7 @@
 
       <div
         v-else-if="!isTransferEpoch"
-        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
+        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-accent-blue p-6 lg:p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">Auction unavailable</p>
         <div class="flex items-start gap-2">
@@ -104,14 +123,6 @@
         </div>
       </div>
     </div>
-
-    <div class="p-6 py-4">
-      <p class="text-xs">Rate projection description</p>
-      <p class="text-xs text-zinc-500">
-        This is a Dutch auction, the chart below illustrates the price
-        decreasing over time once the auction begins.
-      </p>
-    </div>
   </div>
 </template>
 
@@ -126,17 +137,20 @@ const { address: userAccount } = useAccount();
 const spog = storeToRefs(useSpogStore());
 
 const purchaseAmount = ref();
-const purchaseCost = ref();
-const purchasePrice = ref();
+const purchasePrice = ref(0n);
 const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
 const amountLeftToAuction = ref();
 const isLoadingTransaction = ref(false);
+const cost = reactive({
+  timestamp: new Date().getTime(),
+  value: 0n,
+});
 const { epoch } = storeToRefs(spog);
 const wagmiConfig = useWagmiConfig();
 
 const isTransferEpoch = computed(
-  () => epoch.value.current?.type === "TRANSFER"
+  () => spog.epoch.value.current?.type === "TRANSFER"
 );
 
 const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
@@ -158,33 +172,22 @@ async function setMaxPossiblePurchase() {
   purchaseAmount.value = Number(amountLeftToAuction.value);
 }
 
-console.log("EPOCH", epoch.value);
-
 async function getPurchaseCost(amount: bigint) {
   try {
-    purchaseCost.value = await getAuctionPurchaseCost(
-      amount,
-      epoch.value,
-      lastEpochTotalSupply.value
-    );
-    console.log("PURCHASE COST", purchaseCost.value);
+    const purchaseCost = await readPowerToken(wagmiConfig, {
+      address: spog.contracts.value.powerToken as Hash,
+      functionName: "getCost",
+      args: [amount],
+    });
+    if (purchaseCost === cost.value) return purchaseCost;
+    cost.value = purchaseCost;
+    cost.timestamp = Math.floor(new Date().getTime() / 1000);
+
+    return purchaseCost;
   } catch (error) {
     console.log(error);
   }
 }
-
-// async function getPurchaseCost(amount: bigint) {
-//   if (!amount) return 0n;
-//   try {
-//     return await readPowerToken(wagmiConfig, {
-//       address: spog.contracts.value.powerToken as Hash,
-//       functionName: "getCost",
-//       args: [amount],
-//     });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
 
 setInterval(async () => {
   purchasePrice.value = await getPurchaseCost(1n);
@@ -235,3 +238,14 @@ onMounted(() => {
   getAmountLeftToAuction();
 });
 </script>
+
+<style>
+.form-column {
+  background: linear-gradient(
+      0deg,
+      rgba(45, 59, 72, 0.2) 0%,
+      rgba(45, 59, 72, 0.2) 100%
+    ),
+    var(--Colors-Blue-grey-800, #11171d);
+}
+</style>

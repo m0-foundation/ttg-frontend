@@ -10,6 +10,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { formatEther } from "viem";
+
 const series = ref([
   {
     name: "RP",
@@ -17,177 +19,161 @@ const series = ref([
   },
 ]);
 
-const options = ref({
-  annotations: {
-    xaxis: [
-      {
-        x: +new Date() + 20000,
-        strokeDashArray: 4,
-        borderColor: "#627EEA",
-      },
-    ],
+const props = defineProps<{
+  cost: {
+    timestamp: number;
+    value: bigint;
+  };
+}>();
 
-    points: [
-      {
-        x: +new Date() + 20000,
-        y: 256,
-        marker: {
-          size: 6,
-          fillColor: "#627EEA",
+const options = computed(() => {
+  return {
+    annotations: {
+      xaxis: [
+        {
+          x: props.cost.timestamp,
+          strokeDashArray: 4,
+          borderColor: "#627EEA",
         },
-        label: {
-          borderWidth: 0,
-          text: 0.6,
-          textAnchor: "right",
-          offsetX: 20,
-          offsetY: -15,
-          style: {
-            background: "#627EEA",
-            color: "white",
-            fontSize: "14px",
-            fontFamily:
-              "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
-            padding: {
-              left: 10,
-              right: 10,
-              top: 5,
-              bottom: 5,
+      ],
+      points: [
+        {
+          x: props.cost.timestamp,
+          y: Number(props.cost.value),
+          marker: {
+            size: 6,
+            fillColor: "#627EEA",
+          },
+          label: {
+            borderWidth: 0,
+            text: formatNumber(formatEther(props.cost.value)),
+            offsetX: 20,
+            offsetY: -15,
+            style: {
+              background: "#627EEA",
+              color: "white",
+              fontSize: "14px",
+              fontFamily:
+                "Inter, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
+              padding: {
+                left: 10,
+                right: 10,
+                top: 5,
+                bottom: 5,
+              },
             },
           },
         },
-      },
-      {
-        x: +new Date() + 20000,
-        y: 0,
-        marker: {
-          size: 6,
-          fillColor: "#627EEA",
-        },
-        label: {
-          borderWidth: 0,
-          text: "TODAY",
-          textAnchor: "bottom",
-          offsetX: 0,
-          offsetY: 50,
-          style: {
-            background: "transparent",
-            color: "#868886",
-            fontSize: "12px",
-            fontFamily:
-              "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
+        {
+          x: props.cost.timestamp,
+          y: Number(props.cost.value),
+          marker: {
+            size: 6,
+            fillColor: "#627EEA",
           },
-        },
-      },
-    ],
-  },
-  chart: {
-    type: "line",
-    toolbar: {
-      show: true,
-      tools: {
-        download: false,
-        selection: false,
-        zoom: false,
-      },
-    },
-  },
-  fill: {
-    type: "gradient",
-    gradient: {
-      type: "vertical",
-      shadeIntensity: 1,
-      opacityFrom: 0.7,
-      opacityTo: 0.9,
-      colorStops: [
-        {
-          offset: 20,
-          color: "#2B2D2A",
-          opacity: 1,
-        },
-        {
-          offset: 55,
-          color: "#627EEA",
-          opacity: 1,
+          label: {
+            borderWidth: 0,
+            text: "NOW",
+            textAnchor: "bottom",
+            offsetX: -11,
+            offsetY: 50,
+            style: {
+              background: "transparent",
+              fontSize: "10px",
+              color: "#728DA5",
+              fontFamily:
+                "Inter, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
+            },
+          },
         },
       ],
     },
-  },
-  grid: {
-    show: false,
-  },
-  labels: ["0", "Today", "Today", "asd"],
-  stroke: {
-    width: 2,
-  },
-  theme: {
-    mode: "light",
-  },
-  title: {
-    text: "RATE PROJECTION",
-    align: "left",
-    margin: 10,
-    offsetX: -10,
-    style: {
-      fontSize: "12px",
-      fontFamily:
-        "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
-      color: "#868886",
-      fontWeight: "regular",
-    },
-  },
-  tooltip: {
-    enabled: false,
-    x: {
-      show: false,
-    },
-    y: {
-      formatter: undefined,
-      title: {
-        formatter: (seriesName) => "",
+    chart: {
+      type: "line",
+      toolbar: {
+        show: true,
+        tools: {
+          download: false,
+          selection: false,
+        },
       },
     },
-    marker: {
+    fill: {
+      type: "gradient",
+      gradient: {
+        type: "vertical",
+        shadeIntensity: 1,
+        opacityFrom: 0.7,
+        opacityTo: 0.9,
+        colorStops: [
+          {
+            offset: 20,
+            color: "#2B2D2A",
+            opacity: 1,
+          },
+          {
+            offset: 55,
+            color: "#627EEA",
+            opacity: 1,
+          },
+        ],
+      },
+    },
+    grid: {
       show: false,
     },
+    labels: ["0", "Today"],
+    stroke: {
+      width: 2,
+    },
+    theme: {
+      mode: "light",
+    },
+    tooltip: {
+      x: {
+        show: false,
+      },
 
-    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-      return (
-        '<div class="bg-gray-600 px-2 py-1">' +
-        "<span>" +
-        series[seriesIndex][dataPointIndex] +
-        "</span>" +
-        "</div>"
-      );
+      marker: {
+        show: false,
+      },
+
+      custom: function ({ series, seriesIndex, dataPointIndex }) {
+        return (
+          "<div class='bg-[#627EEA] font-inter px-2 py-1'>" +
+          "<span>" +
+          formatNumber(
+            formatEther(BigInt(series[seriesIndex][dataPointIndex]))
+          ) +
+          "</span>" +
+          "</div>"
+        );
+      },
     },
-    style: {
-      fontSize: "12px",
-      fontFamily:
-        "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
+    xaxis: {
+      axisBorder: {
+        show: true,
+        color: "#5E605D",
+        height: 1,
+        width: "100%",
+        offsetX: 0,
+        offsetY: 0,
+      },
+      axisTicks: {
+        show: false,
+      },
+      labels: {
+        show: true,
+      },
     },
-  },
-  xaxis: {
-    axisBorder: {
-      show: true,
-      color: "#5E605D",
-      height: 1,
-      width: "100%",
-      offsetX: 0,
-      offsetY: 0,
-    },
-    axisTicks: {
+    yaxis: {
       show: false,
+      showAlways: false,
+      labels: {
+        show: false,
+      },
     },
-    labels: {
-      show: true,
-    },
-  },
-  yaxis: {
-    show: false,
-    showAlways: false,
-    labels: {
-      show: false,
-    },
-  },
+  };
 });
 </script>
 
