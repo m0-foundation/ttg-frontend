@@ -78,9 +78,9 @@
 
     <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
       <p class="text-xs mb-4 text-grey-600">Current voting power</p>
-      <div class="flex justify-between">
-        <div class="flex">
-          <MIconPower class="h-6 w-6" />
+      <div class="flex gap-2 justify-between">
+        <div class="flex gap-2">
+          <MIconPower class="h-5 w-5" />
           <div class="flex flex-col">
             <span
               >{{
@@ -93,8 +93,8 @@
           </div>
         </div>
 
-        <div class="flex">
-          <MIconZero class="h-6 w-6" />
+        <div class="flex gap-2">
+          <MIconZero class="h-5 w-5" />
           <div class="flex flex-col">
             <span
               >{{
