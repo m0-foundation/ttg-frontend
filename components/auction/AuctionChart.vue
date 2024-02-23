@@ -2,7 +2,7 @@
   <div>
     <apexchart
       :key="series"
-      height="350"
+      :height="height || 350"
       width="100%"
       :options="options"
       :series="series"
@@ -12,6 +12,8 @@
 <script setup lang="ts">
 import { formatEther } from "viem";
 
+const { currentCost, getPricePoints } = useAuction();
+
 const series = ref([
   {
     name: "RP",
@@ -20,10 +22,8 @@ const series = ref([
 ]);
 
 const props = defineProps<{
-  cost: {
-    timestamp: number;
-    value: bigint;
-  };
+  showOptions?: boolean;
+  height?: number;
 }>();
 
 const options = computed(() => {
@@ -31,22 +31,24 @@ const options = computed(() => {
     annotations: {
       xaxis: [
         {
-          x: props.cost.timestamp,
+          show: props.showOptions,
+          x: currentCost.value.timestamp,
           strokeDashArray: 4,
           borderColor: "#627EEA",
         },
       ],
       points: [
         {
-          x: props.cost.timestamp,
-          y: Number(props.cost.value),
+          show: props.showOptions,
+          x: currentCost.value.timestamp,
+          y: Number(currentCost?.value.value),
           marker: {
             size: 6,
             fillColor: "#627EEA",
           },
           label: {
             borderWidth: 0,
-            text: formatNumber(formatEther(props.cost.value)),
+            text: formatNumber(formatEther(currentCost.value.value || 0n)),
             offsetX: 20,
             offsetY: -15,
             style: {
@@ -65,8 +67,9 @@ const options = computed(() => {
           },
         },
         {
-          x: props.cost.timestamp,
-          y: Number(props.cost.value),
+          show: props.showOptions,
+          x: currentCost.value.timestamp,
+          y: Number(currentCost.value.value),
           marker: {
             size: 6,
             fillColor: "#627EEA",
@@ -91,7 +94,7 @@ const options = computed(() => {
     chart: {
       type: "line",
       toolbar: {
-        show: true,
+        show: props.showOptions,
         tools: {
           download: false,
           selection: false,
@@ -130,6 +133,9 @@ const options = computed(() => {
       mode: "light",
     },
     tooltip: {
+      y: {
+        show: props.showOptions,
+      },
       x: {
         show: false,
       },
@@ -163,7 +169,7 @@ const options = computed(() => {
         show: false,
       },
       labels: {
-        show: true,
+        show: props.showOptions,
       },
     },
     yaxis: {

@@ -22,7 +22,9 @@
               image="/img/tokens/eth.svg"
               :size="30"
               :amount="
-                isTransferEpoch ? formatNumber(formatEther(purchasePrice)) : 0
+                isTransferEpoch
+                  ? formatNumber(formatEther(currentCost?.value || 0n))
+                  : 0
               "
             />
           </div>
@@ -38,7 +40,7 @@
         </div>
         <div class="mt-8 min-h-48 lg:min-h-72">
           <p class="text-xs text-grey-500">Rate projection</p>
-          <AuctionChart :cost="cost" />
+          <AuctionChart :show-options="true" />
         </div>
       </div>
 
@@ -57,7 +59,7 @@
           class="input"
           type="text"
           placeholder="0"
-          @update:model-value="getPurchaseCost(purchaseAmount)"
+          @update:model-value="getCurrentCost"
         />
         <button
           class="text text-xs text-grey-500"
@@ -73,9 +75,11 @@
           image="/img/tokens/eth.svg"
           :size="20"
           :amount="
-            purchasePrice && purchaseAmount
+            currentCost?.value && purchaseAmount
               ? formatNumber(
-                  formatEther(BigInt(purchasePrice) * BigInt(purchaseAmount))
+                  formatEther(
+                    BigInt(currentCost?.value) * BigInt(purchaseAmount)
+                  )
                 )
               : 0
           "
@@ -137,17 +141,12 @@ const { address: userAccount } = useAccount();
 const spog = storeToRefs(useSpogStore());
 
 const purchaseAmount = ref();
-const purchasePrice = ref(0n);
 const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
-const amountLeftToAuction = ref();
 const isLoadingTransaction = ref(false);
-const cost = reactive({
-  timestamp: new Date().getTime(),
-  value: 0n,
-});
 const { epoch } = storeToRefs(spog);
 const wagmiConfig = useWagmiConfig();
+const { currentCost, amountLeftToAuction, getCurrentCost } = useAuction();
 
 const isTransferEpoch = computed(
   () => spog.epoch.value.current?.type === "TRANSFER"
@@ -171,34 +170,6 @@ async function setMaxPossiblePurchase() {
   await getAmountLeftToAuction();
   purchaseAmount.value = Number(amountLeftToAuction.value);
 }
-
-async function getPurchaseCost(amount: bigint) {
-  try {
-    const purchaseCost = await readPowerToken(wagmiConfig, {
-      address: spog.contracts.value.powerToken as Hash,
-      functionName: "getCost",
-      args: [amount],
-    });
-    if (purchaseCost === cost.value) return purchaseCost;
-    cost.value = purchaseCost;
-    cost.timestamp = Math.floor(new Date().getTime() / 1000);
-
-    return purchaseCost;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-setInterval(async () => {
-  purchasePrice.value = await getPurchaseCost(1n);
-}, 2000);
-
-watch(
-  () => lastEpochTotalSupply.value,
-  async () => {
-    purchasePrice.value = await getPurchaseCost(1n);
-  }
-);
 
 async function getAmountLeftToAuction() {
   try {

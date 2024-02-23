@@ -1,58 +1,83 @@
 import { storeToRefs } from "pinia";
-import { MEpoch } from "@/lib/api/modules/epoch/epoch.types";
+import { Hash } from "viem";
+import { readPowerToken } from "@/lib/sdk";
 
-const EPOCH_PERIOD = 1296000n;
 const AUCTION_PERIODS = 100n;
 
-export const getAuctionPurchaseCost = (
-  // Same func as "getCost" from PowerToken.sol, calculated in the frontend to save requests
-  amount: bigint,
-  epoch: MEpoch,
-  totalSupplyOfPreviousEpoch: bigint
-) => {
-  const timeRemaining_ =
-    epoch.current.type === "VOTING"
-      ? EPOCH_PERIOD
-      : BigInt(new Date().getTime() - epoch.current.asTimestamp);
+const amountLeftToAuction = ref<bigint>(0n);
+const currentCost = ref({
+  value: 0n,
+  timestamp: 0,
+});
 
-  const secondsPerPeriod_ = EPOCH_PERIOD / AUCTION_PERIODS;
-  const leftPoint_ = BigInt(2) ** (timeRemaining_ / secondsPerPeriod_);
-  const remainder_ = timeRemaining_ % secondsPerPeriod_;
-
-  // NOTE: A good amount of this can be done unchecked, but not every step, so it would look messy.
-  return _divideUp(
-    amount *
-      (remainder_ * leftPoint_ +
-        (secondsPerPeriod_ - remainder_) * (leftPoint_ / BigInt(2))),
-    secondsPerPeriod_ * totalSupplyOfPreviousEpoch
-  );
-};
-
-export const getPricePoints = () => {
+export const useAuction = () => {
   const spog = useSpogStore();
   const { epoch } = storeToRefs(spog);
+  const wagmiConfig = useWagmiConfig();
+  const isTransferEpoch = computed(
+    () => spog.epoch.current?.type === "TRANSFER"
+  );
 
-  const EPOCH_LENGTH =
-    epoch.value.current.end.timestamp - epoch.value.current.asTimestamp;
+  const getPricePoints = () => {
+    const EPOCH_LENGTH =
+      epoch.value.current.end.timestamp - epoch.value.current.asTimestamp;
 
-  return Array.from(Array(Number(AUCTION_PERIODS + 1n)).keys()).map((_, i) => {
-    const timeIntoEpoch = (BigInt(EPOCH_LENGTH) / AUCTION_PERIODS) * BigInt(i);
+    return Array.from(Array(Number(AUCTION_PERIODS + 1n)).keys()).map(
+      (_, i) => {
+        const timeIntoEpoch =
+          (BigInt(EPOCH_LENGTH) / AUCTION_PERIODS) * BigInt(i);
 
-    return {
-      x: epoch.value.current.asTimestamp + Number(timeIntoEpoch),
-      y: 1n << (AUCTION_PERIODS - BigInt(i) - 1n),
-    };
+        return {
+          x: epoch.value.current.asTimestamp + Number(timeIntoEpoch),
+          y: 1n << (AUCTION_PERIODS - BigInt(i) - 1n),
+        };
+      }
+    );
+  };
+
+  const getCurrentCost = async () => {
+    if (!isTransferEpoch.value) return 0n;
+    try {
+      const purchaseCost = await readPowerToken(wagmiConfig, {
+        address: spog.contracts.powerToken as Hash,
+        functionName: "getCost",
+        args: [1n],
+      });
+
+      currentCost.value = {
+        value: purchaseCost || 0n,
+        timestamp: Math.floor(new Date().getTime() / 1000),
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  async function getAmountLeftToAuction() {
+    try {
+      amountLeftToAuction.value = await readPowerToken(wagmiConfig, {
+        address: spog!.contracts!.powerToken! as Hash,
+        functionName: "amountToAuction",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  onMounted(() => {
+    getCurrentCost();
+    getAmountLeftToAuction();
   });
+
+  setInterval(() => {
+    getCurrentCost();
+  }, 3000);
+
+  return {
+    amountLeftToAuction,
+    currentCost,
+    getPricePoints,
+    getCurrentCost,
+    getAmountLeftToAuction,
+  };
 };
-
-function _divideUp(x: bigint, y: bigint): bigint {
-  if (y === BigInt(0)) throw new Error("DivisionByZero");
-
-  let z = x * BigInt(1) + y;
-
-  if (z < x) throw new Error("DivideUpOverflow");
-
-  z = (z - BigInt(1)) / y;
-
-  return z;
-}

@@ -24,6 +24,8 @@
       </div>
     </div>
 
+    <AuctionBanner v-if="isTransferEpoch" class="mb-6" />
+
     <div class="text-grey-600 p-6 pt-0">
       <h5 class="text-xxs mb-1">Proposals:</h5>
 
@@ -92,6 +94,8 @@ import { storeToRefs } from "pinia";
 
 const store = useProposalsStore();
 const spog = useSpogStore();
+
+const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
 
 const pendingExecution = computed(
   () => store.getProposalsByState("Succeeded").length
