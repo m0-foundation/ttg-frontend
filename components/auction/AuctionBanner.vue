@@ -6,7 +6,7 @@
     </div>
     <div class="grid grid-cols-5 gap-3 mb-6">
       <div
-        class="max-sm:col-span-5 col-span-3 flex justify-center items-center gap-3 border border-grey-700"
+        class="max-sm:col-span-5 col-span-3 grow p-6 flex justify-center gap-6 border border-grey-700"
       >
         <div>
           <span class="text-xs leading-3">WETH/Power rate</span>
@@ -19,7 +19,7 @@
         </div>
         <div>
           <span class="text-xs leading-3">Rate projection</span>
-          <AuctionChart class="max-sm:col-span-3" :height="120" />
+          <AuctionChart class="max-sm:col-span-3" :height="50" />
         </div>
       </div>
       <div
@@ -31,7 +31,7 @@
             name="power"
             image="/img/tokens/power.svg"
             :size="24"
-            :amount="formatNumber(amountLeftToAuction || 0n)"
+            :amount="formatNumber(amountLeftToAuction)"
           />
         </div>
         <NuxtLink to="/auction" class="text-xs">

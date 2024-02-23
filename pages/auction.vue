@@ -40,7 +40,7 @@
         </div>
         <div class="mt-8 min-h-48 lg:min-h-72">
           <p class="text-xs text-grey-500">Rate projection</p>
-          <AuctionChart :show-options="true" />
+          <AuctionChart v-if="isTransferEpoch" :show-options="true" />
         </div>
       </div>
 
@@ -115,7 +115,7 @@
 
       <div
         v-else-if="noPowerTokens"
-        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-green-900 p-8 py-10"
+        class="col-span-3 lg:col-span-1 order-1 lg:order-2 bg-accent-blue p-8 py-10"
       >
         <p class="text-gray-200 text-xs uppercase mb-2">No power tokens</p>
         <div class="flex items-start gap-2">

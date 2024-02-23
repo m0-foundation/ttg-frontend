@@ -26,71 +26,72 @@ const props = defineProps<{
   height?: number;
 }>();
 
+const annotations = computed(() => {
+  if (!props.showOptions) return {};
+  return {
+    xaxis: [
+      {
+        x: currentCost.value.timestamp,
+        strokeDashArray: 4,
+        borderColor: "#627EEA",
+      },
+    ],
+    points: [
+      {
+        x: currentCost.value.timestamp,
+        y: Number(currentCost?.value.value),
+        marker: {
+          size: 6,
+          fillColor: "#627EEA",
+        },
+        label: {
+          borderWidth: 0,
+          text: formatNumber(formatEther(currentCost.value.value || 0n)),
+
+          style: {
+            background: "#627EEA",
+            color: "white",
+            fontSize: "14px",
+            fontFamily:
+              "Inter, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
+            padding: {
+              left: 10,
+              right: 10,
+              top: 5,
+              bottom: 5,
+            },
+          },
+        },
+      },
+      {
+        x: currentCost.value.timestamp,
+        y: Number(currentCost.value.value),
+        marker: {
+          size: 6,
+          fillColor: "#627EEA",
+        },
+        label: {
+          borderWidth: 0,
+          text: "NOW",
+          textAnchor: "bottom",
+          offsetX: -11,
+          offsetY: 35,
+          style: {
+            background: "transparent",
+            fontSize: "10px",
+            color: "#728DA5",
+            fontFamily:
+              "Inter, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
+          },
+        },
+      },
+    ],
+  };
+});
+
 const options = computed(() => {
   return {
-    annotations: {
-      xaxis: [
-        {
-          show: props.showOptions,
-          x: currentCost.value.timestamp,
-          strokeDashArray: 4,
-          borderColor: "#627EEA",
-        },
-      ],
-      points: [
-        {
-          show: props.showOptions,
-          x: currentCost.value.timestamp,
-          y: Number(currentCost?.value.value),
-          marker: {
-            size: 6,
-            fillColor: "#627EEA",
-          },
-          label: {
-            borderWidth: 0,
-            text: formatNumber(formatEther(currentCost.value.value || 0n)),
-            offsetX: 20,
-            offsetY: -15,
-            style: {
-              background: "#627EEA",
-              color: "white",
-              fontSize: "14px",
-              fontFamily:
-                "Inter, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
-              padding: {
-                left: 10,
-                right: 10,
-                top: 5,
-                bottom: 5,
-              },
-            },
-          },
-        },
-        {
-          show: props.showOptions,
-          x: currentCost.value.timestamp,
-          y: Number(currentCost.value.value),
-          marker: {
-            size: 6,
-            fillColor: "#627EEA",
-          },
-          label: {
-            borderWidth: 0,
-            text: "NOW",
-            textAnchor: "bottom",
-            offsetX: -11,
-            offsetY: 50,
-            style: {
-              background: "transparent",
-              fontSize: "10px",
-              color: "#728DA5",
-              fontFamily:
-                "Inter, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
-            },
-          },
-        },
-      ],
-    },
+    annotations: annotations.value,
     chart: {
       type: "line",
       toolbar: {
@@ -99,6 +100,11 @@ const options = computed(() => {
           download: false,
           selection: false,
         },
+      },
+      height: props.height,
+      parentHeightOffset: 0,
+      sparkline: {
+        enabled: true,
       },
     },
     fill: {
@@ -125,7 +131,6 @@ const options = computed(() => {
     grid: {
       show: false,
     },
-    labels: ["0", "Today"],
     stroke: {
       width: 2,
     },
@@ -133,15 +138,9 @@ const options = computed(() => {
       mode: "light",
     },
     tooltip: {
+      enabled: props.showOptions,
       y: {
         show: props.showOptions,
-      },
-      x: {
-        show: false,
-      },
-
-      marker: {
-        show: false,
       },
 
       custom: function ({ series, seriesIndex, dataPointIndex }) {
@@ -169,7 +168,13 @@ const options = computed(() => {
         show: false,
       },
       labels: {
-        show: props.showOptions,
+        show: false,
+        formatter: function (value: number) {
+          return `${useDate(value).toFormat("dd DD - HH:mm")}`;
+        },
+        style: {
+          cssClass: "bg-red-500",
+        },
       },
     },
     yaxis: {

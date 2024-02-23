@@ -44,6 +44,8 @@ export const useAuction = () => {
         args: [1n],
       });
 
+      if (purchaseCost === currentCost.value.value) return;
+
       currentCost.value = {
         value: purchaseCost || 0n,
         timestamp: Math.floor(new Date().getTime() / 1000),
