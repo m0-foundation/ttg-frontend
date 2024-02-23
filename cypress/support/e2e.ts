@@ -16,9 +16,6 @@
 // Import commands.js using ES2015 syntax:
 import "./commands";
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
-
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
 import { Eip1193 } from "../lib/eip1193";
@@ -40,12 +37,12 @@ Cypress.on("window:before:load", (win) => {
 });
 
 const cypressLogOriginal = Cypress.log;
-const cypressLogDomainsHidden = ["http://localhost:8545"];
-Cypress.log = function (opts: any, ...other) {
-  const logFetchIs = ["fetch"].includes(opts.displayName);
+const cypressLogDomainsHidden = ["http://localhost:8545", "127.0.0.1:8545"];
+Cypress.log = function (options: Cypress.LogConfig) {
+  const logFetchIs = ["fetch"].includes(options.displayName);
   const logFetchDomainMatch =
-    logFetchIs && cypressLogDomainsHidden.find((d) => opts.url.includes(d));
+    logFetchIs && cypressLogDomainsHidden.find((d) => options.url.includes(d));
   if (logFetchDomainMatch) return;
 
-  return cypressLogOriginal(opts, ...other);
+  return cypressLogOriginal(options);
 };
