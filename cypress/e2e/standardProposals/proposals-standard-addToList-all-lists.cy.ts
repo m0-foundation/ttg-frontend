@@ -31,7 +31,7 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
@@ -56,7 +56,7 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
@@ -81,7 +81,7 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
@@ -135,7 +135,7 @@ describe("Proposals", () => {
 
         cy.get("table > tbody > tr").should("have.length", 3);
 
-        const rowCells = (row) =>
+        const rowCells = (row: { children: any }) =>
           Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
 
         cy.get("table tbody tr").then((rows) => {

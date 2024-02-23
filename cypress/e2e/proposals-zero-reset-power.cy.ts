@@ -4,7 +4,7 @@ describe("Proposals", () => {
     const description = "Test proposal to reset power governor";
 
     /*
-    it("Get old Govenor", () => {
+    it("Get old Governor", () => {
       cy.visit("http://localhost:3000/config/governance");
       cy.get("table > tbody > tr:nth-child(13) > td:nth-child(2)").then(
         ($el) => {
@@ -36,7 +36,7 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });

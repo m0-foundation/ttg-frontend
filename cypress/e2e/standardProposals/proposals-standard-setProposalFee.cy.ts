@@ -6,25 +6,23 @@ describe("Proposals", () => {
 
     it("I should be able to CREATE a proposal", () => {
       cy.visit("http://localhost:3000/proposal/create");
+
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='menuEmergency']").click();
-
-      cy.get("[data-test='emergencySetStandardProposalFee']").click({
-        force: true,
-      });
+      cy.contains("Proposal Fee").click();
 
       cy.get("input[data-test='proposalValue']").type(input);
       cy.get("input[data-test='title']").type(description);
+
       cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
@@ -33,11 +31,9 @@ describe("Proposals", () => {
       // forward in time to be able to vote
       // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
       // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
-      // cy.mineEpochs(2);
+      cy.mineEpochs(1);
 
-      // cy.wait(1000);
-      cy.reload();
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.visit("http://localhost:3000/proposals/");
 
       cy.contains(description).should("exist");
 
@@ -57,10 +53,11 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description, "emergency");
+      cy.castYesOneProposal(description);
     });
 
     it("I should be able to EXECUTE the proposal", () => {
+      cy.mineEpochs(2);
       cy.executeOneProposal(description);
     });
 

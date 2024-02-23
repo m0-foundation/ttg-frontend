@@ -26,7 +26,7 @@ declare global {
       castYesOneEmergencyProposal(description: string): Chainable;
       castYesAllEmergencyProposals(): Chainable;
       executeOneProposal(description: string): Chainable;
-      clickPreviewProposal(quantity: number): Chainable;
+      clickPreviewProposal(): Chainable;
       mineEpochs(quantity: number): Chainable;
       createProposalAddDescription(description: string): Chainable;
     }
@@ -168,7 +168,7 @@ Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.wait(500);
 });
 
-Cypress.Commands.add("clickPreviewProposal", (quantity: number) => {
+Cypress.Commands.add("clickPreviewProposal", () => {
   cy.get("[data-test='create-proposal-button-preview']")
     .should("exist")
     .click();

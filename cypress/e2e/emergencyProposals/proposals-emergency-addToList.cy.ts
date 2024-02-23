@@ -1,28 +1,24 @@
 describe("Proposals", () => {
-  describe("type action: Emergency setKey", () => {
-    const value = "1";
-    const key = "mint_delay";
-    const description = `Add config ${key} = ${value}`;
-    let proposalUrl = "";
+  let proposalUrl = "";
 
-    it("I should be able to CREATE a proposal", () => {
+  describe("Emergency proposal for type action: AddToList", () => {
+    const input1 = "minters";
+    const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+    const description = `Emergency Add ${input2} to list ${input1}`;
+
+    it("I should be able to CREATE a proposal to ADD an address to a list", () => {
       cy.visit("http://localhost:3000/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
       cy.get("[data-test='menuEmergency']").click();
+      cy.get("[data-test='emergencyAddToList']").click({ force: true });
 
-      cy.get("[data-test='emergencySetKey']").click({ force: true });
+      cy.get("[data-test='listSelect']").click();
+      cy.get(`[data-test='list_${input1}']`).click();
 
-      cy.contains("Update protocol config").click();
-
-      cy.get("[data-test='protocolConfigSelect']").should("exist");
-      cy.get("[data-test='protocolConfigSelect']").click();
-
-      cy.contains("Mint delay").click();
-
-      cy.get("input[data-test='proposalValue2']").type(value);
+      cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(description);
       cy.createProposalAddDescription(description);
 
@@ -30,17 +26,16 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the EMERGENCY proposal", () => {
-      // cy.mineEpochs(2);
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
 
-      cy.visit("http://localhost:3000/proposals/emergency");
       cy.reload();
+      cy.visit("http://localhost:3000/proposals/emergency");
 
       cy.contains(description).should("exist");
 
@@ -52,8 +47,8 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", key);
-      cy.get("#technical-proposal-incoming-change").should("contain", value);
+      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should("contain", input2);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -64,23 +59,13 @@ describe("Proposals", () => {
       cy.castYesOneOptionalProposal(description, "emergency");
     });
 
-    it("I should be able to EXECUTE the proposal", () => {
+    it("I should be able to EXECUTE the proposal of ADD to a list", () => {
       cy.executeOneProposal(description);
     });
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
       cy.get("[data-test='executed-badge']").should("exist");
-    });
-
-    it("I should be able to see lists", () => {
-      cy.visit("http://localhost:3000/config/protocol");
-
-      cy.get("table").invoke("text").should("not.contain", "loading data...");
-      cy.get("table > tbody > tr").should("have.length", 1);
-
-      cy.get("table").invoke("text").should("contain", key.toLowerCase());
-      cy.get("table").invoke("text").should("contain", value.toLowerCase());
     });
   });
 });
