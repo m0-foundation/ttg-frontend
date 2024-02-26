@@ -31,15 +31,15 @@
 <script setup lang="ts">
 interface MTokenAmountProps {
   image: string;
-  amount: string | null;
-  size: number | null;
+  amount?: string | number | undefined;
+  size: number;
   name: string | null;
 }
 
 const props = withDefaults(defineProps<MTokenAmountProps>(), {
   image: "",
-  amount: null,
   size: 40,
+  amount: undefined,
   name: "",
 });
 

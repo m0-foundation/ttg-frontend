@@ -134,7 +134,7 @@
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
 import { Hash, formatEther } from "viem";
-import { waitForTransaction } from "@wagmi/core";
+import { waitForTransactionReceipt } from "@wagmi/core";
 import { readPowerToken, writePowerToken } from "@/lib/sdk";
 
 const { address: userAccount } = useAccount();
@@ -186,14 +186,17 @@ async function auctionBuy() {
   if (!userAccount.value) return;
   isLoadingTransaction.value = true;
   try {
-    const { hash } = await writePowerToken(wagmiConfig, {
+    const hash = await writePowerToken(wagmiConfig, {
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
       args: [BigInt(0), BigInt(purchaseAmount.value), userAccount.value],
       account: userAccount.value,
     });
 
-    const txReceipt = await waitForTransaction({ confirmations: 1, hash });
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+      confirmations: 1,
+      hash,
+    });
     if (txReceipt.status !== "success") {
       throw new Error("Transaction was rejected");
     }

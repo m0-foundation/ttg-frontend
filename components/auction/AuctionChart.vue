@@ -27,7 +27,17 @@ const props = defineProps<{
 }>();
 
 const annotations = computed(() => {
-  if (!props.showOptions) return {};
+  if (!props.showOptions)
+    return {
+      xaxis: [
+        {
+          x: currentCost.value.timestamp,
+          strokeDashArray: 4,
+          borderColor: "#627EEA",
+        },
+      ],
+    };
+
   return {
     xaxis: [
       {
@@ -52,8 +62,7 @@ const annotations = computed(() => {
             background: "#627EEA",
             color: "white",
             fontSize: "14px",
-            fontFamily:
-              "Inter, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace",
+            fontFamily: "Inter, ui-monospace, SFMono-Regular, monospace",
             padding: {
               left: 10,
               right: 10,
@@ -101,10 +110,10 @@ const options = computed(() => {
           selection: false,
         },
       },
-      height: props.height,
+      background: "transparent",
       parentHeightOffset: 0,
       sparkline: {
-        enabled: true,
+        enabled: !props.showOptions,
       },
     },
     fill: {
@@ -135,7 +144,7 @@ const options = computed(() => {
       width: 2,
     },
     theme: {
-      mode: "light",
+      mode: "dark",
     },
     tooltip: {
       enabled: props.showOptions,
@@ -145,7 +154,7 @@ const options = computed(() => {
 
       custom: function ({ series, seriesIndex, dataPointIndex }) {
         return (
-          "<div class='bg-[#627EEA] font-inter px-2 py-1'>" +
+          "<div class='bg-grey-900 font-inter px-2 py-1'>" +
           "<span>" +
           formatNumber(
             formatEther(BigInt(series[seriesIndex][dataPointIndex]))
@@ -157,7 +166,7 @@ const options = computed(() => {
     },
     xaxis: {
       axisBorder: {
-        show: true,
+        show: props.showOptions,
         color: "#5E605D",
         height: 1,
         width: "100%",
@@ -171,9 +180,6 @@ const options = computed(() => {
         show: false,
         formatter: function (value: number) {
           return `${useDate(value).toFormat("dd DD - HH:mm")}`;
-        },
-        style: {
-          cssClass: "bg-red-500",
         },
       },
     },
@@ -192,6 +198,5 @@ const options = computed(() => {
 .apexcharts-tooltip {
   box-shadow: none !important;
   border: none !important;
-  font-family: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace";
 }
 </style>
