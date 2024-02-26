@@ -913,14 +913,6 @@ label {
   @apply text-accent-mint text-xxs lg:text-xs tracking-[8px];
 }
 
-.md-editor-dark {
-  --md-bk-color: theme("colors.grey-800");
-}
-
-.md-editor-dark >>> label {
-  margin-bottom: 0px !important;
-}
-
 .disabled {
   /* selectedProposalType */
   pointer-events: none;
