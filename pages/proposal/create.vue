@@ -884,12 +884,6 @@ function onBack() {
 }
 </script>
 
-<style>
-label {
-  @apply text-grey-500 block mb-2 font-medium text-xs font-inter;
-}
-</style>
-
 <style scoped>
 h1 {
   @apply text-3xl font-light mb-12;
@@ -897,6 +891,10 @@ h1 {
 
 hr {
   border-top: 1px dashed #979797;
+}
+
+label {
+  @apply text-grey-500 block mb-2 font-medium text-xs font-inter;
 }
 
 #info-text * {
