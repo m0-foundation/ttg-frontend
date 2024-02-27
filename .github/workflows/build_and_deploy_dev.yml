@@ -1,0 +1,24 @@
+name: Build & Deploy to DEV
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/**'
+      - 'bugfix/**'
+  workflow_dispatch:
+
+jobs:
+  deploy-to-dev:
+    uses: MZero-Labs/devops-templates/.github/workflows/build_and_deploy_dev.yml@feature/CL-1494
+    secrets: inherit
+    permissions:
+      contents: write
+      packages: write
+    with:
+      #HELM_COMPONENTS: ${{ github.event.repository.name }}
+      ## If you want to set the variable HELM_COMPONENTS to something different than the folder name
+      ## it is important to have it set equal to the Chart name in Chart.yaml and to the folder containing the chart itself
+      ## (i.e. build/chart/NAME_OF_CHART
+      HELM_COMPONENTS: ${{ github.event.repository.name }}
+      DEPLOY_NAMESPACE: "shared"
