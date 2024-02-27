@@ -18,7 +18,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue']").should("not.exist");
 
       cy.get("input[data-test='title']").type(title);
-      cy.get("textarea[data-test='description']").type(description);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 

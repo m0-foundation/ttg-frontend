@@ -22,7 +22,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue2']").type(add1);
       cy.get("input[data-test='title']").type(description);
 
-      cy.get("textarea[data-test='description']").type(description);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
@@ -92,7 +92,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue3']").type(add2);
       cy.get("input[data-test='title']").type(title);
 
-      cy.get("textarea[data-test='description']").type(description);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
