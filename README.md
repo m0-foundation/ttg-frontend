@@ -61,6 +61,7 @@ This app uses an environment variables locally (not in docker-compose). For loca
 
 ```
 NETWORK=sepolia | mainnet | local | hardhat | undefined
+IS_AUCTION_ACTIVE=true | false
 ```
 
 #### 2.1.4 RUN
@@ -74,7 +75,8 @@ yarn dev
 This starts the development server on `http://localhost:3000`
 
 ### 2.2 Running with docker-compose
-You need have docker installed, the easiest way is  [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+You need have docker installed, the easiest way is [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 #### 2.2.1 For Development
 
@@ -96,20 +98,23 @@ This will start:
 - a test blockchain Hardhat on port 8545
 - an rpc-proxy on port 3005
 - the Frontend app on port 3000 with live reloading when files change
-  
+
 #### 2.2.2 For Ethereum Mainnet
 
-Just need run this command 
+Just need run this command
+
 ```bash
 docker compose -f docker-compose.mainnet.yml up
 ```
 
 #### 2.2.3 For Ethereum Sepolia
 
-Just need run this command 
+Just need run this command
+
 ```bash
 docker compose -f docker-compose.sepolia.yml up
 ```
+
 You can access now type `https://localhost:3000` in your browser to access.
 
 ### 2.3 Local URL (optinal)
@@ -117,10 +122,13 @@ You can access now type `https://localhost:3000` in your browser to access.
 ```bash
 nano /etc/hosts
 ```
+
 add this line
+
 ```bash
 127.0.0.1 governance.m0.local
 ```
+
 or
 
 ```bash
