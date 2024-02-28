@@ -35,7 +35,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.mineEpochs(1);
+      cy.mineEpochs(2);
 
       cy.visit("http://localhost:3000/proposals/");
 
@@ -66,6 +66,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to check the executed proposal", () => {
+      cy.mineEpochs(1);
       cy.visit(proposalUrl);
       cy.get("[data-test='executed-badge']").should("exist");
       cy.get("#technical-proposal-incoming-change").should("contain", add1);

@@ -61,6 +61,7 @@
                 :class="{
                   'p-2': dense,
                 }"
+                :data-test="`table-cells-${item.key}`"
               >
                 <slot
                   :name="`cell(${key})`"

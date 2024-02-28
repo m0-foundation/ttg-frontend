@@ -155,7 +155,7 @@ export default async function setup(): Promise<
       ]);
     },
     mine: async (blocks) => {
-      console.log("mine", { blocks, increse: blocks * _BLOCK_TIME });
+      console.log("mine", { blocks, increase: blocks * _BLOCK_TIME });
       const currentTimestamp = await time.latest();
       const newTimestamp = currentTimestamp + blocks * _BLOCK_TIME;
       console.log({ currentTimestamp, newTimestamp });

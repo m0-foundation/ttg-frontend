@@ -16,7 +16,7 @@ export async function setupHardhatEvents(
       accounts: env.accounts,
     }),
     "hardhat:reset": async (chainId?: number) => {
-      await env.reset(chainId);
+      await env.reset();
       return null; // A task must not return a value or null to indicate that it was handled.
     },
   });

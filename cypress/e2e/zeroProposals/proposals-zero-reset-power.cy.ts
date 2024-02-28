@@ -1,7 +1,22 @@
 describe("Proposals", () => {
   describe("Emergency proposal for type action: AddToList", () => {
-    const title = "Reset Zero";
-    const description = "Test proposal to reset zero governor";
+    const title = "Reset Power";
+    const description = "Test proposal to reset power governor";
+    const tableSelector = "table-cells-powerToken";
+
+    let oldGovernor = "";
+    let newGovernor = "";
+
+    it("Get old Governor", () => {
+      cy.visit("http://localhost:3000/config/governance");
+      cy.get(`[data-test="${tableSelector}"]`)
+        .last()
+        .then(($el) => {
+          oldGovernor = $el.text();
+          cy.log("Old governor", oldGovernor);
+          cy.validateEthAddress(oldGovernor);
+        });
+    });
 
     it("I should be able to CREATE a proposal to Reset", () => {
       // zero proposals cant be created on first epoch
@@ -13,7 +28,7 @@ describe("Proposals", () => {
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
       cy.get("[data-test='menuReset']").click();
-      cy.get("[data-test='resetToZeroHolders']").click();
+      cy.get("[data-test='resetToPowerHolders']").click();
 
       cy.get("input[data-test='proposalValue']").should("not.exist");
 
@@ -30,13 +45,13 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the proposal", () => {
-      // reset does not need to forward to next epoch, it will be able to vote on same epoch
+      // @todo: is this tho correct url?
       cy.visit("http://localhost:3000/proposals/zero");
 
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({ force: true });
+        cy.wrap($proposal).find("#show-details").click({force: true});
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
@@ -58,6 +73,22 @@ describe("Proposals", () => {
       });
 
       cy.wait(500);
+    });
+
+    it("I should be able to check the executed proposal", () => {
+      cy.visit("http://localhost:3000/config/governance");
+
+      cy.get(`[data-test="${tableSelector}"]`)
+        .last()
+        .then(($el) => {
+          newGovernor = $el.text();
+          cy.log(newGovernor);
+          cy.validateEthAddress(newGovernor);
+        });
+
+      cy.then(() => {
+        expect(newGovernor).to.not.equal(oldGovernor);
+      });
     });
   });
 });

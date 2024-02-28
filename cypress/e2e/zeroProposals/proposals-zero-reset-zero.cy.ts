@@ -1,19 +1,22 @@
-describe("Proposals", () => {
-  describe("Emergency proposal for type action: AddToList", () => {
-    const title = "Reset Power";
-    const description = "Test proposal to reset power governor";
+describe("Emergency Proposals", () => {
+  describe("Emergency proposal for type action: Reset Zero Token", () => {
+    const title = "Reset Zero";
+    const description = "Test proposal to reset zero governor";
+    const tableSelector = "table-cells-zeroToken";
 
-    /*
-    it("Get old Governor", () => {
+    let oldTokenAddr = "";
+    let newTokenAddr = "";
+
+    it("Get old token address", () => {
       cy.visit("http://localhost:3000/config/governance");
-      cy.get("table > tbody > tr:nth-child(13) > td:nth-child(2)").then(
-        ($el) => {
-          oldGovernor = $el.text();
-          console.log({ oldGovernor });
-        }
-      );
+      cy.get(`[data-test="${tableSelector}"]`)
+        .last()
+        .then(($el) => {
+          oldTokenAddr = $el.text();
+          cy.log(oldTokenAddr);
+          cy.validateEthAddress(oldTokenAddr);
+        });
     });
-    */
 
     it("I should be able to CREATE a proposal to Reset", () => {
       // zero proposals cant be created on first epoch
@@ -25,7 +28,7 @@ describe("Proposals", () => {
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
       cy.get("[data-test='menuReset']").click();
-      cy.get("[data-test='resetToPowerHolders']").click();
+      cy.get("[data-test='resetToZeroHolders']").click();
 
       cy.get("input[data-test='proposalValue']").should("not.exist");
 
@@ -42,7 +45,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the proposal", () => {
-      // @todo: is this tho correct url?
+      // reset does not need to forward to next epoch, it will be able to vote on same epoch
       cy.visit("http://localhost:3000/proposals/zero");
 
       cy.contains(description).should("exist");
@@ -72,19 +75,22 @@ describe("Proposals", () => {
       cy.wait(500);
     });
 
-    /*
-    it("I should be able to check the executed proposal", () => {
+    it.skip("Check the executed proposal", () => {
+      // @todo: check which values should be different afterwards
+
       cy.visit("http://localhost:3000/config/governance");
 
-      cy.get("table > tbody > tr:nth-child(13) > td:nth-child(2)").then(
-        ($el) => {
-          newGovernor = $el.text();
-          console.log({ newGovernor, oldGovernor });
-        }
-      );
+      cy.get(`[data-test="${tableSelector}"]`)
+        .last()
+        .then(($el) => {
+          newTokenAddr = $el.text();
+          cy.log(newTokenAddr);
+          cy.validateEthAddress(newTokenAddr);
+        });
 
-      expect(newGovernor).to.not.equal(oldGovernor);
+      cy.then(() => {
+        expect(newTokenAddr).to.not.equal(oldTokenAddr);
+      });
     });
-    */
   });
 });
