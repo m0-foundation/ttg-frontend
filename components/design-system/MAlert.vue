@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-10 right-5 z-50 shadow-lg">
+  <div class="z-50 shadow-lg alert">
     <div class="items-stretch flex flex-col px-4" :class="color">
       <div
         class="text-gray-200 text-xs leading-3 uppercase whitespace-nowrap mt-5 max-md:max-w-full justify-between flex gap-2"
@@ -26,8 +26,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import MIconAlert from "@/components/design-system/MIconAlert";
-import MIconCheck from "@/components/design-system/MIconCheck";
+import MIconAlert from "./MIconAlert.vue";
+import MIconCheck from "./MIconCheck.vue";
 
 export interface Props {
   id: string;
@@ -56,3 +56,35 @@ function dismiss() {
   emit("dismiss", props.id);
 }
 </script>
+
+<style>
+@keyframes enterFromRightToLeft {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateX(0);
+  }
+  40% {
+    transform: translateX(-30px);
+  }
+}
+
+.alert {
+  animation-name: enterFromRightToLeft, bounce;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+</style>
