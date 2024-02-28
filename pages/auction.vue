@@ -74,15 +74,7 @@
           class="text-grey-500"
           image="/img/tokens/eth.svg"
           :size="20"
-          :amount="
-            currentCost?.value && purchaseAmount
-              ? formatNumber(
-                  formatEther(
-                    BigInt(currentCost?.value) * BigInt(purchaseAmount)
-                  )
-                )
-              : 0
-          "
+          :amount="totalPrice"
         />
         <MButton
           :disabled="!purchaseAmount || !userAccount || !userAgreeMinAmount"
@@ -154,6 +146,13 @@ const isTransferEpoch = computed(
 
 const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
 
+const totalPrice = computed(() => {
+  if (!currentCost.value || !purchaseAmount.value) return 0;
+  return formatEther(
+    BigInt(currentCost.value.value) * BigInt(purchaseAmount.value)
+  );
+});
+
 async function getLastEpochTotalSupply() {
   try {
     lastEpochTotalSupply.value = await readPowerToken(wagmiConfig, {
@@ -189,7 +188,11 @@ async function auctionBuy() {
     const hash = await writePowerToken(wagmiConfig, {
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
-      args: [0n, BigInt(purchaseAmount.value), userAccount.value],
+      args: [
+        0n, // Minimun amount the user is willing to buy
+        BigInt(purchaseAmount.value), // Maximum and IDEAL amount the user is willing to buy
+        userAccount.value,
+      ],
       account: userAccount.value,
     });
 
