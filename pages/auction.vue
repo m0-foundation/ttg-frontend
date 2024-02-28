@@ -189,7 +189,7 @@ async function auctionBuy() {
     const hash = await writePowerToken(wagmiConfig, {
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
-      args: [BigInt(0), BigInt(purchaseAmount.value), userAccount.value],
+      args: [0n, BigInt(purchaseAmount.value), userAccount.value],
       account: userAccount.value,
     });
 
