@@ -13,7 +13,7 @@ export interface MButtonProps {
     | "secondary-dark"
     | "outline-light"
     | "outline-dark";
-  isLoading?: false;
+  isLoading?: boolean;
 }
 
 const props = withDefaults(defineProps<MButtonProps>(), {

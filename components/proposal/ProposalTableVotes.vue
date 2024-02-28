@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import orderBy from "lodash/orderBy";
 import { MVote } from "@/lib/api/types";
+import { useNumberFormatterCompact } from "@/utils/numberFormatter";
 
 interface Props {
   votes: MVote[];
@@ -44,7 +45,7 @@ const votes = computed(() => {
     voter: v.voter,
     vote: v.support,
     castedAt: v.timestamp,
-    votes: useNumberFormatter(String(v.weight)),
+    votes: useNumberFormatterCompact(String(v.weight)),
     transactionHash: v.transactionHash,
   }));
 });
