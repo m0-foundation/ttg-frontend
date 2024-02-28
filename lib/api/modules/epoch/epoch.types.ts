@@ -9,14 +9,23 @@ export interface MEpoch {
   current: {
     asNumber: number;
     asTimestamp: number;
-    type: EpochType;
     end: {
       timestamp: number;
     };
+    start: {
+      timestamp: number;
+    };
+    type: EpochType;
   };
   next: {
     asNumber: number;
     asTimestamp: number;
+    end: {
+      timestamp: number;
+    };
+    start: {
+      timestamp: number;
+    };
     type: EpochType;
   };
 }

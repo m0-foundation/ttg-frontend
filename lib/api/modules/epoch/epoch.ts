@@ -48,11 +48,20 @@ export class Epoch {
         end: {
           timestamp: currentEpochEndAsTimestamp,
         },
+        start: {
+          timestamp: currentEpochStartAsTimestamp,
+        },
         type: getType(currentEpoch),
       },
       next: {
         asNumber: currentEpoch + 1,
         asTimestamp: currentEpochEndAsTimestamp,
+        end: {
+          timestamp: currentEpochEndAsTimestamp,
+        },
+        start: {
+          timestamp: currentEpochStartAsTimestamp,
+        },
         type: getType(currentEpoch + 1),
       },
     };
