@@ -22,6 +22,9 @@ export const useAuction = () => {
     const EPOCH_LENGTH =
       epoch.value.current.end.timestamp - epoch.value.current.asTimestamp;
 
+    // We create an array of 101 points, each representing the price of a POWER token at a specific time in the current epoch
+    // The x value is the timestamp of the point, and the y value is the price of a POWER token at that time
+
     return Array.from(Array(Number(AUCTION_PERIODS + 1n)).keys()).map(
       (_, i) => {
         const timeIntoEpoch =
@@ -29,7 +32,7 @@ export const useAuction = () => {
 
         return {
           x: epoch.value.current.asTimestamp + Number(timeIntoEpoch),
-          y: 1n << (AUCTION_PERIODS - BigInt(i) - 1n),
+          y: calculateExponentialIncrease(i, AUCTION_PERIODS),
         };
       }
     );
@@ -41,7 +44,7 @@ export const useAuction = () => {
       const purchaseCost = await readPowerToken(wagmiConfig, {
         address: spog.contracts.powerToken as Hash,
         functionName: "getCost",
-        args: [1n],
+        args: [1n], // We send 1n as the amount to get the current cost of 1 POWER token
       });
 
       if (purchaseCost === currentCost.value.value) return;
@@ -83,3 +86,7 @@ export const useAuction = () => {
     getAmountLeftToAuction,
   };
 };
+
+function calculateExponentialIncrease(number: number, periods: bigint): bigint {
+  return 1n << (periods - BigInt(number) - 1n);
+}
