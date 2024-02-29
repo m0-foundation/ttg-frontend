@@ -1,35 +1,29 @@
 import { storeToRefs } from "pinia";
-import { Hash, formatUnits } from "viem";
-import { useAccount, useReadContract } from "use-wagmi";
-import { powerTokenAbi } from "@/lib/sdk";
+import { formatUnits } from "viem";
+import useBalancePowerToken from "./useBalancePowerToken";
 import { useSpogStore } from "@/stores/spog";
 
-export default () => {
-  const { address, isConnected } = useAccount();
+export default (
+  userAccount:
+    | globalThis.Ref<undefined>
+    | globalThis.Ref<`0x${string}`>
+    | globalThis.Ref<`0x${string}` | undefined>
+) => {
+  // keep the reactivity alive
+  const address = ref(userAccount);
+  const spog = storeToRefs(useSpogStore());
 
-  const store = useSpogStore();
-  const spog = storeToRefs(store);
+  const { data: balance } = useBalancePowerToken(address);
 
   const token = spog.tokens.value.power;
-  const totalSupply = spog.tokens.value.power!.totalSupply!.value;
+  const totalSupply = computed(() => spog.tokens.value.power.totalSupply.value);
+  const votingPower = computed(() => balance.value?.value || BigInt(0));
 
-  return useReadContract({
-    address: spog.contracts.value.powerToken as Hash,
-    abi: powerTokenAbi,
-    functionName: "getVotes",
-    args: [address as Ref<Hash>],
-    //     watch: true,
-    query: {
-      enabled: isConnected,
-      select: (data) => {
-        const votingPower = BigInt(data as string);
-
-        return {
-          relative: Number((votingPower * 100n * 100n) / totalSupply) / 100,
-          value: votingPower,
-          formatted: formatUnits(votingPower, token?.decimals || 0),
-        };
-      },
-    },
-  });
+  return computed(() => ({
+    relative:
+      Number((votingPower.value * 100n * 100n) / totalSupply.value) / 100,
+    value: votingPower.value,
+    formatted: formatUnits(votingPower.value, token.decimals || 6),
+    hasVotingPower: votingPower.value > 0n,
+  }));
 };
