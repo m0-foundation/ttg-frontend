@@ -4,9 +4,9 @@
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
     <span class="lg:hidden">Gov</span>
-    <span class="hidden lg:block text-grey-600 text-nowrap"
-      >[ Governance ]</span
-    >
+    <span class="hidden lg:block text-grey-600 text-nowrap">
+      [ Governance ]
+    </span>
   </div>
 
   <NuxtLink class="block" to="/proposal/create/">
@@ -82,28 +82,20 @@
         <div class="flex gap-2">
           <MIconPower class="h-5 w-5" />
           <div class="flex flex-col">
-            <span
-              >{{
-                powerTokenVotingPower?.data?.value?.relative?.toFixed(0)
-              }}%</span
-            >
-            <span class="text-grey-600 text-xxs">{{
-              balancePowerToken?.data?.value?.formatted
-            }}</span>
+            <span>{{ powerVotingPower.relative.toFixed(1) }}%</span>
+            <span class="text-grey-600 text-xxs">
+              {{ balancePowerToken?.data?.value?.formatted }}
+            </span>
           </div>
         </div>
 
         <div class="flex gap-2">
           <MIconZero class="h-5 w-5" />
           <div class="flex flex-col">
-            <span
-              >{{
-                zeroTokenVotingPower?.data?.value?.relative?.toFixed(0)
-              }}%</span
-            >
-            <span class="text-grey-600 text-xxs">{{
-              balanceZeroToken?.data?.value?.formatted
-            }}</span>
+            <span>{{ zeroVotingPower?.relative?.toFixed(1) }}%</span>
+            <span class="text-grey-600 text-xxs">
+              {{ balanceZeroToken?.data?.value?.formatted }}
+            </span>
           </div>
         </div>
       </div>
@@ -163,10 +155,11 @@ const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
 const { isCorrectChain } = useCorrectChain();
 
-const { powerTokenVotingPower, zeroTokenVotingPower } = useMVotingPower();
-
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
+
+const { power: powerVotingPower, zero: zeroVotingPower } =
+  useMVotingPower(address);
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);

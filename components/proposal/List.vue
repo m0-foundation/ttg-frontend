@@ -3,6 +3,7 @@
     <slot v-if="!hasProposals" name="emptyState"></slot>
     <div v-for="proposal in proposals" v-else :key="proposal.proposalId">
       <ProposalCard
+        :loading="loading"
         :proposal="proposal"
         v-bind="$attrs"
         @on-view="onViewProposal"
@@ -23,6 +24,7 @@ import { MProposal } from "@/lib/api/types";
 
 export interface ProposalListProps {
   proposals: MProposal[];
+  loading: boolean;
 }
 
 const props = defineProps<ProposalListProps>();

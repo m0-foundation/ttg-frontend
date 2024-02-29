@@ -10,7 +10,14 @@ const useMBalances = (
   const powerToken = useBalancePowerToken(userAccount);
   const zeroToken = useBalanceZeroToken(userAccount);
 
-  return { powerToken, zeroToken };
+  return {
+    powerToken,
+    zeroToken,
+    refetch: () => {
+      powerToken.refetch();
+      zeroToken.refetch();
+    },
+  };
 };
 
 export default useMBalances;

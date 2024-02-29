@@ -57,18 +57,10 @@
               id="button-cast-yes"
               :batch="proposal?.votingType === 'Standard'"
               data-test="button-cast-yes"
-              :disabled="
-                isCastVoteYesDisabled ||
-                hasVoted ||
-                isDisconnected ||
-                !canVote ||
-                isLoading
-              "
-              :version="
-                voteEvent && voteEvent.support === true ? 'active' : 'default'
-              "
+              :disabled="hasVoted || isDisconnected || !canVote || isLoading"
+              :version="isVoteYesActive"
               class="cast-vote-button"
-              @click="onCastSelected(1)"
+              @click="onCastSelected(true)"
             >
               YES
             </ProposalButtonCastVote>
@@ -77,17 +69,9 @@
               :batch="proposal?.votingType === 'Standard'"
               class="cast-vote-button"
               data-test="button-cast-no"
-              :disabled="
-                isCastVoteNoDisabled ||
-                hasVoted ||
-                isDisconnected ||
-                !canVote ||
-                isLoading
-              "
-              :version="
-                voteEvent && voteEvent.support === false ? 'active' : 'default'
-              "
-              @click="onCastSelected(0)"
+              :disabled="hasVoted || isDisconnected || !canVote || isLoading"
+              :version="isVoteNoActive"
+              @click="onCastSelected(false)"
             >
               NO
             </ProposalButtonCastVote>
@@ -149,6 +133,7 @@ import { MProposal } from "@/lib/api/types";
 
 export interface ProposalCardProps {
   proposal: MProposal;
+  loading: boolean;
 }
 
 const props = defineProps<ProposalCardProps>();
@@ -164,12 +149,23 @@ const apiStore = useApiClientStore();
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
 const { title } = useParsedDescriptionTitle(props.proposal.description);
 
-const isVoteSelected = ref(false);
-const selectedVote = ref<null | number>(null);
-const isCastVoteYesDisabled = computed(() => selectedVote.value === 0);
-const isCastVoteNoDisabled = computed(() => selectedVote.value === 1);
-const isLoading = ref(false);
+const selectedVote = ref<null | boolean>(null);
+
+const isVoteYesActive = computed(() => {
+  // vote has been casted to Yes
+  if (voteEvent && voteEvent.value?.support === true) return "active";
+
+  return selectedVote.value === true ? "active" : "default";
+});
+
+const isVoteNoActive = computed(() => {
+  if (voteEvent && voteEvent.value?.support === false) return "active";
+
+  return selectedVote.value === false ? "active" : "default";
+});
+
 const voteEndTimestamp = ref();
+const isLoading = computed(() => props.loading);
 
 const { text: truncatedDescriptionText } = useParsedDescription(
   truncate(props.proposal.description, {
@@ -182,43 +178,45 @@ function onViewProposal() {
 }
 
 function onExecuteProposal() {
-  isLoading.value = true;
   emit("on-execute", props.proposal);
 }
 
-function onCastSelected(vote: number) {
-  isLoading.value = true;
-  if (isVoteSelected.value) {
+function onCastSelected(vote: boolean) {
+  // no vote has been select then click on any button
+  if (selectedVote.value === null) {
+    emit("on-cast", Number(vote), props.proposal.proposalId);
+    selectedVote.value = vote;
+  }
+  // vote has been select on the same button
+  else if (selectedVote.value === vote) {
     emit("on-uncast", props.proposal.proposalId);
-    isVoteSelected.value = false;
     selectedVote.value = null;
-  } else {
-    emit("on-cast", vote, props.proposal.proposalId);
-    isVoteSelected.value = true;
+  }
+  // vote has been select on the other button
+  else if (selectedVote.value !== vote) {
+    emit("on-uncast", props.proposal.proposalId);
+    emit("on-cast", Number(vote), props.proposal.proposalId);
     selectedVote.value = vote;
   }
 }
 
 const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
-console.log({ governor });
 
-const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
-  useMVotingPower();
+const { power: powerVotingPower, zero: zeroVotingPower } =
+  useMVotingPower(userAccount);
 
 const canVote = computed(() => {
   if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
-    return hasPowerTokensVotingPower.value;
+    return powerVotingPower.value.hasVotingPower;
   } else if (props.proposal?.votingType === "Zero") {
-    return hasZeroTokenVotingPower.value;
+    return zeroVotingPower.value.hasVotingPower;
   }
 });
 
 voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
   props.proposal.voteEnd
 );
-
-const { timeAgo: voteEnds } = useDate(voteEndTimestamp.value);
 
 const votesStore = useVotesStore();
 const voteEvent = computed(() => {
