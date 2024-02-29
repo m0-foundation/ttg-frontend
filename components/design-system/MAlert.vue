@@ -4,7 +4,7 @@
       <div
         class="text-gray-200 text-xs leading-3 uppercase whitespace-nowrap mt-5 max-md:max-w-full justify-between flex gap-2"
       >
-        <span>{{ title }}</span>
+        <span>{{ props.type }}</span>
 
         <button class="hover:opacity-70" @click="dismiss">X</button>
       </div>
@@ -30,27 +30,30 @@ import MIconAlert from "./MIconAlert.vue";
 import MIconCheck from "./MIconCheck.vue";
 
 export interface Props {
-  id: string;
+  id: number;
   message: string;
   type: "error" | "success" | "info";
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  dismiss: [id: string];
+  dismiss: [id: number];
 }>();
 
-const title = computed(() => {
-  return props.type === "error" ? "Error" : "Success";
-});
+const icons = {
+  error: MIconAlert,
+  success: MIconCheck,
+  info: MIconAlert,
+};
 
-const Icon = computed(() => {
-  return props.type === "error" ? MIconAlert : MIconCheck;
-});
+const colors = {
+  error: "bg-red-500",
+  success: "bg-green-900",
+  info: "bg-accent-blue",
+};
 
-const color = computed(() => {
-  return props.type === "error" ? "bg-red-500" : "bg-green-900";
-});
+const Icon = computed(() => icons[props.type]);
+const color = computed(() => colors[props.type]);
 
 function dismiss() {
   emit("dismiss", props.id);

@@ -38,6 +38,9 @@ export const useAlertsStore = defineStore("alerts", () => {
   const errorAlert = (message: string) => {
     addAlert({ message, type: "error" });
   };
+  const infoAlert = (message: string) => {
+    addAlert({ message, type: "info" });
+  };
 
   const showResetAlert = (proposal: MProposal) => {
     reset.value.show = true;
@@ -56,6 +59,7 @@ export const useAlertsStore = defineStore("alerts", () => {
     addAlert,
     removeAlert,
     successAlert,
+    infoAlert,
     errorAlert,
   };
 });
