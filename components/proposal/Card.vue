@@ -184,19 +184,16 @@ function onExecuteProposal() {
 function onCastSelected(vote: boolean) {
   // no vote has been select then click on any button
   if (selectedVote.value === null) {
-    console.log("no vote has been select then click on any button");
     emit("on-cast", Number(vote), props.proposal.proposalId);
     selectedVote.value = vote;
   }
   // vote has been select on the same button
   else if (selectedVote.value === vote) {
-    console.log("vote has been select on the same button");
     emit("on-uncast", props.proposal.proposalId);
     selectedVote.value = null;
   }
   // vote has been select on the other button
   else if (selectedVote.value !== vote) {
-    console.log("vote has been select on the other button");
     emit("on-uncast", props.proposal.proposalId);
     emit("on-cast", Number(vote), props.proposal.proposalId);
     selectedVote.value = vote;
@@ -206,14 +203,14 @@ function onCastSelected(vote: boolean) {
 const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
 
-const { hasPowerTokensVotingPower, hasZeroTokenVotingPower } =
-  useMVotingPower();
+const { power: powerVotingPower, zero: zeroVotingPower } =
+  useMVotingPower(userAccount);
 
 const canVote = computed(() => {
   if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
-    return hasPowerTokensVotingPower.value;
+    return powerVotingPower.value.hasVotingPower;
   } else if (props.proposal?.votingType === "Zero") {
-    return hasZeroTokenVotingPower.value;
+    return zeroVotingPower.value.hasVotingPower;
   }
 });
 
