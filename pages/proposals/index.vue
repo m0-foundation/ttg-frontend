@@ -8,15 +8,15 @@
         <div>
           <h5 class="text-grey-800 lg:text-xl tracking-tightest">
             <span class="text-accent-blue">Preserve your voting power</span> and
-            get
+            receive
             <span class="text-accent-blue">
               {{ useNumberFormatterPrice(powerInflation) }} POWER
             </span>
-            and
+            in the next epoch, along with an immediate
             <span class="text-accent-blue">
               {{ useNumberFormatterPrice(zeroInflation) }} ZERO
             </span>
-            tokens of inflation by voting on all standard proposals in this
+            tokens of inflation, by voting on all standard proposals in this
             epoch.
           </h5>
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
@@ -188,18 +188,21 @@ async function onCastBatchVotes() {
       throw new Error("Transaction was rejected");
     }
 
-    alerts.successAlert("Vote casted successfully!");
-    alerts.successAlert(
-      `Your Balance has received the reward of ${useNumberFormatterPrice(
+    alerts.infoAlert(
+      `Your Balance will receive the reward of ${useNumberFormatterPrice(
         toValue(powerInflation)
-      )} POWER tokens.`
+      )} POWER tokens in the next epoch.`
     );
+
     alerts.successAlert(
       `Your Balance has received the reward of ${useNumberFormatterPrice(
         toValue(zeroInflation)
       )} ZERO tokens.`
     );
 
+    alerts.successAlert("Vote casted successfully!");
+
+    await spog.fetchTokens();
     balances.refetch();
   } catch (error) {
     console.error("Error casting vote", error);
