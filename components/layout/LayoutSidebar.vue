@@ -41,6 +41,22 @@
         </NuxtLink>
       </li>
 
+      <li v-if="$config.public.auctionActive">
+        <NuxtLink
+          to="/auction/"
+          active-class="active"
+          class="flex items-center gap-1"
+          >Auction
+          <div
+            v-if="amountLeftToAuction"
+            class="p-1 bg-grey-100 text-xxs leading-3 font-inter text-grey-1000 flex items-center gap-1 mr-1"
+          >
+            <MIconPower fill="#000000" class="w-2.5 h-2.5" />
+            {{ amountLeftToAuction }}
+          </div></NuxtLink
+        >
+      </li>
+
       <li>
         <NuxtLink
           to="/config/governance/"
@@ -154,6 +170,7 @@ import { useMVotingPower, useMBalances } from "@/lib/hooks";
 const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
 const { isCorrectChain } = useCorrectChain();
+const { amountLeftToAuction } = useAuction();
 
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useDelegate();
