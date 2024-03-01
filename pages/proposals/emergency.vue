@@ -1,6 +1,10 @@
 <template>
   <NuxtLayout name="proposals">
-    <ProposalList :proposals="proposals" @on-cast="castVote">
+    <ProposalList
+      :proposals="proposals"
+      @on-cast="castVote"
+      :loading="isLoading"
+    >
       <template #emptyState>
         <ProposalListEmptyState>
           No emergency proposals
@@ -23,6 +27,9 @@ useHead({
 
 const { address: userAccount } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
+
+const isLoading = ref(false);
+
 const proposals = computed(() =>
   proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active")
 );
@@ -33,6 +40,8 @@ const alerts = useAlertsStore();
 
 async function castVote(vote: number, proposalId: string) {
   await forceSwitchChain();
+
+  isLoading.value = true;
 
   const governor = useGovernor({ proposalId });
   console.log("cast", { vote, proposalId, governor });
@@ -60,7 +69,9 @@ async function castVote(vote: number, proposalId: string) {
     alerts.successAlert("Vote casted successfully!");
   } catch (error) {
     console.error("Error casting vote", error);
-    alerts.errorAlert((error as Error).message);
+    alerts.errorAlert("Error when casting vote!");
   }
+
+  isLoading.value = false;
 }
 </script>

@@ -8,7 +8,7 @@ export interface NetworkConfig {
   },
   rpc: {
     chainId: number;
-    default: string;
-    values: string[];
+    default?: string;
+    values?: string[];
   }
 }

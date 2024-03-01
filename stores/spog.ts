@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Hash } from "viem";
+import { Abi, Hash } from "viem";
 import {
   MGovernorValues,
   MEpoch,
@@ -7,6 +7,7 @@ import {
   MStandardGovernorValues,
 } from "@/lib/api/types";
 import { MRegistrarStore } from "@/lib/api/modules/registrar/registrar.types";
+import { powerTokenAbi } from "@/lib/sdk";
 
 export const useSpogStore = defineStore("spog", {
   state: () => ({
@@ -120,6 +121,25 @@ export const useSpogStore = defineStore("spog", {
         standard,
         emergency,
         zero,
+      });
+    },
+
+    fetchPowerTokenValue(values: string[]) {
+      const api = useApiClientStore();
+
+      const contractConfig = {
+        address: this.contracts.powerToken!,
+        abi: powerTokenAbi,
+      };
+
+      const contracts = values.map((value) => ({
+        ...contractConfig,
+        functionName: value,
+      }));
+
+      return api.client.context.client.multicall({
+        multicallAddress: api.client.context.config.multicall3,
+        contracts,
       });
     },
   },

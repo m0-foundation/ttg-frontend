@@ -25,7 +25,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue2']").type(fee);
 
       cy.get("input[data-test='title']").type(title);
-      cy.get("textarea[data-test='description']").type(description);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 

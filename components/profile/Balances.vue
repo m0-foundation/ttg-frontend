@@ -9,7 +9,7 @@
           <p
             class="text-2xl lg:text-3xl inline-flex items-center text-grey-100"
           >
-            {{ powerTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+            {{ powerVotingPower?.relative?.toFixed(2) }}%
           </p>
           <p class="text-xs text-grey-500">
             {{ balancePowerToken?.data.value?.formatted }}
@@ -24,7 +24,7 @@
           <p
             class="text-2xl lg:text-3xl inline-flex items-center text-grey-100"
           >
-            {{ zeroTokenVotingPower?.data?.value?.relative?.toFixed(2) }}%
+            {{ zeroVotingPower?.relative?.toFixed(2) }}%
           </p>
           <p class="text-xs text-grey-500">
             {{ balanceZeroToken?.data.value?.formatted }}
@@ -50,7 +50,7 @@ const address = toRef(props, "address");
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
 
-const { powerTokenVotingPower, zeroTokenVotingPower } =
+const { power: powerVotingPower, zero: zeroVotingPower } =
   useMVotingPower(address);
 
 const spog = useSpogStore();

@@ -1,10 +1,10 @@
 <template>
-  <div class="fixed top-10 right-5 z-50 shadow-lg">
+  <div class="z-50 shadow-lg alert">
     <div class="items-stretch flex flex-col px-4" :class="color">
       <div
         class="text-gray-200 text-xs leading-3 uppercase whitespace-nowrap mt-5 max-md:max-w-full justify-between flex gap-2"
       >
-        <span>{{ title }}</span>
+        <span>{{ props.type }}</span>
 
         <button class="hover:opacity-70" @click="dismiss">X</button>
       </div>
@@ -26,33 +26,68 @@
   </div>
 </template>
 <script setup lang="ts">
-import MIconAlert from "@/components/design-system/MIconAlert";
-import MIconCheck from "@/components/design-system/MIconCheck";
+import MIconAlert from "./MIconAlert.vue";
+import MIconCheck from "./MIconCheck.vue";
 
 export interface Props {
-  id: string;
+  id: number;
   message: string;
   type: "error" | "success" | "info";
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  dismiss: [id: string];
+  dismiss: [id: number];
 }>();
 
-const title = computed(() => {
-  return props.type === "error" ? "Error" : "Success";
-});
+const icons = {
+  error: MIconAlert,
+  success: MIconCheck,
+  info: MIconAlert,
+};
 
-const Icon = computed(() => {
-  return props.type === "error" ? MIconAlert : MIconCheck;
-});
+const colors = {
+  error: "bg-red-500",
+  success: "bg-green-900",
+  info: "bg-accent-blue",
+};
 
-const color = computed(() => {
-  return props.type === "error" ? "bg-red-500" : "bg-green-900";
-});
+const Icon = computed(() => icons[props.type]);
+const color = computed(() => colors[props.type]);
 
 function dismiss() {
   emit("dismiss", props.id);
 }
 </script>
+
+<style>
+@keyframes enterFromRightToLeft {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateX(0);
+  }
+  40% {
+    transform: translateX(-30px);
+  }
+}
+
+.alert {
+  animation-name: enterFromRightToLeft, bounce;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+</style>

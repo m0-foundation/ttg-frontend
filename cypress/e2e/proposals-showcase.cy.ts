@@ -8,7 +8,7 @@ describe("Proposals", () => {
     const titleStandard = "Standard proposal";
     const titleReset = "Zero proposal";
     const titleExecutable = "Executable proposal";
-    const descriptionTest = "test proposal description";
+    const description = "test proposal description";
 
     it("CREATE Standard proposal add to list", () => {
       cy.visit("http://localhost:3000/proposal/create");
@@ -25,7 +25,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(titleStandard);
 
-      cy.get("textarea[data-test='description']").type(descriptionTest);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
@@ -57,7 +57,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue']").should("not.exist");
 
       cy.get("input[data-test='title']").type(titleReset);
-      cy.get("textarea[data-test='description']").type(descriptionTest);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
@@ -83,7 +83,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(titlePending);
 
-      cy.get("textarea[data-test='description']").type(descriptionTest);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
@@ -108,7 +108,7 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(titleExecutable);
-      cy.get("textarea[data-test='description']").type(descriptionTest);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
@@ -124,7 +124,7 @@ describe("Proposals", () => {
       cy.connectWallet();
       cy.wait(500);
 
-      cy.contains("article", descriptionTest).then(($proposal) => {
+      cy.contains("article", description).then(($proposal) => {
         cy.wrap($proposal).find("#button-cast-yes").click();
       });
 
@@ -145,7 +145,7 @@ describe("Proposals", () => {
 
       cy.get("input[data-test='proposalValue2']").type(input2);
       cy.get("input[data-test='title']").type(titleEmergency);
-      cy.get("textarea[data-test='description']").type(descriptionTest);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 

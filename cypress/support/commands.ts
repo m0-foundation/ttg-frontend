@@ -159,6 +159,10 @@ Cypress.Commands.add("mineEpochs", (quantity: number) => {
   });
 });
 
+Cypress.Commands.add("createProposalAddDescription", (description: string) => {
+  cy.get(".md-editor-input-wrapper").find("[role='textbox']").type(description);
+});
+
 //
 //
 // -- This is a child command --

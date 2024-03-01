@@ -131,13 +131,11 @@
                 </div>
               </div>
 
-              <MTextareaMarkdown
+              <ProposalCreateFormMarkdown
                 v-model="formData.description"
                 data-test="description"
                 name="description"
                 :errors="$validation.description.$errors"
-                class="h-80 font-inter"
-                :placeholder="descriptionPlaceHolder"
               />
             </div>
 
@@ -295,26 +293,10 @@ const formData = reactive({
   proposalValue2: null,
   proposalValue3: null,
   title: null,
-  description: null,
+  description: "",
   ipfsURL: null,
   discussionURL: null,
 });
-
-const descriptionPlaceHolder = ` Paragraphs are separated by a blank line.
-
-Two spaces at the end of a line produce a line break.
-
-Text attributes _italic_, **bold**
-
-Horizontal rule:
----
-
-Bullet lists nested within numbered list:
-
-  1. fruits
-     * apple
-     * banana
-`;
 
 const rules = computed(() => {
   const constRules = {
@@ -902,12 +884,6 @@ function onBack() {
 }
 </script>
 
-<style>
-label {
-  @apply text-grey-500 block mb-2 font-medium text-xs font-inter;
-}
-</style>
-
 <style scoped>
 h1 {
   @apply text-3xl font-light mb-12;
@@ -915,6 +891,10 @@ h1 {
 
 hr {
   border-top: 1px dashed #979797;
+}
+
+label {
+  @apply text-grey-500 block mb-2 font-medium text-xs font-inter;
 }
 
 #info-text * {

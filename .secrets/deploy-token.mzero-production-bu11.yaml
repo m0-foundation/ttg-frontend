@@ -1,0 +1,23 @@
+kind: SealedSecret
+apiVersion: bitnami.com/v1alpha1
+metadata:
+  name: m0-github-deploy-token
+  creationTimestamp: null
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-50"
+    checksum: 410a77d9ba53a41f7207021cf3bc280ae524bf2e939dcb5b8a7111d21b3b3c4c
+spec:
+  template:
+    metadata:
+      name: m0-github-deploy-token
+      creationTimestamp: null
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+        helm.sh/hook: pre-install,pre-upgrade
+        helm.sh/hook-weight: "-50"
+        checksum: 410a77d9ba53a41f7207021cf3bc280ae524bf2e939dcb5b8a7111d21b3b3c4c
+    type: kubernetes.io/dockerconfigjson
+  encryptedData:
+    .dockerconfigjson: AgBDV3mWU1mJtjqJlQFIA2fgpRK258+LxW+YkYW5BI3u34F9a2jW/S7EBZRaXdXKXqGu3ICDfWjZMX8uVN1fp1/U6MzZCABJ6U8adwPvj5VcCaCDwJetLLSfrr1ni3ysQL9kDVbvcJUwMm/rVErivUTqvmsS3qDqSf2IV4Jl6eTfK18L4fDACBEGA3X7z+dCVu1wi8DqLuN8EEMcBjD1OB9aQJMRr7KzLYdN/kvntbhZB7YxkSZqbGSWw3ZuCqV9OsKkye7fpgA6tm01uzIX2byJ5td1sVukhlhesTIUTl6cskvI7aIR8HcGvxWCOG/tQ5e51w4PqotsxdhNqA4WkzbrgvHcxy5elMrgdF/OxR1CW+w9jyf8EsXOtrCL0GmddA/4q7SEF8mPDq2ZqPyfRR2QrfsUy9YDdUdqeB3qQfzvhduHcEJZCY3Z1dLNowW16RxmzOR1VlyAK1IqLUa27D1vf1FaG+kXxG59od8yKApWdLKyaSYpPcehdq7T5nzwnsPHrux2GROteJ4wNM4PGp+dVOgRFRm3HCabE4bPnL2WS4Q06iE2ZhWKhwVsAYxSfU0VRjTIdsS2Zp+luzxNxnR/2x/0iaQ14Uzk99cnKEtOX/Rjf8JzsjyA6dAcGUZZzOklFuvESJd/MqX+axX/oMVA/aywKFGNNRP3uMdUlfNieBBXq0xRiunMqlR+OhROsH/TXEKhWnm5n9cN6fwUFLdnFAwl0jF1D9KQCGSKBD+KWgEVD9lX7AuwZqvrVZpvueNBumXaYAyWgQwe3nl7tm/lNbvM1snQPS9ps3Y+l2RU0wqBRJ9bLa2m7wgQz6rD2Ehe+KhFkvG7dRSNdKvNGgMJ0ZoyRSzviayqOfHRyT6Ykf+v0uPJWytsRLFBaSfLBjeAjkW7p1MfbNjlVBWt3A1MrzC/ca/rOdMIU8R8gI6NDqinI3ILwas7uh0lqOV8LNAW/t0CcYdHYccv

@@ -10,10 +10,12 @@ export const useAlertsStore = defineStore("alerts", () => {
     Array<{
       show: boolean;
       message: string;
-      id: string;
+      id: number;
       type: "success" | "error" | "info";
     }>
   >([]);
+
+  const count = computed(() => items.value.length);
 
   const addAlert = ({
     message,
@@ -22,11 +24,11 @@ export const useAlertsStore = defineStore("alerts", () => {
     message: string;
     type: "success" | "error" | "info";
   }) => {
-    const id = Math.random().toString(36).substring(7);
-    items.value.push({ show: true, message, type, id });
+    const id = count.value + 1;
+    items.value.unshift({ show: true, message, type, id });
   };
 
-  const removeAlert = (id: string) => {
+  const removeAlert = (id: number) => {
     items.value = items.value.filter((alert) => alert.id !== id);
   };
 
@@ -35,6 +37,9 @@ export const useAlertsStore = defineStore("alerts", () => {
   };
   const errorAlert = (message: string) => {
     addAlert({ message, type: "error" });
+  };
+  const infoAlert = (message: string) => {
+    addAlert({ message, type: "info" });
   };
 
   const showResetAlert = (proposal: MProposal) => {
@@ -54,6 +59,7 @@ export const useAlertsStore = defineStore("alerts", () => {
     addAlert,
     removeAlert,
     successAlert,
+    infoAlert,
     errorAlert,
   };
 });

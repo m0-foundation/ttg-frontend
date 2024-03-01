@@ -25,7 +25,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue2']").type(input1);
       cy.get("input[data-test='title']").type(description1);
 
-      cy.get("textarea[data-test='description']").type(description1);
+      cy.createProposalAddDescription(description1);
 
       cy.clickPreviewProposal();
 
@@ -50,7 +50,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue2']").type(input1);
       cy.get("input[data-test='title']").type(description2);
 
-      cy.get("textarea[data-test='description']").type(description2);
+      cy.createProposalAddDescription(description2);
 
       cy.clickPreviewProposal();
 
@@ -75,7 +75,7 @@ describe("Proposals", () => {
       cy.get("input[data-test='proposalValue2']").type(input1);
       cy.get("input[data-test='title']").type(description3);
 
-      cy.get("textarea[data-test='description']").type(description3);
+      cy.createProposalAddDescription(description3);
 
       cy.clickPreviewProposal();
 
