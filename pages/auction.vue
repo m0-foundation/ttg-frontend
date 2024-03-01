@@ -78,7 +78,12 @@
           :amount="totalPrice"
         />
         <MButton
-          :disabled="!purchaseAmount || !userAccount || !userAgreeMinAmount"
+          :disabled="
+            !purchaseAmount ||
+            !userAccount ||
+            !userAgreeMinAmount ||
+            isLoadingTransaction
+          "
           class="mt-4 w-full flex justify-center"
           type="submit"
           :is-loading="isLoadingTransaction"
