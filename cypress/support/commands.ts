@@ -13,36 +13,24 @@
 //
 // -- This is a parent command --
 import "@testing-library/cypress/add-commands";
+import "cypress-fail-fast";
 
 declare global {
   namespace Cypress {
     interface Chainable {
       connectWallet(): Chainable;
-
       delegatePower(delegate?: string): Chainable;
-
       delegateZero(delegate?: string): Chainable;
-
       executeProposal(proposalUrl: string): Chainable;
-
       castYesOneProposal(description: string): Chainable;
-
       castYesAllProposals(): Chainable;
-
       castYesOneOptionalProposal(description: string, page?: string): Chainable;
-
       castYesOneEmergencyProposal(description: string): Chainable;
-
       castYesAllEmergencyProposals(): Chainable;
-
       executeOneProposal(description: string): Chainable;
-
       clickPreviewProposal(): Chainable;
-
       mineEpochs(quantity: number): Chainable;
-
       createProposalAddDescription(description: string): Chainable;
-
       validateEthAddress(address: string): Chainable;
     }
   }
@@ -74,10 +62,10 @@ Cypress.Commands.add("delegatePower", (delegate?: string) => {
     console.log("type");
   } else {
     // self delegate
-    cy.get("#button-use-my-address-power").click({force: true});
+    cy.get("#button-use-my-address-power").click({ force: true });
   }
 
-  cy.get("#button-delegate-power").click({force: true});
+  cy.get("#button-delegate-power").click({ force: true });
   cy.wait(500);
   cy.reload();
 });
@@ -92,10 +80,10 @@ Cypress.Commands.add("delegateZero", (delegate?: string) => {
     console.log("type");
   } else {
     // self delegate
-    cy.get("#button-use-my-address-zero").click({force: true});
+    cy.get("#button-use-my-address-zero").click({ force: true });
   }
 
-  cy.get("#button-delegate-zero").click({force: true});
+  cy.get("#button-delegate-zero").click({ force: true });
   cy.wait(500);
   // cy.reload();
 });

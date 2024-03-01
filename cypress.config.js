@@ -1,4 +1,5 @@
 import { defineConfig } from "cypress";
+import cypressFailFast from "cypress-fail-fast/plugin";
 import { setupHardhatEvents } from "./hardhat/index";
 
 export default defineConfig({
@@ -9,6 +10,8 @@ export default defineConfig({
   e2e: {
     async setupNodeEvents(on, config) {
       await setupHardhatEvents(on, config);
+      cypressFailFast(on, config);
+      return config;
     },
   },
   defaultCommandTimeout: 120000,
