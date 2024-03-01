@@ -194,8 +194,7 @@ async function getAmountLeftToAuction() {
 }
 
 async function auctionBuy() {
-  const account = userAccount.value;
-  if (!account) return;
+  if (!userAccount.value) return;
   isLoadingTransaction.value = true;
   await forceSwitchChain();
   try {
@@ -209,9 +208,9 @@ async function auctionBuy() {
       args: [
         0n, // Minimun amount the user is willing to buy
         BigInt(purchaseAmount.value), // Maximum and IDEAL amount the user is willing to buy
-        account,
+        userAccount.value as Hash,
       ],
-      account,
+      account: userAccount.value as Hash,
     });
 
     const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
@@ -232,14 +231,12 @@ async function auctionBuy() {
 }
 
 async function writeAllowance(value: string) {
-  const account = userAccount.value;
-
   const allowance = await readContract(wagmiConfig, {
     abi: erc20Abi,
     address: spog.contracts.value.cashToken as Hash,
     functionName: "allowance",
-    args: [account as Hash, spog.contracts.value.powerToken as Hash], // address owner, address spender
-    account,
+    args: [userAccount.value as Hash, spog.contracts.value.powerToken as Hash], // address owner, address spender
+    account: userAccount.value as Hash,
   });
 
   if (!allowance || allowance < parseEther(value)) {
@@ -248,7 +245,7 @@ async function writeAllowance(value: string) {
       address: spog.contracts.value.cashToken as Hash,
       functionName: "approve",
       args: [spog.contracts.value.powerToken as Hash, parseEther(value)], // address spender, uint256 amount
-      account,
+      account: userAccount.value as Hash,
     });
 
     const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
