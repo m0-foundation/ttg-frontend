@@ -34,7 +34,7 @@
               name="power"
               image="/img/tokens/power.svg"
               :size="30"
-              :amount="amountLeftToAuction"
+              :amount="isTransferEpoch ? formatNumber(amountLeftToAuction) : 0"
             />
           </div>
         </div>
@@ -125,10 +125,16 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
-import { Hash, formatEther } from "viem";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { Hash, formatEther, erc20Abi, parseEther } from "viem";
+import {
+  readContract,
+  waitForTransactionReceipt,
+  writeContract,
+} from "@wagmi/core";
 import { readPowerToken, writePowerToken } from "@/lib/sdk";
 
+const alerts = useAlertsStore();
+const { forceSwitchChain } = useCorrectChain();
 const { address: userAccount } = useAccount();
 const spog = storeToRefs(useSpogStore());
 
@@ -147,9 +153,9 @@ const isTransferEpoch = computed(
 const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
 
 const totalPrice = computed(() => {
-  if (!currentCost.value || !purchaseAmount.value) return 0;
-  return formatEther(
-    BigInt(currentCost.value.value) * BigInt(purchaseAmount.value)
+  if (!currentCost.value || !purchaseAmount.value) return "0";
+  return formatNumber(
+    formatEther(BigInt(currentCost.value.value) * BigInt(purchaseAmount.value))
   );
 });
 
@@ -182,18 +188,24 @@ async function getAmountLeftToAuction() {
 }
 
 async function auctionBuy() {
-  if (!userAccount.value) return;
+  const account = userAccount.value;
+  if (!account) return;
   isLoadingTransaction.value = true;
+  await forceSwitchChain();
   try {
+    await writeAllowance(totalPrice.value).catch(() => {
+      alerts.errorAlert("Error getting approval!");
+    });
+
     const hash = await writePowerToken(wagmiConfig, {
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
       args: [
         0n, // Minimun amount the user is willing to buy
         BigInt(purchaseAmount.value), // Maximum and IDEAL amount the user is willing to buy
-        userAccount.value,
+        account,
       ],
-      account: userAccount.value,
+      account,
     });
 
     const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
@@ -202,11 +214,47 @@ async function auctionBuy() {
     });
     if (txReceipt.status !== "success") {
       throw new Error("Transaction was rejected");
+    } else {
+      alerts.successAlert(`You bought ${purchaseAmount.value} Power tokens.`);
     }
   } catch (error) {
-    console.log(error);
+    console.log("ERROR", error);
+    alerts.errorAlert("Error buying!");
   } finally {
     isLoadingTransaction.value = false;
+  }
+}
+
+async function writeAllowance(value: string) {
+  const account = userAccount.value;
+
+  const allowance = await readContract(wagmiConfig, {
+    abi: erc20Abi,
+    address: spog.contracts.value.cashToken as Hash,
+    functionName: "allowance",
+    args: [account as Hash, spog.contracts.value.powerToken as Hash], // address owner, address spender
+    account,
+  });
+
+  if (!allowance || allowance < parseEther(value)) {
+    const hash = await writeContract(wagmiConfig, {
+      abi: erc20Abi,
+      address: spog.contracts.value.cashToken as Hash,
+      functionName: "approve",
+      args: [spog.contracts.value.powerToken as Hash, parseEther(value)], // address spender, uint256 amount
+      account,
+    });
+
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+      confirmations: 1,
+      hash,
+    });
+    // Fail tx
+    if (txReceipt.status !== "success") {
+      throw new Error("Transaction was not successful");
+    }
+
+    return txReceipt;
   }
 }
 
