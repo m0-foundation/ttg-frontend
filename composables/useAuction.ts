@@ -87,6 +87,10 @@ export const useAuction = () => {
   };
 };
 
-function calculateExponentialIncrease(number: number, periods: bigint): bigint {
-  return 1n << (periods - BigInt(number) - 1n);
+function calculateExponentialIncrease(
+  index: number,
+  totalPeriods: bigint
+): bigint {
+  // This function calculates the exponential increase for a given index and total number of periods.
+  return 1n << (totalPeriods - BigInt(index) - 1n);
 }
