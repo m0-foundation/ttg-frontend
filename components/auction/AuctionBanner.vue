@@ -9,8 +9,8 @@
         <div>
           <span class="text-xs">WETH/Power rate</span>
           <MTokenAmount
-            name="power"
-            image="/img/tokens/power.svg"
+            name="weth"
+            image="/img/tokens/weth.png"
             :size="24"
             :amount="formatNumber(formatEther(currentCost.value))"
           />
