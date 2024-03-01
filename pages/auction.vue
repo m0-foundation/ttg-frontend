@@ -18,8 +18,8 @@
           <div>
             <p class="mb-2 text-xxs uppercase">WETH/POWER Rate</p>
             <MTokenAmount
-              name="eth"
-              image="/img/tokens/eth.svg"
+              name="weth"
+              image="/img/tokens/weth.png"
               :size="30"
               :amount="
                 isTransferEpoch
@@ -71,8 +71,9 @@
         <div class="my-2 lg:my-12"></div>
         <p class="text-gray-200 text-xs uppercase mb-2">Total price:</p>
         <MTokenAmount
+          name="weth"
           class="text-grey-500"
-          image="/img/tokens/eth.svg"
+          image="/img/tokens/weth.png"
           :size="20"
           :amount="totalPrice"
         />
