@@ -24,7 +24,7 @@
 
     <form
       class="my-4 bg-grey-800 p-6 font-inter"
-      @submit.prevent="delegateVote"
+      @submit.prevent="delegatePower"
     >
       <div>
         <div class="flex justify-between items-center mb-3">
@@ -59,14 +59,21 @@
       <div class="flex justify-between items-center gap-2">
         <NuxtLink
           class="text-grey-600 underline text-xs cursor-pointer"
-          @click="onUseMyAddressVote"
-          >Use my address</NuxtLink
+          @click="onUseMyAddressPower"
         >
+          Use my address
+        </NuxtLink>
         <MButton
           id="button-delegate-power"
           type="submit"
-          :disabled="!isConnected || !canDelegate || !inputPowerDelegates"
+          :disabled="
+            !isConnected ||
+            !canDelegate ||
+            !inputPowerDelegates ||
+            isLoadingPower
+          "
           data-test="delegate-button-power-submit"
+          :is-loading="isLoadingPower"
         >
           delegate
         </MButton>
@@ -75,7 +82,7 @@
 
     <form
       class="my-4 bg-grey-800 p-6 font-inter"
-      @submit.prevent="delegateValue"
+      @submit.prevent="delegateZero"
     >
       <div>
         <div class="flex justify-between items-center my-3">
@@ -110,14 +117,18 @@
       <div class="flex justify-between items-center gap-2">
         <NuxtLink
           class="text-grey-600 underline text-xs cursor-pointer"
-          @click="onUseMyAddressValue"
-          >Use my address</NuxtLink
+          @click="onUseMyAddressZero"
         >
+          Use my address
+        </NuxtLink>
         <MButton
           id="button-delegate-zero"
           type="submit"
-          :disabled="!isConnected || !canDelegate || !inputZeroDelegates"
+          :disabled="
+            !isConnected || !canDelegate || !inputZeroDelegates || isLoadingZero
+          "
           data-test="delegate-button-zero-submit"
+          :is-loading="isLoadingZero"
         >
           delegate
         </MButton>
@@ -135,7 +146,8 @@
 import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useAccount } from "use-wagmi";
-import { useMBalances } from "@/lib/hooks";
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { useMBalances, useMDelegates } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
 const spog = storeToRefs(useSpogStore());
@@ -146,7 +158,7 @@ const inputZeroDelegates = ref();
 const { address: userAccount, isConnected } = useAccount();
 
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
-  useDelegate();
+  useMDelegates(userAccount);
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(userAccount);
@@ -154,8 +166,8 @@ const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
 function onUseMyAddress(refAddress: Ref<string | undefined>) {
   refAddress.value = userAccount.value!;
 }
-const onUseMyAddressVote = () => onUseMyAddress(inputPowerDelegates);
-const onUseMyAddressValue = () => onUseMyAddress(inputZeroDelegates);
+const onUseMyAddressPower = () => onUseMyAddress(inputPowerDelegates);
+const onUseMyAddressZero = () => onUseMyAddress(inputZeroDelegates);
 
 const canDelegate = computed(
   () => spog.epoch.value.current.type === "TRANSFER"
@@ -163,28 +175,74 @@ const canDelegate = computed(
 
 const { forceSwitchChain } = useCorrectChain();
 const wagmiConfig = useWagmiConfig();
+const alerts = useAlertsStore();
+
+const isLoadingPower = ref(false);
+const isLoadingZero = ref(false);
 
 useHead({
   titleTemplate: "%s - Delegate",
 });
 
-async function delegateVote() {
+async function delegatePower() {
   await forceSwitchChain();
 
-  return writePowerToken(wagmiConfig, {
-    address: spog.contracts.value.powerToken as Hash,
-    functionName: "delegate",
-    args: [inputPowerDelegates.value! as Hash],
-  });
+  isLoadingPower.value = true;
+
+  try {
+    const hash = await writePowerToken(wagmiConfig, {
+      address: spog.contracts.value.powerToken as Hash,
+      functionName: "delegate",
+      args: [inputPowerDelegates.value! as Hash],
+    });
+
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+      confirmations: 1,
+      hash,
+    });
+    // Fail tx
+    if (txReceipt.status !== "success") {
+      throw new Error("Transaction was not successful");
+    }
+    alerts.successAlert(
+      "POWER tokens voting power were delegated Successfully!"
+    );
+  } catch (error) {
+    console.error(error);
+    alerts.errorAlert("Error while delegating!");
+  } finally {
+    isLoadingPower.value = false;
+  }
 }
 
-async function delegateValue() {
+async function delegateZero() {
   await forceSwitchChain();
 
-  return writeZeroToken(wagmiConfig, {
-    address: spog.contracts.value.zeroToken as Hash,
-    functionName: "delegate",
-    args: [inputZeroDelegates.value! as Hash],
-  });
+  isLoadingZero.value = true;
+
+  try {
+    const hash = await writeZeroToken(wagmiConfig, {
+      address: spog.contracts.value.zeroToken as Hash,
+      functionName: "delegate",
+      args: [inputZeroDelegates.value! as Hash],
+    });
+
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+      confirmations: 1,
+      hash,
+    });
+    // Fail tx
+    if (txReceipt.status !== "success") {
+      throw new Error("Transaction was not successful");
+    }
+    alerts.successAlert(
+      "ZERO tokens voting power were delegated Successfully!"
+    );
+  } catch (error) {
+    console.error(error);
+    alerts.errorAlert("Error while delegating!");
+  } finally {
+    isLoadingZero.value = false;
+  }
 }
 </script>
