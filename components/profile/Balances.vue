@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-between gap-4 w-full">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- power -->
-    <div class="px-8 py-4 bg-grey-800 w-1/2">
+    <div class="px-8 py-4 bg-grey-800">
       <div class="flex justify-start w-full items-center">
         <p class="text-xl">POWER Token</p>
         <div>
@@ -15,7 +15,7 @@
           <div class="flex items-center align-middle gap-2">
             <MIconPower class="h-8 w-8" />
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
-              {{ powerVotingPower?.relative?.toFixed(2) }}%
+              {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
             </p>
           </div>
         </div>
@@ -31,9 +31,26 @@
           </div>
         </div>
       </div>
+
+      <div v-if="hasDelegatedPower" class="bg-accent-blue p-2 w-fit">
+        <div class="inline-flex items-center gap-3">
+          <p class="text-xs font-mono">Delegated to:</p>
+          <span class="font-inter text-xs">
+            {{ shortenAddress(powerDelegates) }}
+          </span>
+
+          <MIconSimpleCheck
+            v-if="isJustCopied"
+            class="min-w-5 h-5 fill-white"
+          />
+          <button v-if="!isJustCopied" @click="copy(powerDelegates)">
+            <MIconCopy class="min-w-5 h-5 hover:opacity-75 fill-white" />
+          </button>
+        </div>
+      </div>
     </div>
     <!-- zero -->
-    <div class="px-8 py-4 bg-grey-800 w-1/2">
+    <div class="px-8 py-4 bg-grey-800">
       <div class="flex justify-start w-full items-center">
         <p class="text-xl">Zero Token</p>
         <div>
@@ -47,7 +64,7 @@
           <div class="flex items-center align-middle gap-2">
             <MIconPower class="h-8 w-8" />
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
-              {{ zeroVotingPower?.relative?.toFixed(2) }}%
+              {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
             </p>
           </div>
         </div>
@@ -63,6 +80,23 @@
           </div>
         </div>
       </div>
+
+      <div v-if="hasDelegatedZero" class="bg-accent-blue p-2 w-fit">
+        <div class="inline-flex items-center gap-3">
+          <p class="text-xs font-mono">Delegated to:</p>
+          <span class="font-inter text-xs">
+            {{ shortenAddress(zeroDelegates) }}
+          </span>
+
+          <MIconSimpleCheck
+            v-if="isJustCopied"
+            class="min-w-5 h-5 fill-white"
+          />
+          <button v-if="!isJustCopied" @click="copy(zeroDelegates)">
+            <MIconCopy class="min-w-5 h-5 hover:opacity-75 fill-white" />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -70,7 +104,7 @@
 <script setup lang="ts">
 import { Hash } from "viem";
 import { storeToRefs } from "pinia";
-import { useMBalances, useMVotingPower } from "@/lib/hooks";
+import { useMBalances, useMVotingPower, useMDelegates } from "@/lib/hooks";
 
 const props = defineProps<{
   address: Ref<Hash>;
@@ -84,6 +118,11 @@ const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
 const { power: powerVotingPower, zero: zeroVotingPower } =
   useMVotingPower(address);
 
+const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
+  useMDelegates(address);
+
 const spog = useSpogStore();
 const { getTokens } = storeToRefs(spog);
+
+const { isJustCopied, copy } = useCopyClipboard();
 </script>
