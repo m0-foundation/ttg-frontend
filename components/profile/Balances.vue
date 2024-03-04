@@ -1,36 +1,67 @@
 <template>
-  <div class="px-8 py-4 bg-grey-800">
-    <p class="text-xs text-grey-500 mb-1">Token balance</p>
-    <div class="flex flex-wrap gap-12">
-      <!-- power tokens -->
-      <div class="flex gap-2">
-        <MIconPower class="h-8 w-8" />
+  <div class="flex justify-between gap-4 w-full">
+    <!-- power -->
+    <div class="px-8 py-4 bg-grey-800 w-1/2">
+      <div class="flex justify-start w-full items-center">
+        <p class="text-xl">POWER Token</p>
         <div>
-          <p
-            class="text-2xl lg:text-3xl inline-flex items-center text-grey-100"
-          >
-            {{ powerVotingPower?.relative?.toFixed(2) }}%
-          </p>
-          <p class="text-xs text-grey-500">
-            {{ balancePowerToken?.data.value?.formatted }}
-          </p>
+          <ProfileTokenMenu :token="getTokens?.power" />
         </div>
-        <ProfileTokenMenu :token="getTokens?.power" />
       </div>
-      <!-- zero tokens -->
-      <div class="flex gap-2">
-        <MIconZero class="h-8 w-8" />
+
+      <div class="grid grid-cols-2 gap-4 mt-8 mb-4">
         <div>
-          <p
-            class="text-2xl lg:text-3xl inline-flex items-center text-grey-100"
-          >
-            {{ zeroVotingPower?.relative?.toFixed(2) }}%
-          </p>
-          <p class="text-xs text-grey-500">
-            {{ balanceZeroToken?.data.value?.formatted }}
-          </p>
+          <p class="text-grey-500 text-xs mb-2">Voting power</p>
+          <div class="flex items-center align-middle gap-2">
+            <MIconPower class="h-8 w-8" />
+            <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
+              {{ powerVotingPower?.relative?.toFixed(2) }}%
+            </p>
+          </div>
         </div>
-        <ProfileTokenMenu :token="getTokens?.zero" />
+
+        <div>
+          <p class="text-grey-500 text-xs mb-2">Token Balance</p>
+          <div class="flex items-center align-middle gap-2">
+            <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
+              {{
+                useNumberFormatterPrice(balancePowerToken?.data.value?.value)
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- zero -->
+    <div class="px-8 py-4 bg-grey-800 w-1/2">
+      <div class="flex justify-start w-full items-center">
+        <p class="text-xl">Zero Token</p>
+        <div>
+          <ProfileTokenMenu :token="getTokens?.zero" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mt-8 mb-4">
+        <div>
+          <p class="text-grey-500 text-xs mb-2">Voting power</p>
+          <div class="flex items-center align-middle gap-2">
+            <MIconPower class="h-8 w-8" />
+            <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
+              {{ zeroVotingPower?.relative?.toFixed(2) }}%
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-grey-500 text-xs mb-2">Token Balance</p>
+          <div class="flex items-center align-middle gap-2">
+            <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
+              {{
+                useNumberFormatterPrice(balanceZeroToken?.data.value?.formatted)
+              }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

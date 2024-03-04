@@ -19,12 +19,15 @@
         <li>
           <a @click="copyToClipboard(token?.address)">
             <p>{{ `Copy ${token?.symbol} token address` }}</p>
-            <p class="text-grey-500 text-xxs">{{ token?.address }}</p></a
-          >
+            <p class="text-grey-500 text-xxs">{{ token?.address }}</p>
+          </a>
         </li>
         <li>
-          <a target="_blank" :href="useBlockExplorer('token', token?.address)"
-            >View on Block Explorer
+          <a @click="addTokenToWallet"> Add Token to your wallet </a>
+        </li>
+        <li>
+          <a target="_blank" :href="useBlockExplorer('token', token?.address)">
+            View on Block Explorer
           </a>
         </li>
       </ul>
@@ -34,12 +37,31 @@
 
 <script setup>
 import { copyToClipboard } from "@/utils/misc";
-defineProps({
+const props = defineProps({
   token: {
     type: Object,
     required: true,
   },
 });
+
+async function addTokenToWallet() {
+  try {
+    await ethereum.request({
+      method: "wallet_watchAsset",
+      params: {
+        type: "ERC20",
+        options: {
+          address: props.token?.address,
+          symbol: props.token?.symbol,
+          decimals: props.token?.decimals,
+          // image: tokenImage, // A string url of the token logo
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
 
 <style scoped>
