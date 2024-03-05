@@ -21,10 +21,11 @@ const series = ref([
   },
 ]);
 
+const seriesMiddleItemTimestamp =
+  series.value[0].data[Math.floor(series.value[0].data.length / 2)].x;
+
 const isEpochFirstHalf = computed(
-  () =>
-    series.value[0].data[Math.floor(series.value[0].data.length / 2)].x >
-    currentCost.value.timestamp
+  () => seriesMiddleItemTimestamp > currentCost.value.timestamp
 );
 
 const props = defineProps<{
