@@ -24,7 +24,10 @@
       </div>
     </div>
 
-    <AuctionBanner v-if="isTransferEpoch" class="mb-6" />
+    <AuctionBanner
+      v-if="isTransferEpoch && $config.public.auctionActive"
+      class="mb-6"
+    />
 
     <div class="text-grey-600 p-6 pt-0">
       <h5 class="text-xxs mb-1">Proposals:</h5>
