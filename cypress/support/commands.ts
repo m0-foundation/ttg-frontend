@@ -19,6 +19,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       connectWallet(): Chainable;
+      disconnectWallet(): Chainable;
       delegatePower(delegate?: string): Chainable;
       delegateZero(delegate?: string): Chainable;
       executeProposal(proposalUrl: string): Chainable;
@@ -48,6 +49,23 @@ Cypress.Commands.add("connectWallet", () => {
     } else {
       // Element does not exist, do something else
       console.log("already connected");
+    }
+  });
+});
+
+Cypress.Commands.add("disconnectWallet", () => {
+  cy.get("aside").then(($body) => {
+    if ($body.find("[data-test='sidebar-button-disconnect']").length > 0) {
+      console.log("connected, init disconnect");
+
+      cy.contains("Disconnect").click();
+
+      cy.get("[data-test='modal-web3-button-connect-wallet']").should(
+        "be.visible"
+      );
+    } else {
+      // Element does not exist, do something else
+      console.log("already disconnected");
     }
   });
 });
