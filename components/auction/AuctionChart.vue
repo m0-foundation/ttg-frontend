@@ -21,6 +21,12 @@ const series = ref([
   },
 ]);
 
+const isEpochFirstHalf = computed(
+  () =>
+    series.value[0].data[Math.floor(series.value[0].data.length / 2)].x >
+    currentCost.value.timestamp
+);
+
 const props = defineProps<{
   showOptions?: boolean;
   height?: number;
@@ -57,7 +63,7 @@ const annotations = computed(() => {
         label: {
           borderWidth: 0,
           text: formatNumber(formatEther(currentCost.value.value || 0n)),
-
+          textAnchor: isEpochFirstHalf.value ? "start" : "end",
           style: {
             background: "#627EEA",
             color: "white",
