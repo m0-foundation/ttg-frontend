@@ -21,10 +21,10 @@
       </template>
     </PageTitle>
 
-    <ProfileBalances class="mb-6 lg:px-8" :address="address" />
+    <ProfileBalances :address="address" />
 
     <!-- tables -->
-    <ProfileTables class="lg:px-8" :address="address" />
+    <ProfileTables :address="address" />
   </div>
   <div
     v-else
