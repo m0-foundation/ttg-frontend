@@ -28,5 +28,9 @@ export default (
     zeroDelegates: zeroDelegates?.data,
     hasDelegatedPower,
     hasDelegatedZero,
+    refetch: () => {
+      powerDelegates.refetch();
+      zeroDelegates.refetch();
+    },
   };
 };
