@@ -8,7 +8,7 @@ describe("Proposals", () => {
       // zero proposals cant be created on first epoch
       cy.mineEpochs(2);
 
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -29,7 +29,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       cy.wait(500);
-      cy.visit("http://localhost:3000/proposals/zero");
+      cy.visit("/proposals/zero");
 
       cy.contains(description).should("exist");
 

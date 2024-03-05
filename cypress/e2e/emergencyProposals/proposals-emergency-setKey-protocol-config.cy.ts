@@ -6,7 +6,7 @@ describe("Proposals", () => {
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -39,7 +39,7 @@ describe("Proposals", () => {
       // cy.mineEpochs(2);
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
 
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.visit("/proposals/emergency");
       cy.reload();
 
       cy.contains(description).should("exist");
@@ -74,7 +74,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to see lists", () => {
-      cy.visit("http://localhost:3000/config/protocol");
+      cy.visit("/config/protocol");
 
       cy.get("table").invoke("text").should("not.contain", "loading data...");
       cy.get("table > tbody > tr").should("have.length", 1);

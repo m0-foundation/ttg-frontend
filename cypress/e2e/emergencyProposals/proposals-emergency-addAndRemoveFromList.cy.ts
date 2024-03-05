@@ -8,7 +8,7 @@ describe("Proposals", () => {
     const description = `Add ${input2} and remove ${input3} from list: ${input1}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -38,7 +38,7 @@ describe("Proposals", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
       // cy.task("mine", 10);
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.visit("/proposals/emergency");
 
       cy.contains(description).should("exist");
 

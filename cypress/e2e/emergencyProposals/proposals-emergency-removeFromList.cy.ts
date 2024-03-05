@@ -7,7 +7,7 @@ describe("Proposals", () => {
     const description = `Add ${input2} to list ${LIST}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -35,7 +35,7 @@ describe("Proposals", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
       // cy.task("mine", 10);
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.visit("/proposals/emergency");
 
       cy.contains(description).should("exist");
 
@@ -74,7 +74,7 @@ describe("Proposals", () => {
     const description = `Emergency Remove ${input2} from list ${LIST}`;
 
     it("I should be able to CREATE a proposal to REMOVE an address from a list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -102,7 +102,7 @@ describe("Proposals", () => {
     it("I should be able to ACCESS the EMERGENCY proposal", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.visit("/proposals/emergency");
 
       cy.contains(description).should("exist");
 

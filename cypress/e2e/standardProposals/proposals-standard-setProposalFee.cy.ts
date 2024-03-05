@@ -5,7 +5,7 @@ describe("Proposals", () => {
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
 
       cy.connectWallet();
 
@@ -33,7 +33,7 @@ describe("Proposals", () => {
       // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
       cy.mineEpochs(1);
 
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("/proposals/");
 
       cy.contains(description).should("exist");
 

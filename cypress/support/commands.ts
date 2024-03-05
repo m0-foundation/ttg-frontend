@@ -53,7 +53,7 @@ Cypress.Commands.add("connectWallet", () => {
 });
 
 Cypress.Commands.add("delegatePower", (delegate?: string) => {
-  cy.visit("http://localhost:3000/delegate");
+  cy.visit("/delegate");
   cy.connectWallet();
   cy.wait(500); // wait to load props values
 
@@ -71,7 +71,7 @@ Cypress.Commands.add("delegatePower", (delegate?: string) => {
 });
 
 Cypress.Commands.add("delegateZero", (delegate?: string) => {
-  cy.visit("http://localhost:3000/delegate");
+  cy.visit("/delegate");
   cy.connectWallet();
   cy.wait(500); // wait to load props values
 
@@ -101,7 +101,7 @@ Cypress.Commands.add("executeProposal", (proposalUrl: string) => {
 });
 
 Cypress.Commands.add("castYesOneProposal", (description: string) => {
-  cy.visit("http://localhost:3000/proposals/");
+  cy.visit("/proposals/");
   cy.connectWallet();
   cy.wait(500);
 
@@ -115,7 +115,7 @@ Cypress.Commands.add("castYesOneProposal", (description: string) => {
 });
 
 Cypress.Commands.add("castYesAllProposals", () => {
-  cy.visit("http://localhost:3000/proposals/");
+  cy.visit("/proposals/");
   cy.connectWallet();
   cy.wait(500);
 
@@ -129,7 +129,7 @@ Cypress.Commands.add("castYesAllProposals", () => {
 Cypress.Commands.add(
   "castYesOneOptionalProposal",
   (description: string, page?: string) => {
-    cy.visit(`http://localhost:3000/proposals/${page}`);
+    cy.visit(`/proposals/${page}`);
     cy.connectWallet();
     cy.wait(500);
 
@@ -145,7 +145,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("castYesAllEmergencyProposals", () => {
-  cy.visit("http://localhost:3000/proposals/emergency");
+  cy.visit("/proposals/emergency");
   cy.connectWallet();
   cy.wait(500);
 
@@ -159,7 +159,7 @@ Cypress.Commands.add("castYesAllEmergencyProposals", () => {
 Cypress.Commands.add("executeOneProposal", (description: string) => {
   // cy.mineEpochs(1);
 
-  cy.visit("http://localhost:3000/proposals/succeeded");
+  cy.visit("/proposals/succeeded");
   cy.connectWallet();
 
   // cy.reload();

@@ -6,7 +6,7 @@ describe("Proposals", () => {
     const values: string[] = [];
 
     it("I should be able to CREATE a proposal - Update collateral interval", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -43,7 +43,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CREATE a proposal - Update collateral threshold ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -80,7 +80,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CREATE a proposal - Penalty rate ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -118,7 +118,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CREATE a proposal - Mint delay ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -156,7 +156,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CREATE a proposal - Mint TTL ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -194,7 +194,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CREATE a proposal - Mint ratio ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -232,7 +232,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CREATE a proposal - Minter freeze time ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -270,7 +270,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CREATE a proposal - Minter rate model ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -308,7 +308,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CREATE a proposal - earner rate model ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -351,7 +351,7 @@ describe("Proposals", () => {
 
     it("I should be able to EXECUTE the proposal", () => {
       const execute = (description: string) => {
-        cy.visit("http://localhost:3000/proposals/succeeded");
+        cy.visit("/proposals/succeeded");
         cy.connectWallet();
 
         cy.reload();
@@ -377,7 +377,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to check the executed proposal", () => {
-      cy.visit("http://localhost:3000/config/protocol");
+      cy.visit("/config/protocol");
 
       cy.get("table > tbody > tr").should("have.length", descriptions.length);
 

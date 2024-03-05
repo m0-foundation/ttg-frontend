@@ -14,7 +14,7 @@ describe("Proposals", () => {
 
       description = `Change cash token to ${newCashTokenAddress} with fee to ${fee}`;
 
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -37,7 +37,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
-      cy.visit("http://localhost:3000/proposals/zero");
+      cy.visit("/proposals/zero");
 
       cy.contains(description).should("exist");
 

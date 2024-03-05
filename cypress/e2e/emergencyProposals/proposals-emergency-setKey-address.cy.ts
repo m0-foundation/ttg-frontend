@@ -5,7 +5,7 @@ describe("Proposals", () => {
     const description = `Add protocol config ${key} = ${value}`;
 
     it("I should be able to CREATE a proposal - Minter rate model ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -44,7 +44,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to check the executed proposal", () => {
-      cy.visit("http://localhost:3000/config/protocol");
+      cy.visit("/config/protocol");
 
       cy.contains(key);
       cy.contains(value.toLowerCase());

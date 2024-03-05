@@ -8,7 +8,7 @@ describe("Proposals", () => {
     let newGovernor = "";
 
     it("Get old Governor", () => {
-      cy.visit("http://localhost:3000/config/governance");
+      cy.visit("/config/governance");
       cy.get(`[data-test="${tableSelector}"]`)
         .last()
         .then(($el) => {
@@ -22,7 +22,7 @@ describe("Proposals", () => {
       // zero proposals cant be created on first epoch
       cy.mineEpochs(2);
 
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -46,7 +46,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the proposal", () => {
       // @todo: is this tho correct url?
-      cy.visit("http://localhost:3000/proposals/zero");
+      cy.visit("/proposals/zero");
 
       cy.contains(description).should("exist");
 
@@ -65,7 +65,7 @@ describe("Proposals", () => {
 
     it("I should be able to EXECUTE the proposal of ADD to a list", () => {
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/succeeded");
+      cy.visit("/proposals/succeeded");
       cy.connectWallet();
 
       cy.contains("article", description).then(($proposal) => {
@@ -76,7 +76,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to check the executed proposal", () => {
-      cy.visit("http://localhost:3000/config/governance");
+      cy.visit("/config/governance");
 
       cy.get(`[data-test="${tableSelector}"]`)
         .last()

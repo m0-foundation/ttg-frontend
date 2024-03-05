@@ -11,7 +11,7 @@ describe("Proposals", () => {
     const description = "test proposal description";
 
     it("CREATE Standard proposal add to list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -46,7 +46,7 @@ describe("Proposals", () => {
     it("CREATE Zero proposal reset", () => {
       // zero proposals cant be created on first epoch
 
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -69,7 +69,7 @@ describe("Proposals", () => {
     });
 
     it("CREATE Standard proposal to show in pending proposals", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -95,7 +95,7 @@ describe("Proposals", () => {
     });
 
     it("CREATE Emergency proposal add to list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -120,7 +120,7 @@ describe("Proposals", () => {
     });
 
     it("VOTE YES to proposal to be executable", () => {
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.visit("/proposals/emergency");
       cy.connectWallet();
       cy.wait(500);
 
@@ -132,7 +132,7 @@ describe("Proposals", () => {
     });
 
     it("CREATE Emergency proposal add to list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();

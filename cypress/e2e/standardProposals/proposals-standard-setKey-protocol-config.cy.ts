@@ -6,7 +6,7 @@ describe("Proposals", () => {
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -35,7 +35,7 @@ describe("Proposals", () => {
       // forward in time to be able to vote
       cy.mineEpochs(1);
 
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("/proposals/");
 
       cy.contains(description).should("exist");
 

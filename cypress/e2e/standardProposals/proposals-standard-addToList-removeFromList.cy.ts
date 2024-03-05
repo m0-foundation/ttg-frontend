@@ -8,7 +8,7 @@ describe("Proposals", () => {
     const description = `Add ${input1} to list: ${LIST}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
 
       cy.connectWallet();
 
@@ -39,7 +39,7 @@ describe("Proposals", () => {
       cy.mineEpochs(2);
 
       cy.wait(500);
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("/proposals/");
 
       cy.contains(description).should("exist");
 
@@ -80,7 +80,7 @@ describe("Proposals", () => {
     const description = `Remove address ${input1} from list: ${LIST}`;
 
     it("I should be able to CREATE a proposal to REMOVE an address to a list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
 
       cy.connectWallet();
 
@@ -110,7 +110,7 @@ describe("Proposals", () => {
       cy.mineEpochs(1);
 
       cy.wait(500);
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("/proposals/");
 
       cy.contains(description).should("exist");
 
