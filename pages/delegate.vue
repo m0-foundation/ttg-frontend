@@ -288,7 +288,6 @@ async function delegateZero() {
       "ZERO tokens voting power were delegated Successfully!"
     );
     useDelegate.refetch();
-    useBalance.refetch();
     useVotingPower.refetch();
   } catch (error) {
     console.error(error);
