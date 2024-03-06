@@ -19,7 +19,6 @@
         description="Update the fee charged for submitting proposals based on the new Token."
         placeholder="New Proposal Fee"
         data-test="proposalValue2"
-        decorator="WETH"
       />
     </div>
   </div>
