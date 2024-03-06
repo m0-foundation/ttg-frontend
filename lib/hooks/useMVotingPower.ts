@@ -10,5 +10,12 @@ export default (
   const power = useVotingPowerPowerToken(userAccount);
   const zero = useVotingPowerZeroToken(userAccount);
 
-  return { power, zero };
+  return {
+    power,
+    zero,
+    refetch: () => {
+      power.refetch();
+      zero.refetch();
+    },
+  };
 };

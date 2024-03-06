@@ -48,6 +48,9 @@
           </button>
         </div>
       </div>
+      <div v-else class="bg-grey-700 text-white font-mono text-xs p-2 w-fit">
+        Self-delegated
+      </div>
     </div>
     <!-- zero -->
     <div class="px-8 py-4 bg-grey-800">
@@ -96,6 +99,9 @@
             <MIconCopy class="min-w-5 h-5 hover:opacity-75 fill-white" />
           </button>
         </div>
+      </div>
+      <div v-else class="bg-grey-700 text-white font-mono text-xs p-2 w-fit">
+        Self-delegated
       </div>
     </div>
   </div>
