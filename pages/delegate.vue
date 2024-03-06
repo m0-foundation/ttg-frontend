@@ -28,17 +28,22 @@
     >
       <div>
         <div class="flex justify-between items-center mb-3">
-          <div>$POWER tokens</div>
-          <div class="flex gap-1 items-center">
-            <MIconPower class="h-6 w-6" />
-            <span
-              class="flex items-center text-2xl"
-              :class="{
-                'text-accent-mint': !canDelegate,
-              }"
-            >
-              {{ balancePowerToken?.data.value?.formatted }}
-            </span>
+          <div class="text-xl">$POWER</div>
+          <div class="flex-col gap-2">
+            <div class="flex gap-1 items-center">
+              <MIconPower class="h-6 w-6" />
+              <span
+                class="flex items-center text-2xl"
+                :class="{
+                  'text-accent-mint': !canDelegate,
+                }"
+              >
+                {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
+              </span>
+            </div>
+            <div>
+              <span class="text-xxs text-gray-600 uppercase">Voting Power</span>
+            </div>
           </div>
         </div>
         <label class="text-grey-600">Delegation address</label>
@@ -87,17 +92,22 @@
     >
       <div>
         <div class="flex justify-between items-center my-3">
-          <div>$ZERO tokens</div>
-          <div class="flex gap-1 items-center">
-            <MIconZero class="h-6 w-6" />
-            <span
-              :class="{
-                'text-accent-mint': !canDelegate,
-              }"
-              class="mx-2 flex items-center text-2xl"
-            >
-              {{ balanceZeroToken?.data?.value?.formatted }}
-            </span>
+          <div class="text-xl">$ZERO</div>
+          <div class="flex-col gap-2">
+            <div class="flex gap-1 items-center">
+              <MIconZero class="h-6 w-6" />
+              <span
+                :class="{
+                  'text-accent-mint': !canDelegate,
+                }"
+                class="mx-2 flex items-center text-2xl"
+              >
+                {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
+              </span>
+            </div>
+            <div>
+              <span class="text-xxs text-gray-600 uppercase">Voting Power</span>
+            </div>
           </div>
         </div>
         <label class="text-grey-600">Delegation address</label>
@@ -154,7 +164,7 @@ import { useAccount } from "use-wagmi";
 import { helpers } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import { useMBalances, useMDelegates } from "@/lib/hooks";
+import { useMDelegates, useMVotingPower } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
 const spog = storeToRefs(useSpogStore());
@@ -171,10 +181,10 @@ const {
 } = useMDelegates(userAccount);
 
 const {
-  powerToken: balancePowerToken,
-  zeroToken: balanceZeroToken,
-  ...useBalance
-} = useMBalances(userAccount);
+  power: powerVotingPower,
+  zero: zeroVotingPower,
+  ...useVotingPower
+} = useMVotingPower(userAccount);
 
 const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
 const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
@@ -242,7 +252,7 @@ async function delegatePower() {
     );
 
     useDelegate.refetch();
-    useBalance.refetch();
+    useVotingPower.refetch();
   } catch (error) {
     console.error(error);
     alerts.errorAlert("Error while delegating!");
@@ -279,6 +289,7 @@ async function delegateZero() {
     );
     useDelegate.refetch();
     useBalance.refetch();
+    useVotingPower.refetch();
   } catch (error) {
     console.error(error);
     alerts.errorAlert("Error while delegating!");
