@@ -82,7 +82,7 @@
   <hr class="border-grey-800 my-6" />
 
   <div v-if="isConnected" class="text-grey-100">
-    <div class="mb-4">
+    <li class="mb-4">
       <NuxtLink
         to="/profile/me/"
         data-test="sidebar-link-my-profile"
@@ -90,15 +90,17 @@
       >
         My Profile
       </NuxtLink>
-    </div>
+    </li>
 
     <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
-      <p class="text-xs mb-4 text-grey-600">Current voting power</p>
+      <p class="text-xs mb-4 text-grey-600">Voting power</p>
       <div class="flex gap-2 justify-between">
         <div class="flex gap-2">
           <MIconPower class="h-5 w-5" />
           <div class="flex flex-col">
-            <span>{{ powerVotingPower.relative.toFixed(1) }}%</span>
+            <span>
+              {{ powerVotingPower?.data.value?.relative?.toFixed(1) }}%
+            </span>
             <span class="text-grey-600 text-xxs">
               {{ balancePowerToken?.data?.value?.formatted }}
             </span>
@@ -108,7 +110,9 @@
         <div class="flex gap-2">
           <MIconZero class="h-5 w-5" />
           <div class="flex flex-col">
-            <span>{{ zeroVotingPower?.relative?.toFixed(1) }}%</span>
+            <span>
+              {{ zeroVotingPower?.data.value?.relative?.toFixed(1) }}%
+            </span>
             <span class="text-grey-600 text-xxs">
               {{ balanceZeroToken?.data?.value?.formatted }}
             </span>
@@ -122,7 +126,7 @@
       class="p-4 bg-accent-teal text-white"
     >
       <div class="mb-2">
-        <p class="uppercase mb-2 text-xxs">Tokens delegated to:</p>
+        <p class="uppercase mb-2 text-xxs">Voting Power delegated:</p>
 
         <div v-show="hasDelegatedPower" class="flex items-center">
           <MIconPower class="h-6 w-6 mr-1" />
@@ -165,7 +169,7 @@
 
 <script lang="ts" setup>
 import { useAccount, useDisconnect } from "use-wagmi";
-import { useMVotingPower, useMBalances } from "@/lib/hooks";
+import { useMVotingPower, useMBalances, useMDelegates } from "@/lib/hooks";
 
 const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
@@ -173,7 +177,7 @@ const { isCorrectChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
-  useDelegate();
+  useMDelegates(address);
 
 const { power: powerVotingPower, zero: zeroVotingPower } =
   useMVotingPower(address);

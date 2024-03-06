@@ -21,36 +21,10 @@
       </template>
     </PageTitle>
 
-    <ProfileBalances class="mb-6 lg:px-8" :address="address" />
-
-    <div v-if="hasDelegatedPower" class="p-4 bg-accent-blue my-6">
-      <p class="uppercase text-xs font-mono mb-2">
-        $POWER Tokens are DELEGATED to address:
-      </p>
-      <div class="flex items-center gap-3">
-        <MIconPower class="h-6 w-6" />
-        <span class="hidden lg:block">-></span>
-        <span class="underline font-inter text-xxs lg:text-base">
-          {{ powerDelegates }}</span
-        >
-      </div>
-    </div>
-
-    <div v-if="hasDelegatedZero" class="p-4 bg-accent-blue my-6">
-      <p class="uppercase text-xs font-mono mb-2">
-        $ZERO Tokens are DELEGATED to address:
-      </p>
-      <div class="flex items-center gap-3">
-        <MIconZero class="h-6 w-6" />
-        <span class="hidden lg:block">-></span>
-        <span class="underline font-inter text-xxs lg:text-base">
-          {{ zeroDelegates }}</span
-        >
-      </div>
-    </div>
+    <ProfileBalances :address="address" />
 
     <!-- tables -->
-    <ProfileTables class="lg:px-8" :address="address" />
+    <ProfileTables :address="address" />
   </div>
   <div
     v-else
@@ -64,8 +38,6 @@
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
 const { address } = useAccount();
-const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
-  useDelegate();
 
 const spog = storeToRefs(useSpogStore());
 
