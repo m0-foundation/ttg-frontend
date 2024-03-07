@@ -1,7 +1,12 @@
+import { IToken } from "../../types";
 import { MVotingType } from "./modules/proposal/proposal.types";
 
 export interface MGovernorValues {
   thresholdRatio: string;
+}
+
+export interface MZeroGovernorValues extends MGovernorValues {
+  allowedCashTokens: IToken[];
 }
 
 export interface MStandardGovernorValues {
