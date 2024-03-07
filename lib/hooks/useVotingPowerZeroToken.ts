@@ -23,7 +23,6 @@ export default (
     args: [address as Ref<Hash>],
     query: {
       select: (data) => {
-        console.log({ data });
         const votingPower = BigInt(data as unknown as bigint);
 
         return {
