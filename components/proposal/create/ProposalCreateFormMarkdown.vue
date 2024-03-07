@@ -29,4 +29,7 @@ const hasErrors = computed(() => props.errors?.length);
 .md-editor-dark {
   --md-bk-color: theme("colors.grey-800");
 }
+.md-editor-footer-label {
+  margin-bottom: 0 !important;
+}
 </style>

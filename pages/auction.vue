@@ -138,11 +138,13 @@ import {
   writeContract,
 } from "@wagmi/core";
 import { readPowerToken, writePowerToken } from "@/lib/sdk";
+import { useMBalances } from "@/lib/hooks";
 
 const alerts = useAlertsStore();
 const { forceSwitchChain } = useCorrectChain();
 const { address: userAccount } = useAccount();
 const spog = storeToRefs(useSpogStore());
+const balances = useMBalances(userAccount);
 
 const purchaseAmount = ref();
 const userAgreeMinAmount = ref(true);
@@ -221,6 +223,8 @@ async function auctionBuy() {
       throw new Error("Transaction was rejected");
     } else {
       alerts.successAlert(`You bought ${purchaseAmount.value} Power tokens.`);
+      balances.refetch();
+      getAmountLeftToAuction();
     }
   } catch (error) {
     console.log("ERROR", error);
