@@ -1,6 +1,10 @@
 <template>
   <NuxtLayout name="proposals">
-    <ProposalList :proposals="proposals" @on-execute="onExecute">
+    <ProposalList
+      :proposals="proposals"
+      :loading="isLoading"
+      @on-execute="onExecute"
+    >
       <template #emptyState>
         <ProposalListEmptyState>
           No Proposals to be executed
@@ -26,7 +30,7 @@ const { forceSwitchChain } = useCorrectChain();
 const wagmiConfig = useWagmiConfig();
 const proposalStore = useProposalsStore();
 const alerts = useAlertsStore();
-
+const isLoading = ref(false);
 useHead({
   titleTemplate: "%s - Succeeded proposals",
 });
@@ -41,6 +45,7 @@ async function onExecute(proposal: MProposal) {
   const targets = [governor?.address as Hash];
   const values = [BigInt(0)]; // do not change
 
+  isLoading.value = true;
   try {
     const hash = await writeContract(wagmiConfig, {
       abi: governor!.abi as Abi,
@@ -65,7 +70,9 @@ async function onExecute(proposal: MProposal) {
     proposalStore.updateProposalById(proposal.proposalId);
   } catch (error) {
     console.error("Error executing proposal", error);
-    alerts.errorAlert((error as Error).message);
+    alerts.errorAlert("Error while executing proposal");
+  } finally {
+    isLoading.value = false;
   }
 }
 </script>
