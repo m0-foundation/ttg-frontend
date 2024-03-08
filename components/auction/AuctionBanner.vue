@@ -2,7 +2,7 @@
   <div class="p-6 bg-grey-800 font-inter text-grey-500">
     <div class="flex items-center gap-3 mb-4">
       <h3 class="font-ppformula text-grey-100 text-xl">Auction</h3>
-      <MBadge>Active</MBadge>
+      <div class="bg-green-900 text-green-700 text-xs px-2 py-1">Active</div>
     </div>
     <div class="flex flex-wrap gap-4 my-4">
       <div class="flex flex-wrap gap-8 p-6 border border-grey-700">

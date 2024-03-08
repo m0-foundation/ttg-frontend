@@ -28,17 +28,22 @@
     >
       <div>
         <div class="flex justify-between items-center mb-3">
-          <div>$POWER tokens</div>
-          <div class="flex gap-1 items-center">
-            <MIconPower class="h-6 w-6" />
-            <span
-              class="flex items-center text-2xl"
-              :class="{
-                'text-accent-mint': !canDelegate,
-              }"
-            >
-              {{ balancePowerToken?.data.value?.formatted }}
-            </span>
+          <div class="text-xl">$POWER</div>
+          <div class="flex-col gap-2">
+            <div class="flex gap-1 items-center">
+              <MIconPower class="h-6 w-6" />
+              <span
+                class="flex items-center text-2xl"
+                :class="{
+                  'text-accent-mint': !canDelegate,
+                }"
+              >
+                {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
+              </span>
+            </div>
+            <div>
+              <span class="text-xxs text-gray-600 uppercase">Voting Power</span>
+            </div>
           </div>
         </div>
         <label class="text-grey-600">Delegation address</label>
@@ -60,17 +65,23 @@
       <div class="flex justify-between items-center gap-2">
         <NuxtLink
           class="text-grey-600 underline text-xs cursor-pointer"
-          @click="onUseMyAddressVote"
-          >Use my address</NuxtLink
+          @click="onUseMyAddressPower"
         >
+          Use my address
+        </NuxtLink>
         <MButton
           id="button-delegate-power"
           type="submit"
-          :disabled="!isConnected || !canDelegate || !powerFormData.address"
           data-test="delegate-button-power-submit"
+          :disabled="
+            !isConnected ||
+            !canDelegate ||
+            !powerFormData.address ||
+            powerFormData.loading
+          "
           :is-loading="powerFormData.loading"
         >
-          delegate
+          delegate POWER
         </MButton>
       </div>
     </form>
@@ -81,17 +92,22 @@
     >
       <div>
         <div class="flex justify-between items-center my-3">
-          <div>$ZERO tokens</div>
-          <div class="flex gap-1 items-center">
-            <MIconZero class="h-6 w-6" />
-            <span
-              :class="{
-                'text-accent-mint': !canDelegate,
-              }"
-              class="mx-2 flex items-center text-2xl"
-            >
-              {{ balanceZeroToken?.data?.value?.formatted }}
-            </span>
+          <div class="text-xl">$ZERO</div>
+          <div class="flex-col gap-2">
+            <div class="flex gap-1 items-center">
+              <MIconZero class="h-6 w-6" />
+              <span
+                :class="{
+                  'text-accent-mint': !canDelegate,
+                }"
+                class="mx-2 flex items-center text-2xl"
+              >
+                {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
+              </span>
+            </div>
+            <div>
+              <span class="text-xxs text-gray-600 uppercase">Voting Power</span>
+            </div>
           </div>
         </div>
         <label class="text-grey-600">Delegation address</label>
@@ -113,17 +129,23 @@
       <div class="flex justify-between items-center gap-2">
         <NuxtLink
           class="text-grey-600 underline text-xs cursor-pointer"
-          @click="onUseMyAddressValue"
-          >Use my address</NuxtLink
+          @click="onUseMyAddressZero"
         >
+          Use my address
+        </NuxtLink>
         <MButton
           id="button-delegate-zero"
           type="submit"
-          :disabled="!isConnected || !canDelegate || !zeroFormData.address"
+          :disabled="
+            !isConnected ||
+            !canDelegate ||
+            !zeroFormData.address ||
+            zeroFormData.loading
+          "
           data-test="delegate-button-zero-submit"
           :is-loading="zeroFormData.loading"
         >
-          delegate
+          delegate ZERO
         </MButton>
       </div>
     </form>
@@ -142,7 +164,7 @@ import { useAccount } from "use-wagmi";
 import { helpers } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import { useMBalances } from "@/lib/hooks";
+import { useMDelegates, useMVotingPower } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
 const spog = storeToRefs(useSpogStore());
@@ -150,14 +172,22 @@ const alerts = useAlertsStore();
 
 const { address: userAccount, isConnected } = useAccount();
 
-const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
-  useDelegate();
+const {
+  powerDelegates,
+  zeroDelegates,
+  hasDelegatedPower,
+  hasDelegatedZero,
+  ...useDelegate
+} = useMDelegates(userAccount);
 
-const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
-  useMBalances(userAccount);
+const {
+  power: powerVotingPower,
+  zero: zeroVotingPower,
+  ...useVotingPower
+} = useMVotingPower(userAccount);
 
-const onUseMyAddressVote = () => (powerFormData.address = userAccount.value!);
-const onUseMyAddressValue = () => (zeroFormData.address = userAccount.value!);
+const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
+const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
 
 const canDelegate = computed(
   () => spog.epoch.value.current.type === "TRANSFER"
@@ -215,11 +245,17 @@ async function delegatePower() {
 
     if (txReceipt.status !== "success") {
       throw new Error("Transaction was rejected");
-    } else {
-      alerts.successAlert(
-        `Power successfully delegated to ${powerFormData.address}.`
-      );
     }
+
+    alerts.successAlert(
+      "POWER tokens voting power were delegated Successfully!"
+    );
+
+    useDelegate.refetch();
+    useVotingPower.refetch();
+  } catch (error) {
+    console.error(error);
+    alerts.errorAlert("Error while delegating!");
   } finally {
     powerFormData.loading = false;
   }
@@ -246,11 +282,16 @@ async function delegateZero() {
 
     if (txReceipt.status !== "success") {
       throw new Error("Transaction was rejected");
-    } else {
-      alerts.successAlert(
-        `Zero successfully delegated to ${powerFormData.address}.`
-      );
     }
+
+    alerts.successAlert(
+      "ZERO tokens voting power were delegated Successfully!"
+    );
+    useDelegate.refetch();
+    useVotingPower.refetch();
+  } catch (error) {
+    console.error(error);
+    alerts.errorAlert("Error while delegating!");
   } finally {
     zeroFormData.loading = false;
   }

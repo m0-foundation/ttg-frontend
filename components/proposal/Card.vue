@@ -208,9 +208,9 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 
 const canVote = computed(() => {
   if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
-    return powerVotingPower.value.hasVotingPower;
+    return powerVotingPower?.data.value?.hasVotingPower;
   } else if (props.proposal?.votingType === "Zero") {
-    return zeroVotingPower.value.hasVotingPower;
+    return zeroVotingPower?.data.value?.hasVotingPower;
   }
 });
 
