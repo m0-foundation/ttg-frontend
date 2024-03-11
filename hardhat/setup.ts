@@ -180,18 +180,18 @@ export default async function setup(): Promise<
       ]);
     },
     mine: async (blocks) => {
-      console.log("mine", { blocks, increase: blocks * _BLOCK_TIME });
       const currentTimestamp = await hhHelpers.time.latest();
       const newTimestamp = currentTimestamp + blocks * _BLOCK_TIME;
-
+      // console.log({ currentTimestamp, newTimestamp });
       await hhHelpers.time.setNextBlockTimestamp(newTimestamp);
-      await hhHelpers.mine(blocks);
-      console.log({
-        currentTimestamp,
-        newTimestamp,
-        latestBlock: await hhHelpers.time.latestBlock(),
-      });
+      await hre.network.provider.send("hardhat_mine", [
+        "0x" + blocks.toString(16),
+      ]);
 
+      console.log("mine", {
+        blocks,
+        newBlock: await hhHelpers.time.latestBlock(),
+      });
       return blocks;
     },
   };
