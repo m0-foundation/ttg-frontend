@@ -10,3 +10,14 @@ export interface IApiConfig {
   registrar: string;
   deploymentBlock: bigint;
 }
+
+export interface IToken {
+  address: `0x${string}`;
+  decimals: number | undefined;
+  name: string | undefined;
+  symbol: string | undefined;
+  totalSupply: {
+    formatted: string;
+    value: bigint | undefined;
+  };
+}

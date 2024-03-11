@@ -5,6 +5,9 @@ export interface NetworkConfig {
     registrar: Hash;
     multicall3: Hash;
     deploymentBlock: number,
+    zero?: {
+      allowedCashTokens?: Hash[];
+    }
   },
   rpc: {
     chainId: number;

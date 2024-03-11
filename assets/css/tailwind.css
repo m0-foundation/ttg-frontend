@@ -1,27 +1,25 @@
-@import './github-markdown.css';
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-
+@import "./github-markdown.css";
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
 @font-face {
   font-family: "PPFormula";
-  src: url("../fonts/PPFormula-SemiCondensedRegular.woff") format('woff');
+  src: url("../fonts/PPFormula-SemiCondensedRegular.woff") format("woff");
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   html {
     @apply bg-grey-900 text-grey-100 font-ppformula;
   }
 
-input,
-select,
-textarea {
-  @apply bg-grey-800 border border-grey-700 font-inter text-grey-100 text-sm focus:invalid:ring-red-600 focus:outline-none focus:border-grey-500 focus:ring-1 focus:ring-grey-500 placeholder:text-grey-500 block w-full p-2.5;
-}
+  input,
+  select,
+  textarea {
+    @apply bg-grey-800 border border-grey-700 font-inter text-grey-100 text-sm focus:invalid:ring-red-600 focus:outline-none focus:border-grey-500 focus:ring-1 focus:ring-grey-500 placeholder:text-grey-500 block w-full p-2.5;
+  }
 }
 
 button {
@@ -29,5 +27,9 @@ button {
 }
 
 h1 {
-  @apply text-lg lg:text-[28px]
+  @apply text-lg lg:text-[28px];
+}
+
+:disabled {
+  cursor: not-allowed !important;
 }

@@ -849,10 +849,7 @@ function buildCalldatas(formData) {
   }
 
   if (["setCashToken"].includes(type)) {
-    const newFee = encodeAbiParameters(
-      [{ type: "uint256" }],
-      [useParseCash(input2)]
-    );
+    const newFee = encodeAbiParameters([{ type: "uint256" }], [input2]);
     return buildCalldatasSpog(type, [input1, newFee]);
   }
 

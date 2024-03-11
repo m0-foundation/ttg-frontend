@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
-import { Abi, Hash } from "viem";
+import { Hash } from "viem";
+import { use } from "chai";
 import {
   MGovernorValues,
   MEpoch,
   MProposalsActionTypes,
   MStandardGovernorValues,
+  MZeroGovernorValues,
 } from "@/lib/api/types";
 import { MRegistrarStore } from "@/lib/api/modules/registrar/registrar.types";
 import { powerTokenAbi } from "@/lib/sdk";
@@ -16,7 +18,7 @@ export const useSpogStore = defineStore("spog", {
     governors: {
       standard: {} as Partial<MStandardGovernorValues>,
       emergency: {} as Partial<MGovernorValues>,
-      zero: {} as Partial<MGovernorValues>,
+      zero: {} as Partial<MZeroGovernorValues>,
     },
     tokens: {
       cash: {} as Partial<FetchTokenResult>,
@@ -110,10 +112,21 @@ export const useSpogStore = defineStore("spog", {
         api.client.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
           "thresholdRatio",
         ]),
-        api.client.zeroGovernor!.getParameters<Partial<MGovernorValues>>([
+        api.client.zeroGovernor!.getParameters<Partial<MZeroGovernorValues>>([
           "thresholdRatio",
         ]),
       ]);
+
+      const network = useNetworkStore();
+      const allowedCashTokens =
+        network.network.contracts.zero?.allowedCashTokens;
+      if (allowedCashTokens) {
+        const [weth, M] = await Promise.all([
+          api.getToken(allowedCashTokens[0] as Hash),
+          api.getToken(allowedCashTokens[1] as Hash),
+        ]);
+        zero.allowedCashTokens = [weth, M];
+      }
 
       this.contracts.cashToken = standard.cashToken;
 
