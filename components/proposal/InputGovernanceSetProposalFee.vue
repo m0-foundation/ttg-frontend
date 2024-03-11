@@ -3,7 +3,6 @@
     v-model="value"
     :model-value-errors="modelValueErrors"
     :current-value="currentValue"
-    decorator="WETH"
     :maska="masks.eth"
     description="Update the fee charged for submitting proposals."
     data-test="proposalValue"

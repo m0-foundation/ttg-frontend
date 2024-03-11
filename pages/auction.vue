@@ -16,10 +16,12 @@
       >
         <div class="flex flex-wrap gap-8 text-grey-500">
           <div>
-            <p class="mb-2 text-xxs uppercase">WETH/POWER Rate</p>
+            <p class="mb-2 text-xxs uppercase">
+              {{ currentCashToken?.symbol }}/POWER Rate
+            </p>
             <MTokenAmount
-              name="weth"
-              image="/img/tokens/weth.png"
+              :name="currentCashToken?.symbol"
+              :image="`/img/tokens/${currentCashToken?.symbol}.png`"
               :size="30"
               :amount="
                 isTransferEpoch
@@ -71,9 +73,9 @@
         <div class="my-2 lg:my-12"></div>
         <p class="text-gray-200 text-xs uppercase mb-2">Total price:</p>
         <MTokenAmount
-          name="weth"
+          :name="currentCashToken?.symbol"
           class="text-grey-500"
-          image="/img/tokens/weth.png"
+          :image="`/img/tokens/${currentCashToken?.symbol}.png`"
           :size="20"
           :amount="totalPrice"
         />
@@ -150,7 +152,7 @@ const purchaseAmount = ref();
 const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
 const isLoadingTransaction = ref(false);
-const { epoch } = storeToRefs(spog);
+const { epoch, currentCashToken } = storeToRefs(spog);
 const wagmiConfig = useWagmiConfig();
 const { currentCost, amountLeftToAuction, getCurrentCost } = useAuction();
 
