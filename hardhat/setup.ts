@@ -9,7 +9,7 @@ import {
 import { EthereumProvider, HardhatNetworkAccountsConfig } from "hardhat/types";
 
 import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
-import { time } from "@nomicfoundation/hardhat-network-helpers";
+import * as hhHelpers from "@nomicfoundation/hardhat-network-helpers";
 import { toExternallyOwnedAccounts } from "./accounts";
 
 export interface Network {
@@ -58,16 +58,40 @@ function runChainServer(chainId: number): Promise<ChainServer> {
   );
 }
 
-async function moveToVotingEpoch() {
-  const getEpochFromTimestamp = (timestamp: number) =>
-    Math.floor((timestamp - _STARTING_TIMESTAMP) / _EPOCH_PERIOD_SECONDS) + 1;
+const getEpochFromTimestamp = (timestamp: number) => {
+  return (
+    Math.floor((timestamp - _STARTING_TIMESTAMP) / _EPOCH_PERIOD_SECONDS) + 1
+  );
+};
 
-  const currentTimestamp = await time.latest();
+const getTimestampOfEpochStart = (epoch) => {
+  return _STARTING_TIMESTAMP + (epoch - 1) * _EPOCH_PERIOD_SECONDS;
+};
+
+const getTimestampOfEpochEnd = (epoch) => {
+  return getTimestampOfEpochStart(epoch + 1);
+};
+
+async function moveToVotingEpoch() {
+  const currentTimestamp = await hhHelpers.time.latest();
   const currentEpoch = getEpochFromTimestamp(currentTimestamp);
+  console.log("current block ", await hhHelpers.time.latestBlock());
   console.log({ currentTimestamp, currentEpoch });
   if (currentEpoch % 2 === 0) {
-    console.log("epoch is transfer");
-    await time.setNextBlockTimestamp(currentTimestamp + 400); // move to voting epoch
+    console.log("current epoch is transfer, must change to voting");
+    console.log("updating...");
+    await hhHelpers.time.increaseTo(getTimestampOfEpochEnd(currentEpoch) + 1); // move to voting epoch
+    const newTimestamp = await hhHelpers.time.latest();
+    const newEpoch = getEpochFromTimestamp(newTimestamp);
+    console.log({
+      newTimestamp,
+      newEpoch,
+      epoch: newEpoch % 2 === 0 ? "transfer" : "voting",
+    });
+    return { epoch: newEpoch, timestamp: newTimestamp };
+  } else {
+    console.log("epoch is voting");
+    return { epoch: currentEpoch, timestamp: currentTimestamp };
   }
 }
 
@@ -84,12 +108,13 @@ export default async function setup(): Promise<
   const hardhatConfig = hre.config.networks.hardhat;
   const defaultChainId = hardhatConfig.chainId;
 
-  function reset() {
-    return hre.network.provider.send("hardhat_reset", [
-      {
-        hardhat: { mining: hardhatConfig.mining },
-      },
+  async function reset() {
+    await hre.network.provider.send("hardhat_reset", [
+      { hardhat: { mining: hardhatConfig.mining } },
     ]);
+
+    const epoch = await moveToVotingEpoch();
+    console.log({ ...epoch });
   }
 
   hre.tasks[TASK_NODE_GET_PROVIDER].setAction(() => {
@@ -126,6 +151,7 @@ export default async function setup(): Promise<
   const listen = new Promise<void>((resolve) =>
     forwardingServer.listen(PORT, resolve)
   );
+
   const run = runChainServer(defaultChainId);
 
   // Deriving ExternallyOwnedAccounts is computationally intensive, so we do it while waiting for the server to come up.
@@ -140,9 +166,8 @@ export default async function setup(): Promise<
       "Specifying multiple hardhat accounts will noticeably slow your test startup time.\n\n"
     );
   }
-  const [server] = await Promise.all([run, listen]);
 
-  await moveToVotingEpoch();
+  const [server] = await Promise.all([run, listen]);
 
   return {
     url: "http://" + server.address + ":" + PORT,
@@ -156,13 +181,18 @@ export default async function setup(): Promise<
     },
     mine: async (blocks) => {
       console.log("mine", { blocks, increase: blocks * _BLOCK_TIME });
-      const currentTimestamp = await time.latest();
+      const currentTimestamp = await hhHelpers.time.latest();
       const newTimestamp = currentTimestamp + blocks * _BLOCK_TIME;
-      console.log({ currentTimestamp, newTimestamp });
-      await time.setNextBlockTimestamp(newTimestamp);
-      return hre.network.provider.send("hardhat_mine", [
-        "0x" + blocks.toString(16),
-      ]);
+
+      await hhHelpers.time.setNextBlockTimestamp(newTimestamp);
+      await hhHelpers.mine(blocks);
+      console.log({
+        currentTimestamp,
+        newTimestamp,
+        latestBlock: await hhHelpers.time.latestBlock(),
+      });
+
+      return blocks;
     },
   };
 }
