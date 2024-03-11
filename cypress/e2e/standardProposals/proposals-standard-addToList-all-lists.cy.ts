@@ -98,35 +98,17 @@ describe("Proposals", () => {
       cy.wait(1000);
     });
 
-    it("I should be able to EXECUTE the proposals", () => {
-      // cy.executeOneProposal(description1);
+    it("I should be able to EXECUTE the proposal", () => {
       cy.mineEpochs(1);
-
       cy.visit("/proposals/succeeded");
-      cy.connectWallet();
 
-      cy.contains("article", description1).then(($proposal) => {
-        cy.wrap($proposal).find("#button-proposal-execute").click();
-      });
-
-      cy.visit("/proposals/succeeded");
-      cy.wait(500);
-      cy.reload();
-
-      cy.contains("article", description2).then(($proposal) => {
-        cy.wrap($proposal).find("#button-proposal-execute").click();
-      });
-
-      cy.visit("/proposals/succeeded");
-      cy.wait(500);
-      cy.reload();
-
-      cy.contains("article", description3).then(($proposal) => {
-        cy.wrap($proposal).find("#button-proposal-execute").click();
+      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+        cy.wrap($btn).click();
+        cy.wait(500);
       });
 
       cy.wait(500);
-      cy.reload();
+      cy.mineEpochs(1);
     });
 
     it("I should be able to check the executed proposals", () => {
