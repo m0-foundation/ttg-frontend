@@ -33,7 +33,7 @@ describe("Proposals", () => {
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.mineEpochs(1);
+      cy.mineEpochs(2);
 
       cy.visit("/proposals/");
 
@@ -59,7 +59,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      cy.mineEpochs(2);
+      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 

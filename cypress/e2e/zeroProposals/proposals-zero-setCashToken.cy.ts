@@ -67,16 +67,5 @@ describe("Proposals", () => {
     it("I should be able to EXECUTE the proposal", () => {
       cy.executeOneProposal(description);
     });
-
-    // TODO: fix this test with two cash tokens on deply on latest version of TTG to see if its not a bug on allowedCashTokens
-
-    // it("I should be able to check the executed proposal", () => {
-    //   cy.visit(proposalUrl);
-    //   cy.get("#proposal-state").should("contain", "executed");
-    //   cy.get("#technical-proposal-current").should(
-    //     "contain",
-    //     newCashTokenAddress
-    //   );
-    // });
   });
 });
