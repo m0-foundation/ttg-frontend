@@ -120,7 +120,7 @@
               />
             </div>
 
-            <div class="mb-6">
+            <div class="mb-6" data-test="description">
               <div class="flex justify-between mb-2">
                 <label for="description">Description*</label>
                 <div

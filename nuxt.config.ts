@@ -4,6 +4,8 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 
+console.dir(process.env);
+
 export default defineNuxtConfig({
   alias: {
     color: "color/index.js",

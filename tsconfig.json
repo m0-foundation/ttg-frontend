@@ -2,15 +2,20 @@
   // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "types": ["cypress", "node"],
-    "verbatimModuleSyntax": false,
+    "types": ["cypress", "node", "@testing-library/cypress"],
+    "paths": {
+      "@/support/*": [
+        "./cypress/support/*"
+      ]
+    },
+    "verbatimModuleSyntax": false
   },
   
   "ts-node": {
       "compilerOptions": {
         "module": "commonjs",
         "esModuleInterop": true,
-        "resolveJsonModule": true,
+        "resolveJsonModule": true
       }
-  },
+  }
 }

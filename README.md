@@ -4,7 +4,7 @@ This app is based on Nuxt v3, Vue, and Wagmi
 
 ## 1. Contracts
 
-The Dapp is based on the TTG contracts in order to run the local testnet. Although it does not keep track of versioniong of TTG yet. Meaning, the FE code base has to be updated to latest changes of TTG otherwise it might break.
+The dApp is based on the TTG contracts in order to run the local testnet. Although it does not keep track of versioning of TTG yet. Meaning, the FE code base has to be updated to latest changes of TTG otherwise it might break.
 
 This will download the TTG contracts and all of their submodules recursively
 
@@ -31,7 +31,7 @@ Depending on contract changes this file must be also updated with correct import
 
 ## 2. Setup
 
-### 2.1 Setup manully
+### 2.1 Setup manually
 
 Make sure to install the dependencies:
 

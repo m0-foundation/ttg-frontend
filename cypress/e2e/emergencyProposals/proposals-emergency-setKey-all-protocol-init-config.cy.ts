@@ -5,9 +5,14 @@ describe("Proposals", () => {
     const keys: string[] = [];
     const values: string[] = [];
 
-    it("I should be able to CREATE a proposal - Update collateral interval", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+    it("connect first", () => {
+      cy.visit("/proposal/create");
       cy.connectWallet();
+    });
+
+    it("I should be able to CREATE a proposal - Update collateral interval", () => {
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -37,14 +42,14 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal - Update collateral threshold ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
-      cy.connectWallet();
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -74,14 +79,14 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal - Penalty rate ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
-      cy.connectWallet();
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -112,14 +117,14 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal - Mint delay ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
-      cy.connectWallet();
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -150,14 +155,14 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal - Mint TTL ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
-      cy.connectWallet();
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -188,14 +193,30 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
+    it("I should be able to CAST vote YES for the proposal", () => {
+      cy.castYesAllEmergencyProposals();
+    });
+
+    it("I should be able to EXECUTE the proposal", () => {
+      cy.visit("/proposals/succeeded");
+
+      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+        cy.wrap($btn).click();
+        cy.wait(500);
+      });
+
+      cy.wait(500);
+      cy.mineEpochs(1);
+    });
+
     it("I should be able to CREATE a proposal - Mint ratio ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
-      cy.connectWallet();
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -216,7 +237,7 @@ describe("Proposals", () => {
       const description = `Add protocol config ${key} = ${value}`;
       descriptions.push(description);
       keys.push(key);
-      values.push("90000"); // in bps
+      values.push("9000"); // in bps
 
       cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("input[data-test='title']").type(description);
@@ -226,14 +247,14 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal - Minter freeze time ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
-      cy.connectWallet();
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -264,14 +285,14 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal - Minter rate model ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
-      cy.connectWallet();
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -302,14 +323,14 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal - earner rate model ", () => {
-      cy.visit("http://localhost:3000/proposal/create");
-      cy.connectWallet();
+      cy.visit("/proposal/create");
+      // cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
@@ -340,7 +361,7 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
@@ -350,38 +371,23 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      const execute = (description) => {
-        cy.visit("http://localhost:3000/proposals/succeeded");
-        cy.connectWallet();
+      cy.visit("/proposals/succeeded");
 
-        cy.reload();
-
-        cy.contains("article", description).then(($proposal) => {
-          cy.wrap($proposal).find("#button-proposal-execute").click();
-        });
-
+      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+        cy.wrap($btn).click();
         cy.wait(500);
-      };
+      });
 
-      execute(descriptions[0]);
-      execute(descriptions[1]);
-      execute(descriptions[2]);
-      execute(descriptions[3]);
-      execute(descriptions[4]);
-      execute(descriptions[5]);
-      execute(descriptions[6]);
-      execute(descriptions[7]);
-      execute(descriptions[8]);
-
+      cy.wait(500);
       cy.mineEpochs(1);
     });
 
     it("I should be able to check the executed proposal", () => {
-      cy.visit("http://localhost:3000/config/protocol");
+      cy.visit("/config/protocol");
 
       cy.get("table > tbody > tr").should("have.length", descriptions.length);
 
-      const rowCells = (row) =>
+      const rowCells = (row: { children: any }) =>
         Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
 
       cy.get("table tbody tr").then((rows) => {

@@ -1,36 +1,43 @@
 describe("Proposals", () => {
-  describe("type action: setThresholdRatio for Power Token", () => {
-    const input1 = "15";
-    const description = "Set Power Token Threshold Ratio to 15";
+  const newCashTokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+
+  describe("type action: setCashToken", () => {
+    const fee = "0.001";
+    const title = "Change cash token";
+
     let proposalUrl = "";
+    let description = "";
 
     it("I should be able to CREATE a proposal", () => {
       // zero proposals cant be created on first epoch
       cy.mineEpochs(2);
 
-      cy.visit("http://localhost:3000/proposal/create");
+      description = `Change cash token to ${newCashTokenAddress} with fee to ${fee}`;
+
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.contains("Power threshold").click();
+      cy.contains("Cash Token").click();
 
-      cy.get("input[data-test='proposalValue']").type(input1);
-      cy.get("input[data-test='title']").type(description);
+      cy.get("input[data-test='proposalValue']").type(newCashTokenAddress);
+      cy.get("input[data-test='proposalValue2']").type(fee);
+
+      cy.get("input[data-test='title']").type(title);
       cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
-      cy.wait(500);
-      cy.visit("http://localhost:3000/proposals/zero");
+      cy.visit("/proposals/zero");
 
       cy.contains(description).should("exist");
 
@@ -42,7 +49,11 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", input1);
+      cy.get("#technical-proposal-incoming-change").should(
+        "contain",
+        newCashTokenAddress
+      );
+      cy.get("#technical-proposal-incoming-change").should("contain", fee);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -55,12 +66,6 @@ describe("Proposals", () => {
 
     it("I should be able to EXECUTE the proposal", () => {
       cy.executeOneProposal(description);
-    });
-
-    it("I should be able to check the executed proposal", () => {
-      cy.visit(proposalUrl);
-      cy.get("#proposal-state").should("contain", "executed");
-      cy.get("#technical-proposal-current").should("contain", input1);
     });
   });
 });

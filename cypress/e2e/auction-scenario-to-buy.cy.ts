@@ -6,7 +6,7 @@ describe("Auction", () => {
 
     it("I should be able to CREATE a proposal", () => {
       cy.mineEpochs(2);
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
 
       cy.connectWallet();
 
@@ -17,13 +17,13 @@ describe("Auction", () => {
       cy.get("input[data-test='proposalValue']").type(input);
       cy.get("input[data-test='title']").type(description);
 
-      cy.get("textarea[data-test='description']").type(description);
+      cy.createProposalAddDescription(description);
 
       cy.clickPreviewProposal();
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").should("have.length", 3);
       });
     });
@@ -39,7 +39,7 @@ describe("Auction", () => {
     });
 
     it("I should be able to SEE Power Tokens available on auction", () => {
-      cy.visit("http://localhost:3000/auction/");
+      cy.visit("/auction/");
       cy.get("[data-test='power-token-available']").should("exist");
     });
   });

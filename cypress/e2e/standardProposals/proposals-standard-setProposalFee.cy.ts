@@ -5,7 +5,7 @@ describe("Proposals", () => {
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
 
       cy.connectWallet();
 
@@ -22,18 +22,15 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
-      // forward in time to be able to vote
-      // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
-      // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
-      cy.mineEpochs(1);
+      cy.mineEpochs(2);
 
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("/proposals/");
 
       cy.contains(description).should("exist");
 
@@ -57,7 +54,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to EXECUTE the proposal", () => {
-      cy.mineEpochs(2);
+      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 

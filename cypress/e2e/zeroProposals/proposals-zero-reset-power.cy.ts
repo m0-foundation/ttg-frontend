@@ -1,19 +1,34 @@
 describe("Proposals", () => {
   describe("Emergency proposal for type action: AddToList", () => {
-    const title = "Reset Zero";
-    const description = "Test proposal to reset zero governor";
+    const title = "Reset Power";
+    const description = "Test proposal to reset power governor";
+    const tableSelector = "table-cells-powerToken";
+
+    let oldGovernor = "";
+    let newGovernor = "";
+
+    it("Get old Governor", () => {
+      cy.visit("/config/governance");
+      cy.get(`[data-test="${tableSelector}"]`)
+        .last()
+        .then(($el) => {
+          oldGovernor = $el.text();
+          cy.log("Old governor", oldGovernor);
+          cy.validateEthAddress(oldGovernor);
+        });
+    });
 
     it("I should be able to CREATE a proposal to Reset", () => {
       // zero proposals cant be created on first epoch
       cy.mineEpochs(2);
 
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
       cy.get("[data-test='menuReset']").click();
-      cy.get("[data-test='resetToZeroHolders']").click();
+      cy.get("[data-test='resetToPowerHolders']").click();
 
       cy.get("input[data-test='proposalValue']").should("not.exist");
 
@@ -24,19 +39,19 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the proposal", () => {
-      // reset does not need to forward to next epoch, it will be able to vote on same epoch
-      cy.visit("http://localhost:3000/proposals/zero");
+      // @todo: is this tho correct url?
+      cy.visit("/proposals/zero");
 
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({ force: true });
+        cy.wrap($proposal).find("#show-details").click({force: true});
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
@@ -50,7 +65,7 @@ describe("Proposals", () => {
 
     it("I should be able to EXECUTE the proposal of ADD to a list", () => {
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/succeeded");
+      cy.visit("/proposals/succeeded");
       cy.connectWallet();
 
       cy.contains("article", description).then(($proposal) => {
@@ -58,6 +73,22 @@ describe("Proposals", () => {
       });
 
       cy.wait(500);
+    });
+
+    it("I should be able to check the executed proposal", () => {
+      cy.visit("/config/governance");
+
+      cy.get(`[data-test="${tableSelector}"]`)
+        .last()
+        .then(($el) => {
+          newGovernor = $el.text();
+          cy.log(newGovernor);
+          cy.validateEthAddress(newGovernor);
+        });
+
+      cy.then(() => {
+        expect(newGovernor).to.not.equal(oldGovernor);
+      });
     });
   });
 });

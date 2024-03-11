@@ -8,7 +8,7 @@ describe("Proposals", () => {
     const description = `Add ${add1} to list: ${LIST}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
 
       cy.connectWallet();
 
@@ -28,16 +28,16 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.mineEpochs(1);
+      cy.mineEpochs(2);
 
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("/proposals/");
 
       cy.contains(description).should("exist");
 
@@ -77,7 +77,7 @@ describe("Proposals", () => {
     const description = `remove From ${add1} and add ${add2} to list: ${LIST}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
 
       cy.connectWallet();
 
@@ -98,16 +98,16 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
       // forward in time to be able to vote
-      cy.mineEpochs(2);
+      cy.mineEpochs(1);
 
-      cy.visit("http://localhost:3000/proposals/");
+      cy.visit("/proposals/");
 
       cy.contains(description).should("exist");
 
@@ -144,7 +144,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to see lists", () => {
-      cy.visit("http://localhost:3000/lists");
+      cy.visit("/lists");
 
       cy.contains(add2);
     });

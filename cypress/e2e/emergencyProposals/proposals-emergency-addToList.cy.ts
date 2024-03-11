@@ -7,7 +7,7 @@ describe("Proposals", () => {
     const description = `Emergency Add ${input2} to list ${input1}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -26,7 +26,7 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
@@ -35,7 +35,7 @@ describe("Proposals", () => {
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
 
       cy.reload();
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.visit("/proposals/emergency");
 
       cy.contains(description).should("exist");
 

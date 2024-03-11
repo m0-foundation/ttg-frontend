@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+//
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -10,6 +12,31 @@
 //
 //
 // -- This is a parent command --
+import "@testing-library/cypress/add-commands";
+import "cypress-fail-fast";
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      connectWallet(): Chainable;
+      disconnectWallet(): Chainable;
+      delegatePower(delegate?: string): Chainable;
+      delegateZero(delegate?: string): Chainable;
+      executeProposal(proposalUrl: string): Chainable;
+      castYesOneProposal(description: string): Chainable;
+      castYesAllProposals(): Chainable;
+      castYesOneOptionalProposal(description: string, page?: string): Chainable;
+      castYesOneEmergencyProposal(description: string): Chainable;
+      castYesAllEmergencyProposals(): Chainable;
+      executeOneProposal(description: string): Chainable;
+      clickPreviewProposal(): Chainable;
+      mineEpochs(quantity: number): Chainable;
+      createProposalAddDescription(description: string): Chainable;
+      validateEthAddress(address: string): Chainable;
+    }
+  }
+}
+
 Cypress.Commands.add("connectWallet", () => {
   cy.get("aside").then(($body) => {
     if ($body.find("#button-connect-wallet").length > 0) {
@@ -26,8 +53,25 @@ Cypress.Commands.add("connectWallet", () => {
   });
 });
 
+Cypress.Commands.add("disconnectWallet", () => {
+  cy.get("aside").then(($body) => {
+    if ($body.find("[data-test='sidebar-button-disconnect']").length > 0) {
+      console.log("connected, init disconnect");
+
+      cy.contains("Disconnect").click();
+
+      cy.get("[data-test='modal-web3-button-connect-wallet']").should(
+        "be.visible"
+      );
+    } else {
+      // Element does not exist, do something else
+      console.log("already disconnected");
+    }
+  });
+});
+
 Cypress.Commands.add("delegatePower", (delegate?: string) => {
-  cy.visit("http://localhost:3000/delegate");
+  cy.visit("/delegate");
   cy.connectWallet();
   cy.wait(500); // wait to load props values
 
@@ -45,7 +89,7 @@ Cypress.Commands.add("delegatePower", (delegate?: string) => {
 });
 
 Cypress.Commands.add("delegateZero", (delegate?: string) => {
-  cy.visit("http://localhost:3000/delegate");
+  cy.visit("/delegate");
   cy.connectWallet();
   cy.wait(500); // wait to load props values
 
@@ -75,7 +119,7 @@ Cypress.Commands.add("executeProposal", (proposalUrl: string) => {
 });
 
 Cypress.Commands.add("castYesOneProposal", (description: string) => {
-  cy.visit("http://localhost:3000/proposals/");
+  cy.visit("/proposals/");
   cy.connectWallet();
   cy.wait(500);
 
@@ -89,7 +133,7 @@ Cypress.Commands.add("castYesOneProposal", (description: string) => {
 });
 
 Cypress.Commands.add("castYesAllProposals", () => {
-  cy.visit("http://localhost:3000/proposals/");
+  cy.visit("/proposals/");
   cy.connectWallet();
   cy.wait(500);
 
@@ -103,7 +147,7 @@ Cypress.Commands.add("castYesAllProposals", () => {
 Cypress.Commands.add(
   "castYesOneOptionalProposal",
   (description: string, page?: string) => {
-    cy.visit(`http://localhost:3000/proposals/${page}`);
+    cy.visit(`/proposals/${page}`);
     cy.connectWallet();
     cy.wait(500);
 
@@ -119,7 +163,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("castYesAllEmergencyProposals", () => {
-  cy.visit("http://localhost:3000/proposals/emergency");
+  cy.visit("/proposals/emergency");
   cy.connectWallet();
   cy.wait(500);
 
@@ -133,7 +177,7 @@ Cypress.Commands.add("castYesAllEmergencyProposals", () => {
 Cypress.Commands.add("executeOneProposal", (description: string) => {
   // cy.mineEpochs(1);
 
-  cy.visit("http://localhost:3000/proposals/succeeded");
+  cy.visit("/proposals/succeeded");
   cy.connectWallet();
 
   // cy.reload();
@@ -145,7 +189,7 @@ Cypress.Commands.add("executeOneProposal", (description: string) => {
   cy.wait(500);
 });
 
-Cypress.Commands.add("clickPreviewProposal", (quantity: number) => {
+Cypress.Commands.add("clickPreviewProposal", () => {
   cy.get("[data-test='create-proposal-button-preview']")
     .should("exist")
     .click();
@@ -163,15 +207,12 @@ Cypress.Commands.add("createProposalAddDescription", (description: string) => {
   cy.get(".md-editor-input-wrapper").find("[role='textbox']").type(description);
 });
 
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add("validateEthAddress", (address: string) => {
+  // string should be a valid eth address
+  const result = /^0x[a-fA-F0-9]{40}$/.test(address);
+  if (!result) {
+    throw new Error(`Address ${address} is not a valid eth address`);
+  }
+});
+
+export {};

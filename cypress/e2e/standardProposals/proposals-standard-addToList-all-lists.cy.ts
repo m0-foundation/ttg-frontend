@@ -11,7 +11,7 @@ describe("Proposals", () => {
     const description3 = `Add ${input1} to list: ${LIST3}`;
 
     it("I should be able to CREATE a proposal to ADD an address to a list: minters", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -31,13 +31,13 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal to ADD an address to a list: validators", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -56,13 +56,13 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to CREATE a proposal to ADD an address to a list: earners", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -81,7 +81,7 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
@@ -98,44 +98,26 @@ describe("Proposals", () => {
       cy.wait(1000);
     });
 
-    it("I should be able to EXECUTE the proposals", () => {
-      // cy.executeOneProposal(description1);
+    it("I should be able to EXECUTE the proposal", () => {
       cy.mineEpochs(1);
+      cy.visit("/proposals/succeeded");
 
-      cy.visit("http://localhost:3000/proposals/succeeded");
-      cy.connectWallet();
-
-      cy.contains("article", description1).then(($proposal) => {
-        cy.wrap($proposal).find("#button-proposal-execute").click();
-      });
-
-      cy.visit("http://localhost:3000/proposals/succeeded");
-      cy.wait(500);
-      cy.reload();
-
-      cy.contains("article", description2).then(($proposal) => {
-        cy.wrap($proposal).find("#button-proposal-execute").click();
-      });
-
-      cy.visit("http://localhost:3000/proposals/succeeded");
-      cy.wait(500);
-      cy.reload();
-
-      cy.contains("article", description3).then(($proposal) => {
-        cy.wrap($proposal).find("#button-proposal-execute").click();
+      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+        cy.wrap($btn).click();
+        cy.wait(500);
       });
 
       cy.wait(500);
-      cy.reload();
+      cy.mineEpochs(1);
     });
 
     it("I should be able to check the executed proposals", () => {
       it("I should be able to see lists", () => {
-        cy.visit("http://localhost:3000/lists");
+        cy.visit("/lists");
 
         cy.get("table > tbody > tr").should("have.length", 3);
 
-        const rowCells = (row) =>
+        const rowCells = (row: { children: any }) =>
           Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
 
         cy.get("table tbody tr").then((rows) => {

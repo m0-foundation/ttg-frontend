@@ -1,22 +1,21 @@
 describe("Proposals", () => {
-  describe("type action: setProposalFee", () => {
-    const input = "0.002";
-    const description = "Change Proposal Fee to 0.002 $CASH";
+  describe("type action: setThresholdRatio for Power Token", () => {
+    const input1 = "15";
+    const description = "Set Power Token Threshold Ratio to 15";
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
-      cy.visit("http://localhost:3000/proposal/create");
+      // zero proposals cant be created on first epoch
+      cy.mineEpochs(2);
+
+      cy.visit("/proposal/create");
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='menuEmergency']").click();
+      cy.contains("Power threshold").click();
 
-      cy.get("[data-test='emergencySetStandardProposalFee']").click({
-        force: true,
-      });
-
-      cy.get("input[data-test='proposalValue']").type(input);
+      cy.get("input[data-test='proposalValue']").type(input1);
       cy.get("input[data-test='title']").type(description);
       cy.createProposalAddDescription(description);
 
@@ -24,20 +23,14 @@ describe("Proposals", () => {
 
       cy.contains("Submit proposal").should("exist");
       cy.contains("Submit proposal").then(($el) => {
-        $el.click();
+        cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
-      // forward in time to be able to vote
-      // FIRST epoch is Voting type but recenlty created non-emergency proposals can only be voted
-      // in the next Voting type epoch, thus must skip 1 epoch of Transfer only until the next epoch of Voting
-      // cy.mineEpochs(2);
-
-      // cy.wait(1000);
-      cy.reload();
-      cy.visit("http://localhost:3000/proposals/emergency");
+      cy.wait(500);
+      cy.visit("/proposals/zero");
 
       cy.contains(description).should("exist");
 
@@ -49,7 +42,7 @@ describe("Proposals", () => {
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should("contain", input);
+      cy.get("#technical-proposal-incoming-change").should("contain", input1);
 
       cy.url().then((url) => {
         proposalUrl = url;
@@ -57,7 +50,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description, "emergency");
+      cy.castYesOneOptionalProposal(description, "zero");
     });
 
     it("I should be able to EXECUTE the proposal", () => {
@@ -66,8 +59,8 @@ describe("Proposals", () => {
 
     it("I should be able to check the executed proposal", () => {
       cy.visit(proposalUrl);
-      cy.get("[data-test='executed-badge']").should("exist");
-      cy.get("#technical-proposal-incoming-change").should("contain", input);
+      cy.get("#proposal-state").should("contain", "executed");
+      cy.get("#technical-proposal-current").should("contain", input1);
     });
   });
 });
