@@ -28,6 +28,7 @@ import { wait } from "@/utils/misc";
 import { Api } from "@/lib/api";
 import { watchForExecutedResetProposal } from "@/lib/watchers";
 
+console.dir(process.env);
 const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
 
