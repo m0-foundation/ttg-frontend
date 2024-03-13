@@ -3,6 +3,7 @@
     v-model="value"
     :model-value-errors="modelValueErrors"
     :current-value="currentValue"
+    :decorator="currentCashToken?.symbol"
     :maska="masks.eth"
     description="Update the fee charged for submitting proposals."
     data-test="proposalValue"
@@ -11,6 +12,7 @@
 
 <script setup lang="ts">
 import { ErrorObject } from "@vuelidate/core";
+import { storeToRefs } from "pinia";
 import InputDynamic from "./InputDynamic.vue";
 import { masks } from "@/utils/masks";
 
@@ -19,6 +21,8 @@ export interface InputProps {
   modelValue: any;
   modelValueErrors?: ErrorObject[];
 }
+
+const { currentCashToken } = storeToRefs(useSpogStore());
 
 const props = defineProps<InputProps>();
 const emit = defineEmits(["update:modelValue"]);
