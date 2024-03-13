@@ -77,12 +77,22 @@
           :size="20"
           :amount="totalPrice"
         />
+        <div class="text-grey-500 text-xs mt-4">
+          <p>Available balance:</p>
+          <span
+            :class="{ 'text-red-600 font-bold': totalPrice > cashTokenBalance }"
+          >
+            {{ cashTokenBalance }}
+            {{ cashToken.data.value.symbol }}
+          </span>
+        </div>
         <MButton
           :disabled="
             !purchaseAmount ||
             !userAccount ||
             !userAgreeMinAmount ||
-            isLoadingTransaction
+            isLoadingTransaction ||
+            totalPrice > cashTokenBalance
           "
           class="mt-4 w-full flex justify-center"
           type="submit"
@@ -144,7 +154,10 @@ const alerts = useAlertsStore();
 const { forceSwitchChain } = useCorrectChain();
 const { address: userAccount } = useAccount();
 const spog = storeToRefs(useSpogStore());
-const balances = useMBalances(userAccount);
+
+const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
+
+const cashTokenBalance = computed(() => cashToken?.data?.value?.formatted);
 
 const purchaseAmount = ref();
 const userAgreeMinAmount = ref(true);
@@ -223,7 +236,7 @@ async function auctionBuy() {
       throw new Error("Transaction was rejected");
     } else {
       alerts.successAlert(`You bought ${purchaseAmount.value} Power tokens.`);
-      balances.refetch();
+      refetchBalances();
       getAmountLeftToAuction();
     }
   } catch (error) {
