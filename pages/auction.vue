@@ -16,10 +16,12 @@
       >
         <div class="flex flex-wrap gap-8 text-grey-500">
           <div>
-            <p class="mb-2 text-xxs uppercase">WETH/POWER Rate</p>
+            <p class="mb-2 text-xxs uppercase">
+              {{ currentCashToken?.symbol }}/POWER Rate
+            </p>
             <MTokenAmount
-              name="weth"
-              image="/img/tokens/weth.png"
+              :name="currentCashToken?.symbol"
+              :image="`/img/tokens/${currentCashToken?.symbol}.png`"
               :size="30"
               :amount="
                 isTransferEpoch
@@ -71,18 +73,28 @@
         <div class="my-2 lg:my-12"></div>
         <p class="text-gray-200 text-xs uppercase mb-2">Total price:</p>
         <MTokenAmount
-          name="weth"
+          :name="currentCashToken?.symbol"
           class="text-grey-500"
-          image="/img/tokens/weth.png"
+          :image="`/img/tokens/${currentCashToken?.symbol}.png`"
           :size="20"
           :amount="totalPrice"
         />
+        <div class="text-grey-500 text-xs mt-4">
+          <p>Available balance:</p>
+          <span
+            :class="{ 'text-red-600 font-bold': totalPrice > cashTokenBalance }"
+          >
+            {{ cashTokenBalance }}
+            {{ cashToken.data.value.symbol }}
+          </span>
+        </div>
         <MButton
           :disabled="
             !purchaseAmount ||
             !userAccount ||
             !userAgreeMinAmount ||
-            isLoadingTransaction
+            isLoadingTransaction ||
+            totalPrice > cashTokenBalance
           "
           class="mt-4 w-full flex justify-center"
           type="submit"
@@ -144,13 +156,16 @@ const alerts = useAlertsStore();
 const { forceSwitchChain } = useCorrectChain();
 const { address: userAccount } = useAccount();
 const spog = storeToRefs(useSpogStore());
-const balances = useMBalances(userAccount);
+
+const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
+
+const cashTokenBalance = computed(() => cashToken?.data?.value?.formatted);
 
 const purchaseAmount = ref();
 const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
 const isLoadingTransaction = ref(false);
-const { epoch } = storeToRefs(spog);
+const { epoch, currentCashToken } = storeToRefs(spog);
 const wagmiConfig = useWagmiConfig();
 const { currentCost, amountLeftToAuction, getCurrentCost } = useAuction();
 
@@ -223,7 +238,7 @@ async function auctionBuy() {
       throw new Error("Transaction was rejected");
     } else {
       alerts.successAlert(`You bought ${purchaseAmount.value} Power tokens.`);
-      balances.refetch();
+      refetchBalances();
       getAmountLeftToAuction();
     }
   } catch (error) {

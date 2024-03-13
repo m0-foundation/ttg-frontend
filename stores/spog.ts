@@ -28,6 +28,12 @@ export const useSpogStore = defineStore("spog", {
   }),
 
   getters: {
+    currentCashToken: (state) =>
+      state.governors.zero.allowedCashTokens?.find(
+        (token) =>
+          token.address.toLowerCase() ===
+          state.contracts.cashToken?.toLowerCase()
+      ),
     getEpoch: (state) => state.epoch,
 
     getValuesFormatted: (state) => {
