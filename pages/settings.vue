@@ -45,9 +45,6 @@
 </template>
 
 <script setup lang="ts">
-import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
-import { getNetworkConfig } from "@/network";
-
 definePageMeta({
   layout: "page",
 });
