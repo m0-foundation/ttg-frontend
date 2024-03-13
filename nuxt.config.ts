@@ -6,6 +6,11 @@ import Components from "unplugin-vue-components/vite";
 
 console.dir(process.env);
 
+const auctionActive =
+  process.env.NODE_ENV === "development"
+    ? true
+    : Boolean(process.env.VITE_APP_IS_AUCTION_ACTIVE);
+
 export default defineNuxtConfig({
   alias: {
     color: "color/index.js",
@@ -13,8 +18,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      walletConnectProjectId: "4b34af2e9148b5a50056cf1894e88bf3",
-      auctionActive: true,
+      walletConnectProjectId: process.env.VITE_APP_WALLET_CONNECT_PROJECT_ID,
+      auctionActive,
       env: {
         node: process.env.NODE_ENV,
         network: process.env.NETWORK,
@@ -34,7 +39,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxt/devtools",
   ],
-  // ignore: [process.env.IS_AUCTION_ACTIVE === "true" ? "" : "pages/auction.vue"],
+  ignore: [auctionActive ? "" : "pages/auction.vue"],
   imports: {
     dirs: ["./stores"],
   },
