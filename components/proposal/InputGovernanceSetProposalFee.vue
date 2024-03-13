@@ -4,7 +4,7 @@
     :model-value-errors="modelValueErrors"
     :current-value="currentValue"
     :decorator="currentCashToken?.symbol"
-    :maska="masks.eth"
+    :maska="maskTokenByDecimals(currentCashToken?.decimals)"
     description="Update the fee charged for submitting proposals."
     data-test="proposalValue"
   />
@@ -14,7 +14,7 @@
 import { ErrorObject } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 import InputDynamic from "./InputDynamic.vue";
-import { masks } from "@/utils/masks";
+import { maskTokenByDecimals } from "@/utils/masks";
 
 export interface InputProps {
   currentValue?: string;

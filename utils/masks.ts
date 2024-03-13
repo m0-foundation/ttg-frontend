@@ -23,3 +23,10 @@ export const masks = {
     tokens: "0:\\d:multiple|9:\\d:optional",
   },
 };
+
+export const maskTokenByDecimals = (decimals: number) => {
+  return {
+    mask: `0.${"9".repeat(decimals)}`,
+    tokens: "0:\\d:multiple|9:\\d:optional",
+  };
+};
