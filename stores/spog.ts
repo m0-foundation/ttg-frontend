@@ -110,7 +110,7 @@ export const useSpogStore = defineStore("spog", {
       const api = useApiClientStore();
 
       const [standard, emergency, zero] = await Promise.all([
-        // eslint-disable-next-line prettier/prettier
+
         api.client.standardGovernor!.getParameters<Partial<MStandardGovernorValues>>([
           "proposalFee",
           "cashToken",

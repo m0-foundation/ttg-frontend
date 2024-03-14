@@ -6,7 +6,7 @@ module.exports = {
   parserOptions: {
     parser: "@typescript-eslint/parser",
   },
-  extends: ["@nuxtjs/eslint-config-typescript", "plugin:prettier/recommended"],
+  extends: ["@nuxtjs/eslint-config-typescript", "prettier"],
   rules: {
     quotes: ["error", "double"],
     "comma-dangle": "off",

@@ -13,7 +13,7 @@
     "start": "npx serve .output/public",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint .",
+    "lint": "yarn eslint --ignore-path .gitignore .",
     "test": "cypress run --headless --browser chrome",
     "ci": "concurrently -s last -k \"nuxt dev\" \"sleep 6 && yarn test\"",
     "cy:ci": "cypress run --e2e --browser chrome",
@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@ethersproject/experimental": "^5.7.0",
-    "@faker-js/faker": "^8.0.2",
     "@nuxt/devtools": "^0.8.3",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/tailwindcss": "^6.6.7",
