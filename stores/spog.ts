@@ -69,7 +69,7 @@ export const useSpogStore = defineStore("spog", {
 
       // Re-fetch epoch data when current epoch ends
       setTimeout(() => {
-        this.fetchEpoch(this.getValues.clock! + 1);
+        this.fetchEpoch(_epoch! + 1);
       }, (epochState.current.end.timestamp - Date.now() / 1000 + 3) * 1000);
     },
     async fetchTokens() {

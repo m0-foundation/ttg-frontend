@@ -21,7 +21,7 @@
             </p>
             <MTokenAmount
               :name="currentCashToken?.symbol"
-              :image="`/img/tokens/${currentCashToken?.symbol}.png`"
+              :image="`/img/tokens/${currentCashToken?.symbol?.toLowerCase()}.png`"
               :size="30"
               :amount="
                 isTransferEpoch
@@ -75,7 +75,7 @@
         <MTokenAmount
           :name="currentCashToken?.symbol"
           class="text-grey-500"
-          :image="`/img/tokens/${currentCashToken?.symbol}.png`"
+          :image="`/img/tokens/${currentCashToken?.symbol?.toLowerCase()}.png`"
           :size="20"
           :amount="totalPrice"
         />

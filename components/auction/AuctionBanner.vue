@@ -10,7 +10,7 @@
           <span class="text-xs">{{ currentCashToken?.symbol }}/Power rate</span>
           <MTokenAmount
             :name="currentCashToken?.symbol"
-            :image="`/img/tokens/${currentCashToken?.symbol}.png`"
+            :image="`/img/tokens/${currentCashToken?.symbol?.toLowerCase()}.png`"
             :size="24"
             :amount="formatNumber(formatEther(currentCost.value))"
           />
