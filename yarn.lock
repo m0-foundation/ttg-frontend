@@ -25,7 +25,7 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@antfu/utils@^0.7.5", "@antfu/utils@^0.7.6", "@antfu/utils@^0.7.7":
+"@antfu/utils@^0.7.6", "@antfu/utils@^0.7.7":
   version "0.7.7"
   resolved "https://registry.yarnpkg.com/@antfu/utils/-/utils-0.7.7.tgz#26ea493a831b4f3a85475e7157be02fb4eab51fb"
   integrity sha512-gFPqTG7otEJ8uP6wrhDv6mqwGWYZKNvAcCq6u9hOj0c+IKCEsY4L1oC9trPq2SaWIzAfHvqfBDxF591JkMf+kg==
@@ -3310,7 +3310,7 @@
   resolved "https://registry.yarnpkg.com/@nomicfoundation/edr-win32-x64-msvc/-/edr-win32-x64-msvc-0.3.1.tgz#942c2b1490194d70d67c38b702a56e5603db19c7"
   integrity sha512-8WzEzWUshw28xowVBhEyu4EQpx0TqNmDa70C3L1MWl5waym4U/VwbijFrI0Sb6Y1kdoNCdBTMvfr8OJNF2qJ/A==
 
-"@nomicfoundation/edr@^0.3.0":
+"@nomicfoundation/edr@^0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@nomicfoundation/edr/-/edr-0.3.1.tgz#2a7d4de8d70f63f872f9e86a8487f946cc3d2dcc"
   integrity sha512-uPg1/CvIJpsCe7Ipe80bYnC/Q2Bt/O55KB2ssLx7Z0os4jwDvWBZas8tLMopT+hpOQnv8cZkHJap1iNDTwAfQg==
@@ -4281,7 +4281,7 @@
     is-reference "1.2.1"
     magic-string "^0.30.3"
 
-"@rollup/plugin-inject@^5.0.3", "@rollup/plugin-inject@^5.0.5":
+"@rollup/plugin-inject@^5.0.5":
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-inject/-/plugin-inject-5.0.5.tgz#616f3a73fe075765f91c5bec90176608bed277a3"
   integrity sha512-2+DEJbNBoPROPkgTDNe8/1YXWcqxbN5DTjASVIOx8HS+pITXushyNiBV56RB08zuptzz8gT3YfkqriTBVycepg==
@@ -5414,18 +5414,18 @@
   dependencies:
     remove-accents "0.4.2"
 
-"@tanstack/query-core@5.28.0":
-  version "5.28.0"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.28.0.tgz#721d7fd75eef024408c1609e3ff858607dc2aafa"
-  integrity sha512-BfltXqnoIAXTCFrQCu40M3Ch7odQ6IJraTy0t8n12jAwXMYKIgDwOBWTqkSUYD+vxMi8Ag0+9F8lw9wZKhi2Yg==
+"@tanstack/query-core@5.28.4":
+  version "5.28.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.28.4.tgz#fa416532f8b33ca8608d40bb9728b60e2e1a38dc"
+  integrity sha512-uQZqOFqLWUvXNIQZ63XdKzg22NtHzgCBUfDmjDHi3BoF+nUYeBNvMi/xFPtFrMhqRzG2Ir4mYaGsWZzmiEjXpA==
 
-"@tanstack/vue-query@^5.28.1":
-  version "5.28.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/vue-query/-/vue-query-5.28.1.tgz#6b8cbe8e1790b9af18b07e80395f826a777e436a"
-  integrity sha512-f4hHaRK+9Haha3Dm5NGQ5As/aYJf6IIsdSEtkBJXxFVhM3oUJW6IkgbdfEoH1Zhay4Qepyaj3uJSd2TVqGA8nw==
+"@tanstack/vue-query@^5.28.4":
+  version "5.28.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/vue-query/-/vue-query-5.28.4.tgz#41d9d4bcb2186b3c58db41141f2a4c3e5d1524c0"
+  integrity sha512-/xt4CmP/0NHN5FDtt1uvh+aXm8uHDos7gsXlDr5l6Ul5pkN9eByd86PqEkiRxgrZcuHvcB5RXSaiagxOIgoByg==
   dependencies:
     "@tanstack/match-sorter-utils" "^8.11.8"
-    "@tanstack/query-core" "5.28.0"
+    "@tanstack/query-core" "5.28.4"
     "@vue/devtools-api" "^6.5.1"
     vue-demi "^0.14.6"
 
@@ -6555,7 +6555,7 @@
     "@walletconnect/ethereum-provider" "2.11.1"
     "@walletconnect/modal" "2.6.2"
 
-"@wagmi/core@2.6.5", "@wagmi/core@^2.6.3":
+"@wagmi/core@2.6.5", "@wagmi/core@^2.6.5":
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-2.6.5.tgz#7d1b7d94083d0b01c9ac4bb69e37d0d82b1640b5"
   integrity sha512-DLyrc0o+dx05oIhBJuxnS7ekS5e6rB5mytlqPme+Km7aLdeBdcfYB4yJyYCyWoi93OLa7M5sbflTttz3o56bKw==
@@ -11104,14 +11104,14 @@ handlebars@^4.7.7:
   optionalDependencies:
     uglify-js "^3.1.4"
 
-hardhat@^2.22.0:
-  version "2.22.0"
-  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.22.0.tgz#ccb03fbacc2a3c5902a70e0e4df4acd92ee533f0"
-  integrity sha512-t1J+ThxNYANL6ub6yM5XC84RY38vhfG7ODBtVRNQFQozdALo3qZUjxDzyGQU0U0eswe6orK49hq9UpdB7nPXNQ==
+hardhat@^2.22.1:
+  version "2.22.1"
+  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.22.1.tgz#2640ecc6ff655dea883a25a8b17f1e70e45e6756"
+  integrity sha512-cTWYIJc5jQ132XUI8oRI/TO9L6oavPoJRCTRU9sIjkVxvkxz0Axz0K83Z3BEdJTqBQ2W84ZRoTekti84kBwCjg==
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@metamask/eth-sig-util" "^4.0.0"
-    "@nomicfoundation/edr" "^0.3.0"
+    "@nomicfoundation/edr" "^0.3.1"
     "@nomicfoundation/ethereumjs-common" "4.0.4"
     "@nomicfoundation/ethereumjs-tx" "5.0.4"
     "@nomicfoundation/ethereumjs-util" "9.0.4"
@@ -12762,7 +12762,7 @@ magic-string-ast@^0.3.0:
   dependencies:
     magic-string "^0.30.2"
 
-magic-string@^0.30.0, magic-string@^0.30.1, magic-string@^0.30.2, magic-string@^0.30.3, magic-string@^0.30.4, magic-string@^0.30.5:
+magic-string@^0.30.0, magic-string@^0.30.2, magic-string@^0.30.3, magic-string@^0.30.4, magic-string@^0.30.5:
   version "0.30.5"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.5.tgz#1994d980bd1c8835dc6e78db7cbd4ae4f24746f9"
   integrity sha512-7xlpfBaQaP/T6Vh8MO/EqXSW5En6INHEvEXQiuff7Gku0PWjU3uf6w/j9o7O+SpB5fOAkrI5HeoNgwjEO0pFsA==
@@ -17303,7 +17303,7 @@ unicorn-magic@^0.1.0:
   resolved "https://registry.yarnpkg.com/unicorn-magic/-/unicorn-magic-0.1.0.tgz#1bb9a51c823aaf9d73a8bfcd3d1a23dde94b0ce4"
   integrity sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==
 
-unimport@^3.4.0, unimport@^3.6.0, unimport@^3.7.0:
+unimport@^3.6.0, unimport@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/unimport/-/unimport-3.7.0.tgz#8c9bfe044c811a69f41de0c260c2efcba3e00c87"
   integrity sha512-vesCVjU3CYk41UZNY10kwii7l77vcP4IxPbBMgpve+vean7g7zJWrcCqSoG7u0eB9LZ5bM5BP+3vr3W2uYk0Yg==
@@ -17404,34 +17404,34 @@ unpipe@1.0.0, unpipe@~1.0.0:
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
   integrity sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==
 
-unplugin-auto-import@^0.16.6:
-  version "0.16.7"
-  resolved "https://registry.yarnpkg.com/unplugin-auto-import/-/unplugin-auto-import-0.16.7.tgz#f4f1f7ab3fba24129bc38e47f83782684030d6e4"
-  integrity sha512-w7XmnRlchq6YUFJVFGSvG1T/6j8GrdYN6Em9Wf0Ye+HXgD/22kont+WnuCAA0UaUoxtuvRR1u/mXKy63g/hfqQ==
+unplugin-auto-import@^0.17.5:
+  version "0.17.5"
+  resolved "https://registry.yarnpkg.com/unplugin-auto-import/-/unplugin-auto-import-0.17.5.tgz#5ae7164fddd1560e96bf9be23b2f5ef46c808ca6"
+  integrity sha512-fHNDkDSxv3PGagX1wmKBYBkgaM4AKAgZmdJw/bxjhNljx9KSXSgHpGfX0MwUrq9qw6q1bhHIZVWyOwoY2koo4w==
   dependencies:
-    "@antfu/utils" "^0.7.6"
-    "@rollup/pluginutils" "^5.0.5"
-    fast-glob "^3.3.1"
+    "@antfu/utils" "^0.7.7"
+    "@rollup/pluginutils" "^5.1.0"
+    fast-glob "^3.3.2"
     local-pkg "^0.5.0"
     magic-string "^0.30.5"
     minimatch "^9.0.3"
-    unimport "^3.4.0"
-    unplugin "^1.5.0"
+    unimport "^3.7.1"
+    unplugin "^1.6.0"
 
-unplugin-vue-components@^0.25.2:
-  version "0.25.2"
-  resolved "https://registry.yarnpkg.com/unplugin-vue-components/-/unplugin-vue-components-0.25.2.tgz#99d9d02a4066a24e720edbe74a82a4ee6ff86153"
-  integrity sha512-OVmLFqILH6w+eM8fyt/d/eoJT9A6WO51NZLf1vC5c1FZ4rmq2bbGxTy8WP2Jm7xwFdukaIdv819+UI7RClPyCA==
+unplugin-vue-components@^0.26.0:
+  version "0.26.0"
+  resolved "https://registry.yarnpkg.com/unplugin-vue-components/-/unplugin-vue-components-0.26.0.tgz#6d79caa770039a1eb3d7c09fdd28778ea20afef3"
+  integrity sha512-s7IdPDlnOvPamjunVxw8kNgKNK8A5KM1YpK5j/p97jEKTjlPNrA0nZBiSfAKKlK1gWZuyWXlKL5dk3EDw874LQ==
   dependencies:
-    "@antfu/utils" "^0.7.5"
-    "@rollup/pluginutils" "^5.0.2"
+    "@antfu/utils" "^0.7.6"
+    "@rollup/pluginutils" "^5.0.4"
     chokidar "^3.5.3"
     debug "^4.3.4"
-    fast-glob "^3.3.0"
+    fast-glob "^3.3.1"
     local-pkg "^0.4.3"
-    magic-string "^0.30.1"
+    magic-string "^0.30.3"
     minimatch "^9.0.3"
-    resolve "^1.22.2"
+    resolve "^1.22.4"
     unplugin "^1.4.0"
 
 unplugin-vue-router@^0.7.0:
@@ -17623,7 +17623,7 @@ use-sync-external-store@1.2.0:
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
   integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
-use-wagmi@^1.3.3:
+use-wagmi@^1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/use-wagmi/-/use-wagmi-1.3.5.tgz#5bfab2035b25a960c6a866f97ccdfeb22bae5d98"
   integrity sha512-7VSXSr3SFEN4fRzbFvRSbVq52OE00hOwHLsNeTO/ZCcGEr9Um9xwl6fJP3sbjk28okTTZlCLW4nuh9RZzYugLA==
@@ -17713,7 +17713,7 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-viem@2.*, viem@^2.7.6:
+viem@2.*:
   version "2.8.6"
   resolved "https://registry.yarnpkg.com/viem/-/viem-2.8.6.tgz#7467a0f113b4b13dd53fde4797aec1e686672f03"
   integrity sha512-LqxLOSFtXfbC3tsiZ8Km8jKR4ktTOLfigL2dR9IN28He2+QrNhYvvwGPz3P4hbfU12Wvuxo6mWGZ2L1lpNtvrA==
@@ -17752,6 +17752,20 @@ viem@^1.1.4:
     "@scure/bip32" "1.3.2"
     "@scure/bip39" "1.2.1"
     abitype "0.9.8"
+    isows "1.0.3"
+    ws "8.13.0"
+
+viem@^2.8.9:
+  version "2.8.9"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.8.9.tgz#2de7cfdb3605e2a00930bde482aaafba6920177d"
+  integrity sha512-C9D4rlA95NY6MyO1d1JT/dTrP8iFdilBApJPPitLZOkpo2zkl4Oe3gMMXjUeOvsfnnO7kZI6TGxq5osHrVdM0Q==
+  dependencies:
+    "@adraffy/ens-normalize" "1.10.0"
+    "@noble/curves" "1.2.0"
+    "@noble/hashes" "1.3.2"
+    "@scure/bip32" "1.3.2"
+    "@scure/bip39" "1.2.1"
+    abitype "1.0.0"
     isows "1.0.3"
     ws "8.13.0"
 
@@ -17801,12 +17815,12 @@ vite-plugin-inspect@^0.8.1:
     picocolors "^1.0.0"
     sirv "^2.0.3"
 
-vite-plugin-node-polyfills@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/vite-plugin-node-polyfills/-/vite-plugin-node-polyfills-0.8.2.tgz#6bec3251b86f52bf6c116f9df2de6fdd5c10eb9f"
-  integrity sha512-amOUVWwNvcuKxfWM9vpS8sAqvew28KXyR597OHO7BXWJFxr+QX4qB3XTDhWoRivj89TIZe4JTJTZwBHtIJ3ygQ==
+vite-plugin-node-polyfills@^0.21.0:
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-node-polyfills/-/vite-plugin-node-polyfills-0.21.0.tgz#5566b3a725d4bbc75f4f794b0467e4047c14a58c"
+  integrity sha512-Sk4DiKnmxN8E0vhgEhzLudfJQfaT8k4/gJ25xvUPG54KjLJ6HAmDKbr4rzDD/QWEY+Lwg80KE85fGYBQihEPQA==
   dependencies:
-    "@rollup/plugin-inject" "^5.0.3"
+    "@rollup/plugin-inject" "^5.0.5"
     node-stdlib-browser "^1.2.0"
 
 vite-plugin-vue-inspector@^4.0.2:
