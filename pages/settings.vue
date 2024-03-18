@@ -3,10 +3,23 @@
     <PageTitle class="mb-6">Settings</PageTitle>
 
     <div>
+      <div class="mb-4 w-3/4 text-grey-500">
+        For enhanced security measures, we suggest using a custom RPC URL. This
+        entails either setting up your own RPC Node or contracting third-party
+        services. In the latter scenario, you may opt to utilize a public RPC
+        from this
+        <a
+          href="https://chainlist.org/chain/1"
+          target="_blank"
+          class="underline hover:no-underline"
+        >
+          list.
+        </a>
+      </div>
       <div class="mb-6">
         <div class="flex justify-between text-sm">
           <label>Network Id: </label>
-          <label>{{ chainId }}</label>
+          <label class="underline">{{ chainId }}</label>
         </div>
       </div>
 
@@ -32,9 +45,6 @@
 </template>
 
 <script setup lang="ts">
-import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
-import { getNetworkConfig } from "@/network";
-
 definePageMeta({
   layout: "page",
 });

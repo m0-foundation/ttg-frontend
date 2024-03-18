@@ -7,10 +7,10 @@
     <div class="flex flex-wrap gap-4 my-4">
       <div class="flex flex-wrap gap-8 p-6 border border-grey-700">
         <div>
-          <span class="text-xs">WETH/Power rate</span>
+          <span class="text-xs">{{ currentCashToken?.symbol }}/Power rate</span>
           <MTokenAmount
-            name="weth"
-            image="/img/tokens/weth.png"
+            :name="currentCashToken?.symbol"
+            :image="`/img/tokens/${currentCashToken?.symbol?.toLowerCase()}.png`"
             :size="24"
             :amount="formatNumber(formatEther(currentCost.value))"
           />
@@ -47,6 +47,8 @@
 
 <script setup lang="ts">
 import { formatEther } from "viem";
+import { storeToRefs } from "pinia";
 
 const { currentCost, amountLeftToAuction } = useAuction();
+const { currentCashToken } = storeToRefs(useSpogStore());
 </script>

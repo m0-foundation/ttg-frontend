@@ -41,7 +41,7 @@
         </NuxtLink>
       </li>
 
-      <li v-if="$config.public.auctionActive">
+      <li v-if="isAuctionActive">
         <NuxtLink
           to="/auction/"
           active-class="active"
@@ -176,6 +176,8 @@ const { disconnect } = useDisconnect();
 const { isCorrectChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
+const config = useRuntimeConfig();
+
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useMDelegates(address);
 
@@ -184,6 +186,10 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
+
+const isAuctionActive = computed(() => {
+  return config.public.auctionActive;
+});
 </script>
 
 <style scoped>

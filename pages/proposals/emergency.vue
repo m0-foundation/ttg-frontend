@@ -2,8 +2,8 @@
   <NuxtLayout name="proposals">
     <ProposalList
       :proposals="proposals"
-      @on-cast="castVote"
       :loading="isLoading"
+      @on-cast="castVote"
     >
       <template #emptyState>
         <ProposalListEmptyState>

@@ -16,10 +16,12 @@
       >
         <div class="flex flex-wrap gap-8 text-grey-500">
           <div>
-            <p class="mb-2 text-xxs uppercase">WETH/POWER Rate</p>
+            <p class="mb-2 text-xxs uppercase">
+              {{ currentCashToken?.symbol }}/POWER Rate
+            </p>
             <MTokenAmount
-              name="weth"
-              image="/img/tokens/weth.png"
+              :name="currentCashToken?.symbol"
+              :image="`/img/tokens/${currentCashToken?.symbol?.toLowerCase()}.png`"
               :size="30"
               :amount="
                 isTransferEpoch
@@ -71,9 +73,9 @@
         <div class="my-2 lg:my-12"></div>
         <p class="text-gray-200 text-xs uppercase mb-2">Total price:</p>
         <MTokenAmount
-          name="weth"
+          :name="currentCashToken?.symbol"
           class="text-grey-500"
-          image="/img/tokens/weth.png"
+          :image="`/img/tokens/${currentCashToken?.symbol?.toLowerCase()}.png`"
           :size="20"
           :amount="totalPrice"
         />
@@ -141,7 +143,15 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
-import { Hash, formatEther, erc20Abi, parseEther } from "viem";
+import {
+  Hash,
+  formatEther,
+  erc20Abi,
+  parseEther,
+  parseAbi,
+  decodeEventLog,
+  formatUnits,
+} from "viem";
 import {
   readContract,
   waitForTransactionReceipt,
@@ -163,7 +173,7 @@ const purchaseAmount = ref();
 const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
 const isLoadingTransaction = ref(false);
-const { epoch } = storeToRefs(spog);
+const { epoch, currentCashToken } = storeToRefs(spog);
 const wagmiConfig = useWagmiConfig();
 const { currentCost, amountLeftToAuction, getCurrentCost } = useAuction();
 
@@ -235,7 +245,21 @@ async function auctionBuy() {
     if (txReceipt.status !== "success") {
       throw new Error("Transaction was rejected");
     } else {
-      alerts.successAlert(`You bought ${purchaseAmount.value} Power tokens.`);
+      // Get data from successful buy to show in alert
+      const { args } = decodeEventLog({
+        abi: parseAbi([
+          "event Buy(address indexed buyer, uint240 amount, uint256 cost)",
+        ]),
+        data: txReceipt.logs[0]?.data,
+        topics: txReceipt.logs[0]?.topics,
+      });
+
+      alerts.successAlert(
+        `You bought ${args.amount} Power tokens for ${formatUnits(
+          args.cost * args.amount,
+          currentCashToken?.value?.decimals
+        )} ${currentCashToken?.value?.symbol}`
+      );
       refetchBalances();
       getAmountLeftToAuction();
     }

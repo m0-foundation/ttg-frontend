@@ -7,6 +7,7 @@ import { injected, walletConnect, coinbaseWallet } from "@wagmi/connectors";
 import { createConfig } from "use-wagmi";
 
 export const useWagmi = (rpc: string, fallbackRpc?: string) => {
+  console.log({ rpc, fallbackRpc });
   const config = useRuntimeConfig();
 
   return createConfig({

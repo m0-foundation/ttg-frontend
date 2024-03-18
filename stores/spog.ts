@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { Hash } from "viem";
-import { use } from "chai";
 import {
+  IToken,
   MGovernorValues,
   MEpoch,
   MProposalsActionTypes,
   MStandardGovernorValues,
   MZeroGovernorValues,
-} from "@/lib/api/types";
+} from "../lib/api/types";
 import { MRegistrarStore } from "@/lib/api/modules/registrar/registrar.types";
 import { powerTokenAbi } from "@/lib/sdk";
 
@@ -21,13 +21,19 @@ export const useSpogStore = defineStore("spog", {
       zero: {} as Partial<MZeroGovernorValues>,
     },
     tokens: {
-      cash: {} as Partial<FetchTokenResult>,
-      power: {} as Partial<FetchTokenResult>,
-      zero: {} as Partial<FetchTokenResult>,
+      cash: {} as Partial<IToken>,
+      power: {} as Partial<IToken>,
+      zero: {} as Partial<IToken>,
     },
   }),
 
   getters: {
+    currentCashToken: (state) =>
+      state.governors.zero.allowedCashTokens?.find(
+        (token) =>
+          token.address.toLowerCase() ===
+          state.contracts.cashToken?.toLowerCase()
+      ),
     getEpoch: (state) => state.epoch,
 
     getValuesFormatted: (state) => {
@@ -63,7 +69,7 @@ export const useSpogStore = defineStore("spog", {
 
       // Re-fetch epoch data when current epoch ends
       setTimeout(() => {
-        this.fetchEpoch(this.getValues.clock! + 1);
+        this.fetchEpoch(_epoch! + 1);
       }, (epochState.current.end.timestamp - Date.now() / 1000 + 3) * 1000);
     },
     async fetchTokens() {
@@ -104,10 +110,12 @@ export const useSpogStore = defineStore("spog", {
       const api = useApiClientStore();
 
       const [standard, emergency, zero] = await Promise.all([
-        // eslint-disable-next-line prettier/prettier
+
         api.client.standardGovernor!.getParameters<Partial<MStandardGovernorValues>>([
-          // eslint-disable-next-line prettier/prettier
-          "proposalFee", "cashToken", "maxTotalZeroRewardPerActiveEpoch", "clock"
+          "proposalFee",
+          "cashToken",
+          "maxTotalZeroRewardPerActiveEpoch",
+          "clock",
         ]),
         api.client.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
           "thresholdRatio",
