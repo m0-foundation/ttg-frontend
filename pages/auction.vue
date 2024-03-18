@@ -143,7 +143,15 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
-import { Hash, formatEther, erc20Abi, parseEther } from "viem";
+import {
+  Hash,
+  formatEther,
+  erc20Abi,
+  parseEther,
+  parseAbi,
+  decodeEventLog,
+  formatUnits,
+} from "viem";
 import {
   readContract,
   waitForTransactionReceipt,
@@ -237,7 +245,21 @@ async function auctionBuy() {
     if (txReceipt.status !== "success") {
       throw new Error("Transaction was rejected");
     } else {
-      alerts.successAlert(`You bought ${purchaseAmount.value} Power tokens.`);
+      // Get data from successful buy to show in alert
+      const { args } = decodeEventLog({
+        abi: parseAbi([
+          "event Buy(address indexed buyer, uint240 amount, uint256 cost)",
+        ]),
+        data: txReceipt.logs[0]?.data,
+        topics: txReceipt.logs[0]?.topics,
+      });
+
+      alerts.successAlert(
+        `You bought ${args.amount} Power tokens for ${formatUnits(
+          args.cost * args.amount,
+          currentCashToken?.value?.decimals
+        )} ${currentCashToken?.value?.symbol}`
+      );
       refetchBalances();
       getAmountLeftToAuction();
     }
