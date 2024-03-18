@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { Hash } from "viem";
-import { use } from "chai";
 import {
+  IToken,
   MGovernorValues,
   MEpoch,
   MProposalsActionTypes,
   MStandardGovernorValues,
   MZeroGovernorValues,
-} from "@/lib/api/types";
+} from "../lib/api/types";
 import { MRegistrarStore } from "@/lib/api/modules/registrar/registrar.types";
 import { powerTokenAbi } from "@/lib/sdk";
 
@@ -21,9 +21,9 @@ export const useSpogStore = defineStore("spog", {
       zero: {} as Partial<MZeroGovernorValues>,
     },
     tokens: {
-      cash: {} as Partial<FetchTokenResult>,
-      power: {} as Partial<FetchTokenResult>,
-      zero: {} as Partial<FetchTokenResult>,
+      cash: {} as Partial<IToken>,
+      power: {} as Partial<IToken>,
+      zero: {} as Partial<IToken>,
     },
   }),
 
@@ -110,10 +110,12 @@ export const useSpogStore = defineStore("spog", {
       const api = useApiClientStore();
 
       const [standard, emergency, zero] = await Promise.all([
-        // eslint-disable-next-line prettier/prettier
+
         api.client.standardGovernor!.getParameters<Partial<MStandardGovernorValues>>([
-          // eslint-disable-next-line prettier/prettier
-          "proposalFee", "cashToken", "maxTotalZeroRewardPerActiveEpoch", "clock"
+          "proposalFee",
+          "cashToken",
+          "maxTotalZeroRewardPerActiveEpoch",
+          "clock",
         ]),
         api.client.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
           "thresholdRatio",

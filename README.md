@@ -59,10 +59,18 @@ See file `/hardhat.config.js` for configs.
 
 This app uses an environment variables locally (not in docker-compose). For local development: See package.json.
 
+Use in other chains you must create an .env file with this parameters:
+
 ```
 NETWORK=sepolia | mainnet | local | hardhat | undefined
-IS_AUCTION_ACTIVE=true | false
+VITE_APP_IS_AUCTION_ACTIVE=true | false
+VITE_APP_RPC_URL_MAIN=string
+VITE_APP_RPC_URL_FALLBACK=string
 ```
+
+For hardhat running there is no need for such file.
+
+At deployment, github actions will inject these variables at build time. 
 
 #### 2.1.4 RUN
 

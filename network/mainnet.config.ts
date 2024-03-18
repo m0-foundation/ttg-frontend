@@ -1,6 +1,9 @@
 import { mainnet } from "@wagmi/core/chains";
 import { NetworkConfig } from "./types.d";
 
+const RPC_URL_MAIN = import.meta.env.VITE_APP_RPC_URL_MAIN;
+const RPC_URL_FALLBACK = import.meta.env.VITE_APP_RPC_URL_FALLBACK || mainnet.rpcUrls.default.http[0];
+
 export default {
   contracts: {
     registrar: "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
@@ -9,12 +12,7 @@ export default {
   },
   rpc: {
     chainId: 1,
-    default: mainnet.rpcUrls.default.http[0],
-    values: [
-      mainnet.rpcUrls.default.http[0],
-      "https://eth-mainnet.g.alchemy.com/v2/demo",
-      "https://eth.llamarpc.com",
-      "https://eth.rpc.blxrbdn.com",
-    ],
+    default: RPC_URL_MAIN,
+    values: [RPC_URL_MAIN, RPC_URL_FALLBACK],
   },
 } as NetworkConfig;
