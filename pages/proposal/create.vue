@@ -190,7 +190,8 @@
 
       <div v-if="hasToPayFee">
         <p class="text-grey-500 text-xs flex justify-end font-inter">
-          Available balance: {{ cashToken?.data?.value?.formatted || 0 }} WETH
+          Available balance:
+          {{ formatNumber(cashToken?.data?.value?.formatted) || 0 }} WETH
         </p>
       </div>
 
@@ -409,16 +410,14 @@ const previewDescription = ref();
 const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
-const { getValuesFormatted: spogValuesFormatted } = storeToRefs(spog);
+const { getValuesFormatted: spogValuesFormatted, getValues: spogValues } =
+  storeToRefs(spog);
 
 const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
 
 const userHasEnoughBalance = computed(() => {
   if (!hasToPayFee.value) return true;
-  return (
-    cashToken?.data?.value?.formatted >=
-    spogValuesFormatted.value.setProposalFee
-  );
+  return cashToken?.data?.value?.value >= BigInt(spogValues.value.proposalFee);
 });
 
 const proposalTypes = [
