@@ -21,5 +21,5 @@ jobs:
       ## it is important to have it set equal to the Chart name in Chart.yaml and to the folder containing the chart itself
       ## (i.e. build/chart/NAME_OF_CHART
       HELM_COMPONENTS: ${{ github.event.repository.name }}
-      DEPLOY_NAMESPACE: "ttg"
+      DEPLOY_NAMESPACE: "shared"
       MASTER_VERSION: "0"
