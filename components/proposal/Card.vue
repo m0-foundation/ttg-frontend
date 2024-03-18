@@ -76,16 +76,14 @@
               NO
             </ProposalButtonCastVote>
 
-            <div class="text-xxs text-grey-600 uppercase mx-2">
+            <div class="text-xxs text-grey-600 uppercase mx-2 font-inter">
               <p v-show="!canVote">Not enought voting power</p>
               <p v-show="hasVoted">Your vote has been submitted</p>
             </div>
           </div>
         </div>
 
-        <div
-          class="uppercase font-inter text-xs text-grey-600 whitespace-nowrap"
-        >
+        <div class="font-inter text-xs text-grey-200 whitespace-nowrap">
           <div
             v-if="
               proposal?.votingType === 'Standard' ||
@@ -94,12 +92,12 @@
             class="flex gap-2"
           >
             <MIconPower class="h-4 w-4 ml-1" />
-            vote with power tokens
+            Vote with POWER tokens
           </div>
 
           <div v-if="proposal?.votingType === 'Zero'" class="flex gap-2">
             <MIconZero class="h-4 w-4 ml-1" />
-            vote with zero tokens
+            Vote with ZERO tokens
           </div>
         </div>
       </div>
