@@ -56,6 +56,9 @@ export default () => {
     const inflatorBalance =
       Number(maxTotalZeroRewardPerActiveEpoch!) * inflatorRatio;
 
-    return formatUnits(BigInt(inflatorBalance), spog.tokens.zero.decimals!);
+    return formatUnits(
+      BigInt(inflatorBalance.toFixed(0)),
+      spog.tokens.zero.decimals!
+    );
   });
 };
