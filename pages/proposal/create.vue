@@ -187,11 +187,19 @@
           </div>
         </div>
       </div>
-      <p class="text-grey-600 text-xs flex justify-end font-inter">
-        You will be prompted to pay the tax for submitting the proposal.
+
+      <div v-if="hasToPayFee">
+        <p class="text-grey-500 text-xs flex justify-end font-inter">
+          Available balance:
+          {{ formatNumber(cashToken?.data?.value?.formatted) || 0 }} WETH
+        </p>
+      </div>
+
+      <p class="text-grey-500 text-xs flex justify-end font-inter">
+        You'll receive a refund if the proposal succeeds
       </p>
 
-      <div v-if="isPreview" class="flex justify-end mt-12">
+      <div v-if="isPreview" class="flex justify-end mt-6">
         <button
           class="text-green-800 uppercase mx-4"
           data-test="create-proposal-button-back-bottom"
@@ -208,23 +216,36 @@
           Submit proposal
         </MButton>
       </div>
-      <div v-else class="flex justify-end mt-12">
+      <div v-else class="flex justify-end mt-6">
         <MButton
           type="button"
           data-test="create-proposal-button-preview"
+          :disabled="isDisconnected || !userHasEnoughBalance"
           @click="onPreview"
         >
           Preview and submit
         </MButton>
       </div>
-
-      <p
-        v-if="isDisconnected"
-        class="flex justify-end text-xs text-red-500 mx-2 my-1"
-      >
-        Please connect wallet
-      </p>
     </form>
+    <div class="text-end text-grey-500 font-inter text-xs px-6 lg:px-0 my-3">
+      <p v-if="isDisconnected">
+        Please,
+        <MModalWeb3Connect>
+          <template #default="{ connect }">
+            <button
+              class="font-inter underline text-nowrap cursor-pointer"
+              @click="connect"
+            >
+              connect your wallet
+            </button>
+          </template>
+        </MModalWeb3Connect>
+        to proceed. Your proposal will not be lost.
+      </p>
+      <p v-else-if="!userHasEnoughBalance">
+        You don't have enough balance to submit proposal.
+      </p>
+    </div>
   </div>
 </template>
 
@@ -252,6 +273,7 @@ import {
   emergencyGovernorAbi,
   zeroGovernorAbi,
 } from "@/lib/sdk";
+import { useMBalances } from "@/lib/hooks";
 import { wait } from "@/utils/misc";
 
 /* components */
@@ -388,7 +410,15 @@ const previewDescription = ref();
 const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 const spog = useSpogStore();
-const { getValuesFormatted: spogValuesFormatted } = storeToRefs(spog);
+const { getValuesFormatted: spogValuesFormatted, getValues: spogValues } =
+  storeToRefs(spog);
+
+const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
+
+const userHasEnoughBalance = computed(() => {
+  if (!hasToPayFee.value) return true;
+  return cashToken?.data?.value?.value >= BigInt(spogValues.value.proposalFee);
+});
 
 const proposalTypes = [
   {
@@ -763,6 +793,7 @@ async function onSubmit() {
 
     stepper.value.nextStep();
     stepper.value.changeCurrentStep("complete");
+    refetchBalances();
   } catch (error) {
     console.error({ error });
     catchErrorStep(error);

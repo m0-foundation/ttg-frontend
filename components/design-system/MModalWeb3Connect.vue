@@ -1,62 +1,62 @@
 <template>
-  <div>
+  <slot :connect="openModal">
     <MButton
       id="button-connect-wallet"
       data-test="modal-web3-button-connect-wallet"
-      @click="open = true"
+      @click="openModal"
     >
       Connect Wallet
     </MButton>
+  </slot>
 
-    <Teleport to="body">
-      <div
-        v-if="open"
-        id="modal-backdrop"
-        ref="modal-backdrop"
-        class="fixed z-40 lg:z-40 inset-0 overflow-y-auto bg-grey-900"
-      >
-        <div class="flex items-center justify-center min-h-screen">
-          <div class="w-full max-w-xl">
-            <div class="flex flex-wrap flex-col">
-              <div class="bg-grey-900 text-white p-8">
-                <p class="text-2xl text-center">Connect Wallet</p>
-                <p class="text-sm text-zinc-500 leading-normal mt-2">
-                  Connect with one of our available wallet providers or create a
-                  new one.
-                </p>
+  <Teleport to="body">
+    <div
+      v-if="open"
+      id="modal-backdrop"
+      ref="modal-backdrop"
+      class="fixed z-40 lg:z-40 inset-0 overflow-y-auto bg-grey-900"
+    >
+      <div class="flex items-center justify-center min-h-screen">
+        <div class="w-full max-w-xl">
+          <div class="flex flex-wrap flex-col">
+            <div class="bg-grey-900 text-white p-8">
+              <p class="text-2xl text-center">Connect Wallet</p>
+              <p class="text-sm text-zinc-500 leading-normal mt-2">
+                Connect with one of our available wallet providers or create a
+                new one.
+              </p>
 
-                <div class="mt-4 flex flex-wrap flex-col items-start">
-                  <button
-                    v-for="cc in connectors"
-                    :key="cc.uid"
-                    class="flex justify-between hover:underline border-b border-dashed border-spacing-4 my-4 w-full text-left pb-4 text-xl"
-                    :disabled="isReconnecting || connector?.uid === cc.uid"
-                    :data-test="`modal-web3-connect-button-${cc.name}`"
-                    @click="connect({ connector: cc })"
-                  >
-                    <div class="flex justify-between">
-                      <img :src="images[cc.name]" class="mr-2" />
-                      <span>{{ cc.name }}</span>
-                    </div>
-                  </button>
-                </div>
+              <div class="mt-4 flex flex-wrap flex-col items-start">
+                <button
+                  v-for="cc in connectors"
+                  :key="cc.uid"
+                  class="flex justify-between hover:underline border-b border-dashed border-spacing-4 my-4 w-full text-left pb-4 text-xl"
+                  :disabled="isReconnecting || connector?.uid === cc.uid"
+                  :data-test="`modal-web3-connect-button-${cc.name}`"
+                  @click="connect({ connector: cc })"
+                >
+                  <div class="flex justify-between">
+                    <img :src="images[cc.name]" class="mr-2" />
+                    <span>{{ cc.name }}</span>
+                  </div>
+                </button>
+              </div>
 
-                <div class="flex justify-center">
-                  <button
-                    class="p-4 text-white mb-2 self-end text-3xl"
-                    data-test="modal-web3-connect-button-close"
-                    @click="open = false"
-                  >
-                    x
-                  </button>
-                </div>
+              <div class="flex justify-center">
+                <button
+                  class="p-4 text-white mb-2 self-end text-3xl"
+                  data-test="modal-web3-connect-button-close"
+                  @click="open = false"
+                >
+                  x
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </Teleport>
-  </div>
+    </div>
+  </Teleport>
 </template>
 
 <script setup>
@@ -82,4 +82,6 @@ const { connect, connectors } = useConnect({
     switchChain({ chainId });
   },
 });
+
+const openModal = () => (open.value = true);
 </script>
