@@ -61,7 +61,7 @@
 
       <div
         v-show="hasProposals && isConnected"
-        class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8 border border-grey-700"
+        class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8"
         :class="{
           'bg-grey-700': isSelectedCastProposalsFull,
         }"
