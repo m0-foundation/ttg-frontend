@@ -32,7 +32,7 @@
         </div>
         <div class="flex items-center">
           <NuxtLink to="/auction" class="text-xs">
-            <MButton>Buy Tokens</MButton>
+            <MButton :disabled="!amountLeftToAuction">Buy Tokens</MButton>
           </NuxtLink>
         </div>
       </div>
