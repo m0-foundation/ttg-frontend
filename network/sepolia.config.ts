@@ -8,13 +8,13 @@ console.log("CONFIG VITE", import.meta.env.VITE_APP_RPC_URL_MAIN);
 
 export default {
   contracts: {
-    registrar: "0x44031c4B2da545cac1200f53D895DA1BEa3064bC",
+    registrar: "0x7A05438036B30Fa040884b03275e9D7cEdFE4624",
     multicall3: sepolia.contracts.multicall3.address,
-    deploymentBlock: 5104663,
+    deploymentBlock: 5508124,
     zero: {
       allowedCashTokens: [
         "0xE67ABDA0D43f7AC8f37876bBF00D1DFadbB93aaa", // WETH,
-        "0x1f80158cc9305d69908e29e67c13e0774a3e60fb", // M token
+        "0xc16a22574689F394A5406b9a3Dd826b80bE0E133", // M token
       ],
     },
   },
