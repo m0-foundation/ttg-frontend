@@ -15,7 +15,6 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
     connectors:
       config.public.env.node === "production"
         ? [
-            injected({ target: "metaMask" }),
             walletConnect({ projectId: config.public.walletConnectProjectId }),
             coinbaseWallet({ appName: "spog" }),
           ]
