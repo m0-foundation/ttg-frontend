@@ -147,7 +147,15 @@
       </div>
     </div>
     <div v-else class="mb-4 bg-grey-800 p-4">
-      <p class="bg-red-500 text-white w-fit p-2 text-xs">Wrong network</p>
+      <p class="bg-red-500 text-white w-fit p-2 text-xs">
+        Wrong network!<br />
+        <button
+          class="text-xxs underline hover:no-underline"
+          @click="forceSwitchChain"
+        >
+          Switch network
+        </button>
+      </p>
     </div>
 
     <button
@@ -172,7 +180,7 @@ import { useMVotingPower, useMBalances, useMDelegates } from "@/lib/hooks";
 
 const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
-const { isCorrectChain } = useCorrectChain();
+const { isCorrectChain, forceSwitchChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
 const config = useRuntimeConfig();
