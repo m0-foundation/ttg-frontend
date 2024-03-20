@@ -80,7 +80,7 @@
     </ul>
   </nav>
 
-  <hr class="border-grey-800 my-6" />
+  <hr class="border-grey-700 my-6" />
 
   <div v-if="isConnected" class="text-grey-100">
     <li class="mb-4">
@@ -94,62 +94,60 @@
     </li>
 
     <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
-      <p class="text-xs mb-4 text-grey-600">Voting power</p>
-      <div class="flex gap-2 justify-between">
-        <div class="flex gap-2">
-          <MIconPower class="h-5 w-5" />
-          <div class="flex flex-col">
-            <span>
+      <p class="text-xs mb-2 text-grey-600">POWER tokens</p>
+
+      <div>
+        <div class="flex justify-between items-center">
+          <div class="flex gap-2">
+            <MIconPower
+              class="h-5 w-5"
+              :version="hasDelegatedPower ? 'dark' : 'light'"
+            />
+            <span :class="[hasDelegatedPower ? 'text-grey-600' : 'text-white']">
               {{ powerVotingPower?.data.value?.relative?.toFixed(1) }}%
             </span>
-            <span class="text-grey-600 text-xxs">
-              {{ balancePowerToken?.data?.value?.formatted }}
-            </span>
           </div>
+          <span class="text-grey-600 text-xxs">
+            {{
+              useNumberFormatterCompact(
+                balancePowerToken?.data?.value?.formatted || 0
+              )
+            }}
+          </span>
         </div>
+        <div v-if="hasDelegatedPower" class="bg-accent-blue p-2 mt-4 w-fit">
+          <p class="text-xxs font-mono">Voting power is delegated</p>
+        </div>
+      </div>
 
-        <div class="flex gap-2">
-          <MIconZero class="h-5 w-5" />
-          <div class="flex flex-col">
-            <span>
+      <hr class="border-grey-700 border-dashed my-6" />
+      <p class="text-xs mb-2 text-grey-600">ZERO tokens</p>
+      <div>
+        <div class="flex justify-between items-center">
+          <div class="flex gap-2">
+            <MIconZero
+              :version="hasDelegatedZero ? 'dark' : 'light'"
+              class="h-5 w-5"
+            />
+            <span :class="[hasDelegatedZero ? 'text-grey-600' : 'text-white']">
               {{ zeroVotingPower?.data.value?.relative?.toFixed(1) }}%
             </span>
-            <span class="text-grey-600 text-xxs">
-              {{ balanceZeroToken?.data?.value?.formatted }}
-            </span>
           </div>
+          <span class="text-grey-600 text-xxs">
+            {{
+              useNumberFormatterCompact(
+                balanceZeroToken?.data?.value?.formatted || 0
+              )
+            }}
+          </span>
+        </div>
+        <div v-if="hasDelegatedZero" class="bg-accent-blue p-2 mt-4 w-fit">
+          <p class="text-xxs font-mono">Voting power is delegated</p>
         </div>
       </div>
     </div>
-
-    <div
-      v-show="(hasDelegatedPower || hasDelegatedZero) && isCorrectChain"
-      class="p-4 bg-accent-teal text-white"
-    >
-      <div class="mb-2">
-        <p class="uppercase mb-2 text-xxs">Voting Power delegated:</p>
-
-        <div v-show="hasDelegatedPower" class="flex items-center">
-          <MIconPower class="h-6 w-6 mr-1" />
-          <p class="underline text-xs truncate flex">
-            <MAddressAvatar :show-avatar="false" :address="powerDelegates" />
-          </p>
-        </div>
-
-        <div v-show="hasDelegatedZero" class="flex items-center">
-          <MIconZero class="h-6 w-6 mr-1" />
-          <p class="underline text-xs truncate flex">
-            <MAddressAvatar :show-avatar="false" :address="zeroDelegates" />
-          </p>
-        </div>
-      </div>
-      <MButton
-        version="outline-light"
-        class="w-full"
-        data-test="sidebar-link-delegate"
-      >
-        <NuxtLink to="/delegate/"> Re-delegate </NuxtLink>
-      </MButton>
+    <div v-else class="mb-4 bg-grey-800 p-4">
+      <p class="bg-red-500 text-white w-fit p-2 text-xs">Wrong network</p>
     </div>
 
     <button
@@ -179,8 +177,7 @@ const { amountLeftToAuction } = useAuction();
 
 const config = useRuntimeConfig();
 
-const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
-  useMDelegates(address);
+const { hasDelegatedPower, hasDelegatedZero } = useMDelegates(address);
 
 const { power: powerVotingPower, zero: zeroVotingPower } =
   useMVotingPower(address);

@@ -18,15 +18,15 @@
 </template>
 
 <script lang="ts" setup>
-export interface MButtonProps {
+export interface Props {
   version?: "light" | "dark";
 }
 
-const props = withDefaults(defineProps<MButtonProps>(), {
+const props = withDefaults(defineProps<Props>(), {
   version: "light",
 });
 
 const fill = computed(() =>
-  props.version === "light" ? "#EBEBEB" : "#868886",
+  props.version === "light" ? "#EBEBEB" : "#868886"
 );
 </script>
