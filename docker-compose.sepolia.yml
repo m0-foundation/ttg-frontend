@@ -9,7 +9,7 @@ services:
     restart: always
     command: ["yarn", "run", "build-start"]
     environment:
-      - NETWORK=sepolia
+      - BUILD_ENV=staging
       - NODE_ENV=production
     volumes:
       - .:/usr/src/app

@@ -32,7 +32,7 @@ jobs:
       - name: generating static files
         run: |
           yarn install
-          NETWORK=sepolia yarn generate
+          BUILD_ENV=staging yarn generate
 
       # Upload to main folder for main branch pipeline
       - name: upload static files to S3 bucket
