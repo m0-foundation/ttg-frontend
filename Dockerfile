@@ -27,7 +27,7 @@ RUN yarn install
 
 # Build app
 COPY . .
-RUN yarn build:development
+RUN yarn build
 
 EXPOSE 3000
 EXPOSE 8545
