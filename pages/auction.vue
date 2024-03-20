@@ -86,7 +86,7 @@
             :class="{ 'text-red-600 font-bold': totalPrice > cashTokenBalance }"
           >
             {{ cashTokenBalance }}
-            {{ cashToken.data.value.symbol }}
+            {{ cashToken?.data?.value?.symbol }}
           </span>
         </div>
         <MButton
