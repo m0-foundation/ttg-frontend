@@ -191,7 +191,8 @@
       <div v-if="hasToPayFee">
         <p class="text-grey-500 text-xs flex justify-end font-inter">
           Available balance:
-          {{ formatNumber(cashToken?.data?.value?.formatted) || 0 }} WETH
+          {{ useNumberFormatterEth(cashToken?.data?.value?.formatted) || 0 }}
+          WETH
         </p>
       </div>
 
@@ -618,13 +619,13 @@ const currentValue = computed(() => {
     selectedProposalType?.value?.value === "setEmergencyProposalThresholdRatio"
   ) {
     return `${basisPointsToPercentage(
-      spog.getValues.emergencyProposalThresholdRatio!,
+      spog.getValues.emergencyProposalThresholdRatio!
     )}%`;
   }
 
   if (selectedProposalType?.value?.value === "setZeroProposalThresholdRatio") {
     return `${basisPointsToPercentage(
-      spog.getValues.zeroProposalThresholdRatio!,
+      spog.getValues.zeroProposalThresholdRatio!
     )}%`;
   }
 
@@ -632,7 +633,7 @@ const currentValue = computed(() => {
 
   if (
     ["setProposalFee", "setStandardProposalFee"].includes(
-      selectedProposalType?.value?.value,
+      selectedProposalType?.value?.value
     )
   ) {
     return formatFee(spog.getValues.proposalFee!);
@@ -785,7 +786,7 @@ async function onSubmit() {
         unwatchAll();
 
         return navigateTo(`/proposal/${newProposals[0].proposalId}`);
-      },
+      }
     );
 
     const calldatas = buildCalldatas(formDataWithLinks);
@@ -821,7 +822,7 @@ function buildCalldatas(formData) {
 
     return buildCalldatasSpog(
       type,
-      encondeInputsListOperation({ input1, input2 }),
+      encondeInputsListOperation({ input1, input2 })
     );
   }
 
@@ -840,7 +841,7 @@ function buildCalldatas(formData) {
 
     return buildCalldatasSpog(
       type,
-      encondeInputsListAddRemoveOperation({ input1, input2, input3 }),
+      encondeInputsListAddRemoveOperation({ input1, input2, input3 })
     );
   }
 
@@ -853,7 +854,7 @@ function buildCalldatas(formData) {
       if (["penalty_rate", "mint_ratio"].includes(key)) {
         return encodeAbiParameters(
           [{ type: "uint256" }],
-          [BigInt(percentageToBasispoints(inp))],
+          [BigInt(percentageToBasispoints(inp))]
         );
       }
 
@@ -874,7 +875,7 @@ function buildCalldatas(formData) {
   if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [useParseCash(input1)],
+      [useParseCash(input1)]
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
@@ -892,7 +893,7 @@ function buildCalldatas(formData) {
   ) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(percentageToBasispoints(input1))],
+      [BigInt(percentageToBasispoints(input1))]
     );
     return buildCalldatasSpog(type, [valueEncoded]);
   }
