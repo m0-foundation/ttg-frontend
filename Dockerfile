@@ -27,7 +27,7 @@ RUN yarn install
 
 # Build app
 COPY . .
-RUN yarn build:sepolia
+RUN yarn build:development
 
 EXPOSE 3000
 EXPOSE 8545

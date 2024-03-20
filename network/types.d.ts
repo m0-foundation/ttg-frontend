@@ -1,6 +1,7 @@
 import { Hash } from "viem";
 
 export interface NetworkConfig {
+  network: "sepolia" | "mainnet" | "hardhat",
   contracts: {
     registrar: Hash;
     multicall3: Hash;

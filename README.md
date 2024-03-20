@@ -62,7 +62,7 @@ This app uses an environment variables locally (not in docker-compose). For loca
 Use in other chains you must create an .env file with this parameters:
 
 ```
-NETWORK=sepolia | mainnet | local | hardhat | undefined
+BUILD_ENV=local(hardhat) | development(sepolia) | staging(sepolia) | production(mainnet)
 VITE_APP_IS_AUCTION_ACTIVE=true | false
 VITE_APP_RPC_URL_MAIN=string
 VITE_APP_RPC_URL_FALLBACK=string

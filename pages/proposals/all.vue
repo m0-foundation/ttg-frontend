@@ -6,7 +6,7 @@
       :fields="proposalsTableHeader"
     >
       <template #header-left>
-        <PageTitle class="px-6 lg:px-0">
+        <PageTitle>
           <template #pretitle>
             <NuxtLink
               class="text-green-700 hover:text-green-600 text-sm uppercase cursor-pointer"

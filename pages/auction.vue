@@ -16,6 +16,15 @@
       >
         <div class="flex flex-wrap gap-8 text-grey-500">
           <div>
+            <p class="mb-2 text-xxs uppercase">Power Tokens Available</p>
+            <MTokenAmount
+              name="power"
+              image="/img/tokens/power.svg"
+              :size="30"
+              :amount="isTransferEpoch ? formatNumber(amountLeftToAuction) : 0"
+            />
+          </div>
+          <div>
             <p class="mb-2 text-xxs uppercase">
               {{ currentCashToken?.symbol }}/POWER Rate
             </p>
@@ -30,19 +39,13 @@
               "
             />
           </div>
-          <div>
-            <p class="mb-2 text-xxs uppercase">Power Tokens Available</p>
-            <MTokenAmount
-              name="power"
-              image="/img/tokens/power.svg"
-              :size="30"
-              :amount="isTransferEpoch ? formatNumber(amountLeftToAuction) : 0"
-            />
-          </div>
         </div>
         <div class="mt-8 min-h-48 lg:min-h-72">
           <p class="text-xs text-grey-500">Rate projection</p>
-          <AuctionChart v-if="isTransferEpoch" :show-options="true" />
+          <AuctionChart
+            v-if="isTransferEpoch && !noPowerTokens"
+            :show-options="true"
+          />
         </div>
       </div>
 
