@@ -40,7 +40,7 @@
             class="proposals-nav-button"
             data-test="button-tab-standard"
           >
-            Standard <MBadge>{{ standardProposals }}</MBadge>
+            Standard <MBadge version="info">{{ standardProposals }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
