@@ -1,4 +1,4 @@
-import { NetworkConfig } from "./types.d";
+import { NetworkConfig } from "./types";
 
 export default {
   contracts: {

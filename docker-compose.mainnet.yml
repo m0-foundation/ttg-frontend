@@ -9,7 +9,7 @@ services:
     restart: always
     command: ["yarn", "run", "build-start"]
     environment:
-      - NETWORK=mainnet
+      - BUILD_ENV=production
       - NODE_ENV=production
     volumes:
       - .:/usr/src/app

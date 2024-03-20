@@ -26,7 +26,7 @@ services:
       - HTTP_RPC_URL=http://hardhat:8545/
       - WS_RPC_URL=ws://hardhat:8545/
       - TTL_SECONDS=30
-      - NETWORK=hardhat
+      - BUILD_ENV=local
       - LOG_CACHE_STATUS=true
     depends_on:
       - hardhat
