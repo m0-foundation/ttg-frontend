@@ -4,7 +4,6 @@
     width="24"
     height="24"
     viewBox="0 0 24 24"
-    fill="none"
   >
     <path
       fill-rule="evenodd"
@@ -17,14 +16,16 @@
 
 <script setup lang="ts">
 export interface Props {
-  version?: "light" | "dark";
+  version?: "light" | "dark" | "disabled";
 }
 
 const props = withDefaults(defineProps<Props>(), {
   version: "light",
 });
-
-const fill = computed(() =>
-  props.version === "light" ? "#EBEBEB" : "#868886"
-);
+const colors = {
+  light: "#EBEBEB",
+  dark: "#000D0A",
+  disabled: "#868886",
+};
+const fill = computed(() => colors[props.version]);
 </script>
