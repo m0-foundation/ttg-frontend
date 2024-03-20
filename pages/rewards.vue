@@ -1,11 +1,18 @@
 <template>
   <div>
     <PageTitle class="mb-8 px-6 lg:p-0">
-      <template #default>Claim rewards</template>
+      <template #default>Rewards</template>
       <template #subtitle>
         <p class="text-grey-500 font-inter">
-          Explanation text placeholder. It will explain what is residual balance
-          and why it is generated.
+          In exchange for ZERO holders' participation in protocol governance,
+          they will receive the remainder of the protocol fees.
+          <a
+            href="https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.ii-operation/iii.ii.viii-zero-claiming-of-residual-value"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline"
+            >Learn more </a
+          >.
         </p>
       </template>
     </PageTitle>

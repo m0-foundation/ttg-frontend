@@ -5,7 +5,7 @@
       <h1 class="leading-relaxed my-2 lg:my-0">
         <slot></slot>
       </h1>
-      <span class="text-xs text-grey-500 font-inter">
+      <span class="max-sm:text-sm text-grey-500 font-inter">
         <slot name="subtitle"></slot>
       </span>
     </div>
