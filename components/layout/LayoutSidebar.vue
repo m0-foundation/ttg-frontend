@@ -76,6 +76,16 @@
           M0 Protocol Config
         </NuxtLink>
       </li>
+
+      <li>
+        <NuxtLink
+          to="/rewards/"
+          active-class="active"
+          data-test="sidebar-link-lists"
+        >
+          Rewards
+        </NuxtLink>
+      </li>
     </ul>
   </nav>
 

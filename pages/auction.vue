@@ -3,10 +3,8 @@
     <PageTitle class="mb-8 px-6 lg:p-0">
       <template #default>Auction</template>
       <template #subtitle>
-        <p class="text-grey-500 font-inter">
-          This is a Dutch auction, the chart below illustrates the price
-          decreasing over time once the auction begins.
-        </p>
+        This is a Dutch auction, the chart below illustrates the price
+        decreasing over time once the auction begins.
       </template>
     </PageTitle>
 
