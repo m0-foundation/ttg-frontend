@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="alerts.reset.show">
-      <MAlertBannerReset :proposal="(alerts.reset.proposal as MProposal)" />
+      <MAlertBannerReset :proposal="alerts.reset.proposal as MProposal" />
     </div>
 
     <div class="fixed top-10 right-5 grid grid-cols-1 gap-2">

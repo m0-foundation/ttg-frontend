@@ -66,6 +66,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const hasVotes = computed(
-  () => props.votes?.yes?.count > 0n || props.votes?.no?.count > 0n
+  () => props.votes?.yes?.count > 0n || props.votes?.no?.count > 0n,
 );
 </script>

@@ -46,15 +46,16 @@
           to="/auction/"
           active-class="active"
           class="flex items-center gap-1"
-          >Auction
+        >
+          Auction
           <div
             v-if="amountLeftToAuction"
             class="p-1 bg-grey-100 text-xxs leading-3 font-inter text-grey-1000 flex items-center gap-1 mr-1"
           >
             <MIconPower fill="#000000" class="w-2.5 h-2.5" />
             {{ amountLeftToAuction }}
-          </div></NuxtLink
-        >
+          </div>
+        </NuxtLink>
       </li>
 
       <li>

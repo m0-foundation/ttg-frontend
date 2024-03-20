@@ -181,7 +181,7 @@ const wagmiConfig = useWagmiConfig();
 const { currentCost, amountLeftToAuction, getCurrentCost } = useAuction();
 
 const isTransferEpoch = computed(
-  () => spog.epoch.value.current?.type === "TRANSFER"
+  () => spog.epoch.value.current?.type === "TRANSFER",
 );
 
 const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
@@ -189,7 +189,7 @@ const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
 const totalPrice = computed(() => {
   if (!currentCost.value || !purchaseAmount.value) return "0";
   return formatNumber(
-    formatEther(BigInt(currentCost.value.value) * BigInt(purchaseAmount.value))
+    formatEther(BigInt(currentCost.value.value) * BigInt(purchaseAmount.value)),
   );
 });
 
@@ -260,8 +260,8 @@ async function auctionBuy() {
       alerts.successAlert(
         `You bought ${args.amount} Power tokens for ${formatUnits(
           args.cost * args.amount,
-          currentCashToken?.value?.decimals
-        )} ${currentCashToken?.value?.symbol}`
+          currentCashToken?.value?.decimals,
+        )} ${currentCashToken?.value?.symbol}`,
       );
       refetchBalances();
       getAmountLeftToAuction();

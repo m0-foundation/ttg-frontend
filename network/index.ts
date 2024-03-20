@@ -4,10 +4,7 @@ import development from "./development.config";
 import local from "./local.config";
 export * from "./types.d";
 
-
-
-const getNetworkConfig = (
-) => {
+const getNetworkConfig = () => {
   const config = useRuntimeConfig();
   const { node, build } = config.public.env;
 

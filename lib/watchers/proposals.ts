@@ -21,7 +21,7 @@ export const watchProposalCreated = (callbackOnEvent: Function) => {
     console.log("newProposalCreated", { logs });
 
     const newProposals = await Promise.all(
-      logs.map((log) => governor.proposals.getProposalFromWatchLog(log))
+      logs.map((log) => governor.proposals.getProposalFromWatchLog(log)),
     );
 
     proposals.push(newProposals as Array<MProposal>);

@@ -28,7 +28,7 @@ export default () => {
     spog.fetchPowerTokenValue([
       "participationInflation", // in basis points
     ]),
-    null
+    null,
   );
 
   return computed(() => {
@@ -37,10 +37,10 @@ export default () => {
     if (!get(pastBalanceOf, "data.value", null)) return 0;
 
     const inflatorRatio = BigInt(
-      get(participationInflation, "value[0].result") as unknown as bigint
+      get(participationInflation, "value[0].result") as unknown as bigint,
     );
     const pastBalance = BigInt(
-      get(pastBalanceOf, "data.value") as unknown as bigint
+      get(pastBalanceOf, "data.value") as unknown as bigint,
     );
 
     const powerInflation = Number(pastBalance * inflatorRatio) / 10_000;

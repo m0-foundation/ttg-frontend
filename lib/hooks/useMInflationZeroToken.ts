@@ -31,7 +31,7 @@ export default () => {
       address: spog.contracts.zeroToken! as Hash,
       args: [lastEpoch],
     }),
-    null
+    null,
   );
 
   return computed(() => {
@@ -40,11 +40,11 @@ export default () => {
     if (!toValue(pastTotalSupplyState)) return 0;
 
     const pastVotes = BigInt(
-      get(getPastVotes, "data.value") as unknown as bigint
+      get(getPastVotes, "data.value") as unknown as bigint,
     );
 
     const pastTotalSupply = BigInt(
-      toValue(pastTotalSupplyState) as unknown as bigint
+      toValue(pastTotalSupplyState) as unknown as bigint,
     );
 
     console.log({ pastVotes, pastTotalSupply });
@@ -58,7 +58,7 @@ export default () => {
 
     return formatUnits(
       BigInt(inflatorBalance.toFixed(0)),
-      spog.tokens.zero.decimals!
+      spog.tokens.zero.decimals!,
     );
   });
 };

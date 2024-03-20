@@ -18,7 +18,7 @@ export interface ProposalStatusProps {
     | "Executed";
 }
 
-const props = withDefaults(defineProps<ProposalStatusProps>(), {
+withDefaults(defineProps<ProposalStatusProps>(), {
   version: "Pending",
 });
 

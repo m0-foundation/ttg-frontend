@@ -22,13 +22,15 @@ export const watchVoteCast = () => {
     console.log("newVoteCast", logs);
 
     const newVotes = await Promise.all(
-      logs.map((log) => governor.voting.decodeVote(log))
+      logs.map((log) => governor.voting.decodeVote(log)),
     );
 
     votesStore.push(newVotes);
 
     await Promise.all(
-      newVotes.map((vote) => proposalStore.updateProposalById(vote.proposalId!))
+      newVotes.map((vote) =>
+        proposalStore.updateProposalById(vote.proposalId!),
+      ),
     );
   };
 
