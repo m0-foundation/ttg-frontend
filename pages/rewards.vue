@@ -16,7 +16,7 @@
         <div>
           <span class="token-label">M Token</span>
           <MTokenAmount
-            amount="56156124"
+            :amount="totalClaimableM"
             image="/img/tokens/m.svg"
             name="M"
             size="20"
@@ -25,7 +25,7 @@
         <div>
           <span class="token-label">WETH Token</span>
           <MTokenAmount
-            amount="67"
+            :amount="totalClaimableWeth"
             image="/img/tokens/weth10.png"
             name="WETH"
             size="20"
@@ -46,13 +46,13 @@
               <h4 class="mb-3">M Token</h4>
               <span class="token-label">Claimable balance</span>
               <MTokenAmount
-                amount="1000"
+                :amount="userClaimableM"
                 image="/img/tokens/m.svg"
                 name="M"
                 size="30"
               />
             </div>
-            <MButton>Claim</MButton>
+            <MButton :disabled="!userClaimableM">Claim</MButton>
           </div>
         </div>
         <div class="bg-grey-800 p-6">
@@ -61,13 +61,13 @@
               <h4 class="mb-3">WETH Token</h4>
               <span class="token-label">Claimable balance</span>
               <MTokenAmount
-                amount="0"
+                :amount="userClaimableWeth"
                 image="/img/tokens/weth10.png"
                 name="WETH"
                 size="30"
               />
             </div>
-            <MButton :disabled="true">Claim</MButton>
+            <MButton :disabled="!userClaimableWeth">Claim</MButton>
           </div>
         </div>
       </div>
@@ -78,7 +78,15 @@
     </div>
   </div>
 </template>
-<script setup></script>
+
+<script setup>
+const userClaimableWeth = ref(0);
+const userClaimableM = ref(0);
+
+const totalClaimableWeth = ref(0);
+const totalClaimableM = ref(0);
+</script>
+
 <style>
 .token-label {
   @apply text-grey-500 text-xxs font-inter mb-1;

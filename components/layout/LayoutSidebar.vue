@@ -57,7 +57,7 @@
           to="/rewards/"
           active-class="active"
           data-test="sidebar-link-lists"
-          :class="{ 'notification-dot': true }"
+          :class="{ 'notification-dot': false }"
         >
           Rewards
         </NuxtLink>
