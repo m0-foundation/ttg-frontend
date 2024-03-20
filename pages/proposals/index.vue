@@ -109,19 +109,19 @@ const proposalsStore = useProposalsStore();
 const spog = useSpogStore();
 
 const activeProposals = computed(() =>
-  proposalsStore.getProposalsByState("Active"),
+  proposalsStore.getProposalsByState("Active")
 );
 
 const standardProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Standard"),
+  activeProposals.value.filter((p) => p.votingType === "Standard")
 );
 
 const mandatoryToVoteProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Standard"),
+  activeProposals.value.filter((p) => p.votingType === "Standard")
 );
 
 const hasProposals = computed(
-  () => mandatoryToVoteProposals && mandatoryToVoteProposals.value.length > 0,
+  () => mandatoryToVoteProposals && mandatoryToVoteProposals.value.length > 0
 );
 
 const isSelectedCastProposalsFull = computed(() => {
@@ -157,7 +157,7 @@ function onCast(vote: number, proposalId: string) {
 
 function onUncast(proposalId: string) {
   selectedCastProposals.value = selectedCastProposals.value.filter(
-    (p) => p.proposalId !== proposalId,
+    (p) => p.proposalId !== proposalId
   );
 }
 
@@ -169,7 +169,7 @@ async function onCastBatchVotes() {
 
   try {
     const proposalIds = selectedCastProposals.value.map((p) =>
-      BigInt(p.proposalId),
+      BigInt(p.proposalId)
     );
     const votes = selectedCastProposals.value.map((p) => p.vote);
 
@@ -188,19 +188,17 @@ async function onCastBatchVotes() {
       throw new Error("Transaction was rejected");
     }
 
-    alerts.infoAlert(
-      `Your Balance will receive the reward of ${useNumberFormatterPrice(
-        toValue(powerInflation),
-      )} POWER tokens in the next epoch.`,
+    alerts.successAlert(
+      `Your Balance has received the reward of ${useNumberFormatterPrice(
+        toValue(zeroInflation)
+      )} ZERO tokens.`
     );
 
     alerts.successAlert(
-      `Your Balance has received the reward of ${useNumberFormatterPrice(
-        toValue(zeroInflation),
-      )} ZERO tokens.`,
+      `Vote casted successfully! Your Balance will receive the reward of ${useNumberFormatterPrice(
+        toValue(powerInflation)
+      )} POWER tokens in the next epoch.`
     );
-
-    alerts.successAlert("Vote casted successfully!");
 
     await spog.fetchTokens();
     balances.refetch();
