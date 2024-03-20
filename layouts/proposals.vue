@@ -101,7 +101,10 @@ const spog = useSpogStore();
 const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
 
 const standardProposals = computed(
-  () => store.getProposalsByState("Active").length
+  () =>
+    store
+      .getProposalsByState("Active")
+      .filter((p) => !p.isEmergency && p.votingType !== "Zero").length
 );
 
 const pendingExecution = computed(
