@@ -7,6 +7,7 @@ const RPC_URL_FALLBACK = import.meta.env.VITE_APP_RPC_URL_FALLBACK || sepolia.rp
 console.log("CONFIG VITE", import.meta.env.VITE_APP_RPC_URL_MAIN);
 
 export default {
+  network: "sepolia",
   contracts: {
     registrar: "0x7A05438036B30Fa040884b03275e9D7cEdFE4624",
     multicall3: sepolia.contracts.multicall3.address,

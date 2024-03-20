@@ -22,7 +22,7 @@ export default defineNuxtConfig({
       auctionActive,
       env: {
         node: process.env.NODE_ENV,
-        network: process.env.NETWORK,
+        build: process.env.VITE_BUILD_ENV,
       },
     },
   },
