@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="p-6 pt-2 lg:pt-6">
-      <div class="lg:flex justify-between">
-        <h1>
+    <div class="px-6 lg:p-0">
+      <PageTitle class="items-center">
+        <template #default>
           <span class="capitalize">{{
             epoch?.current?.type.toLowerCase()
           }}</span>
@@ -11,8 +11,8 @@
           <span class="text-grey-600 text-xxs lg:text-xs ml-2">
             {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
           </span>
-        </h1>
-        <div class="hidden lg:block">
+        </template>
+        <template #side>
           <NuxtLink to="/proposals/all/">
             <MNavButton
               class="text-sm font-ppformula underline normal-case text-grey-600"
@@ -20,16 +20,16 @@
               All proposals
             </MNavButton>
           </NuxtLink>
-        </div>
-      </div>
+        </template>
+      </PageTitle>
     </div>
 
     <AuctionBanner
       v-if="isTransferEpoch && $config.public.auctionActive"
-      class="mb-6"
+      class="my-6"
     />
 
-    <div class="text-grey-600 p-6 pt-0">
+    <div class="text-grey-600 my-6 px-6 lg:px-0">
       <h5 class="text-xxs mb-1">Proposals:</h5>
 
       <div

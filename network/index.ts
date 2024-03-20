@@ -1,45 +1,29 @@
-import mainnet from "./mainnet.config";
-import sepolia from "./sepolia.config";
-import hardhat from "./hardhat.config";
-import { NetworkConfig } from "./types.d";
+import production from "./production.config";
+import staging from "./staging.config";
+import development from "./development.config";
+import local from "./local.config";
 export * from "./types.d";
 
-const networks = {
-  mainnet,
-  sepolia,
-  hardhat,
-};
+
 
 const getNetworkConfig = (
-  inputNetwork?: "mainnet" | "sepolia" | "hardhat" | number
 ) => {
-  if (!inputNetwork) return findNetworkConfig();
-
-  if (typeof inputNetwork === "number") {
-    return Object.values(networks).find(
-      (network) => network.rpc.chainId === inputNetwork
-    )!;
-  }
-
-  return networks[inputNetwork] as NetworkConfig;
-};
-
-const findNetworkConfig = () => {
   const config = useRuntimeConfig();
-  const { node, network } = config.public.env;
+  const { node, build } = config.public.env;
 
-  console.log({ node, network });
+  console.log({ node, build });
 
-  // NETWORK env has higher priority
-  if (network) {
-    if (network === "mainnet") return mainnet;
-    if (network === "sepolia") return sepolia;
-    else return hardhat;
+  if (build) {
+    if (build === "production") return production;
+    if (build === "staging") return staging;
+    if (build === "development") return development;
+    else return local;
   }
 
-  if (node === "development") return hardhat;
+  if (node === "production") return production;
+  if (node === "development") return development;
 
-  return mainnet;
+  return local;
 };
 
-export { mainnet, sepolia, hardhat, getNetworkConfig };
+export { production, staging, development, local, getNetworkConfig };

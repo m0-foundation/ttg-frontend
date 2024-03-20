@@ -1,27 +1,29 @@
 {
-  "name": "nuxt-app",
+  "name": "mzero-ttg-dapp",
   "private": true,
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "dev": "nuxt dev",
-    "build": "nuxt generate",
-    "build:sepolia": "NETWORK=sepolia yarn build",
-    "build:test": "npx http-server .output/public",
     "build-start": "yarn build && yarn start",
-    "start": "npx serve .output/public",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "lint": "yarn eslint --ignore-path .gitignore .",
-    "test": "cypress run --headless --browser chrome",
+    "build:development": "BUILD_ENV=development yarn build",
+    "build:production": "BUILD_ENV=production yarn build",
+    "build:staging": "BUILD_ENV=staging yarn build",
+    "build": "nuxt generate",
     "ci": "concurrently -s last -k \"nuxt dev\" \"sleep 6 && yarn test\"",
     "cy:ci": "cypress run --e2e --browser chrome",
     "cy:open": "cypress open --e2e --browser chrome",
     "cy:run": "yarn cy:ci",
+    "dev": "nuxt dev",
     "hardhat": "ts-node run-hardhat.ts",
+    "lint": "yarn eslint --ignore-path .gitignore .",
+    "postinstall": "nuxt prepare",
+    "preview": "nuxt preview",
+    "sb:build": "storybook build",
     "sb": "storybook dev -p 6006",
-    "sb:build": "storybook build"
+    "start": "npx serve .output/public",
+    "test:build": "npx http-server .output/public",
+    "test": "cypress run --headless --browser chrome"
   },
   "devDependencies": {
     "@ethersproject/experimental": "^5.7.0",
@@ -61,10 +63,10 @@
     "typescript": "^5.4.2",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
-    "vite-plugin-node-polyfills": "^0.21.0"
+    "vite-plugin-node-polyfills": "^0.21.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.10"
   },
   "dependencies": {
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@pinia/nuxt": "^0.5.1",
     "@tanstack/vue-query": "^5.28.4",
     "@types/lodash": "^4.17.0",
@@ -72,10 +74,9 @@
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^10.9.0",
     "@vueuse/nuxt": "^10.9.0",
-    "apexcharts": "^3.47.0",
     "@wagmi/core": "^2.6.5",
+    "apexcharts": "^3.47.0",
     "dayjs": "^1.11.10",
-    "identicon.js": "^2.3.3",
     "lodash": "^4.17.21",
     "marked": "^5.0.1",
     "marked-gfm-heading-id": "^3.1.3",
@@ -84,9 +85,9 @@
     "md-editor-v3": "^4.12.1",
     "pinia": "^2.1.7",
     "postcss-custom-properties": "^13.3.6",
-    "vue3-apexcharts": "^1.5.2",
     "use-wagmi": "^1.3.5",
     "viem": "^2.8.9",
+    "vue3-apexcharts": "^1.5.2",
     "vue3-jazzicon": "^0.1.4",
     "xss": "^1.0.15"
   },
