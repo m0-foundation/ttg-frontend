@@ -4,11 +4,10 @@
   "compilerOptions": {
     "types": ["cypress", "node", "@testing-library/cypress"],
     "paths": {
-      "@/support/*": [
-        "./cypress/support/*"
-      ]
+      "@/support/*": ["./cypress/support/*"],
+      "@/*": ["./*"],
     },
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
   },
   
   "ts-node": {
