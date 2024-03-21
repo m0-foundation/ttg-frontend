@@ -6,6 +6,7 @@ const activeTabIndex = ref(0);
 
 onMounted(() => {
   tabs.value = [...tabContainer.value.querySelectorAll(".m-tab")];
+  tabs.value[0].classList.add("active-tab");
   for (const x of tabs.value) {
     if (x.classList.contains("active-tab")) {
       activeTabIndex.value = tabs.value.indexOf(x);
