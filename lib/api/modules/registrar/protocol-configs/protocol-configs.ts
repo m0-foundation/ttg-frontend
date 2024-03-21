@@ -9,8 +9,8 @@ import { ApiModule } from "@/lib/api/api-module";
 
 export class ProtocolConfigs extends ApiModule {
   keysInBytes32 = [
-    "updateCollateral_interval",
-    "updateCollateral_threshold",
+    "update_collateral_interval",
+    "update_collateral_threshold",
     "penalty_rate",
     "mint_delay",
     "mint_ttl",

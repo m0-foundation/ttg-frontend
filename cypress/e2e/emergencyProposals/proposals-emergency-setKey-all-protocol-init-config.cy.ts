@@ -28,7 +28,7 @@ describe("Proposals", () => {
       cy.contains("Update collateral interval").click();
 
       const value = "86400";
-      const key = "updateCollateral_interval";
+      const key = "update_collateral_interval";
       const description = `Add protocol config ${key} = ${value}`;
       descriptions.push(description);
       keys.push(key);
@@ -65,7 +65,7 @@ describe("Proposals", () => {
       cy.contains("Update collateral threshold").click();
 
       const value = "1";
-      const key = "updateCollateral_threshold";
+      const key = "update_collateral_threshold";
       const description = `Add protocol config ${key} = ${value}`;
       descriptions.push(description);
       keys.push(key);
