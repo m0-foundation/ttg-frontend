@@ -80,7 +80,7 @@
     </ul>
   </nav>
 
-  <hr class="border-grey-700 my-6" />
+  <hr class="border-grey-700 my-4" />
 
   <div v-if="isConnected" class="text-grey-100">
     <li class="mb-4">
