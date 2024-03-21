@@ -1,13 +1,14 @@
 <template>
   <div v-if="address" class="px-6 lg:p-0">
     <PageTitle class="mb-6">
-      My Profile<template #subtitle
-        ><MAddressAvatar
+      My Profile<template #subtitle>
+        <MAddressAvatar
           class="text-grey-500 normal-case"
           :short-address="false"
           :address="address"
           :show-avatar="false"
-      /></template>
+        />
+      </template>
       <template #side>
         <NuxtLink to="/delegate/">
           <MButton
@@ -46,6 +47,6 @@ useHead({
 });
 
 const canDelegate = computed(
-  () => spog.epoch.value.current.type === "TRANSFER"
+  () => spog.epoch.value.current.type === "TRANSFER",
 );
 </script>

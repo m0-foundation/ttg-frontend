@@ -44,7 +44,7 @@ export class List extends ApiModule {
       address: this.config.registrar as Hash,
       fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
-        "event AddressAddedToList(bytes32 indexed list, address indexed account)"
+        "event AddressAddedToList(bytes32 indexed list, address indexed account)",
       ),
     });
 
@@ -52,25 +52,25 @@ export class List extends ApiModule {
       address: this.config.registrar as Hash,
       fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
-        "event AddressRemovedFromList(bytes32 indexed list, address indexed account)"
+        "event AddressRemovedFromList(bytes32 indexed list, address indexed account)",
       ),
     });
 
     const addOperations = await Promise.all(
-      addRawLogs.map((log: Log) => this.decodeListLog(log, registrarAbi))
+      addRawLogs.map((log: Log) => this.decodeListLog(log, registrarAbi)),
     );
 
     const removeOperations = await Promise.all(
-      removeRawLogs.map((log: Log) => this.decodeListLog(log, registrarAbi))
+      removeRawLogs.map((log: Log) => this.decodeListLog(log, registrarAbi)),
     );
 
     const listGrouped = groupBy(
       orderBy(
         [...addOperations, ...removeOperations],
         ["blockNumber"],
-        ["asc"]
+        ["asc"],
       ),
-      "list"
+      "list",
     );
 
     const lists: MLists[] = [];

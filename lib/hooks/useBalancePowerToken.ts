@@ -7,7 +7,7 @@ export default (
   userAccount:
     | globalThis.Ref<undefined>
     | globalThis.Ref<`0x${string}`>
-    | globalThis.Ref<`0x${string}` | undefined>
+    | globalThis.Ref<`0x${string}` | undefined>,
 ) => {
   const store = useSpogStore();
   const spog = storeToRefs(store);

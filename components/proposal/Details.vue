@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
     <article class="bg-white text-black px-4 py-4">
@@ -11,9 +12,9 @@
         </div>
       </div>
 
-      <MBadge v-if="proposal?.isEmergency" version="error"
-        >Emergency Proposal</MBadge
-      >
+      <MBadge v-if="proposal?.isEmergency" version="error">
+        Emergency Proposal
+      </MBadge>
 
       <h1 class="text-[28px] my-3 text-grey-1000 font-light leading-10">
         {{ title }}
@@ -75,12 +76,12 @@ const props = defineProps<ProposalDetailsProps>();
 const proposalStore = useProposalsStore();
 
 const proposal = computed(() =>
-  proposalStore.getProposalById(props.proposalId)
+  proposalStore.getProposalById(props.proposalId),
 );
 const proposalId = computed(() => props.proposalId);
 
 const { onlyDescription, title } = useParsedDescriptionTitle(
-  proposal?.value?.description || ""
+  proposal?.value?.description || "",
 );
 
 const spog = useSpogStore();
@@ -97,10 +98,10 @@ const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
 const zeroThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!)
+  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!),
 );
 const powerThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!)
+  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!),
 );
 
 const votesStore = useVotesStore();
@@ -124,7 +125,7 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
       functionName: "totalSupply",
     }),
   ]),
-  [0n, 0n]
+  [0n, 0n],
 );
 
 votesStore.fetchAllVotes();

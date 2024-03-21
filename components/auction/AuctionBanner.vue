@@ -12,7 +12,7 @@
             :name="currentCashToken?.symbol"
             :image="`/img/tokens/${currentCashToken?.symbol?.toLowerCase()}.png`"
             :size="24"
-            :amount="formatNumber(formatEther(currentCost.value))"
+            :amount="useNumberFormatterEth(formatEther(currentCost.value))"
           />
         </div>
         <div>
@@ -27,7 +27,7 @@
             name="power"
             image="/img/tokens/power.svg"
             :size="24"
-            :amount="formatNumber(amountLeftToAuction)"
+            :amount="useNumberFormatterEth(amountLeftToAuction)"
           />
         </div>
         <div class="flex items-center">

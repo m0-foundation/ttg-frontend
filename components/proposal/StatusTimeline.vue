@@ -61,12 +61,12 @@
 </template>
 
 <script setup lang="ts">
-import { MProposal } from "~/lib/api/types";
+import { MProposal } from "@/lib/api/types";
 
 export interface Props {
   version: string;
   proposal: MProposal | undefined;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>

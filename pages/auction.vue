@@ -21,7 +21,9 @@
               name="power"
               image="/img/tokens/power.svg"
               :size="30"
-              :amount="isTransferEpoch ? formatNumber(amountLeftToAuction) : 0"
+              :amount="
+                isTransferEpoch ? useNumberFormatterEth(amountLeftToAuction) : 0
+              "
             />
           </div>
           <div>
@@ -34,7 +36,7 @@
               :size="30"
               :amount="
                 isTransferEpoch
-                  ? formatNumber(formatEther(currentCost?.value || 0n))
+                  ? useNumberFormatterEth(formatEther(currentCost?.value || 0n))
                   : 0
               "
             />
@@ -188,7 +190,7 @@ const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
 
 const totalPrice = computed(() => {
   if (!currentCost.value || !purchaseAmount.value) return "0";
-  return formatNumber(
+  return useNumberFormatterEth(
     formatEther(BigInt(currentCost.value.value) * BigInt(purchaseAmount.value))
   );
 });

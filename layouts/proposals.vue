@@ -108,17 +108,17 @@ const standardProposals = computed(
 );
 
 const pendingExecution = computed(
-  () => store.getProposalsByState("Succeeded").length
+  () => store.getProposalsByState("Succeeded").length,
 );
 
 const emergency = computed(
-  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length
+  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length,
 );
 
 const zero = computed(
   () =>
     store.getProposalsByState("Active").filter((p) => p.votingType === "Zero")
-      .length
+      .length,
 );
 
 const pending = computed(() => store.getProposalsByState("Pending").length);

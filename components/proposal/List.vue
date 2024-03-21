@@ -31,7 +31,7 @@ const props = defineProps<ProposalListProps>();
 const { proposals } = toRefs(props);
 
 const hasProposals = computed(
-  () => proposals.value && proposals.value.length > 0
+  () => proposals.value && proposals.value.length > 0,
 );
 
 const showProposal = ref<string>();

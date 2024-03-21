@@ -85,7 +85,7 @@ function parseVotesForQuorom(
     yes: string;
     no: string;
   },
-  totalSupply: bigint
+  totalSupply: bigint,
 ) {
   const yesBI = BigInt(yes);
   const noBI = BigInt(no);
@@ -121,7 +121,7 @@ const powerVotes = computed(() => {
           yes: props.yesVotes.toString(),
           no: props.noVotes.toString(),
         },
-        props.powerTotalSupply!
+        props.powerTotalSupply!,
       );
 });
 
@@ -131,20 +131,20 @@ const zeroVotes = computed(() =>
       yes: props.yesVotes.toString(),
       no: props.noVotes.toString(),
     },
-    props.zeroTotalSupply!
-  )
+    props.zeroTotalSupply!,
+  ),
 );
 
 const thresholdFormattedPower = computed(() =>
   useNumberFormatterCompact(
-    (props.powerTotalSupply * BigInt(props.powerThreshold! * 100)) / 100n
-  )
+    (props.powerTotalSupply * BigInt(props.powerThreshold! * 100)) / 100n,
+  ),
 );
 
 const thresholdFormattedZero = computed(() =>
   useNumberFormatterCompact(
-    (props.zeroTotalSupply * BigInt(props.zeroThreshold! * 100)) / 100n
-  )
+    (props.zeroTotalSupply * BigInt(props.zeroThreshold! * 100)) / 100n,
+  ),
 );
 </script>
 <style scoped>

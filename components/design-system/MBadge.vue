@@ -9,7 +9,7 @@ export interface MBadgeProps {
   version?: "success" | "error" | "info";
 }
 
-const props = withDefaults(defineProps<MBadgeProps>(), {
+withDefaults(defineProps<MBadgeProps>(), {
   version: "success",
 });
 </script>

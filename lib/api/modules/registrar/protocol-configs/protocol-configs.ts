@@ -33,7 +33,7 @@ export class ProtocolConfigs extends ApiModule {
     const keyValuesBytes = this.keysInBytes32.map((key, index) => ({
       key,
       value: String(
-        decodeAbiParameters([{ type: "uint256" }], valuesBytes[index])
+        decodeAbiParameters([{ type: "uint256" }], valuesBytes[index]),
       ),
     }));
 

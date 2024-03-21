@@ -6,7 +6,7 @@ const useMBalances = (
   userAccount:
     | globalThis.Ref<undefined>
     | globalThis.Ref<`0x${string}`>
-    | globalThis.Ref<`0x${string}` | undefined>
+    | globalThis.Ref<`0x${string}` | undefined>,
 ) => {
   const cashToken = useBalanceCashToken(userAccount);
   const powerToken = useBalancePowerToken(userAccount);

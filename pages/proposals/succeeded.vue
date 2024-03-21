@@ -22,7 +22,7 @@ import { MProposal } from "@/lib/api/types";
 
 const proposalsStore = useProposalsStore();
 const proposals = computed(() =>
-  proposalsStore.getProposalsByState("Succeeded")
+  proposalsStore.getProposalsByState("Succeeded"),
 );
 
 const { address: userAccount } = useAccount();

@@ -39,5 +39,5 @@ export interface Props {
   proposal: MProposal;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>

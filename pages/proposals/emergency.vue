@@ -31,7 +31,7 @@ const { forceSwitchChain } = useCorrectChain();
 const isLoading = ref(false);
 
 const proposals = computed(() =>
-  proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active")
+  proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active"),
 );
 
 const wagmiConfig = useWagmiConfig();
