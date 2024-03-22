@@ -20,10 +20,7 @@ COPY cypress/docker/* /app/
 RUN npm install -g pm2
 
 # Copy the application into the container
-COPY package.json yarn.lock /app/
-
-# load gitsubmodules
-RUN git submodule update --init --recursive
+COPY package.json yarn.lock .gitmodules /app/
 
 # Install any dependencies your application requires (if needed)
 RUN yarn install && yarn cache clean
