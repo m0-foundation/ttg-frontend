@@ -5,14 +5,16 @@ LABEL container.name="ttg-tests"
 LABEL maintainer="m0labs"
 LABEL description="a docker container which executes cypress e2e tests"
 
-
 # Set working directory
 WORKDIR /app
 
 # Install Python, required by node-gyp
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    apt-get clean
+RUN apt-get update \
+    && apt-get install -y python3 python3-pip  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY cypress/docker/* /app/
 
 # Install pm2 to run the app in the background
 RUN npm install -g pm2
@@ -21,17 +23,9 @@ RUN npm install -g pm2
 COPY package.json yarn.lock /app/
 
 # Install any dependencies your application requires (if needed)
-# speedup build
-RUN yarn install
+RUN yarn install && yarn cache clean
 
 COPY . /app
 
-# Expose ports? only internal ports. no need to expose
-# EXPOSE 3000
-# EXPOSE 8545
-
-## Start the application service on port 3000
-# CMD ["pm2", "start", "ecosystem.config.js"]
-
-# Default entry point
-ENTRYPOINT ["cypress", "run"]
+# Run entry point script (start yarn dev server with pm2 and then run tests)
+ENTRYPOINT ["/app/entrypoint.sh"]

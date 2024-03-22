@@ -42,20 +42,18 @@ const chainServers: ChainServer[] = [];
  * The provider *must* be configured for the chainId before calling runChainServer.
  */
 function runChainServer(chainId: number): Promise<ChainServer> {
-  if (chainServers[chainId]) return Promise.resolve(chainServers[chainId]);
+  if (chainServers[chainId]) return Promise.resolve(chainServers[chainId])
 
-  const run = hre.run(TASK_NODE, { port: PORT });
+  const run = hre.run(TASK_NODE, { port: PORT + chainId })
   return new Promise((resolve) =>
-    hre.tasks[TASK_NODE_SERVER_READY].setAction(
-      ({ address, port, provider, server }) => {
-        const close = async () => {
-          await Promise.all([server.close(), run]);
-        };
-        chainServers[chainId] = { address, port, close, provider };
-        resolve(chainServers[chainId]);
+    hre.tasks[TASK_NODE_SERVER_READY].setAction(async ({ address, port, provider, server }) => {
+      const close = async () => {
+        await Promise.all([server.close(), run])
       }
-    )
-  );
+      chainServers[chainId] = { address, port, close, provider }
+      resolve(chainServers[chainId])
+    })
+  )
 }
 
 const getEpochFromTimestamp = (timestamp: number) => {
@@ -167,7 +165,7 @@ export default async function setup(): Promise<
     );
   }
 
-  const [server] = await Promise.all([run, listen]);
+  let [server] = await Promise.all([run, listen]);
 
   const epoch = await moveToVotingEpoch();
   console.log({ ...epoch });

@@ -1,0 +1,31 @@
+---
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened]
+  schedule:
+    - cron: "* 8 * * *" # Run every day at 8am UTC
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: "Dockerfile.tests"
+          tags: local-cypress:latest
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: false
+      - name: Run Cypress tests
+        uses: addnab/docker-run-action@v3
+        with:
+          image: local-cypress:latest
+          run: echo "Cypress tests run here"

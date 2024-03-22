@@ -13,7 +13,6 @@
 //
 // -- This is a parent command --
 import "@testing-library/cypress/add-commands";
-import "cypress-fail-fast";
 
 declare global {
   namespace Cypress {
