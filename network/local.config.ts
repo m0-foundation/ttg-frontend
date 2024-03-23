@@ -9,9 +9,7 @@ export default {
     zero: {
       allowedCashTokens: [
         "0x5FbDB2315678afecb367f032d93F642f64180aa3", // WETH,
-
-        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        // "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", // M token
+        "0x057ef64E23666F000b34aE31332854aCBd1c8544", // M token
       ],
     },
   },

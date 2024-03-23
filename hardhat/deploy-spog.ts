@@ -37,6 +37,8 @@ export default async function deploySpog(network: Network) {
 
   const provider = new JsonRpcProvider(network.url);
   const wallet = new Wallet(network.accounts[0].privateKey, provider);
+
+  // to avoid messing up with the nonce from main deployer, use another account to deploy Mtoken
   const wallet2 = new Wallet(network.accounts[3].privateKey, provider);
 
   const CashTokenFactory = new ContractFactory(
@@ -53,14 +55,10 @@ export default async function deploySpog(network: Network) {
   const cashToken = await CashTokenFactory.deploy("CASH", "Cash Token", 18);
   console.log("Cash Token Address:", cashToken.address);
   
-  // const MToken = await MTokenFactory.deploy("M", "M Token", 6);
-  const MToken = {address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"};
-
+  const MToken = await MTokenFactory.deploy("M", "M Token", 6);
   console.log("MToken:", MToken.address);
-  // TODO check on latest version of TTG if this is not a bug on allowedCashTokens
+
   const allowedCashTokens = [cashToken.address, MToken.address];
-  // NOTE: Ensure this is the current nonce (transaction count) of the deploying address.
-  // const DEPLOYER_NONCE = 0;
 
   const initialPowerAccounts: string[] = [
     network.accounts[0].address,
@@ -148,7 +146,7 @@ export default async function deploySpog(network: Network) {
 
   const DEPLOYER_NONCE = await wallet.getTransactionCount();
   // const DEPLOYER_NONCE = 1;
-  console.log("Deployer nonce: ", await wallet.getTransactionCount());
+  // console.log("Deployer nonce: ", await wallet.getTransactionCount());
 
   const getExpectedAddress = (nounce: number) =>
     utils.getContractAddress({
@@ -161,24 +159,24 @@ export default async function deploySpog(network: Network) {
       getExpectedAddress(DEPLOYER_NONCE + 4), // ZeroGovernor deployment nonce
       getExpectedAddress(DEPLOYER_NONCE + 7) // Registrar deployment nonce
     );
-    console.log("Deployer nonce: ", await wallet.getTransactionCount());
+    // console.log("Deployer nonce: ", await wallet.getTransactionCount());
   const powerTokenDeployer = await powerTokenDeployerFactory.deploy(
     getExpectedAddress(DEPLOYER_NONCE + 4), // ZeroGovernor deployment nonce
     getExpectedAddress(DEPLOYER_NONCE + 6) // DistributionVault deployment nonce
   );
-  console.log("Deployer nonce: ", await wallet.getTransactionCount());
+  // console.log("Deployer nonce: ", await wallet.getTransactionCount());
   const standardGovernorDeployer = await standardGovernorDeployerFactory.deploy(
     getExpectedAddress(DEPLOYER_NONCE + 4), // ZeroGovernor deployment nonce
     getExpectedAddress(DEPLOYER_NONCE + 7), // Registrar deployment nonce
     getExpectedAddress(DEPLOYER_NONCE + 6), // DistributionVault deployment nonce
     getExpectedAddress(DEPLOYER_NONCE + 5) // ZeroToken deployment nonce
   );
-  console.log("Deployer nonce: ", await wallet.getTransactionCount());
+  // console.log("Deployer nonce: ", await wallet.getTransactionCount());
   const bootstrapToken = await powerBootstrapTokenFactory.deploy(
     initialPowerAccounts,
     initialPowerBalances
   );
-  console.log("Deployer nonce: ", await wallet.getTransactionCount());
+  // console.log("Deployer nonce: ", await wallet.getTransactionCount());
   const zeroGovernor = await zeroGovernorFactory.deploy(
     getExpectedAddress(DEPLOYER_NONCE + 5), // ZeroToken deployment nonce
     emergencyGovernorDeployer.address,
@@ -215,10 +213,10 @@ export default async function deploySpog(network: Network) {
       1000000000000000000000n // 1000
     );
 
-    // await MToken.mint(
-    //   account.address,
-    //   1000_000_000n // 1000 M
-    // );
+    await MToken.mint(
+      account.address,
+      1000_000_000n // 1000 M
+    );
   }
 
   console.log("Registrar Address:", registrar.address);
