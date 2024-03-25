@@ -20,7 +20,8 @@
     <div class="px-6 lg:p-0 my-8">
       <h3 class="text-sm font-inter text-grey-200 mb-3">Total amount</h3>
       <div class="flex flex-wrap gap-4 lg:gap-8">
-        <div v-for="token in cashTokens" :key="token.address">
+        <MIconLoading v-if="loadingData" />
+        <div v-for="token in cashTokens" v-else :key="token.address">
           <span class="token-label">{{ token.name }}</span>
           <MTokenAmount
             :amount="formatUnits(token.vaultBalance, token.decimals)"
@@ -38,8 +39,10 @@
       </h3>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <MIconLoading v-if="loadingData" />
         <div
           v-for="(token, i) in cashTokens"
+          v-else
           :key="token.address"
           class="bg-grey-800 p-6"
         >
@@ -80,12 +83,14 @@ import {
 } from "@wagmi/core";
 import { useAccount } from "use-wagmi";
 import { distributionVaultAbi } from "@/lib/sdk";
+import MIconLoading from "@/components/design-system/MIconLoading.vue";
 
 useHead({
   titleTemplate: "%s - Rewards",
 });
 
 const cashTokens = ref([]);
+const loadingData = ref(false);
 
 const { epoch } = storeToRefs(useSpogStore());
 const { address: userAccount } = useAccount();
@@ -102,15 +107,21 @@ const claimEpochStart = computed(() =>
 const claimEpochEnd = computed(() => BigInt(epoch.value.current.asNumber - 1));
 
 onMounted(async () => {
-  cashTokens.value = await Promise.all(
-    allowedCashTokens.value.map(async (token) => {
-      return {
-        ...token,
-        claimable: await getClaimableRewards(token),
-        vaultBalance: await getVaultTokenBalance(token),
-      };
-    })
-  );
+  loadingData.value = true;
+  try {
+    cashTokens.value = await Promise.all(
+      allowedCashTokens.value.map(async (token) => {
+        return {
+          ...token,
+          claimable: await getClaimableRewards(token),
+          vaultBalance: await getVaultTokenBalance(token),
+          isClaiming: false,
+        };
+      })
+    );
+  } finally {
+    loadingData.value = false;
+  }
 });
 
 const getVaultTokenBalance = async (token) => {
@@ -171,10 +182,6 @@ const claimTokenRewards = async (token, index) => {
     } else {
       alerts.successAlert(`You claimed your ${token.name} rewards!`);
     }
-
-    console.log("CLAIMED TOKEN", amount);
-  } catch (error) {
-    console.log("ERROR CLAIMING TOKEN", error);
   } finally {
     cashTokens.value[index].isClaiming = false;
   }
