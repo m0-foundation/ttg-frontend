@@ -17,7 +17,7 @@ export class Governor extends ApiModule {
     contract: Hash,
     context: ApiContext,
     abi: Abi,
-    governanceType: GovernanceType
+    governanceType: GovernanceType,
   ) {
     super(context);
     this.contract = contract;

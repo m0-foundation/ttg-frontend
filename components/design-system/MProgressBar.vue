@@ -21,7 +21,7 @@ export interface MProgressBarProps {
   hasVotes: boolean;
 }
 
-const props = withDefaults(defineProps<MProgressBarProps>(), {
+withDefaults(defineProps<MProgressBarProps>(), {
   width: 0,
 });
 </script>

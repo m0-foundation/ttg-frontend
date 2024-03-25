@@ -40,7 +40,10 @@
             class="proposals-nav-button"
             data-test="button-tab-standard"
           >
-            <span class="capitalize">Standard</span>
+            Standard
+            <MBadge v-if="standardProposals" version="info">{{
+              standardProposals
+            }}</MBadge>
           </MNavButton>
         </NuxtLink>
 
@@ -100,18 +103,25 @@ const spog = useSpogStore();
 
 const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
 
+const standardProposals = computed(
+  () =>
+    store
+      .getProposalsByState("Active")
+      .filter((p) => !p.isEmergency && p.votingType !== "Zero").length
+);
+
 const pendingExecution = computed(
-  () => store.getProposalsByState("Succeeded").length
+  () => store.getProposalsByState("Succeeded").length,
 );
 
 const emergency = computed(
-  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length
+  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length,
 );
 
 const zero = computed(
   () =>
     store.getProposalsByState("Active").filter((p) => p.votingType === "Zero")
-      .length
+      .length,
 );
 
 const pending = computed(() => store.getProposalsByState("Pending").length);
@@ -135,5 +145,8 @@ const nextEpochAsDate = computed(() => {
 }
 .proposals-nav-button {
   @apply text-grey-500 text-base flex items-center gap-1 capitalize font-ppformula;
+}
+.proposals-nav-button span {
+  @apply text-xs px-[5px] py-[1px] mb-1 ml-0.5;
 }
 </style>

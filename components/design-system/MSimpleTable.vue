@@ -65,7 +65,7 @@
               >
                 <slot
                   :name="`cell(${key})`"
-                  :value="format(item, (key as string))"
+                  :value="format(item, key as string)"
                   :item="item"
                   :format="(k: string) => format(item, k)"
                 >
@@ -124,9 +124,7 @@ const sortOrder = ref(1); // 1 for ascending, -1 for descending
 const displayedFields = computed(() => props.fields.filter((i) => !i.hidden));
 
 const displayedFieldKeys = computed(() => {
-  return Object.entries(displayedFields.value).map(
-    ([_key, value]) => value.key
-  );
+  return Object.entries(displayedFields.value).map(([, value]) => value.key);
 });
 
 const cellElement = (key: string) => {
@@ -154,8 +152,8 @@ const searchedItems = computed(() => {
   if (inputSearch.value && props.search) {
     items = items.filter((item) =>
       Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(inputSearch.value.toLowerCase())
-      )
+        String(value).toLowerCase().includes(inputSearch.value.toLowerCase()),
+      ),
     );
   }
 

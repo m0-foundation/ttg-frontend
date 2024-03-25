@@ -63,7 +63,9 @@ const annotations = computed(() => {
         },
         label: {
           borderWidth: 0,
-          text: formatNumber(formatEther(currentCost.value.value || 0n)),
+          text: useNumberFormatterEth(
+            formatEther(currentCost.value.value || 0n)
+          ),
           textAnchor: isEpochFirstHalf.value ? "start" : "end",
           style: {
             background: "#627EEA",
@@ -163,7 +165,7 @@ const options = computed(() => {
         return (
           "<div class='bg-grey-900 font-inter px-2 py-1'>" +
           "<span>" +
-          formatNumber(
+          useNumberFormatterEth(
             formatEther(BigInt(series[seriesIndex][dataPointIndex]))
           ) +
           "</span>" +

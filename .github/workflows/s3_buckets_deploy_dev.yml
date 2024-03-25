@@ -1,0 +1,19 @@
+name: Build & Upload to S3 DEV
+
+on:
+  push:
+    branches:
+      - 'main'
+      #- 'feature/**'
+      #- 'bugfix/**'
+  workflow_dispatch:
+
+jobs:
+  deploy-to-dev:
+    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_dev.yml@main
+    secrets: inherit
+    permissions:
+      contents: write
+    #with:
+      #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
+      #MASTER_VERSION: "0"

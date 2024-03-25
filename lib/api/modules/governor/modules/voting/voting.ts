@@ -33,7 +33,7 @@ export class Voting extends GovernorModule {
       address: this.contract,
       fromBlock: this.config.deploymentBlock,
       event: parseAbiItem(
-        "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)"
+        "event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)",
       ),
     });
 

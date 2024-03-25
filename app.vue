@@ -110,7 +110,7 @@ watch(
     console.log("rpc has changed", { newRpc });
     onSetup(newRpc!);
   },
-  { deep: true }
+  { deep: true },
 );
 </script>
 

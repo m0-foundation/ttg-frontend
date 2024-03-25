@@ -33,7 +33,7 @@
               data-test="proposal-link-copy-url"
               @click="
                 copyToClipboard(
-                  useBlockExplorer('tx', props?.proposal?.transactionHash)
+                  useBlockExplorer('tx', props?.proposal?.transactionHash),
                 )
               "
             >

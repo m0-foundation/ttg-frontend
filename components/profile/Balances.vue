@@ -25,7 +25,9 @@
           <div class="flex items-center align-middle gap-2">
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
               {{
-                useNumberFormatterPrice(balancePowerToken?.data.value?.value)
+                useNumberFormatterPrice(
+                  balancePowerToken?.data.value?.formatted || 0n
+                )
               }}
             </p>
           </div>
@@ -77,7 +79,9 @@
           <div class="flex items-center align-middle gap-2">
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
               {{
-                useNumberFormatterPrice(balanceZeroToken?.data.value?.formatted)
+                useNumberFormatterPrice(
+                  balanceZeroToken?.data.value?.formatted || 0
+                )
               }}
             </p>
           </div>

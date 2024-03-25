@@ -13,7 +13,7 @@ export class ApiModule {
 
   async get<T>(
     parameters: string[],
-    contract: { address: Hash; abi: Abi }
+    contract: { address: Hash; abi: Abi },
   ): Promise<T> {
     const contractCalls = parameters.map((name) => ({
       ...contract,

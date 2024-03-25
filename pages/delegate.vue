@@ -190,7 +190,7 @@ const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
 const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
 
 const canDelegate = computed(
-  () => spog.epoch.value.current.type === "TRANSFER"
+  () => spog.epoch.value.current.type === "TRANSFER",
 );
 
 const addressValidation = (val: Hash) => isAddress(val);
@@ -209,7 +209,7 @@ const addressRules = {
   address: {
     addressValidation: helpers.withMessage(
       "Invalid address",
-      addressValidation
+      addressValidation,
     ),
   },
 };
@@ -248,7 +248,7 @@ async function delegatePower() {
     }
 
     alerts.successAlert(
-      "POWER tokens voting power were delegated Successfully!"
+      "POWER tokens voting power were delegated Successfully!",
     );
 
     useDelegate.refetch();
@@ -285,7 +285,7 @@ async function delegateZero() {
     }
 
     alerts.successAlert(
-      "ZERO tokens voting power were delegated Successfully!"
+      "ZERO tokens voting power were delegated Successfully!",
     );
     useDelegate.refetch();
     useVotingPower.refetch();
