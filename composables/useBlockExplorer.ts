@@ -1,9 +1,8 @@
-import { useConfig } from "use-wagmi";
 import { Hash } from "viem";
 
 export const useBlockExplorer = (type: string, hash: Hash | string) => {
   const network = useNetworkStore().getNetwork();
-  const { chains } = useConfig();
+  const { chains } = useWagmiConfig();
 
   const currentNetwork = computed(() => {
     return chains.find((chain) => chain.id === network.value.rpc.chainId);
