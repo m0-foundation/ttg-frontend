@@ -19,3 +19,4 @@ jobs:
       ## it is important to have it set equal to the Chart name in Chart.yaml and to the folder containing the chart itself
       ## (i.e. build/chart/NAME_OF_CHART
       MASTER_VERSION: "0"
+      ENVIRONMENT: "dev"
