@@ -9,7 +9,7 @@ on:
 
 jobs:
   deploy-to-dev:
-    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main.yml@main
+    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_dev.yml@main
     secrets: inherit
     permissions:
       contents: write
