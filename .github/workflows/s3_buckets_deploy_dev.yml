@@ -10,13 +10,13 @@ on:
 
 jobs:
   deploy-to-dev:
-    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main.yml@feature/CL-1494
+    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main.yml@main
     secrets: inherit
     permissions:
       contents: write
-    with:
+    #with:
       ## If you want to set the variable HELM_COMPONENTS to something different than the folder name
       ## it is important to have it set equal to the Chart name in Chart.yaml and to the folder containing the chart itself
       ## (i.e. build/chart/NAME_OF_CHART
-      MASTER_VERSION: "0"
-      ENVIRONMENT: "dev"
+      #MASTER_VERSION: "0"
+      #ENVIRONMENT: "dev"
