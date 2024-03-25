@@ -116,28 +116,25 @@ const protocolParametersData = [
   },
 ];
 
-const protocolData = computed(() => {
-  return data.value.map((p) => ({
-    value: p.value,
-    key: p.key,
-    ...protocolParametersData.find((param) => param.key === p.key),
-    proposal: proposals.value.find(
-      (proposal) => proposal.proposalParams[0] === p.key
-    ),
-  }));
-});
-
 const protocolDataSorted = computed(() => {
-  const sortedData = [...protocolData.value];
-  sortedData.sort((a, b) => {
-    if (a.description && !b.description) {
-      return -1;
-    } else if (!a.description && b.description) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
-  return sortedData;
+  // Add custom and proposal data to parameters and sort it to show custom parameters first
+  return [...data.value]
+    .map((p) => ({
+      value: p.value,
+      key: p.key,
+      ...protocolParametersData.find((param) => param.key === p.key),
+      proposal: proposals.value.find(
+        (proposal) => proposal.proposalParams[0] === p.key
+      ),
+    }))
+    .sort((a, b) => {
+      if (a.description && !b.description) {
+        return -1;
+      } else if (!a.description && b.description) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 });
 </script>
