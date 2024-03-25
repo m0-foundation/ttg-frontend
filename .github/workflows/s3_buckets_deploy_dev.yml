@@ -6,6 +6,7 @@ on:
       - 'main'
       #- 'feature/**'
       #- 'bugfix/**'
+  workflow_dispatch:
 
 jobs:
   deploy-to-dev:
