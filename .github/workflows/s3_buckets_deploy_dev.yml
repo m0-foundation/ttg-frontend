@@ -1,12 +1,11 @@
 name: Build & Upload to S3 DEV
 
 on:
-  #push:
-  #  branches:
-  #    - 'main'
-  #    - 'feature/**'
-  #    - 'bugfix/**'
-  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+      - 'feature/**'
+      - 'bugfix/**'
 
 jobs:
   deploy-to-dev:
@@ -15,8 +14,5 @@ jobs:
     permissions:
       contents: write
     #with:
-      ## If you want to set the variable HELM_COMPONENTS to something different than the folder name
-      ## it is important to have it set equal to the Chart name in Chart.yaml and to the folder containing the chart itself
-      ## (i.e. build/chart/NAME_OF_CHART
+      #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
       #MASTER_VERSION: "0"
-      #ENVIRONMENT: "dev"
