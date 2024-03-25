@@ -62,21 +62,21 @@ export class Api {
       governors.standardGovernor as Hash,
       this.context,
       standardGovernorAbi,
-      "Standard"
+      "Standard",
     );
 
     this.zeroGovernor = new Governor(
       governors.zeroGovernor as Hash,
       this.context,
       zeroGovernorAbi,
-      "Zero"
+      "Zero",
     );
 
     this.emergencyGovernor = new Governor(
       governors.emergencyGovernor as Hash,
       this.context,
       emergencyGovernorAbi,
-      "Emergency"
+      "Emergency",
     );
   }
 }

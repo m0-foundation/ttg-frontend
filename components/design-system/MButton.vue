@@ -16,7 +16,7 @@ export interface MButtonProps {
   isLoading?: boolean;
 }
 
-const props = withDefaults(defineProps<MButtonProps>(), {
+withDefaults(defineProps<MButtonProps>(), {
   version: "primary",
   isLoading: false,
 });

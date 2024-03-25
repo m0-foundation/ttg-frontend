@@ -11,8 +11,8 @@ export const watchForExecutedResetProposal = () => {
     return proposals.data.filter(
       (p) =>
         ["resetToPowerHolders", "resetToZeroHolders"].includes(
-          p.proposalType
-        ) && p.state === "Executed"
+          p.proposalType,
+        ) && p.state === "Executed",
     );
   });
 

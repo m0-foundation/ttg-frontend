@@ -188,19 +188,17 @@ async function onCastBatchVotes() {
       throw new Error("Transaction was rejected");
     }
 
-    alerts.infoAlert(
-      `Your Balance will receive the reward of ${useNumberFormatterPrice(
-        toValue(powerInflation)
-      )} POWER tokens in the next epoch.`
-    );
-
     alerts.successAlert(
       `Your Balance has received the reward of ${useNumberFormatterPrice(
         toValue(zeroInflation)
       )} ZERO tokens.`
     );
 
-    alerts.successAlert("Vote casted successfully!");
+    alerts.successAlert(
+      `Vote casted successfully! Your Balance will receive the reward of ${useNumberFormatterPrice(
+        toValue(powerInflation)
+      )} POWER tokens in the next epoch.`
+    );
 
     await spog.fetchTokens();
     balances.refetch();

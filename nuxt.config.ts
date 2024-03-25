@@ -44,13 +44,11 @@ export default defineNuxtConfig({
     dirs: ["./stores"],
   },
 
-  pinia: {
-    autoImports: ["defineStore"],
-  },
   vite: {
     resolve: {
       alias: {
         "~": fileURLToPath(new URL("./", import.meta.url)),
+        "@": fileURLToPath(new URL("./", import.meta.url)),
         // Add any other aliases you use in your code base
         // https://nuxt.com/docs/api/configuration/nuxt-config/#alias
       },

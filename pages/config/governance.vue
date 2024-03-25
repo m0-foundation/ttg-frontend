@@ -48,7 +48,7 @@ const immutable = computed(() => {
         "zeroGovernor",
         "zeroToken",
         "vault",
-      ])
+      ]),
     ),
   ];
 });
@@ -60,7 +60,7 @@ const mutable = computed(() => {
         "emergencyProposalThresholdRatio",
         "zeroProposalThresholdRatio",
         "proposalFee",
-      ])
+      ]),
     ),
     ...mapToArray(pick(contracts.value, ["cashToken"])),
   ];

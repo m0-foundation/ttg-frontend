@@ -55,10 +55,10 @@ watch(
   () => {
     votes = votesStore.getBy("voter", address.value);
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const proposalsCreated = computed(() =>
-  proposals.getProposalsByProposer(address.value as string)
+  proposals.getProposalsByProposer(address.value as string),
 );
 </script>

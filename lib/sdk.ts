@@ -4128,7 +4128,7 @@ export const writeDistributionVaultDistribute =
 export const simulateDistributionVault = /* #__PURE__ */ createSimulateContract(
   {
     abi: distributionVaultAbi,
-  }
+  },
 );
 
 /**
@@ -4284,7 +4284,7 @@ export const readEmergencyGovernorGetVotes = /* #__PURE__ */ createReadContract(
   {
     abi: emergencyGovernorAbi,
     functionName: "getVotes",
-  }
+  },
 );
 
 /**
@@ -4294,7 +4294,7 @@ export const readEmergencyGovernorHasVoted = /* #__PURE__ */ createReadContract(
   {
     abi: emergencyGovernorAbi,
     functionName: "hasVoted",
-  }
+  },
 );
 
 /**
@@ -4533,7 +4533,7 @@ export const writeEmergencyGovernorSetKey = /* #__PURE__ */ createWriteContract(
   {
     abi: emergencyGovernorAbi,
     functionName: "setKey",
-  }
+  },
 );
 
 /**
@@ -4560,7 +4560,7 @@ export const writeEmergencyGovernorSetThresholdRatio =
 export const simulateEmergencyGovernor = /* #__PURE__ */ createSimulateContract(
   {
     abi: emergencyGovernorAbi,
-  }
+  },
 );
 
 /**
@@ -4762,7 +4762,7 @@ export const readPowerTokenDomainSeparator = /* #__PURE__ */ createReadContract(
   {
     abi: powerTokenAbi,
     functionName: "DOMAIN_SEPARATOR",
-  }
+  },
 );
 
 /**
@@ -4822,7 +4822,7 @@ export const readPowerTokenAmountToAuction = /* #__PURE__ */ createReadContract(
   {
     abi: powerTokenAbi,
     functionName: "amountToAuction",
-  }
+  },
 );
 
 /**
@@ -4980,7 +4980,7 @@ export const readPowerTokenPastTotalSupply = /* #__PURE__ */ createReadContract(
   {
     abi: powerTokenAbi,
     functionName: "pastTotalSupply",
-  }
+  },
 );
 
 /**
@@ -5071,7 +5071,7 @@ export const writePowerTokenDelegateBySig = /* #__PURE__ */ createWriteContract(
   {
     abi: powerTokenAbi,
     functionName: "delegateBySig",
-  }
+  },
 );
 
 /**
@@ -5157,7 +5157,7 @@ export const simulatePowerTokenApprove = /* #__PURE__ */ createSimulateContract(
   {
     abi: powerTokenAbi,
     functionName: "approve",
-  }
+  },
 );
 
 /**
@@ -5307,7 +5307,7 @@ export const watchPowerTokenBuyEvent = /* #__PURE__ */ createWatchContractEvent(
   {
     abi: powerTokenAbi,
     eventName: "Buy",
-  }
+  },
 );
 
 /**
@@ -5420,7 +5420,7 @@ export const readRegistrarStandardGovernor = /* #__PURE__ */ createReadContract(
   {
     abi: registrarAbi,
     functionName: "standardGovernor",
-  }
+  },
 );
 
 /**
@@ -5478,7 +5478,7 @@ export const writeRegistrarRemoveFromList = /* #__PURE__ */ createWriteContract(
   {
     abi: registrarAbi,
     functionName: "removeFromList",
-  }
+  },
 );
 
 /**
@@ -5588,7 +5588,7 @@ export const readStandardGovernorClockMode = /* #__PURE__ */ createReadContract(
   {
     abi: standardGovernorAbi,
     functionName: "CLOCK_MODE",
-  }
+  },
 );
 
 /**
@@ -5624,7 +5624,7 @@ export const readStandardGovernorCashToken = /* #__PURE__ */ createReadContract(
   {
     abi: standardGovernorAbi,
     functionName: "cashToken",
-  }
+  },
 );
 
 /**
@@ -5800,7 +5800,7 @@ export const readStandardGovernorRegistrar = /* #__PURE__ */ createReadContract(
   {
     abi: standardGovernorAbi,
     functionName: "registrar",
-  }
+  },
 );
 
 /**
@@ -5826,7 +5826,7 @@ export const readStandardGovernorVoteToken = /* #__PURE__ */ createReadContract(
   {
     abi: standardGovernorAbi,
     functionName: "voteToken",
-  }
+  },
 );
 
 /**
@@ -5863,7 +5863,7 @@ export const readStandardGovernorZeroToken = /* #__PURE__ */ createReadContract(
   {
     abi: standardGovernorAbi,
     functionName: "zeroToken",
-  }
+  },
 );
 
 /**
@@ -5934,7 +5934,7 @@ export const writeStandardGovernorExecute = /* #__PURE__ */ createWriteContract(
   {
     abi: standardGovernorAbi,
     functionName: "execute",
-  }
+  },
 );
 
 /**
@@ -5944,7 +5944,7 @@ export const writeStandardGovernorPropose = /* #__PURE__ */ createWriteContract(
   {
     abi: standardGovernorAbi,
     functionName: "propose",
-  }
+  },
 );
 
 /**
@@ -6948,7 +6948,7 @@ export const readZeroTokenStandardGovernor = /* #__PURE__ */ createReadContract(
   {
     abi: zeroTokenAbi,
     functionName: "standardGovernor",
-  }
+  },
 );
 
 /**
@@ -7097,7 +7097,7 @@ export const simulateZeroTokenDelegate = /* #__PURE__ */ createSimulateContract(
   {
     abi: zeroTokenAbi,
     functionName: "delegate",
-  }
+  },
 );
 
 /**
@@ -7141,7 +7141,7 @@ export const simulateZeroTokenTransfer = /* #__PURE__ */ createSimulateContract(
   {
     abi: zeroTokenAbi,
     functionName: "transfer",
-  }
+  },
 );
 
 /**

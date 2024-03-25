@@ -35,7 +35,7 @@ export const useProposalsStore = defineStore("proposals", {
     getProposalsByProposer: (state) => {
       return (proposer: string) =>
         state.data.filter(
-          (p) => p.proposer.toLowerCase() === proposer.toLowerCase()
+          (p) => p.proposer.toLowerCase() === proposer.toLowerCase(),
         );
     },
   },
@@ -47,7 +47,7 @@ export const useProposalsStore = defineStore("proposals", {
         ...orderBy(
           uniqBy([...this.data, ...proposals], "proposalId"),
           "blockNumber",
-          "desc"
+          "desc",
         ),
       ];
     },
@@ -56,14 +56,14 @@ export const useProposalsStore = defineStore("proposals", {
         ...orderBy(
           uniqBy([...this.data, ...proposals], "proposalId"),
           "blockNumber",
-          "desc"
+          "desc",
         ),
       ];
     },
 
     update(proposal: MProposal) {
       const proposalIndex = this.data.findIndex(
-        (p) => p.proposalId === proposal.proposalId
+        (p) => p.proposalId === proposal.proposalId,
       );
       if (proposalIndex !== -1) {
         this.data[proposalIndex] = proposal;

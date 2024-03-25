@@ -2,7 +2,8 @@ import { sepolia } from "@wagmi/core/chains";
 import { NetworkConfig } from "./types";
 
 const RPC_URL_MAIN = import.meta.env.VITE_APP_RPC_URL_MAIN;
-const RPC_URL_FALLBACK = import.meta.env.VITE_APP_RPC_URL_FALLBACK || sepolia.rpcUrls.default.http[0];
+const RPC_URL_FALLBACK =
+  import.meta.env.VITE_APP_RPC_URL_FALLBACK || sepolia.rpcUrls.default.http[0];
 
 console.log("CONFIG VITE", import.meta.env.VITE_APP_RPC_URL_MAIN);
 

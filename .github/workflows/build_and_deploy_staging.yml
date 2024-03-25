@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy:
-    uses: MZero-Labs/devops-templates/.github/workflows/build_and_deploy_staging.yml@feature/CL-1494
+    uses: MZero-Labs/devops-templates/.github/workflows/build_and_deploy_staging.yml@main
     secrets: inherit
     permissions:
       contents: write

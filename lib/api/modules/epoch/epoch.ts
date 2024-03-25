@@ -70,7 +70,7 @@ export class Epoch {
   static getEpochFromTimestamp(timestamp: number) {
     return (
       Math.floor(
-        (timestamp - Epoch._STARTING_TIMESTAMP) / Epoch._EPOCH_PERIOD_SECONDS
+        (timestamp - Epoch._STARTING_TIMESTAMP) / Epoch._EPOCH_PERIOD_SECONDS,
       ) + 1
     );
   }

@@ -168,7 +168,7 @@ const isLoading = computed(() => props.loading);
 const { text: truncatedDescriptionText } = useParsedDescription(
   truncate(props.proposal.description, {
     length: 450,
-  })
+  }),
 );
 
 function onViewProposal() {
@@ -213,7 +213,7 @@ const canVote = computed(() => {
 });
 
 voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
-  props.proposal.voteEnd
+  props.proposal.voteEnd,
 );
 
 const votesStore = useVotesStore();

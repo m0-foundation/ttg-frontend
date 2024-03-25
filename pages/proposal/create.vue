@@ -191,7 +191,8 @@
       <div v-if="hasToPayFee" class="text-grey-500 text-xs text-end font-inter">
         <p>
           Available balance:
-          {{ formatNumber(cashToken?.data?.value?.formatted) || 0 }} WETH
+          {{ useNumberFormatterEth(cashToken?.data?.value?.formatted) || 0 }}
+          WETH
         </p>
         <p>You'll receive a refund if the proposal succeeds</p>
       </div>

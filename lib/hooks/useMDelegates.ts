@@ -5,7 +5,7 @@ export default (
   userAccount:
     | globalThis.Ref<undefined>
     | globalThis.Ref<`0x${string}`>
-    | globalThis.Ref<`0x${string}` | undefined>
+    | globalThis.Ref<`0x${string}` | undefined>,
 ) => {
   const powerDelegates = useMDelegatesPower(userAccount);
   const zeroDelegates = useMDelegatesZero(userAccount);
@@ -14,13 +14,13 @@ export default (
   const hasDelegatedPower = computed(
     () =>
       powerDelegates?.data?.value?.toLowerCase() !==
-      userAccount.value?.toLowerCase()
+      userAccount.value?.toLowerCase(),
   );
 
   const hasDelegatedZero = computed(
     () =>
       zeroDelegates?.data?.value?.toLowerCase() !==
-      userAccount.value?.toLowerCase()
+      userAccount.value?.toLowerCase(),
   );
 
   return {
