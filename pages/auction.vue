@@ -87,7 +87,7 @@
           <span
             :class="{ 'text-red-600 font-bold': totalPrice > cashTokenBalance }"
           >
-            {{ formatNumber(cashTokenBalance) }}
+            {{ useNumberFormatterEth(cashTokenBalance) }}
             {{ cashToken?.data?.value?.symbol }}
           </span>
         </div>
