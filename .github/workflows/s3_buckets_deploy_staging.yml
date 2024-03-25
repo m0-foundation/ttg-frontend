@@ -12,6 +12,7 @@ jobs:
     secrets: inherit
     permissions:
       contents: write
+    if: github.ref_name == 'staging'
     #with:
       #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
       #MASTER_VERSION: "0"
