@@ -188,16 +188,13 @@
         </div>
       </div>
 
-      <div v-if="hasToPayFee">
-        <p class="text-grey-500 text-xs flex justify-end font-inter">
+      <div v-if="hasToPayFee" class="text-grey-500 text-xs text-end font-inter">
+        <p>
           Available balance:
           {{ formatNumber(cashToken?.data?.value?.formatted) || 0 }} WETH
         </p>
+        <p>You'll receive a refund if the proposal succeeds</p>
       </div>
-
-      <p class="text-grey-500 text-xs flex justify-end font-inter">
-        You'll receive a refund if the proposal succeeds
-      </p>
 
       <div v-if="isPreview" class="flex justify-end mt-6">
         <button
