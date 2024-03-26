@@ -8,9 +8,9 @@
           }}</span>
           Epoch:
           <span class="text-green-700">#{{ epoch?.current?.asNumber }}_</span>
-          <span class="text-grey-600 text-xxs lg:text-xs ml-2">
+          <p class="text-grey-600 text-xxs lg:text-xs">
             {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
-          </span>
+          </p>
         </template>
         <template #side>
           <NuxtLink to="/proposals/all/">
@@ -107,7 +107,7 @@ const standardProposals = computed(
   () =>
     store
       .getProposalsByState("Active")
-      .filter((p) => !p.isEmergency && p.votingType !== "Zero").length
+      .filter((p) => !p.isEmergency && p.votingType !== "Zero").length,
 );
 
 const pendingExecution = computed(
@@ -130,12 +130,12 @@ const { epoch } = storeToRefs(spog);
 
 const currentEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.current?.asTimestamp));
-  return toFormat("D MMM");
+  return toFormat("LLL");
 });
 
 const nextEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
-  return toFormat("D MMM");
+  return toFormat("LLL");
 });
 </script>
 
