@@ -5,6 +5,8 @@ LABEL container.name="ttg-tests"
 LABEL maintainer="m0labs"
 LABEL description="a docker container which executes cypress e2e tests"
 
+ENV TEST_RUN="01"
+
 # Set working directory
 WORKDIR /app
 
