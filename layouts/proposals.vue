@@ -25,7 +25,11 @@
     </div>
 
     <AuctionBanner
-      v-if="isTransferEpoch && $config.public.auctionActive"
+      v-if="
+        isTransferEpoch &&
+        $config.public.auctionActive &&
+        amountLeftToAuction === 0n
+      "
       class="my-6"
     />
 
@@ -100,6 +104,7 @@ import { storeToRefs } from "pinia";
 
 const store = useProposalsStore();
 const spog = useSpogStore();
+const { amountLeftToAuction } = useAuction();
 
 const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
 
