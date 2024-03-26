@@ -13,8 +13,10 @@
       </div>
 
       <MBadge v-if="proposal?.isEmergency" version="error">
-        Emergency Proposal
+        Emergency proposal
       </MBadge>
+
+      <MBadge v-if="proposal?.votingType === 'Zero'"> Zero proposal </MBadge>
 
       <h1 class="text-[28px] my-3 text-grey-1000 font-light leading-10">
         {{ title }}
