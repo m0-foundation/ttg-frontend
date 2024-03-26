@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-to-dev:
+  deploy-to-staging:
     uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_staging.yml@main
     secrets: inherit
     permissions:
