@@ -145,7 +145,9 @@ export class Proposals extends GovernorModule {
     const key = hexWith32BytesToString(params[0]);
     const value = ["minter_rate_model", "earner_rate_model"].includes(key)
       ? hexWith32BytesToAddress(params[1])
-      : decodeAbiParameters([{ type: "uint256" }], params[1]);
+      : ["guidance"].includes(key)
+        ? params[1]
+        : decodeAbiParameters([{ type: "uint256" }], params[1]);
 
     return { proposalType, params: [key, value] };
   }

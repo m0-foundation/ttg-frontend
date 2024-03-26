@@ -256,7 +256,14 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
+import {
+  encodeFunctionData,
+  encodeAbiParameters,
+  Hash,
+  erc20Abi,
+  toHex,
+  keccak256,
+} from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -319,6 +326,14 @@ const formData = reactive({
   description: "",
   ipfsURL: null,
   discussionURL: null,
+});
+
+watchEffect(() => {
+  const type = selectedProposalType?.value?.value;
+  const key = formData.proposalValue;
+  if (type === "setKey" && key === "guidance") {
+    formData.ipfsURL = `https://ipfs.io/ipfs/${formData.proposalValue2}`;
+  }
 });
 
 const rules = computed(() => {
@@ -852,7 +867,7 @@ function buildCalldatas(formData) {
       }
 
       if (["guidance"].includes(key)) {
-        return stringToHexWith32Bytes(inp);
+        return keccak256(toHex(inp));
       }
 
       if (
