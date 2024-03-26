@@ -16,6 +16,8 @@ export class ProtocolConfigs extends ApiModule {
     "mint_ttl",
     "mint_ratio",
     "minter_freeze_time",
+    "base_minter_rate",
+    "max_earner_rate",
   ];
 
   keysInAddress = ["minter_rate_model", "earner_rate_model"];
