@@ -47,7 +47,7 @@ jobs:
         with:
           context: .
           file: "Dockerfile.tests"
-          tags: ${{ env.DOCKER_REGISTRY }}/mzero-labs/${{ env.DOCKER_IMAGE_NAME }}:latest
+          tags: ${{ env.DOCKER_REGISTRY }}/mzero-labs/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -74,6 +74,6 @@ jobs:
           registry: ${{ env.DOCKER_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          image:  ${{ DOCKER_IMAGE_NAME }}:${{ DOCKER_IMAGE_VERSION }}
+          image:  ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
           options: --env TEST_RUN=${{ matrix.test_runs }}
           run: "/app/entrypoint.sh"
