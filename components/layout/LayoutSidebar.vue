@@ -45,16 +45,21 @@
         <NuxtLink
           to="/auction/"
           active-class="active"
-          class="flex items-center gap-1"
+          :class="{
+            'notification-dot': amountLeftToAuction && isTransferEpoch,
+          }"
+          >Auction
+        </NuxtLink>
+      </li>
+
+      <li>
+        <NuxtLink
+          to="/rewards/"
+          active-class="active"
+          data-test="sidebar-link-lists"
+          :class="{ 'notification-dot': false }"
         >
-          Auction
-          <div
-            v-if="amountLeftToAuction"
-            class="p-1 bg-grey-100 text-xxs leading-3 font-inter text-grey-1000 flex items-center gap-1 mr-1"
-          >
-            <MIconPower version="dark" class="w-2.5 h-2.5" />
-            {{ amountLeftToAuction }}
-          </div>
+          Rewards
         </NuxtLink>
       </li>
 
@@ -183,6 +188,10 @@ const { disconnect } = useDisconnect();
 const { isCorrectChain, forceSwitchChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
+const spog = useSpogStore();
+
+const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
+
 const config = useRuntimeConfig();
 
 const { hasDelegatedPower, hasDelegatedZero } = useMDelegates(address);
@@ -210,5 +219,9 @@ li {
 .active::after {
   content: "_";
   margin-left: -3px;
+}
+.notification-dot::after {
+  content: "";
+  @apply absolute ml-1 bg-accent-mint w-[6px] h-[6px];
 }
 </style>
