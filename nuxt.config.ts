@@ -6,10 +6,7 @@ import Components from "unplugin-vue-components/vite";
 
 console.dir(process.env);
 
-const auctionActive =
-  process.env.NODE_ENV === "development"
-    ? true
-    : Boolean(process.env.VITE_APP_IS_AUCTION_ACTIVE);
+const auctionActive = process.env.VITE_APP_IS_AUCTION_ACTIVE === "true";
 
 export default defineNuxtConfig({
   alias: {
