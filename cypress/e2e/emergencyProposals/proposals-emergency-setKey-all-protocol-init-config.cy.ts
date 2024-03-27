@@ -122,6 +122,23 @@ describe("Proposals", () => {
       });
     });
 
+
+    it("I should be able to CAST vote YES for the proposal", () => {
+      cy.castYesAllEmergencyProposals();
+    });
+
+    it("I should be able to EXECUTE the proposal", () => {
+      cy.visit("/proposals/succeeded");
+
+      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+        cy.wrap($btn).click();
+        cy.wait(500);
+      });
+
+      cy.wait(500);
+      cy.mineEpochs(1);
+    });
+
     it("I should be able to CREATE a proposal - Mint delay ", () => {
       cy.visit("/proposal/create");
       // cy.connectWallet();
@@ -161,24 +178,6 @@ describe("Proposals", () => {
     });
 
 
-    it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesAllEmergencyProposals();
-    });
-
-    it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("/proposals/succeeded");
-
-      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
-        cy.wrap($btn).click();
-        cy.wait(500);
-      });
-
-      cy.wait(500);
-      cy.mineEpochs(1);
-    });
-
-
-
     it("I should be able to CREATE a proposal - Mint TTL ", () => {
       cy.visit("/proposal/create");
       // cy.connectWallet();
@@ -216,6 +215,42 @@ describe("Proposals", () => {
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
     });
+
+
+    it("I should be able to CAST vote YES for the proposal", () => {
+      cy.castYesAllEmergencyProposals();
+    });
+
+    it("I should be able to EXECUTE the proposal", () => {
+      cy.visit("/proposals/succeeded");
+
+      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+        cy.wrap($btn).click();
+        cy.wait(500);
+      });
+
+      cy.wait(500);
+      cy.mineEpochs(1);
+    });
+
+
+
+    it("I should be able to CAST vote YES for the proposal", () => {
+      cy.castYesAllEmergencyProposals();
+    });
+
+    it("I should be able to EXECUTE the proposal", () => {
+      cy.visit("/proposals/succeeded");
+
+      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+        cy.wrap($btn).click();
+        cy.wait(500);
+      });
+
+      cy.wait(500);
+      cy.mineEpochs(1);
+    });
+
 
     it("I should be able to CREATE a proposal - Mint ratio ", () => {
       cy.visit("/proposal/create");
@@ -482,14 +517,16 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit("/config/protocol");
 
-      cy.get("table > tbody > tr").should("have.length", descriptions.length);
-
       const rowCells = (row: { children: any }) =>
         Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
 
-      cy.get("table tbody tr").then((rows) => {
+      cy.get(".card--config").then((rows) => {
         const mapped = Cypress._.map(rows, rowCells)
-          .map((row) => row.slice(0, 2))
+          .map((row: string[]) => {
+            console.log({row})
+            const arr = row[0].split('\n');
+            return [arr[1], arr[5]];
+          })
           .sort();
 
         const should = [
