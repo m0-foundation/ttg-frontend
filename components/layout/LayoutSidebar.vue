@@ -21,50 +21,17 @@
 
   <nav class="text-grey-100 mb-6">
     <ul>
-      <li>
+      <li v-for="item in mainMenuItems" :key="item.to">
         <NuxtLink
-          to="/proposals/"
-          active-class="active"
-          data-test="sidebar-link-proposals"
-        >
-          Home
-        </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink
-          to="/lists/"
-          active-class="active"
-          data-test="sidebar-link-lists"
-        >
-          Lists
-        </NuxtLink>
-      </li>
-
-      <li v-if="isAuctionActive">
-        <NuxtLink
-          to="/auction/"
-          active-class="active"
+          :to="item.path"
           :class="{
-            'notification-dot': amountLeftToAuction && isTransferEpoch,
+            'notification-dot': item.notification,
+            active: currentRoute?.path?.includes(item.path),
           }"
-          >Auction
-        </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink
-          to="/rewards/"
-          active-class="active"
-          data-test="sidebar-link-lists"
-          :class="{ 'notification-dot': false }"
+          :data-test="item.dataTest"
         >
-          Rewards
+          {{ item.title }} {{}}
         </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink to="/config" active-class="active"> Configs </NuxtLink>
       </li>
     </ul>
   </nav>
@@ -173,6 +140,9 @@ const { isCorrectChain, forceSwitchChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
 const spog = useSpogStore();
+const router = useRouter();
+
+const { currentRoute } = router;
 
 const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
 
@@ -185,6 +155,42 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
+
+const mainMenuItems = computed(() => {
+  return [
+    {
+      title: "Home",
+      path: "/proposals/",
+      active: true,
+      dataTest: "sidebar-link-proposals",
+    },
+    {
+      title: "Lists",
+      path: "/lists/",
+      active: true,
+      dataTest: "sidebar-link-lists",
+    },
+    {
+      title: "Configs",
+      path: "/config/",
+      active: true,
+      dataTest: "sidebar-link-configs",
+    },
+    {
+      title: "Rewards",
+      path: "/rewards/",
+      active: true,
+      dataTest: "sidebar-link-rewards",
+    },
+    {
+      title: "Auction",
+      path: "/auction/",
+      active: isAuctionActive.value,
+      dataTest: "sidebar-link-auction",
+      notification: amountLeftToAuction.value && isTransferEpoch.value,
+    },
+  ];
+});
 
 const isAuctionActive = computed(() => {
   return config.public.auctionActive;

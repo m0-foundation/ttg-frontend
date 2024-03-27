@@ -28,7 +28,7 @@
       v-if="
         isTransferEpoch &&
         $config.public.auctionActive &&
-        amountLeftToAuction === 0n
+        amountLeftToAuction > 0n
       "
       class="my-6"
     />
