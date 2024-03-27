@@ -1,12 +1,12 @@
 import { defineConfig } from "@wagmi/cli";
 import { actions } from "@wagmi/cli/plugins";
-import DistributionVaultAbi from "./modules/spog/abi/DistributionVault.json";
-import StandardGovernorABI from "./modules/spog/abi/StandardGovernor.json";
-import EmergencyGovernorABI from "./modules/spog/abi/EmergencyGovernor.json";
-import ZeroGovernorABI from "./modules/spog/abi/ZeroGovernor.json";
-import PowerTokenABI from "./modules/spog/abi/PowerToken.json";
-import RegistrarABI from "./modules/spog/abi/Registrar.json";
-import ZeroTokenABI from "./modules/spog/abi/ZeroToken.json";
+import DistributionVaultAbi from "./modules/ttg/abi/DistributionVault.json";
+import StandardGovernorABI from "./modules/ttg/abi/StandardGovernor.json";
+import EmergencyGovernorABI from "./modules/ttg/abi/EmergencyGovernor.json";
+import ZeroGovernorABI from "./modules/ttg/abi/ZeroGovernor.json";
+import PowerTokenABI from "./modules/ttg/abi/PowerToken.json";
+import RegistrarABI from "./modules/ttg/abi/Registrar.json";
+import ZeroTokenABI from "./modules/ttg/abi/ZeroToken.json";
 
 export default defineConfig({
   out: "lib/sdk.ts",
