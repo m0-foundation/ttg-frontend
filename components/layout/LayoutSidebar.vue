@@ -23,6 +23,7 @@
     <ul>
       <li v-for="item in mainMenuItems" :key="item.to">
         <NuxtLink
+          v-if="item.isShow"
           :to="item.path"
           :class="{
             'notification-dot': item.notification,
@@ -161,31 +162,31 @@ const mainMenuItems = computed(() => {
     {
       title: "Home",
       path: "/proposals/",
-      active: true,
+      isShow: true,
       dataTest: "sidebar-link-proposals",
     },
     {
       title: "Lists",
       path: "/lists/",
-      active: true,
+      isShow: true,
       dataTest: "sidebar-link-lists",
     },
     {
       title: "Configs",
       path: "/config/",
-      active: true,
+      isShow: true,
       dataTest: "sidebar-link-configs",
     },
     {
       title: "Rewards",
       path: "/rewards/",
-      active: true,
+      isShow: true,
       dataTest: "sidebar-link-rewards",
     },
     {
       title: "Auction",
       path: "/auction/",
-      active: isAuctionActive.value,
+      isShow: isAuctionActive.value,
       dataTest: "sidebar-link-auction",
       notification: amountLeftToAuction.value && isTransferEpoch.value,
     },
