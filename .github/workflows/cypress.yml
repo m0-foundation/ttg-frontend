@@ -23,22 +23,31 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Set Branch Name to Lowercase
+        run: |
+          echo GITHUB_REF_LC=$(echo ${{ github.ref_name }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
+
       - name: Docker login
         uses: docker/login-action@v2
         with:
           registry: ${{ env.DOCKER_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build docker image
         # 2b51285047da1547ffb1b2203d8be4c0af6b1f20 == v3.2.0
         uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20
       - name: Build and push Docker image
         # 2cdde995de11925a030ce8070c3d77a52ffcf1c0 == v5.3.0
         uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0
+        env:
+          DOCKER_IMAGE_NAME: ${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}
+          DOCKER_IMAGE_VERSION: latest
         with:
           context: .
           file: "Dockerfile.tests"
-          tags: ttg-frontend-cypress:latest
+          tags: ${{ env.DOCKER_REGISTRY }}/mzero-labs/${{ env.DOCKER_IMAGE_NAME }}::latest
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
