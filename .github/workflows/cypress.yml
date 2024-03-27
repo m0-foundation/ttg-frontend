@@ -64,6 +64,13 @@ jobs:
         run: |
           echo GITHUB_REF_LC=$(echo ${{ github.ref_name }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
 
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run Cypress tests
         # 4f65fabd2431ebc8d299f8e5a018d79a769ae185 == v3.0.0
         uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185
@@ -71,9 +78,6 @@ jobs:
           DOCKER_IMAGE_NAME: ${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}
           DOCKER_IMAGE_VERSION: latest
         with:
-          registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          image:  ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+          image:  ${{ env.DOCKER_REGISTRY }}/mzero-labs/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
           options: --env TEST_RUN=${{ matrix.test_runs }}
           run: "/app/entrypoint.sh"
