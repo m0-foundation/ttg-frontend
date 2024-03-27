@@ -1,19 +1,18 @@
-name: Build & Upload to S3 DEV
+name: Build & Upload to S3 STAGING
 
 on:
   push:
     branches:
-      - 'main'
-      #- 'feature/**'
-      #- 'bugfix/**'
+      - 'staging'
   workflow_dispatch:
 
 jobs:
-  deploy-to-dev:
-    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_dev.yml@main
+  deploy-to-staging:
+    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_staging.yml@main
     secrets: inherit
     permissions:
       contents: write
+    if: github.ref_name == 'staging'
     #with:
       #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
       #MASTER_VERSION: "0"

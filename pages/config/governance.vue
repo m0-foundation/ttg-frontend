@@ -1,36 +1,75 @@
 <template>
-  <div class="px-6 lg:p-0">
-    <PageTitle>Governance Config</PageTitle>
-
-    <section class="flex flex-col gap-8">
-      <MSimpleTable :items="mutableTableData" :fields="governanceTablesHeaders">
-        <template #header-left>
-          <h2 class="gov-table-title">Changeable parameters</h2>
-        </template>
-      </MSimpleTable>
+  <NuxtLayout class="px-6 lg:p-0" name="config">
+    <section class="flex flex-col gap-4">
+      <ConfigParametersCard
+        v-for="param in mutableParametersWithData"
+        :key="param.key"
+        :param="param"
+      />
 
       <MSimpleTable
         :items="inmutableTableData"
         :fields="governanceTablesHeaders"
       >
         <template #header-left>
-          <h2 class="gov-table-title">Non-changeable parameters</h2>
+          <h3 class="text-sm text-grey-500 font-inter mb-4">
+            Immutable parameters
+          </h3>
+        </template>
+        <template #cell(value)="{ value }">
+          <MAddressAvatar
+            :address="value"
+            :short-address="false"
+            :show-copy="true"
+            :show-avatar="false"
+          />
         </template>
       </MSimpleTable>
     </section>
-  </div>
+  </NuxtLayout>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import pick from "lodash/pick";
 
 const spog = useSpogStore();
 const { getValues, contracts } = storeToRefs(spog);
+const proposalsStore = useProposalsStore();
 
-useHead({
-  titleTemplate: "%s - Configurations",
-});
+const parametersData = [
+  {
+    title: "Emergency Proposal Threshold Ratio",
+    key: "emergencyProposalThresholdRatio",
+    description:
+      "The number of yes votes as a percentage of the total POWER supply required to pass proposals which require a POWER Threshold.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    type: "basisPoints",
+  },
+  {
+    title: "Zero Proposal Threshold Ratio",
+    key: "zeroProposalThresholdRatio",
+    description:
+      "The number of yes votes as a percentage of the total ZERO supply required to pass proposals which require a ZERO Threshold.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    type: "basisPoints",
+  },
+  {
+    title: "Proposal Fee",
+    key: "proposalFee",
+    description: "The amount paid in CASH to submit any proposal.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    type: "decimals",
+  },
+  {
+    title: "Cash Token",
+    key: "cashToken",
+    description:
+      "The internal currency of the TTG. It is used to pay Proposal Fee and to purchase POWER in the Dutch auction. It can be toggled between WETH and M.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    type: "cashToken",
+  },
+];
 
 const mapToArray = (obj: object) =>
   Object.keys(obj).map((key) => ({
@@ -66,17 +105,23 @@ const mutable = computed(() => {
   ];
 });
 
+const proposals = computed(() => proposalsStore.getProposals);
+
+const mutableParametersWithData = mutable.value.map((p) => {
+  return {
+    key: p.key,
+    value: p.value,
+    ...parametersData.find((param) => param.key === p.key),
+    proposal: proposals.value.find(
+      (proposal) => proposal.proposalParams[0] === p.key
+    ),
+  };
+});
+
 const governanceTablesHeaders = ref([
   { key: "key", label: "Name", sortable: true, expand: true },
   { key: "value", label: "Value", sortable: true },
 ]);
-
-const mutableTableData = computed(() => {
-  return mutable.value.map((p) => ({
-    key: p.key,
-    value: p.value,
-  }));
-});
 
 const inmutableTableData = computed(() => {
   return immutable.value.map((p) => ({

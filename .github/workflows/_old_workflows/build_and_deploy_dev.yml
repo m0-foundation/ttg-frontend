@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy-to-dev:
-    uses: MZero-Labs/devops-templates/.github/workflows/build_and_deploy_dev.yml@feature/CL-1494
+    uses: MZero-Labs/devops-templates/.github/workflows/build_and_deploy_dev.yml@main
     secrets: inherit
     permissions:
       contents: write
