@@ -32,8 +32,8 @@ export default async function deploySpog(network: Network) {
 
   const STANDARD_PROPOSAL_FEE = BigInt(1e16); // 0.001 WETH
 
-  const EMERGENCY_PROPOSAL_THRESHOLD_RATIO = BigInt(4000); // 50%
-  const ZERO_PROPOSAL_THRESHOLD_RATIO = BigInt(4000); // 50%
+  const EMERGENCY_PROPOSAL_THRESHOLD_RATIO = BigInt(4000); // 40%
+  const ZERO_PROPOSAL_THRESHOLD_RATIO = BigInt(4000); // 40%
 
   const provider = new JsonRpcProvider(network.url);
   const wallet = new Wallet(network.accounts[0].privateKey, provider);
