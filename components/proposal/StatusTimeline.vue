@@ -11,13 +11,12 @@
             :show-arrow="true"
           />
         </template>
-        <template #content>
-          <ProposalStatusMenu
-            :updated="proposal?.timestamp"
-            :status-block="proposal?.blockNumber"
-            :tx-hash="proposal?.transactionHash"
-          />
-        </template>
+
+        <ProposalStatusMenu
+          :updated="proposal?.timestamp"
+          :status-block="proposal?.blockNumber"
+          :tx-hash="proposal?.transactionHash"
+        />
       </MDropdown>
 
       <ProposalStatusBadge :version="version" name="Active" />
@@ -47,13 +46,12 @@
             data-test="executed-badge"
           />
         </template>
-        <template #content>
-          <ProposalStatusMenu
-            :status-block="proposal?.executedEvent?.blockNumber"
-            :tx-hash="proposal?.executedEvent?.transactionHash"
-            :updated="proposal?.executedEvent?.timestamp"
-          />
-        </template>
+
+        <ProposalStatusMenu
+          :status-block="proposal?.executedEvent?.blockNumber"
+          :tx-hash="proposal?.executedEvent?.transactionHash"
+          :updated="proposal?.executedEvent?.timestamp"
+        />
       </MDropdown>
       <ProposalStatusBadge v-else :version="version" name="Executed" />
     </div>

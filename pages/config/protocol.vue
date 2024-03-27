@@ -1,15 +1,15 @@
 <template>
-  <div class="px-6 lg:p-0">
-    <MSimpleTable
-      :items="protocolTableData"
-      :fields="protocolTableHeaders"
-      :loading="isLoading"
-    >
-      <template #header-left>
-        <PageTitle>M^0 Protocol Configurations</PageTitle>
-      </template>
-    </MSimpleTable>
-  </div>
+  <NuxtLayout class="px-6 lg:p-0" name="config">
+    <section class="flex flex-col gap-4">
+      <MIconLoading v-if="isLoading" />
+      <ConfigParametersCard
+        v-for="param in protocolDataSorted"
+        v-else
+        :key="param.key"
+        :param="param"
+      />
+    </section>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
@@ -20,10 +20,6 @@ useHead({
 });
 
 const apiStore = useApiClientStore();
-const protocolTableHeaders = ref([
-  { key: "key", label: "Name", sortable: true },
-  { key: "value", label: "Value", sortable: true },
-]);
 
 const fetchProtocolConfigs = async () => {
   try {
@@ -40,12 +36,105 @@ const fetchProtocolConfigs = async () => {
 const { isLoading } = useAsyncState(fetchProtocolConfigs(), null);
 
 const store = useProtocolConfigsStore();
+const proposalsStore = useProposalsStore();
 const { configs: data } = storeToRefs(store);
 
-const protocolTableData = computed(() => {
-  return data.value.map((p) => ({
-    value: p.value,
-    key: p.key,
-  }));
+const proposals = computed(() => proposalsStore.getProposals);
+
+const protocolParametersData = [
+  {
+    title: "Update Collateral Interval",
+    key: "updateCollateralInterval",
+    description:
+      "This amount of time is the period between which Update Collateral must be called by a Minter. If they do not call Update Collateral within this amount of time after their previous call, their on-chain Collateral Value is assumed to be 0 and they will incur Penalty Rate on the next update. It is alterable with a Standard Proposal.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#update-collateral-interval",
+    type: "time",
+  },
+  {
+    title: "Update Collateral Threshold",
+    key: "update_collateral_threshold",
+    description:
+      "This number of signatures is the minimum number of Validator signatures required to execute Update Collateral.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#signature-threshold",
+    type: "number",
+  },
+  {
+    title: "Penalty Rate",
+    key: "penalty_rate",
+    description:
+      "The percentage charged on Owed M that is in excess of the amount a Minter is permitted to have generated.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#penalty-rate",
+    type: "",
+  },
+  {
+    title: "Mint Delay",
+    key: "mint_delay",
+    description:
+      "This amount of time is the period between when a Minter has called Propose Mint and when they can first call Mint M.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-delay",
+    type: "",
+  },
+  {
+    title: "Mint TTL",
+    key: "mint_ttl",
+    description:
+      "This is the amount of time after the Mint Delay that a Proposed Mint has to be called before it expires.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#propose-mint-time-to-live",
+    type: "",
+  },
+  {
+    title: "Mint Ratio",
+    key: "mint_ratio",
+    description:
+      "This percentage is the fraction of a Minter’s on-chain Collateral Value that they can generate in M. It effectively controls the leverage of a Minter and the over-collateralization of M. It is alterable with a Standard Proposal.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-ratio",
+    type: "",
+  },
+  {
+    title: "Minter Freeze Time",
+    key: "minter_freeze_time",
+    description:
+      "This amount of time is the duration for which a Minter will not be able to call Propose Mint or Mint after having the Freeze method called by a Validator on their address. It is alterable with a Standard Proposal. ",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-freeze-time",
+    type: "",
+  },
+  {
+    title: "Minter Rate",
+    key: "minter_rate_model",
+    description:
+      "The annualized percentage charged continuously to Minters on their Owed M. It is alterable with a Standard Proposal.",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-rate",
+    type: "address",
+  },
+  {
+    title: "Earner Rate",
+    key: "earner_rate_model",
+    description:
+      "The annualized percentage paid to M in the Earn Mechanism. If the cumulative M paid out via the Earn Mechanism is going to be greater than the amount of M being generated by the Minter Rate, the Earner Rate is automatically discounted to whichever percentage will reduce this mismatch to 0. ",
+    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#earner-rate",
+    type: "address",
+  },
+];
+
+const protocolDataSorted = computed(() => {
+  // Add custom and proposal data to parameters and sort it to show custom parameters first
+  return [...data.value]
+    .map((p) => ({
+      value: p.value,
+      key: p.key,
+      ...protocolParametersData.find((param) => param.key === p.key),
+      proposal: proposals.value.find(
+        (proposal) => proposal.proposalParams[0] === p.key
+      ),
+    }))
+    .sort((a, b) => {
+      if (a.description && !b.description) {
+        return -1;
+      } else if (!a.description && b.description) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 });
 </script>

@@ -64,23 +64,7 @@
       </li>
 
       <li>
-        <NuxtLink
-          to="/config/governance/"
-          active-class="active"
-          data-test="sidebar-link-governance"
-        >
-          Governance Config
-        </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink
-          to="/config/protocol/"
-          active-class="active"
-          data-test="sidebar-link-protocol"
-        >
-          M0 Protocol Config
-        </NuxtLink>
+        <NuxtLink to="/config" active-class="active"> Configs </NuxtLink>
       </li>
     </ul>
   </nav>

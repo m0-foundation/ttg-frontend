@@ -1,8 +1,8 @@
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- power -->
-    <div class="px-8 py-4 bg-grey-800">
-      <div class="flex justify-start w-full items-center">
+    <div class="p-6 bg-grey-800">
+      <div class="flex justify-between w-full items-center">
         <p class="text-xl">POWER Token</p>
         <div>
           <ProfileTokenMenu :token="getTokens?.power" />
@@ -55,8 +55,8 @@
       </div>
     </div>
     <!-- zero -->
-    <div class="px-8 py-4 bg-grey-800">
-      <div class="flex justify-start w-full items-center">
+    <div class="p-6 bg-grey-800">
+      <div class="flex justify-between w-full items-center">
         <p class="text-xl">Zero Token</p>
         <div>
           <ProfileTokenMenu :token="getTokens?.zero" />
