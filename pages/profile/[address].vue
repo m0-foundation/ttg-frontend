@@ -2,7 +2,7 @@
   <div v-if="address" class="px-6 lg:p-0">
     <div class="flex justify-between mb-6">
       <div>
-        <p class="text-grey-600 text-xs">Voting address</p>
+        <p class="text-grey-600 text-xs font-inter">Address</p>
         <p class="text-white text-md">
           {{ address }}
         </p>
