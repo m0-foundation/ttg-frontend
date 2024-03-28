@@ -15,7 +15,7 @@
             class="w-full justify-center mt-4 lg:mt-0"
             data-test="profile-button-redelegate"
           >
-            re-delegate
+            delegate
           </MButton>
         </NuxtLink>
       </template>

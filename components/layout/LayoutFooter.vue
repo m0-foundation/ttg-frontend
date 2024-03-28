@@ -11,13 +11,12 @@
       </div>
       <div class="lg:shrink">
         <ul
-          class="flex flex-wrap items-center lg:mt-0 text-xs text-white lg:hidden"
+          class="flex gap-3 flex-wrap items-center lg:mt-0 text-xs text-white lg:hidden"
         >
           <li>
-            <a href="#" class="mr-4 hover:underline lg:mr-6">Support</a>
-          </li>
-          <li>
-            <a href="#" class="mr-4 hover:underline lg:mr-6">Documentation</a>
+            <NuxtLink href="https://docs.m0.org/" target="_blank"
+              >Documentation</NuxtLink
+            >
           </li>
         </ul>
         <div class="flex justify-between align-center mt-4 lg:mt-0 lg:gap-6">

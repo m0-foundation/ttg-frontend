@@ -143,7 +143,9 @@ const protocolDataSorted = computed(() => {
       key: p.key,
       ...protocolParametersData.find((param) => param.key === p.key),
       proposal: proposals.value.find(
-        (proposal) => proposal.proposalParams[0] === p.key
+        (proposal) =>
+          proposal.proposalParams[0] === p.key &&
+          proposal.executedEvent?.timestamp
       ),
     }))
     .sort((a, b) => {

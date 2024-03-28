@@ -4,8 +4,7 @@
       <NuxtLink to="/proposals">
         <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
       </NuxtLink>
-      <span class="lg:hidden">Gov</span>
-      <span class="hidden lg:block text-gray-400">Governance</span>
+      <span class="text-gray-500 text-xs">[ Governance ]</span>
     </div>
     <div class="flex lg:hidden">
       <button

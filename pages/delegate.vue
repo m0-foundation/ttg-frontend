@@ -78,12 +78,7 @@
           id="button-delegate-power"
           type="submit"
           data-test="delegate-button-power-submit"
-          :disabled="
-            !isConnected ||
-            !canDelegate ||
-            !powerFormData.address ||
-            powerFormData.loading
-          "
+          :disabled="!isConnected || !canDelegate || powerFormData.loading"
           :is-loading="powerFormData.loading"
         >
           delegate POWER
@@ -141,12 +136,7 @@
         <MButton
           id="button-delegate-zero"
           type="submit"
-          :disabled="
-            !isConnected ||
-            !canDelegate ||
-            !zeroFormData.address ||
-            zeroFormData.loading
-          "
+          :disabled="!isConnected || !canDelegate || zeroFormData.loading"
           data-test="delegate-button-zero-submit"
           :is-loading="zeroFormData.loading"
         >
@@ -263,6 +253,8 @@ async function delegatePower() {
     alerts.errorAlert("Error while delegating!");
   } finally {
     powerFormData.loading = false;
+    powerFormData.address = "";
+    $delegatePowerValidation.value.$reset();
   }
 }
 
@@ -299,6 +291,8 @@ async function delegateZero() {
     alerts.errorAlert("Error while delegating!");
   } finally {
     zeroFormData.loading = false;
+    zeroFormData.address = "";
+    $delegateZeroValidation.value.$reset();
   }
 }
 </script>
