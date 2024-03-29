@@ -9,6 +9,7 @@ const getNetworkConfig = () => {
   const { node, build } = config.public.env;
 
   console.log({ node, build });
+  return production; // HOTFIX TEMPORARY until BUILD_ENV=production is set
 
   if (build) {
     if (build === "production") return production;
