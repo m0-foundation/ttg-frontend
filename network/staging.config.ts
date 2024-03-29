@@ -12,7 +12,7 @@ export default {
   contracts: {
     registrar: "0x99Fb2fB21922465F1c2ab50Fd37f9780FFbF3d17",
     multicall3: sepolia.contracts.multicall3.address,
-    deploymentBlock: 5508124,
+    deploymentBlock: 5584949,
     zero: {
       allowedCashTokens: [
         "0xE67ABDA0D43f7AC8f37876bBF00D1DFadbB93aaa", // WETH,
