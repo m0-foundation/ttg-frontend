@@ -9,12 +9,17 @@
       </p>
     </div>
 
-    <div v-show="!canDelegate" class="bg-accent-blue p-6 mb-6">
+    <div v-if="!canDelegate || !isConnected" class="bg-accent-blue p-6 mb-6">
       <span class="uppercase mb-2 text-xs">Warning</span>
 
       <div class="flex items-center gap-3">
         <MIconWarning class="w-12" />
-        <p>
+
+        <p v-if="!isConnected">
+          You need to connect a wallet to delegate your voting power.
+        </p>
+
+        <p v-else>
           The transfer epoch has concluded. You will be able to delegate in the
           next
           <b>Transfer</b> epoch.
@@ -73,12 +78,7 @@
           id="button-delegate-power"
           type="submit"
           data-test="delegate-button-power-submit"
-          :disabled="
-            !isConnected ||
-            !canDelegate ||
-            !powerFormData.address ||
-            powerFormData.loading
-          "
+          :disabled="!isConnected || !canDelegate || powerFormData.loading"
           :is-loading="powerFormData.loading"
         >
           delegate POWER
@@ -136,12 +136,7 @@
         <MButton
           id="button-delegate-zero"
           type="submit"
-          :disabled="
-            !isConnected ||
-            !canDelegate ||
-            !zeroFormData.address ||
-            zeroFormData.loading
-          "
+          :disabled="!isConnected || !canDelegate || zeroFormData.loading"
           data-test="delegate-button-zero-submit"
           :is-loading="zeroFormData.loading"
         >
@@ -190,7 +185,7 @@ const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
 const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
 
 const canDelegate = computed(
-  () => spog.epoch.value.current.type === "TRANSFER",
+  () => spog.epoch.value.current.type === "TRANSFER"
 );
 
 const addressValidation = (val: Hash) => isAddress(val);
@@ -209,7 +204,7 @@ const addressRules = {
   address: {
     addressValidation: helpers.withMessage(
       "Invalid address",
-      addressValidation,
+      addressValidation
     ),
   },
 };
@@ -248,7 +243,7 @@ async function delegatePower() {
     }
 
     alerts.successAlert(
-      "POWER tokens voting power were delegated Successfully!",
+      "POWER tokens voting power were delegated Successfully!"
     );
 
     useDelegate.refetch();
@@ -258,6 +253,8 @@ async function delegatePower() {
     alerts.errorAlert("Error while delegating!");
   } finally {
     powerFormData.loading = false;
+    powerFormData.address = "";
+    $delegatePowerValidation.value.$reset();
   }
 }
 
@@ -285,7 +282,7 @@ async function delegateZero() {
     }
 
     alerts.successAlert(
-      "ZERO tokens voting power were delegated Successfully!",
+      "ZERO tokens voting power were delegated Successfully!"
     );
     useDelegate.refetch();
     useVotingPower.refetch();
@@ -294,6 +291,8 @@ async function delegateZero() {
     alerts.errorAlert("Error while delegating!");
   } finally {
     zeroFormData.loading = false;
+    zeroFormData.address = "";
+    $delegateZeroValidation.value.$reset();
   }
 }
 </script>

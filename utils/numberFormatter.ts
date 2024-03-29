@@ -10,6 +10,7 @@ export const useNumberFormatterCompact = (number: string | number | bigint) => {
 
 export function useNumberFormatterEth(value: number | bigint | string): string {
   const number = Number(value);
+  if (isNaN(number)) return "0";
   // TODO: Improve this formatter
   const formatter: Intl.NumberFormat = new Intl.NumberFormat("en-US", {
     maximumFractionDigits:

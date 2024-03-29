@@ -13,10 +13,9 @@
         <NuxtLink to="/delegate/">
           <MButton
             class="w-full justify-center mt-4 lg:mt-0"
-            :disabled="!canDelegate"
             data-test="profile-button-redelegate"
           >
-            re-delegate
+            delegate
           </MButton>
         </NuxtLink>
       </template>
@@ -36,17 +35,10 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { useAccount } from "use-wagmi";
 const { address } = useAccount();
-
-const spog = storeToRefs(useSpogStore());
 
 useHead({
   titleTemplate: "%s - My profile",
 });
-
-const canDelegate = computed(
-  () => spog.epoch.value.current.type === "TRANSFER",
-);
 </script>

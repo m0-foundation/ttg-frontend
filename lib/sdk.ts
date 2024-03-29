@@ -5,9 +5,9 @@ import {
   createWatchContractEvent,
 } from "@wagmi/core/codegen";
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // DistributionVault
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const distributionVaultAbi = [
   {
@@ -57,6 +57,23 @@ export const distributionVaultAbi = [
       { name: "endEpoch_", internalType: "uint256", type: "uint256" },
       { name: "destination_", internalType: "address", type: "address" },
       { name: "deadline_", internalType: "uint256", type: "uint256" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "claimBySig",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "account_", internalType: "address", type: "address" },
+      { name: "token_", internalType: "address", type: "address" },
+      { name: "startEpoch_", internalType: "uint256", type: "uint256" },
+      { name: "endEpoch_", internalType: "uint256", type: "uint256" },
+      { name: "destination_", internalType: "address", type: "address" },
+      { name: "deadline_", internalType: "uint256", type: "uint256" },
       { name: "signature_", internalType: "bytes", type: "bytes" },
     ],
     name: "claimBySig",
@@ -89,7 +106,23 @@ export const distributionVaultAbi = [
   },
   {
     type: "function",
+    inputs: [],
+    name: "eip712Domain",
+    outputs: [
+      { name: "fields_", internalType: "bytes1", type: "bytes1" },
+      { name: "name_", internalType: "string", type: "string" },
+      { name: "version_", internalType: "string", type: "string" },
+      { name: "chainId_", internalType: "uint256", type: "uint256" },
+      { name: "verifyingContract_", internalType: "address", type: "address" },
+      { name: "salt_", internalType: "bytes32", type: "bytes32" },
+      { name: "extensions_", internalType: "uint256[]", type: "uint256[]" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     inputs: [
+      { name: "account_", internalType: "address", type: "address" },
       { name: "token_", internalType: "address", type: "address" },
       { name: "startEpoch_", internalType: "uint256", type: "uint256" },
       { name: "endEpoch_", internalType: "uint256", type: "uint256" },
@@ -207,8 +240,20 @@ export const distributionVaultAbi = [
     ],
     name: "Distribution",
   },
+  { type: "event", anonymous: false, inputs: [], name: "EIP712DomainChanged" },
+  {
+    type: "error",
+    inputs: [
+      { name: "nonce", internalType: "uint256", type: "uint256" },
+      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
+    ],
+    name: "InvalidAccountNonce",
+  },
+  { type: "error", inputs: [], name: "InvalidDestinationAddress" },
   { type: "error", inputs: [], name: "InvalidSignature" },
   { type: "error", inputs: [], name: "InvalidSignatureLength" },
+  { type: "error", inputs: [], name: "InvalidSignatureS" },
+  { type: "error", inputs: [], name: "InvalidSignatureV" },
   { type: "error", inputs: [], name: "InvalidZeroTokenAddress" },
   {
     type: "error",
@@ -221,26 +266,26 @@ export const distributionVaultAbi = [
   {
     type: "error",
     inputs: [
-      { name: "nonce", internalType: "uint256", type: "uint256" },
-      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
-    ],
-    name: "ReusedNonce",
-  },
-  {
-    type: "error",
-    inputs: [
       { name: "deadline", internalType: "uint256", type: "uint256" },
       { name: "timestamp", internalType: "uint256", type: "uint256" },
     ],
     name: "SignatureExpired",
   },
   { type: "error", inputs: [], name: "SignerMismatch" },
+  {
+    type: "error",
+    inputs: [
+      { name: "startEpoch", internalType: "uint256", type: "uint256" },
+      { name: "endEpoch", internalType: "uint256", type: "uint256" },
+    ],
+    name: "StartEpochAfterEndEpoch",
+  },
   { type: "error", inputs: [], name: "TransferFailed" },
 ] as const;
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // EmergencyGovernor
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const emergencyGovernorAbi = [
   {
@@ -264,7 +309,21 @@ export const emergencyGovernorAbi = [
   {
     type: "function",
     inputs: [],
+    name: "BALLOTS_WITH_REASON_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
     name: "BALLOT_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "BALLOT_WITH_REASON_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
     stateMutability: "view",
   },
@@ -346,9 +405,36 @@ export const emergencyGovernorAbi = [
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
       { name: "support_", internalType: "uint8", type: "uint8" },
-      { name: "", internalType: "string", type: "string" },
+      { name: "reason_", internalType: "string", type: "string" },
     ],
     name: "castVoteWithReason",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "voter_", internalType: "address", type: "address" },
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "castVoteWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "castVoteWithReasonBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
     stateMutability: "nonpayable",
   },
@@ -389,9 +475,62 @@ export const emergencyGovernorAbi = [
   },
   {
     type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+    ],
+    name: "castVotesWithReason",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "voter_", internalType: "address", type: "address" },
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "castVotesWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "castVotesWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "eip712Domain",
+    outputs: [
+      { name: "fields_", internalType: "bytes1", type: "bytes1" },
+      { name: "name_", internalType: "string", type: "string" },
+      { name: "version_", internalType: "string", type: "string" },
+      { name: "chainId_", internalType: "uint256", type: "uint256" },
+      { name: "verifyingContract_", internalType: "address", type: "address" },
+      { name: "salt_", internalType: "bytes32", type: "bytes32" },
+      { name: "extensions_", internalType: "uint256[]", type: "uint256[]" },
+    ],
     stateMutability: "view",
   },
   {
@@ -421,10 +560,32 @@ export const emergencyGovernorAbi = [
   {
     type: "function",
     inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+    ],
+    name: "getBallotWithReasonDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
       { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+    ],
+    name: "getBallotsWithReasonDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
     stateMutability: "view",
   },
@@ -660,6 +821,7 @@ export const emergencyGovernorAbi = [
     outputs: [{ name: "", internalType: "address", type: "address" }],
     stateMutability: "view",
   },
+  { type: "event", anonymous: false, inputs: [], name: "EIP712DomainChanged" },
   {
     type: "event",
     anonymous: false,
@@ -782,15 +944,25 @@ export const emergencyGovernorAbi = [
   { type: "error", inputs: [], name: "AlreadyVoted" },
   {
     type: "error",
+    inputs: [
+      { name: "length1", internalType: "uint256", type: "uint256" },
+      { name: "length2", internalType: "uint256", type: "uint256" },
+    ],
+    name: "ArrayLengthMismatch",
+  },
+  { type: "error", inputs: [], name: "EmptyProposalIdsArray" },
+  {
+    type: "error",
     inputs: [{ name: "data", internalType: "bytes", type: "bytes" }],
     name: "ExecutionFailed",
   },
   { type: "error", inputs: [], name: "InvalidCallData" },
   { type: "error", inputs: [], name: "InvalidCallDatasLength" },
-  { type: "error", inputs: [], name: "InvalidEpoch" },
   { type: "error", inputs: [], name: "InvalidRegistrarAddress" },
   { type: "error", inputs: [], name: "InvalidSignature" },
   { type: "error", inputs: [], name: "InvalidSignatureLength" },
+  { type: "error", inputs: [], name: "InvalidSignatureS" },
+  { type: "error", inputs: [], name: "InvalidSignatureV" },
   { type: "error", inputs: [], name: "InvalidStandardGovernorAddress" },
   { type: "error", inputs: [], name: "InvalidTarget" },
   { type: "error", inputs: [], name: "InvalidTargetsLength" },
@@ -806,6 +978,7 @@ export const emergencyGovernorAbi = [
   { type: "error", inputs: [], name: "InvalidUInt16" },
   { type: "error", inputs: [], name: "InvalidValue" },
   { type: "error", inputs: [], name: "InvalidValuesLength" },
+  { type: "error", inputs: [], name: "InvalidVoteStart" },
   { type: "error", inputs: [], name: "InvalidVoteTokenAddress" },
   { type: "error", inputs: [], name: "InvalidZeroGovernorAddress" },
   { type: "error", inputs: [], name: "NotSelf" },
@@ -822,7 +995,7 @@ export const emergencyGovernorAbi = [
         type: "uint8",
       },
     ],
-    name: "ProposalNotActive",
+    name: "ProposalInactive",
   },
   {
     type: "error",
@@ -835,9 +1008,9 @@ export const emergencyGovernorAbi = [
   { type: "error", inputs: [], name: "SignerMismatch" },
 ] as const;
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PowerToken
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const powerTokenAbi = [
   {
@@ -977,6 +1150,7 @@ export const powerTokenAbi = [
       { name: "minAmount_", internalType: "uint256", type: "uint256" },
       { name: "maxAmount_", internalType: "uint256", type: "uint256" },
       { name: "destination_", internalType: "address", type: "address" },
+      { name: "expiryEpoch_", internalType: "uint16", type: "uint16" },
     ],
     name: "buy",
     outputs: [
@@ -1081,6 +1255,21 @@ export const powerTokenAbi = [
     inputs: [{ name: "account_", internalType: "address", type: "address" }],
     name: "delegates",
     outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "eip712Domain",
+    outputs: [
+      { name: "fields_", internalType: "bytes1", type: "bytes1" },
+      { name: "name_", internalType: "string", type: "string" },
+      { name: "version_", internalType: "string", type: "string" },
+      { name: "chainId_", internalType: "uint256", type: "uint256" },
+      { name: "verifyingContract_", internalType: "address", type: "address" },
+      { name: "salt_", internalType: "bytes32", type: "bytes32" },
+      { name: "extensions_", internalType: "uint256[]", type: "uint256[]" },
+    ],
     stateMutability: "view",
   },
   {
@@ -1288,6 +1477,13 @@ export const powerTokenAbi = [
     name: "symbol",
     outputs: [{ name: "", internalType: "string", type: "string" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [{ name: "account_", internalType: "address", type: "address" }],
+    name: "sync",
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -1517,6 +1713,7 @@ export const powerTokenAbi = [
     ],
     name: "DelegateVotesChanged",
   },
+  { type: "event", anonymous: false, inputs: [], name: "EIP712DomainChanged" },
   {
     type: "event",
     anonymous: false,
@@ -1535,6 +1732,32 @@ export const powerTokenAbi = [
       },
     ],
     name: "NextCashTokenSet",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "account",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+    ],
+    name: "Sync",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "tagline",
+        internalType: "string",
+        type: "string",
+        indexed: false,
+      },
+    ],
+    name: "Tagline",
   },
   {
     type: "event",
@@ -1581,7 +1804,6 @@ export const powerTokenAbi = [
     name: "Transfer",
   },
   { type: "error", inputs: [], name: "AlreadyParticipated" },
-  { type: "error", inputs: [], name: "AmountExceedsUint240" },
   {
     type: "error",
     inputs: [
@@ -1607,6 +1829,7 @@ export const powerTokenAbi = [
     name: "AuthorizationNotYetValid",
   },
   { type: "error", inputs: [], name: "BootstrapSupplyTooLarge" },
+  { type: "error", inputs: [], name: "BootstrapSupplyZero" },
   {
     type: "error",
     inputs: [
@@ -1615,9 +1838,32 @@ export const powerTokenAbi = [
     ],
     name: "CallerMustBePayee",
   },
-  { type: "error", inputs: [], name: "DivideUpOverflow" },
   { type: "error", inputs: [], name: "DivisionByZero" },
+  { type: "error", inputs: [], name: "EpochZero" },
+  { type: "error", inputs: [], name: "ExpiredBuyOrder" },
+  {
+    type: "error",
+    inputs: [
+      { name: "currentEpoch", internalType: "uint16", type: "uint16" },
+      { name: "epoch", internalType: "uint16", type: "uint16" },
+    ],
+    name: "FutureEpoch",
+  },
   { type: "error", inputs: [], name: "InflationTooHigh" },
+  {
+    type: "error",
+    inputs: [
+      { name: "spender", internalType: "address", type: "address" },
+      { name: "allowance", internalType: "uint256", type: "uint256" },
+      { name: "needed", internalType: "uint256", type: "uint256" },
+    ],
+    name: "InsufficientAllowance",
+  },
+  {
+    type: "error",
+    inputs: [{ name: "amount", internalType: "uint256", type: "uint256" }],
+    name: "InsufficientAmount",
+  },
   {
     type: "error",
     inputs: [
@@ -1626,10 +1872,25 @@ export const powerTokenAbi = [
     ],
     name: "InsufficientAuctionSupply",
   },
+  {
+    type: "error",
+    inputs: [
+      { name: "nonce", internalType: "uint256", type: "uint256" },
+      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
+    ],
+    name: "InvalidAccountNonce",
+  },
   { type: "error", inputs: [], name: "InvalidBootstrapTokenAddress" },
   { type: "error", inputs: [], name: "InvalidCashTokenAddress" },
+  {
+    type: "error",
+    inputs: [{ name: "recipient", internalType: "address", type: "address" }],
+    name: "InvalidRecipient",
+  },
   { type: "error", inputs: [], name: "InvalidSignature" },
   { type: "error", inputs: [], name: "InvalidSignatureLength" },
+  { type: "error", inputs: [], name: "InvalidSignatureS" },
+  { type: "error", inputs: [], name: "InvalidSignatureV" },
   { type: "error", inputs: [], name: "InvalidStandardGovernorAddress" },
   { type: "error", inputs: [], name: "InvalidUInt16" },
   { type: "error", inputs: [], name: "InvalidUInt240" },
@@ -1647,27 +1908,28 @@ export const powerTokenAbi = [
   {
     type: "error",
     inputs: [
-      { name: "nonce", internalType: "uint256", type: "uint256" },
-      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
-    ],
-    name: "ReusedNonce",
-  },
-  {
-    type: "error",
-    inputs: [
       { name: "deadline", internalType: "uint256", type: "uint256" },
       { name: "timestamp", internalType: "uint256", type: "uint256" },
     ],
     name: "SignatureExpired",
   },
   { type: "error", inputs: [], name: "SignerMismatch" },
+  {
+    type: "error",
+    inputs: [
+      { name: "bootstrapEpoch", internalType: "uint16", type: "uint16" },
+      { name: "epoch", internalType: "uint16", type: "uint16" },
+    ],
+    name: "SyncBeforeBootstrap",
+  },
   { type: "error", inputs: [], name: "TransferFromFailed" },
   { type: "error", inputs: [], name: "VoteEpoch" },
+  { type: "error", inputs: [], name: "ZeroPurchaseAmount" },
 ] as const;
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Registrar
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const registrarAbi = [
   {
@@ -1861,9 +2123,9 @@ export const registrarAbi = [
   { type: "error", inputs: [], name: "NotStandardOrEmergencyGovernor" },
 ] as const;
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // StandardGovernor
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const standardGovernorAbi = [
   {
@@ -1895,7 +2157,21 @@ export const standardGovernorAbi = [
   {
     type: "function",
     inputs: [],
+    name: "BALLOTS_WITH_REASON_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
     name: "BALLOT_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "BALLOT_WITH_REASON_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
     stateMutability: "view",
   },
@@ -1984,9 +2260,36 @@ export const standardGovernorAbi = [
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
       { name: "support_", internalType: "uint8", type: "uint8" },
-      { name: "", internalType: "string", type: "string" },
+      { name: "reason_", internalType: "string", type: "string" },
     ],
     name: "castVoteWithReason",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "voter_", internalType: "address", type: "address" },
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "castVoteWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "castVoteWithReasonBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
     stateMutability: "nonpayable",
   },
@@ -2027,9 +2330,62 @@ export const standardGovernorAbi = [
   },
   {
     type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+    ],
+    name: "castVotesWithReason",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "voter_", internalType: "address", type: "address" },
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "castVotesWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "castVotesWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "eip712Domain",
+    outputs: [
+      { name: "fields_", internalType: "bytes1", type: "bytes1" },
+      { name: "name_", internalType: "string", type: "string" },
+      { name: "version_", internalType: "string", type: "string" },
+      { name: "chainId_", internalType: "uint256", type: "uint256" },
+      { name: "verifyingContract_", internalType: "address", type: "address" },
+      { name: "salt_", internalType: "bytes32", type: "bytes32" },
+      { name: "extensions_", internalType: "uint256[]", type: "uint256[]" },
+    ],
     stateMutability: "view",
   },
   {
@@ -2066,10 +2422,32 @@ export const standardGovernorAbi = [
   {
     type: "function",
     inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+    ],
+    name: "getBallotWithReasonDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
       { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+    ],
+    name: "getBallotsWithReasonDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
     stateMutability: "view",
   },
@@ -2088,6 +2466,16 @@ export const standardGovernorAbi = [
       { name: "noVotes_", internalType: "uint256", type: "uint256" },
       { name: "yesVotes_", internalType: "uint256", type: "uint256" },
       { name: "proposer_", internalType: "address", type: "address" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
+    name: "getProposalFee",
+    outputs: [
+      { name: "cashToken_", internalType: "address", type: "address" },
+      { name: "fee_", internalType: "uint256", type: "uint256" },
     ],
     stateMutability: "view",
   },
@@ -2362,6 +2750,7 @@ export const standardGovernorAbi = [
     ],
     name: "CashTokenSet",
   },
+  { type: "event", anonymous: false, inputs: [], name: "EIP712DomainChanged" },
   {
     type: "event",
     anonymous: false,
@@ -2528,6 +2917,15 @@ export const standardGovernorAbi = [
   { type: "error", inputs: [], name: "AlreadyVoted" },
   {
     type: "error",
+    inputs: [
+      { name: "length1", internalType: "uint256", type: "uint256" },
+      { name: "length2", internalType: "uint256", type: "uint256" },
+    ],
+    name: "ArrayLengthMismatch",
+  },
+  { type: "error", inputs: [], name: "EmptyProposalIdsArray" },
+  {
+    type: "error",
     inputs: [{ name: "data", internalType: "bytes", type: "bytes" }],
     name: "ExecutionFailed",
   },
@@ -2546,15 +2944,17 @@ export const standardGovernorAbi = [
   { type: "error", inputs: [], name: "InvalidCallDatasLength" },
   { type: "error", inputs: [], name: "InvalidCashTokenAddress" },
   { type: "error", inputs: [], name: "InvalidEmergencyGovernorAddress" },
-  { type: "error", inputs: [], name: "InvalidEpoch" },
   { type: "error", inputs: [], name: "InvalidRegistrarAddress" },
   { type: "error", inputs: [], name: "InvalidSignature" },
   { type: "error", inputs: [], name: "InvalidSignatureLength" },
+  { type: "error", inputs: [], name: "InvalidSignatureS" },
+  { type: "error", inputs: [], name: "InvalidSignatureV" },
   { type: "error", inputs: [], name: "InvalidTarget" },
   { type: "error", inputs: [], name: "InvalidTargetsLength" },
   { type: "error", inputs: [], name: "InvalidValue" },
   { type: "error", inputs: [], name: "InvalidValuesLength" },
   { type: "error", inputs: [], name: "InvalidVaultAddress" },
+  { type: "error", inputs: [], name: "InvalidVoteStart" },
   { type: "error", inputs: [], name: "InvalidVoteTokenAddress" },
   { type: "error", inputs: [], name: "InvalidZeroGovernorAddress" },
   { type: "error", inputs: [], name: "InvalidZeroTokenAddress" },
@@ -2574,7 +2974,7 @@ export const standardGovernorAbi = [
         type: "uint8",
       },
     ],
-    name: "ProposalNotActive",
+    name: "ProposalInactive",
   },
   {
     type: "error",
@@ -2589,9 +2989,9 @@ export const standardGovernorAbi = [
   { type: "error", inputs: [], name: "TransferFromFailed" },
 ] as const;
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ZeroGovernor
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const zeroGovernorAbi = [
   {
@@ -2643,7 +3043,21 @@ export const zeroGovernorAbi = [
   {
     type: "function",
     inputs: [],
+    name: "BALLOTS_WITH_REASON_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
     name: "BALLOT_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "BALLOT_WITH_REASON_TYPEHASH",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
     stateMutability: "view",
   },
@@ -2715,9 +3129,36 @@ export const zeroGovernorAbi = [
     inputs: [
       { name: "proposalId_", internalType: "uint256", type: "uint256" },
       { name: "support_", internalType: "uint8", type: "uint8" },
-      { name: "", internalType: "string", type: "string" },
+      { name: "reason_", internalType: "string", type: "string" },
     ],
     name: "castVoteWithReason",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "voter_", internalType: "address", type: "address" },
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "castVoteWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "castVoteWithReasonBySig",
     outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
     stateMutability: "nonpayable",
   },
@@ -2758,9 +3199,62 @@ export const zeroGovernorAbi = [
   },
   {
     type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+    ],
+    name: "castVotesWithReason",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "voter_", internalType: "address", type: "address" },
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+      { name: "signature_", internalType: "bytes", type: "bytes" },
+    ],
+    name: "castVotesWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+      { name: "v_", internalType: "uint8", type: "uint8" },
+      { name: "r_", internalType: "bytes32", type: "bytes32" },
+      { name: "s_", internalType: "bytes32", type: "bytes32" },
+    ],
+    name: "castVotesWithReasonBySig",
+    outputs: [{ name: "weight_", internalType: "uint256", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     inputs: [],
     name: "clock",
     outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "eip712Domain",
+    outputs: [
+      { name: "fields_", internalType: "bytes1", type: "bytes1" },
+      { name: "name_", internalType: "string", type: "string" },
+      { name: "version_", internalType: "string", type: "string" },
+      { name: "chainId_", internalType: "uint256", type: "uint256" },
+      { name: "verifyingContract_", internalType: "address", type: "address" },
+      { name: "salt_", internalType: "bytes32", type: "bytes32" },
+      { name: "extensions_", internalType: "uint256[]", type: "uint256[]" },
+    ],
     stateMutability: "view",
   },
   {
@@ -2804,10 +3298,32 @@ export const zeroGovernorAbi = [
   {
     type: "function",
     inputs: [
+      { name: "proposalId_", internalType: "uint256", type: "uint256" },
+      { name: "support_", internalType: "uint8", type: "uint8" },
+      { name: "reason_", internalType: "string", type: "string" },
+    ],
+    name: "getBallotWithReasonDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
       { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
       { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
     ],
     name: "getBallotsDigest",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "proposalIds_", internalType: "uint256[]", type: "uint256[]" },
+      { name: "supportList_", internalType: "uint8[]", type: "uint8[]" },
+      { name: "reasonList_", internalType: "string[]", type: "string[]" },
+    ],
+    name: "getBallotsWithReasonDigest",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
     stateMutability: "view",
   },
@@ -3048,6 +3564,20 @@ export const zeroGovernorAbi = [
     anonymous: false,
     inputs: [
       {
+        name: "allowedCashTokens",
+        internalType: "address[]",
+        type: "address[]",
+        indexed: false,
+      },
+    ],
+    name: "AllowedCashTokensSet",
+  },
+  { type: "event", anonymous: false, inputs: [], name: "EIP712DomainChanged" },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
         name: "proposalId",
         internalType: "uint256",
         type: "uint256",
@@ -3196,6 +3726,15 @@ export const zeroGovernorAbi = [
   { type: "error", inputs: [], name: "AlreadyVoted" },
   {
     type: "error",
+    inputs: [
+      { name: "length1", internalType: "uint256", type: "uint256" },
+      { name: "length2", internalType: "uint256", type: "uint256" },
+    ],
+    name: "ArrayLengthMismatch",
+  },
+  { type: "error", inputs: [], name: "EmptyProposalIdsArray" },
+  {
+    type: "error",
     inputs: [{ name: "data", internalType: "bytes", type: "bytes" }],
     name: "ExecutionFailed",
   },
@@ -3208,10 +3747,11 @@ export const zeroGovernorAbi = [
     inputs: [],
     name: "InvalidEmergencyGovernorDeployerAddress",
   },
-  { type: "error", inputs: [], name: "InvalidEpoch" },
   { type: "error", inputs: [], name: "InvalidPowerTokenDeployerAddress" },
   { type: "error", inputs: [], name: "InvalidSignature" },
   { type: "error", inputs: [], name: "InvalidSignatureLength" },
+  { type: "error", inputs: [], name: "InvalidSignatureS" },
+  { type: "error", inputs: [], name: "InvalidSignatureV" },
   { type: "error", inputs: [], name: "InvalidStandardGovernorDeployerAddress" },
   { type: "error", inputs: [], name: "InvalidTarget" },
   { type: "error", inputs: [], name: "InvalidTargetsLength" },
@@ -3227,6 +3767,7 @@ export const zeroGovernorAbi = [
   { type: "error", inputs: [], name: "InvalidUInt16" },
   { type: "error", inputs: [], name: "InvalidValue" },
   { type: "error", inputs: [], name: "InvalidValuesLength" },
+  { type: "error", inputs: [], name: "InvalidVoteStart" },
   { type: "error", inputs: [], name: "InvalidVoteTokenAddress" },
   { type: "error", inputs: [], name: "NoAllowedCashTokens" },
   { type: "error", inputs: [], name: "NotSelf" },
@@ -3242,7 +3783,7 @@ export const zeroGovernorAbi = [
         type: "uint8",
       },
     ],
-    name: "ProposalNotActive",
+    name: "ProposalInactive",
   },
   {
     type: "error",
@@ -3271,9 +3812,9 @@ export const zeroGovernorAbi = [
   },
 ] as const;
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ZeroToken
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const zeroTokenAbi = [
   {
@@ -3476,6 +4017,21 @@ export const zeroTokenAbi = [
   },
   {
     type: "function",
+    inputs: [],
+    name: "eip712Domain",
+    outputs: [
+      { name: "fields_", internalType: "bytes1", type: "bytes1" },
+      { name: "name_", internalType: "string", type: "string" },
+      { name: "version_", internalType: "string", type: "string" },
+      { name: "chainId_", internalType: "uint256", type: "uint256" },
+      { name: "verifyingContract_", internalType: "address", type: "address" },
+      { name: "salt_", internalType: "bytes32", type: "bytes32" },
+      { name: "extensions_", internalType: "uint256[]", type: "uint256[]" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     inputs: [
       { name: "delegatee_", internalType: "address", type: "address" },
       { name: "nonce_", internalType: "uint256", type: "uint256" },
@@ -3493,17 +4049,6 @@ export const zeroTokenAbi = [
     ],
     name: "getPastVotes",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    inputs: [
-      { name: "account_", internalType: "address", type: "address" },
-      { name: "startEpoch_", internalType: "uint256", type: "uint256" },
-      { name: "endEpoch_", internalType: "uint256", type: "uint256" },
-    ],
-    name: "getPastVotes",
-    outputs: [{ name: "", internalType: "uint256[]", type: "uint256[]" }],
     stateMutability: "view",
   },
   {
@@ -3566,17 +4111,6 @@ export const zeroTokenAbi = [
     ],
     name: "pastDelegates",
     outputs: [{ name: "", internalType: "address", type: "address" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    inputs: [
-      { name: "account_", internalType: "address", type: "address" },
-      { name: "startEpoch_", internalType: "uint256", type: "uint256" },
-      { name: "endEpoch_", internalType: "uint256", type: "uint256" },
-    ],
-    name: "pastDelegates",
-    outputs: [{ name: "", internalType: "address[]", type: "address[]" }],
     stateMutability: "view",
   },
   {
@@ -3882,6 +4416,7 @@ export const zeroTokenAbi = [
     ],
     name: "DelegateVotesChanged",
   },
+  { type: "event", anonymous: false, inputs: [], name: "EIP712DomainChanged" },
   {
     type: "event",
     anonymous: false,
@@ -3907,7 +4442,14 @@ export const zeroTokenAbi = [
     ],
     name: "Transfer",
   },
-  { type: "error", inputs: [], name: "AmountExceedsUint240" },
+  {
+    type: "error",
+    inputs: [
+      { name: "accountsLength", internalType: "uint256", type: "uint256" },
+      { name: "balancesLength", internalType: "uint256", type: "uint256" },
+    ],
+    name: "ArrayLengthMismatch",
+  },
   {
     type: "error",
     inputs: [
@@ -3940,19 +4482,41 @@ export const zeroTokenAbi = [
     ],
     name: "CallerMustBePayee",
   },
-  { type: "error", inputs: [], name: "InvalidSignature" },
-  { type: "error", inputs: [], name: "InvalidSignatureLength" },
-  { type: "error", inputs: [], name: "InvalidStandardGovernorDeployerAddress" },
-  { type: "error", inputs: [], name: "InvalidUInt16" },
-  { type: "error", inputs: [], name: "InvalidUInt240" },
+  { type: "error", inputs: [], name: "EpochZero" },
   {
     type: "error",
     inputs: [
-      { name: "accountsLength", internalType: "uint256", type: "uint256" },
-      { name: "balancesLength", internalType: "uint256", type: "uint256" },
+      { name: "spender", internalType: "address", type: "address" },
+      { name: "allowance", internalType: "uint256", type: "uint256" },
+      { name: "needed", internalType: "uint256", type: "uint256" },
     ],
-    name: "LengthMismatch",
+    name: "InsufficientAllowance",
   },
+  {
+    type: "error",
+    inputs: [{ name: "amount", internalType: "uint256", type: "uint256" }],
+    name: "InsufficientAmount",
+  },
+  {
+    type: "error",
+    inputs: [
+      { name: "nonce", internalType: "uint256", type: "uint256" },
+      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
+    ],
+    name: "InvalidAccountNonce",
+  },
+  {
+    type: "error",
+    inputs: [{ name: "recipient", internalType: "address", type: "address" }],
+    name: "InvalidRecipient",
+  },
+  { type: "error", inputs: [], name: "InvalidSignature" },
+  { type: "error", inputs: [], name: "InvalidSignatureLength" },
+  { type: "error", inputs: [], name: "InvalidSignatureS" },
+  { type: "error", inputs: [], name: "InvalidSignatureV" },
+  { type: "error", inputs: [], name: "InvalidStandardGovernorDeployerAddress" },
+  { type: "error", inputs: [], name: "InvalidUInt16" },
+  { type: "error", inputs: [], name: "InvalidUInt240" },
   {
     type: "error",
     inputs: [
@@ -3965,14 +4529,6 @@ export const zeroTokenAbi = [
   {
     type: "error",
     inputs: [
-      { name: "nonce", internalType: "uint256", type: "uint256" },
-      { name: "expectedNonce", internalType: "uint256", type: "uint256" },
-    ],
-    name: "ReusedNonce",
-  },
-  {
-    type: "error",
-    inputs: [
       { name: "deadline", internalType: "uint256", type: "uint256" },
       { name: "timestamp", internalType: "uint256", type: "uint256" },
     ],
@@ -3982,14 +4538,14 @@ export const zeroTokenAbi = [
   { type: "error", inputs: [], name: "StartEpochAfterEndEpoch" },
 ] as const;
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Action
-/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__
  */
-export const readDistributionVault = /* #__PURE__ */ createReadContract({
+export const readDistributionVault = /*#__PURE__*/ createReadContract({
   abi: distributionVaultAbi,
 });
 
@@ -3997,7 +4553,7 @@ export const readDistributionVault = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"CLAIM_TYPEHASH"`
  */
 export const readDistributionVaultClaimTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: distributionVaultAbi,
     functionName: "CLAIM_TYPEHASH",
   });
@@ -4005,17 +4561,16 @@ export const readDistributionVaultClaimTypehash =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"CLOCK_MODE"`
  */
-export const readDistributionVaultClockMode =
-  /* #__PURE__ */ createReadContract({
-    abi: distributionVaultAbi,
-    functionName: "CLOCK_MODE",
-  });
+export const readDistributionVaultClockMode = /*#__PURE__*/ createReadContract({
+  abi: distributionVaultAbi,
+  functionName: "CLOCK_MODE",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
  */
 export const readDistributionVaultDomainSeparator =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: distributionVaultAbi,
     functionName: "DOMAIN_SEPARATOR",
   });
@@ -4023,7 +4578,7 @@ export const readDistributionVaultDomainSeparator =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"clock"`
  */
-export const readDistributionVaultClock = /* #__PURE__ */ createReadContract({
+export const readDistributionVaultClock = /*#__PURE__*/ createReadContract({
   abi: distributionVaultAbi,
   functionName: "clock",
 });
@@ -4032,16 +4587,25 @@ export const readDistributionVaultClock = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"distributionOfAt"`
  */
 export const readDistributionVaultDistributionOfAt =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: distributionVaultAbi,
     functionName: "distributionOfAt",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"eip712Domain"`
+ */
+export const readDistributionVaultEip712Domain =
+  /*#__PURE__*/ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "eip712Domain",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"getClaimDigest"`
  */
 export const readDistributionVaultGetClaimDigest =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: distributionVaultAbi,
     functionName: "getClaimDigest",
   });
@@ -4050,7 +4614,7 @@ export const readDistributionVaultGetClaimDigest =
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"getClaimable"`
  */
 export const readDistributionVaultGetClaimable =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: distributionVaultAbi,
     functionName: "getClaimable",
   });
@@ -4058,16 +4622,14 @@ export const readDistributionVaultGetClaimable =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"hasClaimed"`
  */
-export const readDistributionVaultHasClaimed =
-  /* #__PURE__ */ createReadContract({
-    abi: distributionVaultAbi,
-    functionName: "hasClaimed",
-  });
+export const readDistributionVaultHasClaimed = /*#__PURE__*/ createReadContract(
+  { abi: distributionVaultAbi, functionName: "hasClaimed" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"name"`
  */
-export const readDistributionVaultName = /* #__PURE__ */ createReadContract({
+export const readDistributionVaultName = /*#__PURE__*/ createReadContract({
   abi: distributionVaultAbi,
   functionName: "name",
 });
@@ -4075,7 +4637,7 @@ export const readDistributionVaultName = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"nonces"`
  */
-export const readDistributionVaultNonces = /* #__PURE__ */ createReadContract({
+export const readDistributionVaultNonces = /*#__PURE__*/ createReadContract({
   abi: distributionVaultAbi,
   functionName: "nonces",
 });
@@ -4083,23 +4645,22 @@ export const readDistributionVaultNonces = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"zeroToken"`
  */
-export const readDistributionVaultZeroToken =
-  /* #__PURE__ */ createReadContract({
-    abi: distributionVaultAbi,
-    functionName: "zeroToken",
-  });
+export const readDistributionVaultZeroToken = /*#__PURE__*/ createReadContract({
+  abi: distributionVaultAbi,
+  functionName: "zeroToken",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultAbi}__
  */
-export const writeDistributionVault = /* #__PURE__ */ createWriteContract({
+export const writeDistributionVault = /*#__PURE__*/ createWriteContract({
   abi: distributionVaultAbi,
 });
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"claim"`
  */
-export const writeDistributionVaultClaim = /* #__PURE__ */ createWriteContract({
+export const writeDistributionVaultClaim = /*#__PURE__*/ createWriteContract({
   abi: distributionVaultAbi,
   functionName: "claim",
 });
@@ -4108,7 +4669,7 @@ export const writeDistributionVaultClaim = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"claimBySig"`
  */
 export const writeDistributionVaultClaimBySig =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: distributionVaultAbi,
     functionName: "claimBySig",
   });
@@ -4117,7 +4678,7 @@ export const writeDistributionVaultClaimBySig =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"distribute"`
  */
 export const writeDistributionVaultDistribute =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: distributionVaultAbi,
     functionName: "distribute",
   });
@@ -4125,17 +4686,15 @@ export const writeDistributionVaultDistribute =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link distributionVaultAbi}__
  */
-export const simulateDistributionVault = /* #__PURE__ */ createSimulateContract(
-  {
-    abi: distributionVaultAbi,
-  },
-);
+export const simulateDistributionVault = /*#__PURE__*/ createSimulateContract({
+  abi: distributionVaultAbi,
+});
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"claim"`
  */
 export const simulateDistributionVaultClaim =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: distributionVaultAbi,
     functionName: "claim",
   });
@@ -4144,7 +4703,7 @@ export const simulateDistributionVaultClaim =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"claimBySig"`
  */
 export const simulateDistributionVaultClaimBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: distributionVaultAbi,
     functionName: "claimBySig",
   });
@@ -4153,7 +4712,7 @@ export const simulateDistributionVaultClaimBySig =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"distribute"`
  */
 export const simulateDistributionVaultDistribute =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: distributionVaultAbi,
     functionName: "distribute",
   });
@@ -4162,13 +4721,13 @@ export const simulateDistributionVaultDistribute =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link distributionVaultAbi}__
  */
 export const watchDistributionVaultEvent =
-  /* #__PURE__ */ createWatchContractEvent({ abi: distributionVaultAbi });
+  /*#__PURE__*/ createWatchContractEvent({ abi: distributionVaultAbi });
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link distributionVaultAbi}__ and `eventName` set to `"Claim"`
  */
 export const watchDistributionVaultClaimEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: distributionVaultAbi,
     eventName: "Claim",
   });
@@ -4177,15 +4736,24 @@ export const watchDistributionVaultClaimEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link distributionVaultAbi}__ and `eventName` set to `"Distribution"`
  */
 export const watchDistributionVaultDistributionEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: distributionVaultAbi,
     eventName: "Distribution",
   });
 
 /**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link distributionVaultAbi}__ and `eventName` set to `"EIP712DomainChanged"`
+ */
+export const watchDistributionVaultEip712DomainChangedEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: distributionVaultAbi,
+    eventName: "EIP712DomainChanged",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__
  */
-export const readEmergencyGovernor = /* #__PURE__ */ createReadContract({
+export const readEmergencyGovernor = /*#__PURE__*/ createReadContract({
   abi: emergencyGovernorAbi,
 });
 
@@ -4193,34 +4761,51 @@ export const readEmergencyGovernor = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"BALLOTS_TYPEHASH"`
  */
 export const readEmergencyGovernorBallotsTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "BALLOTS_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"BALLOTS_WITH_REASON_TYPEHASH"`
+ */
+export const readEmergencyGovernorBallotsWithReasonTypehash =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "BALLOTS_WITH_REASON_TYPEHASH",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"BALLOT_TYPEHASH"`
  */
 export const readEmergencyGovernorBallotTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "BALLOT_TYPEHASH",
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"BALLOT_WITH_REASON_TYPEHASH"`
+ */
+export const readEmergencyGovernorBallotWithReasonTypehash =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "BALLOT_WITH_REASON_TYPEHASH",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"CLOCK_MODE"`
  */
-export const readEmergencyGovernorClockMode =
-  /* #__PURE__ */ createReadContract({
-    abi: emergencyGovernorAbi,
-    functionName: "CLOCK_MODE",
-  });
+export const readEmergencyGovernorClockMode = /*#__PURE__*/ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "CLOCK_MODE",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"COUNTING_MODE"`
  */
 export const readEmergencyGovernorCountingMode =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "COUNTING_MODE",
   });
@@ -4229,7 +4814,7 @@ export const readEmergencyGovernorCountingMode =
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
  */
 export const readEmergencyGovernorDomainSeparator =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "DOMAIN_SEPARATOR",
   });
@@ -4237,7 +4822,7 @@ export const readEmergencyGovernorDomainSeparator =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"ONE"`
  */
-export const readEmergencyGovernorOne = /* #__PURE__ */ createReadContract({
+export const readEmergencyGovernorOne = /*#__PURE__*/ createReadContract({
   abi: emergencyGovernorAbi,
   functionName: "ONE",
 });
@@ -4245,34 +4830,61 @@ export const readEmergencyGovernorOne = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"clock"`
  */
-export const readEmergencyGovernorClock = /* #__PURE__ */ createReadContract({
+export const readEmergencyGovernorClock = /*#__PURE__*/ createReadContract({
   abi: emergencyGovernorAbi,
   functionName: "clock",
 });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"eip712Domain"`
+ */
+export const readEmergencyGovernorEip712Domain =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "eip712Domain",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getBallotDigest"`
  */
 export const readEmergencyGovernorGetBallotDigest =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "getBallotDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getBallotWithReasonDigest"`
+ */
+export const readEmergencyGovernorGetBallotWithReasonDigest =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "getBallotWithReasonDigest",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getBallotsDigest"`
  */
 export const readEmergencyGovernorGetBallotsDigest =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "getBallotsDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getBallotsWithReasonDigest"`
+ */
+export const readEmergencyGovernorGetBallotsWithReasonDigest =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "getBallotsWithReasonDigest",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getProposal"`
  */
 export const readEmergencyGovernorGetProposal =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "getProposal",
   });
@@ -4280,28 +4892,24 @@ export const readEmergencyGovernorGetProposal =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"getVotes"`
  */
-export const readEmergencyGovernorGetVotes = /* #__PURE__ */ createReadContract(
-  {
-    abi: emergencyGovernorAbi,
-    functionName: "getVotes",
-  },
-);
+export const readEmergencyGovernorGetVotes = /*#__PURE__*/ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "getVotes",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"hasVoted"`
  */
-export const readEmergencyGovernorHasVoted = /* #__PURE__ */ createReadContract(
-  {
-    abi: emergencyGovernorAbi,
-    functionName: "hasVoted",
-  },
-);
+export const readEmergencyGovernorHasVoted = /*#__PURE__*/ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "hasVoted",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"hashProposal"`
  */
 export const readEmergencyGovernorHashProposal =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "hashProposal",
   });
@@ -4309,7 +4917,7 @@ export const readEmergencyGovernorHashProposal =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"name"`
  */
-export const readEmergencyGovernorName = /* #__PURE__ */ createReadContract({
+export const readEmergencyGovernorName = /*#__PURE__*/ createReadContract({
   abi: emergencyGovernorAbi,
   functionName: "name",
 });
@@ -4318,7 +4926,7 @@ export const readEmergencyGovernorName = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalDeadline"`
  */
 export const readEmergencyGovernorProposalDeadline =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "proposalDeadline",
   });
@@ -4327,7 +4935,7 @@ export const readEmergencyGovernorProposalDeadline =
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalProposer"`
  */
 export const readEmergencyGovernorProposalProposer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "proposalProposer",
   });
@@ -4336,7 +4944,7 @@ export const readEmergencyGovernorProposalProposer =
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalSnapshot"`
  */
 export const readEmergencyGovernorProposalSnapshot =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "proposalSnapshot",
   });
@@ -4345,7 +4953,7 @@ export const readEmergencyGovernorProposalSnapshot =
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalThreshold"`
  */
 export const readEmergencyGovernorProposalThreshold =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "proposalThreshold",
   });
@@ -4353,7 +4961,7 @@ export const readEmergencyGovernorProposalThreshold =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"quorum"`
  */
-export const readEmergencyGovernorQuorum = /* #__PURE__ */ createReadContract({
+export const readEmergencyGovernorQuorum = /*#__PURE__*/ createReadContract({
   abi: emergencyGovernorAbi,
   functionName: "quorum",
 });
@@ -4361,17 +4969,16 @@ export const readEmergencyGovernorQuorum = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"registrar"`
  */
-export const readEmergencyGovernorRegistrar =
-  /* #__PURE__ */ createReadContract({
-    abi: emergencyGovernorAbi,
-    functionName: "registrar",
-  });
+export const readEmergencyGovernorRegistrar = /*#__PURE__*/ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "registrar",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"standardGovernor"`
  */
 export const readEmergencyGovernorStandardGovernor =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "standardGovernor",
   });
@@ -4379,7 +4986,7 @@ export const readEmergencyGovernorStandardGovernor =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"state"`
  */
-export const readEmergencyGovernorState = /* #__PURE__ */ createReadContract({
+export const readEmergencyGovernorState = /*#__PURE__*/ createReadContract({
   abi: emergencyGovernorAbi,
   functionName: "state",
 });
@@ -4388,7 +4995,7 @@ export const readEmergencyGovernorState = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"thresholdRatio"`
  */
 export const readEmergencyGovernorThresholdRatio =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "thresholdRatio",
   });
@@ -4396,17 +5003,16 @@ export const readEmergencyGovernorThresholdRatio =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"voteToken"`
  */
-export const readEmergencyGovernorVoteToken =
-  /* #__PURE__ */ createReadContract({
-    abi: emergencyGovernorAbi,
-    functionName: "voteToken",
-  });
+export const readEmergencyGovernorVoteToken = /*#__PURE__*/ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "voteToken",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"votingDelay"`
  */
 export const readEmergencyGovernorVotingDelay =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "votingDelay",
   });
@@ -4415,7 +5021,7 @@ export const readEmergencyGovernorVotingDelay =
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"votingPeriod"`
  */
 export const readEmergencyGovernorVotingPeriod =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "votingPeriod",
   });
@@ -4424,7 +5030,7 @@ export const readEmergencyGovernorVotingPeriod =
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"zeroGovernor"`
  */
 export const readEmergencyGovernorZeroGovernor =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: emergencyGovernorAbi,
     functionName: "zeroGovernor",
   });
@@ -4432,7 +5038,7 @@ export const readEmergencyGovernorZeroGovernor =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__
  */
-export const writeEmergencyGovernor = /* #__PURE__ */ createWriteContract({
+export const writeEmergencyGovernor = /*#__PURE__*/ createWriteContract({
   abi: emergencyGovernorAbi,
 });
 
@@ -4440,7 +5046,7 @@ export const writeEmergencyGovernor = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"addToList"`
  */
 export const writeEmergencyGovernorAddToList =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "addToList",
   });
@@ -4448,17 +5054,15 @@ export const writeEmergencyGovernorAddToList =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVote"`
  */
-export const writeEmergencyGovernorCastVote =
-  /* #__PURE__ */ createWriteContract({
-    abi: emergencyGovernorAbi,
-    functionName: "castVote",
-  });
+export const writeEmergencyGovernorCastVote = /*#__PURE__*/ createWriteContract(
+  { abi: emergencyGovernorAbi, functionName: "castVote" },
+);
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
  */
 export const writeEmergencyGovernorCastVoteBySig =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "castVoteBySig",
   });
@@ -4467,16 +5071,25 @@ export const writeEmergencyGovernorCastVoteBySig =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
  */
 export const writeEmergencyGovernorCastVoteWithReason =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteWithReasonBySig"`
+ */
+export const writeEmergencyGovernorCastVoteWithReasonBySig =
+  /*#__PURE__*/ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVoteWithReasonBySig",
   });
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotes"`
  */
 export const writeEmergencyGovernorCastVotes =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "castVotes",
   });
@@ -4485,34 +5098,50 @@ export const writeEmergencyGovernorCastVotes =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
  */
 export const writeEmergencyGovernorCastVotesBySig =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "castVotesBySig",
   });
 
 /**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotesWithReason"`
+ */
+export const writeEmergencyGovernorCastVotesWithReason =
+  /*#__PURE__*/ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVotesWithReason",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotesWithReasonBySig"`
+ */
+export const writeEmergencyGovernorCastVotesWithReasonBySig =
+  /*#__PURE__*/ createWriteContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVotesWithReasonBySig",
+  });
+
+/**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"execute"`
  */
-export const writeEmergencyGovernorExecute =
-  /* #__PURE__ */ createWriteContract({
-    abi: emergencyGovernorAbi,
-    functionName: "execute",
-  });
+export const writeEmergencyGovernorExecute = /*#__PURE__*/ createWriteContract({
+  abi: emergencyGovernorAbi,
+  functionName: "execute",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"propose"`
  */
-export const writeEmergencyGovernorPropose =
-  /* #__PURE__ */ createWriteContract({
-    abi: emergencyGovernorAbi,
-    functionName: "propose",
-  });
+export const writeEmergencyGovernorPropose = /*#__PURE__*/ createWriteContract({
+  abi: emergencyGovernorAbi,
+  functionName: "propose",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"removeFromAndAddToList"`
  */
 export const writeEmergencyGovernorRemoveFromAndAddToList =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "removeFromAndAddToList",
   });
@@ -4521,7 +5150,7 @@ export const writeEmergencyGovernorRemoveFromAndAddToList =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"removeFromList"`
  */
 export const writeEmergencyGovernorRemoveFromList =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "removeFromList",
   });
@@ -4529,18 +5158,16 @@ export const writeEmergencyGovernorRemoveFromList =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setKey"`
  */
-export const writeEmergencyGovernorSetKey = /* #__PURE__ */ createWriteContract(
-  {
-    abi: emergencyGovernorAbi,
-    functionName: "setKey",
-  },
-);
+export const writeEmergencyGovernorSetKey = /*#__PURE__*/ createWriteContract({
+  abi: emergencyGovernorAbi,
+  functionName: "setKey",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setStandardProposalFee"`
  */
 export const writeEmergencyGovernorSetStandardProposalFee =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "setStandardProposalFee",
   });
@@ -4549,7 +5176,7 @@ export const writeEmergencyGovernorSetStandardProposalFee =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setThresholdRatio"`
  */
 export const writeEmergencyGovernorSetThresholdRatio =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: emergencyGovernorAbi,
     functionName: "setThresholdRatio",
   });
@@ -4557,17 +5184,15 @@ export const writeEmergencyGovernorSetThresholdRatio =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__
  */
-export const simulateEmergencyGovernor = /* #__PURE__ */ createSimulateContract(
-  {
-    abi: emergencyGovernorAbi,
-  },
-);
+export const simulateEmergencyGovernor = /*#__PURE__*/ createSimulateContract({
+  abi: emergencyGovernorAbi,
+});
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"addToList"`
  */
 export const simulateEmergencyGovernorAddToList =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "addToList",
   });
@@ -4576,7 +5201,7 @@ export const simulateEmergencyGovernorAddToList =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVote"`
  */
 export const simulateEmergencyGovernorCastVote =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "castVote",
   });
@@ -4585,7 +5210,7 @@ export const simulateEmergencyGovernorCastVote =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
  */
 export const simulateEmergencyGovernorCastVoteBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "castVoteBySig",
   });
@@ -4594,16 +5219,25 @@ export const simulateEmergencyGovernorCastVoteBySig =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
  */
 export const simulateEmergencyGovernorCastVoteWithReason =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVoteWithReasonBySig"`
+ */
+export const simulateEmergencyGovernorCastVoteWithReasonBySig =
+  /*#__PURE__*/ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVoteWithReasonBySig",
   });
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotes"`
  */
 export const simulateEmergencyGovernorCastVotes =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "castVotes",
   });
@@ -4612,16 +5246,34 @@ export const simulateEmergencyGovernorCastVotes =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
  */
 export const simulateEmergencyGovernorCastVotesBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "castVotesBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotesWithReason"`
+ */
+export const simulateEmergencyGovernorCastVotesWithReason =
+  /*#__PURE__*/ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVotesWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"castVotesWithReasonBySig"`
+ */
+export const simulateEmergencyGovernorCastVotesWithReasonBySig =
+  /*#__PURE__*/ createSimulateContract({
+    abi: emergencyGovernorAbi,
+    functionName: "castVotesWithReasonBySig",
   });
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"execute"`
  */
 export const simulateEmergencyGovernorExecute =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "execute",
   });
@@ -4630,7 +5282,7 @@ export const simulateEmergencyGovernorExecute =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"propose"`
  */
 export const simulateEmergencyGovernorPropose =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "propose",
   });
@@ -4639,7 +5291,7 @@ export const simulateEmergencyGovernorPropose =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"removeFromAndAddToList"`
  */
 export const simulateEmergencyGovernorRemoveFromAndAddToList =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "removeFromAndAddToList",
   });
@@ -4648,7 +5300,7 @@ export const simulateEmergencyGovernorRemoveFromAndAddToList =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"removeFromList"`
  */
 export const simulateEmergencyGovernorRemoveFromList =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "removeFromList",
   });
@@ -4657,7 +5309,7 @@ export const simulateEmergencyGovernorRemoveFromList =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setKey"`
  */
 export const simulateEmergencyGovernorSetKey =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "setKey",
   });
@@ -4666,7 +5318,7 @@ export const simulateEmergencyGovernorSetKey =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setStandardProposalFee"`
  */
 export const simulateEmergencyGovernorSetStandardProposalFee =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "setStandardProposalFee",
   });
@@ -4675,7 +5327,7 @@ export const simulateEmergencyGovernorSetStandardProposalFee =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"setThresholdRatio"`
  */
 export const simulateEmergencyGovernorSetThresholdRatio =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: emergencyGovernorAbi,
     functionName: "setThresholdRatio",
   });
@@ -4684,13 +5336,22 @@ export const simulateEmergencyGovernorSetThresholdRatio =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__
  */
 export const watchEmergencyGovernorEvent =
-  /* #__PURE__ */ createWatchContractEvent({ abi: emergencyGovernorAbi });
+  /*#__PURE__*/ createWatchContractEvent({ abi: emergencyGovernorAbi });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"EIP712DomainChanged"`
+ */
+export const watchEmergencyGovernorEip712DomainChangedEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: emergencyGovernorAbi,
+    eventName: "EIP712DomainChanged",
+  });
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"ProposalCreated"`
  */
 export const watchEmergencyGovernorProposalCreatedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: emergencyGovernorAbi,
     eventName: "ProposalCreated",
   });
@@ -4699,7 +5360,7 @@ export const watchEmergencyGovernorProposalCreatedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"ProposalExecuted"`
  */
 export const watchEmergencyGovernorProposalExecutedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: emergencyGovernorAbi,
     eventName: "ProposalExecuted",
   });
@@ -4708,7 +5369,7 @@ export const watchEmergencyGovernorProposalExecutedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"ThresholdRatioSet"`
  */
 export const watchEmergencyGovernorThresholdRatioSetEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: emergencyGovernorAbi,
     eventName: "ThresholdRatioSet",
   });
@@ -4717,7 +5378,7 @@ export const watchEmergencyGovernorThresholdRatioSetEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"VoteCast"`
  */
 export const watchEmergencyGovernorVoteCastEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: emergencyGovernorAbi,
     eventName: "VoteCast",
   });
@@ -4725,7 +5386,7 @@ export const watchEmergencyGovernorVoteCastEvent =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__
  */
-export const readPowerToken = /* #__PURE__ */ createReadContract({
+export const readPowerToken = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
 });
 
@@ -4733,7 +5394,7 @@ export const readPowerToken = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"CANCEL_AUTHORIZATION_TYPEHASH"`
  */
 export const readPowerTokenCancelAuthorizationTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: powerTokenAbi,
     functionName: "CANCEL_AUTHORIZATION_TYPEHASH",
   });
@@ -4741,7 +5402,7 @@ export const readPowerTokenCancelAuthorizationTypehash =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"CLOCK_MODE"`
  */
-export const readPowerTokenClockMode = /* #__PURE__ */ createReadContract({
+export const readPowerTokenClockMode = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "CLOCK_MODE",
 });
@@ -4750,7 +5411,7 @@ export const readPowerTokenClockMode = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"DELEGATION_TYPEHASH"`
  */
 export const readPowerTokenDelegationTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: powerTokenAbi,
     functionName: "DELEGATION_TYPEHASH",
   });
@@ -4758,17 +5419,15 @@ export const readPowerTokenDelegationTypehash =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
  */
-export const readPowerTokenDomainSeparator = /* #__PURE__ */ createReadContract(
-  {
-    abi: powerTokenAbi,
-    functionName: "DOMAIN_SEPARATOR",
-  },
-);
+export const readPowerTokenDomainSeparator = /*#__PURE__*/ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "DOMAIN_SEPARATOR",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"INITIAL_SUPPLY"`
  */
-export const readPowerTokenInitialSupply = /* #__PURE__ */ createReadContract({
+export const readPowerTokenInitialSupply = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "INITIAL_SUPPLY",
 });
@@ -4776,7 +5435,7 @@ export const readPowerTokenInitialSupply = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"ONE"`
  */
-export const readPowerTokenOne = /* #__PURE__ */ createReadContract({
+export const readPowerTokenOne = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "ONE",
 });
@@ -4784,7 +5443,7 @@ export const readPowerTokenOne = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"PERMIT_TYPEHASH"`
  */
-export const readPowerTokenPermitTypehash = /* #__PURE__ */ createReadContract({
+export const readPowerTokenPermitTypehash = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "PERMIT_TYPEHASH",
 });
@@ -4793,7 +5452,7 @@ export const readPowerTokenPermitTypehash = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"RECEIVE_WITH_AUTHORIZATION_TYPEHASH"`
  */
 export const readPowerTokenReceiveWithAuthorizationTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: powerTokenAbi,
     functionName: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
   });
@@ -4802,7 +5461,7 @@ export const readPowerTokenReceiveWithAuthorizationTypehash =
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"TRANSFER_WITH_AUTHORIZATION_TYPEHASH"`
  */
 export const readPowerTokenTransferWithAuthorizationTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: powerTokenAbi,
     functionName: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
   });
@@ -4810,7 +5469,7 @@ export const readPowerTokenTransferWithAuthorizationTypehash =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"allowance"`
  */
-export const readPowerTokenAllowance = /* #__PURE__ */ createReadContract({
+export const readPowerTokenAllowance = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "allowance",
 });
@@ -4818,18 +5477,16 @@ export const readPowerTokenAllowance = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"amountToAuction"`
  */
-export const readPowerTokenAmountToAuction = /* #__PURE__ */ createReadContract(
-  {
-    abi: powerTokenAbi,
-    functionName: "amountToAuction",
-  },
-);
+export const readPowerTokenAmountToAuction = /*#__PURE__*/ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "amountToAuction",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"authorizationState"`
  */
 export const readPowerTokenAuthorizationState =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: powerTokenAbi,
     functionName: "authorizationState",
   });
@@ -4837,7 +5494,7 @@ export const readPowerTokenAuthorizationState =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"balanceOf"`
  */
-export const readPowerTokenBalanceOf = /* #__PURE__ */ createReadContract({
+export const readPowerTokenBalanceOf = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "balanceOf",
 });
@@ -4845,7 +5502,7 @@ export const readPowerTokenBalanceOf = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"bootstrapEpoch"`
  */
-export const readPowerTokenBootstrapEpoch = /* #__PURE__ */ createReadContract({
+export const readPowerTokenBootstrapEpoch = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "bootstrapEpoch",
 });
@@ -4853,7 +5510,7 @@ export const readPowerTokenBootstrapEpoch = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"bootstrapToken"`
  */
-export const readPowerTokenBootstrapToken = /* #__PURE__ */ createReadContract({
+export const readPowerTokenBootstrapToken = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "bootstrapToken",
 });
@@ -4861,7 +5518,7 @@ export const readPowerTokenBootstrapToken = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"cashToken"`
  */
-export const readPowerTokenCashToken = /* #__PURE__ */ createReadContract({
+export const readPowerTokenCashToken = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "cashToken",
 });
@@ -4869,7 +5526,7 @@ export const readPowerTokenCashToken = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"clock"`
  */
-export const readPowerTokenClock = /* #__PURE__ */ createReadContract({
+export const readPowerTokenClock = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "clock",
 });
@@ -4877,7 +5534,7 @@ export const readPowerTokenClock = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"decimals"`
  */
-export const readPowerTokenDecimals = /* #__PURE__ */ createReadContract({
+export const readPowerTokenDecimals = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "decimals",
 });
@@ -4885,15 +5542,23 @@ export const readPowerTokenDecimals = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegates"`
  */
-export const readPowerTokenDelegates = /* #__PURE__ */ createReadContract({
+export const readPowerTokenDelegates = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "delegates",
 });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"eip712Domain"`
+ */
+export const readPowerTokenEip712Domain = /*#__PURE__*/ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "eip712Domain",
+});
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"getCost"`
  */
-export const readPowerTokenGetCost = /* #__PURE__ */ createReadContract({
+export const readPowerTokenGetCost = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "getCost",
 });
@@ -4902,7 +5567,7 @@ export const readPowerTokenGetCost = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"getDelegationDigest"`
  */
 export const readPowerTokenGetDelegationDigest =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: powerTokenAbi,
     functionName: "getDelegationDigest",
   });
@@ -4910,7 +5575,7 @@ export const readPowerTokenGetDelegationDigest =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"getPastVotes"`
  */
-export const readPowerTokenGetPastVotes = /* #__PURE__ */ createReadContract({
+export const readPowerTokenGetPastVotes = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "getPastVotes",
 });
@@ -4918,7 +5583,7 @@ export const readPowerTokenGetPastVotes = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"getVotes"`
  */
-export const readPowerTokenGetVotes = /* #__PURE__ */ createReadContract({
+export const readPowerTokenGetVotes = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "getVotes",
 });
@@ -4926,16 +5591,14 @@ export const readPowerTokenGetVotes = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"hasParticipatedAt"`
  */
-export const readPowerTokenHasParticipatedAt =
-  /* #__PURE__ */ createReadContract({
-    abi: powerTokenAbi,
-    functionName: "hasParticipatedAt",
-  });
+export const readPowerTokenHasParticipatedAt = /*#__PURE__*/ createReadContract(
+  { abi: powerTokenAbi, functionName: "hasParticipatedAt" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"name"`
  */
-export const readPowerTokenName = /* #__PURE__ */ createReadContract({
+export const readPowerTokenName = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "name",
 });
@@ -4943,7 +5606,7 @@ export const readPowerTokenName = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"nonces"`
  */
-export const readPowerTokenNonces = /* #__PURE__ */ createReadContract({
+export const readPowerTokenNonces = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "nonces",
 });
@@ -4952,7 +5615,7 @@ export const readPowerTokenNonces = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"participationInflation"`
  */
 export const readPowerTokenParticipationInflation =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: powerTokenAbi,
     functionName: "participationInflation",
   });
@@ -4960,7 +5623,7 @@ export const readPowerTokenParticipationInflation =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"pastBalanceOf"`
  */
-export const readPowerTokenPastBalanceOf = /* #__PURE__ */ createReadContract({
+export const readPowerTokenPastBalanceOf = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "pastBalanceOf",
 });
@@ -4968,7 +5631,7 @@ export const readPowerTokenPastBalanceOf = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"pastDelegates"`
  */
-export const readPowerTokenPastDelegates = /* #__PURE__ */ createReadContract({
+export const readPowerTokenPastDelegates = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "pastDelegates",
 });
@@ -4976,26 +5639,23 @@ export const readPowerTokenPastDelegates = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"pastTotalSupply"`
  */
-export const readPowerTokenPastTotalSupply = /* #__PURE__ */ createReadContract(
-  {
-    abi: powerTokenAbi,
-    functionName: "pastTotalSupply",
-  },
-);
+export const readPowerTokenPastTotalSupply = /*#__PURE__*/ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "pastTotalSupply",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"standardGovernor"`
  */
-export const readPowerTokenStandardGovernor =
-  /* #__PURE__ */ createReadContract({
-    abi: powerTokenAbi,
-    functionName: "standardGovernor",
-  });
+export const readPowerTokenStandardGovernor = /*#__PURE__*/ createReadContract({
+  abi: powerTokenAbi,
+  functionName: "standardGovernor",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"symbol"`
  */
-export const readPowerTokenSymbol = /* #__PURE__ */ createReadContract({
+export const readPowerTokenSymbol = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "symbol",
 });
@@ -5003,7 +5663,7 @@ export const readPowerTokenSymbol = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"targetSupply"`
  */
-export const readPowerTokenTargetSupply = /* #__PURE__ */ createReadContract({
+export const readPowerTokenTargetSupply = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "targetSupply",
 });
@@ -5011,7 +5671,7 @@ export const readPowerTokenTargetSupply = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"totalSupply"`
  */
-export const readPowerTokenTotalSupply = /* #__PURE__ */ createReadContract({
+export const readPowerTokenTotalSupply = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "totalSupply",
 });
@@ -5019,7 +5679,7 @@ export const readPowerTokenTotalSupply = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"vault"`
  */
-export const readPowerTokenVault = /* #__PURE__ */ createReadContract({
+export const readPowerTokenVault = /*#__PURE__*/ createReadContract({
   abi: powerTokenAbi,
   functionName: "vault",
 });
@@ -5027,14 +5687,14 @@ export const readPowerTokenVault = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__
  */
-export const writePowerToken = /* #__PURE__ */ createWriteContract({
+export const writePowerToken = /*#__PURE__*/ createWriteContract({
   abi: powerTokenAbi,
 });
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"approve"`
  */
-export const writePowerTokenApprove = /* #__PURE__ */ createWriteContract({
+export const writePowerTokenApprove = /*#__PURE__*/ createWriteContract({
   abi: powerTokenAbi,
   functionName: "approve",
 });
@@ -5042,7 +5702,7 @@ export const writePowerTokenApprove = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"buy"`
  */
-export const writePowerTokenBuy = /* #__PURE__ */ createWriteContract({
+export const writePowerTokenBuy = /*#__PURE__*/ createWriteContract({
   abi: powerTokenAbi,
   functionName: "buy",
 });
@@ -5051,7 +5711,7 @@ export const writePowerTokenBuy = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"cancelAuthorization"`
  */
 export const writePowerTokenCancelAuthorization =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: powerTokenAbi,
     functionName: "cancelAuthorization",
   });
@@ -5059,7 +5719,7 @@ export const writePowerTokenCancelAuthorization =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegate"`
  */
-export const writePowerTokenDelegate = /* #__PURE__ */ createWriteContract({
+export const writePowerTokenDelegate = /*#__PURE__*/ createWriteContract({
   abi: powerTokenAbi,
   functionName: "delegate",
 });
@@ -5067,18 +5727,16 @@ export const writePowerTokenDelegate = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegateBySig"`
  */
-export const writePowerTokenDelegateBySig = /* #__PURE__ */ createWriteContract(
-  {
-    abi: powerTokenAbi,
-    functionName: "delegateBySig",
-  },
-);
+export const writePowerTokenDelegateBySig = /*#__PURE__*/ createWriteContract({
+  abi: powerTokenAbi,
+  functionName: "delegateBySig",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"markNextVotingEpochAsActive"`
  */
 export const writePowerTokenMarkNextVotingEpochAsActive =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: powerTokenAbi,
     functionName: "markNextVotingEpochAsActive",
   });
@@ -5087,7 +5745,7 @@ export const writePowerTokenMarkNextVotingEpochAsActive =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"markParticipation"`
  */
 export const writePowerTokenMarkParticipation =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: powerTokenAbi,
     functionName: "markParticipation",
   });
@@ -5095,7 +5753,7 @@ export const writePowerTokenMarkParticipation =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"permit"`
  */
-export const writePowerTokenPermit = /* #__PURE__ */ createWriteContract({
+export const writePowerTokenPermit = /*#__PURE__*/ createWriteContract({
   abi: powerTokenAbi,
   functionName: "permit",
 });
@@ -5104,7 +5762,7 @@ export const writePowerTokenPermit = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"receiveWithAuthorization"`
  */
 export const writePowerTokenReceiveWithAuthorization =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: powerTokenAbi,
     functionName: "receiveWithAuthorization",
   });
@@ -5113,15 +5771,23 @@ export const writePowerTokenReceiveWithAuthorization =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"setNextCashToken"`
  */
 export const writePowerTokenSetNextCashToken =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: powerTokenAbi,
     functionName: "setNextCashToken",
   });
 
 /**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"sync"`
+ */
+export const writePowerTokenSync = /*#__PURE__*/ createWriteContract({
+  abi: powerTokenAbi,
+  functionName: "sync",
+});
+
+/**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transfer"`
  */
-export const writePowerTokenTransfer = /* #__PURE__ */ createWriteContract({
+export const writePowerTokenTransfer = /*#__PURE__*/ createWriteContract({
   abi: powerTokenAbi,
   functionName: "transfer",
 });
@@ -5129,7 +5795,7 @@ export const writePowerTokenTransfer = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transferFrom"`
  */
-export const writePowerTokenTransferFrom = /* #__PURE__ */ createWriteContract({
+export const writePowerTokenTransferFrom = /*#__PURE__*/ createWriteContract({
   abi: powerTokenAbi,
   functionName: "transferFrom",
 });
@@ -5138,7 +5804,7 @@ export const writePowerTokenTransferFrom = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transferWithAuthorization"`
  */
 export const writePowerTokenTransferWithAuthorization =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: powerTokenAbi,
     functionName: "transferWithAuthorization",
   });
@@ -5146,24 +5812,22 @@ export const writePowerTokenTransferWithAuthorization =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__
  */
-export const simulatePowerToken = /* #__PURE__ */ createSimulateContract({
+export const simulatePowerToken = /*#__PURE__*/ createSimulateContract({
   abi: powerTokenAbi,
 });
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"approve"`
  */
-export const simulatePowerTokenApprove = /* #__PURE__ */ createSimulateContract(
-  {
-    abi: powerTokenAbi,
-    functionName: "approve",
-  },
-);
+export const simulatePowerTokenApprove = /*#__PURE__*/ createSimulateContract({
+  abi: powerTokenAbi,
+  functionName: "approve",
+});
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"buy"`
  */
-export const simulatePowerTokenBuy = /* #__PURE__ */ createSimulateContract({
+export const simulatePowerTokenBuy = /*#__PURE__*/ createSimulateContract({
   abi: powerTokenAbi,
   functionName: "buy",
 });
@@ -5172,7 +5836,7 @@ export const simulatePowerTokenBuy = /* #__PURE__ */ createSimulateContract({
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"cancelAuthorization"`
  */
 export const simulatePowerTokenCancelAuthorization =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: powerTokenAbi,
     functionName: "cancelAuthorization",
   });
@@ -5180,17 +5844,16 @@ export const simulatePowerTokenCancelAuthorization =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegate"`
  */
-export const simulatePowerTokenDelegate =
-  /* #__PURE__ */ createSimulateContract({
-    abi: powerTokenAbi,
-    functionName: "delegate",
-  });
+export const simulatePowerTokenDelegate = /*#__PURE__*/ createSimulateContract({
+  abi: powerTokenAbi,
+  functionName: "delegate",
+});
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"delegateBySig"`
  */
 export const simulatePowerTokenDelegateBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: powerTokenAbi,
     functionName: "delegateBySig",
   });
@@ -5199,7 +5862,7 @@ export const simulatePowerTokenDelegateBySig =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"markNextVotingEpochAsActive"`
  */
 export const simulatePowerTokenMarkNextVotingEpochAsActive =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: powerTokenAbi,
     functionName: "markNextVotingEpochAsActive",
   });
@@ -5208,7 +5871,7 @@ export const simulatePowerTokenMarkNextVotingEpochAsActive =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"markParticipation"`
  */
 export const simulatePowerTokenMarkParticipation =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: powerTokenAbi,
     functionName: "markParticipation",
   });
@@ -5216,7 +5879,7 @@ export const simulatePowerTokenMarkParticipation =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"permit"`
  */
-export const simulatePowerTokenPermit = /* #__PURE__ */ createSimulateContract({
+export const simulatePowerTokenPermit = /*#__PURE__*/ createSimulateContract({
   abi: powerTokenAbi,
   functionName: "permit",
 });
@@ -5225,7 +5888,7 @@ export const simulatePowerTokenPermit = /* #__PURE__ */ createSimulateContract({
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"receiveWithAuthorization"`
  */
 export const simulatePowerTokenReceiveWithAuthorization =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: powerTokenAbi,
     functionName: "receiveWithAuthorization",
   });
@@ -5234,25 +5897,32 @@ export const simulatePowerTokenReceiveWithAuthorization =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"setNextCashToken"`
  */
 export const simulatePowerTokenSetNextCashToken =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: powerTokenAbi,
     functionName: "setNextCashToken",
   });
 
 /**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"sync"`
+ */
+export const simulatePowerTokenSync = /*#__PURE__*/ createSimulateContract({
+  abi: powerTokenAbi,
+  functionName: "sync",
+});
+
+/**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transfer"`
  */
-export const simulatePowerTokenTransfer =
-  /* #__PURE__ */ createSimulateContract({
-    abi: powerTokenAbi,
-    functionName: "transfer",
-  });
+export const simulatePowerTokenTransfer = /*#__PURE__*/ createSimulateContract({
+  abi: powerTokenAbi,
+  functionName: "transfer",
+});
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transferFrom"`
  */
 export const simulatePowerTokenTransferFrom =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: powerTokenAbi,
     functionName: "transferFrom",
   });
@@ -5261,7 +5931,7 @@ export const simulatePowerTokenTransferFrom =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link powerTokenAbi}__ and `functionName` set to `"transferWithAuthorization"`
  */
 export const simulatePowerTokenTransferWithAuthorization =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: powerTokenAbi,
     functionName: "transferWithAuthorization",
   });
@@ -5269,7 +5939,7 @@ export const simulatePowerTokenTransferWithAuthorization =
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__
  */
-export const watchPowerTokenEvent = /* #__PURE__ */ createWatchContractEvent({
+export const watchPowerTokenEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: powerTokenAbi,
 });
 
@@ -5277,7 +5947,7 @@ export const watchPowerTokenEvent = /* #__PURE__ */ createWatchContractEvent({
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"Approval"`
  */
 export const watchPowerTokenApprovalEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: powerTokenAbi,
     eventName: "Approval",
   });
@@ -5286,7 +5956,7 @@ export const watchPowerTokenApprovalEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"AuthorizationCanceled"`
  */
 export const watchPowerTokenAuthorizationCanceledEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: powerTokenAbi,
     eventName: "AuthorizationCanceled",
   });
@@ -5295,7 +5965,7 @@ export const watchPowerTokenAuthorizationCanceledEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"AuthorizationUsed"`
  */
 export const watchPowerTokenAuthorizationUsedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: powerTokenAbi,
     eventName: "AuthorizationUsed",
   });
@@ -5303,18 +5973,16 @@ export const watchPowerTokenAuthorizationUsedEvent =
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"Buy"`
  */
-export const watchPowerTokenBuyEvent = /* #__PURE__ */ createWatchContractEvent(
-  {
-    abi: powerTokenAbi,
-    eventName: "Buy",
-  },
-);
+export const watchPowerTokenBuyEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: powerTokenAbi,
+  eventName: "Buy",
+});
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"DelegateChanged"`
  */
 export const watchPowerTokenDelegateChangedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: powerTokenAbi,
     eventName: "DelegateChanged",
   });
@@ -5323,25 +5991,51 @@ export const watchPowerTokenDelegateChangedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"DelegateVotesChanged"`
  */
 export const watchPowerTokenDelegateVotesChangedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: powerTokenAbi,
     eventName: "DelegateVotesChanged",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"EIP712DomainChanged"`
+ */
+export const watchPowerTokenEip712DomainChangedEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "EIP712DomainChanged",
   });
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"NextCashTokenSet"`
  */
 export const watchPowerTokenNextCashTokenSetEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: powerTokenAbi,
     eventName: "NextCashTokenSet",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"Sync"`
+ */
+export const watchPowerTokenSyncEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: powerTokenAbi,
+  eventName: "Sync",
+});
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"Tagline"`
+ */
+export const watchPowerTokenTaglineEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: powerTokenAbi,
+    eventName: "Tagline",
   });
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"TargetSupplyInflated"`
  */
 export const watchPowerTokenTargetSupplyInflatedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: powerTokenAbi,
     eventName: "TargetSupplyInflated",
   });
@@ -5350,7 +6044,7 @@ export const watchPowerTokenTargetSupplyInflatedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link powerTokenAbi}__ and `eventName` set to `"Transfer"`
  */
 export const watchPowerTokenTransferEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: powerTokenAbi,
     eventName: "Transfer",
   });
@@ -5358,24 +6052,23 @@ export const watchPowerTokenTransferEvent =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__
  */
-export const readRegistrar = /* #__PURE__ */ createReadContract({
+export const readRegistrar = /*#__PURE__*/ createReadContract({
   abi: registrarAbi,
 });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"emergencyGovernor"`
  */
-export const readRegistrarEmergencyGovernor =
-  /* #__PURE__ */ createReadContract({
-    abi: registrarAbi,
-    functionName: "emergencyGovernor",
-  });
+export const readRegistrarEmergencyGovernor = /*#__PURE__*/ createReadContract({
+  abi: registrarAbi,
+  functionName: "emergencyGovernor",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"emergencyGovernorDeployer"`
  */
 export const readRegistrarEmergencyGovernorDeployer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: registrarAbi,
     functionName: "emergencyGovernorDeployer",
   });
@@ -5383,7 +6076,7 @@ export const readRegistrarEmergencyGovernorDeployer =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"get"`
  */
-export const readRegistrarGet = /* #__PURE__ */ createReadContract({
+export const readRegistrarGet = /*#__PURE__*/ createReadContract({
   abi: registrarAbi,
   functionName: "get",
 });
@@ -5391,7 +6084,7 @@ export const readRegistrarGet = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"listContains"`
  */
-export const readRegistrarListContains = /* #__PURE__ */ createReadContract({
+export const readRegistrarListContains = /*#__PURE__*/ createReadContract({
   abi: registrarAbi,
   functionName: "listContains",
 });
@@ -5399,7 +6092,7 @@ export const readRegistrarListContains = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"powerToken"`
  */
-export const readRegistrarPowerToken = /* #__PURE__ */ createReadContract({
+export const readRegistrarPowerToken = /*#__PURE__*/ createReadContract({
   abi: registrarAbi,
   functionName: "powerToken",
 });
@@ -5407,27 +6100,23 @@ export const readRegistrarPowerToken = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"powerTokenDeployer"`
  */
-export const readRegistrarPowerTokenDeployer =
-  /* #__PURE__ */ createReadContract({
-    abi: registrarAbi,
-    functionName: "powerTokenDeployer",
-  });
+export const readRegistrarPowerTokenDeployer = /*#__PURE__*/ createReadContract(
+  { abi: registrarAbi, functionName: "powerTokenDeployer" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"standardGovernor"`
  */
-export const readRegistrarStandardGovernor = /* #__PURE__ */ createReadContract(
-  {
-    abi: registrarAbi,
-    functionName: "standardGovernor",
-  },
-);
+export const readRegistrarStandardGovernor = /*#__PURE__*/ createReadContract({
+  abi: registrarAbi,
+  functionName: "standardGovernor",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"standardGovernorDeployer"`
  */
 export const readRegistrarStandardGovernorDeployer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: registrarAbi,
     functionName: "standardGovernorDeployer",
   });
@@ -5435,7 +6124,7 @@ export const readRegistrarStandardGovernorDeployer =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"vault"`
  */
-export const readRegistrarVault = /* #__PURE__ */ createReadContract({
+export const readRegistrarVault = /*#__PURE__*/ createReadContract({
   abi: registrarAbi,
   functionName: "vault",
 });
@@ -5443,7 +6132,7 @@ export const readRegistrarVault = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"zeroGovernor"`
  */
-export const readRegistrarZeroGovernor = /* #__PURE__ */ createReadContract({
+export const readRegistrarZeroGovernor = /*#__PURE__*/ createReadContract({
   abi: registrarAbi,
   functionName: "zeroGovernor",
 });
@@ -5451,7 +6140,7 @@ export const readRegistrarZeroGovernor = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"zeroToken"`
  */
-export const readRegistrarZeroToken = /* #__PURE__ */ createReadContract({
+export const readRegistrarZeroToken = /*#__PURE__*/ createReadContract({
   abi: registrarAbi,
   functionName: "zeroToken",
 });
@@ -5459,14 +6148,14 @@ export const readRegistrarZeroToken = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarAbi}__
  */
-export const writeRegistrar = /* #__PURE__ */ createWriteContract({
+export const writeRegistrar = /*#__PURE__*/ createWriteContract({
   abi: registrarAbi,
 });
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"addToList"`
  */
-export const writeRegistrarAddToList = /* #__PURE__ */ createWriteContract({
+export const writeRegistrarAddToList = /*#__PURE__*/ createWriteContract({
   abi: registrarAbi,
   functionName: "addToList",
 });
@@ -5474,17 +6163,15 @@ export const writeRegistrarAddToList = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"removeFromList"`
  */
-export const writeRegistrarRemoveFromList = /* #__PURE__ */ createWriteContract(
-  {
-    abi: registrarAbi,
-    functionName: "removeFromList",
-  },
-);
+export const writeRegistrarRemoveFromList = /*#__PURE__*/ createWriteContract({
+  abi: registrarAbi,
+  functionName: "removeFromList",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"setKey"`
  */
-export const writeRegistrarSetKey = /* #__PURE__ */ createWriteContract({
+export const writeRegistrarSetKey = /*#__PURE__*/ createWriteContract({
   abi: registrarAbi,
   functionName: "setKey",
 });
@@ -5492,24 +6179,23 @@ export const writeRegistrarSetKey = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link registrarAbi}__
  */
-export const simulateRegistrar = /* #__PURE__ */ createSimulateContract({
+export const simulateRegistrar = /*#__PURE__*/ createSimulateContract({
   abi: registrarAbi,
 });
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"addToList"`
  */
-export const simulateRegistrarAddToList =
-  /* #__PURE__ */ createSimulateContract({
-    abi: registrarAbi,
-    functionName: "addToList",
-  });
+export const simulateRegistrarAddToList = /*#__PURE__*/ createSimulateContract({
+  abi: registrarAbi,
+  functionName: "addToList",
+});
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"removeFromList"`
  */
 export const simulateRegistrarRemoveFromList =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: registrarAbi,
     functionName: "removeFromList",
   });
@@ -5517,7 +6203,7 @@ export const simulateRegistrarRemoveFromList =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"setKey"`
  */
-export const simulateRegistrarSetKey = /* #__PURE__ */ createSimulateContract({
+export const simulateRegistrarSetKey = /*#__PURE__*/ createSimulateContract({
   abi: registrarAbi,
   functionName: "setKey",
 });
@@ -5525,7 +6211,7 @@ export const simulateRegistrarSetKey = /* #__PURE__ */ createSimulateContract({
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarAbi}__
  */
-export const watchRegistrarEvent = /* #__PURE__ */ createWatchContractEvent({
+export const watchRegistrarEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: registrarAbi,
 });
 
@@ -5533,7 +6219,7 @@ export const watchRegistrarEvent = /* #__PURE__ */ createWatchContractEvent({
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarAbi}__ and `eventName` set to `"AddressAddedToList"`
  */
 export const watchRegistrarAddressAddedToListEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: registrarAbi,
     eventName: "AddressAddedToList",
   });
@@ -5542,7 +6228,7 @@ export const watchRegistrarAddressAddedToListEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarAbi}__ and `eventName` set to `"AddressRemovedFromList"`
  */
 export const watchRegistrarAddressRemovedFromListEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: registrarAbi,
     eventName: "AddressRemovedFromList",
   });
@@ -5550,16 +6236,14 @@ export const watchRegistrarAddressRemovedFromListEvent =
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link registrarAbi}__ and `eventName` set to `"KeySet"`
  */
-export const watchRegistrarKeySetEvent =
-  /* #__PURE__ */ createWatchContractEvent({
-    abi: registrarAbi,
-    eventName: "KeySet",
-  });
+export const watchRegistrarKeySetEvent = /*#__PURE__*/ createWatchContractEvent(
+  { abi: registrarAbi, eventName: "KeySet" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__
  */
-export const readStandardGovernor = /* #__PURE__ */ createReadContract({
+export const readStandardGovernor = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
 });
 
@@ -5567,35 +6251,51 @@ export const readStandardGovernor = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"BALLOTS_TYPEHASH"`
  */
 export const readStandardGovernorBallotsTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "BALLOTS_TYPEHASH",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"BALLOTS_WITH_REASON_TYPEHASH"`
+ */
+export const readStandardGovernorBallotsWithReasonTypehash =
+  /*#__PURE__*/ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "BALLOTS_WITH_REASON_TYPEHASH",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"BALLOT_TYPEHASH"`
  */
 export const readStandardGovernorBallotTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "BALLOT_TYPEHASH",
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"BALLOT_WITH_REASON_TYPEHASH"`
+ */
+export const readStandardGovernorBallotWithReasonTypehash =
+  /*#__PURE__*/ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "BALLOT_WITH_REASON_TYPEHASH",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"CLOCK_MODE"`
  */
-export const readStandardGovernorClockMode = /* #__PURE__ */ createReadContract(
-  {
-    abi: standardGovernorAbi,
-    functionName: "CLOCK_MODE",
-  },
-);
+export const readStandardGovernorClockMode = /*#__PURE__*/ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "CLOCK_MODE",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"COUNTING_MODE"`
  */
 export const readStandardGovernorCountingMode =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "COUNTING_MODE",
   });
@@ -5604,7 +6304,7 @@ export const readStandardGovernorCountingMode =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
  */
 export const readStandardGovernorDomainSeparator =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "DOMAIN_SEPARATOR",
   });
@@ -5612,7 +6312,7 @@ export const readStandardGovernorDomainSeparator =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"ONE"`
  */
-export const readStandardGovernorOne = /* #__PURE__ */ createReadContract({
+export const readStandardGovernorOne = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "ONE",
 });
@@ -5620,26 +6320,33 @@ export const readStandardGovernorOne = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"cashToken"`
  */
-export const readStandardGovernorCashToken = /* #__PURE__ */ createReadContract(
-  {
-    abi: standardGovernorAbi,
-    functionName: "cashToken",
-  },
-);
+export const readStandardGovernorCashToken = /*#__PURE__*/ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "cashToken",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"clock"`
  */
-export const readStandardGovernorClock = /* #__PURE__ */ createReadContract({
+export const readStandardGovernorClock = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "clock",
 });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"eip712Domain"`
+ */
+export const readStandardGovernorEip712Domain =
+  /*#__PURE__*/ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "eip712Domain",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"emergencyGovernor"`
  */
 export const readStandardGovernorEmergencyGovernor =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "emergencyGovernor",
   });
@@ -5648,33 +6355,58 @@ export const readStandardGovernorEmergencyGovernor =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getBallotDigest"`
  */
 export const readStandardGovernorGetBallotDigest =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "getBallotDigest",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getBallotWithReasonDigest"`
+ */
+export const readStandardGovernorGetBallotWithReasonDigest =
+  /*#__PURE__*/ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "getBallotWithReasonDigest",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getBallotsDigest"`
  */
 export const readStandardGovernorGetBallotsDigest =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "getBallotsDigest",
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getBallotsWithReasonDigest"`
+ */
+export const readStandardGovernorGetBallotsWithReasonDigest =
+  /*#__PURE__*/ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "getBallotsWithReasonDigest",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getProposal"`
  */
-export const readStandardGovernorGetProposal =
-  /* #__PURE__ */ createReadContract({
+export const readStandardGovernorGetProposal = /*#__PURE__*/ createReadContract(
+  { abi: standardGovernorAbi, functionName: "getProposal" },
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getProposalFee"`
+ */
+export const readStandardGovernorGetProposalFee =
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
-    functionName: "getProposal",
+    functionName: "getProposalFee",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"getVotes"`
  */
-export const readStandardGovernorGetVotes = /* #__PURE__ */ createReadContract({
+export const readStandardGovernorGetVotes = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "getVotes",
 });
@@ -5682,7 +6414,7 @@ export const readStandardGovernorGetVotes = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"hasVoted"`
  */
-export const readStandardGovernorHasVoted = /* #__PURE__ */ createReadContract({
+export const readStandardGovernorHasVoted = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "hasVoted",
 });
@@ -5691,7 +6423,7 @@ export const readStandardGovernorHasVoted = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"hasVotedOnAllProposals"`
  */
 export const readStandardGovernorHasVotedOnAllProposals =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "hasVotedOnAllProposals",
   });
@@ -5700,7 +6432,7 @@ export const readStandardGovernorHasVotedOnAllProposals =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"hashProposal"`
  */
 export const readStandardGovernorHashProposal =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "hashProposal",
   });
@@ -5709,7 +6441,7 @@ export const readStandardGovernorHashProposal =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"maxTotalZeroRewardPerActiveEpoch"`
  */
 export const readStandardGovernorMaxTotalZeroRewardPerActiveEpoch =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "maxTotalZeroRewardPerActiveEpoch",
   });
@@ -5717,7 +6449,7 @@ export const readStandardGovernorMaxTotalZeroRewardPerActiveEpoch =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"name"`
  */
-export const readStandardGovernorName = /* #__PURE__ */ createReadContract({
+export const readStandardGovernorName = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "name",
 });
@@ -5726,7 +6458,7 @@ export const readStandardGovernorName = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"numberOfProposalsAt"`
  */
 export const readStandardGovernorNumberOfProposalsAt =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "numberOfProposalsAt",
   });
@@ -5735,7 +6467,7 @@ export const readStandardGovernorNumberOfProposalsAt =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"numberOfProposalsVotedOnAt"`
  */
 export const readStandardGovernorNumberOfProposalsVotedOnAt =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "numberOfProposalsVotedOnAt",
   });
@@ -5744,7 +6476,7 @@ export const readStandardGovernorNumberOfProposalsVotedOnAt =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalDeadline"`
  */
 export const readStandardGovernorProposalDeadline =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "proposalDeadline",
   });
@@ -5752,17 +6484,15 @@ export const readStandardGovernorProposalDeadline =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalFee"`
  */
-export const readStandardGovernorProposalFee =
-  /* #__PURE__ */ createReadContract({
-    abi: standardGovernorAbi,
-    functionName: "proposalFee",
-  });
+export const readStandardGovernorProposalFee = /*#__PURE__*/ createReadContract(
+  { abi: standardGovernorAbi, functionName: "proposalFee" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalProposer"`
  */
 export const readStandardGovernorProposalProposer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "proposalProposer",
   });
@@ -5771,7 +6501,7 @@ export const readStandardGovernorProposalProposer =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalSnapshot"`
  */
 export const readStandardGovernorProposalSnapshot =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "proposalSnapshot",
   });
@@ -5780,7 +6510,7 @@ export const readStandardGovernorProposalSnapshot =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalThreshold"`
  */
 export const readStandardGovernorProposalThreshold =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "proposalThreshold",
   });
@@ -5788,7 +6518,7 @@ export const readStandardGovernorProposalThreshold =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"quorum"`
  */
-export const readStandardGovernorQuorum = /* #__PURE__ */ createReadContract({
+export const readStandardGovernorQuorum = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "quorum",
 });
@@ -5796,17 +6526,15 @@ export const readStandardGovernorQuorum = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"registrar"`
  */
-export const readStandardGovernorRegistrar = /* #__PURE__ */ createReadContract(
-  {
-    abi: standardGovernorAbi,
-    functionName: "registrar",
-  },
-);
+export const readStandardGovernorRegistrar = /*#__PURE__*/ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "registrar",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"state"`
  */
-export const readStandardGovernorState = /* #__PURE__ */ createReadContract({
+export const readStandardGovernorState = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "state",
 });
@@ -5814,7 +6542,7 @@ export const readStandardGovernorState = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"vault"`
  */
-export const readStandardGovernorVault = /* #__PURE__ */ createReadContract({
+export const readStandardGovernorVault = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "vault",
 });
@@ -5822,27 +6550,23 @@ export const readStandardGovernorVault = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"voteToken"`
  */
-export const readStandardGovernorVoteToken = /* #__PURE__ */ createReadContract(
-  {
-    abi: standardGovernorAbi,
-    functionName: "voteToken",
-  },
-);
+export const readStandardGovernorVoteToken = /*#__PURE__*/ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "voteToken",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"votingDelay"`
  */
-export const readStandardGovernorVotingDelay =
-  /* #__PURE__ */ createReadContract({
-    abi: standardGovernorAbi,
-    functionName: "votingDelay",
-  });
+export const readStandardGovernorVotingDelay = /*#__PURE__*/ createReadContract(
+  { abi: standardGovernorAbi, functionName: "votingDelay" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"votingPeriod"`
  */
 export const readStandardGovernorVotingPeriod =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "votingPeriod",
   });
@@ -5851,7 +6575,7 @@ export const readStandardGovernorVotingPeriod =
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"zeroGovernor"`
  */
 export const readStandardGovernorZeroGovernor =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: standardGovernorAbi,
     functionName: "zeroGovernor",
   });
@@ -5859,43 +6583,38 @@ export const readStandardGovernorZeroGovernor =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"zeroToken"`
  */
-export const readStandardGovernorZeroToken = /* #__PURE__ */ createReadContract(
-  {
-    abi: standardGovernorAbi,
-    functionName: "zeroToken",
-  },
-);
+export const readStandardGovernorZeroToken = /*#__PURE__*/ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "zeroToken",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__
  */
-export const writeStandardGovernor = /* #__PURE__ */ createWriteContract({
+export const writeStandardGovernor = /*#__PURE__*/ createWriteContract({
   abi: standardGovernorAbi,
 });
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"addToList"`
  */
-export const writeStandardGovernorAddToList =
-  /* #__PURE__ */ createWriteContract({
-    abi: standardGovernorAbi,
-    functionName: "addToList",
-  });
+export const writeStandardGovernorAddToList = /*#__PURE__*/ createWriteContract(
+  { abi: standardGovernorAbi, functionName: "addToList" },
+);
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVote"`
  */
-export const writeStandardGovernorCastVote =
-  /* #__PURE__ */ createWriteContract({
-    abi: standardGovernorAbi,
-    functionName: "castVote",
-  });
+export const writeStandardGovernorCastVote = /*#__PURE__*/ createWriteContract({
+  abi: standardGovernorAbi,
+  functionName: "castVote",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
  */
 export const writeStandardGovernorCastVoteBySig =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: standardGovernorAbi,
     functionName: "castVoteBySig",
   });
@@ -5904,54 +6623,75 @@ export const writeStandardGovernorCastVoteBySig =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
  */
 export const writeStandardGovernorCastVoteWithReason =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: standardGovernorAbi,
     functionName: "castVoteWithReason",
   });
 
 /**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteWithReasonBySig"`
+ */
+export const writeStandardGovernorCastVoteWithReasonBySig =
+  /*#__PURE__*/ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "castVoteWithReasonBySig",
+  });
+
+/**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotes"`
  */
-export const writeStandardGovernorCastVotes =
-  /* #__PURE__ */ createWriteContract({
-    abi: standardGovernorAbi,
-    functionName: "castVotes",
-  });
+export const writeStandardGovernorCastVotes = /*#__PURE__*/ createWriteContract(
+  { abi: standardGovernorAbi, functionName: "castVotes" },
+);
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
  */
 export const writeStandardGovernorCastVotesBySig =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: standardGovernorAbi,
     functionName: "castVotesBySig",
   });
 
 /**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotesWithReason"`
+ */
+export const writeStandardGovernorCastVotesWithReason =
+  /*#__PURE__*/ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "castVotesWithReason",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotesWithReasonBySig"`
+ */
+export const writeStandardGovernorCastVotesWithReasonBySig =
+  /*#__PURE__*/ createWriteContract({
+    abi: standardGovernorAbi,
+    functionName: "castVotesWithReasonBySig",
+  });
+
+/**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"execute"`
  */
-export const writeStandardGovernorExecute = /* #__PURE__ */ createWriteContract(
-  {
-    abi: standardGovernorAbi,
-    functionName: "execute",
-  },
-);
+export const writeStandardGovernorExecute = /*#__PURE__*/ createWriteContract({
+  abi: standardGovernorAbi,
+  functionName: "execute",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"propose"`
  */
-export const writeStandardGovernorPropose = /* #__PURE__ */ createWriteContract(
-  {
-    abi: standardGovernorAbi,
-    functionName: "propose",
-  },
-);
+export const writeStandardGovernorPropose = /*#__PURE__*/ createWriteContract({
+  abi: standardGovernorAbi,
+  functionName: "propose",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"removeFromAndAddToList"`
  */
 export const writeStandardGovernorRemoveFromAndAddToList =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: standardGovernorAbi,
     functionName: "removeFromAndAddToList",
   });
@@ -5960,7 +6700,7 @@ export const writeStandardGovernorRemoveFromAndAddToList =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"removeFromList"`
  */
 export const writeStandardGovernorRemoveFromList =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: standardGovernorAbi,
     functionName: "removeFromList",
   });
@@ -5969,7 +6709,7 @@ export const writeStandardGovernorRemoveFromList =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"sendProposalFeeToVault"`
  */
 export const writeStandardGovernorSendProposalFeeToVault =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: standardGovernorAbi,
     functionName: "sendProposalFeeToVault",
   });
@@ -5978,7 +6718,7 @@ export const writeStandardGovernorSendProposalFeeToVault =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setCashToken"`
  */
 export const writeStandardGovernorSetCashToken =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: standardGovernorAbi,
     functionName: "setCashToken",
   });
@@ -5986,7 +6726,7 @@ export const writeStandardGovernorSetCashToken =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setKey"`
  */
-export const writeStandardGovernorSetKey = /* #__PURE__ */ createWriteContract({
+export const writeStandardGovernorSetKey = /*#__PURE__*/ createWriteContract({
   abi: standardGovernorAbi,
   functionName: "setKey",
 });
@@ -5995,7 +6735,7 @@ export const writeStandardGovernorSetKey = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setProposalFee"`
  */
 export const writeStandardGovernorSetProposalFee =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: standardGovernorAbi,
     functionName: "setProposalFee",
   });
@@ -6003,7 +6743,7 @@ export const writeStandardGovernorSetProposalFee =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__
  */
-export const simulateStandardGovernor = /* #__PURE__ */ createSimulateContract({
+export const simulateStandardGovernor = /*#__PURE__*/ createSimulateContract({
   abi: standardGovernorAbi,
 });
 
@@ -6011,7 +6751,7 @@ export const simulateStandardGovernor = /* #__PURE__ */ createSimulateContract({
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"addToList"`
  */
 export const simulateStandardGovernorAddToList =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "addToList",
   });
@@ -6020,7 +6760,7 @@ export const simulateStandardGovernorAddToList =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVote"`
  */
 export const simulateStandardGovernorCastVote =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "castVote",
   });
@@ -6029,7 +6769,7 @@ export const simulateStandardGovernorCastVote =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
  */
 export const simulateStandardGovernorCastVoteBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "castVoteBySig",
   });
@@ -6038,16 +6778,25 @@ export const simulateStandardGovernorCastVoteBySig =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
  */
 export const simulateStandardGovernorCastVoteWithReason =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVoteWithReasonBySig"`
+ */
+export const simulateStandardGovernorCastVoteWithReasonBySig =
+  /*#__PURE__*/ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "castVoteWithReasonBySig",
   });
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotes"`
  */
 export const simulateStandardGovernorCastVotes =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "castVotes",
   });
@@ -6056,16 +6805,34 @@ export const simulateStandardGovernorCastVotes =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
  */
 export const simulateStandardGovernorCastVotesBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "castVotesBySig",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotesWithReason"`
+ */
+export const simulateStandardGovernorCastVotesWithReason =
+  /*#__PURE__*/ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "castVotesWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"castVotesWithReasonBySig"`
+ */
+export const simulateStandardGovernorCastVotesWithReasonBySig =
+  /*#__PURE__*/ createSimulateContract({
+    abi: standardGovernorAbi,
+    functionName: "castVotesWithReasonBySig",
   });
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"execute"`
  */
 export const simulateStandardGovernorExecute =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "execute",
   });
@@ -6074,7 +6841,7 @@ export const simulateStandardGovernorExecute =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"propose"`
  */
 export const simulateStandardGovernorPropose =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "propose",
   });
@@ -6083,7 +6850,7 @@ export const simulateStandardGovernorPropose =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"removeFromAndAddToList"`
  */
 export const simulateStandardGovernorRemoveFromAndAddToList =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "removeFromAndAddToList",
   });
@@ -6092,7 +6859,7 @@ export const simulateStandardGovernorRemoveFromAndAddToList =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"removeFromList"`
  */
 export const simulateStandardGovernorRemoveFromList =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "removeFromList",
   });
@@ -6101,7 +6868,7 @@ export const simulateStandardGovernorRemoveFromList =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"sendProposalFeeToVault"`
  */
 export const simulateStandardGovernorSendProposalFeeToVault =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "sendProposalFeeToVault",
   });
@@ -6110,7 +6877,7 @@ export const simulateStandardGovernorSendProposalFeeToVault =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setCashToken"`
  */
 export const simulateStandardGovernorSetCashToken =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "setCashToken",
   });
@@ -6119,7 +6886,7 @@ export const simulateStandardGovernorSetCashToken =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setKey"`
  */
 export const simulateStandardGovernorSetKey =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "setKey",
   });
@@ -6128,7 +6895,7 @@ export const simulateStandardGovernorSetKey =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"setProposalFee"`
  */
 export const simulateStandardGovernorSetProposalFee =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: standardGovernorAbi,
     functionName: "setProposalFee",
   });
@@ -6137,22 +6904,31 @@ export const simulateStandardGovernorSetProposalFee =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__
  */
 export const watchStandardGovernorEvent =
-  /* #__PURE__ */ createWatchContractEvent({ abi: standardGovernorAbi });
+  /*#__PURE__*/ createWatchContractEvent({ abi: standardGovernorAbi });
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"CashTokenSet"`
  */
 export const watchStandardGovernorCashTokenSetEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: standardGovernorAbi,
     eventName: "CashTokenSet",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"EIP712DomainChanged"`
+ */
+export const watchStandardGovernorEip712DomainChangedEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: standardGovernorAbi,
+    eventName: "EIP712DomainChanged",
   });
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"HasVotedOnAllProposals"`
  */
 export const watchStandardGovernorHasVotedOnAllProposalsEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: standardGovernorAbi,
     eventName: "HasVotedOnAllProposals",
   });
@@ -6161,7 +6937,7 @@ export const watchStandardGovernorHasVotedOnAllProposalsEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"ProposalCreated"`
  */
 export const watchStandardGovernorProposalCreatedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: standardGovernorAbi,
     eventName: "ProposalCreated",
   });
@@ -6170,7 +6946,7 @@ export const watchStandardGovernorProposalCreatedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"ProposalExecuted"`
  */
 export const watchStandardGovernorProposalExecutedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: standardGovernorAbi,
     eventName: "ProposalExecuted",
   });
@@ -6179,7 +6955,7 @@ export const watchStandardGovernorProposalExecutedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"ProposalFeeSentToVault"`
  */
 export const watchStandardGovernorProposalFeeSentToVaultEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: standardGovernorAbi,
     eventName: "ProposalFeeSentToVault",
   });
@@ -6188,7 +6964,7 @@ export const watchStandardGovernorProposalFeeSentToVaultEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"ProposalFeeSet"`
  */
 export const watchStandardGovernorProposalFeeSetEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: standardGovernorAbi,
     eventName: "ProposalFeeSet",
   });
@@ -6197,7 +6973,7 @@ export const watchStandardGovernorProposalFeeSetEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link standardGovernorAbi}__ and `eventName` set to `"VoteCast"`
  */
 export const watchStandardGovernorVoteCastEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: standardGovernorAbi,
     eventName: "VoteCast",
   });
@@ -6205,32 +6981,47 @@ export const watchStandardGovernorVoteCastEvent =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__
  */
-export const readZeroGovernor = /* #__PURE__ */ createReadContract({
+export const readZeroGovernor = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
 });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"BALLOTS_TYPEHASH"`
  */
-export const readZeroGovernorBallotsTypehash =
-  /* #__PURE__ */ createReadContract({
+export const readZeroGovernorBallotsTypehash = /*#__PURE__*/ createReadContract(
+  { abi: zeroGovernorAbi, functionName: "BALLOTS_TYPEHASH" },
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"BALLOTS_WITH_REASON_TYPEHASH"`
+ */
+export const readZeroGovernorBallotsWithReasonTypehash =
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
-    functionName: "BALLOTS_TYPEHASH",
+    functionName: "BALLOTS_WITH_REASON_TYPEHASH",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"BALLOT_TYPEHASH"`
  */
-export const readZeroGovernorBallotTypehash =
-  /* #__PURE__ */ createReadContract({
+export const readZeroGovernorBallotTypehash = /*#__PURE__*/ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "BALLOT_TYPEHASH",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"BALLOT_WITH_REASON_TYPEHASH"`
+ */
+export const readZeroGovernorBallotWithReasonTypehash =
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
-    functionName: "BALLOT_TYPEHASH",
+    functionName: "BALLOT_WITH_REASON_TYPEHASH",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"CLOCK_MODE"`
  */
-export const readZeroGovernorClockMode = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorClockMode = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "CLOCK_MODE",
 });
@@ -6238,7 +7029,7 @@ export const readZeroGovernorClockMode = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"COUNTING_MODE"`
  */
-export const readZeroGovernorCountingMode = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorCountingMode = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "COUNTING_MODE",
 });
@@ -6246,16 +7037,14 @@ export const readZeroGovernorCountingMode = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
  */
-export const readZeroGovernorDomainSeparator =
-  /* #__PURE__ */ createReadContract({
-    abi: zeroGovernorAbi,
-    functionName: "DOMAIN_SEPARATOR",
-  });
+export const readZeroGovernorDomainSeparator = /*#__PURE__*/ createReadContract(
+  { abi: zeroGovernorAbi, functionName: "DOMAIN_SEPARATOR" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"ONE"`
  */
-export const readZeroGovernorOne = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorOne = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "ONE",
 });
@@ -6263,16 +7052,24 @@ export const readZeroGovernorOne = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"clock"`
  */
-export const readZeroGovernorClock = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorClock = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "clock",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"eip712Domain"`
+ */
+export const readZeroGovernorEip712Domain = /*#__PURE__*/ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "eip712Domain",
 });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"emergencyGovernor"`
  */
 export const readZeroGovernorEmergencyGovernor =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "emergencyGovernor",
   });
@@ -6281,7 +7078,7 @@ export const readZeroGovernorEmergencyGovernor =
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"emergencyGovernorDeployer"`
  */
 export const readZeroGovernorEmergencyGovernorDeployer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "emergencyGovernorDeployer",
   });
@@ -6289,25 +7086,41 @@ export const readZeroGovernorEmergencyGovernorDeployer =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getBallotDigest"`
  */
-export const readZeroGovernorGetBallotDigest =
-  /* #__PURE__ */ createReadContract({
+export const readZeroGovernorGetBallotDigest = /*#__PURE__*/ createReadContract(
+  { abi: zeroGovernorAbi, functionName: "getBallotDigest" },
+);
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getBallotWithReasonDigest"`
+ */
+export const readZeroGovernorGetBallotWithReasonDigest =
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
-    functionName: "getBallotDigest",
+    functionName: "getBallotWithReasonDigest",
   });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getBallotsDigest"`
  */
 export const readZeroGovernorGetBallotsDigest =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "getBallotsDigest",
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getBallotsWithReasonDigest"`
+ */
+export const readZeroGovernorGetBallotsWithReasonDigest =
+  /*#__PURE__*/ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "getBallotsWithReasonDigest",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getProposal"`
  */
-export const readZeroGovernorGetProposal = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorGetProposal = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "getProposal",
 });
@@ -6315,7 +7128,7 @@ export const readZeroGovernorGetProposal = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"getVotes"`
  */
-export const readZeroGovernorGetVotes = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorGetVotes = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "getVotes",
 });
@@ -6323,7 +7136,7 @@ export const readZeroGovernorGetVotes = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"hasVoted"`
  */
-export const readZeroGovernorHasVoted = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorHasVoted = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "hasVoted",
 });
@@ -6331,7 +7144,7 @@ export const readZeroGovernorHasVoted = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"hashProposal"`
  */
-export const readZeroGovernorHashProposal = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorHashProposal = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "hashProposal",
 });
@@ -6340,7 +7153,7 @@ export const readZeroGovernorHashProposal = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"isAllowedCashToken"`
  */
 export const readZeroGovernorIsAllowedCashToken =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "isAllowedCashToken",
   });
@@ -6348,7 +7161,7 @@ export const readZeroGovernorIsAllowedCashToken =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"name"`
  */
-export const readZeroGovernorName = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorName = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "name",
 });
@@ -6357,7 +7170,7 @@ export const readZeroGovernorName = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"powerTokenDeployer"`
  */
 export const readZeroGovernorPowerTokenDeployer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "powerTokenDeployer",
   });
@@ -6366,7 +7179,7 @@ export const readZeroGovernorPowerTokenDeployer =
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalDeadline"`
  */
 export const readZeroGovernorProposalDeadline =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "proposalDeadline",
   });
@@ -6375,7 +7188,7 @@ export const readZeroGovernorProposalDeadline =
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalProposer"`
  */
 export const readZeroGovernorProposalProposer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "proposalProposer",
   });
@@ -6384,7 +7197,7 @@ export const readZeroGovernorProposalProposer =
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalSnapshot"`
  */
 export const readZeroGovernorProposalSnapshot =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "proposalSnapshot",
   });
@@ -6393,7 +7206,7 @@ export const readZeroGovernorProposalSnapshot =
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalThreshold"`
  */
 export const readZeroGovernorProposalThreshold =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "proposalThreshold",
   });
@@ -6401,7 +7214,7 @@ export const readZeroGovernorProposalThreshold =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"quorum"`
  */
-export const readZeroGovernorQuorum = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorQuorum = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "quorum",
 });
@@ -6410,7 +7223,7 @@ export const readZeroGovernorQuorum = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"standardGovernor"`
  */
 export const readZeroGovernorStandardGovernor =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "standardGovernor",
   });
@@ -6419,7 +7232,7 @@ export const readZeroGovernorStandardGovernor =
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"standardGovernorDeployer"`
  */
 export const readZeroGovernorStandardGovernorDeployer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroGovernorAbi,
     functionName: "standardGovernorDeployer",
   });
@@ -6427,7 +7240,7 @@ export const readZeroGovernorStandardGovernorDeployer =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"state"`
  */
-export const readZeroGovernorState = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorState = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "state",
 });
@@ -6435,16 +7248,15 @@ export const readZeroGovernorState = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"thresholdRatio"`
  */
-export const readZeroGovernorThresholdRatio =
-  /* #__PURE__ */ createReadContract({
-    abi: zeroGovernorAbi,
-    functionName: "thresholdRatio",
-  });
+export const readZeroGovernorThresholdRatio = /*#__PURE__*/ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "thresholdRatio",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"voteToken"`
  */
-export const readZeroGovernorVoteToken = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorVoteToken = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "voteToken",
 });
@@ -6452,7 +7264,7 @@ export const readZeroGovernorVoteToken = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"votingDelay"`
  */
-export const readZeroGovernorVotingDelay = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorVotingDelay = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "votingDelay",
 });
@@ -6460,7 +7272,7 @@ export const readZeroGovernorVotingDelay = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"votingPeriod"`
  */
-export const readZeroGovernorVotingPeriod = /* #__PURE__ */ createReadContract({
+export const readZeroGovernorVotingPeriod = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "votingPeriod",
 });
@@ -6468,14 +7280,14 @@ export const readZeroGovernorVotingPeriod = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__
  */
-export const writeZeroGovernor = /* #__PURE__ */ createWriteContract({
+export const writeZeroGovernor = /*#__PURE__*/ createWriteContract({
   abi: zeroGovernorAbi,
 });
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVote"`
  */
-export const writeZeroGovernorCastVote = /* #__PURE__ */ createWriteContract({
+export const writeZeroGovernorCastVote = /*#__PURE__*/ createWriteContract({
   abi: zeroGovernorAbi,
   functionName: "castVote",
 });
@@ -6483,25 +7295,32 @@ export const writeZeroGovernorCastVote = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
  */
-export const writeZeroGovernorCastVoteBySig =
-  /* #__PURE__ */ createWriteContract({
-    abi: zeroGovernorAbi,
-    functionName: "castVoteBySig",
-  });
+export const writeZeroGovernorCastVoteBySig = /*#__PURE__*/ createWriteContract(
+  { abi: zeroGovernorAbi, functionName: "castVoteBySig" },
+);
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
  */
 export const writeZeroGovernorCastVoteWithReason =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroGovernorAbi,
     functionName: "castVoteWithReason",
   });
 
 /**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteWithReasonBySig"`
+ */
+export const writeZeroGovernorCastVoteWithReasonBySig =
+  /*#__PURE__*/ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVoteWithReasonBySig",
+  });
+
+/**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotes"`
  */
-export const writeZeroGovernorCastVotes = /* #__PURE__ */ createWriteContract({
+export const writeZeroGovernorCastVotes = /*#__PURE__*/ createWriteContract({
   abi: zeroGovernorAbi,
   functionName: "castVotes",
 });
@@ -6510,15 +7329,33 @@ export const writeZeroGovernorCastVotes = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
  */
 export const writeZeroGovernorCastVotesBySig =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroGovernorAbi,
     functionName: "castVotesBySig",
   });
 
 /**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotesWithReason"`
+ */
+export const writeZeroGovernorCastVotesWithReason =
+  /*#__PURE__*/ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVotesWithReason",
+  });
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotesWithReasonBySig"`
+ */
+export const writeZeroGovernorCastVotesWithReasonBySig =
+  /*#__PURE__*/ createWriteContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVotesWithReasonBySig",
+  });
+
+/**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"execute"`
  */
-export const writeZeroGovernorExecute = /* #__PURE__ */ createWriteContract({
+export const writeZeroGovernorExecute = /*#__PURE__*/ createWriteContract({
   abi: zeroGovernorAbi,
   functionName: "execute",
 });
@@ -6526,7 +7363,7 @@ export const writeZeroGovernorExecute = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"propose"`
  */
-export const writeZeroGovernorPropose = /* #__PURE__ */ createWriteContract({
+export const writeZeroGovernorPropose = /*#__PURE__*/ createWriteContract({
   abi: zeroGovernorAbi,
   functionName: "propose",
 });
@@ -6535,7 +7372,7 @@ export const writeZeroGovernorPropose = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"resetToPowerHolders"`
  */
 export const writeZeroGovernorResetToPowerHolders =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroGovernorAbi,
     functionName: "resetToPowerHolders",
   });
@@ -6544,7 +7381,7 @@ export const writeZeroGovernorResetToPowerHolders =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"resetToZeroHolders"`
  */
 export const writeZeroGovernorResetToZeroHolders =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroGovernorAbi,
     functionName: "resetToZeroHolders",
   });
@@ -6552,17 +7389,16 @@ export const writeZeroGovernorResetToZeroHolders =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setCashToken"`
  */
-export const writeZeroGovernorSetCashToken =
-  /* #__PURE__ */ createWriteContract({
-    abi: zeroGovernorAbi,
-    functionName: "setCashToken",
-  });
+export const writeZeroGovernorSetCashToken = /*#__PURE__*/ createWriteContract({
+  abi: zeroGovernorAbi,
+  functionName: "setCashToken",
+});
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setEmergencyProposalThresholdRatio"`
  */
 export const writeZeroGovernorSetEmergencyProposalThresholdRatio =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroGovernorAbi,
     functionName: "setEmergencyProposalThresholdRatio",
   });
@@ -6571,7 +7407,7 @@ export const writeZeroGovernorSetEmergencyProposalThresholdRatio =
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setZeroProposalThresholdRatio"`
  */
 export const writeZeroGovernorSetZeroProposalThresholdRatio =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroGovernorAbi,
     functionName: "setZeroProposalThresholdRatio",
   });
@@ -6579,7 +7415,7 @@ export const writeZeroGovernorSetZeroProposalThresholdRatio =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__
  */
-export const simulateZeroGovernor = /* #__PURE__ */ createSimulateContract({
+export const simulateZeroGovernor = /*#__PURE__*/ createSimulateContract({
   abi: zeroGovernorAbi,
 });
 
@@ -6587,7 +7423,7 @@ export const simulateZeroGovernor = /* #__PURE__ */ createSimulateContract({
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVote"`
  */
 export const simulateZeroGovernorCastVote =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "castVote",
   });
@@ -6596,7 +7432,7 @@ export const simulateZeroGovernorCastVote =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteBySig"`
  */
 export const simulateZeroGovernorCastVoteBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "castVoteBySig",
   });
@@ -6605,16 +7441,25 @@ export const simulateZeroGovernorCastVoteBySig =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteWithReason"`
  */
 export const simulateZeroGovernorCastVoteWithReason =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "castVoteWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVoteWithReasonBySig"`
+ */
+export const simulateZeroGovernorCastVoteWithReasonBySig =
+  /*#__PURE__*/ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVoteWithReasonBySig",
   });
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotes"`
  */
 export const simulateZeroGovernorCastVotes =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "castVotes",
   });
@@ -6623,34 +7468,48 @@ export const simulateZeroGovernorCastVotes =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotesBySig"`
  */
 export const simulateZeroGovernorCastVotesBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "castVotesBySig",
   });
 
 /**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotesWithReason"`
+ */
+export const simulateZeroGovernorCastVotesWithReason =
+  /*#__PURE__*/ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVotesWithReason",
+  });
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"castVotesWithReasonBySig"`
+ */
+export const simulateZeroGovernorCastVotesWithReasonBySig =
+  /*#__PURE__*/ createSimulateContract({
+    abi: zeroGovernorAbi,
+    functionName: "castVotesWithReasonBySig",
+  });
+
+/**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"execute"`
  */
-export const simulateZeroGovernorExecute =
-  /* #__PURE__ */ createSimulateContract({
-    abi: zeroGovernorAbi,
-    functionName: "execute",
-  });
+export const simulateZeroGovernorExecute = /*#__PURE__*/ createSimulateContract(
+  { abi: zeroGovernorAbi, functionName: "execute" },
+);
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"propose"`
  */
-export const simulateZeroGovernorPropose =
-  /* #__PURE__ */ createSimulateContract({
-    abi: zeroGovernorAbi,
-    functionName: "propose",
-  });
+export const simulateZeroGovernorPropose = /*#__PURE__*/ createSimulateContract(
+  { abi: zeroGovernorAbi, functionName: "propose" },
+);
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"resetToPowerHolders"`
  */
 export const simulateZeroGovernorResetToPowerHolders =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "resetToPowerHolders",
   });
@@ -6659,7 +7518,7 @@ export const simulateZeroGovernorResetToPowerHolders =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"resetToZeroHolders"`
  */
 export const simulateZeroGovernorResetToZeroHolders =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "resetToZeroHolders",
   });
@@ -6668,7 +7527,7 @@ export const simulateZeroGovernorResetToZeroHolders =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setCashToken"`
  */
 export const simulateZeroGovernorSetCashToken =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "setCashToken",
   });
@@ -6677,7 +7536,7 @@ export const simulateZeroGovernorSetCashToken =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setEmergencyProposalThresholdRatio"`
  */
 export const simulateZeroGovernorSetEmergencyProposalThresholdRatio =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "setEmergencyProposalThresholdRatio",
   });
@@ -6686,7 +7545,7 @@ export const simulateZeroGovernorSetEmergencyProposalThresholdRatio =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"setZeroProposalThresholdRatio"`
  */
 export const simulateZeroGovernorSetZeroProposalThresholdRatio =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroGovernorAbi,
     functionName: "setZeroProposalThresholdRatio",
   });
@@ -6694,15 +7553,33 @@ export const simulateZeroGovernorSetZeroProposalThresholdRatio =
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__
  */
-export const watchZeroGovernorEvent = /* #__PURE__ */ createWatchContractEvent({
+export const watchZeroGovernorEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: zeroGovernorAbi,
 });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"AllowedCashTokensSet"`
+ */
+export const watchZeroGovernorAllowedCashTokensSetEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: zeroGovernorAbi,
+    eventName: "AllowedCashTokensSet",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"EIP712DomainChanged"`
+ */
+export const watchZeroGovernorEip712DomainChangedEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: zeroGovernorAbi,
+    eventName: "EIP712DomainChanged",
+  });
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"ProposalCreated"`
  */
 export const watchZeroGovernorProposalCreatedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroGovernorAbi,
     eventName: "ProposalCreated",
   });
@@ -6711,7 +7588,7 @@ export const watchZeroGovernorProposalCreatedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"ProposalExecuted"`
  */
 export const watchZeroGovernorProposalExecutedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroGovernorAbi,
     eventName: "ProposalExecuted",
   });
@@ -6720,7 +7597,7 @@ export const watchZeroGovernorProposalExecutedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"ResetExecuted"`
  */
 export const watchZeroGovernorResetExecutedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroGovernorAbi,
     eventName: "ResetExecuted",
   });
@@ -6729,7 +7606,7 @@ export const watchZeroGovernorResetExecutedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"ThresholdRatioSet"`
  */
 export const watchZeroGovernorThresholdRatioSetEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroGovernorAbi,
     eventName: "ThresholdRatioSet",
   });
@@ -6738,7 +7615,7 @@ export const watchZeroGovernorThresholdRatioSetEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"VoteCast"`
  */
 export const watchZeroGovernorVoteCastEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroGovernorAbi,
     eventName: "VoteCast",
   });
@@ -6746,7 +7623,7 @@ export const watchZeroGovernorVoteCastEvent =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__
  */
-export const readZeroToken = /* #__PURE__ */ createReadContract({
+export const readZeroToken = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
 });
 
@@ -6754,7 +7631,7 @@ export const readZeroToken = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"CANCEL_AUTHORIZATION_TYPEHASH"`
  */
 export const readZeroTokenCancelAuthorizationTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroTokenAbi,
     functionName: "CANCEL_AUTHORIZATION_TYPEHASH",
   });
@@ -6762,7 +7639,7 @@ export const readZeroTokenCancelAuthorizationTypehash =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"CLOCK_MODE"`
  */
-export const readZeroTokenClockMode = /* #__PURE__ */ createReadContract({
+export const readZeroTokenClockMode = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "CLOCK_MODE",
 });
@@ -6770,16 +7647,14 @@ export const readZeroTokenClockMode = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"DELEGATION_TYPEHASH"`
  */
-export const readZeroTokenDelegationTypehash =
-  /* #__PURE__ */ createReadContract({
-    abi: zeroTokenAbi,
-    functionName: "DELEGATION_TYPEHASH",
-  });
+export const readZeroTokenDelegationTypehash = /*#__PURE__*/ createReadContract(
+  { abi: zeroTokenAbi, functionName: "DELEGATION_TYPEHASH" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"DOMAIN_SEPARATOR"`
  */
-export const readZeroTokenDomainSeparator = /* #__PURE__ */ createReadContract({
+export const readZeroTokenDomainSeparator = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "DOMAIN_SEPARATOR",
 });
@@ -6787,7 +7662,7 @@ export const readZeroTokenDomainSeparator = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"PERMIT_TYPEHASH"`
  */
-export const readZeroTokenPermitTypehash = /* #__PURE__ */ createReadContract({
+export const readZeroTokenPermitTypehash = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "PERMIT_TYPEHASH",
 });
@@ -6796,7 +7671,7 @@ export const readZeroTokenPermitTypehash = /* #__PURE__ */ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"RECEIVE_WITH_AUTHORIZATION_TYPEHASH"`
  */
 export const readZeroTokenReceiveWithAuthorizationTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroTokenAbi,
     functionName: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
   });
@@ -6805,7 +7680,7 @@ export const readZeroTokenReceiveWithAuthorizationTypehash =
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"TRANSFER_WITH_AUTHORIZATION_TYPEHASH"`
  */
 export const readZeroTokenTransferWithAuthorizationTypehash =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroTokenAbi,
     functionName: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
   });
@@ -6813,7 +7688,7 @@ export const readZeroTokenTransferWithAuthorizationTypehash =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"allowance"`
  */
-export const readZeroTokenAllowance = /* #__PURE__ */ createReadContract({
+export const readZeroTokenAllowance = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "allowance",
 });
@@ -6821,16 +7696,14 @@ export const readZeroTokenAllowance = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"authorizationState"`
  */
-export const readZeroTokenAuthorizationState =
-  /* #__PURE__ */ createReadContract({
-    abi: zeroTokenAbi,
-    functionName: "authorizationState",
-  });
+export const readZeroTokenAuthorizationState = /*#__PURE__*/ createReadContract(
+  { abi: zeroTokenAbi, functionName: "authorizationState" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"balanceOf"`
  */
-export const readZeroTokenBalanceOf = /* #__PURE__ */ createReadContract({
+export const readZeroTokenBalanceOf = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "balanceOf",
 });
@@ -6838,7 +7711,7 @@ export const readZeroTokenBalanceOf = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"clock"`
  */
-export const readZeroTokenClock = /* #__PURE__ */ createReadContract({
+export const readZeroTokenClock = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "clock",
 });
@@ -6846,7 +7719,7 @@ export const readZeroTokenClock = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"decimals"`
  */
-export const readZeroTokenDecimals = /* #__PURE__ */ createReadContract({
+export const readZeroTokenDecimals = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "decimals",
 });
@@ -6854,16 +7727,24 @@ export const readZeroTokenDecimals = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegates"`
  */
-export const readZeroTokenDelegates = /* #__PURE__ */ createReadContract({
+export const readZeroTokenDelegates = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "delegates",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"eip712Domain"`
+ */
+export const readZeroTokenEip712Domain = /*#__PURE__*/ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "eip712Domain",
 });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"getDelegationDigest"`
  */
 export const readZeroTokenGetDelegationDigest =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroTokenAbi,
     functionName: "getDelegationDigest",
   });
@@ -6871,7 +7752,7 @@ export const readZeroTokenGetDelegationDigest =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"getPastVotes"`
  */
-export const readZeroTokenGetPastVotes = /* #__PURE__ */ createReadContract({
+export const readZeroTokenGetPastVotes = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "getPastVotes",
 });
@@ -6879,7 +7760,7 @@ export const readZeroTokenGetPastVotes = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"getVotes"`
  */
-export const readZeroTokenGetVotes = /* #__PURE__ */ createReadContract({
+export const readZeroTokenGetVotes = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "getVotes",
 });
@@ -6887,7 +7768,7 @@ export const readZeroTokenGetVotes = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"name"`
  */
-export const readZeroTokenName = /* #__PURE__ */ createReadContract({
+export const readZeroTokenName = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "name",
 });
@@ -6895,7 +7776,7 @@ export const readZeroTokenName = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"nonces"`
  */
-export const readZeroTokenNonces = /* #__PURE__ */ createReadContract({
+export const readZeroTokenNonces = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "nonces",
 });
@@ -6903,7 +7784,7 @@ export const readZeroTokenNonces = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastBalanceOf"`
  */
-export const readZeroTokenPastBalanceOf = /* #__PURE__ */ createReadContract({
+export const readZeroTokenPastBalanceOf = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "pastBalanceOf",
 });
@@ -6911,7 +7792,7 @@ export const readZeroTokenPastBalanceOf = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastBalancesOf"`
  */
-export const readZeroTokenPastBalancesOf = /* #__PURE__ */ createReadContract({
+export const readZeroTokenPastBalancesOf = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "pastBalancesOf",
 });
@@ -6919,7 +7800,7 @@ export const readZeroTokenPastBalancesOf = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastDelegates"`
  */
-export const readZeroTokenPastDelegates = /* #__PURE__ */ createReadContract({
+export const readZeroTokenPastDelegates = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "pastDelegates",
 });
@@ -6927,16 +7808,15 @@ export const readZeroTokenPastDelegates = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastTotalSupplies"`
  */
-export const readZeroTokenPastTotalSupplies =
-  /* #__PURE__ */ createReadContract({
-    abi: zeroTokenAbi,
-    functionName: "pastTotalSupplies",
-  });
+export const readZeroTokenPastTotalSupplies = /*#__PURE__*/ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "pastTotalSupplies",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"pastTotalSupply"`
  */
-export const readZeroTokenPastTotalSupply = /* #__PURE__ */ createReadContract({
+export const readZeroTokenPastTotalSupply = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "pastTotalSupply",
 });
@@ -6944,18 +7824,16 @@ export const readZeroTokenPastTotalSupply = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"standardGovernor"`
  */
-export const readZeroTokenStandardGovernor = /* #__PURE__ */ createReadContract(
-  {
-    abi: zeroTokenAbi,
-    functionName: "standardGovernor",
-  },
-);
+export const readZeroTokenStandardGovernor = /*#__PURE__*/ createReadContract({
+  abi: zeroTokenAbi,
+  functionName: "standardGovernor",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"standardGovernorDeployer"`
  */
 export const readZeroTokenStandardGovernorDeployer =
-  /* #__PURE__ */ createReadContract({
+  /*#__PURE__*/ createReadContract({
     abi: zeroTokenAbi,
     functionName: "standardGovernorDeployer",
   });
@@ -6963,7 +7841,7 @@ export const readZeroTokenStandardGovernorDeployer =
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"symbol"`
  */
-export const readZeroTokenSymbol = /* #__PURE__ */ createReadContract({
+export const readZeroTokenSymbol = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "symbol",
 });
@@ -6971,7 +7849,7 @@ export const readZeroTokenSymbol = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"totalSupply"`
  */
-export const readZeroTokenTotalSupply = /* #__PURE__ */ createReadContract({
+export const readZeroTokenTotalSupply = /*#__PURE__*/ createReadContract({
   abi: zeroTokenAbi,
   functionName: "totalSupply",
 });
@@ -6979,14 +7857,14 @@ export const readZeroTokenTotalSupply = /* #__PURE__ */ createReadContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__
  */
-export const writeZeroToken = /* #__PURE__ */ createWriteContract({
+export const writeZeroToken = /*#__PURE__*/ createWriteContract({
   abi: zeroTokenAbi,
 });
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"approve"`
  */
-export const writeZeroTokenApprove = /* #__PURE__ */ createWriteContract({
+export const writeZeroTokenApprove = /*#__PURE__*/ createWriteContract({
   abi: zeroTokenAbi,
   functionName: "approve",
 });
@@ -6995,7 +7873,7 @@ export const writeZeroTokenApprove = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"cancelAuthorization"`
  */
 export const writeZeroTokenCancelAuthorization =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroTokenAbi,
     functionName: "cancelAuthorization",
   });
@@ -7003,7 +7881,7 @@ export const writeZeroTokenCancelAuthorization =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegate"`
  */
-export const writeZeroTokenDelegate = /* #__PURE__ */ createWriteContract({
+export const writeZeroTokenDelegate = /*#__PURE__*/ createWriteContract({
   abi: zeroTokenAbi,
   functionName: "delegate",
 });
@@ -7011,7 +7889,7 @@ export const writeZeroTokenDelegate = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegateBySig"`
  */
-export const writeZeroTokenDelegateBySig = /* #__PURE__ */ createWriteContract({
+export const writeZeroTokenDelegateBySig = /*#__PURE__*/ createWriteContract({
   abi: zeroTokenAbi,
   functionName: "delegateBySig",
 });
@@ -7019,7 +7897,7 @@ export const writeZeroTokenDelegateBySig = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"mint"`
  */
-export const writeZeroTokenMint = /* #__PURE__ */ createWriteContract({
+export const writeZeroTokenMint = /*#__PURE__*/ createWriteContract({
   abi: zeroTokenAbi,
   functionName: "mint",
 });
@@ -7027,7 +7905,7 @@ export const writeZeroTokenMint = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"permit"`
  */
-export const writeZeroTokenPermit = /* #__PURE__ */ createWriteContract({
+export const writeZeroTokenPermit = /*#__PURE__*/ createWriteContract({
   abi: zeroTokenAbi,
   functionName: "permit",
 });
@@ -7036,7 +7914,7 @@ export const writeZeroTokenPermit = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"receiveWithAuthorization"`
  */
 export const writeZeroTokenReceiveWithAuthorization =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroTokenAbi,
     functionName: "receiveWithAuthorization",
   });
@@ -7044,7 +7922,7 @@ export const writeZeroTokenReceiveWithAuthorization =
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transfer"`
  */
-export const writeZeroTokenTransfer = /* #__PURE__ */ createWriteContract({
+export const writeZeroTokenTransfer = /*#__PURE__*/ createWriteContract({
   abi: zeroTokenAbi,
   functionName: "transfer",
 });
@@ -7052,7 +7930,7 @@ export const writeZeroTokenTransfer = /* #__PURE__ */ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transferFrom"`
  */
-export const writeZeroTokenTransferFrom = /* #__PURE__ */ createWriteContract({
+export const writeZeroTokenTransferFrom = /*#__PURE__*/ createWriteContract({
   abi: zeroTokenAbi,
   functionName: "transferFrom",
 });
@@ -7061,7 +7939,7 @@ export const writeZeroTokenTransferFrom = /* #__PURE__ */ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transferWithAuthorization"`
  */
 export const writeZeroTokenTransferWithAuthorization =
-  /* #__PURE__ */ createWriteContract({
+  /*#__PURE__*/ createWriteContract({
     abi: zeroTokenAbi,
     functionName: "transferWithAuthorization",
   });
@@ -7069,14 +7947,14 @@ export const writeZeroTokenTransferWithAuthorization =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__
  */
-export const simulateZeroToken = /* #__PURE__ */ createSimulateContract({
+export const simulateZeroToken = /*#__PURE__*/ createSimulateContract({
   abi: zeroTokenAbi,
 });
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"approve"`
  */
-export const simulateZeroTokenApprove = /* #__PURE__ */ createSimulateContract({
+export const simulateZeroTokenApprove = /*#__PURE__*/ createSimulateContract({
   abi: zeroTokenAbi,
   functionName: "approve",
 });
@@ -7085,7 +7963,7 @@ export const simulateZeroTokenApprove = /* #__PURE__ */ createSimulateContract({
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"cancelAuthorization"`
  */
 export const simulateZeroTokenCancelAuthorization =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroTokenAbi,
     functionName: "cancelAuthorization",
   });
@@ -7093,18 +7971,16 @@ export const simulateZeroTokenCancelAuthorization =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegate"`
  */
-export const simulateZeroTokenDelegate = /* #__PURE__ */ createSimulateContract(
-  {
-    abi: zeroTokenAbi,
-    functionName: "delegate",
-  },
-);
+export const simulateZeroTokenDelegate = /*#__PURE__*/ createSimulateContract({
+  abi: zeroTokenAbi,
+  functionName: "delegate",
+});
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"delegateBySig"`
  */
 export const simulateZeroTokenDelegateBySig =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroTokenAbi,
     functionName: "delegateBySig",
   });
@@ -7112,7 +7988,7 @@ export const simulateZeroTokenDelegateBySig =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"mint"`
  */
-export const simulateZeroTokenMint = /* #__PURE__ */ createSimulateContract({
+export const simulateZeroTokenMint = /*#__PURE__*/ createSimulateContract({
   abi: zeroTokenAbi,
   functionName: "mint",
 });
@@ -7120,7 +7996,7 @@ export const simulateZeroTokenMint = /* #__PURE__ */ createSimulateContract({
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"permit"`
  */
-export const simulateZeroTokenPermit = /* #__PURE__ */ createSimulateContract({
+export const simulateZeroTokenPermit = /*#__PURE__*/ createSimulateContract({
   abi: zeroTokenAbi,
   functionName: "permit",
 });
@@ -7129,7 +8005,7 @@ export const simulateZeroTokenPermit = /* #__PURE__ */ createSimulateContract({
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"receiveWithAuthorization"`
  */
 export const simulateZeroTokenReceiveWithAuthorization =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroTokenAbi,
     functionName: "receiveWithAuthorization",
   });
@@ -7137,18 +8013,16 @@ export const simulateZeroTokenReceiveWithAuthorization =
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transfer"`
  */
-export const simulateZeroTokenTransfer = /* #__PURE__ */ createSimulateContract(
-  {
-    abi: zeroTokenAbi,
-    functionName: "transfer",
-  },
-);
+export const simulateZeroTokenTransfer = /*#__PURE__*/ createSimulateContract({
+  abi: zeroTokenAbi,
+  functionName: "transfer",
+});
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transferFrom"`
  */
 export const simulateZeroTokenTransferFrom =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroTokenAbi,
     functionName: "transferFrom",
   });
@@ -7157,7 +8031,7 @@ export const simulateZeroTokenTransferFrom =
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link zeroTokenAbi}__ and `functionName` set to `"transferWithAuthorization"`
  */
 export const simulateZeroTokenTransferWithAuthorization =
-  /* #__PURE__ */ createSimulateContract({
+  /*#__PURE__*/ createSimulateContract({
     abi: zeroTokenAbi,
     functionName: "transferWithAuthorization",
   });
@@ -7165,7 +8039,7 @@ export const simulateZeroTokenTransferWithAuthorization =
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__
  */
-export const watchZeroTokenEvent = /* #__PURE__ */ createWatchContractEvent({
+export const watchZeroTokenEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: zeroTokenAbi,
 });
 
@@ -7173,7 +8047,7 @@ export const watchZeroTokenEvent = /* #__PURE__ */ createWatchContractEvent({
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"Approval"`
  */
 export const watchZeroTokenApprovalEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroTokenAbi,
     eventName: "Approval",
   });
@@ -7182,7 +8056,7 @@ export const watchZeroTokenApprovalEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"AuthorizationCanceled"`
  */
 export const watchZeroTokenAuthorizationCanceledEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroTokenAbi,
     eventName: "AuthorizationCanceled",
   });
@@ -7191,7 +8065,7 @@ export const watchZeroTokenAuthorizationCanceledEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"AuthorizationUsed"`
  */
 export const watchZeroTokenAuthorizationUsedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroTokenAbi,
     eventName: "AuthorizationUsed",
   });
@@ -7200,7 +8074,7 @@ export const watchZeroTokenAuthorizationUsedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"DelegateChanged"`
  */
 export const watchZeroTokenDelegateChangedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroTokenAbi,
     eventName: "DelegateChanged",
   });
@@ -7209,16 +8083,25 @@ export const watchZeroTokenDelegateChangedEvent =
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"DelegateVotesChanged"`
  */
 export const watchZeroTokenDelegateVotesChangedEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroTokenAbi,
     eventName: "DelegateVotesChanged",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"EIP712DomainChanged"`
+ */
+export const watchZeroTokenEip712DomainChangedEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: zeroTokenAbi,
+    eventName: "EIP712DomainChanged",
   });
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroTokenAbi}__ and `eventName` set to `"Transfer"`
  */
 export const watchZeroTokenTransferEvent =
-  /* #__PURE__ */ createWatchContractEvent({
+  /*#__PURE__*/ createWatchContractEvent({
     abi: zeroTokenAbi,
     eventName: "Transfer",
   });

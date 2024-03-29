@@ -1,24 +1,33 @@
 describe("Proposals", () => {
   describe("type action: setKey", () => {
-    const value = "1";
-    const key = "update_collateral_interval";
-    const description = `Add protocol config ${key} = ${value}`;
     let proposalUrl = "";
+    const key = "guidance";
+    const input = "QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy";
+    const description = `Add protocol config ${key} = ${input}`;
 
-    it("I should be able to CREATE a proposal", () => {
+    it("connect first", () => {
       cy.visit("/proposal/create");
       cy.connectWallet();
+    });
+
+    it("I should be able to CREATE a proposal - Guidance ", () => {
+      cy.visit("/proposal/create");
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
 
-      cy.get("[data-test='protocolSetKey']").click();
+      cy.get("[data-test='menuEmergency']").click();
+
+      cy.get("[data-test='emergencySetKey']").click({ force: true });
+
+      cy.contains("Update protocol config").click();
 
       cy.get("[data-test='protocolConfigSelect']").should("exist");
       cy.get("[data-test='protocolConfigSelect']").click();
 
-      cy.contains("Update collateral interval").click();
+      // config
+      cy.contains("Guidance").click();
 
-      cy.get("input[data-test='proposalValue2']").type(value);
+      cy.get("input[data-test='proposalValue2']").type(input);
       cy.get("input[data-test='title']").type(description);
       cy.createProposalAddDescription(description);
 
@@ -31,11 +40,10 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to ACCESS the ACTIVE proposal", () => {
-      // forward in time to be able to vote
-      cy.mineEpochs(2);
 
-      cy.visit("/proposals/");
+
+    it("I should be able to ACCESS the ACTIVE proposal", () => {
+      cy.visit("/proposals/emergency");
 
       cy.contains(description).should("exist");
 
@@ -46,20 +54,15 @@ describe("Proposals", () => {
       cy.url().should("match", /proposal\/([0-9])\w+/g);
       cy.contains(".markdown-body", description).should("exist");
 
-      cy.get("#technical-proposal-incoming-change").should("contain", key);
-      cy.get("#technical-proposal-incoming-change").should("contain", value);
-
       cy.url().then((url) => {
         proposalUrl = url;
       });
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneProposal(description);
+      cy.castYesAllEmergencyProposals();
     });
-
     it("I should be able to EXECUTE the proposal", () => {
-      cy.mineEpochs(1);
       cy.executeOneProposal(description);
     });
 

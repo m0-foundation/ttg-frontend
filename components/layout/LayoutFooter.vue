@@ -2,26 +2,27 @@
   <footer class="w-full p-6 lg:px-16 font-inter">
     <div class="lg:flex items-center">
       <div class="lg:grow">
-        <span class="text-xs text-grey-600">
+        <span class="text-xs text-grey-500">
           © 2024
-          <a href="/" class="hover:underline">Mˆ0 Labs_</a>
+          <a href="/" class="hover:underline"
+            >M^0 FOUNDATION. All rights reserved.</a
+          >
         </span>
       </div>
       <div class="lg:shrink">
         <ul
-          class="flex flex-wrap items-center lg:mt-0 text-xs text-white lg:hidden"
+          class="flex gap-3 flex-wrap items-center lg:mt-0 text-xs text-white lg:hidden"
         >
           <li>
-            <a href="#" class="mr-4 hover:underline lg:mr-6">Support</a>
-          </li>
-          <li>
-            <a href="#" class="mr-4 hover:underline lg:mr-6">Documentation</a>
+            <NuxtLink href="https://docs.m0.org/" target="_blank"
+              >Documentation</NuxtLink
+            >
           </li>
         </ul>
         <div class="flex justify-between align-center mt-4 lg:mt-0 lg:gap-6">
           <NuxtLink to="/settings" class="footer-link">App settings</NuxtLink>
-          <div class="text-grey-600 text-xs hidden lg:block">|</div>
-          <a href="#" class="footer-link">Join our community</a>
+          <div class="text-grey-700 text-xs hidden lg:block">|</div>
+          <span class="text-grey-500 text-xs">Join our community</span>
           <ul class="flex items-center gap-4">
             <li v-for="social in socialLinks" :key="social.name">
               <a :href="social.url" class="">
@@ -38,14 +39,9 @@
 <script setup>
 const socialLinks = [
   {
-    name: "Discord",
-    url: "#",
-    icon: "/img/socials/discord.svg",
-  },
-  {
-    name: "Twitter",
+    name: "X",
     url: "https://twitter.com/m0labs",
-    icon: "/img/socials/twitter.svg",
+    icon: "/img/socials/x.svg",
   },
   {
     name: "LinkedIn",
@@ -57,6 +53,6 @@ const socialLinks = [
 
 <style>
 .footer-link {
-  @apply text-xs text-grey-600 whitespace-nowrap hover:text-grey-100;
+  @apply text-xs underline text-grey-500 whitespace-nowrap hover:text-grey-100;
 }
 </style>

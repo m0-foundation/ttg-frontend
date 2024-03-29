@@ -35,7 +35,7 @@ export interface InputProps {
 }
 
 const inputs = {
-  updateCollateral_interval: {
+  update_collateral_interval: {
     component: InputDynamic,
     props: {
       decorator: "seconds",
@@ -43,7 +43,7 @@ const inputs = {
     },
   },
 
-  updateCollateral_threshold: {
+  update_collateral_threshold: {
     component: InputDynamic,
     props: {
       maska: masks.interger,
@@ -93,7 +93,7 @@ const inputs = {
   minter_rate_model: {
     component: InputDynamic,
     props: {
-      decorator: "address",
+      decorator: "contract",
       maska: masks.ethereumAddress,
     },
   },
@@ -101,8 +101,31 @@ const inputs = {
   earner_rate_model: {
     component: InputDynamic,
     props: {
-      decorator: "address",
+      decorator: "contract",
       maska: masks.ethereumAddress,
+    },
+  },
+
+  base_minter_rate: {
+    component: InputDynamic,
+    props: {
+      decorator: "%",
+      maska: masks.percentage,
+    },
+  },
+
+  max_earner_rate: {
+    component: InputDynamic,
+    props: {
+      decorator: "%",
+      maska: masks.percentage,
+    },
+  },
+
+  guidance: {
+    component: InputDynamic,
+    props: {
+      decorator: "IPFS HASH",
     },
   },
 };
