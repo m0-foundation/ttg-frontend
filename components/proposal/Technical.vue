@@ -86,7 +86,7 @@ const showParsed = computed(() =>
     "setEmergencyProposalThresholdRatio",
     "setZeroProposalThresholdRatio",
     "setCashToken",
-  ].includes(props.proposal?.proposalType)
+  ].includes(props.proposal?.proposalType),
 );
 
 const currentValue = computed(
@@ -94,14 +94,14 @@ const currentValue = computed(
     props.currentProposalValues[
       props.proposal
         ?.proposalType as keyof ProposalProps["currentProposalValues"]
-    ]
+    ],
 );
 
 const incomingValues = computed(() => props.proposal?.proposalParams);
 
 const incomingValuesParsed = computed(() =>
   props.proposal?.proposalParams.map((param) =>
-    parsedValue(param, props.proposal?.proposalType)
-  )
+    parsedValue(param, props.proposal?.proposalType),
+  ),
 );
 </script>

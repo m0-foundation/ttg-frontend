@@ -6,10 +6,7 @@ import Components from "unplugin-vue-components/vite";
 
 console.dir(process.env);
 
-const auctionActive =
-  process.env.NODE_ENV === "development"
-    ? true
-    : Boolean(process.env.VITE_APP_IS_AUCTION_ACTIVE);
+const auctionActive = process.env.VITE_APP_IS_AUCTION_ACTIVE === "true";
 
 export default defineNuxtConfig({
   alias: {
@@ -44,13 +41,11 @@ export default defineNuxtConfig({
     dirs: ["./stores"],
   },
 
-  pinia: {
-    autoImports: ["defineStore"],
-  },
   vite: {
     resolve: {
       alias: {
         "~": fileURLToPath(new URL("./", import.meta.url)),
+        "@": fileURLToPath(new URL("./", import.meta.url)),
         // Add any other aliases you use in your code base
         // https://nuxt.com/docs/api/configuration/nuxt-config/#alias
       },

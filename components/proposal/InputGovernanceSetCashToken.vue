@@ -93,7 +93,7 @@ const hasErrors = computed(() => props.modelValueErrors?.length);
 
 const selectedToken = ref<TokenOptionItem>();
 const hasAllowedCashTokens = computed(
-  () => (spogStore.governors.zero.allowedCashTokens?.length ?? 0) > 0
+  () => (spogStore.governors.zero.allowedCashTokens?.length ?? 0) > 0,
 );
 
 const options: TokenOptionItem[] | undefined =

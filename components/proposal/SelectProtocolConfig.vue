@@ -49,7 +49,7 @@ const configParams = [
     header: "protocol",
   },
   {
-    value: "updateCollateral_interval",
+    value: "update_collateral_interval",
     label: "Update collateral interval",
     shortDescription:
       "Update the period of time between which Update Collateral must be called by a Minter.",
@@ -57,7 +57,7 @@ const configParams = [
       "The length of time in seconds that Minter has to call updateCollateral, from the previous time it was called by that minter, before they will incur the penalty.",
   },
   {
-    value: "updateCollateral_threshold",
+    value: "update_collateral_threshold",
     label: "Update collateral threshold",
     shortDescription:
       "Update the minimum number of signatures required to execute Update Collateral.",
@@ -100,15 +100,41 @@ const configParams = [
   },
   {
     value: "minter_rate_model",
-    label: "Minter rate",
+    label: "Minter rate model",
     shortDescription:
-      "Update the annualized percentage charged to Minters on their Owed M.",
+      "Smart contract that implements logic for calculation of Minter rate.",
   },
+
+  {
+    value: "base_minter_rate",
+    label: "Base Minter rate",
+    shortDescription:
+      "Base yearly interest rate that continuously accrues on $M owed to the protocol.",
+  },
+
   {
     value: "earner_rate_model",
-    label: "Earner rate",
+    label: "Earner rate model",
     shortDescription:
-      "Update the annualized percentage paid to M in the Earn Mechanism.",
+      "Smart contract that implements the logic for calculation of Earner rate.",
+  },
+
+  {
+    value: "max_earner_rate",
+    label: "Max. Earner rate",
+    shortDescription:
+      "Maximum yearly interest rate that continuously accrues on $M owned by Earners.",
+  },
+
+  {
+    header: "Others",
+  },
+
+  {
+    value: "guidance",
+    label: "Guidance",
+    shortDescription:
+      "IPFS Hash to a document that provides guidance on the protocol.",
   },
 ];
 

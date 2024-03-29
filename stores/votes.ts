@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { MVote } from "@/lib/api/types";
+import { defineStore } from "pinia";
 
 export const useVotesStore = defineStore("votes", () => {
   const api = useApiClientStore();

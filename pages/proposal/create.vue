@@ -188,16 +188,14 @@
         </div>
       </div>
 
-      <div v-if="hasToPayFee">
-        <p class="text-grey-500 text-xs flex justify-end font-inter">
+      <div v-if="hasToPayFee" class="text-grey-500 text-xs text-end font-inter">
+        <p>
           Available balance:
-          {{ formatNumber(cashToken?.data?.value?.formatted) || 0 }} WETH
+          {{ useNumberFormatterEth(cashToken?.data?.value?.formatted) || 0 }}
+          WETH
         </p>
+        <p>You'll receive a refund if the proposal succeeds</p>
       </div>
-
-      <p class="text-grey-500 text-xs flex justify-end font-inter">
-        You'll receive a refund if the proposal succeeds
-      </p>
 
       <div v-if="isPreview" class="flex justify-end mt-6">
         <button
@@ -255,7 +253,14 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
+import {
+  encodeFunctionData,
+  encodeAbiParameters,
+  Hash,
+  erc20Abi,
+  toHex,
+  keccak256,
+} from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -318,6 +323,14 @@ const formData = reactive({
   description: "",
   ipfsURL: null,
   discussionURL: null,
+});
+
+watchEffect(() => {
+  const type = selectedProposalType?.value?.value;
+  const key = formData.proposalValue;
+  if (type === "setKey" && key === "guidance") {
+    formData.ipfsURL = `https://ipfs.io/ipfs/${formData.proposalValue2}`;
+  }
 });
 
 const rules = computed(() => {
@@ -850,7 +863,18 @@ function buildCalldatas(formData) {
         return addressToHexWith32Bytes(inp);
       }
 
-      if (["penalty_rate", "mint_ratio"].includes(key)) {
+      if (["guidance"].includes(key)) {
+        return keccak256(toHex(inp));
+      }
+
+      if (
+        [
+          "penalty_rate",
+          "mint_ratio",
+          "base_minter_rate",
+          "max_earner_rate",
+        ].includes(key)
+      ) {
         return encodeAbiParameters(
           [{ type: "uint256" }],
           [BigInt(percentageToBasispoints(inp))]

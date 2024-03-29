@@ -31,7 +31,7 @@ const { forceSwitchChain } = useCorrectChain();
 const isLoading = ref(false);
 
 const proposals = computed(() =>
-  proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active")
+  proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active"),
 );
 
 async function castVote(vote: number, proposalId: string) {

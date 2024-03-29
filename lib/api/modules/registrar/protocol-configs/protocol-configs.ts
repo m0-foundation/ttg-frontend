@@ -9,13 +9,15 @@ import { ApiModule } from "@/lib/api/api-module";
 
 export class ProtocolConfigs extends ApiModule {
   keysInBytes32 = [
-    "updateCollateral_interval",
-    "updateCollateral_threshold",
+    "update_collateral_interval",
+    "update_collateral_threshold",
     "penalty_rate",
     "mint_delay",
     "mint_ttl",
     "mint_ratio",
     "minter_freeze_time",
+    "base_minter_rate",
+    "max_earner_rate",
   ];
 
   keysInAddress = ["minter_rate_model", "earner_rate_model"];
@@ -33,7 +35,7 @@ export class ProtocolConfigs extends ApiModule {
     const keyValuesBytes = this.keysInBytes32.map((key, index) => ({
       key,
       value: String(
-        decodeAbiParameters([{ type: "uint256" }], valuesBytes[index])
+        decodeAbiParameters([{ type: "uint256" }], valuesBytes[index]),
       ),
     }));
 

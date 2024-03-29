@@ -1,11 +1,11 @@
 <template>
   <div class="my-2">
     <!-- tabs -->
-    <div class="flex justify-start gap-12 my-3 font-ppformula">
+    <div class="flex justify-start gap-12 mt-8 mb-1 table-nav">
       <button
         :class="[
-          'hover:underline -tracking-wider',
-          selectedTab === 0 ? 'text-white' : 'text-grey-600',
+          '-tracking-wider',
+          selectedTab === 0 ? 'text-grey-200' : 'text-grey-500',
         ]"
         data-test="profile-button-voting-history"
         @click="selectedTab = 0"
@@ -13,10 +13,7 @@
         Voting History
       </button>
       <button
-        :class="[
-          'hover:underline',
-          selectedTab === 1 ? 'text-white' : 'text-grey-600',
-        ]"
+        :class="[selectedTab === 1 ? 'text-grey-200' : 'text-grey-500']"
         data-test="profile-button-submitted-proposals"
         @click="selectedTab = 1"
       >
@@ -62,3 +59,9 @@ const proposalsCreated = computed(() =>
   proposals.getProposalsByProposer(address.value as string)
 );
 </script>
+
+<style>
+.table-nav button {
+  @apply font-ppformula;
+}
+</style>

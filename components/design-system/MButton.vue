@@ -16,7 +16,7 @@ export interface MButtonProps {
   isLoading?: boolean;
 }
 
-const props = withDefaults(defineProps<MButtonProps>(), {
+withDefaults(defineProps<MButtonProps>(), {
   version: "primary",
   isLoading: false,
 });
@@ -40,7 +40,7 @@ button:disabled {
 }
 
 .outline-light {
-  @apply border border-white text-white bg-transparent  hover:bg-gray-100 hover:bg-opacity-10;
+  @apply border border-grey-200 text-grey-200 bg-transparent  hover:bg-gray-100 hover:bg-opacity-10;
 }
 
 .outline-dark {

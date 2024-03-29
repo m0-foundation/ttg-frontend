@@ -32,7 +32,7 @@ export const useSpogStore = defineStore("spog", {
       state.governors.zero.allowedCashTokens?.find(
         (token) =>
           token.address.toLowerCase() ===
-          state.contracts.cashToken?.toLowerCase()
+          state.contracts.cashToken?.toLowerCase(),
       ),
     getEpoch: (state) => state.epoch,
 
@@ -68,9 +68,12 @@ export const useSpogStore = defineStore("spog", {
       this.epoch = epochState;
 
       // Re-fetch epoch data when current epoch ends
-      setTimeout(() => {
-        this.fetchEpoch(_epoch! + 1);
-      }, (epochState.current.end.timestamp - Date.now() / 1000 + 3) * 1000);
+      setTimeout(
+        () => {
+          this.fetchEpoch(_epoch! + 1);
+        },
+        (epochState.current.end.timestamp - Date.now() / 1000 + 3) * 1000,
+      );
     },
     async fetchTokens() {
       const api = useApiClientStore();
@@ -110,8 +113,9 @@ export const useSpogStore = defineStore("spog", {
       const api = useApiClientStore();
 
       const [standard, emergency, zero] = await Promise.all([
-
-        api.client.standardGovernor!.getParameters<Partial<MStandardGovernorValues>>([
+        api.client.standardGovernor!.getParameters<
+          Partial<MStandardGovernorValues>
+        >([
           "proposalFee",
           "cashToken",
           "maxTotalZeroRewardPerActiveEpoch",

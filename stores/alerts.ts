@@ -1,4 +1,5 @@
 import { MProposal } from "@/lib/api/types";
+import { defineStore } from "pinia";
 
 export const useAlertsStore = defineStore("alerts", () => {
   const reset = ref<{ show: boolean; proposal?: MProposal }>({

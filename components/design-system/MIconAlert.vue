@@ -1,15 +1,15 @@
 <template>
   <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g>
-      <rect x="12" y="8" width="1" height="5" fill="#EBEBEB" />
-      <rect x="12" y="14" width="1" height="1" fill="#EBEBEB" />
-      <circle cx="12.5" cy="11.5" r="8" stroke="#EBEBEB" style="fill: none" />
-    </g>
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M20 10C20 4.47715 15.5228 0 10 0C4.47715 0 0 4.47715 0 10C0 15.5228 4.47715 20 10 20C15.5228 20 20 15.5228 20 10ZM3.5 14L10 3L16.5 14H3.5ZM5.25245 13L10 4.96568L14.7476 13H5.25245ZM10.5 7V10H9.5V7H10.5ZM10.5 12V11H9.5V12H10.5Z"
+    />
   </svg>
 </template>

@@ -26,7 +26,9 @@
         v-if="props.decorator"
         class="inline-flex items-center px-3 bg-grey-800 border border-l-0 border-grey-700"
       >
-        <div class="text-gray-600 font-inter">{{ props.decorator }}</div>
+        <div class="text-gray-600 font-inter whitespace-nowrap">
+          {{ props.decorator }}
+        </div>
       </span>
     </div>
 

@@ -1,26 +1,26 @@
 <template>
   <div class="z-50 shadow-lg alert">
-    <div class="items-stretch flex flex-col px-4" :class="color">
+    <div class="items-stretch flex flex-col px-4" :class="type">
       <div
-        class="text-gray-200 text-xs leading-3 uppercase whitespace-nowrap mt-5 max-md:max-w-full justify-between flex gap-2"
-      >
-        <span>{{ props.type }}</span>
-
-        <button class="hover:opacity-70" @click="dismiss">X</button>
-      </div>
-      <div
-        class="flex justify-between items-center align-middle gap-2 mt-4 mb-4 max-md:max-w-full max-md:flex-wrap"
+        class="flex justify-between items-center align-middle gap-2 mt-4 mb-4 min-w-80 max-w-96 max-md:max-w-full max-md:flex-wrap"
       >
         <component
           :is="Icon"
-          class="aspect-square object-contain object-center w-6 overflow-hidden shrink-0 max-w-full fill-white"
+          class="aspect-square object-contain object-center w-6 overflow-hidden shrink-0 max-w-full"
+          :class="type"
         />
 
         <p
-          class="text-gray-200 text-base items-center align-middle leading-6 self-stretch grow shrink basis-auto max-md:max-w-full font-bold"
+          class="text-base items-center align-middle leading-6 self-stretch grow shrink basis-auto max-md:max-w-full font-bold"
         >
           {{ message }}
         </p>
+
+        <div
+          class="text-md leading-3 uppercase whitespace-nowrap ml-12 max-md:max-w-full justify-between flex gap-2"
+        >
+          <button class="hover:opacity-70" @click="dismiss">✕</button>
+        </div>
       </div>
     </div>
   </div>
@@ -28,6 +28,7 @@
 <script setup lang="ts">
 import MIconAlert from "./MIconAlert.vue";
 import MIconCheck from "./MIconCheck.vue";
+import MIconInfo from "./MIconInfo.vue";
 
 export interface Props {
   id: number;
@@ -43,17 +44,10 @@ const emit = defineEmits<{
 const icons = {
   error: MIconAlert,
   success: MIconCheck,
-  info: MIconAlert,
-};
-
-const colors = {
-  error: "bg-red-500",
-  success: "bg-green-900",
-  info: "bg-accent-blue",
+  info: MIconInfo,
 };
 
 const Icon = computed(() => icons[props.type]);
-const color = computed(() => colors[props.type]);
 
 function dismiss() {
   emit("dismiss", props.id);
@@ -89,5 +83,17 @@ function dismiss() {
   animation-name: enterFromRightToLeft, bounce;
   animation-duration: 0.5s;
   animation-fill-mode: both;
+  @apply font-inter;
+}
+.success {
+  @apply bg-green-700 text-gray-900 fill-grey-900;
+}
+
+.error {
+  @apply bg-red-500 text-white fill-white;
+}
+
+.info {
+  @apply bg-accent-blue text-white fill-white;
 }
 </style>

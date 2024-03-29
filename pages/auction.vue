@@ -3,10 +3,8 @@
     <PageTitle class="mb-8 px-6 lg:p-0">
       <template #default>Auction</template>
       <template #subtitle>
-        <p class="text-grey-500 font-inter">
-          This is a Dutch auction, the chart below illustrates the price
-          decreasing over time once the auction begins.
-        </p>
+        This is a Dutch auction, the chart below illustrates the price
+        decreasing over time once the auction begins.
       </template>
     </PageTitle>
 
@@ -21,7 +19,9 @@
               name="power"
               image="/img/tokens/power.svg"
               :size="30"
-              :amount="isTransferEpoch ? formatNumber(amountLeftToAuction) : 0"
+              :amount="
+                isTransferEpoch ? useNumberFormatterEth(amountLeftToAuction) : 0
+              "
             />
           </div>
           <div>
@@ -34,7 +34,7 @@
               :size="30"
               :amount="
                 isTransferEpoch
-                  ? formatNumber(formatEther(currentCost?.value || 0n))
+                  ? useNumberFormatterEth(formatEther(currentCost?.value || 0n))
                   : 0
               "
             />
@@ -51,7 +51,7 @@
 
       <div
         v-if="isTransferEpoch && !noPowerTokens"
-        class="col-span-3 lg:col-span-1 order-1 lg:order-2 p-6 lg:p-8 py-10 form-column"
+        class="col-span-3 lg:col-span-1 order-1 lg:order-2 p-6 lg:p-8 py-10 bg-grey-800"
       >
         <div class="flex items-center justify-between mb-1">
           <label for="buy-input" class="text-gray-100 text-xs"
@@ -87,15 +87,14 @@
           <span
             :class="{ 'text-red-600 font-bold': totalPrice > cashTokenBalance }"
           >
-            {{ cashTokenBalance }}
-            {{ cashToken.data.value.symbol }}
+            {{ useNumberFormatterEth(cashTokenBalance) }}
+            {{ cashToken?.data?.value?.symbol }}
           </span>
         </div>
         <MButton
           :disabled="
             !purchaseAmount ||
             !userAccount ||
-            !userAgreeMinAmount ||
             isLoadingTransaction ||
             totalPrice > cashTokenBalance
           "
@@ -107,9 +106,12 @@
         >
           Buy
         </MButton>
-        <MCheckbox v-model="userAgreeMinAmount" class="text-xs mt-3"
-          >Buy any amount up to specified limit for purchase</MCheckbox
-        >
+        <div class="flex items-start gap-2 mt-4">
+          <img class="w-4 lg:w-8" src="/img/icon-info.svg" alt="" />
+          <span class="text-xs"
+            >You may purchase any amount up to the specified limit.</span
+          >
+        </div>
       </div>
 
       <div
@@ -173,7 +175,6 @@ const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
 const cashTokenBalance = computed(() => cashToken?.data?.value?.formatted);
 
 const purchaseAmount = ref();
-const userAgreeMinAmount = ref(true);
 const lastEpochTotalSupply = ref();
 const isLoadingTransaction = ref(false);
 const { epoch, currentCashToken } = storeToRefs(spog);
@@ -188,7 +189,7 @@ const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
 
 const totalPrice = computed(() => {
   if (!currentCost.value || !purchaseAmount.value) return "0";
-  return formatNumber(
+  return useNumberFormatterEth(
     formatEther(BigInt(currentCost.value.value) * BigInt(purchaseAmount.value))
   );
 });
@@ -234,9 +235,10 @@ async function auctionBuy() {
       address: spog.contracts.value.powerToken as Hash,
       functionName: "buy",
       args: [
-        0n, // Minimun amount the user is willing to buy
+        1n, // Minimun amount the user is willing to buy
         BigInt(purchaseAmount.value), // Maximum and IDEAL amount the user is willing to buy
         userAccount.value as Hash,
+        epoch.value.current?.asNumber, // expiryEpoch_ should send the current epoch as it UP TO this epoch we buy
       ],
       account: userAccount.value as Hash,
     });
@@ -310,14 +312,3 @@ onMounted(() => {
   getAmountLeftToAuction();
 });
 </script>
-
-<style>
-.form-column {
-  background: linear-gradient(
-      0deg,
-      rgba(45, 59, 72, 0.2) 0%,
-      rgba(45, 59, 72, 0.2) 100%
-    ),
-    var(--Colors-Blue-grey-800, #11171d);
-}
-</style>

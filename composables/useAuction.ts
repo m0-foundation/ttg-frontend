@@ -15,7 +15,7 @@ export const useAuction = () => {
   const { epoch } = storeToRefs(spog);
   const wagmiConfig = useWagmiConfig();
   const isTransferEpoch = computed(
-    () => spog.epoch.current?.type === "TRANSFER"
+    () => spog.epoch.current?.type === "TRANSFER",
   );
 
   const getPricePoints = () => {
@@ -34,7 +34,7 @@ export const useAuction = () => {
           x: epoch.value.current.asTimestamp + Number(timeIntoEpoch),
           y: calculateExponentialIncrease(i, AUCTION_PERIODS),
         };
-      }
+      },
     );
   };
 
@@ -89,7 +89,7 @@ export const useAuction = () => {
 
 function calculateExponentialIncrease(
   index: number,
-  totalPeriods: bigint
+  totalPeriods: bigint,
 ): bigint {
   // This function calculates the exponential increase for a given index and total number of periods.
   return 1n << (totalPeriods - BigInt(index) - 1n);
