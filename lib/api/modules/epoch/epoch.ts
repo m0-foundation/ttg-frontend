@@ -13,8 +13,8 @@ see files:
 export class Epoch {
   client: PublicClient;
 
-  static _STARTING_TIMESTAMP = 1_704_809_636;
-  static _EPOCH_PERIOD_SECONDS = 400;
+  static _STARTING_TIMESTAMP = 1_711_544_399;
+  static _EPOCH_PERIOD_SECONDS = 86400;
 
   constructor(client: PublicClient) {
     this.client = client;
@@ -70,7 +70,7 @@ export class Epoch {
   static getEpochFromTimestamp(timestamp: number) {
     return (
       Math.floor(
-        (timestamp - Epoch._STARTING_TIMESTAMP) / Epoch._EPOCH_PERIOD_SECONDS,
+        (timestamp - Epoch._STARTING_TIMESTAMP) / Epoch._EPOCH_PERIOD_SECONDS
       ) + 1
     );
   }
