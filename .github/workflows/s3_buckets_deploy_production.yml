@@ -4,18 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  #deploy-to-production:
-  #  uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_production.yml@main
-  #  secrets: inherit
-  #  permissions:
-  #    contents: write
-  #  if: github.ref_name == 'production'
-  #  with:
-  #    #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
-  #    MASTER_VERSION: "0"
-  upload-to-ipfs:
-    uses: MZero-Labs/devops-templates/.github/workflows/upload_to_ipfs.yml@feature/CL-1790
+  deploy-to-production:
+    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_production.yml@main
     secrets: inherit
+    permissions:
+      contents: write
     if: github.ref_name == 'production'
     with:
       #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
