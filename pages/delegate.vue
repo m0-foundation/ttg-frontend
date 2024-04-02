@@ -4,26 +4,18 @@
       <PageTitle class="mb-3">Delegate voting power</PageTitle>
 
       <p class="text-grey-600 text-sm lg:text-base mb-6">
-        You can delegate your voting power to any address. The tokens will
-        remain in your balance, and you can re-delegate them in the future.
+        Both POWER and ZERO owners may delegate their voting power to an
+        arbitrary Ethereum address during the Transfer Epoch. Delegated POWER
+        will retain its inflation in the owner address, while ZERO rewards will
+        be claimable by the delegate address.
       </p>
     </div>
 
-    <div v-if="!canDelegate || !isConnected" class="bg-accent-blue p-6 mb-6">
+    <div v-if="!canDelegate && !isConnected" class="bg-accent-blue p-6 mb-6">
       <span class="uppercase mb-2 text-xs">Warning</span>
-
       <div class="flex items-center gap-3">
         <MIconWarning class="w-12" />
-
-        <p v-if="!isConnected">
-          You need to connect a wallet to delegate your voting power.
-        </p>
-
-        <p v-else>
-          The transfer epoch has concluded. You will be able to delegate in the
-          next
-          <b>Transfer</b> epoch.
-        </p>
+        <p>You need to connect a wallet to delegate your voting power.</p>
       </div>
     </div>
 
@@ -33,16 +25,19 @@
     >
       <div>
         <div class="flex justify-between items-center mb-3">
-          <div class="text-xl">$POWER</div>
+          <div>
+            <p class="text-xl">POWER Tokens</p>
+            <p class="text-grey-600 text-xs">
+              You are delegating
+              <span class="text-grey-500 font-bold">only voting power</span>.
+              The tokens will remain in your balance.
+            </p>
+          </div>
+
           <div class="flex-col gap-2">
             <div class="flex gap-1 items-center">
               <MIconPower class="h-6 w-6" />
-              <span
-                class="flex items-center text-2xl"
-                :class="{
-                  'text-accent-mint': !canDelegate,
-                }"
-              >
+              <span class="flex items-center text-2xl">
                 {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
               </span>
             </div>
@@ -51,7 +46,29 @@
             </div>
           </div>
         </div>
-        <label class="text-grey-600">Delegation address</label>
+
+        <div>
+          <div v-if="!canDelegate" class="bg-accent-blue p-6 mb-6">
+            <span class="uppercase mb-2 text-xs">Warning</span>
+            <div class="flex items-center gap-3">
+              <MIconWarning class="w-12" />
+              <p>
+                The transfer epoch has concluded. You will be able to delegate
+                in the next Transfer epoch.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between">
+          <label class="text-grey-600">Delegation address</label>
+          <NuxtLink
+            class="text-grey-600 underline text-xs cursor-pointer"
+            @click="onUseMyAddressPower"
+          >
+            Use my address
+          </NuxtLink>
+        </div>
         <MInput
           id="input-delegate-power"
           v-model="powerFormData.address"
@@ -61,19 +78,22 @@
           :errors="$delegatePowerValidation.address?.$errors"
         />
 
-        <div v-if="hasDelegatedPower" class="my-4 text-xs text-grey-600">
-          <p>Current Delegatee:</p>
-          <p class="underline">{{ powerDelegates }}</p>
+        <div
+          v-if="hasDelegatedPower"
+          class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
+        >
+          Voting power delegated to:
+          <MAddressAvatar :address="powerDelegates" :short-address="false" />
+        </div>
+        <div
+          v-if="!hasDelegatedPower && powerDelegates"
+          class="px-2 py-1 w-fit text-xs bg-grey-600 text-white"
+        >
+          <p>Self-delegated</p>
         </div>
       </div>
 
-      <div class="flex justify-between items-center gap-2">
-        <NuxtLink
-          class="text-grey-600 underline text-xs cursor-pointer"
-          @click="onUseMyAddressPower"
-        >
-          Use my address
-        </NuxtLink>
+      <div class="flex justify-end items-center gap-2 my-4">
         <MButton
           id="button-delegate-power"
           type="submit"
@@ -92,16 +112,18 @@
     >
       <div>
         <div class="flex justify-between items-center my-3">
-          <div class="text-xl">$ZERO</div>
+          <div>
+            <p class="text-xl">ZERO Tokens</p>
+            <p class="text-grey-600 text-xs">
+              You are delegating
+              <span class="text-grey-500 font-bold">only voting power</span>.
+              The tokens will remain in your balance.
+            </p>
+          </div>
           <div class="flex-col gap-2">
             <div class="flex gap-1 items-center">
               <MIconZero class="h-6 w-6" />
-              <span
-                :class="{
-                  'text-accent-mint': !canDelegate,
-                }"
-                class="mx-2 flex items-center text-2xl"
-              >
+              <span class="mx-2 flex items-center text-2xl">
                 {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
               </span>
             </div>
@@ -110,7 +132,15 @@
             </div>
           </div>
         </div>
-        <label class="text-grey-600">Delegation address</label>
+        <div class="flex justify-between">
+          <label class="text-grey-600">Delegation address</label>
+          <NuxtLink
+            class="text-grey-600 underline text-xs cursor-pointer"
+            @click="onUseMyAddressZero"
+          >
+            Use my address
+          </NuxtLink>
+        </div>
         <MInput
           id="input-delegate-zero"
           v-model="zeroFormData.address"
@@ -120,23 +150,26 @@
           :errors="$delegateZeroValidation.address?.$errors"
         />
 
-        <div v-if="hasDelegatedZero" class="my-4 text-xs text-grey-600">
-          <p>Current Delegatee:</p>
-          <p class="underline">{{ zeroDelegates }}</p>
+        <div
+          v-if="hasDelegatedZero"
+          class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
+        >
+          Voting power delegated to:
+          <MAddressAvatar :address="zeroDelegates" :short-address="false" />
+        </div>
+        <div
+          v-if="!hasDelegatedZero && zeroDelegates"
+          class="px-2 py-1 w-fit text-xs bg-grey-600 text-white"
+        >
+          <p>Self-delegated</p>
         </div>
       </div>
 
-      <div class="flex justify-between items-center gap-2">
-        <NuxtLink
-          class="text-grey-600 underline text-xs cursor-pointer"
-          @click="onUseMyAddressZero"
-        >
-          Use my address
-        </NuxtLink>
+      <div class="flex justify-end items-center gap-2 my-2">
         <MButton
           id="button-delegate-zero"
           type="submit"
-          :disabled="!isConnected || !canDelegate || zeroFormData.loading"
+          :disabled="!isConnected || zeroFormData.loading"
           data-test="delegate-button-zero-submit"
           :is-loading="zeroFormData.loading"
         >
@@ -175,6 +208,7 @@ const {
   ...useDelegate
 } = useMDelegates(userAccount);
 
+console.log({ hasDelegatedPower });
 const {
   power: powerVotingPower,
   zero: zeroVotingPower,
@@ -188,8 +222,6 @@ const canDelegate = computed(
   () => spog.epoch.value.current.type === "TRANSFER"
 );
 
-const addressValidation = (val: Hash) => isAddress(val);
-
 const powerFormData = reactive({
   address: "",
   loading: false,
@@ -200,17 +232,46 @@ const zeroFormData = reactive({
   loading: false,
 });
 
-const addressRules = {
+const addressValidation = (val: Hash) => isAddress(val);
+const addressValidationDelegatePower = (val: Hash) =>
+  val !== powerDelegates.value;
+const addressValidationDelegateZero = (val: Hash) =>
+  val !== zeroDelegates.value;
+
+const addressValidationRule = {
+  addressValidation: helpers.withMessage("Invalid address", addressValidation),
+};
+
+const delegatePowerValidationRule = {
+  delegatePowerValidation: helpers.withMessage(
+    "Please enter a different address than the one you've currently provided.",
+    addressValidationDelegatePower
+  ),
+};
+
+const delegateZeroValidationRule = {
+  delegatePowerValidation: helpers.withMessage(
+    "Please enter a different address than the one you've currently provided.",
+    addressValidationDelegateZero
+  ),
+};
+
+const powerRules = {
   address: {
-    addressValidation: helpers.withMessage(
-      "Invalid address",
-      addressValidation
-    ),
+    ...addressValidationRule,
+    ...delegatePowerValidationRule,
   },
 };
 
-const $delegatePowerValidation = useVuelidate(addressRules, powerFormData);
-const $delegateZeroValidation = useVuelidate(addressRules, zeroFormData);
+const zeroRules = {
+  address: {
+    ...addressValidationRule,
+    ...delegateZeroValidationRule,
+  },
+};
+
+const $delegatePowerValidation = useVuelidate(powerRules, powerFormData);
+const $delegateZeroValidation = useVuelidate(zeroRules, zeroFormData);
 
 const { forceSwitchChain } = useCorrectChain();
 const wagmiConfig = useWagmiConfig();
