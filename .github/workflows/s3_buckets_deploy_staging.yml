@@ -3,7 +3,7 @@ name: Build & Upload to S3 STAGING
 on:
   push:
     branches:
-      - "staging"
+      - 'staging'
   workflow_dispatch:
 
 jobs:
@@ -14,5 +14,5 @@ jobs:
       contents: write
     if: github.ref_name == 'staging'
     #with:
-    #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
-    #MASTER_VERSION: "0"
+      #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
+      #MASTER_VERSION: "0"
