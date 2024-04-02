@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - 'main'
-      #- 'feature/**'
-      #- 'bugfix/**'
   workflow_dispatch:
 
 jobs:
