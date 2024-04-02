@@ -12,12 +12,11 @@
             <span class="text-accent-blue">
               {{ useNumberFormatterPrice(powerInflation) }} POWER
             </span>
-            in the next epoch, along with an immediate
+            in the next epoch as inflation, along with an immediate
             <span class="text-accent-blue">
               {{ useNumberFormatterPrice(zeroInflation) }} ZERO
             </span>
-            tokens of inflation, by voting on all standard proposals in this
-            epoch.
+            as rewards, by voting on all standard proposals in this epoch.
           </h5>
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
             <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
@@ -161,6 +160,15 @@ function onUncast(proposalId: string) {
   );
 }
 
+const { data: hasFinishedVoting, ...hasVotedOnAllProposals } = useReadContract({
+  address: spog.contracts.standardGovernor as Hash,
+  abi: standardGovernorAbi,
+  functionName: "hasVotedOnAllProposals",
+  args: [userAccount as Ref<Hash>, BigInt(spog.epoch?.current?.asNumber || 0)],
+  query: {
+    enabled: isConnected,
+  },
+});
 // batch is only for standard proposals
 async function onCastBatchVotes() {
   await forceSwitchChain();
@@ -202,6 +210,7 @@ async function onCastBatchVotes() {
 
     await spog.fetchTokens();
     balances.refetch();
+    hasVotedOnAllProposals.refetch();
   } catch (error) {
     console.error("Error casting vote", error);
     alerts.errorAlert("Error when casting vote!");
@@ -209,15 +218,4 @@ async function onCastBatchVotes() {
 
   isLoading.value = false;
 }
-
-const { data: hasFinishedVoting } = useReadContract({
-  address: spog.contracts.standardGovernor as Hash,
-  abi: standardGovernorAbi,
-  functionName: "hasVotedOnAllProposals",
-  args: [userAccount as Ref<Hash>, BigInt(spog.epoch?.current?.asNumber || 0)],
-  // watch: true,
-  query: {
-    enabled: isConnected,
-  },
-});
 </script>
