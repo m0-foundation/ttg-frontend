@@ -3,95 +3,74 @@
     <NuxtLink to="/proposals">
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
-    <span class="lg:hidden">Gov</span>
-    <span class="hidden lg:block text-grey-600 text-nowrap">
+    <span class="text-grey-500 text-sm font-ppformula text-nowrap">
       [ Governance ]
     </span>
   </div>
 
-  <NuxtLink class="block" to="/proposal/create/">
-    <MButton
-      :disabled="$route.path === '/proposal/create/'"
-      class="mb-6 w-full flex justify-center"
-      data-test="sidebar-button-create-proposal"
-    >
-      Create Proposal
-    </MButton>
-  </NuxtLink>
+  <div class="flex flex-col gap-3">
+    <MModalWeb3Connect v-if="!isConnected">
+      <template #default="{ connect }">
+        <MButton
+          class="w-full flex justify-center"
+          data-test="sidebar-button-connect-wallet"
+          @click="connect"
+        >
+          Connect Wallet
+        </MButton>
+      </template>
+    </MModalWeb3Connect>
+
+    <NuxtLink class="block" to="/proposal/create/">
+      <MButton
+        :disabled="$route.path === '/proposal/create/'"
+        class="mb-6 w-full flex justify-center"
+        data-test="sidebar-button-create-proposal"
+        :version="isConnected ? 'primary' : 'outline-light'"
+      >
+        Create Proposal
+      </MButton>
+    </NuxtLink>
+  </div>
 
   <nav class="text-grey-100 mb-6">
     <ul>
-      <li>
+      <li v-for="item in mainMenuItems" :key="item.to">
         <NuxtLink
-          to="/proposals/"
-          active-class="active"
-          data-test="sidebar-link-proposals"
+          v-if="item.isShow"
+          :to="item.path"
+          :class="{
+            'notification-dot': item.notification,
+            active: currentRoute?.path?.includes(item.path),
+          }"
+          :data-test="item.dataTest"
         >
-          Home
-        </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink
-          to="/lists/"
-          active-class="active"
-          data-test="sidebar-link-lists"
-        >
-          Lists
-        </NuxtLink>
-      </li>
-
-      <li v-if="isAuctionActive">
-        <NuxtLink
-          to="/auction/"
-          active-class="active"
-          class="flex items-center gap-1"
-        >
-          Auction
-          <div
-            v-if="amountLeftToAuction"
-            class="p-1 bg-grey-100 text-xxs leading-3 font-inter text-grey-1000 flex items-center gap-1 mr-1"
-          >
-            <MIconPower version="dark" class="w-2.5 h-2.5" />
-            {{ amountLeftToAuction }}
-          </div>
-        </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink
-          to="/config/governance/"
-          active-class="active"
-          data-test="sidebar-link-governance"
-        >
-          Governance Config
-        </NuxtLink>
-      </li>
-
-      <li>
-        <NuxtLink
-          to="/config/protocol/"
-          active-class="active"
-          data-test="sidebar-link-protocol"
-        >
-          M0 Protocol Config
+          {{ item.title }} {{}}
         </NuxtLink>
       </li>
     </ul>
   </nav>
 
-  <hr class="border-grey-700 my-4" />
-
   <div v-if="isConnected" class="text-grey-100">
-    <li class="mb-4">
-      <NuxtLink
-        to="/profile/me/"
-        data-test="sidebar-link-my-profile"
-        active-class="active"
-      >
-        My Profile
-      </NuxtLink>
-    </li>
+    <hr class="border-grey-700 my-4" />
+
+    <nav class="text-grey-100 mb-6">
+      <ul>
+        <li v-for="item in profileMenuItems" :key="item.to">
+          <NuxtLink
+            v-if="item.isShow"
+            :to="item.path"
+            :class="{
+              'notification-dot': item?.notification,
+              active: currentRoute?.path?.includes(item.path),
+            }"
+            :data-test="item.dataTest"
+          >
+            {{ item.title }} {{}}
+          </NuxtLink>
+        </li>
+      </ul>
+    </nav>
 
     <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
       <p class="text-xs mb-2 text-grey-600">POWER tokens</p>
@@ -115,12 +94,16 @@
             }}
           </span>
         </div>
-        <div v-if="hasDelegatedPower" class="bg-accent-blue p-2 mt-4 w-fit">
-          <p class="text-xxs font-mono">Voting power is delegated</p>
+        <div
+          v-if="hasDelegatedPower"
+          class="bg-accent-blue p-2 py-1 mt-2 text-center"
+        >
+          <p class="text-xxs font-inter">Voting power is delegated</p>
         </div>
       </div>
 
-      <hr class="border-grey-700 border-dashed my-6" />
+      <hr class="border-grey-700 border-dashed my-4" />
+
       <p class="text-xs mb-2 text-grey-600">ZERO tokens</p>
       <div>
         <div class="flex justify-between items-center">
@@ -141,8 +124,11 @@
             }}
           </span>
         </div>
-        <div v-if="hasDelegatedZero" class="bg-accent-blue p-2 mt-4 w-fit">
-          <p class="text-xxs font-mono">Voting power is delegated</p>
+        <div
+          v-if="hasDelegatedZero"
+          class="bg-accent-blue p-2 py-1 mt-2 text-center"
+        >
+          <p class="text-xxs font-inter">Voting power is delegated</p>
         </div>
       </div>
     </div>
@@ -168,10 +154,6 @@
       Disconnect
     </button>
   </div>
-
-  <div v-else class="py-2">
-    <MModalWeb3Connect />
-  </div>
 </template>
 
 <script lang="ts" setup>
@@ -183,6 +165,13 @@ const { disconnect } = useDisconnect();
 const { isCorrectChain, forceSwitchChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
+const spog = useSpogStore();
+const router = useRouter();
+
+const { currentRoute } = router;
+
+const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
+
 const config = useRuntimeConfig();
 
 const { hasDelegatedPower, hasDelegatedZero } = useMDelegates(address);
@@ -192,6 +181,57 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
+
+const mainMenuItems = computed(() => {
+  return [
+    {
+      title: "Home",
+      path: "/proposals/",
+      isShow: true,
+      dataTest: "sidebar-link-proposals",
+    },
+    {
+      title: "Lists",
+      path: "/lists/",
+      isShow: true,
+      dataTest: "sidebar-link-lists",
+    },
+    {
+      title: "Configs",
+      path: "/config/",
+      isShow: true,
+      dataTest: "sidebar-link-configs",
+    },
+    {
+      title: "Rewards",
+      path: "/rewards/",
+      isShow: true,
+      dataTest: "sidebar-link-rewards",
+    },
+    {
+      title: "Auction",
+      path: "/auction/",
+      isShow: isAuctionActive.value,
+      dataTest: "sidebar-link-auction",
+      notification: amountLeftToAuction.value && isTransferEpoch.value,
+    },
+  ];
+});
+
+const profileMenuItems = [
+  {
+    title: "My Profile",
+    path: "/profile/me/",
+    isShow: true,
+    dataTest: "sidebar-link-my-profile",
+  },
+  {
+    title: "Delegate",
+    path: "/delegate/",
+    isShow: true,
+    dataTest: "sidebar-link-delegate",
+  },
+];
 
 const isAuctionActive = computed(() => {
   return config.public.auctionActive;
@@ -210,5 +250,9 @@ li {
 .active::after {
   content: "_";
   margin-left: -3px;
+}
+.notification-dot::after {
+  content: "";
+  @apply absolute ml-1 bg-accent-mint w-[6px] h-[6px];
 }
 </style>

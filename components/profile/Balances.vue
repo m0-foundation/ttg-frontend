@@ -1,8 +1,8 @@
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- power -->
-    <div class="px-8 py-4 bg-grey-800">
-      <div class="flex justify-start w-full items-center">
+    <div class="p-6 bg-grey-800">
+      <div class="flex justify-between w-full items-center">
         <p class="text-xl">POWER Token</p>
         <div>
           <ProfileTokenMenu :token="getTokens?.power" />
@@ -11,7 +11,7 @@
 
       <div class="grid grid-cols-2 gap-4 mt-8 mb-4">
         <div>
-          <p class="text-grey-500 text-xs mb-2">Voting power</p>
+          <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
           <div class="flex items-center align-middle gap-2">
             <MIconPower class="h-8 w-8" />
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
@@ -21,9 +21,9 @@
         </div>
 
         <div>
-          <p class="text-grey-500 text-xs mb-2">Token Balance</p>
+          <p class="text-grey-500 text-xs mb-2 font-inter">Token Balance</p>
           <div class="flex items-center align-middle gap-2">
-            <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
+            <p class="lg:text-xl text-grey-100 mt-2">
               {{
                 useNumberFormatterPrice(
                   balancePowerToken?.data.value?.formatted || 0n
@@ -34,9 +34,12 @@
         </div>
       </div>
 
-      <div v-if="hasDelegatedPower" class="bg-accent-blue p-2 w-fit">
-        <div class="inline-flex items-center gap-3">
-          <p class="text-xs font-mono">Delegated to:</p>
+      <div
+        v-if="hasDelegatedPower"
+        class="bg-accent-blue p-2 py-1 w-fit font-inter"
+      >
+        <div class="inline-flex items-center gap-2">
+          <p class="text-xs">Delegated to:</p>
           <span class="font-inter text-xs">
             {{ shortenAddress(powerDelegates) }}
           </span>
@@ -50,13 +53,16 @@
           </button>
         </div>
       </div>
-      <div v-else class="bg-grey-700 text-white font-mono text-xs p-2 w-fit">
+      <div
+        v-else
+        class="bg-grey-700 text-white font-inter text-xs p-2 py-1 w-fit"
+      >
         Self-delegated
       </div>
     </div>
     <!-- zero -->
-    <div class="px-8 py-4 bg-grey-800">
-      <div class="flex justify-start w-full items-center">
+    <div class="p-6 bg-grey-800">
+      <div class="flex justify-between w-full items-center">
         <p class="text-xl">Zero Token</p>
         <div>
           <ProfileTokenMenu :token="getTokens?.zero" />
@@ -65,7 +71,7 @@
 
       <div class="grid grid-cols-2 gap-4 mt-8 mb-4">
         <div>
-          <p class="text-grey-500 text-xs mb-2">Voting power</p>
+          <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
           <div class="flex items-center align-middle gap-2">
             <MIconPower class="h-8 w-8" />
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
@@ -75,9 +81,9 @@
         </div>
 
         <div>
-          <p class="text-grey-500 text-xs mb-2">Token Balance</p>
+          <p class="text-grey-500 text-xs mb-2 font-inter">Token Balance</p>
           <div class="flex items-center align-middle gap-2">
-            <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
+            <p class="lg:text-xl text-grey-100 mt-2">
               {{
                 useNumberFormatterPrice(
                   balanceZeroToken?.data.value?.formatted || 0
@@ -88,10 +94,10 @@
         </div>
       </div>
 
-      <div v-if="hasDelegatedZero" class="bg-accent-blue p-2 w-fit">
-        <div class="inline-flex items-center gap-3">
-          <p class="text-xs font-mono">Delegated to:</p>
-          <span class="font-inter text-xs">
+      <div v-if="hasDelegatedZero" class="bg-accent-blue p-2 w-fit font-inter">
+        <div class="inline-flex items-center gap-2">
+          <p class="text-xs">Delegated to:</p>
+          <span class="text-xs">
             {{ shortenAddress(zeroDelegates) }}
           </span>
 
@@ -104,7 +110,10 @@
           </button>
         </div>
       </div>
-      <div v-else class="bg-grey-700 text-white font-mono text-xs p-2 w-fit">
+      <div
+        v-else
+        class="bg-grey-700 text-white text-xs p-2 py-1 w-fit font-inter"
+      >
         Self-delegated
       </div>
     </div>

@@ -53,9 +53,23 @@
         <MIconZero v-else-if="['Zero'].includes(value)" />
       </template>
       <template #cell(proposal)="{ item }">
-        <NuxtLink :href="`/proposal/${item?.proposalId}/`" class="underline">{{
-          useParsedDescriptionTitle(item?.description).title
-        }}</NuxtLink>
+        <div class="flex gap-4">
+          <NuxtLink :href="`/proposal/${item?.proposalId}/`" class="underline"
+            >{{ useParsedDescriptionTitle(item?.description).title }}
+          </NuxtLink>
+          <div class="flex items-center">
+            <div
+              class="px-2 py-0.5 text-xxs"
+              :class="{
+                'bg-green-700 text-grey-800': item.votingType === 'Zero',
+                'bg-red-700': item.votingType === 'Emergency',
+                'bg-grey-200 text-grey-800': item.votingType === 'Standard',
+              }"
+            >
+              {{ item.votingType }}
+            </div>
+          </div>
+        </div>
         <p class="text-xs text-grey-600 mt-1">
           {{ item?.proposalLabel }} · Created:
           {{ useDate(item?.timestamp).toFormat("DD.MM.YY") }}
@@ -80,7 +94,7 @@ const selectedType = ref("all");
 const selectedEpoch = ref(0);
 
 const proposalsTableHeader = [
-  { key: "epoch", label: "Epoch", sortable: true },
+  { key: "epoch", label: "Created Epoch", sortable: true },
   { key: "votingType", label: "Token", sortable: false },
   { key: "proposal", label: "Proposal", sortable: true },
   { key: "state", label: "Status", sortable: true },

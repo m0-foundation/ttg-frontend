@@ -15,4 +15,4 @@ cypress/downloads/
 ./contracts/
 auto-imports.d.ts
 components.d.ts
-modules/spog/
+modules/ttg/

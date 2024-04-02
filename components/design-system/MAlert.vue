@@ -2,7 +2,7 @@
   <div class="z-50 shadow-lg alert">
     <div class="items-stretch flex flex-col px-4" :class="type">
       <div
-        class="flex justify-between items-center align-middle gap-2 mt-4 mb-4 min-w-80 max-md:max-w-full max-md:flex-wrap"
+        class="flex justify-between items-center align-middle gap-2 mt-4 mb-4 min-w-80 max-w-96 max-md:max-w-full max-md:flex-wrap"
       >
         <component
           :is="Icon"
