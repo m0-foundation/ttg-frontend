@@ -46,7 +46,6 @@ const descriptionHtml = computed(() => {
 
 function onBack() {
   // emit isPreview
-  console.log("back");
   emit("on-back");
 }
 </script>

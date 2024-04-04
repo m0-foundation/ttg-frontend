@@ -7,10 +7,10 @@ export const useParsedDescriptionTitle = (description: string) => {
     const titleHtml = dom.getElementsByTagName("h1")[0];
     const firstParagraph = dom.getElementsByTagName("p")[0];
     if (titleHtml) {
-      return titleHtml.innerHTML;
+      return titleHtml.innerText;
     }
     if (firstParagraph) {
-      return firstParagraph.innerHTML;
+      return firstParagraph.innerText;
     }
     return "";
   });
@@ -21,12 +21,12 @@ export const useParsedDescriptionTitle = (description: string) => {
     if (titleHtml) {
       titleHtml.remove();
     }
-    return dom.body.innerHTML;
+    return dom.body.innerText;
   });
 
   return {
     html,
-    title,
-    onlyDescription,
+    title: title.value,
+    onlyDescription: onlyDescription.value,
   };
 };

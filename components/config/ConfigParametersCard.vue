@@ -10,7 +10,10 @@
           <p class="text-2xl font-bold">
             {{ formattedValue(param) }}
           </p>
-          <p class="config-key-badge">{{ param?.value }}</p>
+          <p class="config-key-badge">
+            <span v-if="param?.value">{{ param?.value }}</span>
+            <span v-else>Parameter not set</span>
+          </p>
         </div>
         <MDropdown v-if="param?.proposal?.executedEvent" origin="right">
           <ul class="dropdown-menu-items">
@@ -21,7 +24,7 @@
               <p>
                 {{
                   useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
-                    "LLL"
+                    "LLL",
                   )
                 }}
               </p>

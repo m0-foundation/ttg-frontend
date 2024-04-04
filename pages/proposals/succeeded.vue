@@ -45,7 +45,7 @@ async function onExecute(proposal: MProposal) {
   const targets = [governor?.address as Hash];
   const values = [BigInt(0)]; // do not change
 
-  isLoading.value = true;
+  proposalStore.updateProposalByKey(proposal.proposalId, "executing", true);
   try {
     const hash = await writeContract(wagmiConfig, {
       abi: governor!.abi as Abi,
@@ -72,7 +72,7 @@ async function onExecute(proposal: MProposal) {
     console.error("Error executing proposal", error);
     alerts.errorAlert("Error while executing proposal");
   } finally {
-    isLoading.value = false;
+    proposalStore.updateProposalByKey(proposal.proposalId, "executing", false);
   }
 }
 </script>

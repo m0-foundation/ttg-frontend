@@ -15,7 +15,7 @@
       </div>
 
       <div class="text-grey-600 font-inter mb-4">
-        {{ truncatedDescriptionText }}
+        {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
 
       <button
@@ -110,8 +110,8 @@
           <MButton
             id="button-proposal-execute"
             data-test="proposal-button-execute"
-            :disabled="isDisconnected || isLoading"
-            :is-loading="isLoading"
+            :disabled="isDisconnected || proposal.executing"
+            :is-loading="proposal.executing"
             @click="onExecuteProposal()"
           >
             Execute
@@ -145,7 +145,6 @@ const emit = defineEmits<{
 const apiStore = useApiClientStore();
 
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
-const { title } = useParsedDescriptionTitle(props.proposal.description);
 
 const selectedVote = ref<null | boolean>(null);
 
@@ -165,10 +164,8 @@ const isVoteNoActive = computed(() => {
 const voteEndTimestamp = ref();
 const isLoading = computed(() => props.loading);
 
-const { text: truncatedDescriptionText } = useParsedDescription(
-  truncate(props.proposal.description, {
-    length: 450,
-  }),
+const { onlyDescription, title } = useParsedDescriptionTitle(
+  props.proposal.description,
 );
 
 function onViewProposal() {

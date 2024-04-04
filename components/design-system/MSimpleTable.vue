@@ -37,7 +37,7 @@
                 'p-2': dense,
                 'w-full': field.expand,
               }"
-              @click="sort(field.key)"
+              @click="field.sortable && sort(field.key)"
             >
               <slot :name="`head(${field.key})`" :field="field">
                 <div class="flex gap-2" :class="`w-${field.width}`">

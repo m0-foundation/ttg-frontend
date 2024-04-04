@@ -73,10 +73,8 @@ export const useProposalsStore = defineStore("proposals", {
     updateProposalByKey(proposalId: string, key: keyof MProposal, value: any) {
       const proposalStore = this.data.find((p) => p.proposalId === proposalId);
       if (proposalStore) {
-        if (has(proposalStore, key)) {
-          const newProposal = { ...proposalStore, [key]: value } as MProposal;
-          this.update(newProposal);
-        }
+        const newProposal = { ...proposalStore, [key]: value } as MProposal;
+        this.update(newProposal);
       }
     },
 
