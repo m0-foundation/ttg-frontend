@@ -36,18 +36,18 @@ const currentProposal = ref<string>();
 const modal = ref();
 
 async function onViewProposal(proposalId: string) {
+  // do not change this oder;
   await modal.value.close(); //waits for the drawer to unmount
-  if (currentProposal.value !== proposalId) {
-    showProposal.value = false; // force unmount content of drawer
-    currentProposal.value = proposalId;
-    showProposal.value = true;
-    modal.value.open();
-    window.history.pushState({}, "", `/proposal/${proposalId}`);
-  }
+  showProposal.value = false; // force unmount content of drawer
+  currentProposal.value = proposalId;
+  showProposal.value = true;
+  modal.value.open();
+  window.history.pushState({}, "", `/proposal/${proposalId}`);
 }
 
 function onCloseDrawer() {
   showProposal.value = false;
+  currentProposal.value = undefined;
   window.history.replaceState({}, "", "/proposals/");
 }
 </script>
