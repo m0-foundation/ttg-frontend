@@ -59,7 +59,7 @@
           </NuxtLink>
           <div class="flex items-center">
             <div
-              class="px-2 py-0.5 text-xxs"
+              class="px-2 py-0.5 text-xxs leading-4"
               :class="{
                 'bg-green-700 text-grey-800': item.votingType === 'Zero',
                 'bg-red-700': item.votingType === 'Emergency',

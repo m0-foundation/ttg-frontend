@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { merge } from "lodash";
 
 useHead({
   titleTemplate: "%s - Protocol configurations",
@@ -122,7 +123,7 @@ const protocolParametersData = [
     description:
       "Base yearly interest rate that continuously accrues on $M owed to the protocol.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters",
-    type: "",
+    type: "basisPoints",
   },
 
   {
@@ -131,7 +132,7 @@ const protocolParametersData = [
     description:
       "Maximum yearly interest rate that continuously accrues on $M owned by Earners.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters",
-    type: "",
+    type: "basisPoints",
   },
 ];
 
@@ -145,7 +146,7 @@ const protocolDataSorted = computed(() => {
       proposal: proposals.value.find(
         (proposal) =>
           proposal.proposalParams[0] === p.key &&
-          proposal.executedEvent?.timestamp
+          proposal.executedEvent?.timestamp,
       ),
     }))
     .sort((a, b) => {
