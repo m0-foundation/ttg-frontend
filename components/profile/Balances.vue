@@ -73,7 +73,7 @@
         <div>
           <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
           <div class="flex items-center align-middle gap-2">
-            <MIconPower class="h-8 w-8" />
+            <MIconZero class="h-8 w-8" />
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
               {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
             </p>
