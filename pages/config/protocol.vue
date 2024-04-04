@@ -66,7 +66,7 @@ const protocolParametersData = [
     description:
       "The percentage charged on Owed M that is in excess of the amount a Minter is permitted to have generated.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#penalty-rate",
-    type: "",
+    type: "basisPoints",
   },
   {
     title: "Mint Delay",
@@ -74,7 +74,7 @@ const protocolParametersData = [
     description:
       "This amount of time is the period between when a Minter has called Propose Mint and when they can first call Mint M.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-delay",
-    type: "",
+    type: "time",
   },
   {
     title: "Mint TTL",
@@ -82,7 +82,7 @@ const protocolParametersData = [
     description:
       "This is the amount of time after the Mint Delay that a Proposed Mint has to be called before it expires.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#propose-mint-time-to-live",
-    type: "",
+    type: "time",
   },
   {
     title: "Mint Ratio",
@@ -90,7 +90,7 @@ const protocolParametersData = [
     description:
       "This percentage is the fraction of a Minter’s on-chain Collateral Value that they can generate in M. It effectively controls the leverage of a Minter and the over-collateralization of M. It is alterable with a Standard Proposal.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-ratio",
-    type: "",
+    type: "basisPoints",
   },
   {
     title: "Minter Freeze Time",
@@ -98,7 +98,7 @@ const protocolParametersData = [
     description:
       "This amount of time is the duration for which a Minter will not be able to call Propose Mint or Mint after having the Freeze method called by a Validator on their address. It is alterable with a Standard Proposal. ",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-freeze-time",
-    type: "",
+    type: "time",
   },
   {
     title: "Minter Rate Model",
@@ -146,7 +146,7 @@ const protocolDataSorted = computed(() => {
       proposal: proposals.value.find(
         (proposal) =>
           proposal.proposalParams[0] === p.key &&
-          proposal.executedEvent?.timestamp,
+          proposal.executedEvent?.timestamp
       ),
     }))
     .sort((a, b) => {
