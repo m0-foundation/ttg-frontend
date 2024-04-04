@@ -110,8 +110,8 @@
           <MButton
             id="button-proposal-execute"
             data-test="proposal-button-execute"
-            :disabled="isDisconnected || isLoading"
-            :is-loading="isLoading"
+            :disabled="isDisconnected || proposal.executing"
+            :is-loading="proposal.executing"
             @click="onExecuteProposal()"
           >
             Execute
