@@ -24,7 +24,7 @@
               <p>
                 {{
                   useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
-                    "LLL"
+                    "LLL",
                   )
                 }}
               </p>

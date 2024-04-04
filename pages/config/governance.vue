@@ -113,7 +113,7 @@ const mutableParametersWithData = mutable.value.map((p) => {
     value: p.value,
     ...parametersData.find((param) => param.key === p.key),
     proposal: proposals.value.find(
-      (proposal) => proposal.proposalParams[0] === p.key
+      (proposal) => proposal.proposalParams[0] === p.key,
     ),
   };
 });
