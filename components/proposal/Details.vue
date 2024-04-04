@@ -45,7 +45,7 @@
         />
       </div>
 
-      <div class="markdown-body mb-3" v-html="onlyDescription"></div>
+      <div class="markdown-body mb-8" v-html="onlyDescription"></div>
 
       <ProposalTechnical
         :proposal="proposal"
@@ -53,7 +53,7 @@
       />
 
       <div class="mt-8">
-        <div class="text-grey-900">
+        <div class="text-grey-900 border-t border-grey-200 border-dashed py-4">
           <h3 class="text-xl">Voters</h3>
         </div>
 
@@ -78,12 +78,12 @@ const props = defineProps<ProposalDetailsProps>();
 const proposalStore = useProposalsStore();
 
 const proposal = computed(() =>
-  proposalStore.getProposalById(props.proposalId),
+  proposalStore.getProposalById(props.proposalId)
 );
 const proposalId = computed(() => props.proposalId);
 
 const { onlyDescription, title } = useParsedDescriptionTitle(
-  proposal?.value?.description || "",
+  proposal?.value?.description!
 );
 
 const spog = useSpogStore();
@@ -100,10 +100,10 @@ const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
 const zeroThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!),
+  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!)
 );
 const powerThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!),
+  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!)
 );
 
 const votesStore = useVotesStore();
@@ -127,7 +127,7 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
       functionName: "totalSupply",
     }),
   ]),
-  [0n, 0n],
+  [0n, 0n]
 );
 
 votesStore.fetchAllVotes();
