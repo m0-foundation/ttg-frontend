@@ -26,7 +26,7 @@ export const useParsedDescriptionTitle = (description: string) => {
 
   return {
     html,
-    title: title.value,
-    onlyDescription: onlyDescription.value,
+    title,
+    onlyDescription,
   };
 };
