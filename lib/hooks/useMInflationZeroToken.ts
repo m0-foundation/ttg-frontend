@@ -1,7 +1,7 @@
 import { useAccount, useReadContract } from "use-wagmi";
 import { Hash, formatUnits } from "viem";
 import get from "lodash/get";
-import { readZeroTokenPastTotalSupply, zeroTokenAbi } from "@/lib/sdk";
+import { powerTokenAbi, readZeroTokenPastTotalSupply } from "@/lib/sdk";
 
 export default () => {
   // formula: maxTotalZeroRewardPerActiveEpoch * getPastVotes(account, lastEpoch) / pastTotalSupply(lastEpoch)
@@ -16,8 +16,8 @@ export default () => {
   const lastEpoch = BigInt(currentEpoch - 1);
 
   const getPastVotes = useReadContract({
-    address: spog.contracts.zeroToken as Hash,
-    abi: zeroTokenAbi,
+    address: spog.contracts.powerToken as Hash,
+    abi: powerTokenAbi,
     functionName: "getPastVotes",
     args: [account as Ref<Hash>, lastEpoch],
     query: {
@@ -55,6 +55,8 @@ export default () => {
 
     const inflatorBalance =
       Number(maxTotalZeroRewardPerActiveEpoch!) * inflatorRatio;
+
+    console.log({ inflatorRatio, inflatorBalance });
 
     return formatUnits(
       BigInt(inflatorBalance.toFixed(0)),
