@@ -113,8 +113,6 @@ const votes = computed(() => {
   }
 });
 
-console.log("VOTES", votes.value?.value);
-
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
     readPowerToken(wagmiConfig, {
@@ -130,10 +128,17 @@ const { state: totalSupplyAt, isLoading } = useAsyncState(
   [0n, 0n]
 );
 
-votesStore.fetchAllVotes();
+/*
+votesStore.fetchAllVotes request takes a lot of requests since for each vote event it needs to find the Block timestamp then is a RPC request for each vote
+Improve this would need to find only events for that proposalI but the event signature does have proposalId as indexed.
+Thus need to find all events. What could be done is to fetch only votes of proposal voting type: Standard, Emergency or Zero;
+*/
+votesStore.fetchVotes(proposal.value!.votingType!);
+
+// update tally on mount
 proposalStore.updateProposalById(props.proposalId);
 
-const { unwatchAll } = watchVoteCast();
+const { unwatchAll } = watchVoteCast(proposal.value!.votingType!);
 
 onUnmounted(() => {
   console.log("unwatching all votes");
