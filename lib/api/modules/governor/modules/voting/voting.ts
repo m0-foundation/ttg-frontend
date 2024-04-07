@@ -25,6 +25,8 @@ export class Voting extends GovernorModule {
       epoch,
     } as MVote;
 
+    vote.voteId = `${vote.proposalId}_${vote.voter}`;
+
     return vote;
   }
 

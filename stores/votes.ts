@@ -1,4 +1,4 @@
-import _ from "lodash";
+import uniqBy from "lodash/uniqBy";
 import { MVote } from "@/lib/api/types";
 import { defineStore } from "pinia";
 
@@ -7,24 +7,56 @@ export const useVotesStore = defineStore("votes", () => {
 
   const votes = ref<Array<MVote>>([]);
 
-  async function fetchAllVotes() {
-    const [standardVotes, emergencyVotes, zeroVotes] = await Promise.all([
-      api.client!.standardGovernor!.voting!.getAllVotes(),
-      api.client.emergencyGovernor!.voting!.getAllVotes(),
-      api.client.zeroGovernor!.voting!.getAllVotes(),
-    ]);
-
-    votes.value = [...standardVotes, ...emergencyVotes, ...zeroVotes];
-  }
-
   function getBy(key: keyof MVote, value: string) {
     return computed(() => votes.value.filter((v) => v[key] === value));
   }
 
-  function push(addVotes: MVote[]) {
-    console.log({ addVotes });
-    votes.value = [..._.uniqBy([...votes.value, ...addVotes], "data")];
+  function add(newVotes: MVote[]) {
+    votes.value = [...uniqBy([...votes.value, ...newVotes], "voteId")];
   }
 
-  return { votes, fetchAllVotes, getBy, push };
+  async function fetchVotesStandard() {
+    console.log("fetchVotesStandard");
+    const votes = await api.client.standardGovernor!.voting!.getAllVotes();
+    add(votes);
+  }
+
+  async function fetchVotesEmergency() {
+    console.log("fetchVotesEmergency");
+    const votes = await api.client.emergencyGovernor!.voting!.getAllVotes();
+    add(votes);
+  }
+
+  async function fetchVotesZero() {
+    console.log("fetchVotesZero");
+    const votes = await api.client.zeroGovernor!.voting!.getAllVotes();
+    add(votes);
+  }
+
+  async function fetchAllVotes() {
+    await Promise.all([
+      fetchVotesStandard(),
+      fetchVotesEmergency(),
+      fetchVotesZero(),
+    ]);
+  }
+
+  async function fetchVotes(votingType: "Standard" | "Emergency" | "Zero") {
+    return votingType === "Standard"
+      ? await fetchVotesStandard()
+      : votingType === "Emergency"
+        ? await fetchVotesEmergency()
+        : await fetchVotesZero();
+  }
+
+  return {
+    votes,
+    fetchAllVotes,
+    fetchVotesStandard,
+    fetchVotesEmergency,
+    fetchVotesZero,
+    fetchVotes,
+    getBy,
+    add,
+  };
 });
