@@ -25,6 +25,8 @@ export default () => {
     },
   });
 
+  console.log({ getPastVotes });
+
   // wrap promise into ref
   const { state: pastTotalSupplyState } = useAsyncState(
     readZeroTokenPastTotalSupply(wagmiConfig, {
@@ -33,6 +35,8 @@ export default () => {
     }),
     null,
   );
+
+  console.log({ pastTotalSupplyState });
 
   return computed(() => {
     //  return 0 to avoid division by zero
@@ -47,16 +51,12 @@ export default () => {
       toValue(pastTotalSupplyState) as unknown as bigint,
     );
 
-    console.log({ pastVotes, pastTotalSupply });
-
-    // safe division in bigint with 2 decimal places
-    const inflatorRatio =
-      Number((pastVotes * 10_000n) / pastTotalSupply) / 10_000;
-
+    // maxTotalZeroRewardPerActiveEpoch * getPastVotes(account, lastEpoch) / pastTotalSupply(lastEpoch)
     const inflatorBalance =
-      Number(maxTotalZeroRewardPerActiveEpoch!) * inflatorRatio;
+      (Number(maxTotalZeroRewardPerActiveEpoch!) * Number(pastVotes)) /
+      Number(pastTotalSupply);
 
-    console.log({ inflatorRatio, inflatorBalance });
+    console.log({ inflatorBalance });
 
     return formatUnits(
       BigInt(inflatorBalance.toFixed(0)),
