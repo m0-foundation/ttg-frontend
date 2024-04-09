@@ -6,12 +6,12 @@
 
     <template #cell(vote)="{ value, item }">
       <a
-        class="flex items-center cursor-pointer"
+        class="flex items-center cursor-pointer hover:underline"
         :href="useBlockExplorer('tx', item.transactionHash)"
       >
         <div
           class="w-2.5 h-2.5"
-          :class="value ? 'bg-green-800' : 'bg-red-800'"
+          :class="value ? 'bg-green-800' : 'bg-red-600'"
         ></div>
         <span class="text-xs px-2 py-1 uppercase">{{
           value ? "Yes" : "No"
