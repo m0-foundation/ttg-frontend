@@ -6,7 +6,7 @@
 
     <template #cell(vote)="{ value, item }">
       <a
-        class="flex items-center gap-2 cursor-pointer"
+        class="flex items-center gap-2 cursor-pointer hover:underline"
         :href="useBlockExplorer('tx', item.transactionHash)"
       >
         <div

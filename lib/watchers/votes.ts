@@ -9,7 +9,7 @@ import {
   watchZeroGovernorEvent,
 } from "@/lib/sdk";
 
-export const watchVoteCast = () => {
+export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   console.log("watchVoteCast");
   const spog = storeToRefs(useSpogStore());
   const network = useNetworkStore().getNetwork();
@@ -25,8 +25,9 @@ export const watchVoteCast = () => {
       logs.map((log) => governor.voting.decodeVote(log)),
     );
 
-    votesStore.push(newVotes);
+    votesStore.add(newVotes);
 
+    // update tally
     await Promise.all(
       newVotes.map((vote) =>
         proposalStore.updateProposalById(vote.proposalId!),
@@ -34,32 +35,55 @@ export const watchVoteCast = () => {
     );
   };
 
-  const unwatchStandard = watchStandardGovernorEvent(wagmiConfig, {
-    address: spog.contracts.value.standardGovernor as Hash,
-    eventName: "VoteCast",
-    chainId: network.value.rpc.chainId,
-    onLogs: (logs) => onEvent(logs, api.client.standardGovernor as Governor),
-  });
+  if (votinType === "Standard") {
+    console.log("watchStandard");
+    const unwatchStandard = watchStandardGovernorEvent(wagmiConfig, {
+      address: spog.contracts.value.standardGovernor as Hash,
+      eventName: "VoteCast",
+      chainId: network.value.rpc.chainId,
+      onLogs: (logs) => onEvent(logs, api.client.standardGovernor as Governor),
+    });
 
-  const unwatchEmergency = watchEmergencyGovernorEvent(wagmiConfig, {
-    address: spog.contracts.value.emergencyGovernor as Hash,
-    eventName: "VoteCast",
-    chainId: network.value.rpc.chainId,
-    onLogs: (logs) => onEvent(logs, api.client.emergencyGovernor as Governor),
-  });
+    return {
+      unwatchAll: () => {
+        unwatchStandard();
+      },
+    };
+  }
 
-  const unwatchZero = watchZeroGovernorEvent(wagmiConfig, {
-    address: spog.contracts.value.zeroGovernor as Hash,
-    eventName: "VoteCast",
-    chainId: network.value.rpc.chainId,
-    onLogs: (logs) => onEvent(logs, api.client.zeroGovernor as Governor),
-  });
+  if (votinType === "Emergency") {
+    console.log("watchEmergencyVotes");
+    const unwatchEmergency = watchEmergencyGovernorEvent(wagmiConfig, {
+      address: spog.contracts.value.emergencyGovernor as Hash,
+      eventName: "VoteCast",
+      chainId: network.value.rpc.chainId,
+      onLogs: (logs) => onEvent(logs, api.client.emergencyGovernor as Governor),
+    });
+
+    return {
+      unwatchAll: () => {
+        unwatchEmergency();
+      },
+    };
+  }
+
+  if (votinType === "Zero") {
+    console.log("watchZeroVotes");
+    const unwatchZero = watchZeroGovernorEvent(wagmiConfig, {
+      address: spog.contracts.value.zeroGovernor as Hash,
+      eventName: "VoteCast",
+      chainId: network.value.rpc.chainId,
+      onLogs: (logs) => onEvent(logs, api.client.zeroGovernor as Governor),
+    });
+
+    return {
+      unwatchAll: () => {
+        unwatchZero();
+      },
+    };
+  }
 
   return {
-    unwatchAll: () => {
-      unwatchStandard();
-      unwatchEmergency();
-      unwatchZero();
-    },
+    unwatchAll: () => {},
   };
 };

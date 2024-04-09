@@ -15,7 +15,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { merge } from "lodash";
 
 useHead({
   titleTemplate: "%s - Protocol configurations",
