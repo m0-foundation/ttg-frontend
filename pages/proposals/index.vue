@@ -1,7 +1,12 @@
 <template>
   <NuxtLayout name="proposals">
     <div
-      v-if="!hasFinishedVoting && isConnected && hasProposals"
+      v-if="
+        !hasFinishedVoting &&
+        isConnected &&
+        hasProposals &&
+        (powerInflation || zeroInflation)
+      "
       class="p-8 py-6 bg-grey-200 font-inter flex flex-col gap-3 text-grey-600 mb-6"
     >
       <div class="flex flex-col lg:flex-row gap-3 items-start">

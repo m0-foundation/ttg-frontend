@@ -6,16 +6,16 @@
 
     <template #cell(vote)="{ value, item }">
       <a
-        class="flex items-center cursor-pointer hover:underline"
+        class="flex items-center gap-2 cursor-pointer hover:underline"
         :href="useBlockExplorer('tx', item.transactionHash)"
       >
         <div
           class="w-2.5 h-2.5"
-          :class="value ? 'bg-green-800' : 'bg-red-600'"
+          :class="value ? 'bg-green-800' : 'bg-red-700'"
         ></div>
-        <span class="text-xs px-2 py-1 uppercase">{{
-          value ? "Yes" : "No"
-        }}</span>
+        <span class="text-xs uppercase">
+          {{ value ? "Yes" : "No" }}
+        </span>
       </a>
     </template>
   </MSimpleTable>
@@ -35,7 +35,7 @@ const props = defineProps<Props>();
 const votesTableHeaders = ref([
   { key: "voter", label: "Address" },
   { key: "votes", label: "Votes", sortable: true },
-  { key: "vote", label: "Voted" },
+  { key: "vote", label: "Voted", sortable: true },
 ]);
 
 const votes = computed(() => {
