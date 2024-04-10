@@ -1,6 +1,5 @@
 import { MProposal } from "@/lib/api/types";
 import { defineStore } from "pinia";
-import { randomBytes } from "@ethersproject/random";
 
 export const useAlertsStore = defineStore("alerts", () => {
   const reset = ref<{ show: boolean; proposal?: MProposal }>({
