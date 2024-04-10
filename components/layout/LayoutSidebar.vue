@@ -83,7 +83,7 @@
               :version="hasDelegatedPower ? 'dark' : 'light'"
             />
             <span :class="[hasDelegatedPower ? 'text-grey-600' : 'text-white']">
-              {{ powerVotingPower?.data.value?.relative?.toFixed(1) }}%
+              {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
             </span>
           </div>
           <span class="text-grey-600 text-xxs">
@@ -113,7 +113,7 @@
               class="h-5 w-5"
             />
             <span :class="[hasDelegatedZero ? 'text-grey-600' : 'text-white']">
-              {{ zeroVotingPower?.data.value?.relative?.toFixed(1) }}%
+              {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
             </span>
           </div>
           <span class="text-grey-600 text-xxs">
