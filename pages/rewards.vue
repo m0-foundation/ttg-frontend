@@ -99,7 +99,17 @@ const wagmiConfig = useWagmiConfig();
 const spog = useSpogStore();
 const alerts = useAlertsStore();
 
-const allowedCashTokens = computed(() => spog.governors.zero.allowedCashTokens);
+// const allowedCashTokens = computed(() => spog.governors.zero.allowedCashTokens);
+// This is a temporary replacement for M token on dry-run in staging environment
+const allowedCashTokens = computed(() => {
+  return spog.governors.zero.allowedCashTokens?.map((token) => ({
+    ...token,
+    address:
+      token.symbol === "MONEY"
+        ? "0xc5165406dB791549f0D2423D1483c1EA10A3A206"
+        : token.address,
+  }));
+});
 
 const claimEpochStart = computed(() =>
   BigInt(epoch.value.current.asNumber - 50)
