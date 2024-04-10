@@ -6,9 +6,11 @@
       }}</NuxtLink>
     </template>
     <template #cell(vote)="{ value }">
-      <span class="text-grey-600">
-        <span v-if="value" class="bg-green-700 px-2 py-1">YES</span>
-        <span v-else class="bg-red-700 px-2 py-1">NO</span>
+      <span>
+        <span v-if="value" class="bg-green-700 px-2 py-1 text-grey-600">
+          YES
+        </span>
+        <span v-else class="bg-red-700 px-2 py-1 text-white">NO</span>
       </span>
     </template>
     <template #cell(castedAt)="{ value }">
