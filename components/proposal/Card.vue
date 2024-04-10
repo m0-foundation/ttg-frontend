@@ -79,7 +79,7 @@
             </ProposalButtonCastVote>
 
             <div class="text-xxs text-grey-600 uppercase mx-2 font-inter">
-              <p v-show="!canVote">Not enought voting power</p>
+              <p v-show="!canVote">Not enough voting power</p>
               <p v-show="hasVoted">Your vote has been submitted</p>
             </div>
           </div>
