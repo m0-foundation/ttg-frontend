@@ -1,5 +1,6 @@
 import { MProposal } from "@/lib/api/types";
 import { defineStore } from "pinia";
+import { randomBytes } from "@ethersproject/random";
 
 export const useAlertsStore = defineStore("alerts", () => {
   const reset = ref<{ show: boolean; proposal?: MProposal }>({
@@ -11,13 +12,10 @@ export const useAlertsStore = defineStore("alerts", () => {
     Array<{
       show: boolean;
       message: string;
-      id: number;
+      id: string;
       type: "success" | "error" | "info";
     }>
   >([]);
-
-  const count = computed(() => items.value.length);
-
   const addAlert = ({
     message,
     type,
@@ -25,11 +23,15 @@ export const useAlertsStore = defineStore("alerts", () => {
     message: string;
     type: "success" | "error" | "info";
   }) => {
-    const id = count.value + 1;
+    const id = String(randomBytes(8));
     items.value.unshift({ show: true, message, type, id });
+
+    setTimeout(() => {
+      removeAlert(id);
+    }, 10_000); // 10 seconds to automatically close the alert
   };
 
-  const removeAlert = (id: number) => {
+  const removeAlert = (id: string) => {
     items.value = items.value.filter((alert) => alert.id !== id);
   };
 
