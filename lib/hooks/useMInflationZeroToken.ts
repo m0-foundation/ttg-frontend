@@ -30,7 +30,7 @@ export default () => {
   // wrap promise into ref
   const { state: pastTotalSupplyState } = useAsyncState(
     readZeroTokenPastTotalSupply(wagmiConfig, {
-      address: spog.contracts.zeroToken! as Hash,
+      address: spog.contracts.powerToken! as Hash,
       args: [lastEpoch],
     }),
     null,
@@ -51,16 +51,17 @@ export default () => {
       toValue(pastTotalSupplyState) as unknown as bigint,
     );
 
-    // maxTotalZeroRewardPerActiveEpoch * getPastVotes(account, lastEpoch) / pastTotalSupply(lastEpoch)
-    const inflatorBalance =
-      (Number(maxTotalZeroRewardPerActiveEpoch!) * Number(pastVotes)) /
-      Number(pastTotalSupply);
-
-    console.log({ inflatorBalance });
-
-    return formatUnits(
-      BigInt(inflatorBalance.toFixed(0)),
-      spog.tokens.zero.decimals!,
+    const zeroDecimalsMaxTotalZeroRewardPerActiveEpoch = BigInt(
+      maxTotalZeroRewardPerActiveEpoch!,
     );
+    const powerDecimalsPastVotes = BigInt(pastVotes);
+    const powerDecimalsPastTotalSupply = BigInt(pastTotalSupply);
+
+    // maxTotalZeroRewardPerActiveEpoch * getPastVotes(account, lastEpoch) / pastTotalSupply(lastEpoch)
+    const zeroDecimalsProRataRewards =
+      (zeroDecimalsMaxTotalZeroRewardPerActiveEpoch * powerDecimalsPastVotes) /
+      powerDecimalsPastTotalSupply;
+
+    return formatUnits(zeroDecimalsProRataRewards, spog.tokens.zero.decimals!);
   });
 };
