@@ -14,5 +14,9 @@ export const copyToClipboard = (text: undefined | string | number) => {
   }
 };
 
+export const generateRandomId = () =>
+  Math.random().toString(32).substring(2, 5) +
+  Math.random().toString(32).substring(2, 5);
+
 export const wait = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));

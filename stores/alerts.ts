@@ -23,7 +23,7 @@ export const useAlertsStore = defineStore("alerts", () => {
     message: string;
     type: "success" | "error" | "info";
   }) => {
-    const id = String(randomBytes(8));
+    const id = generateRandomId();
     items.value.unshift({ show: true, message, type, id });
 
     setTimeout(() => {
