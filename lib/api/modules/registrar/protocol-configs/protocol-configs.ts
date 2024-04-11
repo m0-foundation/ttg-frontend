@@ -18,6 +18,7 @@ export class ProtocolConfigs extends ApiModule {
     "minter_freeze_time",
     "base_minter_rate",
     "max_earner_rate",
+    "guidance",
   ];
 
   keysInAddress = ["minter_rate_model", "earner_rate_model"];
