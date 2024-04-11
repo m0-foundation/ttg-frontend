@@ -1,4 +1,4 @@
-import { Hash, decodeAbiParameters } from "viem";
+import { Hash, decodeAbiParameters, hexToString } from "viem";
 
 import { registrarAbi } from "@/lib/sdk";
 import {
@@ -35,9 +35,11 @@ export class ProtocolConfigs extends ApiModule {
 
     const keyValuesBytes = this.keysInBytes32.map((key, index) => ({
       key,
-      value: String(
-        decodeAbiParameters([{ type: "uint256" }], valuesBytes[index]),
-      ),
+      value: ["guidance"].includes(key)
+        ? hexToString(String(valuesBytes[index]))
+        : String(
+            decodeAbiParameters([{ type: "uint256" }], valuesBytes[index]),
+          ),
     }));
 
     const valuesAddress = await this.client.readContract({
