@@ -1,5 +1,5 @@
 import { useAccount, useReadContract } from "use-wagmi";
-import { Hash } from "viem";
+import { Hash, formatUnits } from "viem";
 import get from "lodash/get";
 import { powerTokenAbi } from "@/lib/sdk";
 
@@ -44,6 +44,6 @@ export default () => {
     );
 
     const powerInflation = Number(pastBalance * inflatorRatio) / 10_000;
-    return powerInflation;
+    return formatUnits(BigInt(powerInflation), spog.tokens.power.decimals!);
   });
 };

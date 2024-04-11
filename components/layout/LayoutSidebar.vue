@@ -100,6 +100,13 @@
         >
           <p class="text-xxs font-inter">Voting power is delegated</p>
         </div>
+
+        <div
+          v-if="hasReceivedPowerVotingPower"
+          class="bg-green-800 p-2 py-1 mt-2 text-left w-fit"
+        >
+          <p class="text-xxs font-inter">Delegatee</p>
+        </div>
       </div>
 
       <hr class="border-grey-700 border-dashed my-4" />
@@ -129,6 +136,13 @@
           class="bg-accent-blue p-2 py-1 mt-2 text-center"
         >
           <p class="text-xxs font-inter">Voting power is delegated</p>
+        </div>
+
+        <div
+          v-if="hasReceivedZeroVotingPower"
+          class="bg-green-800 p-2 py-1 mt-2 text-left w-fit"
+        >
+          <p class="text-xxs font-inter">Delegatee</p>
         </div>
       </div>
     </div>
@@ -181,6 +195,17 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
+
+const hasReceivedPowerVotingPower = computed(
+  () =>
+    powerVotingPower?.data?.value?.value! >
+    balancePowerToken.data?.value?.value!
+);
+
+const hasReceivedZeroVotingPower = computed(
+  () =>
+    zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!
+);
 
 const mainMenuItems = computed(() => {
   return [

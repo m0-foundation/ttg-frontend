@@ -1,9 +1,12 @@
 <template>
   <MSimpleTable :items="proposalsTableData" :fields="proposalsTableHeaders">
     <template #cell(proposal)="{ item }">
-      <NuxtLink class="underline" :to="`/proposal/${item?.proposalId}`">{{
-        useParsedDescriptionTitle(item.proposal).title
-      }}</NuxtLink>
+      <NuxtLink
+        class="underline hover:no-underline"
+        :to="`/proposal/${item?.proposalId}`"
+      >
+        {{ useParsedDescriptionTitle(item.proposal).title }}
+      </NuxtLink>
     </template>
     <template #cell(action)="{ value }">
       <span class="text-grey-600">{{ value }}</span>

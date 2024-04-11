@@ -6,8 +6,6 @@ export interface MVote extends EventLog {
   support?: boolean;
   voter?: string;
   weight?: BigInt;
-  timestamp?: number;
-  epoch?: number;
   data?: string;
   voteId?: string;
 }

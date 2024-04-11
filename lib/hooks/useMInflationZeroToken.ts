@@ -25,14 +25,18 @@ export default () => {
     },
   });
 
+  console.log({ getPastVotes });
+
   // wrap promise into ref
   const { state: pastTotalSupplyState } = useAsyncState(
     readZeroTokenPastTotalSupply(wagmiConfig, {
-      address: spog.contracts.zeroToken! as Hash,
+      address: spog.contracts.powerToken! as Hash,
       args: [lastEpoch],
     }),
     null,
   );
+
+  console.log({ pastTotalSupplyState });
 
   return computed(() => {
     //  return 0 to avoid division by zero
@@ -47,20 +51,17 @@ export default () => {
       toValue(pastTotalSupplyState) as unknown as bigint,
     );
 
-    console.log({ pastVotes, pastTotalSupply });
-
-    // safe division in bigint with 2 decimal places
-    const inflatorRatio =
-      Number((pastVotes * 10_000n) / pastTotalSupply) / 10_000;
-
-    const inflatorBalance =
-      Number(maxTotalZeroRewardPerActiveEpoch!) * inflatorRatio;
-
-    console.log({ inflatorRatio, inflatorBalance });
-
-    return formatUnits(
-      BigInt(inflatorBalance.toFixed(0)),
-      spog.tokens.zero.decimals!,
+    const zeroDecimalsMaxTotalZeroRewardPerActiveEpoch = BigInt(
+      maxTotalZeroRewardPerActiveEpoch!,
     );
+    const powerDecimalsPastVotes = BigInt(pastVotes);
+    const powerDecimalsPastTotalSupply = BigInt(pastTotalSupply);
+
+    // maxTotalZeroRewardPerActiveEpoch * getPastVotes(account, lastEpoch) / pastTotalSupply(lastEpoch)
+    const zeroDecimalsProRataRewards =
+      (zeroDecimalsMaxTotalZeroRewardPerActiveEpoch * powerDecimalsPastVotes) /
+      powerDecimalsPastTotalSupply;
+
+    return formatUnits(zeroDecimalsProRataRewards, spog.tokens.zero.decimals!);
   });
 };

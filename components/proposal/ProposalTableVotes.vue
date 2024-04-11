@@ -44,7 +44,6 @@ const votes = computed(() => {
   return votesOrdered.map((v: MVote) => ({
     voter: v.voter,
     vote: v.support,
-    castedAt: v.timestamp,
     votes: useNumberFormatterCompact(String(v.weight)),
     transactionHash: v.transactionHash,
   }));
