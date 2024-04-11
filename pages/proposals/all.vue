@@ -11,8 +11,9 @@
             <NuxtLink
               class="text-green-700 hover:text-green-600 text-sm uppercase cursor-pointer"
               @click="$router.back()"
-              >Back</NuxtLink
             >
+              Back
+            </NuxtLink>
           </template>
           <template #default>All proposals</template>
         </PageTitle>
@@ -54,9 +55,12 @@
       </template>
       <template #cell(proposal)="{ item }">
         <div class="flex gap-4">
-          <NuxtLink :href="`/proposal/${item?.proposalId}/`" class="underline"
-            >{{ useParsedDescriptionTitle(item?.description).title }}
-          </NuxtLink>
+          <button
+            class="underline hover:no-underline"
+            @click="() => onViewProposal(item)"
+          >
+            {{ useParsedDescriptionTitle(item?.description).title }}
+          </button>
           <div class="flex items-center">
             <div
               class="px-2 py-0.5 text-xxs leading-4"
@@ -79,10 +83,15 @@
         <ProposalStatus :version="value" />
       </template>
     </MSimpleTable>
+
+    <MDrawer ref="modal" @on-closed="onCloseDrawer">
+      <ProposalDetails v-if="showProposal" :proposal-id="currentProposal" />
+    </MDrawer>
   </div>
 </template>
 
 <script setup lang="ts">
+import { MProposal } from "@/lib/api/types";
 import ProposalStatus from "@/components/proposal/Status.vue";
 import MIconPower from "@/components/design-system/MIconPower.vue";
 import MIconZero from "@/components/design-system/MIconZero.vue";
@@ -123,4 +132,26 @@ const filteredProposals = computed(() => {
 useHead({
   titleTemplate: "%s - All proposals",
 });
+
+const showProposal = ref<boolean>(false);
+const currentProposal = ref<string>();
+const modal = ref();
+
+async function onViewProposal(proposal: MProposal) {
+  const proposalId = proposal.proposalId;
+  console.log("onViewProposal", proposalId);
+  // do not change this oder;
+  await modal.value.close(); //waits for the drawer to unmount
+  showProposal.value = false; // force unmount content of drawer
+  currentProposal.value = proposalId;
+  showProposal.value = true;
+  modal.value.open();
+  window.history.pushState({}, "", `/proposal/${proposalId}`);
+}
+
+function onCloseDrawer() {
+  showProposal.value = false;
+  currentProposal.value = undefined;
+  window.history.replaceState({}, "", "/proposals/all");
+}
 </script>
