@@ -43,7 +43,9 @@ export default () => {
       get(pastBalanceOf, "data.value") as unknown as bigint,
     );
 
-    const powerInflation = Number(pastBalance * inflatorRatio) / 10_000;
+    const powerInflation = Math.floor(
+      Number(pastBalance * inflatorRatio) / 10_000,
+    );
     return formatUnits(BigInt(powerInflation), spog.tokens.power.decimals!);
   });
 };
