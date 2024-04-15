@@ -216,8 +216,8 @@ const mainMenuItems = computed(() => {
       dataTest: "sidebar-link-proposals",
     },
     {
-      title: "Lists",
-      path: "/lists/",
+      title: "Actors",
+      path: "/actors/",
       isShow: true,
       dataTest: "sidebar-link-lists",
     },
