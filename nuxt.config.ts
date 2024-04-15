@@ -35,10 +35,26 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@nuxt/devtools",
+    "@vite-pwa/nuxt",
   ],
   ignore: [auctionActive ? "" : "pages/auction.vue"],
   imports: {
     dirs: ["./stores"],
+  },
+
+  pwa: {
+    manifest: {
+      name: "TTG Governance",
+      short_name: "TTG",
+      theme_color: "#ffffff",
+      icons: [
+        {
+          src: "favicon.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+      ],
+    },
   },
 
   vite: {
