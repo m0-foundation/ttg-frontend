@@ -169,6 +169,9 @@ export default async function setup(): Promise<
 
   const [server] = await Promise.all([run, listen]);
 
+  const epoch = await moveToVotingEpoch();
+  console.log({ ...epoch });
+
   return {
     url: "http://" + server.address + ":" + PORT,
     accounts,

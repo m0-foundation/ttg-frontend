@@ -1,7 +1,12 @@
 import { fallback, http } from "@wagmi/core";
 import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 // connectors
-import { injected, walletConnect, coinbaseWallet } from "@wagmi/connectors";
+import {
+  injected,
+  walletConnect,
+  coinbaseWallet,
+  safe,
+} from "@wagmi/connectors";
 
 // use wagmi
 import { createConfig } from "use-wagmi";
@@ -26,6 +31,7 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
                 provider: window.ethereum,
               },
             }),
+            safe(),
           ],
     transports: {
       [mainnet.id]: fallback([http(rpc), http(fallbackRpc)]),
