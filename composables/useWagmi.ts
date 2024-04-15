@@ -22,6 +22,9 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
         ? [
             walletConnect({ projectId: config.public.walletConnectProjectId }),
             coinbaseWallet({ appName: "spog" }),
+            safe({
+              allowedDomains: [/app.safe.global$/],
+            }),
           ]
         : [
             injected({
@@ -31,7 +34,9 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
                 provider: window.ethereum,
               },
             }),
-            safe(),
+            safe({
+              allowedDomains: [/app.safe.global$/],
+            }),
           ],
     transports: {
       [mainnet.id]: fallback([http(rpc), http(fallbackRpc)]),
