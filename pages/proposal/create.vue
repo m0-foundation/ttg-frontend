@@ -259,7 +259,6 @@ import {
   Hash,
   erc20Abi,
   toHex,
-  keccak256,
 } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
@@ -864,7 +863,7 @@ function buildCalldatas(formData) {
       }
 
       if (["guidance"].includes(key)) {
-        return keccak256(toHex(inp));
+        return toHex(inp);
       }
 
       if (

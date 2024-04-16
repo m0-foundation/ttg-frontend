@@ -1,24 +1,38 @@
 <template>
   <NuxtLayout name="proposals">
     <div
-      v-if="!hasFinishedVoting && isConnected && hasProposals"
+      v-if="
+        !hasVotedOnAllProposals &&
+        isConnected &&
+        hasProposals &&
+        hasPowerVotingPower
+      "
       class="p-8 py-6 bg-grey-200 font-inter flex flex-col gap-3 text-grey-600 mb-6"
     >
       <div class="flex flex-col lg:flex-row gap-3 items-start">
         <div>
-          <h5 class="text-grey-800 lg:text-xl tracking-tightest">
+          <h5
+            v-if="Number(powerInflation) > 0"
+            class="text-grey-800 lg:text-xl tracking-tightest"
+          >
             <span class="text-accent-blue">Preserve your voting power</span> and
             receive
             <span class="text-accent-blue">
               {{ useNumberFormatterPrice(powerInflation) }} POWER
             </span>
-            in the next epoch, along with an immediate
+            in the next epoch as inflation.
+          </h5>
+          <h5
+            v-if="Number(zeroInflation) > 0"
+            class="text-grey-800 lg:text-xl tracking-tightest"
+          >
+            Vote on all proposals in this epoch and receive
             <span class="text-accent-blue">
               {{ useNumberFormatterPrice(zeroInflation) }} ZERO
             </span>
-            tokens of inflation, by voting on all standard proposals in this
-            epoch.
+            as rewards.
           </h5>
+
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
             <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
               Votes submitted:
@@ -30,7 +44,7 @@
             <div class="w-full lg:h-1/3 bg-white rounded-sm h-1.5">
               <div
                 class="bg-accent-blue h-1.5 rounded-sm"
-                :style="`width: ${hasFinishedVoting ? 100 : progressBarWidth}%`"
+                :style="`width: ${hasVotedOnAllProposals ? 100 : progressBarWidth}%`"
               ></div>
             </div>
           </div>
@@ -42,7 +56,7 @@
             Learn more
           </a>
         </div>
-        <img class="w-8 hidden lg:block" src="/img/icon-inflation.svg" alt="" />
+        <MIconWarning class="w-8 hidden lg:block" />
       </div>
     </div>
     <div>
@@ -73,7 +87,7 @@
           id="button-cast-submit"
           class="w-full lg:w-40 flex justify-center"
           :disabled="
-            !isSelectedCastProposalsFull || hasFinishedVoting || isLoading
+            !isSelectedCastProposalsFull || hasVotedOnAllProposals || isLoading
           "
           :is-loading="isLoading"
           data-test="proposal-button-submit-votes"
@@ -95,6 +109,7 @@ import {
   useMBalances,
   useMInflationPowerToken,
   useMInflationZeroToken,
+  useMVotingPower,
 } from "@/lib/hooks";
 
 interface CastedProposal {
@@ -146,6 +161,10 @@ const alerts = useAlertsStore();
 const powerInflation = useMInflationPowerToken();
 const zeroInflation = useMInflationZeroToken();
 const balances = useMBalances(userAccount);
+const { power: powerVotingPower } = useMVotingPower(userAccount);
+const hasPowerVotingPower = computed(
+  () => powerVotingPower.data.value?.hasVotingPower
+);
 
 useHead({
   titleTemplate: "%s - Proposals",
@@ -161,6 +180,19 @@ function onUncast(proposalId: string) {
   );
 }
 
+const { data: hasVotedOnAllProposals, ...votedOnAllProposals } =
+  useReadContract({
+    address: spog.contracts.standardGovernor as Hash,
+    abi: standardGovernorAbi,
+    functionName: "hasVotedOnAllProposals",
+    args: [
+      userAccount as Ref<Hash>,
+      BigInt(spog.epoch?.current?.asNumber || 0),
+    ],
+    query: {
+      enabled: isConnected,
+    },
+  });
 // batch is only for standard proposals
 async function onCastBatchVotes() {
   await forceSwitchChain();
@@ -194,14 +226,17 @@ async function onCastBatchVotes() {
       )} ZERO tokens.`
     );
 
-    alerts.successAlert(
-      `Vote casted successfully! Your Balance will receive the reward of ${useNumberFormatterPrice(
-        toValue(powerInflation)
-      )} POWER tokens in the next epoch.`
-    );
+    if (hasPowerVotingPower) {
+      alerts.successAlert(
+        `Vote casted successfully! Your Balance will receive the reward of ${useNumberFormatterPrice(
+          toValue(powerInflation)
+        )} POWER tokens in the next epoch.`
+      );
+    }
 
     await spog.fetchTokens();
     balances.refetch();
+    votedOnAllProposals.refetch();
   } catch (error) {
     console.error("Error casting vote", error);
     alerts.errorAlert("Error when casting vote!");
@@ -209,15 +244,4 @@ async function onCastBatchVotes() {
 
   isLoading.value = false;
 }
-
-const { data: hasFinishedVoting } = useReadContract({
-  address: spog.contracts.standardGovernor as Hash,
-  abi: standardGovernorAbi,
-  functionName: "hasVotedOnAllProposals",
-  args: [userAccount as Ref<Hash>, BigInt(spog.epoch?.current?.asNumber || 0)],
-  // watch: true,
-  query: {
-    enabled: isConnected,
-  },
-});
 </script>

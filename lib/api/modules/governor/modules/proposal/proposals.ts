@@ -27,7 +27,7 @@ import {
 } from "@/lib/api/utils";
 
 import { ApiContext } from "@/lib/api/api-context";
-import { Epoch } from "~/lib/api/modules/epoch/epoch";
+import { Epoch } from "@/lib/api/modules/epoch/epoch";
 
 const ProposalTypesFunctionSelectors = {
   addToList: toFunctionSelector("addToList(bytes32,address)"),

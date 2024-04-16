@@ -3,6 +3,7 @@
     <ProposalList
       :proposals="proposals"
       :loading="isLoading"
+      :selected-proposal="selectedProposal"
       @on-cast="castVote"
     >
       <template #emptyState>
@@ -29,14 +30,16 @@ const { address: userAccount } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 
 const isLoading = ref(false);
+const selectedProposal = ref();
 
 const proposals = computed(() =>
-  proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active"),
+  proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active")
 );
 
 async function castVote(vote: number, proposalId: string) {
   await forceSwitchChain();
 
+  selectedProposal.value = proposalId;
   isLoading.value = true;
 
   const governor = useGovernor({ proposalId });
@@ -66,8 +69,9 @@ async function castVote(vote: number, proposalId: string) {
   } catch (error) {
     console.error("Error casting vote", error);
     alerts.errorAlert("Error when casting vote!");
+  } finally {
+    isLoading.value = false;
+    selectedProposal.value = undefined;
   }
-
-  isLoading.value = false;
 }
 </script>

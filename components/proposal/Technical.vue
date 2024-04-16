@@ -1,6 +1,9 @@
 <template>
-  <div data-test="technical-proposal">
-    <h3 class="text-xl">Technical Proposal</h3>
+  <div
+    data-test="technical-proposal"
+    class="border-t border-grey-200 border-dashed py-4"
+  >
+    <h3 class="text-md font-black">Technical Proposal</h3>
     <p class="text-sm font-inter mb-4">
       Agree or deny the following incoming change
     </p>
@@ -86,7 +89,7 @@ const showParsed = computed(() =>
     "setEmergencyProposalThresholdRatio",
     "setZeroProposalThresholdRatio",
     "setCashToken",
-  ].includes(props.proposal?.proposalType),
+  ].includes(props.proposal?.proposalType)
 );
 
 const currentValue = computed(
@@ -94,14 +97,14 @@ const currentValue = computed(
     props.currentProposalValues[
       props.proposal
         ?.proposalType as keyof ProposalProps["currentProposalValues"]
-    ],
+    ]
 );
 
 const incomingValues = computed(() => props.proposal?.proposalParams);
 
 const incomingValuesParsed = computed(() =>
   props.proposal?.proposalParams.map((param) =>
-    parsedValue(param, props.proposal?.proposalType),
-  ),
+    parsedValue(param, props.proposal?.proposalType)
+  )
 );
 </script>
