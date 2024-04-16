@@ -10,10 +10,8 @@ jobs:
     permissions:
       contents: write
     if: github.ref_name == 'production'
-    with:
-      #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
-      MASTER_VERSION: "0"
   upload-to-ipfs:
     uses: MZero-Labs/devops-templates/.github/workflows/upload_to_ipfs.yml@main
+    needs: [ deploy-to-production ]
     secrets: inherit
     if: github.ref_name == 'production'
