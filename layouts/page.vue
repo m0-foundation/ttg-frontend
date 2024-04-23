@@ -17,6 +17,7 @@
     <div class="mx-auto w-full md:w-3/4 mb-20">
       <NuxtPage />
     </div>
+    <LayoutAlerts />
     <LayoutFooter />
   </div>
 </template>

@@ -49,6 +49,7 @@ definePageMeta({
   layout: "page",
 });
 
+const alerts = useAlertsStore();
 const apiStore = useApiClientStore();
 const networkStore = useNetworkStore();
 
@@ -65,6 +66,8 @@ function onSubmit() {
   console.log("submitting", customRPC.value);
   const newRpc = unref(customRPC);
   if (!newRpc) return;
+  if (newRpc.startsWith("http:"))
+    return alerts.errorAlert("Only https (secure) connections allowed");
 
   apiStore.setRpc(newRpc);
 
