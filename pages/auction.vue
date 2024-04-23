@@ -162,7 +162,7 @@ import {
   waitForTransactionReceipt,
   writeContract,
 } from "@wagmi/core";
-import { readPowerToken, writePowerToken } from "@/lib/sdk";
+import { writePowerToken } from "@/lib/sdk";
 import { useMBalances } from "@/lib/hooks";
 
 const alerts = useAlertsStore();
@@ -175,11 +175,15 @@ const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
 const cashTokenBalance = computed(() => cashToken?.data?.value?.formatted);
 
 const purchaseAmount = ref();
-const lastEpochTotalSupply = ref();
 const isLoadingTransaction = ref(false);
 const { epoch, currentCashToken } = storeToRefs(spog);
 const wagmiConfig = useWagmiConfig();
-const { currentCost, amountLeftToAuction, getCurrentCost } = useAuction();
+const {
+  amountLeftToAuction,
+  currentCost,
+  getCurrentCost,
+  getAmountLeftToAuction,
+} = useAuction();
 
 const isTransferEpoch = computed(
   () => spog.epoch.value.current?.type === "TRANSFER"
@@ -194,32 +198,9 @@ const totalPrice = computed(() => {
   );
 });
 
-async function getLastEpochTotalSupply() {
-  try {
-    lastEpochTotalSupply.value = await readPowerToken(wagmiConfig, {
-      address: spog.contracts.value.powerToken as Hash,
-      functionName: "pastTotalSupply",
-      args: [BigInt(epoch.value.current?.asNumber - 1)],
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 async function setMaxPossiblePurchase() {
   await getAmountLeftToAuction();
   purchaseAmount.value = Number(amountLeftToAuction.value);
-}
-
-async function getAmountLeftToAuction() {
-  try {
-    amountLeftToAuction.value = await readPowerToken(wagmiConfig, {
-      address: spog!.contracts!.value.powerToken! as Hash,
-      functionName: "amountToAuction",
-    });
-  } catch (error) {
-    console.log(error);
-  }
 }
 
 async function auctionBuy() {
@@ -306,9 +287,4 @@ async function writeAllowance(value: string) {
     return txReceipt;
   }
 }
-
-onMounted(() => {
-  getLastEpochTotalSupply();
-  getAmountLeftToAuction();
-});
 </script>
