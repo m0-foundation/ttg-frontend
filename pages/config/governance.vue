@@ -60,6 +60,7 @@ const parametersData = [
     description: "The amount paid in CASH to submit any proposal.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
     type: "decimals",
+    copyValue: true,
   },
   {
     title: "Cash Token",
@@ -68,6 +69,7 @@ const parametersData = [
       "The internal currency of the TTG. It is used to pay Proposal Fee and to purchase POWER in the Dutch auction. It can be toggled between WETH and M.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
     type: "cashToken",
+    copyValue: true,
   },
 ];
 
@@ -107,23 +109,25 @@ const mutable = computed(() => {
 
 const proposals = computed(() => proposalsStore.getProposals);
 
-const mutableParametersWithData = mutable.value.map((p) => {
-  return {
-    key: p.key,
-    value: p.value,
-    ...parametersData.find((param) => param.key === p.key),
-    proposal: proposals.value.find(
-      (proposal) => proposal.proposalParams[0] === p.key,
-    ),
-  };
-});
+const mutableParametersWithData = computed(() =>
+  mutable.value.map((p) => {
+    return {
+      key: p.key,
+      value: p.value,
+      ...parametersData.find((param) => param.key === p.key),
+      proposal: proposals.value.find(
+        (proposal) => proposal.proposalParams[0] === p.key
+      ),
+    };
+  }),
+);
 
-const governanceTablesHeaders = ref([
+const governanceTablesHeaders = [
   { key: "title", label: "Name", sortable: true },
   { key: "description", label: "Description" },
   { key: "key", label: "Key" },
   { key: "value", label: "Value" },
-]);
+];
 
 const inmutableParametersData = [
   {
