@@ -74,7 +74,7 @@ VITE_APP_RPC_URL_FALLBACK=string
 
 For hardhat running there is no need for such file.
 
-At deployment, github actions will inject these variables at build time. 
+At deployment, github actions will inject these variables at build time.
 
 #### 2.1.4 RUN
 
@@ -219,3 +219,17 @@ yarn preview
 ```
 
 Check out the NUXT [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## GIT tag problem
+
+If you ever encounted a error while pushing about tags error, try this:
+
+```
+git tag -d $(git tag -l)
+```
+
+```
+git fetch
+```
+
+try push it again.
