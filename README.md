@@ -9,6 +9,10 @@ The dApp is based on the TTG contracts in order to run the local testnet. Althou
 This will download the TTG contracts and all of their submodules recursively
 
 ```bash
+git submodule add git@github.com:MZero-Labs/ttg.git modules/ttg
+```
+
+```bash
 git submodule update --init --recursive
 ```
 
