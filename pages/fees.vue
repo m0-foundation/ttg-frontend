@@ -1,7 +1,7 @@
 <template>
   <div>
     <PageTitle class="px-6 lg:p-0 mb-8">
-      <template #default>Rewards</template>
+      <template #default>Protocol Fees</template>
       <template #subtitle>
         <p class="text-grey-500 font-inter">
           In exchange for ZERO holders' participation in protocol governance,

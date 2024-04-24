@@ -231,18 +231,20 @@ const mainMenuItems = computed(() => {
       isShow: !isAuctionActive.value,
       dataTest: "sidebar-link-configs",
     },
-    {
-      title: "Rewards",
-      path: "/rewards/",
-      isShow: !isAuctionActive.value,
-      dataTest: "sidebar-link-rewards",
-    },
+
     {
       title: "Auction",
       path: "/auction/",
       isShow: isAuctionActive.value,
       dataTest: "sidebar-link-auction",
       notification: amountLeftToAuction.value && isTransferEpoch.value,
+    },
+
+    {
+      title: "Protocol Fees",
+      path: "/fees/",
+      isShow: isAuctionActive.value,
+      dataTest: "sidebar-link-fees",
     },
   ];
 });
