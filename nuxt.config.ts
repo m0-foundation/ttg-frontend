@@ -36,7 +36,16 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxt/devtools",
   ],
-  ignore: [auctionActive ? "" : "pages/auction.vue"],
+  ignore: auctionActive
+    ? [
+        "pages/config/*",
+        "pages/profile/*",
+        "pages/proposal/*",
+        "pages/proposals/*",
+        "pages/actors.vue",
+        "pages/delegate.vue",
+      ]
+    : ["pages/auction.vue", "pages/fees.vue"],
   imports: {
     dirs: ["./stores"],
   },
