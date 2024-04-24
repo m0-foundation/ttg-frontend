@@ -207,30 +207,34 @@ const hasReceivedZeroVotingPower = computed(
     zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!
 );
 
+const isAuctionActive = computed(() => {
+  return config.public.auctionActive;
+});
+
 const mainMenuItems = computed(() => {
   return [
     {
       title: "Home",
       path: "/proposals/",
-      isShow: true,
+      isShow: !isAuctionActive.value,
       dataTest: "sidebar-link-proposals",
     },
     {
       title: "Actors",
       path: "/actors/",
-      isShow: true,
+      isShow: !isAuctionActive.value,
       dataTest: "sidebar-link-lists",
     },
     {
       title: "Configs",
       path: "/config/",
-      isShow: true,
+      isShow: !isAuctionActive.value,
       dataTest: "sidebar-link-configs",
     },
     {
       title: "Rewards",
       path: "/rewards/",
-      isShow: true,
+      isShow: !isAuctionActive.value,
       dataTest: "sidebar-link-rewards",
     },
     {
@@ -243,24 +247,20 @@ const mainMenuItems = computed(() => {
   ];
 });
 
-const profileMenuItems = [
+const profileMenuItems = computed(() => [
   {
     title: "My Profile",
     path: "/profile/me/",
-    isShow: true,
+    isShow: !isAuctionActive.value,
     dataTest: "sidebar-link-my-profile",
   },
   {
     title: "Delegate",
     path: "/delegate/",
-    isShow: true,
+    isShow: !isAuctionActive.value,
     dataTest: "sidebar-link-delegate",
   },
-];
-
-const isAuctionActive = computed(() => {
-  return config.public.auctionActive;
-});
+]);
 </script>
 
 <style scoped>
