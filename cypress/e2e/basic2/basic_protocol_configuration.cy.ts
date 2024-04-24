@@ -10,32 +10,33 @@ describe("Basic configuration", () => {
     cy.findByRole("button", {name: /Connect Wallet/i}).should("be.visible");
 
     cy.get("nav").should("contain", "Home");
-    cy.get("nav").should("contain", "List");
-    cy.get("nav").should("contain", "Governance Config");
-    cy.get("nav").should("contain", "M0 Protocol Config");
+    cy.get("nav").should("contain", "Actors");
+    cy.get("nav").should("contain", "Configs");
+    cy.get("nav").should("contain", "Rewards");
   });
 
   it("I should see all configuration parameters", () => {
-    cy.get('h1').should('contain', 'M^0 Protocol Configurations')
-
-    cy.get('table').should('have.length', 1)
-    cy.get('table').find('tbody tr').should('exist')
+    cy.get('h1').should('contain', 'Configs')
+    cy.get('a.link-tab').contains('Protocol').should('have.class', 'active-link-tab')
+    cy.get('a.link-tab').contains('Governance').should('be.visible')
 
     const configParams = [
-      "updateCollateral_interval",
-      "updateCollateral_threshold",
-      "penalty_rate",
-      "mint_delay",
-      "mint_ttl",
-      "mint_ratio",
-      "minter_freeze_time"
+      "Update Collateral Interval",
+      "Update Collateral Threshold",
+      "Penalty Rate",
+      "Mint Delay",
+      "Mint TTL",
+      "Mint Ratio",
+      "Minter Freeze Time",
+      "Base Minter rate",
+      "Max. Earner rate",
+      "Guidance",
     ]
 
-    // changeable parameters table
-    cy.get('table').eq(0).find('tbody tr').should('have.length', configParams.length)
+    cy.get('h3.text-xl').should('have.length', configParams.length)
 
     configParams.forEach((value: string) => {
-      cy.get('table').find('tbody tr').contains(value)
+      cy.get('h3.text-xl').contains(value)
     })
   });
 });

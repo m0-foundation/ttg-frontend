@@ -1,4 +1,4 @@
-describe("Basic configuration", () => {
+describe("Governance configuration", () => {
   beforeEach(() => {
     cy.visit("/config/governance");
   });
@@ -10,36 +10,32 @@ describe("Basic configuration", () => {
     cy.findByRole("button", {name: /Connect Wallet/i}).should("be.visible");
 
     cy.get("nav").should("contain", "Home");
-    cy.get("nav").should("contain", "List");
-    cy.get("nav").should("contain", "Governance Config");
-    cy.get("nav").should("contain", "M0 Protocol Config");
+    cy.get("nav").should("contain", "Actors");
+    cy.get("nav").should("contain", "Configs");
+    cy.get("nav").should("contain", "Rewards");
   });
 
   it("I should see all configuration parameters", () => {
-    cy.get('h1').should('contain', 'Governance Config')
-    cy.get('h2').should('contain', 'Changeable parameters')
-    cy.get('h2').should('contain', 'Non-changeable parameters')
+    cy.get('h1').should('contain', 'Configs')
+    cy.get('a.link-tab').contains('Governance').should('have.class', 'active-link-tab')
+    cy.get('a.link-tab').contains('Protocol').should('be.visible')
 
-    cy.get('table').should('have.length', 2)
-    cy.get('table').find('tbody tr').should('exist')
-
-
-    // changeable parameters table
-    cy.get('table').eq(0).find('tbody tr').should('have.length', 4)
-
+    // changeable parameters
     const changeableConfigParams = [
-      "emergencyProposalThresholdRatio",
-      "zeroProposalThresholdRatio",
-      "proposalFee",
-      "cashToken"
+      "Emergency Proposal Threshold Ratio",
+      "Zero Proposal Threshold Ratio",
+      "Proposal Fee",
+      "Cash Token",
     ]
 
+    cy.get('h3.text-xl').should('have.length', changeableConfigParams.length)
+
     changeableConfigParams.forEach((value: string) => {
-      cy.get('table').eq(0).find('tbody tr').contains(value)
+      cy.get('h3.text-xl').contains(value)
     })
 
     // non-changeable parameters table
-    cy.get('table').eq(1).find('tbody tr').should('have.length', 6)
+    cy.get('table').eq(0).find('tbody tr').should('have.length', 6)
 
     const nonChangeableConfigParams = [
       "standardGovernor",
@@ -51,7 +47,7 @@ describe("Basic configuration", () => {
     ]
 
     nonChangeableConfigParams.forEach((value: string) => {
-      cy.get('table').eq(1).find('tbody tr').contains(value)
+      cy.get('table').eq(0).find('tbody tr').contains(value)
     })
   });
 });
