@@ -21,7 +21,7 @@
       </template>
     </MModalWeb3Connect>
 
-    <NuxtLink class="block" to="/proposal/create/">
+    <NuxtLink v-if="isAuctionNotActive" class="block" to="/proposal/create/">
       <MButton
         :disabled="$route.path === '/proposal/create/'"
         class="mb-6 w-full flex justify-center"
@@ -207,8 +207,16 @@ const hasReceivedZeroVotingPower = computed(
     zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!
 );
 
+const auctionActive = computed(() => {
+  return config.public.auctionActive as unknown as boolean | string;
+});
+
+const isAuctionNotActive = computed(() => {
+  return auctionActive.value !== true;
+});
+
 const isAuctionActive = computed(() => {
-  return config.public.auctionActive;
+  return auctionActive.value === true || auctionActive.value === "";
 });
 
 const mainMenuItems = computed(() => {
@@ -216,26 +224,26 @@ const mainMenuItems = computed(() => {
     {
       title: "Home",
       path: "/proposals/",
-      isShow: !isAuctionActive.value,
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-proposals",
     },
     {
       title: "Actors",
       path: "/actors/",
-      isShow: !isAuctionActive.value,
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-lists",
     },
     {
       title: "Configs",
       path: "/config/",
-      isShow: !isAuctionActive.value,
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-configs",
     },
 
     {
       title: "Auction",
       path: "/auction/",
-      isShow: isAuctionActive.value,
+      isShow: isAuctionActive,
       dataTest: "sidebar-link-auction",
       notification: amountLeftToAuction.value && isTransferEpoch.value,
     },
@@ -243,7 +251,7 @@ const mainMenuItems = computed(() => {
     {
       title: "Protocol Fees",
       path: "/fees/",
-      isShow: isAuctionActive.value,
+      isShow: true,
       dataTest: "sidebar-link-fees",
     },
   ];
@@ -253,13 +261,13 @@ const profileMenuItems = computed(() => [
   {
     title: "My Profile",
     path: "/profile/me/",
-    isShow: !isAuctionActive.value,
+    isShow: isAuctionNotActive.value,
     dataTest: "sidebar-link-my-profile",
   },
   {
     title: "Delegate",
     path: "/delegate/",
-    isShow: !isAuctionActive.value,
+    isShow: isAuctionNotActive.value,
     dataTest: "sidebar-link-delegate",
   },
 ]);

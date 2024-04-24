@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return navigateTo("/settings");
   }
 
-  if (config.public.auctionActive) {
+  if (config.public.auctionActive === true) {
     if (to.path === "/") {
       return navigateTo("/auction/");
     }
