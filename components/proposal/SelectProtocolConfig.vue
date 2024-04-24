@@ -134,7 +134,7 @@ const configParams = [
     value: "guidance",
     label: "Guidance",
     shortDescription:
-      "Hash to a document that provides guidance on the protocol.",
+      "IPFS Hash to a document that provides guidance on the protocol.",
   },
 ];
 

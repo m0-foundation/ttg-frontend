@@ -125,7 +125,7 @@ const inputs = {
   guidance: {
     component: InputDynamic,
     props: {
-      decorator: "HASH",
+      decorator: "IPFS HASH",
     },
   },
 };
