@@ -20,7 +20,7 @@ describe("Proposals", () => {
       cy.get("[data-test='protocolConfigSelect']").click();
 
       // config
-      cy.contains("Minter rate").click();
+      cy.contains("Minter rate model").click();
 
       cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("input[data-test='title']").type(description);
