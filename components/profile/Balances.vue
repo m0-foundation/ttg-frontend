@@ -36,11 +36,11 @@
 
       <div
         v-if="hasDelegatedPower"
-        class="bg-accent-blue p-2 py-1 w-fit font-inter"
+        class="bg-accent-blue p-2 py-1 w-fit font-inter text-xs leading-3"
       >
         <div class="inline-flex items-center gap-2">
-          <p class="text-xs">Delegated to:</p>
-          <span class="font-inter text-xs">
+          <p>Delegated to:</p>
+          <span>
             {{ shortenAddress(powerDelegates) }}
           </span>
 
@@ -94,10 +94,13 @@
         </div>
       </div>
 
-      <div v-if="hasDelegatedZero" class="bg-accent-blue p-2 w-fit font-inter">
+      <div
+        v-if="hasDelegatedZero"
+        class="bg-accent-blue p-2 w-fit font-inter text-xs leading-3"
+      >
         <div class="inline-flex items-center gap-2">
-          <p class="text-xs">Delegated to:</p>
-          <span class="text-xs">
+          <p>Delegated to:</p>
+          <span>
             {{ shortenAddress(zeroDelegates) }}
           </span>
 
