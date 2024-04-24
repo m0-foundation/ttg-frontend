@@ -218,7 +218,7 @@ const isAuctionNotActive = computed(() => {
 const isAuctionActive = computed(() => {
   return auctionActive.value === true || auctionActive.value === "";
 });
-console.log("isAuctionActive", isAuctionActive.value);
+
 const mainMenuItems = computed(() => {
   return [
     {
