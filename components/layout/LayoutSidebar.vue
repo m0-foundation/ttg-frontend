@@ -218,7 +218,7 @@ const isAuctionNotActive = computed(() => {
 const isAuctionActive = computed(() => {
   return auctionActive.value === true || auctionActive.value === "";
 });
-
+console.log("isAuctionActive", isAuctionActive.value);
 const mainMenuItems = computed(() => {
   return [
     {
@@ -243,7 +243,7 @@ const mainMenuItems = computed(() => {
     {
       title: "Auction",
       path: "/auction/",
-      isShow: isAuctionActive,
+      isShow: isAuctionActive.value,
       dataTest: "sidebar-link-auction",
       notification: amountLeftToAuction.value && isTransferEpoch.value,
     },
