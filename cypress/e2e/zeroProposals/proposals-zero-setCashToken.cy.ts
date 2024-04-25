@@ -17,11 +17,18 @@ describe("Proposals", () => {
       cy.visit("/proposal/create");
       cy.connectWallet();
 
+      // select cash token proposal
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
+      cy.get("[data-test='proposalTypeSelect']").findByRole('button',{name: /Cash Token/i}).click();
 
-      cy.contains("Cash Token").click();
+      // select cash token
+      cy.get("[data-test='select-cash-token']").should('be.visible').click();
+      cy.get("[data-test='Cash Token']").should('be.visible').click();
+      // assert token address after selection
+      cy.get("[data-test='select-cash-token']").parent().find('span.text-xxs').should('contain', '0x');
 
-      cy.get("input[data-test='proposalValue']").type(newCashTokenAddress);
+      // type fee proposal
+      cy.get("input[data-test='proposalValue2']").should('be.visible')
       cy.get("input[data-test='proposalValue2']").type(fee);
 
       cy.get("input[data-test='title']").type(title);
@@ -42,14 +49,14 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({ force: true });
+        cy.wrap($proposal).find("#show-details").click({force: true});
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
       cy.contains(".markdown-body", description).should("exist");
       cy.wait(500); // wait to load props values
 
-      cy.get("#technical-proposal-incoming-change").should(
+      cy.get("#technical-proposal-incoming-change").parent().parent().should(
         "contain",
         newCashTokenAddress
       );

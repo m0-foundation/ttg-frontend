@@ -59,7 +59,7 @@ jobs:
     needs: build-docker
     strategy:
       matrix:
-        test_runs: [ "basic1", "basic2" ]
+        test_runs: [ "basic", "emergencyProposals", "zeroProposals" ]
     steps:
       - name: Set Branch Name to Lowercase
         run: |

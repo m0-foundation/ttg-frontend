@@ -47,7 +47,12 @@ describe("Proposals", () => {
       cy.visit("/config/protocol");
 
       cy.contains(key);
-      cy.contains(value.toLowerCase());
+
+      // address is shortened to 0xe7f1...3f0512
+      // first six digits of the address
+      cy.contains(value.toLowerCase().slice(0, 6));
+      // last six digits of the address
+      cy.contains(value.toLowerCase().slice(-6));
     });
   });
 });
