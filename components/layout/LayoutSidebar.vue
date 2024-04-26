@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6 z-50">
-    <NuxtLink to="/proposals">
+    <NuxtLink to="/">
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
     <span class="text-grey-500 text-sm font-ppformula text-nowrap">
