@@ -4,10 +4,8 @@ describe("Basic configuration", () => {
   });
 
   it("I should visit mzero protocol config page and see navigation", () => {
-    cy.disconnectWallet();
     cy.url().should("include", "/config/protocol");
     cy.findByRole("button", {name: /Create proposal/i}).should("be.visible");
-    cy.findByRole("button", {name: /Connect Wallet/i}).should("be.visible");
 
     cy.get("nav").should("contain", "Home");
     cy.get("nav").should("contain", "Actors");

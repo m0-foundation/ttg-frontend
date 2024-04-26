@@ -4,10 +4,8 @@ describe("Basic navigation", () => {
   });
 
   it("I should visit homepage and see navigation", () => {
-    cy.disconnectWallet();
     cy.url().should("include", "/proposals");
     cy.findByRole("button", {name: /Create proposal/i}).should("be.visible");
-    cy.findByRole("button", {name: /Connect Wallet/i}).should("be.visible");
 
     cy.get("nav").should("contain", "Home");
     cy.get("nav").should("contain", "Actors");
@@ -24,4 +22,18 @@ describe("Basic navigation", () => {
 
     cy.get("table.w-full").find("tbody tr").should("exist");
   });
+
+  it("I should be able to connect/disconnect wallet", () => {
+    // expect to be connected initially
+    cy.visit("/");
+    cy.findByRole("button", {name: /Create proposal/i}).should("be.visible");
+    cy.findByRole("button", {name: /Connect wallet/i}).should("not.exist");
+    cy.get('[data-test="sidebar-button-disconnect"]').should("exist").and("be.visible");
+
+    // disconnect
+    cy.disconnectWallet();
+    cy.findByRole("button", {name: /Create proposal/i}).should("be.visible");
+    cy.findByRole("button", {name: /Connect wallet/i}).should("be.visible");
+    cy.findByRole("button", {name: /Disconnect wallet/i}).should("not.exist");
+  })
 });
