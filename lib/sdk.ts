@@ -148,6 +148,13 @@ export const distributionVaultAbi = [
   },
   {
     type: "function",
+    inputs: [{ name: "token_", internalType: "address", type: "address" }],
+    name: "getDistributable",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     inputs: [
       { name: "token", internalType: "address", type: "address" },
       { name: "epoch", internalType: "uint256", type: "uint256" },
@@ -604,7 +611,8 @@ export const emergencyGovernorAbi = [
       { name: "noVotes_", internalType: "uint256", type: "uint256" },
       { name: "yesVotes_", internalType: "uint256", type: "uint256" },
       { name: "proposer_", internalType: "address", type: "address" },
-      { name: "thresholdRatio_", internalType: "uint16", type: "uint16" },
+      { name: "quorum_", internalType: "uint256", type: "uint256" },
+      { name: "quorumNumerator_", internalType: "uint16", type: "uint16" },
     ],
     stateMutability: "view",
   },
@@ -670,6 +678,13 @@ export const emergencyGovernorAbi = [
   },
   {
     type: "function",
+    inputs: [{ name: "proposalId", internalType: "uint256", type: "uint256" }],
+    name: "proposalQuorum",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalSnapshot",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
@@ -681,6 +696,17 @@ export const emergencyGovernorAbi = [
     name: "proposalThreshold",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "pure",
+  },
+  {
+    type: "function",
+    inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
+    name: "proposalVotes",
+    outputs: [
+      { name: "", internalType: "uint256", type: "uint256" },
+      { name: "", internalType: "uint256", type: "uint256" },
+      { name: "", internalType: "uint256", type: "uint256" },
+    ],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -700,14 +726,21 @@ export const emergencyGovernorAbi = [
     type: "function",
     inputs: [],
     name: "quorum",
-    outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
-    inputs: [{ name: "timepoint_", internalType: "uint256", type: "uint256" }],
-    name: "quorum",
-    outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    inputs: [],
+    name: "quorumDenominator",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "quorumNumerator",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "view",
   },
   {
@@ -791,6 +824,13 @@ export const emergencyGovernorAbi = [
     inputs: [],
     name: "thresholdRatio",
     outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "token",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
     stateMutability: "view",
   },
   {
@@ -901,6 +941,25 @@ export const emergencyGovernorAbi = [
     anonymous: false,
     inputs: [
       {
+        name: "oldQuorumNumerator",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "newQuorumNumerator",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+    ],
+    name: "QuorumNumeratorUpdated",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
         name: "thresholdRatio",
         internalType: "uint16",
         type: "uint16",
@@ -975,7 +1034,6 @@ export const emergencyGovernorAbi = [
     ],
     name: "InvalidThresholdRatio",
   },
-  { type: "error", inputs: [], name: "InvalidUInt16" },
   { type: "error", inputs: [], name: "InvalidValue" },
   { type: "error", inputs: [], name: "InvalidValuesLength" },
   { type: "error", inputs: [], name: "InvalidVoteStart" },
@@ -1941,6 +1999,13 @@ export const registrarAbi = [
   },
   {
     type: "function",
+    inputs: [],
+    name: "CLOCK_MODE",
+    outputs: [{ name: "", internalType: "string", type: "string" }],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
     inputs: [
       { name: "list_", internalType: "bytes32", type: "bytes32" },
       { name: "account_", internalType: "address", type: "address" },
@@ -1948,6 +2013,27 @@ export const registrarAbi = [
     name: "addToList",
     outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "clock",
+    outputs: [{ name: "", internalType: "uint48", type: "uint48" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "clockPeriod",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "clockStartingTimestamp",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
   },
   {
     type: "function",
@@ -2194,13 +2280,6 @@ export const standardGovernorAbi = [
     inputs: [],
     name: "DOMAIN_SEPARATOR",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    inputs: [],
-    name: "ONE",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "view",
   },
   {
@@ -2466,6 +2545,7 @@ export const standardGovernorAbi = [
       { name: "noVotes_", internalType: "uint256", type: "uint256" },
       { name: "yesVotes_", internalType: "uint256", type: "uint256" },
       { name: "proposer_", internalType: "address", type: "address" },
+      { name: "quorum_", internalType: "uint256", type: "uint256" },
     ],
     stateMutability: "view",
   },
@@ -2596,6 +2676,17 @@ export const standardGovernorAbi = [
   },
   {
     type: "function",
+    inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
+    name: "proposalVotes",
+    outputs: [
+      { name: "", internalType: "uint256", type: "uint256" },
+      { name: "", internalType: "uint256", type: "uint256" },
+      { name: "", internalType: "uint256", type: "uint256" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     inputs: [
       { name: "targets_", internalType: "address[]", type: "address[]" },
       { name: "values_", internalType: "uint256[]", type: "uint256[]" },
@@ -2611,13 +2702,6 @@ export const standardGovernorAbi = [
   {
     type: "function",
     inputs: [],
-    name: "quorum",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
-    stateMutability: "pure",
-  },
-  {
-    type: "function",
-    inputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     name: "quorum",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "pure",
@@ -2693,6 +2777,13 @@ export const standardGovernorAbi = [
     outputs: [
       { name: "", internalType: "enum IGovernor.ProposalState", type: "uint8" },
     ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "token",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
     stateMutability: "view",
   },
   {
@@ -3342,7 +3433,8 @@ export const zeroGovernorAbi = [
       { name: "noVotes_", internalType: "uint256", type: "uint256" },
       { name: "yesVotes_", internalType: "uint256", type: "uint256" },
       { name: "proposer_", internalType: "address", type: "address" },
-      { name: "thresholdRatio_", internalType: "uint16", type: "uint16" },
+      { name: "quorum_", internalType: "uint256", type: "uint256" },
+      { name: "quorumNumerator_", internalType: "uint16", type: "uint16" },
     ],
     stateMutability: "view",
   },
@@ -3422,6 +3514,13 @@ export const zeroGovernorAbi = [
   },
   {
     type: "function",
+    inputs: [{ name: "proposalId", internalType: "uint256", type: "uint256" }],
+    name: "proposalQuorum",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
     name: "proposalSnapshot",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
@@ -3433,6 +3532,17 @@ export const zeroGovernorAbi = [
     name: "proposalThreshold",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "pure",
+  },
+  {
+    type: "function",
+    inputs: [{ name: "proposalId_", internalType: "uint256", type: "uint256" }],
+    name: "proposalVotes",
+    outputs: [
+      { name: "", internalType: "uint256", type: "uint256" },
+      { name: "", internalType: "uint256", type: "uint256" },
+      { name: "", internalType: "uint256", type: "uint256" },
+    ],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -3452,14 +3562,21 @@ export const zeroGovernorAbi = [
     type: "function",
     inputs: [],
     name: "quorum",
-    outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
-    inputs: [{ name: "timepoint_", internalType: "uint256", type: "uint256" }],
-    name: "quorum",
-    outputs: [{ name: "quorum_", internalType: "uint256", type: "uint256" }],
+    inputs: [],
+    name: "quorumDenominator",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "quorumNumerator",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "view",
   },
   {
@@ -3536,6 +3653,13 @@ export const zeroGovernorAbi = [
     inputs: [],
     name: "thresholdRatio",
     outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "token",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
     stateMutability: "view",
   },
   {
@@ -3646,6 +3770,25 @@ export const zeroGovernorAbi = [
       },
     ],
     name: "ProposalExecuted",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "oldQuorumNumerator",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "newQuorumNumerator",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+    ],
+    name: "QuorumNumeratorUpdated",
   },
   {
     type: "event",
@@ -3764,7 +3907,6 @@ export const zeroGovernorAbi = [
     ],
     name: "InvalidThresholdRatio",
   },
-  { type: "error", inputs: [], name: "InvalidUInt16" },
   { type: "error", inputs: [], name: "InvalidValue" },
   { type: "error", inputs: [], name: "InvalidValuesLength" },
   { type: "error", inputs: [], name: "InvalidVoteStart" },
@@ -4620,6 +4762,15 @@ export const readDistributionVaultGetClaimable =
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"getDistributable"`
+ */
+export const readDistributionVaultGetDistributable =
+  /*#__PURE__*/ createReadContract({
+    abi: distributionVaultAbi,
+    functionName: "getDistributable",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link distributionVaultAbi}__ and `functionName` set to `"hasClaimed"`
  */
 export const readDistributionVaultHasClaimed = /*#__PURE__*/ createReadContract(
@@ -4941,6 +5092,15 @@ export const readEmergencyGovernorProposalProposer =
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalQuorum"`
+ */
+export const readEmergencyGovernorProposalQuorum =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "proposalQuorum",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalSnapshot"`
  */
 export const readEmergencyGovernorProposalSnapshot =
@@ -4959,12 +5119,39 @@ export const readEmergencyGovernorProposalThreshold =
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"proposalVotes"`
+ */
+export const readEmergencyGovernorProposalVotes =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "proposalVotes",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"quorum"`
  */
 export const readEmergencyGovernorQuorum = /*#__PURE__*/ createReadContract({
   abi: emergencyGovernorAbi,
   functionName: "quorum",
 });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"quorumDenominator"`
+ */
+export const readEmergencyGovernorQuorumDenominator =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "quorumDenominator",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"quorumNumerator"`
+ */
+export const readEmergencyGovernorQuorumNumerator =
+  /*#__PURE__*/ createReadContract({
+    abi: emergencyGovernorAbi,
+    functionName: "quorumNumerator",
+  });
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"registrar"`
@@ -4999,6 +5186,14 @@ export const readEmergencyGovernorThresholdRatio =
     abi: emergencyGovernorAbi,
     functionName: "thresholdRatio",
   });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"token"`
+ */
+export const readEmergencyGovernorToken = /*#__PURE__*/ createReadContract({
+  abi: emergencyGovernorAbi,
+  functionName: "token",
+});
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `functionName` set to `"voteToken"`
@@ -5363,6 +5558,15 @@ export const watchEmergencyGovernorProposalExecutedEvent =
   /*#__PURE__*/ createWatchContractEvent({
     abi: emergencyGovernorAbi,
     eventName: "ProposalExecuted",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link emergencyGovernorAbi}__ and `eventName` set to `"QuorumNumeratorUpdated"`
+ */
+export const watchEmergencyGovernorQuorumNumeratorUpdatedEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: emergencyGovernorAbi,
+    eventName: "QuorumNumeratorUpdated",
   });
 
 /**
@@ -6057,6 +6261,39 @@ export const readRegistrar = /*#__PURE__*/ createReadContract({
 });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"CLOCK_MODE"`
+ */
+export const readRegistrarClockMode = /*#__PURE__*/ createReadContract({
+  abi: registrarAbi,
+  functionName: "CLOCK_MODE",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"clock"`
+ */
+export const readRegistrarClock = /*#__PURE__*/ createReadContract({
+  abi: registrarAbi,
+  functionName: "clock",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"clockPeriod"`
+ */
+export const readRegistrarClockPeriod = /*#__PURE__*/ createReadContract({
+  abi: registrarAbi,
+  functionName: "clockPeriod",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"clockStartingTimestamp"`
+ */
+export const readRegistrarClockStartingTimestamp =
+  /*#__PURE__*/ createReadContract({
+    abi: registrarAbi,
+    functionName: "clockStartingTimestamp",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link registrarAbi}__ and `functionName` set to `"emergencyGovernor"`
  */
 export const readRegistrarEmergencyGovernor = /*#__PURE__*/ createReadContract({
@@ -6310,14 +6547,6 @@ export const readStandardGovernorDomainSeparator =
   });
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"ONE"`
- */
-export const readStandardGovernorOne = /*#__PURE__*/ createReadContract({
-  abi: standardGovernorAbi,
-  functionName: "ONE",
-});
-
-/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"cashToken"`
  */
 export const readStandardGovernorCashToken = /*#__PURE__*/ createReadContract({
@@ -6516,6 +6745,15 @@ export const readStandardGovernorProposalThreshold =
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"proposalVotes"`
+ */
+export const readStandardGovernorProposalVotes =
+  /*#__PURE__*/ createReadContract({
+    abi: standardGovernorAbi,
+    functionName: "proposalVotes",
+  });
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"quorum"`
  */
 export const readStandardGovernorQuorum = /*#__PURE__*/ createReadContract({
@@ -6537,6 +6775,14 @@ export const readStandardGovernorRegistrar = /*#__PURE__*/ createReadContract({
 export const readStandardGovernorState = /*#__PURE__*/ createReadContract({
   abi: standardGovernorAbi,
   functionName: "state",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link standardGovernorAbi}__ and `functionName` set to `"token"`
+ */
+export const readStandardGovernorToken = /*#__PURE__*/ createReadContract({
+  abi: standardGovernorAbi,
+  functionName: "token",
 });
 
 /**
@@ -7194,6 +7440,14 @@ export const readZeroGovernorProposalProposer =
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalQuorum"`
+ */
+export const readZeroGovernorProposalQuorum = /*#__PURE__*/ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "proposalQuorum",
+});
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalSnapshot"`
  */
 export const readZeroGovernorProposalSnapshot =
@@ -7212,12 +7466,36 @@ export const readZeroGovernorProposalThreshold =
   });
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"proposalVotes"`
+ */
+export const readZeroGovernorProposalVotes = /*#__PURE__*/ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "proposalVotes",
+});
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"quorum"`
  */
 export const readZeroGovernorQuorum = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "quorum",
 });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"quorumDenominator"`
+ */
+export const readZeroGovernorQuorumDenominator =
+  /*#__PURE__*/ createReadContract({
+    abi: zeroGovernorAbi,
+    functionName: "quorumDenominator",
+  });
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"quorumNumerator"`
+ */
+export const readZeroGovernorQuorumNumerator = /*#__PURE__*/ createReadContract(
+  { abi: zeroGovernorAbi, functionName: "quorumNumerator" },
+);
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"standardGovernor"`
@@ -7251,6 +7529,14 @@ export const readZeroGovernorState = /*#__PURE__*/ createReadContract({
 export const readZeroGovernorThresholdRatio = /*#__PURE__*/ createReadContract({
   abi: zeroGovernorAbi,
   functionName: "thresholdRatio",
+});
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link zeroGovernorAbi}__ and `functionName` set to `"token"`
+ */
+export const readZeroGovernorToken = /*#__PURE__*/ createReadContract({
+  abi: zeroGovernorAbi,
+  functionName: "token",
 });
 
 /**
@@ -7591,6 +7877,15 @@ export const watchZeroGovernorProposalExecutedEvent =
   /*#__PURE__*/ createWatchContractEvent({
     abi: zeroGovernorAbi,
     eventName: "ProposalExecuted",
+  });
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link zeroGovernorAbi}__ and `eventName` set to `"QuorumNumeratorUpdated"`
+ */
+export const watchZeroGovernorQuorumNumeratorUpdatedEvent =
+  /*#__PURE__*/ createWatchContractEvent({
+    abi: zeroGovernorAbi,
+    eventName: "QuorumNumeratorUpdated",
   });
 
 /**
