@@ -328,7 +328,16 @@ export class Proposals extends GovernorModule {
 
   decodeReadGetProposal(proposal: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [voteStart, voteEnd, state, noVotes, yesVotes, proposer] = proposal;
+    const [
+      voteStart,
+      voteEnd,
+      state,
+      noVotes,
+      yesVotes,
+      proposer,
+      quorum,
+      quorumNumerator,
+    ] = proposal;
 
     return {
       state: ProposalState[state] as keyof typeof ProposalState,
@@ -440,15 +449,27 @@ export class Proposals extends GovernorModule {
       args: [BigInt(p.proposalId!)],
     }));
 
+    console.log("BEFORE");
+    const getProposal = await this.client.readContract({
+      abi: this.abi,
+      address: this.contract,
+      functionName: "getProposal",
+      args: [BigInt(proposals[0].proposalId!)],
+    });
+    console.log({ getProposal });
+
     const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
     const proposalsWithGetProposal = (
       await this.client.multicall({
         multicallAddress: (this.config.multicall3 ?? defaultMulticall3) as Hash,
         contracts: contractCallsGetProposal,
       })
-    ).map((res) => res.result);
+    ).map((res) => {
+      console.log("RES", { res });
+      return res.result;
+    });
 
-    console.log({
+    console.log("HERE", {
       governanceType: this.governanceType,
       proposalsWithGetProposal,
     });
