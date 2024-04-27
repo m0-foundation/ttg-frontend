@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6 z-50">
-    <NuxtLink to="/proposals">
+    <NuxtLink to="/">
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
     <span class="text-grey-500 text-sm font-ppformula text-nowrap">
@@ -21,7 +21,7 @@
       </template>
     </MModalWeb3Connect>
 
-    <NuxtLink class="block" to="/proposal/create/">
+    <NuxtLink v-if="isAuctionNotActive" class="block" to="/proposal/create/">
       <MButton
         :disabled="$route.path === '/proposal/create/'"
         class="mb-6 w-full flex justify-center"
@@ -207,32 +207,39 @@ const hasReceivedZeroVotingPower = computed(
     zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!
 );
 
+const auctionActive = computed(() => {
+  return config.public.auctionActive as unknown as boolean | string;
+});
+
+const isAuctionNotActive = computed(() => {
+  return auctionActive.value !== true;
+});
+
+const isAuctionActive = computed(() => {
+  return auctionActive.value === true || auctionActive.value === "";
+});
+
 const mainMenuItems = computed(() => {
   return [
     {
       title: "Home",
       path: "/proposals/",
-      isShow: true,
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-proposals",
     },
     {
       title: "Actors",
       path: "/actors/",
-      isShow: true,
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-lists",
     },
     {
       title: "Configs",
       path: "/config/",
-      isShow: true,
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-configs",
     },
-    {
-      title: "Rewards",
-      path: "/rewards/",
-      isShow: true,
-      dataTest: "sidebar-link-rewards",
-    },
+
     {
       title: "Auction",
       path: "/auction/",
@@ -240,27 +247,30 @@ const mainMenuItems = computed(() => {
       dataTest: "sidebar-link-auction",
       notification: amountLeftToAuction.value && isTransferEpoch.value,
     },
+
+    {
+      title: "Protocol Fees",
+      path: "/fees/",
+      isShow: true,
+      dataTest: "sidebar-link-fees",
+    },
   ];
 });
 
-const profileMenuItems = [
+const profileMenuItems = computed(() => [
   {
     title: "My Profile",
     path: "/profile/me/",
-    isShow: true,
+    isShow: isAuctionNotActive.value,
     dataTest: "sidebar-link-my-profile",
   },
   {
     title: "Delegate",
     path: "/delegate/",
-    isShow: true,
+    isShow: isAuctionNotActive.value,
     dataTest: "sidebar-link-delegate",
   },
-];
-
-const isAuctionActive = computed(() => {
-  return config.public.auctionActive;
-});
+]);
 </script>
 
 <style scoped>
