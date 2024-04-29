@@ -61,7 +61,7 @@ jobs:
       matrix:
         test_runs: [
           "basic",
-        #  "standardProposals",
+          "standardProposals",
           "emergencyProposals",
           "zeroProposals"
         ]
