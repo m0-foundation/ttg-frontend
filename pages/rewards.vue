@@ -18,13 +18,15 @@
     </PageTitle>
 
     <div class="px-6 lg:p-0 my-8">
-      <h3 class="text-sm font-inter text-grey-200 mb-3">Total amount</h3>
+      <h3 class="text-sm font-inter text-grey-200 mb-3">
+        Total amount to be distributed among all holders
+      </h3>
       <div class="flex flex-wrap gap-4 lg:gap-8">
         <MIconLoading v-if="loadingData" />
         <div v-for="token in cashTokens" v-else :key="token.address">
           <span class="token-label">{{ token.name }}</span>
           <MTokenAmount
-            :amount="formatUnits(token.vaultBalance, token.decimals)"
+            :amount="formatUnits(token.distributable, token.decimals)"
             :image="`/img/tokens/${token.symbol.toLowerCase()}.svg`"
             :name="token.name"
             size="20"
@@ -114,28 +116,16 @@ onMounted(async () => {
         return {
           ...token,
           claimable: await getClaimableRewards(token),
-          vaultBalance: await getVaultTokenBalance(token),
+          distributable: await getDistributableRewards(token),
           isClaiming: false,
         };
       })
     );
+    console.log(cashTokens.value);
   } finally {
     loadingData.value = false;
   }
 });
-
-const getVaultTokenBalance = async (token) => {
-  try {
-    return await readContract(wagmiConfig, {
-      abi: erc20Abi,
-      address: token.address as Hash,
-      functionName: "balanceOf",
-      args: [spog.contracts.vault as Hash], // address account
-    });
-  } catch (error) {
-    return 0n;
-  }
-};
 
 const getClaimableRewards = async (token) => {
   try {
@@ -149,6 +139,20 @@ const getClaimableRewards = async (token) => {
         claimEpochStart.value,
         claimEpochEnd.value,
       ], // address token, address account, uint256 startEpoch, uint256 endEpoch
+    });
+  } catch (error) {
+    console.log("ERROR GETTING CLAIMABLE", error);
+    return 0n;
+  }
+};
+
+const getDistributableRewards = async (token) => {
+  try {
+    return await readContract(wagmiConfig, {
+      abi: distributionVaultAbi,
+      address: spog.contracts.vault as Hash,
+      functionName: "getDistributable",
+      args: [token.address as Hash], // address token
     });
   } catch (error) {
     console.log("ERROR GETTING CLAIMABLE", error);
