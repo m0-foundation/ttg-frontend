@@ -10,7 +10,7 @@ describe("Governance configuration", () => {
     cy.get("nav").should("contain", "Home");
     cy.get("nav").should("contain", "Actors");
     cy.get("nav").should("contain", "Configs");
-    cy.get("nav").should("contain", "Rewards");
+    cy.get("nav").should("contain", "Protocol Fees");
   });
 
   it("I should see all configuration parameters", () => {
