@@ -18,17 +18,27 @@
     </PageTitle>
 
     <div class="px-6 lg:p-0 my-8">
-      <h3 class="text-sm font-inter text-grey-200 mb-3">Total amount</h3>
+      <h3 class="text-sm font-inter text-grey-200 mb-3">
+        Total amount to be distributed among all holders
+      </h3>
       <div class="flex flex-wrap gap-4 lg:gap-8">
         <MIconLoading v-if="loadingData" />
-        <div v-for="token in cashTokens" v-else :key="token.address">
+        <div v-for="(token, i) in cashTokens" v-else :key="token.address">
           <span class="token-label">{{ token.name }}</span>
           <MTokenAmount
-            :amount="formatUnits(token.vaultBalance, token.decimals)"
+            :amount="formatUnits(token.distributable, token.decimals)"
             :image="`/img/tokens/${token.symbol.toLowerCase()}.svg`"
             :name="token.name"
             size="20"
           />
+          <MButton
+            class="mt-4"
+            :is-loading="token.isDistributing"
+            :disabled="token.isDistributing"
+            @click="distributeRewards(token, i)"
+          >
+            Distribute
+          </MButton>
         </div>
       </div>
     </div>
@@ -75,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { Hash, erc20Abi, formatUnits } from "viem";
+import { Hash, formatUnits } from "viem";
 import {
   readContract,
   writeContract,
@@ -102,11 +112,44 @@ const alerts = useAlertsStore();
 const allowedCashTokens = computed(() => spog.governors.zero.allowedCashTokens);
 
 const claimEpochStart = computed(() =>
-  BigInt(epoch.value.current.asNumber - 50)
+  BigInt(epoch.value.current.asNumber - 50),
 );
 const claimEpochEnd = computed(() => BigInt(epoch.value.current.asNumber - 1));
 
 onMounted(async () => {
+  getRewardsData();
+});
+
+const distributeRewards = async (token, index) => {
+  cashTokens.value[index].isDistributing = true;
+
+  try {
+    const hash = await writeContract(wagmiConfig, {
+      abi: distributionVaultAbi,
+      address: spog.contracts.vault as Hash,
+      functionName: "distribute",
+      args: [token.address as Hash],
+    }); // address token
+
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+      confirmations: 1,
+      hash,
+    });
+
+    if (txReceipt.status !== "success") {
+      throw new Error("Transaction was rejected");
+    } else {
+      getRewardsData();
+      alerts.successAlert(
+        `You successfully distributed ${token.name} rewards!`,
+      );
+    }
+  } finally {
+    cashTokens.value[index].isDistributing = false;
+  }
+};
+
+const getRewardsData = async () => {
   loadingData.value = true;
   try {
     cashTokens.value = await Promise.all(
@@ -114,26 +157,13 @@ onMounted(async () => {
         return {
           ...token,
           claimable: await getClaimableRewards(token),
-          vaultBalance: await getVaultTokenBalance(token),
+          distributable: await getDistributableRewards(token),
           isClaiming: false,
         };
-      })
+      }),
     );
   } finally {
     loadingData.value = false;
-  }
-});
-
-const getVaultTokenBalance = async (token) => {
-  try {
-    return await readContract(wagmiConfig, {
-      abi: erc20Abi,
-      address: token.address as Hash,
-      functionName: "balanceOf",
-      args: [spog.contracts.vault as Hash], // address account
-    });
-  } catch (error) {
-    return 0n;
   }
 };
 
@@ -151,7 +181,19 @@ const getClaimableRewards = async (token) => {
       ], // address token, address account, uint256 startEpoch, uint256 endEpoch
     });
   } catch (error) {
-    console.log("ERROR GETTING CLAIMABLE", error);
+    return 0n;
+  }
+};
+
+const getDistributableRewards = async (token) => {
+  try {
+    return await readContract(wagmiConfig, {
+      abi: distributionVaultAbi,
+      address: spog.contracts.vault as Hash,
+      functionName: "getDistributable",
+      args: [token.address as Hash], // address token
+    });
+  } catch (error) {
     return 0n;
   }
 };

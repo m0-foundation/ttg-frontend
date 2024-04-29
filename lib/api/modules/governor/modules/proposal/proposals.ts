@@ -328,7 +328,16 @@ export class Proposals extends GovernorModule {
 
   decodeReadGetProposal(proposal: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [voteStart, voteEnd, state, noVotes, yesVotes, proposer] = proposal;
+    const [
+      voteStart,
+      voteEnd,
+      state,
+      noVotes,
+      yesVotes,
+      proposer,
+      quorum,
+      quorumNumerator,
+    ] = proposal;
 
     return {
       state: ProposalState[state] as keyof typeof ProposalState,

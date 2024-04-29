@@ -56,7 +56,7 @@
       <template #cell(proposal)="{ item }">
         <div class="flex gap-4">
           <button
-            class="underline hover:no-underline"
+            class="underline hover:no-underline text-left"
             @click="() => onViewProposal(item)"
           >
             {{ useParsedDescriptionTitle(item?.description).title }}
