@@ -25,8 +25,8 @@ const PORT = 8545;
 const _BLOCK_TIME = 12;
 
 // see file lib/api/modules/epoch/epoch.ts#L17
-const _STARTING_TIMESTAMP = 1_704_809_636;
-const _EPOCH_PERIOD_SECONDS = 400;
+const _STARTING_TIMESTAMP = 1_714_154_183;
+const _EPOCH_PERIOD_SECONDS = 900;
 
 type ChainServer = {
   address: string;
@@ -180,10 +180,12 @@ export default async function setup(): Promise<
         ...chainServers.map((server) => server.close()),
       ]);
     },
-    mine: async (blocks) => {
+    mine: async (quantity) => {
+      const blocks = (_EPOCH_PERIOD_SECONDS / _BLOCK_TIME) * quantity;
+
       const currentTimestamp = await hhHelpers.time.latest();
       const newTimestamp = currentTimestamp + blocks * _BLOCK_TIME;
-      // console.log({ currentTimestamp, newTimestamp });
+      console.log({ quantity, currentTimestamp, newTimestamp });
       await hhHelpers.time.setNextBlockTimestamp(newTimestamp);
       await hre.network.provider.send("hardhat_mine", [
         "0x" + blocks.toString(16),
@@ -193,7 +195,9 @@ export default async function setup(): Promise<
         blocks,
         newBlock: await hhHelpers.time.latestBlock(),
       });
+
       return blocks;
     },
   };
 }
+
