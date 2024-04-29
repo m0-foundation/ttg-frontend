@@ -449,27 +449,15 @@ export class Proposals extends GovernorModule {
       args: [BigInt(p.proposalId!)],
     }));
 
-    console.log("BEFORE");
-    const getProposal = await this.client.readContract({
-      abi: this.abi,
-      address: this.contract,
-      functionName: "getProposal",
-      args: [BigInt(proposals[0].proposalId!)],
-    });
-    console.log({ getProposal });
-
     const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
     const proposalsWithGetProposal = (
       await this.client.multicall({
         multicallAddress: (this.config.multicall3 ?? defaultMulticall3) as Hash,
         contracts: contractCallsGetProposal,
       })
-    ).map((res) => {
-      console.log("RES", { res });
-      return res.result;
-    });
+    ).map((res) => res.result);
 
-    console.log("HERE", {
+    console.log({
       governanceType: this.governanceType,
       proposalsWithGetProposal,
     });
