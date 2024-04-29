@@ -37,7 +37,10 @@ export class ProtocolConfigs extends ApiModule {
 
     const decodeValue = (key: string, value: string) => {
       if (["guidance"].includes(key)) {
-        return getIpfsHashFromBytes32(value);
+        return value ===
+          "0x0000000000000000000000000000000000000000000000000000000000000000"
+          ? undefined
+          : getIpfsHashFromBytes32(value);
       }
       return String(decodeAbiParameters([{ type: "uint256" }], value as Hash));
     };
