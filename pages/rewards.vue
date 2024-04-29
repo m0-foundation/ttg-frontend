@@ -23,7 +23,7 @@
       </h3>
       <div class="flex flex-wrap gap-4 lg:gap-8">
         <MIconLoading v-if="loadingData" />
-        <div v-for="token in cashTokens" v-else :key="token.address">
+        <div v-for="(token, i) in cashTokens" v-else :key="token.address">
           <span class="token-label">{{ token.name }}</span>
           <MTokenAmount
             :amount="formatUnits(token.distributable, token.decimals)"
@@ -31,6 +31,14 @@
             :name="token.name"
             size="20"
           />
+          <MButton
+            class="mt-4"
+            :is-loading="token.isDistributing"
+            :disabled="token.isDistributing"
+            @click="distributeRewards(token, i)"
+          >
+            Distribute
+          </MButton>
         </div>
       </div>
     </div>
@@ -77,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { Hash, erc20Abi, formatUnits } from "viem";
+import { Hash, formatUnits } from "viem";
 import {
   readContract,
   writeContract,
@@ -104,11 +112,44 @@ const alerts = useAlertsStore();
 const allowedCashTokens = computed(() => spog.governors.zero.allowedCashTokens);
 
 const claimEpochStart = computed(() =>
-  BigInt(epoch.value.current.asNumber - 50)
+  BigInt(epoch.value.current.asNumber - 50),
 );
 const claimEpochEnd = computed(() => BigInt(epoch.value.current.asNumber - 1));
 
 onMounted(async () => {
+  getRewardsData();
+});
+
+const distributeRewards = async (token, index) => {
+  cashTokens.value[index].isDistributing = true;
+
+  try {
+    const hash = await writeContract(wagmiConfig, {
+      abi: distributionVaultAbi,
+      address: spog.contracts.vault as Hash,
+      functionName: "distribute",
+      args: [token.address as Hash],
+    }); // address token
+
+    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+      confirmations: 1,
+      hash,
+    });
+
+    if (txReceipt.status !== "success") {
+      throw new Error("Transaction was rejected");
+    } else {
+      getRewardsData();
+      alerts.successAlert(
+        `You successfully distributed ${token.name} rewards!`,
+      );
+    }
+  } finally {
+    cashTokens.value[index].isDistributing = false;
+  }
+};
+
+const getRewardsData = async () => {
   loadingData.value = true;
   try {
     cashTokens.value = await Promise.all(
@@ -119,13 +160,12 @@ onMounted(async () => {
           distributable: await getDistributableRewards(token),
           isClaiming: false,
         };
-      })
+      }),
     );
-    console.log(cashTokens.value);
   } finally {
     loadingData.value = false;
   }
-});
+};
 
 const getClaimableRewards = async (token) => {
   try {
@@ -141,7 +181,6 @@ const getClaimableRewards = async (token) => {
       ], // address token, address account, uint256 startEpoch, uint256 endEpoch
     });
   } catch (error) {
-    console.log("ERROR GETTING CLAIMABLE", error);
     return 0n;
   }
 };
@@ -155,7 +194,6 @@ const getDistributableRewards = async (token) => {
       args: [token.address as Hash], // address token
     });
   } catch (error) {
-    console.log("ERROR GETTING CLAIMABLE", error);
     return 0n;
   }
 };
