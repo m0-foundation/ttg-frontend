@@ -61,9 +61,12 @@ jobs:
       matrix:
         test_runs: [
           "basic",
-          "standardProposals",
-          "emergencyProposals",
-          "zeroProposals"
+          "basic-standard",
+          "basic-emergency",
+          "basic-zero",
+          # "standardProposals",
+          # "emergencyProposals",
+          # "zeroProposals"
         ]
     steps:
       - name: Set Branch Name to Lowercase
