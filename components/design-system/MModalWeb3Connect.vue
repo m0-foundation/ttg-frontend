@@ -20,31 +20,32 @@
         <div class="w-full max-w-xl">
           <div class="flex flex-wrap flex-col">
             <div class="bg-grey-900 text-white p-8">
-              <p class="text-2xl text-center">Connect Wallet</p>
-              <p class="text-sm text-zinc-500 leading-normal mt-2">
-                Connect with one of our available wallet providers or create a
-                new one.
+              <p class="text-3xl text-center">Connect Wallet</p>
+              <p
+                class="font-inter text-center text-grey-500 leading-normal mt-2"
+              >
+                Connect with one of our available wallet providers.
               </p>
 
-              <div class="mt-4 flex flex-wrap flex-col items-start">
+              <div class="my-6 flex flex-wrap flex-col items-start">
                 <button
                   v-for="cc in connectors"
                   :key="cc.uid"
-                  class="flex justify-between hover:underline border-b border-dashed border-spacing-4 my-4 w-full text-left pb-4 text-xl"
+                  class="flex justify-between hover:underline border-grey-700 border-t last:border-y border-dashed border-spacing-4 py-4 w-full text-left text-xl"
                   :disabled="isReconnecting || connector?.uid === cc.uid"
                   :data-test="`modal-web3-connect-button-${cc.name}`"
                   @click="connect({ connector: cc })"
                 >
-                  <div class="flex justify-between">
-                    <img :src="images[cc.name]" class="mr-2" />
-                    <span>{{ cc.name }}</span>
+                  <div class="flex justify-between items-center gap-4">
+                    <img :src="images[cc.name]" class="max-h-6 w-6" />
+                    <span class="font-inter">{{ cc.name }}</span>
                   </div>
                 </button>
               </div>
 
               <div class="flex justify-center">
                 <button
-                  class="p-4 text-white mb-2 self-end text-3xl"
+                  class="text-grey-200 self-end text-3xl p-2"
                   data-test="modal-web3-connect-button-close"
                   @click="open = false"
                 >
@@ -68,6 +69,7 @@ const images = {
   MetaMask: "/img/icon-metamask.svg",
   "Coinbase Wallet": "/img/icon-coinbase.svg",
   WalletConnect: "/img/icon-walletconnect.svg",
+  Safe: "/img/wallets/safe.svg",
 };
 
 const open = ref(false);

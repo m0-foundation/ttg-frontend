@@ -38,6 +38,7 @@ Cypress.on("window:before:load", (win) => {
 
 const cypressLogOriginal = Cypress.log;
 const cypressLogDomainsHidden = ["http://localhost:8545", "127.0.0.1:8545"];
+// @ts-ignore
 Cypress.log = function (options: Cypress.LogConfig) {
   const logFetchIs = ["fetch"].includes(options.displayName);
   const logFetchDomainMatch =

@@ -1,16 +1,9 @@
 import { parseAbiItem } from "viem";
 import { GovernorModule } from "../GovernorModule";
-import { Epoch } from "../../../epoch";
 import { MVote } from "./voting.types";
 
 export class Voting extends GovernorModule {
   async decodeVote(log: any): Promise<MVote> {
-    const block = await this.client.getBlock({
-      blockNumber: BigInt(log.blockNumber),
-    });
-
-    const epoch = Epoch.getEpochFromTimestamp(Number(block.timestamp));
-
     const vote = {
       proposalId: log?.args?.proposalId?.toString(),
       reason: log?.args?.reason,
@@ -20,10 +13,10 @@ export class Voting extends GovernorModule {
       transactionHash: log.transactionHash?.toString(),
       blockNumber: Number(log.blockNumber),
       eventName: log.eventName,
-      timestamp: Number(block.timestamp),
       data: log.data,
-      epoch,
     } as MVote;
+
+    vote.voteId = `${vote.proposalId}_${vote.voter}`;
 
     return vote;
   }

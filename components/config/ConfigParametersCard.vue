@@ -7,10 +7,24 @@
       </div>
       <div class="flex gap-4">
         <div class="text-end">
-          <p class="text-2xl font-bold">
+          <p class="lg:text-2xl font-bold">
             {{ formattedValue(param) }}
           </p>
-          <p class="config-key-badge">{{ param?.value }}</p>
+          <div class="config-key-badge">
+            <div v-if="param?.value" class="flex align-center">
+              <span>{{ shortenText(param.value) }}</span>
+              <template v-if="param?.copyValue">
+                <MIconSimpleCheck
+                  v-if="isJustCopied"
+                  class="min-w-4 h-4 fill-white"
+                />
+                <button v-if="!isJustCopied" @click="copy(param.value)">
+                  <MIconCopy class="min-w-4 h-4 hover:opacity-75 fill-white" />
+                </button>
+              </template>
+            </div>
+            <span v-else>Parameter not set</span>
+          </div>
         </div>
         <MDropdown v-if="param?.proposal?.executedEvent" origin="right">
           <ul class="dropdown-menu-items">
@@ -21,7 +35,7 @@
               <p>
                 {{
                   useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
-                    "LLL"
+                    "LLL",
                   )
                 }}
               </p>
@@ -59,8 +73,10 @@
 </template>
 <script setup>
 import { formatUnits } from "viem";
+import { shortenText } from "@/utils/misc";
 
 const { currentCashToken } = storeToRefs(useSpogStore());
+const { isJustCopied, copy } = useCopyClipboard();
 
 defineProps({
   param: Object,
@@ -75,9 +91,11 @@ const formattedValue = (param) => {
     return formatUnits(BigInt(param.value), 18);
   } else if (param.type === "basisPoints") {
     return `${basisPointsToPercentage(param.value)}%`;
-  } else if (param.type === "address") {
-    return shortenAddress(param.value);
+  } else if (param.type === "time") {
+    return `${param.value >= 7200 ? param.value / 3600 + " hours" : param.value / 60 + " minutes"}`;
+  } else if (param.type === "number") {
+    return param.value;
   }
-  return param.value;
+  return;
 };
 </script>

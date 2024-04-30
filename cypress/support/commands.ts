@@ -13,25 +13,38 @@
 //
 // -- This is a parent command --
 import "@testing-library/cypress/add-commands";
-import "cypress-fail-fast";
 
 declare global {
   namespace Cypress {
     interface Chainable {
       connectWallet(): Chainable;
+
       disconnectWallet(): Chainable;
+
       delegatePower(delegate?: string): Chainable;
+
       delegateZero(delegate?: string): Chainable;
+
       executeProposal(proposalUrl: string): Chainable;
+
       castYesOneProposal(description: string): Chainable;
+
       castYesAllProposals(): Chainable;
+
       castYesOneOptionalProposal(description: string, page?: string): Chainable;
+
       castYesOneEmergencyProposal(description: string): Chainable;
+
       castYesAllEmergencyProposals(): Chainable;
+
       executeOneProposal(description: string): Chainable;
+
       clickPreviewProposal(): Chainable;
+
       mineEpochs(quantity: number): Chainable;
+
       createProposalAddDescription(description: string): Chainable;
+
       validateEthAddress(address: string): Chainable;
     }
   }
@@ -56,13 +69,9 @@ Cypress.Commands.add("connectWallet", () => {
 Cypress.Commands.add("disconnectWallet", () => {
   cy.get("aside").then(($body) => {
     if ($body.find("[data-test='sidebar-button-disconnect']").length > 0) {
-      console.log("connected, init disconnect");
-
-      cy.contains("Disconnect").click();
-
-      cy.get("[data-test='modal-web3-button-connect-wallet']").should(
-        "be.visible"
-      );
+      cy.log("connected, init disconnect");
+      cy.get("[data-test='sidebar-button-disconnect']").click();
+      cy.findByRole("button", {name: /Connect wallet/i}).should("be.visible");
     } else {
       // Element does not exist, do something else
       console.log("already disconnected");
@@ -80,10 +89,10 @@ Cypress.Commands.add("delegatePower", (delegate?: string) => {
     console.log("type");
   } else {
     // self delegate
-    cy.get("#button-use-my-address-power").click({ force: true });
+    cy.get("#button-use-my-address-power").click({force: true});
   }
 
-  cy.get("#button-delegate-power").click({ force: true });
+  cy.get("#button-delegate-power").click({force: true});
   cy.wait(500);
   cy.reload();
 });
@@ -98,10 +107,10 @@ Cypress.Commands.add("delegateZero", (delegate?: string) => {
     console.log("type");
   } else {
     // self delegate
-    cy.get("#button-use-my-address-zero").click({ force: true });
+    cy.get("#button-use-my-address-zero").click({force: true});
   }
 
-  cy.get("#button-delegate-zero").click({ force: true });
+  cy.get("#button-delegate-zero").click({force: true});
   cy.wait(500);
   // cy.reload();
 });
@@ -196,9 +205,7 @@ Cypress.Commands.add("clickPreviewProposal", () => {
 });
 
 Cypress.Commands.add("mineEpochs", (quantity: number) => {
-  const _EPOCH_PERIOD = 30;
-  const blocks = _EPOCH_PERIOD * quantity;
-  cy.task("mine", blocks).then((obj) => {
+  cy.task("mine", quantity).then((blocks) => {
     console.log("mined", blocks);
   });
 });

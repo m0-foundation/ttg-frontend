@@ -144,7 +144,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to see lists", () => {
-      cy.visit("/lists");
+      cy.visit("/actors");
 
       cy.contains(add2);
     });

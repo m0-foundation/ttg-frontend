@@ -7,14 +7,14 @@
       :loading="isLoading"
     >
       <template #header-left>
-        <PageTitle>Lists</PageTitle>
+        <PageTitle>Actors</PageTitle>
       </template>
       <template #header-right>
         <select
           v-model="selectedList"
           class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2 font-inter"
         >
-          <option value="all" default>All lists</option>
+          <option value="all" default>All roles</option>
           <option v-for="option in listsOptions" :key="option" :value="option">
             {{ option }}
           </option>
@@ -61,7 +61,7 @@ const listTableHeaders = [
     label: "Name or Address",
     sortable: true,
   },
-  { key: "list", label: "List", sortable: true },
+  { key: "list", label: "Role", sortable: true },
   { key: "timestamp", label: "Updated", sortable: true },
 ];
 

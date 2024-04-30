@@ -31,14 +31,14 @@ import MIconCheck from "./MIconCheck.vue";
 import MIconInfo from "./MIconInfo.vue";
 
 export interface Props {
-  id: number;
+  id: string;
   message: string;
   type: "error" | "success" | "info";
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  dismiss: [id: number];
+  dismiss: [id: string];
 }>();
 
 const icons = {

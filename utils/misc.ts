@@ -14,5 +14,18 @@ export const copyToClipboard = (text: undefined | string | number) => {
   }
 };
 
+export const generateRandomId = () =>
+  Math.random().toString(32).substring(2, 5) +
+  Math.random().toString(32).substring(2, 5);
+
+export const shortenText = (text: string, maxLength = 10): string => {
+  if (text.length <= maxLength) {
+    return text;
+  } else {
+    const slicedText = text.slice(0, 6) + "..." + text.slice(-6);
+    return slicedText;
+  }
+};
+
 export const wait = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));

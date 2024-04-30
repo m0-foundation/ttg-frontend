@@ -73,14 +73,9 @@ describe("Proposals", () => {
       cy.get("[data-test='executed-badge']").should("exist");
     });
 
-    it("I should be able to see lists", () => {
-      cy.visit("/config/protocol");
-
-      cy.get("table").invoke("text").should("not.contain", "loading data...");
-      cy.get("table > tbody > tr").should("have.length", 1);
-
-      cy.get("table").invoke("text").should("contain", key.toLowerCase());
-      cy.get("table").invoke("text").should("contain", value.toLowerCase());
+    it("I should be able to check the executed proposal", () => {
+      cy.visit(proposalUrl);
+      cy.get("[data-test='executed-badge']").should("exist");
     });
   });
 });

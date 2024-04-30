@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6 z-50">
-    <NuxtLink to="/proposals">
+    <NuxtLink to="/">
       <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
     </NuxtLink>
     <span class="text-grey-500 text-sm font-ppformula text-nowrap">
@@ -21,7 +21,7 @@
       </template>
     </MModalWeb3Connect>
 
-    <NuxtLink class="block" to="/proposal/create/">
+    <NuxtLink v-if="isAuctionNotActive" class="block" to="/proposal/create/">
       <MButton
         :disabled="$route.path === '/proposal/create/'"
         class="mb-6 w-full flex justify-center"
@@ -83,7 +83,7 @@
               :version="hasDelegatedPower ? 'dark' : 'light'"
             />
             <span :class="[hasDelegatedPower ? 'text-grey-600' : 'text-white']">
-              {{ powerVotingPower?.data.value?.relative?.toFixed(1) }}%
+              {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
             </span>
           </div>
           <span class="text-grey-600 text-xxs">
@@ -100,6 +100,13 @@
         >
           <p class="text-xxs font-inter">Voting power is delegated</p>
         </div>
+
+        <div
+          v-if="hasReceivedPowerVotingPower"
+          class="bg-green-800 p-2 py-1 mt-2 text-left w-fit"
+        >
+          <p class="text-xxs font-inter">Delegatee</p>
+        </div>
       </div>
 
       <hr class="border-grey-700 border-dashed my-4" />
@@ -113,7 +120,7 @@
               class="h-5 w-5"
             />
             <span :class="[hasDelegatedZero ? 'text-grey-600' : 'text-white']">
-              {{ zeroVotingPower?.data.value?.relative?.toFixed(1) }}%
+              {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
             </span>
           </div>
           <span class="text-grey-600 text-xxs">
@@ -129,6 +136,13 @@
           class="bg-accent-blue p-2 py-1 mt-2 text-center"
         >
           <p class="text-xxs font-inter">Voting power is delegated</p>
+        </div>
+
+        <div
+          v-if="hasReceivedZeroVotingPower"
+          class="bg-green-800 p-2 py-1 mt-2 text-left w-fit"
+        >
+          <p class="text-xxs font-inter">Delegatee</p>
         </div>
       </div>
     </div>
@@ -182,32 +196,50 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
 
+const hasReceivedPowerVotingPower = computed(
+  () =>
+    powerVotingPower?.data?.value?.value! >
+    balancePowerToken.data?.value?.value!
+);
+
+const hasReceivedZeroVotingPower = computed(
+  () =>
+    zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!
+);
+
+const auctionActive = computed(() => {
+  return config.public.auctionActive as unknown as boolean | string;
+});
+
+const isAuctionNotActive = computed(() => {
+  return auctionActive.value !== true;
+});
+
+const isAuctionActive = computed(() => {
+  return auctionActive.value === true || auctionActive.value === "";
+});
+
 const mainMenuItems = computed(() => {
   return [
     {
       title: "Home",
       path: "/proposals/",
-      isShow: true,
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-proposals",
     },
     {
-      title: "Lists",
-      path: "/lists/",
-      isShow: true,
+      title: "Actors",
+      path: "/actors/",
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-lists",
     },
     {
       title: "Configs",
       path: "/config/",
-      isShow: true,
+      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-configs",
     },
-    {
-      title: "Rewards",
-      path: "/rewards/",
-      isShow: true,
-      dataTest: "sidebar-link-rewards",
-    },
+
     {
       title: "Auction",
       path: "/auction/",
@@ -215,27 +247,30 @@ const mainMenuItems = computed(() => {
       dataTest: "sidebar-link-auction",
       notification: amountLeftToAuction.value && isTransferEpoch.value,
     },
+
+    {
+      title: "Protocol Fees",
+      path: "/fees/",
+      isShow: true,
+      dataTest: "sidebar-link-fees",
+    },
   ];
 });
 
-const profileMenuItems = [
+const profileMenuItems = computed(() => [
   {
     title: "My Profile",
     path: "/profile/me/",
-    isShow: true,
+    isShow: isAuctionNotActive.value,
     dataTest: "sidebar-link-my-profile",
   },
   {
     title: "Delegate",
     path: "/delegate/",
-    isShow: true,
+    isShow: isAuctionNotActive.value,
     dataTest: "sidebar-link-delegate",
   },
-];
-
-const isAuctionActive = computed(() => {
-  return config.public.auctionActive;
-});
+]);
 </script>
 
 <style scoped>

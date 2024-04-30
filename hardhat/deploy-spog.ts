@@ -2,27 +2,27 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
 import { ContractFactory, utils } from "ethers";
 
-import StandardGovernorDeployerAbi from "../modules/ttg/abi/StandardGovernorDeployer.json";
-import EmergencyGovernorDeployerAbi from "../modules/ttg/abi/EmergencyGovernorDeployer.json";
-import ZeroGovernorAbi from "../modules/ttg/abi/ZeroGovernor.json";
+import StandardGovernorDeployerAbi from "../modules/m-core/abi/StandardGovernorDeployer.json";
+import EmergencyGovernorDeployerAbi from "../modules/m-core/abi/EmergencyGovernorDeployer.json";
+import ZeroGovernorAbi from "../modules/m-core/abi/ZeroGovernor.json";
 
-import PowerBootstrapTokenAbi from "../modules/ttg/abi/PowerBootstrapToken.json";
-import PowerTokenDeployerAbi from "../modules/ttg/abi/PowerTokenDeployer.json";
-import RegistrarAbi from "../modules/ttg/abi/Registrar.json";
-import ZeroTokenAbi from "../modules/ttg/abi/ZeroToken.json";
-import ERC20ExtendedHarnessAbi from "../modules/ttg/abi/ERC20ExtendedHarness.json";
-import DistributionVaultAbi from "../modules/ttg/abi/DistributionVault.json";
+import PowerBootstrapTokenAbi from "../modules/m-core/abi/PowerBootstrapToken.json";
+import PowerTokenDeployerAbi from "../modules/m-core/abi/PowerTokenDeployer.json";
+import RegistrarAbi from "../modules/m-core/abi/Registrar.json";
+import ZeroTokenAbi from "../modules/m-core/abi/ZeroToken.json";
+import ERC20ExtendedHarnessAbi from "../modules/m-core/abi/ERC20ExtendedHarness.json";
+import DistributionVaultAbi from "../modules/m-core/abi/DistributionVault.json";
 
-import { bytecode as StandardGovernorDeployerBytecode } from "../modules/ttg/bytecode/StandardGovernorDeployer.json";
-import { bytecode as EmergencyGovernorDeployerBytecode } from "../modules/ttg/bytecode/EmergencyGovernorDeployer.json";
-import { bytecode as ZeroGovernorBytecode } from "../modules/ttg/bytecode/ZeroGovernor.json";
+import { bytecode as StandardGovernorDeployerBytecode } from "../modules/m-core/bytecode/StandardGovernorDeployer.json";
+import { bytecode as EmergencyGovernorDeployerBytecode } from "../modules/m-core/bytecode/EmergencyGovernorDeployer.json";
+import { bytecode as ZeroGovernorBytecode } from "../modules/m-core/bytecode/ZeroGovernor.json";
 
-import { bytecode as PowerBootstrapTokenBytecode } from "../modules/ttg/bytecode/PowerBootstrapToken.json";
-import { bytecode as PowerTokenDeployerBytecode } from "../modules/ttg/bytecode/PowerTokenDeployer.json";
-import { bytecode as RegistrarBytecode } from "../modules/ttg/bytecode/Registrar.json";
-import { bytecode as ZeroTokenBytecode } from "../modules/ttg/bytecode/ZeroToken.json";
-import { bytecode as ERC20ExtendedHarnessBytecode } from "../modules/ttg/bytecode/ERC20ExtendedHarness.json";
-import { bytecode as DistributionVaultBytecode } from "../modules/ttg/bytecode/DistributionVault.json";
+import { bytecode as PowerBootstrapTokenBytecode } from "../modules/m-core/bytecode/PowerBootstrapToken.json";
+import { bytecode as PowerTokenDeployerBytecode } from "../modules/m-core/bytecode/PowerTokenDeployer.json";
+import { bytecode as RegistrarBytecode } from "../modules/m-core/bytecode/Registrar.json";
+import { bytecode as ZeroTokenBytecode } from "../modules/m-core/bytecode/ZeroToken.json";
+import { bytecode as ERC20ExtendedHarnessBytecode } from "../modules/m-core/bytecode/ERC20ExtendedHarness.json";
+import { bytecode as DistributionVaultBytecode } from "../modules/m-core/bytecode/DistributionVault.json";
 
 import multicall3 from "./contracts/Multicall3.json";
 import { Network } from "./setup";

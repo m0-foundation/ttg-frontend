@@ -20,7 +20,7 @@
 import { MProposal } from "@/lib/api/types";
 const alerts = useAlertsStore();
 
-function dismissAlert(id: number) {
+function dismissAlert(id: string) {
   alerts.removeAlert(id);
 }
 </script>

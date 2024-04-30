@@ -24,15 +24,6 @@
       </PageTitle>
     </div>
 
-    <AuctionBanner
-      v-if="
-        isTransferEpoch &&
-        $config.public.auctionActive &&
-        amountLeftToAuction > 0n
-      "
-      class="my-6"
-    />
-
     <div class="text-grey-600 my-6 px-6 lg:px-0">
       <h5 class="text-xxs mb-1">Proposals:</h5>
 
@@ -104,29 +95,26 @@ import { storeToRefs } from "pinia";
 
 const store = useProposalsStore();
 const spog = useSpogStore();
-const { amountLeftToAuction } = useAuction();
-
-const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
 
 const standardProposals = computed(
   () =>
     store
       .getProposalsByState("Active")
-      .filter((p) => !p.isEmergency && p.votingType !== "Zero").length,
+      .filter((p) => !p.isEmergency && p.votingType !== "Zero").length
 );
 
 const pendingExecution = computed(
-  () => store.getProposalsByState("Succeeded").length,
+  () => store.getProposalsByState("Succeeded").length
 );
 
 const emergency = computed(
-  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length,
+  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length
 );
 
 const zero = computed(
   () =>
     store.getProposalsByState("Active").filter((p) => p.votingType === "Zero")
-      .length,
+      .length
 );
 
 const pending = computed(() => store.getProposalsByState("Pending").length);

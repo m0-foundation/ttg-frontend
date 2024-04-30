@@ -8,6 +8,11 @@
       <Meta content="/favicon.jpg" property="twitter:image" />
 
       <Link href="/favicon.png" rel="shortcut icon" type="image/x-icon" />
+      <link
+        rel="manifest"
+        href="/manifest.json"
+        crossorigin="use-credentials"
+      />
     </Head>
 
     <div v-if="isLoading" class="flex h-screen">

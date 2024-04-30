@@ -12,7 +12,7 @@
         :fields="governanceTablesHeaders"
       >
         <template #header-left>
-          <h3 class="text-sm text-grey-500 font-inter mb-4">
+          <h3 class="text-grey-500 font-inter mt-4 mb-2">
             Immutable parameters
           </h3>
         </template>
@@ -60,6 +60,7 @@ const parametersData = [
     description: "The amount paid in CASH to submit any proposal.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
     type: "decimals",
+    copyValue: true,
   },
   {
     title: "Cash Token",
@@ -68,6 +69,7 @@ const parametersData = [
       "The internal currency of the TTG. It is used to pay Proposal Fee and to purchase POWER in the Dutch auction. It can be toggled between WETH and M.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
     type: "cashToken",
+    copyValue: true,
   },
 ];
 
@@ -87,7 +89,7 @@ const immutable = computed(() => {
         "zeroGovernor",
         "zeroToken",
         "vault",
-      ]),
+      ])
     ),
   ];
 });
@@ -99,7 +101,7 @@ const mutable = computed(() => {
         "emergencyProposalThresholdRatio",
         "zeroProposalThresholdRatio",
         "proposalFee",
-      ]),
+      ])
     ),
     ...mapToArray(pick(contracts.value, ["cashToken"])),
   ];
@@ -107,27 +109,87 @@ const mutable = computed(() => {
 
 const proposals = computed(() => proposalsStore.getProposals);
 
-const mutableParametersWithData = mutable.value.map((p) => {
-  return {
-    key: p.key,
-    value: p.value,
-    ...parametersData.find((param) => param.key === p.key),
-    proposal: proposals.value.find(
-      (proposal) => proposal.proposalParams[0] === p.key
-    ),
-  };
-});
+const mutableParametersWithData = computed(() =>
+  mutable.value.map((p) => {
+    return {
+      key: p.key,
+      value: p.value,
+      ...parametersData.find((param) => param.key === p.key),
+      proposal: proposals.value.find(
+        (proposal) => proposal.proposalParams[0] === p.key
+      ),
+    };
+  }),
+);
 
-const governanceTablesHeaders = ref([
-  { key: "key", label: "Name", sortable: true, expand: true },
-  { key: "value", label: "Value", sortable: true },
-]);
+const governanceTablesHeaders = [
+  { key: "title", label: "Name", sortable: true },
+  { key: "description", label: "Description" },
+  { key: "key", label: "Key" },
+  { key: "value", label: "Value" },
+];
+
+const inmutableParametersData = [
+  {
+    title: "Standard Governor",
+    key: "standardGovernor",
+    description:
+      "The address of the Standard Governor contract. It is the primary governance contract for the TTG.",
+    type: "Governor",
+  },
+  {
+    title: "Emergency Governor",
+    key: "emergencyGovernor",
+    description:
+      "The address of the Emergency Governor contract. It is the secondary governance contract for the TTG.",
+    type: "Governor",
+  },
+  {
+    title: "POWER Token",
+    key: "powerToken",
+    description:
+      "The address of the POWER token contract. It is the governance token of the TTG.",
+    type: "Token",
+  },
+  {
+    title: "ZERO Governor",
+    key: "zeroGovernor",
+    description:
+      "The address of the ZERO Governor contract. It is the governance contract for the ZERO token.",
+    type: "Governor",
+  },
+  {
+    title: "ZERO Token",
+    key: "zeroToken",
+    description:
+      "The address of the ZERO token contract. It is the governance token of the ZERO Governor.",
+    type: "Token",
+  },
+  {
+    title: "Distribution Vault",
+    key: "vault",
+    description:
+      "The address of the Vault contract. It is the contract that holds the collateral backing the TTG.",
+    type: "Address",
+  },
+];
 
 const inmutableTableData = computed(() => {
-  return immutable.value.map((p) => ({
-    key: p.key,
-    value: p.value,
-  }));
+  return immutable.value
+    .map((p) => ({
+      key: p.key,
+      value: p.value,
+      ...inmutableParametersData.find((param) => param.key === p.key),
+    }))
+    .sort((a, b) => {
+      if (a.type === "Token" && b.type !== "Token") {
+        return -1;
+      } else if (a.type !== "Token" && b.type === "Token") {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 });
 </script>
 

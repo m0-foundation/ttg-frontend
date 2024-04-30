@@ -27,7 +27,8 @@ import {
 } from "@/lib/api/utils";
 
 import { ApiContext } from "@/lib/api/api-context";
-import { Epoch } from "~/lib/api/modules/epoch/epoch";
+import { Epoch } from "@/lib/api/modules/epoch/epoch";
+import { getIpfsHashFromBytes32 } from "@/utils/ipfs";
 
 const ProposalTypesFunctionSelectors = {
   addToList: toFunctionSelector("addToList(bytes32,address)"),
@@ -143,11 +144,20 @@ export class Proposals extends GovernorModule {
     );
 
     const key = hexWith32BytesToString(params[0]);
-    const value = ["minter_rate_model", "earner_rate_model"].includes(key)
-      ? hexWith32BytesToAddress(params[1])
-      : ["guidance"].includes(key)
-        ? params[1]
-        : decodeAbiParameters([{ type: "uint256" }], params[1]);
+
+    const decodeValue = (key: string, value: string) => {
+      if (["minter_rate_model", "earner_rate_model"].includes(key)) {
+        return hexWith32BytesToAddress(value as Hash);
+      }
+
+      if (["guidance"].includes(key)) {
+        return getIpfsHashFromBytes32(value);
+      }
+
+      return decodeAbiParameters([{ type: "uint256" }], value as Hash);
+    };
+
+    const value = decodeValue(key, params[1]);
 
     return { proposalType, params: [key, value] };
   }
@@ -318,7 +328,16 @@ export class Proposals extends GovernorModule {
 
   decodeReadGetProposal(proposal: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [voteStart, voteEnd, state, noVotes, yesVotes, proposer] = proposal;
+    const [
+      voteStart,
+      voteEnd,
+      state,
+      noVotes,
+      yesVotes,
+      proposer,
+      quorum,
+      quorumNumerator,
+    ] = proposal;
 
     return {
       state: ProposalState[state] as keyof typeof ProposalState,
