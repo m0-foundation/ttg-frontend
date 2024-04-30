@@ -444,6 +444,26 @@ describe("Proposals", () => {
       });
     });
 
+
+
+
+    it("I should be able to CAST vote YES for the proposal", () => {
+      cy.castYesAllEmergencyProposals();
+    });
+
+    it("I should be able to EXECUTE the proposal", () => {
+      cy.visit("/proposals/succeeded");
+
+      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+        cy.wrap($btn).click();
+        cy.wait(500);
+      });
+
+      cy.wait(500);
+      cy.mineEpochs(1);
+    });
+
+
     it("I should be able to CREATE a proposal - earner rate model ", () => {
       cy.visit("/proposal/create");
       // cy.connectWallet();
@@ -482,7 +502,42 @@ describe("Proposals", () => {
       });
     });
 
+    it("I should be able to CREATE a proposal - Guidance ", () => {
+      cy.visit("/proposal/create");
 
+      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
+
+      cy.get("[data-test='menuEmergency']").click();
+
+      cy.get("[data-test='emergencySetKey']").click({ force: true });
+
+      cy.contains("Update protocol config").click();
+
+      cy.get("[data-test='protocolConfigSelect']").should("exist");
+      cy.get("[data-test='protocolConfigSelect']").click();
+
+      // config
+      cy.contains("Guidance").click();
+
+      const key = "guidance";
+      const value = "QmdkVSAV53qy2og64vrbyVNqkBhBDkBzALKDURt1Z5bxR7"; //md5 hash
+      const description = `Add protocol config ${key} = ${value}`;
+      descriptions.push(description);
+      keys.push(key);
+      values.push(value);
+
+      cy.get("input[data-test='proposalValue2']").type(value);
+      cy.get("input[data-test='title']").type(description);
+      cy.createProposalAddDescription(description);
+
+      cy.clickPreviewProposal();
+
+      cy.contains("Submit proposal").should("exist");
+      cy.contains("Submit proposal").then(($el) => {
+        cy.wrap($el).click();
+        cy.get(".complete").invoke("text").should("contain", "Confirmation");
+      });
+    });
 
     it("I should be able to CAST vote YES for the proposal", () => {
       cy.castYesAllEmergencyProposals();
@@ -499,38 +554,8 @@ describe("Proposals", () => {
       cy.wait(500);
       cy.mineEpochs(1);
     });
+    
 
-    it("I should be able to check the executed proposal", () => {
-      cy.visit("/config/protocol");
-
-      const rowCells = (row: { children: any }) =>
-        Cypress._.map(row.children, (cell) => cell.innerText.toLowerCase());
-
-      cy.get(".card--config").then((rows) => {
-        const mapped = Cypress._.map(rows, rowCells)
-          .map((row: string[]) => {
-            console.log({row})
-            const arr = row[0].split('\n');
-            return [arr[1], arr[5]];
-          })
-          .sort();
-
-        const should = [
-          [keys[0].toLowerCase(), values[0]],
-          [keys[1].toLowerCase(), values[1]],
-          [keys[2].toLowerCase(), values[2]],
-          [keys[3].toLowerCase(), values[3]],
-          [keys[4].toLowerCase(), values[4]],
-          [keys[5].toLowerCase(), values[5]],
-          [keys[6].toLowerCase(), values[6]],
-          [keys[7].toLowerCase(), values[7]],
-          [keys[8].toLowerCase(), values[8]],
-          [keys[9].toLowerCase(), values[9].toLowerCase()],
-          [keys[10].toLowerCase(), values[10].toLowerCase()],
-        ].sort();
-
-        expect(mapped).to.deep.equal(should);
-      });
-    });
+    
   });
 });

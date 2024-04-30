@@ -1,0 +1,33 @@
+# Use Cypress base image with pre-installed headless browsers
+FROM cypress/included:latest
+
+LABEL container.name="ttg-tests"
+LABEL maintainer="m0labs"
+LABEL description="a docker container which executes cypress e2e tests"
+
+ENV TEST_RUN="01"
+
+# Set working directory
+WORKDIR /app
+
+# Install Python, required by node-gyp
+RUN apt-get update \
+    && apt-get install -y python3 python3-pip  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY cypress/docker/* /app/
+
+# Install pm2 to run the app in the background
+RUN npm install -g pm2
+
+# Copy the application into the container
+COPY package.json yarn.lock /app/
+
+# Install any dependencies your application requires (if needed)
+RUN yarn install && yarn cache clean
+
+COPY . /app
+
+# Run entry point script (start yarn dev server with pm2 and then run tests)
+ENTRYPOINT ["/app/entrypoint.sh"]

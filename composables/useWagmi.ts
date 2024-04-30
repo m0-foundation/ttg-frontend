@@ -34,9 +34,6 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
                 provider: window.ethereum,
               },
             }),
-            safe({
-              allowedDomains: [/app.safe.global$/],
-            }),
           ],
     transports: {
       [mainnet.id]: fallback([http(rpc), http(fallbackRpc)]),

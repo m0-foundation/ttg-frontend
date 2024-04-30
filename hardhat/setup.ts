@@ -25,8 +25,8 @@ const PORT = 8545;
 const _BLOCK_TIME = 12;
 
 // see file lib/api/modules/epoch/epoch.ts#L17
-const _STARTING_TIMESTAMP = 1_704_809_636;
-const _EPOCH_PERIOD_SECONDS = 400;
+const _STARTING_TIMESTAMP = 1_714_154_183;
+const _EPOCH_PERIOD_SECONDS = 900;
 
 type ChainServer = {
   address: string;
@@ -42,20 +42,18 @@ const chainServers: ChainServer[] = [];
  * The provider *must* be configured for the chainId before calling runChainServer.
  */
 function runChainServer(chainId: number): Promise<ChainServer> {
-  if (chainServers[chainId]) return Promise.resolve(chainServers[chainId]);
+  if (chainServers[chainId]) return Promise.resolve(chainServers[chainId])
 
-  const run = hre.run(TASK_NODE, { port: PORT });
+  const run = hre.run(TASK_NODE, { port: PORT + chainId })
   return new Promise((resolve) =>
-    hre.tasks[TASK_NODE_SERVER_READY].setAction(
-      ({ address, port, provider, server }) => {
-        const close = async () => {
-          await Promise.all([server.close(), run]);
-        };
-        chainServers[chainId] = { address, port, close, provider };
-        resolve(chainServers[chainId]);
+    hre.tasks[TASK_NODE_SERVER_READY].setAction(async ({ address, port, provider, server }) => {
+      const close = async () => {
+        await Promise.all([server.close(), run])
       }
-    )
-  );
+      chainServers[chainId] = { address, port, close, provider }
+      resolve(chainServers[chainId])
+    })
+  )
 }
 
 const getEpochFromTimestamp = (timestamp: number) => {
@@ -167,7 +165,7 @@ export default async function setup(): Promise<
     );
   }
 
-  const [server] = await Promise.all([run, listen]);
+  let [server] = await Promise.all([run, listen]);
 
   const epoch = await moveToVotingEpoch();
   console.log({ ...epoch });
@@ -182,10 +180,12 @@ export default async function setup(): Promise<
         ...chainServers.map((server) => server.close()),
       ]);
     },
-    mine: async (blocks) => {
+    mine: async (quantity) => {
+      const blocks = (_EPOCH_PERIOD_SECONDS / _BLOCK_TIME) * quantity;
+
       const currentTimestamp = await hhHelpers.time.latest();
-      const newTimestamp = currentTimestamp + blocks * _BLOCK_TIME;
-      // console.log({ currentTimestamp, newTimestamp });
+      const newTimestamp = currentTimestamp + (blocks-1) * _BLOCK_TIME;
+      console.log({ quantity, currentTimestamp, newTimestamp });
       await hhHelpers.time.setNextBlockTimestamp(newTimestamp);
       await hre.network.provider.send("hardhat_mine", [
         "0x" + blocks.toString(16),
@@ -195,7 +195,9 @@ export default async function setup(): Promise<
         blocks,
         newBlock: await hhHelpers.time.latestBlock(),
       });
+
       return blocks;
     },
   };
 }
+
