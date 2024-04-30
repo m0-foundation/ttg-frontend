@@ -21,7 +21,7 @@
       <h3 class="text-sm font-inter text-grey-200 mb-3">
         Total amount to be distributed among all holders
       </h3>
-      <div class="flex flex-wrap gap-4 lg:gap-8">
+      <div class="flex flex-wrap gap-6 lg:gap-12">
         <MIconLoading v-if="loadingData" />
         <div v-for="(token, i) in cashTokens" v-else :key="token.address">
           <span class="token-label">{{ token.name }}</span>
@@ -32,9 +32,9 @@
             size="20"
           />
           <MButton
-            class="mt-4"
+            class="distribute-button"
             :is-loading="token.isDistributing"
-            :disabled="token.isDistributing"
+            :disabled="token.isDistributing || token.distributable === 0n"
             @click="distributeRewards(token, i)"
           >
             Distribute
@@ -233,5 +233,8 @@ const claimTokenRewards = async (token, index) => {
 <style>
 .token-label {
   @apply text-grey-500 text-xxs font-inter mb-1;
+}
+.distribute-button {
+  @apply mt-4 text-xs !important;
 }
 </style>
