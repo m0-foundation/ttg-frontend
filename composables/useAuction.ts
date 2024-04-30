@@ -75,8 +75,14 @@ export const useAuction = () => {
   });
 
   setInterval(() => {
+    if (!isTransferEpoch.value) return;
     getCurrentCost();
-  }, 3000);
+  }, 5000);
+
+  watch(isTransferEpoch, () => {
+    getCurrentCost();
+    getAmountLeftToAuction();
+  });
 
   return {
     amountLeftToAuction,

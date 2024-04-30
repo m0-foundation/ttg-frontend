@@ -2,7 +2,7 @@ describe("Proposals", () => {
   describe("type action: setKey", () => {
     let proposalUrl = "";
     const key = "guidance";
-    const input = "QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy";
+    const input = "QmdkVSAV53qy2og64vrbyVNqkBhBDkBzALKDURt1Z5bxR7"; //md5 hash
     const description = `Add protocol config ${key} = ${input}`;
 
     it("connect first", () => {

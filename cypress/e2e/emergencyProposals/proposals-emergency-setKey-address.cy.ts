@@ -20,7 +20,7 @@ describe("Proposals", () => {
       cy.get("[data-test='protocolConfigSelect']").click();
 
       // config
-      cy.contains("Minter rate").click();
+      cy.contains("Minter rate model").click();
 
       cy.get("input[data-test='proposalValue2']").type(value);
       cy.get("input[data-test='title']").type(description);
@@ -47,7 +47,12 @@ describe("Proposals", () => {
       cy.visit("/config/protocol");
 
       cy.contains(key);
-      cy.contains(value.toLowerCase());
+
+      // address is shortened to 0xe7f1...3f0512
+      // first six digits of the address
+      cy.contains(value.toLowerCase().slice(0, 6));
+      // last six digits of the address
+      cy.contains(value.toLowerCase().slice(-6));
     });
   });
 });

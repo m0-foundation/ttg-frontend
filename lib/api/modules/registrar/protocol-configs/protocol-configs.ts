@@ -1,4 +1,4 @@
-import { Hash, decodeAbiParameters } from "viem";
+import { Hash, decodeAbiParameters, hexToString } from "viem";
 
 import { registrarAbi } from "@/lib/sdk";
 import {
@@ -6,6 +6,8 @@ import {
   stringToHexWith32Bytes,
 } from "@/lib/api/utils";
 import { ApiModule } from "@/lib/api/api-module";
+import { getIpfsHashFromBytes32 } from "@/utils/ipfs";
+import { decode } from "bs58";
 
 export class ProtocolConfigs extends ApiModule {
   keysInBytes32 = [
@@ -18,6 +20,7 @@ export class ProtocolConfigs extends ApiModule {
     "minter_freeze_time",
     "base_minter_rate",
     "max_earner_rate",
+    "guidance",
   ];
 
   keysInAddress = ["minter_rate_model", "earner_rate_model"];
@@ -32,11 +35,19 @@ export class ProtocolConfigs extends ApiModule {
       args: [this.keysInBytes32.map(stringToHexWith32Bytes)],
     });
 
+    const decodeValue = (key: string, value: string) => {
+      if (["guidance"].includes(key)) {
+        return value ===
+          "0x0000000000000000000000000000000000000000000000000000000000000000"
+          ? undefined
+          : getIpfsHashFromBytes32(value);
+      }
+      return String(decodeAbiParameters([{ type: "uint256" }], value as Hash));
+    };
+
     const keyValuesBytes = this.keysInBytes32.map((key, index) => ({
       key,
-      value: String(
-        decodeAbiParameters([{ type: "uint256" }], valuesBytes[index]),
-      ),
+      value: decodeValue(key, valuesBytes[index]),
     }));
 
     const valuesAddress = await this.client.readContract({

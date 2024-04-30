@@ -1,7 +1,7 @@
 <template>
   <div class="flex-col gap-3">
     <div>
-      <label>List *</label>
+      <label>Role *</label>
       <ProposalSelectList
         v-model="list"
         data-test="listSelect"

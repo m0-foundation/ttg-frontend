@@ -6,8 +6,18 @@ import Components from "unplugin-vue-components/vite";
 
 console.dir(process.env);
 
-const auctionActive = process.env.VITE_APP_IS_AUCTION_ACTIVE === "true";
+const getAuctionActive = () => {
+  if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "true") {
+    return true;
+  }
+  if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "false") {
+    return false;
+  }
 
+  return null;
+};
+const auctionActive = getAuctionActive();
+console.log("auctionActive", auctionActive);
 export default defineNuxtConfig({
   alias: {
     color: "color/index.js",
@@ -36,7 +46,19 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxt/devtools",
   ],
-  ignore: [auctionActive ? "" : "pages/auction.vue"],
+  ignore:
+    auctionActive === true
+      ? [
+          "pages/config/*",
+          "pages/profile/*",
+          "pages/proposal/*",
+          "pages/proposals/*",
+          "pages/actors.vue",
+          "pages/delegate.vue",
+        ]
+      : auctionActive === false
+        ? ["pages/auction.vue"]
+        : undefined, //no router is ignored
   imports: {
     dirs: ["./stores"],
   },

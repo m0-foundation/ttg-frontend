@@ -1,15 +1,21 @@
 <template>
   <div>
-    <div class="px-6 lg:p-0">
-      <PageTitle class="mb-3">Delegate voting power</PageTitle>
-
-      <p class="text-grey-600 text-sm lg:text-base mb-6">
+    <PageTitle class="mb-8 px-6 lg:p-0">
+      Delegate voting power
+      <template #subtitle>
         Both POWER and ZERO owners may delegate their voting power to an
         arbitrary Ethereum address during the Transfer Epoch. Delegated POWER
         will retain its inflation in the owner address, while ZERO rewards will
         be claimable by the delegate address.
-      </p>
-    </div>
+        <NuxtLink
+          href="https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.ii-operation/iii.ii.vii-delegation"
+          target="_blank"
+          class="underline"
+        >
+          Learn more.
+        </NuxtLink>
+      </template>
+    </PageTitle>
 
     <div v-if="!canDelegate && !isConnected" class="bg-accent-blue p-6 mb-6">
       <span class="uppercase mb-2 text-xs">Warning</span>
@@ -219,7 +225,7 @@ const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
 const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
 
 const canDelegate = computed(
-  () => spog.epoch.value.current.type === "TRANSFER"
+  () => spog.epoch.value.current.type === "TRANSFER",
 );
 
 const powerFormData = reactive({
@@ -245,14 +251,14 @@ const addressValidationRule = {
 const delegatePowerValidationRule = {
   delegatePowerValidation: helpers.withMessage(
     "Please enter a different address than the one you've currently provided.",
-    addressValidationDelegatePower
+    addressValidationDelegatePower,
   ),
 };
 
 const delegateZeroValidationRule = {
   delegatePowerValidation: helpers.withMessage(
     "Please enter a different address than the one you've currently provided.",
-    addressValidationDelegateZero
+    addressValidationDelegateZero,
   ),
 };
 
@@ -304,7 +310,7 @@ async function delegatePower() {
     }
 
     alerts.successAlert(
-      "POWER tokens voting power were delegated Successfully!"
+      "POWER tokens voting power were delegated Successfully!",
     );
 
     useDelegate.refetch();
@@ -343,7 +349,7 @@ async function delegateZero() {
     }
 
     alerts.successAlert(
-      "ZERO tokens voting power were delegated Successfully!"
+      "ZERO tokens voting power were delegated Successfully!",
     );
     useDelegate.refetch();
     useVotingPower.refetch();

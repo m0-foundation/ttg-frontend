@@ -15,7 +15,7 @@
       </div>
 
       <div class="text-grey-600 font-inter mb-4">
-        {{ truncatedDescriptionText }}
+        {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
 
       <button
@@ -57,8 +57,9 @@
               id="button-cast-yes"
               :batch="proposal?.votingType === 'Standard'"
               data-test="button-cast-yes"
-              :disabled="hasVoted || isDisconnected || !canVote || isLoading"
+              :disabled="hasVoted || isDisconnected || !canVote || loading"
               :version="isVoteYesActive"
+              :is-loading="loading && selectedVote"
               class="cast-vote-button"
               @click="onCastSelected(true)"
             >
@@ -69,15 +70,16 @@
               :batch="proposal?.votingType === 'Standard'"
               class="cast-vote-button"
               data-test="button-cast-no"
-              :disabled="hasVoted || isDisconnected || !canVote || isLoading"
+              :disabled="hasVoted || isDisconnected || !canVote || loading"
               :version="isVoteNoActive"
+              :is-loading="loading && !selectedVote"
               @click="onCastSelected(false)"
             >
               NO
             </ProposalButtonCastVote>
 
             <div class="text-xxs text-grey-600 uppercase mx-2 font-inter">
-              <p v-show="!canVote">Not enought voting power</p>
+              <p v-show="!canVote">Not enough voting power</p>
               <p v-show="hasVoted">Your vote has been submitted</p>
             </div>
           </div>
@@ -110,8 +112,8 @@
           <MButton
             id="button-proposal-execute"
             data-test="proposal-button-execute"
-            :disabled="isDisconnected || isLoading"
-            :is-loading="isLoading"
+            :disabled="isDisconnected || loading"
+            :is-loading="loading"
             @click="onExecuteProposal()"
           >
             Execute
@@ -145,7 +147,6 @@ const emit = defineEmits<{
 const apiStore = useApiClientStore();
 
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
-const { title } = useParsedDescriptionTitle(props.proposal.description);
 
 const selectedVote = ref<null | boolean>(null);
 
@@ -163,12 +164,9 @@ const isVoteNoActive = computed(() => {
 });
 
 const voteEndTimestamp = ref();
-const isLoading = computed(() => props.loading);
 
-const { text: truncatedDescriptionText } = useParsedDescription(
-  truncate(props.proposal.description, {
-    length: 450,
-  }),
+const { onlyDescription, title } = useParsedDescriptionTitle(
+  props.proposal.description
 );
 
 function onViewProposal() {
@@ -213,7 +211,7 @@ const canVote = computed(() => {
 });
 
 voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
-  props.proposal.voteEnd,
+  props.proposal.voteEnd
 );
 
 const votesStore = useVotesStore();

@@ -1,5 +1,11 @@
-export const useNumberFormatterPrice = (number: string | number | bigint) => {
-  return new Intl.NumberFormat("en").format(Number(number));
+export const useNumberFormatterPrice = (
+  number: string | number | bigint,
+  decimals: number = 0,
+) => {
+  return new Intl.NumberFormat("en", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: 6,
+  }).format(Number(number));
 };
 
 export const useNumberFormatterCompact = (number: string | number | bigint) => {

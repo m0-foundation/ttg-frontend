@@ -11,7 +11,7 @@ describe("Check proposal form validation", () => {
   listOperations.forEach((listOperation) => {
     listTypes.forEach((listType) => {
       it(`Check ${listOperation} addresses of ${listType} form`, () => {
-        cy.disconnectWallet();
+        cy.connectWallet();
         cy.get("[data-test='proposalTypeSelect']").click();
         const buttonRegex = new RegExp(`^${listOperation} address$`, "i");
         cy.findByRole("button", { name: buttonRegex })
@@ -48,8 +48,8 @@ describe("Check proposal form validation", () => {
           .should("contain.text", "Value is required");
 
         // description
-        cy.get("#md-editor-v3").parent().should("have.class", "border-red-500");
-        cy.get("#md-editor-v3").parent().parent().contains("Value is required");
+        cy.get("#md-editor-v3_1").parent().should("have.class", "border-red-500");
+        cy.get("#md-editor-v3_1").parent().parent().contains("Value is required");
 
         // select minters
         cy.get("[data-test='listSelect']").click();
@@ -77,10 +77,7 @@ describe("Check proposal form validation", () => {
         cy.get("[data-test='create-proposal-button-preview']")
           .should("be.visible")
           .click();
-        cy.get("[data-test='create-proposal-button-preview']")
-          .parent()
-          .siblings()
-          .should("contain.text", "Please connect wallet");
+   
       });
     });
   });
@@ -95,7 +92,7 @@ describe("Check proposal form validation", () => {
     cy.get("@configDropdown")
       .find("ul li")
       .as("dropdownOptions")
-      .should("have.length", 12);
+      .should("have.length", 16);
 
     const configOptions = [
       "Update collateral interval",

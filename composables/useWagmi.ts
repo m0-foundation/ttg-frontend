@@ -1,7 +1,12 @@
 import { fallback, http } from "@wagmi/core";
 import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
 // connectors
-import { injected, walletConnect, coinbaseWallet } from "@wagmi/connectors";
+import {
+  injected,
+  walletConnect,
+  coinbaseWallet,
+  safe,
+} from "@wagmi/connectors";
 
 // use wagmi
 import { createConfig } from "use-wagmi";
@@ -17,6 +22,9 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
         ? [
             walletConnect({ projectId: config.public.walletConnectProjectId }),
             coinbaseWallet({ appName: "spog" }),
+            safe({
+              allowedDomains: [/app.safe.global$/],
+            }),
           ]
         : [
             injected({

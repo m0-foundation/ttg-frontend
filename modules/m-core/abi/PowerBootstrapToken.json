@@ -1,0 +1,82 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "initialAccounts_",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "initialBalances_",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "pastBalanceOf",
+    "inputs": [
+      {
+        "name": "account_",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "pastTotalSupply",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "error",
+    "name": "ArrayLengthMismatch",
+    "inputs": [
+      {
+        "name": "accountsLength",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "balancesLength",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "TotalSupplyTooLarge",
+    "inputs": []
+  }
+]

@@ -36,11 +36,11 @@
 
       <div
         v-if="hasDelegatedPower"
-        class="bg-accent-blue p-2 py-1 w-fit font-inter"
+        class="bg-accent-blue p-2 py-1 w-fit font-inter text-xs leading-3"
       >
         <div class="inline-flex items-center gap-2">
-          <p class="text-xs">Delegated to:</p>
-          <span class="font-inter text-xs">
+          <p>Delegated to:</p>
+          <span>
             {{ shortenAddress(powerDelegates) }}
           </span>
 
@@ -73,7 +73,7 @@
         <div>
           <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
           <div class="flex items-center align-middle gap-2">
-            <MIconPower class="h-8 w-8" />
+            <MIconZero class="h-8 w-8" />
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
               {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
             </p>
@@ -94,10 +94,13 @@
         </div>
       </div>
 
-      <div v-if="hasDelegatedZero" class="bg-accent-blue p-2 w-fit font-inter">
+      <div
+        v-if="hasDelegatedZero"
+        class="bg-accent-blue p-2 w-fit font-inter text-xs leading-3"
+      >
         <div class="inline-flex items-center gap-2">
-          <p class="text-xs">Delegated to:</p>
-          <span class="text-xs">
+          <p>Delegated to:</p>
+          <span>
             {{ shortenAddress(zeroDelegates) }}
           </span>
 

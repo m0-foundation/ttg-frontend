@@ -3,6 +3,7 @@
     <ProposalList
       :proposals="proposals"
       :loading="isLoading"
+      :selected-proposal="selectedProposal"
       @on-execute="onExecute"
     >
       <template #emptyState>
@@ -22,7 +23,7 @@ import { MProposal } from "@/lib/api/types";
 
 const proposalsStore = useProposalsStore();
 const proposals = computed(() =>
-  proposalsStore.getProposalsByState("Succeeded"),
+  proposalsStore.getProposalsByState("Succeeded")
 );
 
 const { address: userAccount } = useAccount();
@@ -30,7 +31,9 @@ const { forceSwitchChain } = useCorrectChain();
 const wagmiConfig = useWagmiConfig();
 const proposalStore = useProposalsStore();
 const alerts = useAlertsStore();
-const isLoading = ref(false);
+const isLoading = ref();
+const selectedProposal = ref();
+
 useHead({
   titleTemplate: "%s - Succeeded proposals",
 });
@@ -45,6 +48,7 @@ async function onExecute(proposal: MProposal) {
   const targets = [governor?.address as Hash];
   const values = [BigInt(0)]; // do not change
 
+  selectedProposal.value = proposal.proposalId;
   isLoading.value = true;
   try {
     const hash = await writeContract(wagmiConfig, {
@@ -73,6 +77,7 @@ async function onExecute(proposal: MProposal) {
     alerts.errorAlert("Error while executing proposal");
   } finally {
     isLoading.value = false;
+    selectedProposal.value = undefined;
   }
 }
 </script>

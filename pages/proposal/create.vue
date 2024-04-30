@@ -259,7 +259,6 @@ import {
   Hash,
   erc20Abi,
   toHex,
-  keccak256,
 } from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength } from "@vuelidate/validators";
@@ -289,6 +288,7 @@ import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSe
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
+import { getBytes32FromIpfsHash } from "@/utils/ipfs";
 
 /* wagmi */
 const wagmiConfig = useWagmiConfig();
@@ -864,7 +864,7 @@ function buildCalldatas(formData) {
       }
 
       if (["guidance"].includes(key)) {
-        return keccak256(toHex(inp));
+        return getBytes32FromIpfsHash(inp);
       }
 
       if (
