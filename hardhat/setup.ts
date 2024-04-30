@@ -184,7 +184,7 @@ export default async function setup(): Promise<
       const blocks = (_EPOCH_PERIOD_SECONDS / _BLOCK_TIME) * quantity;
 
       const currentTimestamp = await hhHelpers.time.latest();
-      const newTimestamp = currentTimestamp + blocks * _BLOCK_TIME;
+      const newTimestamp = currentTimestamp + (blocks-1) * _BLOCK_TIME;
       console.log({ quantity, currentTimestamp, newTimestamp });
       await hhHelpers.time.setNextBlockTimestamp(newTimestamp);
       await hre.network.provider.send("hardhat_mine", [
