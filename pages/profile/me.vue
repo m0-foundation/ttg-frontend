@@ -7,6 +7,7 @@
           :short-address="false"
           :address="address"
           :show-avatar="false"
+          :show-copy="true"
         />
       </template>
       <template #side>
