@@ -2,12 +2,12 @@
   <MDropdown origin="right">
     <ul class="token-menu-items">
       <li>
-        <a @click="copyToClipboard(token?.address)">
+        <a @click="copyTokenAddress(token)">
           <p>{{ `Copy ${token?.symbol} token address` }}</p>
           <p class="text-grey-500 text-xxs">{{ token?.address }}</p>
         </a>
       </li>
-      <li>
+      <li v-if="isConnected">
         <a @click="addTokenToWallet"> Add Token to your wallet </a>
       </li>
       <li>
@@ -21,12 +21,22 @@
 
 <script setup>
 import { copyToClipboard } from "@/utils/misc";
+import { useAccount } from "use-wagmi";
+
 const props = defineProps({
   token: {
     type: Object,
     required: true,
   },
 });
+
+const { isConnected } = useAccount();
+const alerts = useAlertsStore();
+
+async function copyTokenAddress(token) {
+  copyToClipboard(token?.address);
+  alerts.successAlert(`${token?.symbol} token address copied to clipboard`);
+}
 
 async function addTokenToWallet() {
   try {
