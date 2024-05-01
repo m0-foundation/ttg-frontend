@@ -168,7 +168,7 @@ const inmutableParametersData = [
     title: "Distribution Vault",
     key: "vault",
     description:
-      "The address of the Vault contract. It is the contract that holds the collateral backing the TTG.",
+      "The address of the Vault contract. It is the contract that holds protocol fees claimable by ZERO holders.",
     type: "Address",
   },
 ];
