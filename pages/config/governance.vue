@@ -125,7 +125,6 @@ const mutableParametersWithData = computed(() =>
 const governanceTablesHeaders = [
   { key: "title", label: "Name", sortable: true },
   { key: "description", label: "Description" },
-  { key: "key", label: "Key" },
   { key: "value", label: "Value" },
 ];
 
