@@ -43,7 +43,7 @@ const parametersData = [
     key: "emergencyProposalThresholdRatio",
     description:
       "The number of yes votes as a percentage of the total POWER supply required to pass proposals which require a POWER Threshold.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#power-threshold",
     type: "basisPoints",
   },
   {
@@ -51,14 +51,14 @@ const parametersData = [
     key: "zeroProposalThresholdRatio",
     description:
       "The number of yes votes as a percentage of the total ZERO supply required to pass proposals which require a ZERO Threshold.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#zero-threshold",
     type: "basisPoints",
   },
   {
     title: "Proposal Fee",
     key: "proposalFee",
     description: "The amount paid in CASH to submit any proposal.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#proposal-fee",
     type: "decimals",
     copyValue: true,
   },
@@ -67,7 +67,7 @@ const parametersData = [
     key: "cashToken",
     description:
       "The internal currency of the TTG. It is used to pay Proposal Fee and to purchase POWER in the Dutch auction. It can be toggled between WETH and M.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#cash",
     type: "cashToken",
     copyValue: true,
   },
