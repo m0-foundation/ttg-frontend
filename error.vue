@@ -14,7 +14,7 @@
       </p>
     </template>
     <NuxtLink to="/">
-      <MButton>Go homepage</MButton>
+      <MButton>Go to homepage</MButton>
     </NuxtLink>
   </div>
 </template>
