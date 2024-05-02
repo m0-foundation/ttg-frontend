@@ -105,7 +105,7 @@ const selectedEpoch = ref(0);
 const proposalsTableHeader = [
   { key: "epoch", label: "Created Epoch", sortable: true },
   { key: "votingType", label: "Token", sortable: false },
-  { key: "proposal", label: "Proposal", sortable: true },
+  { key: "proposal", label: "Proposal" },
   { key: "state", label: "Status", sortable: true },
 ];
 
