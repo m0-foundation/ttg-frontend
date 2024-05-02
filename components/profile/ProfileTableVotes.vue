@@ -4,9 +4,7 @@
       <NuxtLink
         class="underline hover:no-underline"
         :to="`/proposal/${item?.proposalId}`"
-        >{{
-          useParsedDescriptionTitle(item.proposal?.description).title
-        }}</NuxtLink
+        >{{ useParsedDescriptionTitle(item.proposal).title }}</NuxtLink
       >
     </template>
     <template #cell(vote)="{ value, item }">
@@ -50,7 +48,7 @@ const votesTableHeaders = [
 const votesTableData = computed(() => {
   return props.votes.map((v: MVote) => ({
     proposalId: v.proposalId,
-    proposal: proposals.getProposalById(v.proposalId),
+    proposal: proposals.getProposalById(v.proposalId)?.description,
     vote: v.support,
     votes: useNumberFormatterCompact(String(v.weight)),
     transactionHash: v.transactionHash,
