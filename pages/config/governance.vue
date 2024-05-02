@@ -146,8 +146,7 @@ const inmutableParametersData = [
   {
     title: "POWER Token",
     key: "powerToken",
-    description:
-      "The address of the POWER token contract. It is the governance token of the TTG.",
+    description: "The governance token of the Standard and Emergency Governor.",
     type: "Token",
   },
   {
@@ -160,15 +159,14 @@ const inmutableParametersData = [
   {
     title: "ZERO Token",
     key: "zeroToken",
-    description:
-      "The address of the ZERO token contract. It is the governance token of the ZERO Governor.",
+    description: "The governance token of the Zero Governor.",
     type: "Token",
   },
   {
     title: "Distribution Vault",
     key: "vault",
     description:
-      "The address of the Vault contract. It is the contract that holds protocol fees claimable by ZERO holders.",
+      "It is the contract holding any assets which have accumulated via TTG operations.",
     type: "Address",
   },
 ];
