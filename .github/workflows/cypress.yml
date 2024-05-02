@@ -7,7 +7,7 @@ on:
   pull_request:
     types: [opened]
   schedule:
-    - cron: "* 8 * * *" # Run every day at 8am UTC
+    - cron: "0 8 * * *" # Run every day at 8am UTC
 
 env:
   DOCKER_REGISTRY: ghcr.io
