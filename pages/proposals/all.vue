@@ -19,7 +19,7 @@
         </PageTitle>
       </template>
       <template #header-right>
-        <div class="flex gap-3 mt-2 lg:mt-0 font-inter">
+        <div class="flex max-lg:flex-wrap gap-3 mt-2 lg:mt-0 font-inter">
           <select
             v-model="selectedType"
             class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
