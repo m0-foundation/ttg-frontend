@@ -145,7 +145,7 @@ const protocolParametersData = [
     copyValue: true,
   },
   {
-    title: "Ecosystem guidance",
+    title: "Ecosystem Guidance",
     key: "ecosystem_guidance",
     description:
       "This document provides guidance for the Ecosystem of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
@@ -154,7 +154,7 @@ const protocolParametersData = [
     copyValue: true,
   },
   {
-    title: "Collateral guidance",
+    title: "Collateral Guidance",
     key: "collateral_guidance",
     description:
       "This document provides guidance for the Collaterals of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
@@ -163,7 +163,7 @@ const protocolParametersData = [
     copyValue: true,
   },
   {
-    title: "SPV operators guidance",
+    title: "SPV Operators Guidance",
     key: "spv_operators_guidance",
     description:
       "This document provides guidance for the SPV Operators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
@@ -172,7 +172,7 @@ const protocolParametersData = [
     copyValue: true,
   },
   {
-    title: "Validators guidance",
+    title: "Validators Guidance",
     key: "validators_guidance",
     description:
       "This document provides guidance for the Validators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
@@ -181,7 +181,7 @@ const protocolParametersData = [
     copyValue: true,
   },
   {
-    title: "Minters guidance",
+    title: "Minters Guidance",
     key: "minters_guidance",
     description:
       "This document provides guidance for the Minters of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
@@ -190,7 +190,7 @@ const protocolParametersData = [
     copyValue: true,
   },
   {
-    title: "Mandatory contract guidance",
+    title: "Mandatory Contract Clauses Guidance",
     key: "mandatory_contract_guidance",
     description:
       "This document provides guidance for the Mandatory Contracts of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
