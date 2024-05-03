@@ -4,7 +4,11 @@
       <div>
         <p class="text-grey-600 text-xs font-inter">Address</p>
         <p class="text-white text-md">
-          {{ address }}
+          <MAddressAvatar
+            :address="address"
+            :show-copy="true"
+            :show-avatar="false"
+          />
         </p>
       </div>
     </div>

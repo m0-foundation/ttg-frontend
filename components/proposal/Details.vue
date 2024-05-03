@@ -45,7 +45,7 @@
         />
       </div>
 
-      <div class="markdown-body mb-8" v-html="onlyDescription"></div>
+      <div class="markdown-body mb-8" v-html="onlyDescriptionHtml"></div>
 
       <ProposalTechnical
         :proposal="proposal"
@@ -78,12 +78,12 @@ const props = defineProps<ProposalDetailsProps>();
 const proposalStore = useProposalsStore();
 
 const proposal = computed(() =>
-  proposalStore.getProposalById(props.proposalId)
+  proposalStore.getProposalById(props.proposalId),
 );
 const proposalId = computed(() => props.proposalId);
 
-const { onlyDescription, title } = useParsedDescriptionTitle(
-  proposal?.value?.description!
+const { onlyDescriptionHtml, title } = useParsedDescriptionTitle(
+  proposal?.value?.description!,
 );
 
 const spog = useSpogStore();

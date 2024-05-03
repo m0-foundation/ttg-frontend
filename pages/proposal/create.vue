@@ -142,24 +142,26 @@
             <div class="mb-6">
               <label for="type-value">IPFS</label>
 
-              <input
+              <MInput
                 v-model="formData.ipfsURL"
                 type="text"
                 placeholder="https://"
                 data-test="create-proposal-input-url-ipfs"
                 class="font-inter"
+                :errors="$validation.ipfsURL.$errors"
               />
             </div>
 
             <div class="mb-6">
               <label for="type-value">Discussion URL:</label>
 
-              <input
+              <MInput
                 v-model="formData.discussionURL"
                 type="text"
                 placeholder="https://"
                 data-test="create-proposal-input-url-discussion"
                 class="font-inter"
+                :errors="$validation.discussionURL.$errors"
               />
             </div>
           </div>
@@ -253,15 +255,9 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import {
-  encodeFunctionData,
-  encodeAbiParameters,
-  Hash,
-  erc20Abi,
-  toHex,
-} from "viem";
+import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
 import { useAccount } from "use-wagmi";
-import { required, minLength, maxLength } from "@vuelidate/validators";
+import { required, minLength, maxLength, url } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 
@@ -337,6 +333,8 @@ const rules = computed(() => {
   const constRules = {
     description: { required, minLength: minLength(6) },
     title: { required, minLength: minLength(6) },
+    ipfsURL: { url },
+    discussionURL: { url },
   };
 
   const type = selectedProposalType?.value?.value;
