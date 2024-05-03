@@ -92,7 +92,7 @@ describe("Check proposal form validation", () => {
     cy.get("@configDropdown")
       .find("ul li")
       .as("dropdownOptions")
-      .should("have.length", 15);
+      .should("have.length", 14);
 
     const configOptions = [
       "Update collateral interval",
