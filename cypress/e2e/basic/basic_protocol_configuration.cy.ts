@@ -28,7 +28,13 @@ describe("Basic configuration", () => {
       "Minter Freeze Time",
       "Base Minter rate",
       "Max. Earner rate",
-      "Guidance",
+      "Adopted Guidance",
+      "Ecosystem Guidance",
+      "Collateral Guidance",
+      "SPV Operators Guidance",
+      "Validators Guidance",
+      "Minters Guidance",
+      "Mandatory Contract Clauses Guidance",
     ]
 
     cy.get('h3.text-xl').should('have.length', configParams.length)

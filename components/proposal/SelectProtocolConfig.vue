@@ -125,17 +125,6 @@ const configParams = [
     shortDescription:
       "Maximum yearly interest rate that continuously accrues on M owned by Earners.",
   },
-
-  {
-    header: "Others",
-  },
-
-  {
-    value: "guidance",
-    label: "Guidance",
-    shortDescription:
-      "IPFS Hash to a document that provides guidance on the protocol.",
-  },
 ];
 
 function handleChangeList(e: any) {

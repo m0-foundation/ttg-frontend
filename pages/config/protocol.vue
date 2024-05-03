@@ -133,11 +133,67 @@ const protocolParametersData = [
       "This is the annualized rate which continuously accrues to M that is in addresses on the Earner List.",
     type: "basisPoints",
   },
+
+  // guidances keys
   {
-    title: "Guidance",
+    title: "Adopted Guidance",
     key: "guidance",
     description:
-      "This document provides guidance for Minters and Validators as to the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
+      "This document provides general Adopted guidance for the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
+    type: "guidance",
+    copyValue: true,
+  },
+  {
+    title: "Ecosystem Guidance",
+    key: "ecosystem_guidance",
+    description:
+      "This document provides guidance for the Ecosystem of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
+    type: "guidance",
+    copyValue: true,
+  },
+  {
+    title: "Collateral Guidance",
+    key: "collateral_guidance",
+    description:
+      "This document provides guidance for the Collaterals of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
+    type: "guidance",
+    copyValue: true,
+  },
+  {
+    title: "SPV Operators Guidance",
+    key: "spv_operators_guidance",
+    description:
+      "This document provides guidance for the SPV Operators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
+    type: "guidance",
+    copyValue: true,
+  },
+  {
+    title: "Validators Guidance",
+    key: "validators_guidance",
+    description:
+      "This document provides guidance for the Validators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
+    type: "guidance",
+    copyValue: true,
+  },
+  {
+    title: "Minters Guidance",
+    key: "minters_guidance",
+    description:
+      "This document provides guidance for the Minters of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
+    type: "guidance",
+    copyValue: true,
+  },
+  {
+    title: "Mandatory Contract Clauses Guidance",
+    key: "mandatory_contract_guidance",
+    description:
+      "This document provides guidance for the Mandatory Contracts of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
     type: "guidance",
     copyValue: true,

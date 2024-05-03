@@ -502,42 +502,6 @@ describe("Proposals", () => {
       });
     });
 
-    it("I should be able to CREATE a proposal - Guidance ", () => {
-      cy.visit("/proposal/create");
-
-      cy.get("[data-test='proposalTypeSelect']").should("exist").click();
-
-      cy.get("[data-test='menuEmergency']").click();
-
-      cy.get("[data-test='emergencySetKey']").click({ force: true });
-
-      cy.contains("Update protocol config").click();
-
-      cy.get("[data-test='protocolConfigSelect']").should("exist");
-      cy.get("[data-test='protocolConfigSelect']").click();
-
-      // config
-      cy.contains("Guidance").click();
-
-      const key = "guidance";
-      const value = "QmdkVSAV53qy2og64vrbyVNqkBhBDkBzALKDURt1Z5bxR7"; //md5 hash
-      const description = `Add protocol config ${key} = ${value}`;
-      descriptions.push(description);
-      keys.push(key);
-      values.push(value);
-
-      cy.get("input[data-test='proposalValue2']").type(value);
-      cy.get("input[data-test='title']").type(description);
-      cy.createProposalAddDescription(description);
-
-      cy.clickPreviewProposal();
-
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
-    });
 
     it("I should be able to CAST vote YES for the proposal", () => {
       cy.castYesAllEmergencyProposals();

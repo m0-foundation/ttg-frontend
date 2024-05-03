@@ -121,13 +121,6 @@ const inputs = {
       maska: masks.percentage,
     },
   },
-
-  guidance: {
-    component: InputDynamic,
-    props: {
-      decorator: "IPFS HASH",
-    },
-  },
 };
 
 const props = defineProps<InputProps>();
