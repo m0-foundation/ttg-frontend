@@ -251,7 +251,7 @@ const mainMenuItems = computed(() => {
     {
       title: "Protocol Fees",
       path: "/fees/",
-      isShow: true,
+      isShow: isAuctionActive.value,
       dataTest: "sidebar-link-fees",
     },
   ];
