@@ -150,8 +150,8 @@ export class Proposals extends GovernorModule {
         return hexWith32BytesToAddress(value as Hash);
       }
 
-      if (["guidance"].includes(key)) {
-        return getIpfsHashFromBytes32(value);
+      if (key.includes("guidance")) {
+        return value.slice(2);
       }
 
       return decodeAbiParameters([{ type: "uint256" }], value as Hash);

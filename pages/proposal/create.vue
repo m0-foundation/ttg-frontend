@@ -277,13 +277,15 @@ import { useMBalances } from "@/lib/hooks";
 import { wait } from "@/utils/misc";
 
 /* components */
-import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
-import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
-import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
+import InputListOperation from "@/components/proposal/InputListOperation.vue";
+import InputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
+import InputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
+import InputProtocolGuidanceConfigOperation from "@/components/proposal/InputProtocolGuidanceConfigOperation.vue";
 import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSetCashToken.vue";
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
+
 import { getBytes32FromIpfsHash } from "@/utils/ipfs";
 
 /* wagmi */
@@ -319,14 +321,6 @@ const formData = reactive({
   description: "",
   ipfsURL: null,
   discussionURL: null,
-});
-
-watchEffect(() => {
-  const type = selectedProposalType?.value?.value;
-  const key = formData.proposalValue;
-  if (type === "setKey" && key === "guidance") {
-    formData.ipfsURL = `https://ipfs.io/ipfs/${formData.proposalValue2}`;
-  }
 });
 
 const rules = computed(() => {
@@ -438,7 +432,7 @@ const proposalTypes = [
   {
     value: "addToList",
     label: "Add address",
-    component: ProposalInputListOperation,
+    component: InputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorAbi,
@@ -448,7 +442,7 @@ const proposalTypes = [
   {
     value: "removeFromList",
     label: "Remove address",
-    component: ProposalInputListOperation,
+    component: InputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorAbi,
@@ -459,7 +453,7 @@ const proposalTypes = [
   {
     value: "removeFromAndAddToList",
     label: "Replace address",
-    component: ProposalInputListRemoveAddOperation,
+    component: InputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorAbi,
@@ -470,12 +464,23 @@ const proposalTypes = [
   {
     value: "setKey",
     label: "Update protocol config",
-    component: ProposalInputProtocolConfigOperation,
+    component: InputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "protocolSetKey",
+  },
+
+  {
+    value: "setKeyGuidance",
+    label: "Update protocol guidance",
+    component: InputProtocolGuidanceConfigOperation,
+    tokens: [MVotingTokens.Power],
+    governor: spog.contracts.standardGovernor,
+    abi: standardGovernorAbi,
+    hasToPayFee: true,
+    id: "protocolGuidanceSetKey",
   },
 
   {
@@ -534,7 +539,7 @@ const proposalTypes = [
         value: "addToList",
         label: "Add address",
         isEmergency: true,
-        component: ProposalInputListOperation,
+        component: InputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
@@ -545,7 +550,7 @@ const proposalTypes = [
         value: "removeFromList",
         label: "Remove address",
         isEmergency: true,
-        component: ProposalInputListOperation,
+        component: InputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
@@ -557,7 +562,7 @@ const proposalTypes = [
         value: "removeFromAndAddToList",
         label: "Update address",
         isEmergency: true,
-        component: ProposalInputListRemoveAddOperation,
+        component: InputListRemoveAddOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
@@ -579,12 +584,23 @@ const proposalTypes = [
         value: "setKey",
         label: "Update protocol config",
         isEmergency: true,
-        component: ProposalInputProtocolConfigOperation,
+        component: InputProtocolConfigOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetKey",
+      },
+
+      {
+        value: "setKeyGuidance",
+        label: "Update protocol guidance",
+        component: InputProtocolGuidanceConfigOperation,
+        tokens: [MVotingTokens.Power],
+        governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorAbi,
+        hasToPayFee: false,
+        id: "emergencyGuidanceSetKey",
       },
     ],
   },
@@ -861,10 +877,6 @@ function buildCalldatas(formData) {
         return addressToHexWith32Bytes(inp);
       }
 
-      if (["guidance"].includes(key)) {
-        return getBytes32FromIpfsHash(inp);
-      }
-
       if (
         [
           "penalty_rate",
@@ -886,6 +898,13 @@ function buildCalldatas(formData) {
     const value = getValueEncoded(input2);
 
     return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
+  }
+
+  if (["setKeyGuidance"].includes(type)) {
+    const key = input1;
+    const value = "0x" + input2;
+
+    return buildCalldatasSpog("setKey", [stringToHexWith32Bytes(key), value]);
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {

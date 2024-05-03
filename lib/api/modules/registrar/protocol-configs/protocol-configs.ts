@@ -1,4 +1,4 @@
-import { Hash, decodeAbiParameters, hexToString } from "viem";
+import { Hash, decodeAbiParameters } from "viem";
 
 import { registrarAbi } from "@/lib/sdk";
 import {
@@ -6,8 +6,6 @@ import {
   stringToHexWith32Bytes,
 } from "@/lib/api/utils";
 import { ApiModule } from "@/lib/api/api-module";
-import { getIpfsHashFromBytes32 } from "@/utils/ipfs";
-import { decode } from "bs58";
 
 export class ProtocolConfigs extends ApiModule {
   keysInBytes32 = [
@@ -20,7 +18,14 @@ export class ProtocolConfigs extends ApiModule {
     "minter_freeze_time",
     "base_minter_rate",
     "max_earner_rate",
+
     "guidance",
+    "ecosystem_guidance",
+    "collateral_guidance",
+    "spv_operators_guidance",
+    "validators_guidance",
+    "minters_guidance",
+    "mandatory_contract_guidance",
   ];
 
   keysInAddress = ["minter_rate_model", "earner_rate_model"];
@@ -36,11 +41,11 @@ export class ProtocolConfigs extends ApiModule {
     });
 
     const decodeValue = (key: string, value: string) => {
-      if (["guidance"].includes(key)) {
+      if (key.includes("guidance")) {
         return value ===
           "0x0000000000000000000000000000000000000000000000000000000000000000"
           ? undefined
-          : getIpfsHashFromBytes32(value);
+          : value.slice(2);
       }
       return String(decodeAbiParameters([{ type: "uint256" }], value as Hash));
     };
