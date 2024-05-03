@@ -125,10 +125,6 @@ const configParams = [
     shortDescription:
       "Maximum yearly interest rate that continuously accrues on M owned by Earners.",
   },
-
-  {
-    header: "Others",
-  },
 ];
 
 function handleChangeList(e: any) {
