@@ -129,13 +129,6 @@ const configParams = [
   {
     header: "Others",
   },
-
-  {
-    value: "guidance",
-    label: "Guidance",
-    shortDescription:
-      "IPFS Hash to a document that provides guidance on the protocol.",
-  },
 ];
 
 function handleChangeList(e: any) {
