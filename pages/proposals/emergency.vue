@@ -6,7 +6,7 @@
       <template #body>
         <div>
           <div class="flex justify-start items-center gap-6 mb-4">
-            <p class="">
+            <p>
               <MIconPower class="w-6 inline-block mr-2" />
               {{ useNumberFormatterPrice((votingPower as any)?.formatted) }}
             </p>
