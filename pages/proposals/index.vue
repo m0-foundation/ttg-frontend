@@ -216,8 +216,9 @@ async function onCastBatchVotes() {
       confirmations: 1,
       hash,
     });
+
     if (txReceipt.status !== "success") {
-      throw new Error("Transaction was rejected");
+      throw txReceipt;
     }
 
     alerts.successAlert(
@@ -237,9 +238,15 @@ async function onCastBatchVotes() {
     await spog.fetchTokens();
     balances.refetch();
     votedOnAllProposals.refetch();
-  } catch (error) {
-    console.error("Error casting vote", error);
-    alerts.errorAlert("Error when casting vote!");
+  } catch (error: any) {
+    console.log("Error casting vote", { error });
+    if (error.transactionHash) {
+      alerts.errorAlert(
+        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`
+      );
+    } else {
+      alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);
+    }
   }
 
   isLoading.value = false;
