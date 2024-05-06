@@ -1,10 +1,31 @@
 <template>
   <NuxtLayout name="proposals">
+    <MDialog ref="dialog">
+      <template #header> Confirm your voting power </template>
+
+      <template #body>
+        <div>
+          <div class="flex justify-start items-center gap-6 mb-4">
+            <p class="">
+              <MIconZero class="w-6 inline-block mr-2" />
+              {{ useNumberFormatterPrice((votingPower as any)?.formatted) }}
+            </p>
+            <p class="uppercase text-xxs text-grey-600">voting power</p>
+          </div>
+
+          <p class="text-sm">
+            This is your ZERO <u>voting power</u> which will be utilized to vote
+            on this proposal base on the previous epoch.
+          </p>
+        </div>
+      </template>
+    </MDialog>
+
     <ProposalList
       :proposals="proposals"
       :loading="isLoading"
       :selected-proposal="selectedProposal"
-      @on-cast="castVote"
+      @on-cast="confirmCastVote"
     >
       <template #emptyState>
         <ProposalListEmptyState> No Zero proposals </ProposalListEmptyState>
@@ -32,9 +53,30 @@ const { forceSwitchChain } = useCorrectChain();
 const isLoading = ref(false);
 const selectedProposal = ref();
 
+const dialog = ref();
+const votingPower = ref();
+
 const proposals = computed(() =>
   proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active")
 );
+
+async function confirmCastVote(vote: number, proposalId: string) {
+  await fetchVotingPower(proposalId);
+  if (await dialog.value.open()) {
+    return castVote(vote, proposalId);
+  }
+}
+
+async function fetchVotingPower(proposalId: string) {
+  const proposal = proposalsStore.getProposalById(proposalId);
+  const pastEpoch = proposal!.voteStart - 1;
+
+  votingPower.value = await usePastVotes({
+    address: userAccount.value!,
+    epoch: pastEpoch,
+    token: "zero",
+  });
+}
 
 async function castVote(vote: number, proposalId: string) {
   await forceSwitchChain();
@@ -66,9 +108,16 @@ async function castVote(vote: number, proposalId: string) {
     proposalsStore.updateProposalById(proposalId);
 
     alerts.successAlert("Vote casted successfully!");
-  } catch (error) {
-    console.error("Error casting vote", error);
-    alerts.errorAlert("Error when casting vote!");
+  } catch (error: any) {
+    console.log("Error casting vote", { error });
+
+    if (error.transactionHash) {
+      alerts.errorAlert(
+        `Error when casting vote! <br/> See failed <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`
+      );
+    } else {
+      alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);
+    }
   } finally {
     isLoading.value = false;
     selectedProposal.value = undefined;
