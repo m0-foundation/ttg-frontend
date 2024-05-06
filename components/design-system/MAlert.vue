@@ -10,11 +10,11 @@
           :class="type"
         />
 
-        <p
+        <div
           class="text-base items-center align-middle leading-6 self-stretch grow shrink basis-auto max-md:max-w-full font-bold"
         >
-          {{ message }}
-        </p>
+          <div v-html="message" />
+        </div>
 
         <div
           class="text-md leading-3 uppercase whitespace-nowrap ml-12 max-md:max-w-full justify-between flex gap-2"
