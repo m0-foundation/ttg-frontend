@@ -1,4 +1,4 @@
-import { Hash, decodeAbiParameters } from "viem";
+import { Hash } from "viem";
 
 import { registrarAbi } from "@/lib/sdk";
 import { stringToHexWith32Bytes } from "@/lib/api/utils";
@@ -24,20 +24,16 @@ export class Guidances extends ApiModule {
       args: [this.keysInBytes32.map(stringToHexWith32Bytes)],
     });
 
-    const decodeValue = (key: string, value: string) => {
-      if (key.includes("guidance")) {
-        console.log("guidance", value, key)
-        return value ===
-          "0x0000000000000000000000000000000000000000000000000000000000000000"
-          ? undefined
-          : getIpfsHashFromBytes32(value);
-      }
-      return String(decodeAbiParameters([{ type: "uint256" }], value as Hash));
+    const decodeValue = (value: string) => {
+      return value ===
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+        ? undefined
+        : getIpfsHashFromBytes32(value);
     };
 
     const keyValuesBytes = this.keysInBytes32.map((key, index) => ({
       key,
-      value: decodeValue(key, valuesBytes[index]),
+      value: decodeValue(valuesBytes[index]),
     }));
 
     return keyValuesBytes;

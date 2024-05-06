@@ -33,12 +33,6 @@ export class ProtocolConfigs extends ApiModule {
     });
 
     const decodeValue = (key: string, value: string) => {
-      if (key.includes("guidance")) {
-        return value ===
-          "0x0000000000000000000000000000000000000000000000000000000000000000"
-          ? undefined
-          : value.slice(2);
-      }
       return String(decodeAbiParameters([{ type: "uint256" }], value as Hash));
     };
 
