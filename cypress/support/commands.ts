@@ -167,10 +167,6 @@ Cypress.Commands.add(
       cy.get("[data-test='dialog-button-confirm']").click();
     });
 
-    // cy.get("[data-test='button-tab-pending-execution']").should(
-    //   "have.length",
-    //   1
-    // );
   }
 );
 
