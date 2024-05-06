@@ -10,6 +10,9 @@ export const useProtocolConfigsStore = defineStore("protocol", {
     getProtocolGuidances(): MProtocolConfig[] {
       return this.configs.filter((config) => config.key.includes("guidance"));
     },
+    getProtocolConfigsWithoutGuidances(): MProtocolConfig[] {
+      return this.configs.filter((config) => !config.key.includes("guidance"));
+    },
   },
 
   actions: {

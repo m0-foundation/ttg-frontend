@@ -18,6 +18,13 @@ export class ProtocolConfigs extends ApiModule {
     "minter_freeze_time",
     "base_minter_rate",
     "max_earner_rate",
+    "guidance",
+    "ecosystem_guidance",
+    "collateral_guidance",
+    "spv_operators_guidance",
+    "validators_guidance",
+    "minters_guidance",
+    "mandatory_contract_guidance",
   ];
 
   keysInAddress = ["minter_rate_model", "earner_rate_model"];
@@ -33,6 +40,12 @@ export class ProtocolConfigs extends ApiModule {
     });
 
     const decodeValue = (key: string, value: string) => {
+      if (key.includes("guidance")) {
+        return value ===
+          "0x0000000000000000000000000000000000000000000000000000000000000000"
+          ? undefined
+          : value.slice(2);
+      }
       return String(decodeAbiParameters([{ type: "uint256" }], value as Hash));
     };
 

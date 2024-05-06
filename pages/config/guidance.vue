@@ -28,7 +28,7 @@ const { getProtocolGuidances } = storeToRefs(store);
 const fetchProtocolConfigs = async () => {
   if (getProtocolGuidances.value.length) return;
   try {
-    const response = await apiStore.client.registrar!.guidances.getAllGuidances();
+    const response = await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues();
     store.setProtocolConfigs(response);
   } catch (error) {
     console.error({ error });
