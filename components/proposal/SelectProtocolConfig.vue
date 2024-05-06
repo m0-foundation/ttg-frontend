@@ -107,7 +107,7 @@ const configParams = [
 
   {
     value: "base_minter_rate",
-    label: "Base Minter rate",
+    label: "Base minter rate",
     shortDescription:
       "Base yearly interest rate that continuously accrues on M owed to the protocol.",
   },
@@ -121,7 +121,7 @@ const configParams = [
 
   {
     value: "max_earner_rate",
-    label: "Max. Earner rate",
+    label: "Max earner rate",
     shortDescription:
       "Maximum yearly interest rate that continuously accrues on M owned by Earners.",
   },

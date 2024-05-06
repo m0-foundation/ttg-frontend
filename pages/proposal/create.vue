@@ -199,9 +199,9 @@
         <p>You'll receive a refund if the proposal succeeds</p>
       </div>
 
-      <div v-if="isPreview" class="flex justify-end mt-6">
+      <div v-if="isPreview" class="flex justify-end mt-6 gap-6">
         <button
-          class="text-green-800 uppercase mx-4"
+          class="text-green-700 uppercase"
           data-test="create-proposal-button-back-bottom"
           @click="onBack"
         >
@@ -431,7 +431,7 @@ const proposalTypes = [
   },
   {
     value: "addToList",
-    label: "Add address",
+    label: "Add actor",
     component: InputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -441,7 +441,7 @@ const proposalTypes = [
   },
   {
     value: "removeFromList",
-    label: "Remove address",
+    label: "Remove actor",
     component: InputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -452,7 +452,7 @@ const proposalTypes = [
 
   {
     value: "removeFromAndAddToList",
-    label: "Replace address",
+    label: "Update actor",
     component: InputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -489,7 +489,7 @@ const proposalTypes = [
 
   {
     value: "setProposalFee",
-    label: "Proposal Fee",
+    label: "Proposal fee",
     component: InputGovernanceSetProposalFee,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -499,7 +499,7 @@ const proposalTypes = [
 
   {
     value: "setCashToken",
-    label: "Cash Token",
+    label: "Cash token",
     component: InputGovernanceSetCashToken,
     tokens: [MVotingTokens.Zero],
     governor: spog.contracts.zeroGovernor,
@@ -533,11 +533,11 @@ const proposalTypes = [
     id: "menuEmergency",
     isEmergency: true,
     submenuText:
-      "Emergency proposals it requires a POWER Threshold and is immediately votable and subsequently immediately executable rather than only being votable and executable in the future epochs.",
+      "Emergency Proposals require a POWER (yes) threshold and are immediately voteable. They are also immediately executable upon reaching this threshold, rather than only being executeable in the following epoch.",
     children: [
       {
         value: "addToList",
-        label: "Add address",
+        label: "Add actor",
         isEmergency: true,
         component: InputListOperation,
         tokens: [MVotingTokens.Power],
@@ -548,7 +548,7 @@ const proposalTypes = [
       },
       {
         value: "removeFromList",
-        label: "Remove address",
+        label: "Remove actor",
         isEmergency: true,
         component: InputListOperation,
         tokens: [MVotingTokens.Power],
@@ -560,7 +560,7 @@ const proposalTypes = [
 
       {
         value: "removeFromAndAddToList",
-        label: "Update address",
+        label: "Update actor",
         isEmergency: true,
         component: InputListRemoveAddOperation,
         tokens: [MVotingTokens.Power],
@@ -599,6 +599,7 @@ const proposalTypes = [
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
+        isEmergency: true,
         hasToPayFee: false,
         id: "emergencyGuidanceSetKey",
       },
