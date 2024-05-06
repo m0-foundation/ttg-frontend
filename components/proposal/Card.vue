@@ -199,15 +199,14 @@ function onCastSelected(vote: boolean) {
 const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
 
-const { power: powerVotingPower, zero: zeroVotingPower } =
-  useMVotingPower(userAccount);
+const { power: powerVotingPower } = useMVotingPower(userAccount);
 
 const canVote = computed(() => {
-  if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
+  if (["Standard"].includes(props.proposal.votingType!)) {
     return powerVotingPower?.data.value?.hasVotingPower;
-  } else if (props.proposal?.votingType === "Zero") {
-    return zeroVotingPower?.data.value?.hasVotingPower;
   }
+  //TODO: add Zero/Emergency voting power based on getPastVotes(proposal.voteStart - 1)
+  return true;
 });
 
 voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
