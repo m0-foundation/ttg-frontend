@@ -3,6 +3,7 @@ import { Hash } from "viem";
 import { ApiModule } from "../../api-module";
 import { ApiContext } from "../../api-context";
 import { ProtocolConfigs } from "./protocol-configs";
+import { Guidances } from "./protocol-configs";
 
 import { List } from "./modules/list";
 import { MRegistrarValues } from "./registrar.types";
@@ -11,11 +12,13 @@ import { registrarAbi } from "@/lib/sdk";
 export class Registrar extends ApiModule {
   protocolConfigs: ProtocolConfigs;
   list: List;
+  guidances: Guidances;
 
   constructor(context: ApiContext) {
     super(context);
     this.protocolConfigs = new ProtocolConfigs(context);
     this.list = new List(context);
+    this.guidances = new Guidances(context);
   }
 
   getParameters<T>(parameters: string[]): Promise<T> {
