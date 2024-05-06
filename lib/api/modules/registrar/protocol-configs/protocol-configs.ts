@@ -18,7 +18,6 @@ export class ProtocolConfigs extends ApiModule {
     "minter_freeze_time",
     "base_minter_rate",
     "max_earner_rate",
-
     "guidance",
     "ecosystem_guidance",
     "collateral_guidance",
