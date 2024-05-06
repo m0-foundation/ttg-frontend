@@ -329,7 +329,7 @@ describe("Proposals", () => {
         cy.get("[data-test='protocolConfigSelect']").click();
 
         // config
-        cy.contains("Base Minter rate").click();
+        cy.contains("Base minter rate").click();
 
         const value = "10";
         const key = "base_minter_rate";
@@ -384,7 +384,7 @@ describe("Proposals", () => {
       cy.get("[data-test='protocolConfigSelect']").click();
 
       // config
-      cy.contains("Max. Earner rate").click();
+      cy.contains("Max earner rate").click();
 
       const value = "10";
       const key = "max_earner_rate";
@@ -422,7 +422,7 @@ describe("Proposals", () => {
       cy.get("[data-test='protocolConfigSelect']").click();
 
       // config
-      cy.contains("Minter rate").click();
+      cy.contains("Minter rate model").click();
 
       const value = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
       const key = "minter_rate_model";
@@ -480,7 +480,7 @@ describe("Proposals", () => {
       cy.get("[data-test='protocolConfigSelect']").click();
 
       // config
-      cy.contains("Earner rate").click();
+      cy.contains("Earner rate model").click();
 
       const value = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
       const key = "earner_rate_model";

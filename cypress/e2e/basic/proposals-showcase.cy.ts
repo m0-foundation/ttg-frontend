@@ -120,15 +120,7 @@ describe("Proposals", () => {
     });
 
     it("VOTE YES to proposal to be executable", () => {
-      cy.visit("/proposals/emergency");
-      cy.connectWallet();
-      cy.wait(500);
-
-      cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#button-cast-yes").click();
-      });
-
-      cy.reload();
+      cy.castYesAllEmergencyProposals();
     });
 
     it("CREATE Emergency proposal add to list", () => {

@@ -61,7 +61,7 @@
               :version="isVoteYesActive"
               :is-loading="loading && selectedVote"
               class="cast-vote-button"
-              @click="onCastSelected(true)"
+              @click="onCast(true)"
             >
               YES
             </ProposalButtonCastVote>
@@ -73,7 +73,7 @@
               :disabled="hasVoted || isDisconnected || !canVote || loading"
               :version="isVoteNoActive"
               :is-loading="loading && !selectedVote"
-              @click="onCastSelected(false)"
+              @click="onCast(false)"
             >
               NO
             </ProposalButtonCastVote>
@@ -177,7 +177,15 @@ function onExecuteProposal() {
   emit("on-execute", props.proposal);
 }
 
-function onCastSelected(vote: boolean) {
+function onCast(vote: boolean) {
+  if (props.proposal?.votingType === "Standard") {
+    return onBatchCastSelected(vote);
+  } else {
+    return onSingleCastSelected(vote);
+  }
+}
+
+function onBatchCastSelected(vote: boolean) {
   // no vote has been select then click on any button
   if (selectedVote.value === null) {
     emit("on-cast", Number(vote), props.proposal.proposalId);
@@ -196,18 +204,21 @@ function onCastSelected(vote: boolean) {
   }
 }
 
+function onSingleCastSelected(vote: boolean) {
+  emit("on-cast", Number(vote), props.proposal.proposalId);
+}
+
 const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
 
-const { power: powerVotingPower, zero: zeroVotingPower } =
-  useMVotingPower(userAccount);
+const { power: powerVotingPower } = useMVotingPower(userAccount);
 
 const canVote = computed(() => {
-  if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
+  if (["Standard"].includes(props.proposal.votingType!)) {
     return powerVotingPower?.data.value?.hasVotingPower;
-  } else if (props.proposal?.votingType === "Zero") {
-    return zeroVotingPower?.data.value?.hasVotingPower;
   }
+  //TODO: add Zero/Emergency voting power based on getPastVotes(proposal.voteStart - 1)
+  return true;
 });
 
 voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
