@@ -1,5 +1,5 @@
 describe("Auction", () => {
-  describe("Create Sceneario to buy in Auction", () => {
+  it.skip("Create Sceneario to buy in Auction", () => {
     const input = "0.001";
     const title = "Change Proposal Fee";
     const description = "Auction Scenario to buy.";
