@@ -4,7 +4,7 @@ describe("Check proposal form validation", () => {
     cy.findByRole("button", { name: /Create proposal/i }).click();
   });
 
-  const listOperations = ["add", "remove", "replace"];
+  const listOperations = ["add", "remove", "update"];
   const listTypes = ["minters", "validators", "earners"];
 
   // loop through the matrix listOperations x listTypes
@@ -13,7 +13,7 @@ describe("Check proposal form validation", () => {
       it(`Check ${listOperation} addresses of ${listType} form`, () => {
         cy.connectWallet();
         cy.get("[data-test='proposalTypeSelect']").click();
-        const buttonRegex = new RegExp(`^${listOperation} address$`, "i");
+        const buttonRegex = new RegExp(`^${listOperation} actor$`, "i");
         cy.findByRole("button", { name: buttonRegex })
           .should("be.visible")
           .click();

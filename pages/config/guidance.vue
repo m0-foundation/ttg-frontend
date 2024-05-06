@@ -28,7 +28,8 @@ const { getProtocolGuidances } = storeToRefs(store);
 const fetchProtocolConfigs = async () => {
   if (getProtocolGuidances.value.length) return;
   try {
-    const response = await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues();
+    const response =
+      await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues();
     store.setProtocolConfigs(response);
   } catch (error) {
     console.error({ error });
@@ -80,7 +81,7 @@ const protocolParametersData = [
     copyValue: true,
   },
   {
-    title: "Manadatory Contract Clauses Guidance",
+    title: "Mandatory Contract Clauses Guidance",
     key: "mandatory_contract_guidance",
     type: "guidance",
     copyValue: true,
