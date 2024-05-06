@@ -38,7 +38,7 @@ const { isLoading } = useAsyncState(fetchProtocolConfigs(), null);
 
 const store = useProtocolConfigsStore();
 const proposalsStore = useProposalsStore();
-const { configs: data } = storeToRefs(store);
+const { getProtocolConfigsWithoutGuidances } = storeToRefs(store);
 
 const proposals = computed(() => proposalsStore.getProposals);
 
@@ -202,7 +202,7 @@ const protocolParametersData = [
 
 const protocolDataSorted = computed(() => {
   // Add custom and proposal data to parameters and sort it to show custom parameters first
-  return [...data.value]
+  return getProtocolConfigsWithoutGuidances.value
     .map((p) => ({
       value: p.value,
       key: p.key,
