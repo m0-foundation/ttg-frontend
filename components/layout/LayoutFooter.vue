@@ -43,11 +43,6 @@ const socialLinks = [
     url: "https://twitter.com/m0foundation",
     icon: "/img/socials/x.svg",
   },
-  {
-    name: "LinkedIn",
-    url: "https://www.linkedin.com/company/m-zero-labs/",
-    icon: "/img/socials/linkedin.svg",
-  },
 ];
 </script>
 
