@@ -25,9 +25,9 @@
           <span class="text-grey-500 text-xs">Join our community</span>
           <ul class="flex items-center gap-4">
             <li v-for="social in socialLinks" :key="social.name">
-              <a :href="social.url" class="">
+              <NuxtLink target="_blank" :href="social.url">
                 <img :src="social.icon" :alt="`${social.name} logo white`" />
-              </a>
+              </NuxtLink>
             </li>
           </ul>
         </div>
@@ -40,7 +40,7 @@
 const socialLinks = [
   {
     name: "X",
-    url: "https://twitter.com/m0labs",
+    url: "https://twitter.com/m0foundation",
     icon: "/img/socials/x.svg",
   },
   {
