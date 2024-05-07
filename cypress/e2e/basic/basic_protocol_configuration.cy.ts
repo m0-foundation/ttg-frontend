@@ -10,7 +10,6 @@ describe("Basic configuration", () => {
     cy.get("nav").should("contain", "Home");
     cy.get("nav").should("contain", "Actors");
     cy.get("nav").should("contain", "Configs");
-    cy.get("nav").should("contain", "Protocol Fees");
   });
 
   it("I should see all configuration parameters", () => {
@@ -28,7 +27,29 @@ describe("Basic configuration", () => {
       "Minter Freeze Time",
       "Base Minter rate",
       "Max. Earner rate",
+    ]
+
+    cy.get('h3.text-xl').should('have.length', configParams.length)
+
+    configParams.forEach((value: string) => {
+      cy.get('h3.text-xl').contains(value)
+    })
+  });
+
+  it("I should see all guidance configuration parameters", () => {
+    cy.visit("/config/guidance");
+    cy.url().should("include", "/config/guidance");
+    cy.get('h1').should('contain', 'Configs')
+    cy.get('a.link-tab').contains('Guidance').should('have.class', 'active-link-tab')
+
+    const configParams = [
       "Guidance",
+      "Ecosystem Guidance",
+      "Collateral Guidance",
+      "SPV Operator Guidance",
+      "Validator Guidance",
+      "Minter Guidance",
+      "Mandatory Contract Clauses Guidance",
     ]
 
     cy.get('h3.text-xl').should('have.length', configParams.length)

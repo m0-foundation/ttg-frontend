@@ -36,6 +36,8 @@ declare global {
       castYesOneEmergencyProposal(description: string): Chainable;
 
       castYesAllEmergencyProposals(): Chainable;
+      
+      executeAllProposals(): Chainable;
 
       executeOneProposal(description: string): Chainable;
 
@@ -162,12 +164,9 @@ Cypress.Commands.add(
 
     cy.contains("article", description).then(($proposal) => {
       cy.wrap($proposal).find("#button-cast-yes").click();
+      cy.get("[data-test='dialog-button-confirm']").click();
     });
 
-    cy.get("[data-test='button-tab-pending-execution']").should(
-      "have.length",
-      1
-    );
   }
 );
 
@@ -178,7 +177,19 @@ Cypress.Commands.add("castYesAllEmergencyProposals", () => {
 
   cy.get("article").each(($proposal) => {
     cy.wrap($proposal).find("#button-cast-yes").click();
+    cy.get("[data-test='dialog-button-confirm']").click();
     cy.wrap($proposal).contains("Your vote has been submitted");
+    cy.wait(500);
+  });
+});
+
+Cypress.Commands.add("executeAllProposals", () => {
+  cy.visit("/proposals/succeeded");
+  cy.connectWallet();
+
+  cy.get("article").each(($proposal) => {
+    cy.wrap($proposal).find("#button-proposal-execute").click();
+    // cy.wrap($proposal).contains("Proposal executed successfully!");
     cy.wait(500);
   });
 });

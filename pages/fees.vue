@@ -4,7 +4,7 @@
       <template #default>Protocol Fees</template>
       <template #subtitle>
         <p class="text-grey-500 font-inter">
-          In exchange for ZERO holders' participation in protocol governance,
+          In exchange for ZERO holders' guardianship over protocol governance,
           they will receive the remainder of the protocol fees.
           <a
             href="https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.ii-operation/iii.ii.viii-zero-claiming-of-residual-value"
@@ -112,7 +112,7 @@ const alerts = useAlertsStore();
 const allowedCashTokens = computed(() => spog.governors.zero.allowedCashTokens);
 
 const claimEpochStart = computed(() =>
-  BigInt(epoch.value.current.asNumber - 50),
+  BigInt(epoch.value.current.asNumber - 50)
 );
 const claimEpochEnd = computed(() => BigInt(epoch.value.current.asNumber - 1));
 
@@ -141,7 +141,7 @@ const distributeRewards = async (token, index) => {
     } else {
       getRewardsData();
       alerts.successAlert(
-        `You successfully distributed ${token.name} rewards!`,
+        `You successfully distributed ${token.name} rewards!`
       );
     }
   } finally {
@@ -160,7 +160,7 @@ const getRewardsData = async () => {
           distributable: await getDistributableRewards(token),
           isClaiming: false,
         };
-      }),
+      })
     );
   } finally {
     loadingData.value = false;

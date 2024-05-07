@@ -73,6 +73,11 @@
     </nav>
 
     <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
+      <div class="text-xs flex justify-between">
+        <p>Epoch:</p>
+        <p class="text-grey-600">#{{ epoch }}</p>
+      </div>
+      <hr class="border-grey-700 border-dashed mb-4 mt-2" />
       <p class="text-xs mb-2 text-grey-600">POWER tokens</p>
 
       <div>
@@ -185,6 +190,7 @@ const router = useRouter();
 const { currentRoute } = router;
 
 const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
+const epoch = computed(() => spog.epoch.current.asNumber);
 
 const config = useRuntimeConfig();
 
@@ -251,7 +257,7 @@ const mainMenuItems = computed(() => {
     {
       title: "Protocol Fees",
       path: "/fees/",
-      isShow: true,
+      isShow: isAuctionActive.value,
       dataTest: "sidebar-link-fees",
     },
   ];

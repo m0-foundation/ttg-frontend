@@ -142,24 +142,26 @@
             <div class="mb-6">
               <label for="type-value">IPFS</label>
 
-              <input
+              <MInput
                 v-model="formData.ipfsURL"
                 type="text"
                 placeholder="https://"
                 data-test="create-proposal-input-url-ipfs"
                 class="font-inter"
+                :errors="$validation.ipfsURL.$errors"
               />
             </div>
 
             <div class="mb-6">
               <label for="type-value">Discussion URL:</label>
 
-              <input
+              <MInput
                 v-model="formData.discussionURL"
                 type="text"
                 placeholder="https://"
                 data-test="create-proposal-input-url-discussion"
                 class="font-inter"
+                :errors="$validation.discussionURL.$errors"
               />
             </div>
           </div>
@@ -197,9 +199,9 @@
         <p>You'll receive a refund if the proposal succeeds</p>
       </div>
 
-      <div v-if="isPreview" class="flex justify-end mt-6">
+      <div v-if="isPreview" class="flex justify-end mt-6 gap-6">
         <button
-          class="text-green-800 uppercase mx-4"
+          class="text-green-700 uppercase"
           data-test="create-proposal-button-back-bottom"
           @click="onBack"
         >
@@ -253,15 +255,9 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import {
-  encodeFunctionData,
-  encodeAbiParameters,
-  Hash,
-  erc20Abi,
-  toHex,
-} from "viem";
+import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
 import { useAccount } from "use-wagmi";
-import { required, minLength, maxLength } from "@vuelidate/validators";
+import { required, minLength, maxLength, url } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 
@@ -281,13 +277,15 @@ import { useMBalances } from "@/lib/hooks";
 import { wait } from "@/utils/misc";
 
 /* components */
-import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
-import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
-import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
+import InputListOperation from "@/components/proposal/InputListOperation.vue";
+import InputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
+import InputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
+import InputProtocolGuidanceConfigOperation from "@/components/proposal/InputProtocolGuidanceConfigOperation.vue";
 import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSetCashToken.vue";
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
+
 import { getBytes32FromIpfsHash } from "@/utils/ipfs";
 
 /* wagmi */
@@ -325,18 +323,12 @@ const formData = reactive({
   discussionURL: null,
 });
 
-watchEffect(() => {
-  const type = selectedProposalType?.value?.value;
-  const key = formData.proposalValue;
-  if (type === "setKey" && key === "guidance") {
-    formData.ipfsURL = `https://ipfs.io/ipfs/${formData.proposalValue2}`;
-  }
-});
-
 const rules = computed(() => {
   const constRules = {
     description: { required, minLength: minLength(6) },
     title: { required, minLength: minLength(6) },
+    ipfsURL: { url },
+    discussionURL: { url },
   };
 
   const type = selectedProposalType?.value?.value;
@@ -439,8 +431,8 @@ const proposalTypes = [
   },
   {
     value: "addToList",
-    label: "Add address",
-    component: ProposalInputListOperation,
+    label: "Add actor",
+    component: InputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorAbi,
@@ -449,8 +441,8 @@ const proposalTypes = [
   },
   {
     value: "removeFromList",
-    label: "Remove address",
-    component: ProposalInputListOperation,
+    label: "Remove actor",
+    component: InputListOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorAbi,
@@ -460,8 +452,8 @@ const proposalTypes = [
 
   {
     value: "removeFromAndAddToList",
-    label: "Replace address",
-    component: ProposalInputListRemoveAddOperation,
+    label: "Update actor",
+    component: InputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorAbi,
@@ -472,7 +464,7 @@ const proposalTypes = [
   {
     value: "setKey",
     label: "Update protocol config",
-    component: ProposalInputProtocolConfigOperation,
+    component: InputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
     abi: standardGovernorAbi,
@@ -481,12 +473,23 @@ const proposalTypes = [
   },
 
   {
+    value: "setKeyGuidance",
+    label: "Update protocol guidance",
+    component: InputProtocolGuidanceConfigOperation,
+    tokens: [MVotingTokens.Power],
+    governor: spog.contracts.standardGovernor,
+    abi: standardGovernorAbi,
+    hasToPayFee: true,
+    id: "protocolGuidanceSetKey",
+  },
+
+  {
     header: "governance",
   },
 
   {
     value: "setProposalFee",
-    label: "Proposal Fee",
+    label: "Proposal fee",
     component: InputGovernanceSetProposalFee,
     tokens: [MVotingTokens.Power],
     governor: spog.contracts.standardGovernor,
@@ -496,7 +499,7 @@ const proposalTypes = [
 
   {
     value: "setCashToken",
-    label: "Cash Token",
+    label: "Cash token",
     component: InputGovernanceSetCashToken,
     tokens: [MVotingTokens.Zero],
     governor: spog.contracts.zeroGovernor,
@@ -530,13 +533,13 @@ const proposalTypes = [
     id: "menuEmergency",
     isEmergency: true,
     submenuText:
-      "Emergency proposals it requires a POWER Threshold and is immediately votable and subsequently immediately executable rather than only being votable and executable in the future epochs.",
+      "Emergency Proposals require a POWER (yes) threshold and are immediately voteable. They are also immediately executable upon reaching this threshold, rather than only being executeable in the following epoch.",
     children: [
       {
         value: "addToList",
-        label: "Add address",
+        label: "Add actor",
         isEmergency: true,
-        component: ProposalInputListOperation,
+        component: InputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
@@ -545,9 +548,9 @@ const proposalTypes = [
       },
       {
         value: "removeFromList",
-        label: "Remove address",
+        label: "Remove actor",
         isEmergency: true,
-        component: ProposalInputListOperation,
+        component: InputListOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
@@ -557,9 +560,9 @@ const proposalTypes = [
 
       {
         value: "removeFromAndAddToList",
-        label: "Update address",
+        label: "Update actor",
         isEmergency: true,
-        component: ProposalInputListRemoveAddOperation,
+        component: InputListRemoveAddOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
@@ -581,12 +584,24 @@ const proposalTypes = [
         value: "setKey",
         label: "Update protocol config",
         isEmergency: true,
-        component: ProposalInputProtocolConfigOperation,
+        component: InputProtocolConfigOperation,
         tokens: [MVotingTokens.Power],
         governor: spog.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetKey",
+      },
+
+      {
+        value: "setKeyGuidance",
+        label: "Update protocol guidance",
+        component: InputProtocolGuidanceConfigOperation,
+        tokens: [MVotingTokens.Power],
+        governor: spog.contracts.emergencyGovernor,
+        abi: emergencyGovernorAbi,
+        isEmergency: true,
+        hasToPayFee: false,
+        id: "emergencyGuidanceSetKey",
       },
     ],
   },
@@ -863,10 +878,6 @@ function buildCalldatas(formData) {
         return addressToHexWith32Bytes(inp);
       }
 
-      if (["guidance"].includes(key)) {
-        return getBytes32FromIpfsHash(inp);
-      }
-
       if (
         [
           "penalty_rate",
@@ -888,6 +899,13 @@ function buildCalldatas(formData) {
     const value = getValueEncoded(input2);
 
     return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
+  }
+
+  if (["setKeyGuidance"].includes(type)) {
+    const key = input1;
+    const value = "0x" + input2;
+
+    return buildCalldatasSpog("setKey", [stringToHexWith32Bytes(key), value]);
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {
