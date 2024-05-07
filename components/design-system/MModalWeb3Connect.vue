@@ -66,10 +66,12 @@ import { ref } from "vue";
 import { useAccount, useConnect, useSwitchChain } from "use-wagmi";
 
 const images = {
-  MetaMask: "/img/icon-metamask.svg",
+  "Brave Wallet": "/img/wallets/brave.svg",
   "Coinbase Wallet": "/img/icon-coinbase.svg",
-  WalletConnect: "/img/icon-walletconnect.svg",
+  Frame: "/img/wallets/frame.png",
+  MetaMask: "/img/icon-metamask.svg",
   Safe: "/img/wallets/safe.svg",
+  WalletConnect: "/img/icon-walletconnect.svg",
 };
 
 const open = ref(false);

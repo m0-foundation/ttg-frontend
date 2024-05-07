@@ -38,9 +38,8 @@
       </div>
     </div>
     <p class="text-xxs lg:text-xs">
-      This is a Dutch auction, the price decreasing over time once the auction
-      begins. Rate of Decrease: information on the rate or interval at which the
-      price decreases during the auction.
+      This is a Dutch auction, the price decreases over time once the auction
+      begins.
     </p>
   </div>
 </template>

@@ -19,7 +19,7 @@
         </PageTitle>
       </template>
       <template #header-right>
-        <div class="flex gap-3 mt-2 lg:mt-0 font-inter">
+        <div class="flex max-lg:flex-wrap gap-3 mt-2 lg:mt-0 font-inter">
           <select
             v-model="selectedType"
             class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
@@ -43,6 +43,16 @@
               :key="option"
               :value="option"
             >
+              {{ option }}
+            </option>
+          </select>
+
+          <select
+            v-model="selectedStatus"
+            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
+          >
+            <option value="all" default>All status</option>
+            <option v-for="option in statusTypes" :key="option" :value="option">
               {{ option }}
             </option>
           </select>
@@ -101,11 +111,12 @@ const proposals = computed(() => store.data);
 
 const selectedType = ref("all");
 const selectedEpoch = ref(0);
+const selectedStatus = ref("all");
 
 const proposalsTableHeader = [
   { key: "epoch", label: "Created Epoch", sortable: true },
   { key: "votingType", label: "Token", sortable: false },
-  { key: "proposal", label: "Proposal", sortable: true },
+  { key: "proposal", label: "Proposal" },
   { key: "state", label: "Status", sortable: true },
 ];
 
@@ -117,6 +128,10 @@ const epochNumbers = computed(() => [
   ...new Set(proposals.value.map((obj) => obj.epoch)),
 ]);
 
+const statusTypes = computed(() => [
+  ...new Set(proposals.value.map((obj) => obj.state)),
+]);
+
 const filteredProposals = computed(() => {
   let results = proposals.value;
 
@@ -125,6 +140,9 @@ const filteredProposals = computed(() => {
 
   if (selectedEpoch.value !== 0)
     results = results.filter((obj) => obj.epoch === selectedEpoch.value);
+
+  if (selectedStatus.value !== "all")
+    results = results.filter((obj) => obj.state === selectedStatus.value);
 
   return results;
 });

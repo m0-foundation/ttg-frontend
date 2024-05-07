@@ -33,7 +33,7 @@
               data-test="proposal-link-copy-url"
               @click="
                 copyToClipboard(
-                  useBlockExplorer('tx', props?.proposal?.transactionHash),
+                  `${url.origin}/proposal/${props?.proposal?.proposalId}`,
                 )
               "
             >
@@ -71,6 +71,7 @@ export interface ProposalProps {
 }
 
 const props = defineProps<ProposalProps>();
+const url = useRequestURL();
 </script>
 <style>
 .menu-items {
