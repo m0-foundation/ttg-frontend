@@ -8,15 +8,9 @@ const RPC_URL_FALLBACK =
 export default {
   network: "mainnet",
   contracts: {
-    registrar: "0x119FbeeDD4F4f4298Fb59B720d5654442b81ae2c",
+    registrar: "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
     multicall3: mainnet.contracts.multicall3.address,
-    deploymentBlock: 19812904,
-    zero: {
-      allowedCashTokens: [
-        "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // WETH,
-        "0x866A2BF4E572CbcF37D5071A7a58503Bfb36be1b", // M token
-      ],
-    },
+    deploymentBlock: 4520940,
   },
   rpc: {
     chainId: 1,
