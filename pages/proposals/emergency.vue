@@ -1,102 +1,102 @@
 <template>
   <NuxtLayout name="proposals">
-    <MDialog ref="dialog">
-      <template #header> Confirm your voting power </template>
+    <div>
+      <ProposalList
+        :proposals="emergencyProposals"
+        :loading="isLoading"
+        @on-cast="onCast"
+        @on-uncast="onUncast"
+      >
+        <template #emptyState>
+          <ProposalListEmptyState>
+            No active standard proposals
+          </ProposalListEmptyState>
+        </template>
+      </ProposalList>
 
-      <template #body>
-        <div>
-          <div class="flex justify-start items-center gap-6 mb-4">
-            <p>
-              <MIconPower class="w-6 inline-block mr-2" />
-              {{ useNumberFormatterPrice((votingPower as any)?.formatted) }}
-            </p>
-            <p class="uppercase text-xxs text-grey-600">voting power</p>
-          </div>
-
-          <p class="text-sm">
-            This is your POWER <u>voting power</u> which will be utilized to
-            vote on this proposal base on the previous epoch.
-          </p>
-        </div>
-      </template>
-    </MDialog>
-
-    <ProposalList
-      :proposals="proposals"
-      :loading="isLoading"
-      :selected-proposal="selectedProposal"
-      @on-cast="confirmCastVote"
-    >
-      <template #emptyState>
-        <ProposalListEmptyState>
-          No emergency proposals
-        </ProposalListEmptyState>
-      </template>
-    </ProposalList>
+      <div
+        v-show="isConnected"
+        class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8"
+      >
+        <span class="text-xxs"> Select YES or NO to submit your vote </span>
+        <MButton
+          id="button-cast-submit"
+          class="w-full lg:w-40 flex justify-center"
+          :disabled="isLoading || selectedCastProposals.length === 0"
+          :is-loading="isLoading"
+          data-test="proposal-button-submit-votes"
+          @click="onCastBatchVotes"
+        >
+          submit
+        </MButton>
+      </div>
+    </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { Abi, Hash } from "viem";
+import { Hash } from "viem";
 import { useAccount } from "use-wagmi";
-import { writeContract, waitForTransactionReceipt } from "@wagmi/core";
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { writeEmergencyGovernor } from "@/lib/sdk";
+import { useMBalances } from "@/lib/hooks";
+
+interface CastedProposal {
+  vote: number;
+  proposalId: string;
+}
+
+const selectedCastProposals = ref<Array<CastedProposal>>([]);
+const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
+const spog = useSpogStore();
 
-useHead({
-  titleTemplate: "%s - Emergency proposals",
-});
-
-const { address: userAccount } = useAccount();
-const { forceSwitchChain } = useCorrectChain();
-
-const isLoading = ref(false);
-const selectedProposal = ref();
-
-const dialog = ref();
-const votingPower = ref();
-
-const proposals = computed(() =>
-  proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active")
+const activeProposals = computed(() =>
+  proposalsStore.getProposalsByState("Active")
 );
 
+const emergencyProposals = computed(() =>
+  activeProposals.value.filter((p) => p.votingType === "Emergency")
+);
+
+const { address: userAccount, isConnected } = useAccount();
+const { forceSwitchChain } = useCorrectChain();
 const wagmiConfig = useWagmiConfig();
-const proposalStore = useProposalsStore();
 const alerts = useAlertsStore();
 
-async function confirmCastVote(vote: number, proposalId: string) {
-  await fetchVotingPower(proposalId);
-  if (await dialog.value.open()) {
-    return castVote(vote, proposalId);
-  }
+const balances = useMBalances(userAccount);
+
+useHead({
+  titleTemplate: "%s - Proposals",
+});
+
+function onCast(vote: number, proposalId: string) {
+  selectedCastProposals.value.push({ vote, proposalId });
 }
 
-async function fetchVotingPower(proposalId: string) {
-  const proposal = proposalStore.getProposalById(proposalId);
-  const pastEpoch = proposal!.voteStart - 1;
-
-  votingPower.value = await usePastVotes({
-    address: userAccount.value!,
-    epoch: pastEpoch,
-    token: "power",
-  });
+function onUncast(proposalId: string) {
+  selectedCastProposals.value = selectedCastProposals.value.filter(
+    (p) => p.proposalId !== proposalId
+  );
 }
 
-async function castVote(vote: number, proposalId: string) {
+// batch is only for standard proposals
+async function onCastBatchVotes() {
   await forceSwitchChain();
 
-  selectedProposal.value = proposalId;
   isLoading.value = true;
 
-  const governor = useGovernor({ proposalId });
-  console.log("cast", { vote, proposalId, governor });
-
   try {
-    const hash = await writeContract(wagmiConfig, {
-      address: governor!.address as Hash,
-      abi: governor!.abi as Abi,
-      functionName: "castVote",
-      args: [BigInt(proposalId), vote],
+    const proposalIds = selectedCastProposals.value.map((p) =>
+      BigInt(p.proposalId)
+    );
+    const votes = selectedCastProposals.value.map((p) => p.vote);
+
+    const hash = await writeEmergencyGovernor(wagmiConfig, {
+      address: spog.contracts.emergencyGovernor as Hash,
+      functionName: "castVotes",
+      args: [proposalIds, votes], // uint256 proposalId, uint8 support
       account: userAccount.value,
     });
 
@@ -109,9 +109,8 @@ async function castVote(vote: number, proposalId: string) {
       throw txReceipt;
     }
 
-    proposalStore.updateProposalById(proposalId);
-
-    alerts.successAlert("Vote casted successfully!");
+    await spog.fetchTokens();
+    balances.refetch();
   } catch (error: any) {
     console.log("Error casting vote", { error });
     if (error.transactionHash) {
@@ -121,9 +120,8 @@ async function castVote(vote: number, proposalId: string) {
     } else {
       alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);
     }
-  } finally {
-    isLoading.value = false;
-    selectedProposal.value = undefined;
   }
+
+  isLoading.value = false;
 }
 </script>
