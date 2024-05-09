@@ -3,10 +3,7 @@
     <div class="lg:flex items-center">
       <div class="lg:grow">
         <span class="text-xs text-grey-500">
-          © 2024
-          <a href="/" class="hover:underline"
-            >M^0 FOUNDATION. All rights reserved.</a
-          >
+          © 2024 M^0 FOUNDATION. All rights reserved.
         </span>
       </div>
       <div class="lg:shrink">
@@ -25,9 +22,9 @@
           <span class="text-grey-500 text-xs">Join our community</span>
           <ul class="flex items-center gap-4">
             <li v-for="social in socialLinks" :key="social.name">
-              <a :href="social.url" class="">
+              <NuxtLink target="_blank" :href="social.url">
                 <img :src="social.icon" :alt="`${social.name} logo white`" />
-              </a>
+              </NuxtLink>
             </li>
           </ul>
         </div>
@@ -40,13 +37,8 @@
 const socialLinks = [
   {
     name: "X",
-    url: "https://twitter.com/m0labs",
+    url: "https://twitter.com/m0foundation",
     icon: "/img/socials/x.svg",
-  },
-  {
-    name: "LinkedIn",
-    url: "https://www.linkedin.com/company/m-zero-labs/",
-    icon: "/img/socials/linkedin.svg",
   },
 ];
 </script>
