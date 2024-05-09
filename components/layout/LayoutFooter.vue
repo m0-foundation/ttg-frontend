@@ -3,10 +3,7 @@
     <div class="lg:flex items-center">
       <div class="lg:grow">
         <span class="text-xs text-grey-500">
-          © 2024
-          <a href="/" class="hover:underline"
-            >M^0 FOUNDATION. All rights reserved.</a
-          >
+          © 2024 M^0 FOUNDATION. All rights reserved.
         </span>
       </div>
       <div class="lg:shrink">
