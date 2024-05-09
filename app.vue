@@ -37,7 +37,7 @@ const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
 
 const apiStore = useApiClientStore();
-const spog = useSpogStore();
+const ttg = useSpogStore();
 const proposalStore = useProposalsStore();
 const votes = useVotesStore();
 
@@ -51,7 +51,7 @@ async function onSetup(rpc: string) {
   const wagmiConfig = useWagmi(rpc, fallbackRpc);
   nuxtApp.vueApp.use(UseWagmiPlugin, { config: wagmiConfig });
   nuxtApp.vueApp.use(VueQueryPlugin);
-  /* setup spog client */
+  /* setup ttg client */
   const api = new Api({
     rpcUrl: rpc,
     fallbackRpcUrl: fallbackRpc,
@@ -63,7 +63,7 @@ async function onSetup(rpc: string) {
   });
 
   const registrarContracts = await api.registrar.getValues();
-  spog.setContracts(registrarContracts);
+  ttg.setContracts(registrarContracts);
 
   api.setGovernors({
     standardGovernor: registrarContracts.standardGovernor,
@@ -83,11 +83,11 @@ onMounted(async () => {
     await onSetup(rpc.value!);
 
     // this must go first
-    await spog
+    await ttg
       .fetchGovernorsValues()
       .catch((e) => trackError(e, "fetchGovernorsValues"));
 
-    await spog.fetchTokens().catch((e) => trackError(e, "fetchTokens"));
+    await ttg.fetchTokens().catch((e) => trackError(e, "fetchTokens"));
 
     await wait(200);
 
@@ -98,8 +98,8 @@ onMounted(async () => {
     await wait(200);
 
     await votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes"));
-    await spog
-      .fetchEpoch(spog.getValues.clock)
+    await ttg
+      .fetchEpoch(ttg.getValues.clock)
       .catch((e) => trackError(e, "fetchEpoch"));
 
     watchForExecutedResetProposal();

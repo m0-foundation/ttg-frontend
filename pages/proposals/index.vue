@@ -121,22 +121,22 @@ const selectedCastProposals = ref<Array<CastedProposal>>([]);
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
-const spog = useSpogStore();
+const ttg = useSpogStore();
 
 const activeProposals = computed(() =>
-  proposalsStore.getProposalsByState("Active")
+  proposalsStore.getProposalsByState("Active"),
 );
 
 const standardProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Standard")
+  activeProposals.value.filter((p) => p.votingType === "Standard"),
 );
 
 const mandatoryToVoteProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Standard")
+  activeProposals.value.filter((p) => p.votingType === "Standard"),
 );
 
 const hasProposals = computed(
-  () => mandatoryToVoteProposals && mandatoryToVoteProposals.value.length > 0
+  () => mandatoryToVoteProposals && mandatoryToVoteProposals.value.length > 0,
 );
 
 const isSelectedCastProposalsFull = computed(() => {
@@ -163,7 +163,7 @@ const zeroInflation = useMInflationZeroToken();
 const balances = useMBalances(userAccount);
 const { power: powerVotingPower } = useMVotingPower(userAccount);
 const hasPowerVotingPower = computed(
-  () => powerVotingPower.data.value?.hasVotingPower
+  () => powerVotingPower.data.value?.hasVotingPower,
 );
 
 useHead({
@@ -176,19 +176,16 @@ function onCast(vote: number, proposalId: string) {
 
 function onUncast(proposalId: string) {
   selectedCastProposals.value = selectedCastProposals.value.filter(
-    (p) => p.proposalId !== proposalId
+    (p) => p.proposalId !== proposalId,
   );
 }
 
 const { data: hasVotedOnAllProposals, ...votedOnAllProposals } =
   useReadContract({
-    address: spog.contracts.standardGovernor as Hash,
+    address: ttg.contracts.standardGovernor as Hash,
     abi: standardGovernorAbi,
     functionName: "hasVotedOnAllProposals",
-    args: [
-      userAccount as Ref<Hash>,
-      BigInt(spog.epoch?.current?.asNumber || 0),
-    ],
+    args: [userAccount as Ref<Hash>, BigInt(ttg.epoch?.current?.asNumber || 0)],
     query: {
       enabled: isConnected,
     },
@@ -201,12 +198,12 @@ async function onCastBatchVotes() {
 
   try {
     const proposalIds = selectedCastProposals.value.map((p) =>
-      BigInt(p.proposalId)
+      BigInt(p.proposalId),
     );
     const votes = selectedCastProposals.value.map((p) => p.vote);
 
     const hash = await writeStandardGovernor(wagmiConfig, {
-      address: spog.contracts.standardGovernor as Hash,
+      address: ttg.contracts.standardGovernor as Hash,
       functionName: "castVotes",
       args: [proposalIds, votes], // uint256 proposalId, uint8 support
       account: userAccount.value,
@@ -223,26 +220,26 @@ async function onCastBatchVotes() {
 
     alerts.successAlert(
       `Your Balance has received the reward of ${useNumberFormatterPrice(
-        toValue(zeroInflation)
-      )} ZERO tokens.`
+        toValue(zeroInflation),
+      )} ZERO tokens.`,
     );
 
     if (hasPowerVotingPower) {
       alerts.successAlert(
         `Vote casted successfully! Your Balance will receive the reward of ${useNumberFormatterPrice(
-          toValue(powerInflation)
-        )} POWER tokens in the next epoch.`
+          toValue(powerInflation),
+        )} POWER tokens in the next epoch.`,
       );
     }
 
-    await spog.fetchTokens();
+    await ttg.fetchTokens();
     balances.refetch();
     votedOnAllProposals.refetch();
   } catch (error: any) {
     console.log("Error casting vote", { error });
     if (error.transactionHash) {
       alerts.errorAlert(
-        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`
+        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`,
       );
     } else {
       alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);

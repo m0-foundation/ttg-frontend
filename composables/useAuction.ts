@@ -11,11 +11,11 @@ const currentCost = ref({
 });
 
 export const useAuction = () => {
-  const spog = useSpogStore();
-  const { epoch } = storeToRefs(spog);
+  const ttg = useSpogStore();
+  const { epoch } = storeToRefs(ttg);
   const wagmiConfig = useWagmiConfig();
   const isTransferEpoch = computed(
-    () => spog.epoch.current?.type === "TRANSFER",
+    () => ttg.epoch.current?.type === "TRANSFER",
   );
 
   const getPricePoints = () => {
@@ -42,7 +42,7 @@ export const useAuction = () => {
     if (!isTransferEpoch.value) return 0n;
     try {
       const purchaseCost = await readPowerToken(wagmiConfig, {
-        address: spog.contracts.powerToken as Hash,
+        address: ttg.contracts.powerToken as Hash,
         functionName: "getCost",
         args: [1n], // We send 1n as the amount to get the current cost of 1 POWER token
       });
@@ -61,7 +61,7 @@ export const useAuction = () => {
   async function getAmountLeftToAuction() {
     try {
       amountLeftToAuction.value = await readPowerToken(wagmiConfig, {
-        address: spog!.contracts!.powerToken! as Hash,
+        address: ttg!.contracts!.powerToken! as Hash,
         functionName: "amountToAuction",
       });
     } catch (error) {

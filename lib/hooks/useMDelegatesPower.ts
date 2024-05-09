@@ -2,7 +2,6 @@ import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useReadContract } from "use-wagmi";
 import { powerTokenAbi } from "@/lib/sdk";
-import { useSpogStore } from "@/stores/spog";
 
 export default (
   userAccount:
@@ -14,10 +13,10 @@ export default (
   const account = ref(userAccount);
 
   const store = useSpogStore();
-  const spog = storeToRefs(store);
+  const ttg = storeToRefs(store);
 
   return useReadContract({
-    address: spog.contracts.value.powerToken as Hash,
+    address: ttg.contracts.value.powerToken as Hash,
     abi: powerTokenAbi,
     functionName: "delegates",
     args: [account as Ref<Hash>],

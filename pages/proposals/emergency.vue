@@ -57,7 +57,7 @@ const dialog = ref();
 const votingPower = ref();
 
 const proposals = computed(() =>
-  proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active")
+  proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active"),
 );
 
 const wagmiConfig = useWagmiConfig();
@@ -116,7 +116,7 @@ async function castVote(vote: number, proposalId: string) {
     console.log("Error casting vote", { error });
     if (error.transactionHash) {
       alerts.errorAlert(
-        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`
+        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`,
       );
     } else {
       alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);

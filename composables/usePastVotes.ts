@@ -12,9 +12,9 @@ export const usePastVotes = async ({
   token: "power" | "zero";
 }) => {
   const wagmiConfig = useWagmiConfig();
-  const spog = storeToRefs(useSpogStore());
+  const ttg = storeToRefs(useSpogStore());
   const selectedToken =
-    token === "power" ? spog.tokens.value.power : spog.tokens.value.zero;
+    token === "power" ? ttg.tokens.value.power : ttg.tokens.value.zero;
   const abi: Abi = token === "power" ? powerTokenAbi : zeroTokenAbi;
 
   const result = await readContract(wagmiConfig, {

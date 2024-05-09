@@ -94,32 +94,32 @@
 import { storeToRefs } from "pinia";
 
 const store = useProposalsStore();
-const spog = useSpogStore();
+const ttg = useSpogStore();
 
 const standardProposals = computed(
   () =>
     store
       .getProposalsByState("Active")
-      .filter((p) => !p.isEmergency && p.votingType !== "Zero").length
+      .filter((p) => !p.isEmergency && p.votingType !== "Zero").length,
 );
 
 const pendingExecution = computed(
-  () => store.getProposalsByState("Succeeded").length
+  () => store.getProposalsByState("Succeeded").length,
 );
 
 const emergency = computed(
-  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length
+  () => store.getProposalsByState("Active").filter((p) => p.isEmergency).length,
 );
 
 const zero = computed(
   () =>
     store.getProposalsByState("Active").filter((p) => p.votingType === "Zero")
-      .length
+      .length,
 );
 
 const pending = computed(() => store.getProposalsByState("Pending").length);
 
-const { epoch } = storeToRefs(spog);
+const { epoch } = storeToRefs(ttg);
 
 const currentEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.current?.asTimestamp));

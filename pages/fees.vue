@@ -106,13 +106,13 @@ const { epoch } = storeToRefs(useSpogStore());
 const { address: userAccount } = useAccount();
 
 const wagmiConfig = useWagmiConfig();
-const spog = useSpogStore();
+const ttg = useSpogStore();
 const alerts = useAlertsStore();
 
-const allowedCashTokens = computed(() => spog.governors.zero.allowedCashTokens);
+const allowedCashTokens = computed(() => ttg.governors.zero.allowedCashTokens);
 
 const claimEpochStart = computed(() =>
-  BigInt(epoch.value.current.asNumber - 50)
+  BigInt(epoch.value.current.asNumber - 50),
 );
 const claimEpochEnd = computed(() => BigInt(epoch.value.current.asNumber - 1));
 
@@ -126,7 +126,7 @@ const distributeRewards = async (token, index) => {
   try {
     const hash = await writeContract(wagmiConfig, {
       abi: distributionVaultAbi,
-      address: spog.contracts.vault as Hash,
+      address: ttg.contracts.vault as Hash,
       functionName: "distribute",
       args: [token.address as Hash],
     }); // address token
@@ -141,7 +141,7 @@ const distributeRewards = async (token, index) => {
     } else {
       getRewardsData();
       alerts.successAlert(
-        `You successfully distributed ${token.name} rewards!`
+        `You successfully distributed ${token.name} rewards!`,
       );
     }
   } finally {
@@ -160,7 +160,7 @@ const getRewardsData = async () => {
           distributable: await getDistributableRewards(token),
           isClaiming: false,
         };
-      })
+      }),
     );
   } finally {
     loadingData.value = false;
@@ -171,7 +171,7 @@ const getClaimableRewards = async (token) => {
   try {
     return await readContract(wagmiConfig, {
       abi: distributionVaultAbi,
-      address: spog.contracts.vault as Hash,
+      address: ttg.contracts.vault as Hash,
       functionName: "getClaimable",
       args: [
         token.address as Hash,
@@ -189,7 +189,7 @@ const getDistributableRewards = async (token) => {
   try {
     return await readContract(wagmiConfig, {
       abi: distributionVaultAbi,
-      address: spog.contracts.vault as Hash,
+      address: ttg.contracts.vault as Hash,
       functionName: "getDistributable",
       args: [token.address as Hash], // address token
     });
@@ -204,7 +204,7 @@ const claimTokenRewards = async (token, index) => {
   try {
     const hash = await writeContract(wagmiConfig, {
       abi: distributionVaultAbi,
-      address: spog.contracts.vault as Hash,
+      address: ttg.contracts.vault as Hash,
       functionName: "claim",
       args: [
         token.address as Hash,

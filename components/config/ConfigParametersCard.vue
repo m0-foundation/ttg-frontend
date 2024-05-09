@@ -79,8 +79,10 @@ const { currentCashToken } = storeToRefs(useSpogStore());
 const { isJustCopied, copy } = useCopyClipboard();
 
 defineProps({
-  param: Object,
-  default: () => {},
+  param: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const formattedValue = (param) => {
