@@ -26,10 +26,10 @@ export default (
         const votingPower = BigInt(data as unknown as bigint);
 
         return {
-          relative:
-            votingPower === 0n
-              ? 0
-              : Number((votingPower * 100n * 100n) / totalSupply.value) / 100,
+          relative: getVotingPowerPercentageByTotalSupply(
+            votingPower,
+            totalSupply.value,
+          ),
           value: votingPower,
           formatted: formatUnits(votingPower, token.decimals || 6),
           hasVotingPower: votingPower > 0n,

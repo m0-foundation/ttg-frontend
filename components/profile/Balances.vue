@@ -34,10 +34,7 @@
         </div>
       </div>
 
-      <div
-        v-if="hasDelegatedPower"
-        class="bg-accent-blue p-2 py-1 w-fit font-inter text-xs leading-3"
-      >
+      <div v-if="hasDelegatedPower" class="bg-accent-blue balances-badge py-1">
         <div class="inline-flex items-center gap-2">
           <p>Delegated to:</p>
           <span>
@@ -53,17 +50,24 @@
           </button>
         </div>
       </div>
-      <div
-        v-else
-        class="bg-grey-700 text-white font-inter text-xs p-2 py-1 w-fit"
-      >
+      <div v-else class="bg-grey-700 text-white balances-badge">
         Self-delegated
+        <span v-if="receivedPowerVotingPower">
+          ({{ selfDelegatedPowerVotingPercentage }}%)
+        </span>
+      </div>
+
+      <div
+        v-if="receivedPowerVotingPower"
+        class="bg-green-700 text-green-900 balances-badge mt-2"
+      >
+        Delegated to me ({{ receivedPowerVotingPercentage }}%)
       </div>
     </div>
     <!-- zero -->
     <div class="p-6 bg-grey-800">
       <div class="flex justify-between w-full items-center">
-        <p class="text-xl">Zero Token</p>
+        <p class="text-xl">ZERO Token</p>
         <div>
           <ProfileTokenMenu :token="getTokens?.zero" />
         </div>
@@ -94,10 +98,7 @@
         </div>
       </div>
 
-      <div
-        v-if="hasDelegatedZero"
-        class="bg-accent-blue p-2 w-fit font-inter text-xs leading-3"
-      >
+      <div v-if="hasDelegatedZero" class="bg-accent-blue balances-badge">
         <div class="inline-flex items-center gap-2">
           <p>Delegated to:</p>
           <span>
@@ -113,11 +114,18 @@
           </button>
         </div>
       </div>
-      <div
-        v-else
-        class="bg-grey-700 text-white text-xs p-2 py-1 w-fit font-inter"
-      >
+      <div v-else class="bg-grey-700 text-white balances-badge">
         Self-delegated
+        <span v-if="receivedZeroVotingPercentage">
+          ({{ selfDelegatedZeroVotingPercentage }}%)
+        </span>
+      </div>
+
+      <div
+        v-if="receivedZeroVotingPercentage"
+        class="bg-green-700 text-green-900 balances-badge mt-2"
+      >
+        Delegated to me ({{ receivedZeroVotingPercentage }}%)
       </div>
     </div>
   </div>
@@ -133,6 +141,9 @@ const props = defineProps<{
 }>();
 
 const address = toRef(props, "address");
+const spog = useSpogStore();
+const { getTokens } = storeToRefs(spog);
+const { isJustCopied, copy } = useCopyClipboard();
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
@@ -143,8 +154,57 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useMDelegates(address);
 
-const spog = useSpogStore();
-const { getTokens } = storeToRefs(spog);
+// Power
+const powerTotalSuply = computed(() => spog.tokens.power.totalSupply?.value);
 
-const { isJustCopied, copy } = useCopyClipboard();
+const receivedPowerVotingPower = computed(() => {
+  if (!powerVotingPower?.data?.value?.value) return BigInt(0);
+  return (
+    powerVotingPower.data?.value?.value! - balancePowerToken.data?.value?.value!
+  );
+});
+
+const receivedPowerVotingPercentage = computed(() => {
+  return getVotingPowerPercentageByTotalSupply(
+    receivedPowerVotingPower.value,
+    powerTotalSuply.value,
+  );
+});
+
+const selfDelegatedPowerVotingPercentage = computed(() => {
+  return getVotingPowerPercentageByTotalSupply(
+    balancePowerToken.data?.value?.value!,
+    powerTotalSuply.value,
+  );
+});
+
+// Zero
+const zeroTotalSuply = computed(() => spog.tokens.zero.totalSupply?.value);
+
+const receivedZeroVotingPower = computed(() => {
+  if (!zeroVotingPower?.data?.value?.value) return BigInt(0);
+  return (
+    zeroVotingPower?.data?.value?.value! - balanceZeroToken.data?.value?.value!
+  );
+});
+
+const receivedZeroVotingPercentage = computed(() => {
+  return getVotingPowerPercentageByTotalSupply(
+    receivedZeroVotingPower.value,
+    zeroTotalSuply.value,
+  );
+});
+
+const selfDelegatedZeroVotingPercentage = computed(() => {
+  return getVotingPowerPercentageByTotalSupply(
+    balanceZeroToken.data?.value?.value!,
+    zeroTotalSuply.value,
+  );
+});
 </script>
+
+<style>
+.balances-badge {
+  @apply p-2 py-1 w-fit font-inter text-xs leading-3;
+}
+</style>
