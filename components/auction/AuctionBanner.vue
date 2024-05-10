@@ -49,5 +49,5 @@ import { formatEther } from "viem";
 import { storeToRefs } from "pinia";
 
 const { currentCost, amountLeftToAuction } = useAuction();
-const { currentCashToken } = storeToRefs(useSpogStore());
+const { currentCashToken } = storeToRefs(useTtgStore());
 </script>

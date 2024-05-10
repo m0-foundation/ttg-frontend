@@ -7,6 +7,7 @@ export default defineConfig({
     bundler: "vite",
   },
   e2e: {
+    experimentalRunAllSpecs: true,
     baseUrl: "http://localhost:3000",
     specPattern: "cypress/e2e/**/*.{cy,spec}.{js,jsx,ts,tsx}",
     async setupNodeEvents(on, config) {

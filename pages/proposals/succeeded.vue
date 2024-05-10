@@ -23,7 +23,7 @@ import { MProposal } from "@/lib/api/types";
 
 const proposalsStore = useProposalsStore();
 const proposals = computed(() =>
-  proposalsStore.getProposalsByState("Succeeded")
+  proposalsStore.getProposalsByState("Succeeded"),
 );
 
 const { address: userAccount } = useAccount();
@@ -76,7 +76,7 @@ async function onExecute(proposal: MProposal) {
     console.error("Error executing proposal", error);
     if (error.transactionHash) {
       alerts.errorAlert(
-        `Error while executing proposal! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`
+        `Error while executing proposal! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`,
       );
     } else {
       alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);

@@ -166,7 +166,7 @@ const isVoteNoActive = computed(() => {
 const voteEndTimestamp = ref();
 
 const { onlyDescription, title } = useParsedDescriptionTitle(
-  props.proposal.description
+  props.proposal.description,
 );
 
 function onViewProposal() {
@@ -229,7 +229,7 @@ const canVote = computed(() => {
 });
 
 voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
-  props.proposal.voteEnd
+  props.proposal.voteEnd,
 );
 
 const votesStore = useVotesStore();

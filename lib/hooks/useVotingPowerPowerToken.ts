@@ -2,7 +2,6 @@ import { storeToRefs } from "pinia";
 import { Hash, formatUnits } from "viem";
 import { useReadContract } from "use-wagmi";
 import { powerTokenAbi } from "../sdk";
-import { useSpogStore } from "@/stores/spog";
 
 export default (
   userAccount:
@@ -13,12 +12,12 @@ export default (
   // keep the reactivity alive
   const address = ref(userAccount);
 
-  const spog = storeToRefs(useSpogStore());
-  const token = spog.tokens.value.power;
-  const totalSupply = computed(() => spog.tokens.value.power.totalSupply.value);
+  const ttg = storeToRefs(useTtgStore());
+  const token = ttg.tokens.value.power;
+  const totalSupply = computed(() => ttg.tokens.value.power.totalSupply.value);
 
   return useReadContract({
-    address: spog.contracts.value.powerToken as Hash,
+    address: ttg.contracts.value.powerToken as Hash,
     abi: powerTokenAbi,
     functionName: "getVotes",
     args: [address as Ref<Hash>],

@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import orderBy from "lodash/orderBy";
 import uniqBy from "lodash/uniqBy";
-import has from "lodash/has";
 
 import { MProposal, ProposalState } from "@/lib/api/types";
 

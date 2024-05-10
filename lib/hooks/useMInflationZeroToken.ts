@@ -8,15 +8,15 @@ export default () => {
 
   const { address: account, isConnected } = useAccount();
 
-  const spog = useSpogStore();
-  const currentEpoch = spog.getEpoch.current.asNumber;
+  const ttg = useTtgStore();
+  const currentEpoch = ttg.getEpoch.current.asNumber;
   const wagmiConfig = useWagmiConfig();
 
-  const { maxTotalZeroRewardPerActiveEpoch } = spog.governors.standard;
+  const { maxTotalZeroRewardPerActiveEpoch } = ttg.governors.standard;
   const lastEpoch = BigInt(currentEpoch - 1);
 
   const getPastVotes = useReadContract({
-    address: spog.contracts.powerToken as Hash,
+    address: ttg.contracts.powerToken as Hash,
     abi: powerTokenAbi,
     functionName: "getPastVotes",
     args: [account as Ref<Hash>, lastEpoch],
@@ -30,7 +30,7 @@ export default () => {
   // wrap promise into ref
   const { state: pastTotalSupplyState } = useAsyncState(
     readZeroTokenPastTotalSupply(wagmiConfig, {
-      address: spog.contracts.powerToken! as Hash,
+      address: ttg.contracts.powerToken! as Hash,
       args: [lastEpoch],
     }),
     null,
@@ -62,6 +62,6 @@ export default () => {
       (zeroDecimalsMaxTotalZeroRewardPerActiveEpoch * powerDecimalsPastVotes) /
       powerDecimalsPastTotalSupply;
 
-    return formatUnits(zeroDecimalsProRataRewards, spog.tokens.zero.decimals!);
+    return formatUnits(zeroDecimalsProRataRewards, ttg.tokens.zero.decimals!);
   });
 };

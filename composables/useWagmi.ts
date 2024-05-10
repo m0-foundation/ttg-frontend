@@ -21,7 +21,7 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
       config.public.env.node === "production"
         ? [
             walletConnect({ projectId: config.public.walletConnectProjectId }),
-            coinbaseWallet({ appName: "spog" }),
+            coinbaseWallet({ appName: "TTG" }),
             safe({
               allowedDomains: [/app.safe.global$/],
             }),

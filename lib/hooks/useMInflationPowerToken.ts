@@ -8,13 +8,13 @@ export default () => {
 
   const { address: account, isConnected } = useAccount();
 
-  const spog = useSpogStore();
+  const ttg = useTtgStore();
 
-  const currentEpoch = spog.getEpoch.current.asNumber;
+  const currentEpoch = ttg.getEpoch.current.asNumber;
   const lastEpoch = BigInt(currentEpoch - 1);
 
   const pastBalanceOf = useReadContract({
-    address: spog.contracts.powerToken as Hash,
+    address: ttg.contracts.powerToken as Hash,
     abi: powerTokenAbi,
     functionName: "pastBalanceOf",
     args: [account as Ref<Hash>, lastEpoch],
@@ -25,7 +25,7 @@ export default () => {
 
   // wrap promise into ref
   const { state: participationInflation } = useAsyncState(
-    spog.fetchPowerTokenValue([
+    ttg.fetchPowerTokenValue([
       "participationInflation", // in basis points
     ]),
     null,
@@ -46,6 +46,6 @@ export default () => {
     const powerInflation = Math.floor(
       Number(pastBalance * inflatorRatio) / 10_000,
     );
-    return formatUnits(BigInt(powerInflation), spog.tokens.power.decimals!);
+    return formatUnits(BigInt(powerInflation), ttg.tokens.power.decimals!);
   });
 };
