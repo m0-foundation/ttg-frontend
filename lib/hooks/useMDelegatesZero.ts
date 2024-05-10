@@ -2,7 +2,6 @@ import { storeToRefs } from "pinia";
 import { Hash } from "viem";
 import { useReadContract } from "use-wagmi";
 import { zeroTokenAbi } from "@/lib/sdk";
-import { useSpogStore } from "@/stores/spog";
 
 export default (
   userAccount:
@@ -12,11 +11,11 @@ export default (
 ) => {
   // keep the reactive from the prop alive
   const account = ref(userAccount);
-  const store = useSpogStore();
-  const spog = storeToRefs(store);
+  const store = useTtgStore();
+  const ttg = storeToRefs(store);
 
   return useReadContract({
-    address: spog.contracts.value.zeroToken as Hash,
+    address: ttg.contracts.value.zeroToken as Hash,
     abi: zeroTokenAbi,
     functionName: "delegates",
     args: [account as Ref<Hash>],

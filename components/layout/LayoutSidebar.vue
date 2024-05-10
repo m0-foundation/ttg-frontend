@@ -94,7 +94,7 @@
           <span class="text-grey-600 text-xxs">
             {{
               useNumberFormatterCompact(
-                balancePowerToken?.data?.value?.formatted || 0
+                balancePowerToken?.data?.value?.formatted || 0,
               )
             }}
           </span>
@@ -131,7 +131,7 @@
           <span class="text-grey-600 text-xxs">
             {{
               useNumberFormatterCompact(
-                balanceZeroToken?.data?.value?.formatted || 0
+                balanceZeroToken?.data?.value?.formatted || 0,
               )
             }}
           </span>
@@ -184,13 +184,13 @@ const { disconnect } = useDisconnect();
 const { isCorrectChain, forceSwitchChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
-const spog = useSpogStore();
+const ttg = useTtgStore();
 const router = useRouter();
 
 const { currentRoute } = router;
 
-const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
-const epoch = computed(() => spog.epoch.current.asNumber);
+const isTransferEpoch = computed(() => ttg.epoch.current?.type === "TRANSFER");
+const epoch = computed(() => ttg.epoch.current.asNumber);
 
 const config = useRuntimeConfig();
 
@@ -205,12 +205,12 @@ const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
 const hasReceivedPowerVotingPower = computed(
   () =>
     powerVotingPower?.data?.value?.value! >
-    balancePowerToken.data?.value?.value!
+    balancePowerToken.data?.value?.value!,
 );
 
 const hasReceivedZeroVotingPower = computed(
   () =>
-    zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!
+    zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!,
 );
 
 const auctionActive = computed(() => {

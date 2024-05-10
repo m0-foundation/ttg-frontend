@@ -25,7 +25,7 @@ const seriesMiddleItemTimestamp =
   series.value[0].data[Math.floor(series.value[0].data.length / 2)].x;
 
 const isEpochFirstHalf = computed(
-  () => seriesMiddleItemTimestamp > currentCost.value.timestamp
+  () => seriesMiddleItemTimestamp > currentCost.value.timestamp,
 );
 
 const props = defineProps<{
@@ -64,7 +64,7 @@ const annotations = computed(() => {
         label: {
           borderWidth: 0,
           text: useNumberFormatterEth(
-            formatEther(currentCost.value.value || 0n)
+            formatEther(currentCost.value.value || 0n),
           ),
           textAnchor: isEpochFirstHalf.value ? "start" : "end",
           style: {
@@ -166,7 +166,7 @@ const options = computed(() => {
           "<div class='bg-grey-900 font-inter px-2 py-1'>" +
           "<span>" +
           useNumberFormatterEth(
-            formatEther(BigInt(series[seriesIndex][dataPointIndex]))
+            formatEther(BigInt(series[seriesIndex][dataPointIndex])),
           ) +
           "</span>" +
           "</div>"

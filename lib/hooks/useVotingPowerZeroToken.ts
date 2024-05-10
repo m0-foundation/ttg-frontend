@@ -2,7 +2,6 @@ import { storeToRefs } from "pinia";
 import { Hash, formatUnits } from "viem";
 import { useReadContract } from "use-wagmi";
 import { zeroTokenAbi } from "../sdk";
-import { useSpogStore } from "@/stores/spog";
 
 export default (
   userAccount:
@@ -11,13 +10,13 @@ export default (
     | globalThis.Ref<`0x${string}` | undefined>,
 ) => {
   const address = ref(userAccount);
-  const spog = storeToRefs(useSpogStore());
+  const ttg = storeToRefs(useTtgStore());
 
-  const token = spog.tokens.value.zero;
-  const totalSupply = computed(() => spog.tokens.value.zero.totalSupply.value);
+  const token = ttg.tokens.value.zero;
+  const totalSupply = computed(() => ttg.tokens.value.zero.totalSupply.value);
 
   return useReadContract({
-    address: spog.contracts.value.zeroToken as Hash,
+    address: ttg.contracts.value.zeroToken as Hash,
     abi: zeroTokenAbi,
     functionName: "getVotes",
     args: [address as Ref<Hash>],

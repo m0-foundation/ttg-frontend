@@ -28,7 +28,6 @@ import {
 
 import { ApiContext } from "@/lib/api/api-context";
 import { Epoch } from "@/lib/api/modules/epoch/epoch";
-import { getIpfsHashFromBytes32 } from "@/utils/ipfs";
 
 const ProposalTypesFunctionSelectors = {
   addToList: toFunctionSelector("addToList(bytes32,address)"),
@@ -327,7 +326,7 @@ export class Proposals extends GovernorModule {
   }
 
   decodeReadGetProposal(proposal: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const [
       voteStart,
       voteEnd,
@@ -338,6 +337,7 @@ export class Proposals extends GovernorModule {
       quorum,
       quorumNumerator,
     ] = proposal;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
 
     return {
       state: ProposalState[state] as keyof typeof ProposalState,

@@ -201,7 +201,7 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import { useMDelegates, useMVotingPower } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
-const spog = storeToRefs(useSpogStore());
+const ttg = storeToRefs(useTtgStore());
 const alerts = useAlertsStore();
 
 const { address: userAccount, isConnected } = useAccount();
@@ -224,9 +224,7 @@ const {
 const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
 const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
 
-const canDelegate = computed(
-  () => spog.epoch.value.current.type === "TRANSFER",
-);
+const canDelegate = computed(() => ttg.epoch.value.current.type === "TRANSFER");
 
 const powerFormData = reactive({
   address: "",
@@ -295,7 +293,7 @@ async function delegatePower() {
     await forceSwitchChain();
 
     const hash = await writePowerToken(wagmiConfig, {
-      address: spog.contracts.value.powerToken as Hash,
+      address: ttg.contracts.value.powerToken as Hash,
       functionName: "delegate",
       args: [powerFormData.address! as Hash],
     });
@@ -334,7 +332,7 @@ async function delegateZero() {
     await forceSwitchChain();
 
     const hash = await writeZeroToken(wagmiConfig, {
-      address: spog.contracts.value.zeroToken as Hash,
+      address: ttg.contracts.value.zeroToken as Hash,
       functionName: "delegate",
       args: [zeroFormData.address! as Hash],
     });

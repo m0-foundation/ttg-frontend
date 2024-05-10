@@ -1,5 +1,5 @@
 import { Network } from "../../hardhat/setup";
-import deploySpog from "../../hardhat/deploy-spog";
+import deployTtg from "../../hardhat/deploy-ttg";
 
 export default async function redeploy() {
   cy.task("hardhat:reset");
@@ -9,5 +9,5 @@ export default async function redeploy() {
     });
   });
   console.log(network);
-  await deploySpog(network);
+  await deployTtg(network);
 }

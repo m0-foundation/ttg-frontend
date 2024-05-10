@@ -26,7 +26,7 @@
             <p class="lg:text-xl text-grey-100 mt-2">
               {{
                 useNumberFormatterPrice(
-                  balancePowerToken?.data.value?.formatted || 0n
+                  balancePowerToken?.data.value?.formatted || 0n,
                 )
               }}
             </p>
@@ -86,7 +86,7 @@
             <p class="lg:text-xl text-grey-100 mt-2">
               {{
                 useNumberFormatterPrice(
-                  balanceZeroToken?.data.value?.formatted || 0
+                  balanceZeroToken?.data.value?.formatted || 0,
                 )
               }}
             </p>
@@ -143,8 +143,8 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useMDelegates(address);
 
-const spog = useSpogStore();
-const { getTokens } = storeToRefs(spog);
+const ttg = useTtgStore();
+const { getTokens } = storeToRefs(ttg);
 
 const { isJustCopied, copy } = useCopyClipboard();
 </script>
