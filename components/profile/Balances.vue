@@ -143,7 +143,7 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useMDelegates(address);
 
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 const { getTokens } = storeToRefs(ttg);
 
 const { isJustCopied, copy } = useCopyClipboard();

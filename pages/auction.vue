@@ -168,7 +168,7 @@ import { useMBalances } from "@/lib/hooks";
 const alerts = useAlertsStore();
 const { forceSwitchChain } = useCorrectChain();
 const { address: userAccount } = useAccount();
-const ttg = storeToRefs(useSpogStore());
+const ttg = storeToRefs(useTtgStore());
 
 const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
 

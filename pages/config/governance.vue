@@ -33,8 +33,8 @@
 import { storeToRefs } from "pinia";
 import pick from "lodash/pick";
 
-const spog = useSpogStore();
-const { getValues, contracts } = storeToRefs(spog);
+const ttg = useTtgStore();
+const { getValues, contracts } = storeToRefs(ttg);
 const proposalsStore = useProposalsStore();
 
 const parametersData = [

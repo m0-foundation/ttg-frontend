@@ -13,7 +13,7 @@ export const useGovernor = ({
   votingType?: MVotingType;
   proposalId?: string;
 }) => {
-  const ttg = useSpogStore();
+  const ttg = useTtgStore();
   const proposalStore = useProposalsStore();
 
   let type;

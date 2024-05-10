@@ -75,7 +75,7 @@
 import { formatUnits } from "viem";
 import { shortenText } from "@/utils/misc";
 
-const { currentCashToken } = storeToRefs(useSpogStore());
+const { currentCashToken } = storeToRefs(useTtgStore());
 const { isJustCopied, copy } = useCopyClipboard();
 
 defineProps({

@@ -2,7 +2,6 @@ import { Hash } from "viem";
 import { storeToRefs } from "pinia";
 import { MProposal } from "../api/types";
 import { useProposalsStore } from "@/stores/proposals";
-import { useSpogStore } from "@/stores/spog";
 import {
   watchStandardGovernorEvent,
   watchEmergencyGovernorEvent,
@@ -11,7 +10,7 @@ import {
 
 export const watchProposalCreated = (callbackOnEvent: Function) => {
   console.log("watchProposalCreated");
-  const ttg = storeToRefs(useSpogStore());
+  const ttg = storeToRefs(useTtgStore());
   const network = useNetworkStore().getNetwork();
   const api = useApiClientStore();
   const proposals = useProposalsStore();

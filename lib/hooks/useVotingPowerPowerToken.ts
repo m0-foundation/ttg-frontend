@@ -12,7 +12,7 @@ export default (
   // keep the reactivity alive
   const address = ref(userAccount);
 
-  const ttg = storeToRefs(useSpogStore());
+  const ttg = storeToRefs(useTtgStore());
   const token = ttg.tokens.value.power;
   const totalSupply = computed(() => ttg.tokens.value.power.totalSupply.value);
 

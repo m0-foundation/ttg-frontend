@@ -10,7 +10,7 @@ export default (
     | globalThis.Ref<`0x${string}` | undefined>,
 ) => {
   const address = ref(userAccount);
-  const ttg = storeToRefs(useSpogStore());
+  const ttg = storeToRefs(useTtgStore());
 
   const token = ttg.tokens.value.zero;
   const totalSupply = computed(() => ttg.tokens.value.zero.totalSupply.value);

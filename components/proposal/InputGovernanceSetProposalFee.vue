@@ -22,7 +22,7 @@ export interface InputProps {
   modelValueErrors?: ErrorObject[];
 }
 
-const { currentCashToken } = storeToRefs(useSpogStore());
+const { currentCashToken } = storeToRefs(useTtgStore());
 
 const props = defineProps<InputProps>();
 const emit = defineEmits(["update:modelValue"]);

@@ -37,7 +37,7 @@ const nuxtApp = useNuxtApp();
 const network = useNetworkStore().getNetwork();
 
 const apiStore = useApiClientStore();
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 const proposalStore = useProposalsStore();
 const votes = useVotesStore();
 

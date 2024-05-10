@@ -86,7 +86,7 @@ const { onlyDescriptionHtml, title } = useParsedDescriptionTitle(
   proposal?.value?.description!,
 );
 
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 const wagmiConfig = useWagmiConfig();
 
 const { getValuesFormatted: currentProposalValuesFormatted } = storeToRefs(ttg);

@@ -88,7 +88,7 @@ const address = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const tax = useVModelWrapper<InputProps>(props, emit, "modelValue2"); // in bigint wei already with the selected token's decimals
 const inputTaxAmount = ref();
 
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 const hasErrors = computed(() => props.modelValueErrors?.length);
 
 const selectedToken = ref<TokenOptionItem>();

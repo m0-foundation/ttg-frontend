@@ -102,11 +102,11 @@ useHead({
 const cashTokens = ref([]);
 const loadingData = ref(false);
 
-const { epoch } = storeToRefs(useSpogStore());
+const { epoch } = storeToRefs(useTtgStore());
 const { address: userAccount } = useAccount();
 
 const wagmiConfig = useWagmiConfig();
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 const alerts = useAlertsStore();
 
 const allowedCashTokens = computed(() => ttg.governors.zero.allowedCashTokens);

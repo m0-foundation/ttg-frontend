@@ -121,7 +121,7 @@ const selectedCastProposals = ref<Array<CastedProposal>>([]);
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 
 const activeProposals = computed(() =>
   proposalsStore.getProposalsByState("Active"),

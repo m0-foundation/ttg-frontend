@@ -412,7 +412,7 @@ const previewDescription = ref();
 
 const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 const { getValuesFormatted: ttgValuesFormatted, getValues: ttgValues } =
   storeToRefs(ttg);
 

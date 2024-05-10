@@ -5,7 +5,7 @@ import { useAlertsStore } from "@/stores/alerts";
 export const watchForExecutedResetProposal = () => {
   const proposals = useProposalsStore();
   const alerts = useAlertsStore();
-  const ttg = useSpogStore();
+  const ttg = useTtgStore();
 
   const resetProposals = computed(() => {
     return proposals.data.filter(

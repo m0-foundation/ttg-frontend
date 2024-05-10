@@ -4,7 +4,7 @@ import { useToken } from "use-wagmi";
 import { useNetworkStore } from "@/stores/network";
 
 export default () => {
-  const ttgStore = useSpogStore();
+  const ttgStore = useTtgStore();
   const networkStore = useNetworkStore();
   const ttg = storeToRefs(ttgStore);
   const network = networkStore.getNetwork();

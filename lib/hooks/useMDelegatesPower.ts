@@ -12,7 +12,7 @@ export default (
   // keep the reactive from the prop alive
   const account = ref(userAccount);
 
-  const store = useSpogStore();
+  const store = useTtgStore();
   const ttg = storeToRefs(store);
 
   return useReadContract({

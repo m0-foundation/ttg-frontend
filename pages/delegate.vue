@@ -201,7 +201,7 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import { useMDelegates, useMVotingPower } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
-const ttg = storeToRefs(useSpogStore());
+const ttg = storeToRefs(useTtgStore());
 const alerts = useAlertsStore();
 
 const { address: userAccount, isConnected } = useAccount();

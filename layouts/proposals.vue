@@ -94,7 +94,7 @@
 import { storeToRefs } from "pinia";
 
 const store = useProposalsStore();
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 
 const standardProposals = computed(
   () =>

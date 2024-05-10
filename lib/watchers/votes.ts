@@ -2,7 +2,6 @@ import { Hash, Log } from "viem";
 import { storeToRefs } from "pinia";
 import { Governor } from "../api/modules/governor";
 import { useVotesStore } from "@/stores/votes";
-import { useSpogStore } from "@/stores/spog";
 import {
   watchStandardGovernorEvent,
   watchEmergencyGovernorEvent,
@@ -11,7 +10,7 @@ import {
 
 export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   console.log("watchVoteCast");
-  const ttg = storeToRefs(useSpogStore());
+  const ttg = storeToRefs(useTtgStore());
   const network = useNetworkStore().getNetwork();
   const api = useApiClientStore();
   const votesStore = useVotesStore();

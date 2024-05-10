@@ -8,7 +8,7 @@ export default (
     | globalThis.Ref<`0x${string}`>
     | globalThis.Ref<`0x${string}` | undefined>,
 ) => {
-  const store = useSpogStore();
+  const store = useTtgStore();
   const ttg = storeToRefs(store);
   // keep the reactivity alive
   const account = ref(userAccount);

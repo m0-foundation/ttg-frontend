@@ -11,7 +11,7 @@ const currentCost = ref({
 });
 
 export const useAuction = () => {
-  const ttg = useSpogStore();
+  const ttg = useTtgStore();
   const { epoch } = storeToRefs(ttg);
   const wagmiConfig = useWagmiConfig();
   const isTransferEpoch = computed(

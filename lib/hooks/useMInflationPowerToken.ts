@@ -8,7 +8,7 @@ export default () => {
 
   const { address: account, isConnected } = useAccount();
 
-  const ttg = useSpogStore();
+  const ttg = useTtgStore();
 
   const currentEpoch = ttg.getEpoch.current.asNumber;
   const lastEpoch = BigInt(currentEpoch - 1);

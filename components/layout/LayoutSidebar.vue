@@ -184,7 +184,7 @@ const { disconnect } = useDisconnect();
 const { isCorrectChain, forceSwitchChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
-const ttg = useSpogStore();
+const ttg = useTtgStore();
 const router = useRouter();
 
 const { currentRoute } = router;
