@@ -159,7 +159,7 @@ This resets the nonce and state for the wallet
 
 ## E2E Test
 
-We use cypress that on every .cy.ts file deploys the TTG contract found on `hardhat/deploy-spog.ts`
+We use cypress that on every .cy.ts file deploys the TTG contract found on `hardhat/deploy-ttg.ts`
 
 To Run specific test or debug:
 

@@ -845,7 +845,7 @@ function buildCalldatas(formData) {
       return [stringToHexWith32Bytes(list), address];
     };
 
-    return buildCalldatasSpog(
+    return buildCalldatasTtg(
       type,
       encondeInputsListOperation({ input1, input2 }),
     );
@@ -864,7 +864,7 @@ function buildCalldatas(formData) {
       return [stringToHexWith32Bytes(list), remove, add];
     };
 
-    return buildCalldatasSpog(
+    return buildCalldatasTtg(
       type,
       encondeInputsListAddRemoveOperation({ input1, input2, input3 }),
     );
@@ -896,19 +896,19 @@ function buildCalldatas(formData) {
     const key = input1;
     const value = getValueEncoded(input2);
 
-    return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
+    return buildCalldatasTtg(type, [stringToHexWith32Bytes(key), value]);
   }
 
   if (["setKeyGuidance"].includes(type)) {
     const key = input1;
     const value = "0x" + input2;
 
-    return buildCalldatasSpog("setKey", [stringToHexWith32Bytes(key), value]);
+    return buildCalldatasTtg("setKey", [stringToHexWith32Bytes(key), value]);
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {
-    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
-    return buildCalldatasSpog(type, undefined);
+    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ITTG
+    return buildCalldatasTtg(type, undefined);
   }
 
   if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
@@ -916,12 +916,12 @@ function buildCalldatas(formData) {
       [{ type: "uint256" }],
       [useParseCash(input1)],
     );
-    return buildCalldatasSpog(type, [valueEncoded]);
+    return buildCalldatasTtg(type, [valueEncoded]);
   }
 
   if (["setCashToken"].includes(type)) {
     const newFee = encodeAbiParameters([{ type: "uint256" }], [input2]);
-    return buildCalldatasSpog(type, [input1, newFee]);
+    return buildCalldatasTtg(type, [input1, newFee]);
   }
 
   if (
@@ -934,11 +934,11 @@ function buildCalldatas(formData) {
       [{ type: "uint256" }],
       [BigInt(percentageToBasispoints(input1))],
     );
-    return buildCalldatasSpog(type, [valueEncoded]);
+    return buildCalldatasTtg(type, [valueEncoded]);
   }
 }
 
-function buildCalldatasSpog(functionName: any, args: any) {
+function buildCalldatasTtg(functionName: any, args: any) {
   return encodeFunctionData({
     abi: selectedProposalType.value.abi,
     functionName,

@@ -1,6 +1,6 @@
-export const useSpog = () => {
+export const useTtg = () => {
   const nuxtApp = useNuxtApp();
-  const client = nuxtApp.$spogClient;
+  const client = nuxtApp.$ttgClient;
 
   return { client };
 };
