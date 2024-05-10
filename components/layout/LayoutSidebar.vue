@@ -88,13 +88,13 @@
               :version="hasDelegatedPower ? 'dark' : 'light'"
             />
             <span :class="[hasDelegatedPower ? 'text-grey-600' : 'text-white']">
-              {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
+              {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
             </span>
           </div>
           <span class="text-grey-600 text-xxs">
             {{
               useNumberFormatterCompact(
-                balancePowerToken?.data?.value?.formatted || 0
+                balancePowerToken?.data?.value?.formatted || 0,
               )
             }}
           </span>
@@ -125,13 +125,13 @@
               class="h-5 w-5"
             />
             <span :class="[hasDelegatedZero ? 'text-grey-600' : 'text-white']">
-              {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
+              {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
             </span>
           </div>
           <span class="text-grey-600 text-xxs">
             {{
               useNumberFormatterCompact(
-                balanceZeroToken?.data?.value?.formatted || 0
+                balanceZeroToken?.data?.value?.formatted || 0,
               )
             }}
           </span>
@@ -205,12 +205,12 @@ const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
 const hasReceivedPowerVotingPower = computed(
   () =>
     powerVotingPower?.data?.value?.value! >
-    balancePowerToken.data?.value?.value!
+    balancePowerToken.data?.value?.value!,
 );
 
 const hasReceivedZeroVotingPower = computed(
   () =>
-    zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!
+    zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!,
 );
 
 const auctionActive = computed(() => {
