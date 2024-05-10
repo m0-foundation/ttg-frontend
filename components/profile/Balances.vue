@@ -15,7 +15,7 @@
           <div class="flex items-center align-middle gap-2">
             <MIconPower class="h-8 w-8" />
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
-              {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
+              {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
             </p>
           </div>
         </div>
@@ -75,7 +75,7 @@
           <div class="flex items-center align-middle gap-2">
             <MIconZero class="h-8 w-8" />
             <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
-              {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
+              {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
             </p>
           </div>
         </div>
