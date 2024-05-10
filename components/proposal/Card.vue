@@ -55,7 +55,7 @@
           >
             <ProposalButtonCastVote
               id="button-cast-yes"
-              :batch="proposal?.votingType === 'Standard'"
+              :batch="proposal?.votingType !== 'Zero'"
               data-test="button-cast-yes"
               :disabled="hasVoted || isDisconnected || !canVote || loading"
               :version="isVoteYesActive"
@@ -67,7 +67,7 @@
             </ProposalButtonCastVote>
             <ProposalButtonCastVote
               id="button-cast-no"
-              :batch="proposal?.votingType === 'Standard'"
+              :batch="proposal?.votingType !== 'Zero'"
               class="cast-vote-button"
               data-test="button-cast-no"
               :disabled="hasVoted || isDisconnected || !canVote || loading"
@@ -128,7 +128,7 @@
 import truncate from "lodash/truncate";
 import { useAccount, useReadContract, useBlockNumber } from "use-wagmi";
 import { Hash, Abi } from "viem";
-import { useMVotingPower } from "@/lib/hooks";
+import { useMVotingPower, useMPastVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
 
 export interface ProposalCardProps {
@@ -178,7 +178,7 @@ function onExecuteProposal() {
 }
 
 function onCast(vote: boolean) {
-  if (props.proposal?.votingType === "Standard") {
+  if (["Standard", "Emergency"].includes(props.proposal?.votingType!)) {
     return onBatchCastSelected(vote);
   } else {
     return onSingleCastSelected(vote);
@@ -210,14 +210,21 @@ function onSingleCastSelected(vote: boolean) {
 
 const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
+const pastEpoch = computed(() => BigInt(props.proposal.voteStart - 1));
 
 const { power: powerVotingPower } = useMVotingPower(userAccount);
+const { power: powerPastVotingPower, zero: zeroPastVotingPower } =
+  useMPastVotingPower({ userAccount, epoch: pastEpoch });
 
 const canVote = computed(() => {
   if (["Standard"].includes(props.proposal.votingType!)) {
     return powerVotingPower?.data.value?.hasVotingPower;
+  } else if (["Emergency"].includes(props.proposal.votingType!)) {
+    return powerPastVotingPower?.data.value?.hasVotingPower;
+  } else if (["Zero"].includes(props.proposal.votingType!)) {
+    return zeroPastVotingPower?.data.value?.hasVotingPower;
   }
-  //TODO: add Zero/Emergency voting power based on getPastVotes(proposal.voteStart - 1)
+
   return true;
 });
 
