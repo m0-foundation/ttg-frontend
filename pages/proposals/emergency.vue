@@ -57,17 +57,17 @@ const selectedCastProposals = ref<Array<CastedProposal>>([]);
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
-const spog = useSpogStore();
+const ttg = useTtgStore();
 
 const activeProposals = computed(() =>
-  proposalsStore.getProposalsByState("Active")
+  proposalsStore.getProposalsByState("Active"),
 );
 
 const emergencyProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Emergency")
+  activeProposals.value.filter((p) => p.votingType === "Emergency"),
 );
 const hasProposals = computed(
-  () => emergencyProposals && emergencyProposals.value.length > 0
+  () => emergencyProposals && emergencyProposals.value.length > 0,
 );
 
 const isSelectedCastProposalsFull = computed(() => {
@@ -90,7 +90,7 @@ function onCast(vote: number, proposalId: string) {
 function onUncast(proposalId: string) {
   console.log("uncast", proposalId, selectedCastProposals.value);
   selectedCastProposals.value = selectedCastProposals.value.filter(
-    (p) => p.proposalId !== proposalId
+    (p) => p.proposalId !== proposalId,
   );
 }
 
@@ -98,12 +98,12 @@ const hasVotedOnAllProposals = ref(false);
 
 // const { data: hasVotedOnAllProposals, ...votedOnAllProposals } =
 //   useReadContract({
-//     address: spog.contracts.standardGovernor as Hash,
+//     address: ttg.contracts.standardGovernor as Hash,
 //     abi: standardGovernorAbi,
 //     functionName: "hasVotedOnAllProposals",
 //     args: [
 //       userAccount as Ref<Hash>,
-//       BigInt(spog.epoch?.current?.asNumber || 0),
+//       BigInt(ttg.epoch?.current?.asNumber || 0),
 //     ],
 //     query: {
 //       enabled: isConnected,
@@ -117,12 +117,12 @@ async function onCastBatchVotes() {
 
   try {
     const proposalIds = selectedCastProposals.value.map((p) =>
-      BigInt(p.proposalId)
+      BigInt(p.proposalId),
     );
     const votes = selectedCastProposals.value.map((p) => p.vote);
 
     const hash = await writeEmergencyGovernor(wagmiConfig, {
-      address: spog.contracts.emergencyGovernor as Hash,
+      address: ttg.contracts.emergencyGovernor as Hash,
       functionName: "castVotes",
       args: [proposalIds, votes], // uint256 proposalId, uint8 support
       account: userAccount.value,
@@ -142,7 +142,7 @@ async function onCastBatchVotes() {
     console.log("Error casting vote", { error });
     if (error.transactionHash) {
       alerts.errorAlert(
-        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`
+        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`,
       );
     } else {
       alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);

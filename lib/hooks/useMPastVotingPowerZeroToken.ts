@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { Hash, formatUnits } from "viem";
 import { useReadContracts } from "use-wagmi";
-import { useSpogStore } from "@/stores/spog";
+import { useTtgStore } from "@/stores/ttg";
 import { zeroTokenAbi } from "../sdk";
 
 export default ({
@@ -17,8 +17,8 @@ export default ({
   // keep the reactivity alive
   const address = ref(userAccount);
 
-  const spog = storeToRefs(useSpogStore());
-  const token = spog.tokens.value.zero;
+  const ttg = storeToRefs(useTtgStore());
+  const token = ttg.tokens.value.zero;
 
   return useReadContracts({
     contracts: [
