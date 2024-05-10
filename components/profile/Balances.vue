@@ -141,8 +141,8 @@ const props = defineProps<{
 }>();
 
 const address = toRef(props, "address");
-const spog = useSpogStore();
-const { getTokens } = storeToRefs(spog);
+const ttg = useTtgStore();
+const { getTokens } = storeToRefs(ttg);
 const { isJustCopied, copy } = useCopyClipboard();
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
@@ -155,7 +155,7 @@ const { powerDelegates, zeroDelegates, hasDelegatedPower, hasDelegatedZero } =
   useMDelegates(address);
 
 // Power
-const powerTotalSuply = computed(() => spog.tokens.power.totalSupply?.value);
+const powerTotalSuply = computed(() => ttg.tokens.power.totalSupply?.value);
 
 const receivedPowerVotingPower = computed(() => {
   if (!powerVotingPower?.data?.value?.value) return BigInt(0);
@@ -179,7 +179,7 @@ const selfDelegatedPowerVotingPercentage = computed(() => {
 });
 
 // Zero
-const zeroTotalSuply = computed(() => spog.tokens.zero.totalSupply?.value);
+const zeroTotalSuply = computed(() => ttg.tokens.zero.totalSupply?.value);
 
 const receivedZeroVotingPower = computed(() => {
   if (!zeroVotingPower?.data?.value?.value) return BigInt(0);

@@ -57,7 +57,7 @@ const dialog = ref();
 const votingPower = ref();
 
 const proposals = computed(() =>
-  proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active")
+  proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active"),
 );
 
 async function confirmCastVote(vote: number, proposalId: string) {
@@ -113,7 +113,7 @@ async function castVote(vote: number, proposalId: string) {
 
     if (error.transactionHash) {
       alerts.errorAlert(
-        `Error when casting vote! <br/> See failed <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`
+        `Error when casting vote! <br/> See failed <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`,
       );
     } else {
       alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);

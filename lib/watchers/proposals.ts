@@ -2,7 +2,6 @@ import { Hash } from "viem";
 import { storeToRefs } from "pinia";
 import { MProposal } from "../api/types";
 import { useProposalsStore } from "@/stores/proposals";
-import { useSpogStore } from "@/stores/spog";
 import {
   watchStandardGovernorEvent,
   watchEmergencyGovernorEvent,
@@ -11,7 +10,7 @@ import {
 
 export const watchProposalCreated = (callbackOnEvent: Function) => {
   console.log("watchProposalCreated");
-  const spog = storeToRefs(useSpogStore());
+  const ttg = storeToRefs(useTtgStore());
   const network = useNetworkStore().getNetwork();
   const api = useApiClientStore();
   const proposals = useProposalsStore();
@@ -30,21 +29,21 @@ export const watchProposalCreated = (callbackOnEvent: Function) => {
   };
 
   const unwatchStandard = watchStandardGovernorEvent(wagmiConfig, {
-    address: spog.contracts.value.standardGovernor as Hash,
+    address: ttg.contracts.value.standardGovernor as Hash,
     eventName: "ProposalCreated",
     chainId: network.value.rpc.chainId,
     onLogs: (logs) => onEvent(logs, api.client.standardGovernor),
   });
 
   const unwatchEmergency = watchEmergencyGovernorEvent(wagmiConfig, {
-    address: spog.contracts.value.emergencyGovernor as Hash,
+    address: ttg.contracts.value.emergencyGovernor as Hash,
     eventName: "ProposalCreated",
     chainId: network.value.rpc.chainId,
     onLogs: (logs) => onEvent(logs, api.client.emergencyGovernor),
   });
 
   const unwatchZero = watchZeroGovernorEvent(wagmiConfig, {
-    address: spog.contracts.value.zeroGovernor as Hash,
+    address: ttg.contracts.value.zeroGovernor as Hash,
     eventName: "ProposalCreated",
     chainId: network.value.rpc.chainId,
     onLogs: (logs) => onEvent(logs, api.client.zeroGovernor),

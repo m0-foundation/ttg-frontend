@@ -2,7 +2,6 @@ import { Hash, Log } from "viem";
 import { storeToRefs } from "pinia";
 import { Governor } from "../api/modules/governor";
 import { useVotesStore } from "@/stores/votes";
-import { useSpogStore } from "@/stores/spog";
 import {
   watchStandardGovernorEvent,
   watchEmergencyGovernorEvent,
@@ -11,7 +10,7 @@ import {
 
 export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   console.log("watchVoteCast");
-  const spog = storeToRefs(useSpogStore());
+  const ttg = storeToRefs(useTtgStore());
   const network = useNetworkStore().getNetwork();
   const api = useApiClientStore();
   const votesStore = useVotesStore();
@@ -38,7 +37,7 @@ export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   if (votinType === "Standard") {
     console.log("watchStandard");
     const unwatchStandard = watchStandardGovernorEvent(wagmiConfig, {
-      address: spog.contracts.value.standardGovernor as Hash,
+      address: ttg.contracts.value.standardGovernor as Hash,
       eventName: "VoteCast",
       chainId: network.value.rpc.chainId,
       onLogs: (logs) => onEvent(logs, api.client.standardGovernor as Governor),
@@ -54,7 +53,7 @@ export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   if (votinType === "Emergency") {
     console.log("watchEmergencyVotes");
     const unwatchEmergency = watchEmergencyGovernorEvent(wagmiConfig, {
-      address: spog.contracts.value.emergencyGovernor as Hash,
+      address: ttg.contracts.value.emergencyGovernor as Hash,
       eventName: "VoteCast",
       chainId: network.value.rpc.chainId,
       onLogs: (logs) => onEvent(logs, api.client.emergencyGovernor as Governor),
@@ -70,7 +69,7 @@ export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   if (votinType === "Zero") {
     console.log("watchZeroVotes");
     const unwatchZero = watchZeroGovernorEvent(wagmiConfig, {
-      address: spog.contracts.value.zeroGovernor as Hash,
+      address: ttg.contracts.value.zeroGovernor as Hash,
       eventName: "VoteCast",
       chainId: network.value.rpc.chainId,
       onLogs: (logs) => onEvent(logs, api.client.zeroGovernor as Governor),

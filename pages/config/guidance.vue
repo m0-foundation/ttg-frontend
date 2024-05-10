@@ -97,7 +97,7 @@ const protocolDataSorted = computed(() => {
     proposal: proposals.value.find(
       (proposal) =>
         proposal.proposalParams[0] === p.key &&
-        proposal.executedEvent?.timestamp
+        proposal.executedEvent?.timestamp,
     ),
   }));
 });

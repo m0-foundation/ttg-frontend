@@ -33,8 +33,8 @@
 import { storeToRefs } from "pinia";
 import pick from "lodash/pick";
 
-const spog = useSpogStore();
-const { getValues, contracts } = storeToRefs(spog);
+const ttg = useTtgStore();
+const { getValues, contracts } = storeToRefs(ttg);
 const proposalsStore = useProposalsStore();
 
 const parametersData = [
@@ -89,7 +89,7 @@ const immutable = computed(() => {
         "zeroGovernor",
         "zeroToken",
         "vault",
-      ])
+      ]),
     ),
   ];
 });
@@ -101,7 +101,7 @@ const mutable = computed(() => {
         "emergencyProposalThresholdRatio",
         "zeroProposalThresholdRatio",
         "proposalFee",
-      ])
+      ]),
     ),
     ...mapToArray(pick(contracts.value, ["cashToken"])),
   ];
@@ -116,7 +116,7 @@ const mutableParametersWithData = computed(() =>
       value: p.value,
       ...parametersData.find((param) => param.key === p.key),
       proposal: proposals.value.find(
-        (proposal) => proposal.proposalParams[0] === p.key
+        (proposal) => proposal.proposalParams[0] === p.key,
       ),
     };
   }),

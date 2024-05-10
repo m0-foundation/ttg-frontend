@@ -184,13 +184,13 @@ const { disconnect } = useDisconnect();
 const { isCorrectChain, forceSwitchChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
-const spog = useSpogStore();
+const ttg = useTtgStore();
 const router = useRouter();
 
 const { currentRoute } = router;
 
-const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
-const epoch = computed(() => spog.epoch.current.asNumber);
+const isTransferEpoch = computed(() => ttg.epoch.current?.type === "TRANSFER");
+const epoch = computed(() => ttg.epoch.current.asNumber);
 
 const config = useRuntimeConfig();
 
