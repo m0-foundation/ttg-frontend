@@ -44,7 +44,11 @@
             <div class="flex gap-1 items-center">
               <MIconPower class="h-6 w-6" />
               <span class="flex items-center text-2xl">
-                {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
+                {{
+                  useNumberFormatterPrice(
+                    powerVotingPower?.data.value?.formatted || 0,
+                  )
+                }}
               </span>
             </div>
             <div>
@@ -130,7 +134,11 @@
             <div class="flex gap-1 items-center">
               <MIconZero class="h-6 w-6" />
               <span class="mx-2 flex items-center text-2xl">
-                {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
+                {{
+                  useNumberFormatterPrice(
+                    zeroVotingPower?.data.value?.formatted || 0,
+                  )
+                }}
               </span>
             </div>
             <div>
