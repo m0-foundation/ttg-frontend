@@ -131,7 +131,7 @@
           <span class="text-grey-600 text-xxs">
             {{
               useNumberFormatterCompact(
-                powerVotingPower?.data?.value?.formatted || 0,
+                zeroVotingPower?.data?.value?.formatted || 0,
               )
             }}
           </span>
