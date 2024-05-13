@@ -27,7 +27,6 @@ export class Voting extends GovernorModule {
       support: Boolean(log?.args?.support),
       voter: log?.args?.voter?.toString(),
       weight: log?.args?.weight,
-      // weight: formatUnits(BigInt(log?.args?.weight), token === "zero" ? 6 : 0),
       transactionHash: log.transactionHash?.toString(),
       blockNumber: Number(log.blockNumber),
       eventName: log.eventName,
