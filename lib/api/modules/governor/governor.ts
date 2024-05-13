@@ -24,7 +24,7 @@ export class Governor extends ApiModule {
     this.abi = abi;
 
     this.proposals = new Proposals(contract, context, abi, governanceType);
-    this.voting = new Voting(contract, context);
+    this.voting = new Voting(contract, context, governanceType);
   }
 
   getParameters<T>(parameters: string[]): Promise<T> {
