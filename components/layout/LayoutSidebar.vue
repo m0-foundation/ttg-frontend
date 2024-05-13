@@ -94,7 +94,7 @@
           <span class="text-grey-600 text-xxs">
             {{
               useNumberFormatterCompact(
-                balancePowerToken?.data?.value?.formatted || 0,
+                powerVotingPower?.data?.value?.formatted || 0,
               )
             }}
           </span>
@@ -131,7 +131,7 @@
           <span class="text-grey-600 text-xxs">
             {{
               useNumberFormatterCompact(
-                balanceZeroToken?.data?.value?.formatted || 0,
+                powerVotingPower?.data?.value?.formatted || 0,
               )
             }}
           </span>
