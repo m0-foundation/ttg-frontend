@@ -127,7 +127,7 @@ const protocolParametersData = [
   },
 
   {
-    title: "Max. Earner rate",
+    title: "Max Earner rate",
     key: "max_earner_rate",
     description:
       "This is the annualized rate which continuously accrues to M that is in addresses on the Earner List.",
