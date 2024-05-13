@@ -83,11 +83,8 @@
       <div>
         <div class="flex justify-between items-center">
           <div class="flex gap-2">
-            <MIconPower
-              class="h-5 w-5"
-              :version="hasDelegatedPower ? 'dark' : 'light'"
-            />
-            <span :class="[hasDelegatedPower ? 'text-grey-600' : 'text-white']">
+            <MIconPower class="h-5 w-5" version="light" />
+            <span class="text-white">
               {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
             </span>
           </div>
@@ -99,19 +96,6 @@
             }}
           </span>
         </div>
-        <div
-          v-if="hasDelegatedPower"
-          class="bg-accent-blue p-2 py-1 mt-2 text-center"
-        >
-          <p class="text-xxs font-inter">Voting power is delegated</p>
-        </div>
-
-        <div
-          v-if="hasReceivedPowerVotingPower"
-          class="bg-green-800 p-2 py-1 mt-2 text-left w-fit"
-        >
-          <p class="text-xxs font-inter">Delegatee</p>
-        </div>
       </div>
 
       <hr class="border-grey-700 border-dashed my-4" />
@@ -120,11 +104,8 @@
       <div>
         <div class="flex justify-between items-center">
           <div class="flex gap-2">
-            <MIconZero
-              :version="hasDelegatedZero ? 'dark' : 'light'"
-              class="h-5 w-5"
-            />
-            <span :class="[hasDelegatedZero ? 'text-grey-600' : 'text-white']">
+            <MIconZero version="light" class="h-5 w-5" />
+            <span class="text-white">
               {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
             </span>
           </div>
@@ -135,19 +116,6 @@
               )
             }}
           </span>
-        </div>
-        <div
-          v-if="hasDelegatedZero"
-          class="bg-accent-blue p-2 py-1 mt-2 text-center"
-        >
-          <p class="text-xxs font-inter">Voting power is delegated</p>
-        </div>
-
-        <div
-          v-if="hasReceivedZeroVotingPower"
-          class="bg-green-800 p-2 py-1 mt-2 text-left w-fit"
-        >
-          <p class="text-xxs font-inter">Delegatee</p>
         </div>
       </div>
     </div>
@@ -194,24 +162,8 @@ const epoch = computed(() => ttg.epoch.current.asNumber);
 
 const config = useRuntimeConfig();
 
-const { hasDelegatedPower, hasDelegatedZero } = useMDelegates(address);
-
 const { power: powerVotingPower, zero: zeroVotingPower } =
   useMVotingPower(address);
-
-const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
-  useMBalances(address);
-
-const hasReceivedPowerVotingPower = computed(
-  () =>
-    powerVotingPower?.data?.value?.value! >
-    balancePowerToken.data?.value?.value!,
-);
-
-const hasReceivedZeroVotingPower = computed(
-  () =>
-    zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!,
-);
 
 const auctionActive = computed(() => {
   return config.public.auctionActive as unknown as boolean | string;

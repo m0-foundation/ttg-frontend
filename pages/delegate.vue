@@ -87,20 +87,6 @@
           data-test="delegate-power-input-address"
           :errors="$delegatePowerValidation.address?.$errors"
         />
-
-        <div
-          v-if="hasDelegatedPower"
-          class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
-        >
-          Voting power delegated to:
-          <MAddressAvatar :address="powerDelegates" :short-address="false" />
-        </div>
-        <div
-          v-if="!hasDelegatedPower && powerDelegates"
-          class="px-2 py-1 w-fit text-xs bg-grey-600 text-white"
-        >
-          <p>Self-delegated</p>
-        </div>
       </div>
 
       <div class="flex justify-end items-center gap-2 my-4">
@@ -163,20 +149,6 @@
           data-test="delegate-zero-input-address"
           :errors="$delegateZeroValidation.address?.$errors"
         />
-
-        <div
-          v-if="hasDelegatedZero"
-          class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
-        >
-          Voting power delegated to:
-          <MAddressAvatar :address="zeroDelegates" :short-address="false" />
-        </div>
-        <div
-          v-if="!hasDelegatedZero && zeroDelegates"
-          class="px-2 py-1 w-fit text-xs bg-grey-600 text-white"
-        >
-          <p>Self-delegated</p>
-        </div>
       </div>
 
       <div class="flex justify-end items-center gap-2 my-2">
@@ -214,15 +186,9 @@ const alerts = useAlertsStore();
 
 const { address: userAccount, isConnected } = useAccount();
 
-const {
-  powerDelegates,
-  zeroDelegates,
-  hasDelegatedPower,
-  hasDelegatedZero,
-  ...useDelegate
-} = useMDelegates(userAccount);
+const { powerDelegates, zeroDelegates, ...useDelegate } =
+  useMDelegates(userAccount);
 
-console.log({ hasDelegatedPower });
 const {
   power: powerVotingPower,
   zero: zeroVotingPower,
