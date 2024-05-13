@@ -25,6 +25,7 @@
 import orderBy from "lodash/orderBy";
 import { MVote } from "@/lib/api/types";
 import { useNumberFormatterCompact } from "@/utils/numberFormatter";
+import { formatUnits } from "viem";
 
 interface Props {
   votes: MVote[];
@@ -44,7 +45,10 @@ const votes = computed(() => {
   return votesOrdered.map((v: MVote) => ({
     voter: v.voter,
     vote: v.support,
-    votes: useNumberFormatterCompact(String(v.weight)),
+    votes:
+      v.token === "zero"
+        ? useNumberFormatterCompact(formatUnits(v.weight as bigint, 6))
+        : useNumberFormatterCompact(String(v.weight)),
     transactionHash: v.transactionHash,
   }));
 });
