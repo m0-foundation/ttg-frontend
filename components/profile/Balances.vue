@@ -85,7 +85,11 @@
           <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
           <div class="flex items-center align-middle gap-2">
             <p class="text-xl lg:text-xl text-grey-100 mt-2">
-              {{ useNumberFormatterPrice(zeroVotingPower?.data.value?.value) }}
+              {{
+                useNumberFormatterPrice(
+                  zeroVotingPower?.data.value?.formatted || 0,
+                )
+              }}
             </p>
           </div>
           <p class="text-xs text-grey-600 mt-2">
