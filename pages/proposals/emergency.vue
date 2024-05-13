@@ -1,5 +1,37 @@
 <template>
   <NuxtLayout name="proposals">
+    <div class="modal-backdrop">
+      <div class="bg-grey-200 font-inter text-grey-600">
+        <header
+          class="text-xl bg-accent-blue text-white p-4 flex gap-2 items-center"
+        >
+          <MIconWarning />
+          Your voting power
+        </header>
+
+        <section class="text-grey-800 lg:text-xl tracking-tightest p-4">
+          <div>
+            <p class="text-sm">
+              This is your POWER <u>voting power</u> which will be utilized to
+              vote base on the previous epoch.
+            </p>
+
+            <div class="flex justify-start items-center gap-6 my-2">
+              <p>
+                <MIconPower class="w-6 inline-block mr-2" version="dark" />
+                {{
+                  useNumberFormatterPrice(
+                    pastVotingPower.power.data.value.formatted,
+                  )
+                }}
+              </p>
+              <p class="uppercase text-xxs text-grey-600">voting power</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
     <div>
       <ProposalList
         :proposals="emergencyProposals"
@@ -46,7 +78,7 @@ import { Hash } from "viem";
 import { useAccount } from "use-wagmi";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { writeEmergencyGovernor } from "@/lib/sdk";
-import { useMBalances } from "@/lib/hooks";
+import { useMPastVotingPower } from "@/lib/hooks";
 
 interface CastedProposal {
   vote: number;
@@ -78,6 +110,12 @@ const { address: userAccount, isConnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
 const wagmiConfig = useWagmiConfig();
 const alerts = useAlertsStore();
+
+const pastEpoch = computed(() =>
+  BigInt(emergencyProposals.value[0].voteStart - 1),
+);
+
+const pastVotingPower = useMPastVotingPower({ epoch: pastEpoch, userAccount });
 
 useHead({
   titleTemplate: "%s - Proposals",
