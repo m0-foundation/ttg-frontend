@@ -3,21 +3,29 @@
     <!-- power -->
     <div class="p-6 bg-grey-800">
       <div class="flex justify-between w-full items-center">
-        <p class="text-xl">POWER Token</p>
+        <div class="flex items-center gap-4">
+          <MIconPower class="h-8 w-8" />
+          <p class="text-xl">POWER Token</p>
+        </div>
         <div>
           <ProfileTokenMenu :token="getTokens?.power" />
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 mt-8 mb-4">
+      <div class="flex justify-between gap-4 mt-8 mb-4">
         <div>
           <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
           <div class="flex items-center align-middle gap-2">
-            <MIconPower class="h-8 w-8" />
-            <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
-              {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
+            <p class="text-xl lg:text-xl text-grey-100 mt-2">
+              {{ useNumberFormatterPrice(powerVotingPower?.data.value?.value) }}
             </p>
           </div>
+          <p class="text-xs text-grey-600 mt-2">
+            {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
+            <span class="mx-1 uppercase text-xxs">
+              out of total voting power
+            </span>
+          </p>
         </div>
 
         <div>
@@ -63,21 +71,29 @@
     <!-- zero -->
     <div class="p-6 bg-grey-800">
       <div class="flex justify-between w-full items-center">
-        <p class="text-xl">Zero Token</p>
+        <div class="flex items-center gap-4">
+          <MIconZero class="h-8 w-8" />
+          <p class="text-xl">Zero Token</p>
+        </div>
         <div>
           <ProfileTokenMenu :token="getTokens?.zero" />
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 mt-8 mb-4">
+      <div class="gap-4 mt-8 mb-4 flex justify-between">
         <div>
           <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
           <div class="flex items-center align-middle gap-2">
-            <MIconZero class="h-8 w-8" />
-            <p class="text-2xl lg:text-3xl text-grey-100 mt-2">
-              {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
+            <p class="text-xl lg:text-xl text-grey-100 mt-2">
+              {{ useNumberFormatterPrice(zeroVotingPower?.data.value?.value) }}
             </p>
           </div>
+          <p class="text-xs text-grey-600 mt-2">
+            {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
+            <span class="mx-1 uppercase text-xxs">
+              out of total voting power
+            </span>
+          </p>
         </div>
 
         <div>
