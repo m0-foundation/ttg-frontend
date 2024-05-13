@@ -7,15 +7,15 @@
         <div>
           <div class="flex justify-start items-center gap-6 mb-4">
             <p>
-              <MIconZero class="w-6 inline-block mr-2" />
+              <MIconPower class="w-6 inline-block mr-2" />
               {{ useNumberFormatterPrice((votingPower as any)?.formatted) }}
             </p>
             <p class="uppercase text-xxs text-grey-600">voting power</p>
           </div>
 
           <p class="text-sm">
-            This is your ZERO <u>voting power</u> which will be utilized to vote
-            on this proposal base on the previous epoch.
+            This is your POWER <u>voting power</u> which will be utilized to
+            vote on this proposal base on the previous epoch.
           </p>
         </div>
       </template>
@@ -28,7 +28,9 @@
       @on-cast="confirmCastVote"
     >
       <template #emptyState>
-        <ProposalListEmptyState> No Zero proposals </ProposalListEmptyState>
+        <ProposalListEmptyState>
+          No emergency proposals
+        </ProposalListEmptyState>
       </template>
     </ProposalList>
   </NuxtLayout>
@@ -40,11 +42,9 @@ import { useAccount } from "use-wagmi";
 import { writeContract, waitForTransactionReceipt } from "@wagmi/core";
 
 const proposalsStore = useProposalsStore();
-const wagmiConfig = useWagmiConfig();
-const alerts = useAlertsStore();
 
 useHead({
-  titleTemplate: "%s - Zero proposals",
+  titleTemplate: "%s - Emergency proposals",
 });
 
 const { address: userAccount } = useAccount();
@@ -57,8 +57,12 @@ const dialog = ref();
 const votingPower = ref();
 
 const proposals = computed(() =>
-  proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active"),
+  proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active")
 );
+
+const wagmiConfig = useWagmiConfig();
+const proposalStore = useProposalsStore();
+const alerts = useAlertsStore();
 
 async function confirmCastVote(vote: number, proposalId: string) {
   await fetchVotingPower(proposalId);
@@ -68,13 +72,13 @@ async function confirmCastVote(vote: number, proposalId: string) {
 }
 
 async function fetchVotingPower(proposalId: string) {
-  const proposal = proposalsStore.getProposalById(proposalId);
+  const proposal = proposalStore.getProposalById(proposalId);
   const pastEpoch = proposal!.voteStart - 1;
 
   votingPower.value = await usePastVotes({
     address: userAccount.value!,
     epoch: pastEpoch,
-    token: "zero",
+    token: "power",
   });
 }
 
@@ -102,18 +106,17 @@ async function castVote(vote: number, proposalId: string) {
     });
 
     if (txReceipt.status !== "success") {
-      throw new Error("Transaction was not successful");
+      throw txReceipt;
     }
 
-    proposalsStore.updateProposalById(proposalId);
+    proposalStore.updateProposalById(proposalId);
 
     alerts.successAlert("Vote casted successfully!");
   } catch (error: any) {
     console.log("Error casting vote", { error });
-
     if (error.transactionHash) {
       alerts.errorAlert(
-        `Error when casting vote! <br/> See failed <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`,
+        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`
       );
     } else {
       alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);

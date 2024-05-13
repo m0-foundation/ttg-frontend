@@ -4,6 +4,7 @@ import useMTokens from "./useMTokens";
 import useMDelegates from "./useMDelegates";
 import useMInflationPowerToken from "./useMInflationPowerToken";
 import useMInflationZeroToken from "./useMInflationZeroToken";
+import useMPastVotingPower from "./useMPastVotingPower";
 
 export {
   useMBalances,
@@ -12,4 +13,5 @@ export {
   useMDelegates,
   useMInflationPowerToken,
   useMInflationZeroToken,
+  useMPastVotingPower,
 };

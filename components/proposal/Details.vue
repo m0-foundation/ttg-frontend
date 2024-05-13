@@ -86,11 +86,10 @@ const { onlyDescriptionHtml, title } = useParsedDescriptionTitle(
   proposal?.value?.description!,
 );
 
-const spog = useSpogStore();
+const ttg = useTtgStore();
 const wagmiConfig = useWagmiConfig();
 
-const { getValuesFormatted: currentProposalValuesFormatted } =
-  storeToRefs(spog);
+const { getValuesFormatted: currentProposalValuesFormatted } = storeToRefs(ttg);
 
 useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,
@@ -100,10 +99,10 @@ const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
 const zeroThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!)
+  basisPointsToDecimal(ttg.getValues.zeroProposalThresholdRatio!),
 );
 const powerThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!)
+  basisPointsToDecimal(ttg.getValues.emergencyProposalThresholdRatio!),
 );
 
 const votesStore = useVotesStore();
@@ -116,16 +115,16 @@ const votes = computed(() => {
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
     readPowerToken(wagmiConfig, {
-      address: spog!.contracts!.powerToken! as Hash,
+      address: ttg!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
       args: [BigInt(proposal.value!.epoch!) - 1n],
     }),
     readZeroToken(wagmiConfig, {
-      address: spog!.contracts!.zeroToken! as Hash,
+      address: ttg!.contracts!.zeroToken! as Hash,
       functionName: "totalSupply",
     }),
   ]),
-  [0n, 0n]
+  [0n, 0n],
 );
 
 /*

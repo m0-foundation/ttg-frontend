@@ -44,7 +44,11 @@
             <div class="flex gap-1 items-center">
               <MIconPower class="h-6 w-6" />
               <span class="flex items-center text-2xl">
-                {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
+                {{
+                  useNumberFormatterPrice(
+                    powerVotingPower?.data.value?.formatted || 0,
+                  )
+                }}
               </span>
             </div>
             <div>
@@ -83,20 +87,6 @@
           data-test="delegate-power-input-address"
           :errors="$delegatePowerValidation.address?.$errors"
         />
-
-        <div
-          v-if="hasDelegatedPower"
-          class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
-        >
-          Voting power delegated to:
-          <MAddressAvatar :address="powerDelegates" :short-address="false" />
-        </div>
-        <div
-          v-if="!hasDelegatedPower && powerDelegates"
-          class="px-2 py-1 w-fit text-xs bg-grey-600 text-white"
-        >
-          <p>Self-delegated</p>
-        </div>
       </div>
 
       <div class="flex justify-end items-center gap-2 my-4">
@@ -130,7 +120,11 @@
             <div class="flex gap-1 items-center">
               <MIconZero class="h-6 w-6" />
               <span class="mx-2 flex items-center text-2xl">
-                {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
+                {{
+                  useNumberFormatterPrice(
+                    zeroVotingPower?.data.value?.formatted || 0,
+                  )
+                }}
               </span>
             </div>
             <div>
@@ -155,20 +149,6 @@
           data-test="delegate-zero-input-address"
           :errors="$delegateZeroValidation.address?.$errors"
         />
-
-        <div
-          v-if="hasDelegatedZero"
-          class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
-        >
-          Voting power delegated to:
-          <MAddressAvatar :address="zeroDelegates" :short-address="false" />
-        </div>
-        <div
-          v-if="!hasDelegatedZero && zeroDelegates"
-          class="px-2 py-1 w-fit text-xs bg-grey-600 text-white"
-        >
-          <p>Self-delegated</p>
-        </div>
       </div>
 
       <div class="flex justify-end items-center gap-2 my-2">
@@ -201,20 +181,14 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import { useMDelegates, useMVotingPower } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
-const spog = storeToRefs(useSpogStore());
+const ttg = storeToRefs(useTtgStore());
 const alerts = useAlertsStore();
 
 const { address: userAccount, isConnected } = useAccount();
 
-const {
-  powerDelegates,
-  zeroDelegates,
-  hasDelegatedPower,
-  hasDelegatedZero,
-  ...useDelegate
-} = useMDelegates(userAccount);
+const { powerDelegates, zeroDelegates, ...useDelegate } =
+  useMDelegates(userAccount);
 
-console.log({ hasDelegatedPower });
 const {
   power: powerVotingPower,
   zero: zeroVotingPower,
@@ -224,9 +198,7 @@ const {
 const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
 const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
 
-const canDelegate = computed(
-  () => spog.epoch.value.current.type === "TRANSFER",
-);
+const canDelegate = computed(() => ttg.epoch.value.current.type === "TRANSFER");
 
 const powerFormData = reactive({
   address: "",
@@ -295,7 +267,7 @@ async function delegatePower() {
     await forceSwitchChain();
 
     const hash = await writePowerToken(wagmiConfig, {
-      address: spog.contracts.value.powerToken as Hash,
+      address: ttg.contracts.value.powerToken as Hash,
       functionName: "delegate",
       args: [powerFormData.address! as Hash],
     });
@@ -334,7 +306,7 @@ async function delegateZero() {
     await forceSwitchChain();
 
     const hash = await writeZeroToken(wagmiConfig, {
-      address: spog.contracts.value.zeroToken as Hash,
+      address: ttg.contracts.value.zeroToken as Hash,
       functionName: "delegate",
       args: [zeroFormData.address! as Hash],
     });

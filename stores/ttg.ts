@@ -11,7 +11,7 @@ import {
 import { MRegistrarStore } from "@/lib/api/modules/registrar/registrar.types";
 import { powerTokenAbi } from "@/lib/sdk";
 
-export const useSpogStore = defineStore("spog", {
+export const useTtgStore = defineStore("ttg", {
   state: () => ({
     epoch: {} as MEpoch,
     contracts: {} as Partial<MRegistrarStore>,

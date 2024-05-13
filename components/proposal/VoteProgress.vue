@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import { MVotingType } from "@/lib/api/types";
 import { useNumberFormatterCompact } from "@/utils/numberFormatter";
+import { formatUnits } from "viem";
 
 interface Props {
   yesVotes: bigint;
@@ -125,15 +126,29 @@ const powerVotes = computed(() => {
       );
 });
 
-const zeroVotes = computed(() =>
-  parseVotesForQuorom(
+const zeroVotes = computed(() => {
+  const parsed = parseVotesForQuorom(
     {
       yes: props.yesVotes.toString(),
       no: props.noVotes.toString(),
     },
     props.zeroTotalSupply!,
-  ),
-);
+  );
+
+  return {
+    total: parsed.total,
+    yes: {
+      count: parsed.yes.count,
+      formatted: useNumberFormatterCompact(formatUnits(parsed.yes.count, 6)),
+      percentage: parsed.yes.percentage,
+    },
+    no: {
+      count: parsed.no.count,
+      formatted: useNumberFormatterCompact(formatUnits(parsed.no.count, 6)),
+      percentage: parsed.no.percentage,
+    },
+  };
+});
 
 const thresholdFormattedPower = computed(() =>
   useNumberFormatterCompact(
@@ -143,7 +158,10 @@ const thresholdFormattedPower = computed(() =>
 
 const thresholdFormattedZero = computed(() =>
   useNumberFormatterCompact(
-    (props.zeroTotalSupply * BigInt(props.zeroThreshold! * 100)) / 100n,
+    formatUnits(
+      (props.zeroTotalSupply * BigInt(props.zeroThreshold! * 100)) / 100n,
+      6,
+    ),
   ),
 );
 </script>

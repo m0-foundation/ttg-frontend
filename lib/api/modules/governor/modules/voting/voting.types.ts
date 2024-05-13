@@ -8,6 +8,7 @@ export interface MVote extends EventLog {
   weight?: BigInt;
   data?: string;
   voteId?: string;
+  token?: "power" | "zero";
 }
 
 export enum MVotingTokens {
