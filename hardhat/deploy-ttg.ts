@@ -27,7 +27,7 @@ import { bytecode as DistributionVaultBytecode } from "../modules/m-core/bytecod
 import multicall3 from "./contracts/Multicall3.json";
 import { Network } from "./setup";
 
-export default async function deploySpog(network: Network) {
+export default async function deployTtg(network: Network) {
   console.log({ network });
 
   const STANDARD_PROPOSAL_FEE = BigInt(1e16); // 0.001 WETH

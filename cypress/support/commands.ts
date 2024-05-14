@@ -165,6 +165,8 @@ Cypress.Commands.add(
     cy.contains("article", description).then(($proposal) => {
       cy.wrap($proposal).find("#button-cast-yes").click();
       cy.get("[data-test='dialog-button-confirm']").click();
+      cy.wrap($proposal).contains("Your vote has been submitted");
+      cy.wait(500);
     });
 
   }

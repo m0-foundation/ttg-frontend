@@ -123,21 +123,22 @@ describe("Proposals", () => {
     });
 
 
-    it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesAllEmergencyProposals();
-    });
+    // it("I should be able to CAST vote YES for the proposal", () => {
 
-    it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("/proposals/succeeded");
+    //   cy.visit("/proposals/emergency");
 
-      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
-        cy.wrap($btn).click();
-        cy.wait(500);
-      });
+    //   cy.get("[data-test='button-cast-yes']").each(($btn) => {
+    //     cy.wrap($btn).click();
+    //   });
+    
+    //   cy.get("#button-cast-submit").click();
 
-      cy.wait(500);
-      cy.mineEpochs(1);
-    });
+    //   cy.wait(1000);
+    // });
+
+    // it("I should be able to EXECUTE the proposal of ADD to a list", () => {
+    //   cy.executeAllProposals();
+    // });
 
     it("I should be able to CREATE a proposal - Mint delay ", () => {
       cy.visit("/proposal/create");
@@ -217,21 +218,22 @@ describe("Proposals", () => {
     });
 
 
-    it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesAllEmergencyProposals();
-    });
+    // it("I should be able to CAST vote YES for the proposal", () => {
 
-    it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("/proposals/succeeded");
+    //   cy.visit("/proposals/emergency");
 
-      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
-        cy.wrap($btn).click();
-        cy.wait(500);
-      });
+    //   cy.get("[data-test='button-cast-yes']").each(($btn) => {
+    //     cy.wrap($btn).click();
+    //   });
+    
+    //   cy.get("#button-cast-submit").click();
 
-      cy.wait(500);
-      cy.mineEpochs(1);
-    });
+    //   cy.wait(1000);
+    // });
+
+    // it("I should be able to EXECUTE the proposal of ADD to a list", () => {
+    //   cy.executeAllProposals();
+    // });
 
 
 
@@ -353,21 +355,22 @@ describe("Proposals", () => {
 
 
 
-    it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesAllEmergencyProposals();
-    });
+    // it("I should be able to CAST vote YES for the proposal", () => {
 
-    it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("/proposals/succeeded");
+    //   cy.visit("/proposals/emergency");
 
-      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
-        cy.wrap($btn).click();
-        cy.wait(500);
-      });
+    //   cy.get("[data-test='button-cast-yes']").each(($btn) => {
+    //     cy.wrap($btn).click();
+    //   });
+    
+    //   cy.get("#button-cast-submit").click();
 
-      cy.wait(500);
-      cy.mineEpochs(1);
-    });
+    //   cy.wait(1000);
+    // });
+
+    // it("I should be able to EXECUTE the proposal of ADD to a list", () => {
+    //   cy.executeAllProposals();
+    // });
     
     it("I should be able to CREATE a proposal - max_earner_rate", () => {
       cy.visit("/proposal/create");
@@ -444,26 +447,6 @@ describe("Proposals", () => {
       });
     });
 
-
-
-
-    it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesAllEmergencyProposals();
-    });
-
-    it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("/proposals/succeeded");
-
-      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
-        cy.wrap($btn).click();
-        cy.wait(500);
-      });
-
-      cy.wait(500);
-      cy.mineEpochs(1);
-    });
-
-
     it("I should be able to CREATE a proposal - earner rate model ", () => {
       cy.visit("/proposal/create");
       // cy.connectWallet();
@@ -503,21 +486,27 @@ describe("Proposals", () => {
     });
 
 
+
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesAllEmergencyProposals();
-    });
 
-    it("I should be able to EXECUTE the proposal", () => {
-      cy.visit("/proposals/succeeded");
+      cy.visit("/proposals/emergency");
 
-      cy.get("[data-test='proposal-button-execute']").each(($btn) => {
+      cy.get("[data-test='button-cast-yes']").each(($btn) => {
         cy.wrap($btn).click();
-        cy.wait(500);
       });
+    
+      cy.get("#button-cast-submit").click();
 
-      cy.wait(500);
-      cy.mineEpochs(1);
+      cy.wait(1000);
     });
+
+    it("I should be able to EXECUTE the proposal of ADD to a list", () => {
+      cy.executeAllProposals();
+    });
+
+
+   
+
     
 
     

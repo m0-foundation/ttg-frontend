@@ -5,7 +5,7 @@ import { useAlertsStore } from "@/stores/alerts";
 export const watchForExecutedResetProposal = () => {
   const proposals = useProposalsStore();
   const alerts = useAlertsStore();
-  const spog = useSpogStore();
+  const ttg = useTtgStore();
 
   const resetProposals = computed(() => {
     return proposals.data.filter(
@@ -20,7 +20,7 @@ export const watchForExecutedResetProposal = () => {
     const lastestResetProposal = maxBy(resetProposals, "blockNumber");
 
     if (lastestResetProposal) {
-      if (lastestResetProposal.voteEnd! + 6 >= spog.epoch.current.asNumber) {
+      if (lastestResetProposal.voteEnd! + 6 >= ttg.epoch.current.asNumber) {
         alerts.showResetAlert(lastestResetProposal);
       } else {
         alerts.hideResetAlert();

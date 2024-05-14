@@ -31,6 +31,7 @@
 
 <script setup lang="ts">
 import { MVote } from "@/lib/api/types";
+import { formatUnits } from "viem";
 
 interface Props {
   votes: MVote[];
@@ -50,7 +51,10 @@ const votesTableData = computed(() => {
     proposalId: v.proposalId,
     proposal: proposals.getProposalById(v.proposalId)?.description,
     vote: v.support,
-    votes: useNumberFormatterCompact(String(v.weight)),
+    votes:
+      v.token === "zero"
+        ? useNumberFormatterCompact(formatUnits(v.weight as bigint, 6))
+        : useNumberFormatterCompact(String(v.weight)),
     transactionHash: v.transactionHash,
   }));
 });

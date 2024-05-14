@@ -180,7 +180,7 @@
         <div class="flex items-center gap-2 text-lg">
           Submission tax:
           <div v-if="hasToPayFee" class="flex items-center gap-2">
-            {{ spogValuesFormatted.setProposalFee }}
+            {{ ttgValuesFormatted.setProposalFee }}
             <MIconWeth />
           </div>
           <div v-else class="flex items-center gap-2">
@@ -285,8 +285,6 @@ import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSe
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
-
-import { getBytes32FromIpfsHash } from "@/utils/ipfs";
 
 /* wagmi */
 const wagmiConfig = useWagmiConfig();
@@ -414,15 +412,15 @@ const previewDescription = ref();
 
 const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
-const spog = useSpogStore();
-const { getValuesFormatted: spogValuesFormatted, getValues: spogValues } =
-  storeToRefs(spog);
+const ttg = useTtgStore();
+const { getValuesFormatted: ttgValuesFormatted, getValues: ttgValues } =
+  storeToRefs(ttg);
 
 const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
 
 const userHasEnoughBalance = computed(() => {
   if (!hasToPayFee.value) return true;
-  return cashToken?.data?.value?.value >= BigInt(spogValues.value.proposalFee);
+  return cashToken?.data?.value?.value >= BigInt(ttgValues.value.proposalFee);
 });
 
 const proposalTypes = [
@@ -434,7 +432,7 @@ const proposalTypes = [
     label: "Add actor",
     component: InputListOperation,
     tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "addToList",
@@ -444,7 +442,7 @@ const proposalTypes = [
     label: "Remove actor",
     component: InputListOperation,
     tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "removeFromList",
@@ -455,7 +453,7 @@ const proposalTypes = [
     label: "Update actor",
     component: InputListRemoveAddOperation,
     tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "removeFromAndAddToList",
@@ -466,7 +464,7 @@ const proposalTypes = [
     label: "Update protocol config",
     component: InputProtocolConfigOperation,
     tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "protocolSetKey",
@@ -477,7 +475,7 @@ const proposalTypes = [
     label: "Update protocol guidance",
     component: InputProtocolGuidanceConfigOperation,
     tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "protocolGuidanceSetKey",
@@ -492,7 +490,7 @@ const proposalTypes = [
     label: "Proposal fee",
     component: InputGovernanceSetProposalFee,
     tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
   },
@@ -502,7 +500,7 @@ const proposalTypes = [
     label: "Cash token",
     component: InputGovernanceSetCashToken,
     tokens: [MVotingTokens.Zero],
-    governor: spog.contracts.zeroGovernor,
+    governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
@@ -513,7 +511,7 @@ const proposalTypes = [
     component: InputGovernanceSetEmergencyProposalThreshold,
     modelValue: formData.proposalValue,
     tokens: [MVotingTokens.Zero],
-    governor: spog.contracts.zeroGovernor,
+    governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
@@ -522,7 +520,7 @@ const proposalTypes = [
     label: "Zero threshold",
     component: InputGovernanceSetZeroProposalThreshold,
     tokens: [MVotingTokens.Zero],
-    governor: spog.contracts.zeroGovernor,
+    governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
@@ -541,7 +539,7 @@ const proposalTypes = [
         isEmergency: true,
         component: InputListOperation,
         tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyAddToList",
@@ -552,7 +550,7 @@ const proposalTypes = [
         isEmergency: true,
         component: InputListOperation,
         tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyRemoveFromList",
@@ -564,7 +562,7 @@ const proposalTypes = [
         isEmergency: true,
         component: InputListRemoveAddOperation,
         tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyRemoveFromAndAddToList",
@@ -575,7 +573,7 @@ const proposalTypes = [
         isEmergency: true,
         component: InputGovernanceSetProposalFee,
         tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetStandardProposalFee",
@@ -586,7 +584,7 @@ const proposalTypes = [
         isEmergency: true,
         component: InputProtocolConfigOperation,
         tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetKey",
@@ -597,7 +595,7 @@ const proposalTypes = [
         label: "Update protocol guidance",
         component: InputProtocolGuidanceConfigOperation,
         tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         isEmergency: true,
         hasToPayFee: false,
@@ -620,7 +618,7 @@ const proposalTypes = [
         isReset: true,
         component: undefined,
         tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
+        governor: ttg.contracts.zeroGovernor,
         abi: zeroGovernorAbi,
         hasToPayFee: false,
         id: "resetToPowerHolders",
@@ -632,7 +630,7 @@ const proposalTypes = [
         isReset: true,
         component: undefined,
         tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
+        governor: ttg.contracts.zeroGovernor,
         abi: zeroGovernorAbi,
         hasToPayFee: false,
         id: "resetToZeroHolders",
@@ -646,13 +644,13 @@ const currentValue = computed(() => {
     selectedProposalType?.value?.value === "setEmergencyProposalThresholdRatio"
   ) {
     return `${basisPointsToPercentage(
-      spog.getValues.emergencyProposalThresholdRatio!
+      ttg.getValues.emergencyProposalThresholdRatio!,
     )}%`;
   }
 
   if (selectedProposalType?.value?.value === "setZeroProposalThresholdRatio") {
     return `${basisPointsToPercentage(
-      spog.getValues.zeroProposalThresholdRatio!
+      ttg.getValues.zeroProposalThresholdRatio!,
     )}%`;
   }
 
@@ -660,10 +658,10 @@ const currentValue = computed(() => {
 
   if (
     ["setProposalFee", "setStandardProposalFee"].includes(
-      selectedProposalType?.value?.value
+      selectedProposalType?.value?.value,
     )
   ) {
-    return formatFee(spog.getValues.proposalFee!);
+    return formatFee(ttg.getValues.proposalFee!);
   }
 });
 
@@ -704,18 +702,18 @@ async function writeAllowance() {
   // It needs approval to pay for fees
   const allowance = await readContract(wagmiConfig, {
     abi: erc20Abi,
-    address: spog.contracts.cashToken as Hash,
+    address: ttg.contracts.cashToken as Hash,
     functionName: "allowance",
     args: [account as Hash, selectedProposalType.value.governor as Hash], // address owner, address spender
     account,
   });
 
-  const fee = BigInt(spog.getValues.proposalFee!);
+  const fee = BigInt(ttg.getValues.proposalFee!);
   console.log({ allowance, fee });
   if (allowance < fee && hasToPayFee.value) {
     const hash = await writeContract(wagmiConfig, {
       abi: erc20Abi,
-      address: spog.contracts.cashToken as Hash,
+      address: ttg.contracts.cashToken as Hash,
       functionName: "approve",
       args: [selectedProposalType.value.governor as Hash, fee], // address spender, uint256 amount
       account,
@@ -813,7 +811,7 @@ async function onSubmit() {
         unwatchAll();
 
         return navigateTo(`/proposal/${newProposals[0].proposalId}`);
-      }
+      },
     );
 
     const calldatas = buildCalldatas(formDataWithLinks);
@@ -847,9 +845,9 @@ function buildCalldatas(formData) {
       return [stringToHexWith32Bytes(list), address];
     };
 
-    return buildCalldatasSpog(
+    return buildCalldatasTtg(
       type,
-      encondeInputsListOperation({ input1, input2 })
+      encondeInputsListOperation({ input1, input2 }),
     );
   }
 
@@ -866,9 +864,9 @@ function buildCalldatas(formData) {
       return [stringToHexWith32Bytes(list), remove, add];
     };
 
-    return buildCalldatasSpog(
+    return buildCalldatasTtg(
       type,
-      encondeInputsListAddRemoveOperation({ input1, input2, input3 })
+      encondeInputsListAddRemoveOperation({ input1, input2, input3 }),
     );
   }
 
@@ -888,7 +886,7 @@ function buildCalldatas(formData) {
       ) {
         return encodeAbiParameters(
           [{ type: "uint256" }],
-          [BigInt(percentageToBasispoints(inp))]
+          [BigInt(percentageToBasispoints(inp))],
         );
       }
 
@@ -898,32 +896,32 @@ function buildCalldatas(formData) {
     const key = input1;
     const value = getValueEncoded(input2);
 
-    return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
+    return buildCalldatasTtg(type, [stringToHexWith32Bytes(key), value]);
   }
 
   if (["setKeyGuidance"].includes(type)) {
     const key = input1;
     const value = "0x" + input2;
 
-    return buildCalldatasSpog("setKey", [stringToHexWith32Bytes(key), value]);
+    return buildCalldatasTtg("setKey", [stringToHexWith32Bytes(key), value]);
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {
-    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
-    return buildCalldatasSpog(type, undefined);
+    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ITTG
+    return buildCalldatasTtg(type, undefined);
   }
 
   if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [useParseCash(input1)]
+      [useParseCash(input1)],
     );
-    return buildCalldatasSpog(type, [valueEncoded]);
+    return buildCalldatasTtg(type, [valueEncoded]);
   }
 
   if (["setCashToken"].includes(type)) {
     const newFee = encodeAbiParameters([{ type: "uint256" }], [input2]);
-    return buildCalldatasSpog(type, [input1, newFee]);
+    return buildCalldatasTtg(type, [input1, newFee]);
   }
 
   if (
@@ -934,13 +932,13 @@ function buildCalldatas(formData) {
   ) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(percentageToBasispoints(input1))]
+      [BigInt(percentageToBasispoints(input1))],
     );
-    return buildCalldatasSpog(type, [valueEncoded]);
+    return buildCalldatasTtg(type, [valueEncoded]);
   }
 }
 
-function buildCalldatasSpog(functionName: any, args: any) {
+function buildCalldatasTtg(functionName: any, args: any) {
   return encodeFunctionData({
     abi: selectedProposalType.value.abi,
     functionName,

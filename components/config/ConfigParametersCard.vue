@@ -75,12 +75,14 @@
 import { formatUnits } from "viem";
 import { shortenText } from "@/utils/misc";
 
-const { currentCashToken } = storeToRefs(useSpogStore());
+const { currentCashToken } = storeToRefs(useTtgStore());
 const { isJustCopied, copy } = useCopyClipboard();
 
 defineProps({
-  param: Object,
-  default: () => {},
+  param: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const formattedValue = (param) => {
