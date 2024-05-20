@@ -12,7 +12,7 @@
           target="_blank"
           class="underline"
         >
-          Learn more.
+          Learn more
         </NuxtLink>
       </template>
     </PageTitle>
@@ -30,7 +30,7 @@
       @submit.prevent="delegatePower"
     >
       <div>
-        <div class="flex justify-between items-center mb-3">
+        <div class="flex justify-between mb-3 gap-4">
           <div>
             <p class="text-xl">POWER Tokens</p>
             <p class="text-grey-600 text-xs">
@@ -107,7 +107,7 @@
       @submit.prevent="delegateZero"
     >
       <div>
-        <div class="flex justify-between items-center my-3">
+        <div class="flex justify-between my-3 gap-4">
           <div>
             <p class="text-xl">ZERO Tokens</p>
             <p class="text-grey-600 text-xs">
