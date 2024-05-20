@@ -24,6 +24,9 @@
             :show-avatar="false"
           />
         </template>
+        <template #cell(description)="{ value }">
+          <div class="max-sm:min-w-72">{{ value }}</div>
+        </template>
       </MSimpleTable>
     </section>
   </NuxtLayout>
