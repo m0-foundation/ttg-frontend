@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 bg-grey-800 p-8">
+  <div class="flex flex-col gap-4 bg-grey-800 p-6">
     <div class="flex gap-4 justify-between">
       <div>
         <h3 class="text-xl">{{ param?.title }}</h3>

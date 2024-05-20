@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
-    <article class="bg-white text-black px-4 py-4">
-      <div class="flex justify-between mb-2">
+    <article class="bg-white text-black lg:p-4">
+      <div class="flex flex-wrap justify-between mb-2">
         <ProposalStatusTimeline
           :proposal="proposal"
           :version="proposal?.state"
@@ -22,11 +22,9 @@
         {{ title }}
       </h1>
 
-      <div
-        class="text-grey-400 my-3 font-inter text-xs truncate w-52 lg:w-full"
-      >
+      <div class="text-grey-400 my-3 font-inter text-xs">
         Proposed by
-        <u><MAddressAvatar :address="proposal?.proposer" /></u>
+        <MAddressAvatar :address="proposal?.proposer" />
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
 
