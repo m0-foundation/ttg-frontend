@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="flex gap-4">
-                  <MIconPower class="w-[24px] h-[24px]" />
+                  <MIconPower class="min-w-[24px] h-[24px]" />
                   <div>
                     <span class="font-inter text-grey-100">
                       Only holders who possess active
@@ -71,7 +71,7 @@
                   <p class="uppercase text-xxs">Standard Proposal</p>
                 </div>
                 <div class="flex gap-4">
-                  <MIconZero class="w-[24px] h-[24px]" />
+                  <MIconZero class="min-w-[24px] h-[24px]" />
                   <div>
                     <span class="font-inter text-grey-100">
                       Only holders who possess active
