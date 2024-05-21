@@ -1,116 +1,100 @@
 <template>
   <NuxtLayout name="proposals">
-    <div>
-      <ProposalList
-        :proposals="emergencyProposals"
-        :loading="isLoading"
-        @on-cast="onCast"
-        @on-uncast="onUncast"
-      >
-        <template #emptyState>
-          <ProposalListEmptyState>
-            No active emergency proposals
-          </ProposalListEmptyState>
-        </template>
-      </ProposalList>
+    <MDialog ref="dialog">
+      <template #header> Confirm your voting power </template>
 
-      <div
-        v-show="hasProposals && isConnected"
-        class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8"
-        :class="{
-          'bg-grey-700': isSelectedCastProposalsFull,
-        }"
-      >
-        <span v-if="!isSelectedCastProposalsFull" class="text-xxs">
-          Select YES or NO to submit your vote
-        </span>
-        <MButton
-          id="button-cast-submit"
-          class="w-full lg:w-40 flex justify-center"
-          :disabled="
-            !isSelectedCastProposalsFull || hasVotedOnAllProposals || isLoading
-          "
-          :is-loading="isLoading"
-          data-test="proposal-button-submit-votes"
-          @click="onCastBatchVotes"
-        >
-          submit
-        </MButton>
-      </div>
-    </div>
+      <template #body>
+        <div>
+          <div class="flex justify-start items-center gap-6 mb-4">
+            <p>
+              <MIconPower class="w-6 inline-block mr-2" />
+              {{ useNumberFormatterPrice((votingPower as any)?.formatted) }}
+            </p>
+            <p class="uppercase text-xxs text-grey-600">voting power</p>
+          </div>
+
+          <p class="text-sm">
+            This is your POWER <u>voting power</u> which will be utilized to
+            vote on this proposal base on the previous epoch.
+          </p>
+        </div>
+      </template>
+    </MDialog>
+
+    <ProposalList
+      :proposals="proposals"
+      :loading="isLoading"
+      :selected-proposal="selectedProposal"
+      @on-cast="confirmCastVote"
+    >
+      <template #emptyState>
+        <ProposalListEmptyState>
+          No emergency proposals
+        </ProposalListEmptyState>
+      </template>
+    </ProposalList>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { Hash } from "viem";
+import { Abi, Hash } from "viem";
 import { useAccount } from "use-wagmi";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { writeContract, waitForTransactionReceipt } from "@wagmi/core";
 import { writeEmergencyGovernor } from "@/lib/sdk";
 
-interface CastedProposal {
-  vote: number;
-  proposalId: string;
-}
-
-const selectedCastProposals = ref<Array<CastedProposal>>([]);
-const isLoading = ref(false);
-
 const proposalsStore = useProposalsStore();
-const ttg = useTtgStore();
-
-const activeProposals = computed(() =>
-  proposalsStore.getProposalsByState("Active"),
-);
-
-const emergencyProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Emergency"),
-);
-const hasProposals = computed(
-  () => emergencyProposals && emergencyProposals.value.length > 0,
-);
-
-const isSelectedCastProposalsFull = computed(() => {
-  return selectedCastProposals.value.length === emergencyProposals.value.length;
-});
-
-const { address: userAccount, isConnected } = useAccount();
-const { forceSwitchChain } = useCorrectChain();
-const wagmiConfig = useWagmiConfig();
-const alerts = useAlertsStore();
 
 useHead({
-  titleTemplate: "%s - Proposals",
+  titleTemplate: "%s - Emergency proposals",
 });
 
-function onCast(vote: number, proposalId: string) {
-  selectedCastProposals.value.push({ vote, proposalId });
+const { address: userAccount } = useAccount();
+const { forceSwitchChain } = useCorrectChain();
+
+const isLoading = ref(false);
+const selectedProposal = ref();
+
+const dialog = ref();
+const votingPower = ref();
+
+const proposals = computed(() =>
+  proposalsStore.getProposalsTypeEmergency.filter((p) => p.state === "Active"),
+);
+
+const wagmiConfig = useWagmiConfig();
+const proposalStore = useProposalsStore();
+const ttg = useTtgStore();
+const alerts = useAlertsStore();
+
+async function confirmCastVote(vote: number, proposalId: string) {
+  await fetchVotingPower(proposalId);
+  if (await dialog.value.open()) {
+    return castVote(vote, proposalId);
+  }
 }
 
-function onUncast(proposalId: string) {
-  console.log("uncast", proposalId, selectedCastProposals.value);
-  selectedCastProposals.value = selectedCastProposals.value.filter(
-    (p) => p.proposalId !== proposalId,
-  );
+async function fetchVotingPower(proposalId: string) {
+  const proposal = proposalStore.getProposalById(proposalId);
+  const pastEpoch = proposal!.voteStart - 1;
+
+  votingPower.value = await usePastVotes({
+    address: userAccount.value!,
+    epoch: pastEpoch,
+    token: "power",
+  });
 }
 
-// temporary
-const hasVotedOnAllProposals = ref(false);
-
-async function onCastBatchVotes() {
+async function castVote(vote: number, proposalId: string) {
   await forceSwitchChain();
 
+  selectedProposal.value = proposalId;
   isLoading.value = true;
 
   try {
-    const proposalIds = selectedCastProposals.value.map((p) =>
-      BigInt(p.proposalId),
-    );
-    const votes = selectedCastProposals.value.map((p) => p.vote);
-
     const hash = await writeEmergencyGovernor(wagmiConfig, {
       address: ttg.contracts.emergencyGovernor as Hash,
-      functionName: "castVotes",
-      args: [proposalIds, votes], // uint256 proposalId, uint8 support
+      functionName: "castVote",
+      args: [BigInt(proposalId), vote],
       account: userAccount.value,
     });
 
@@ -123,6 +107,8 @@ async function onCastBatchVotes() {
       throw txReceipt;
     }
 
+    proposalStore.updateProposalById(proposalId);
+
     alerts.successAlert("Vote casted successfully!");
   } catch (error: any) {
     console.log("Error casting vote", { error });
@@ -133,8 +119,9 @@ async function onCastBatchVotes() {
     } else {
       alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);
     }
+  } finally {
+    isLoading.value = false;
+    selectedProposal.value = undefined;
   }
-
-  isLoading.value = false;
 }
 </script>
