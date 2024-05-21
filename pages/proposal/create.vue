@@ -29,9 +29,9 @@
           </div>
 
           <div class="my-3">
-            <div v-for="token in selectedProposalType?.tokens" :key="token">
+            <div>
               <div
-                v-if="token === MVotingTokens.Power"
+                v-if="selectedProposalType?.votingType === 'Standard'"
                 class="p-4 bg-accent-teal"
               >
                 <div class="mb-2">
@@ -64,7 +64,7 @@
               </div>
 
               <div
-                v-if="token === MVotingTokens.Zero"
+                v-if="selectedProposalType?.votingType === 'Zero'"
                 class="p-4 bg-accent-teal"
               >
                 <div class="mb-2">
@@ -169,8 +169,8 @@
 
         <div v-if="isPreview">
           <ProposalPreview
-            :address="userAccount"
-            :description="previewDescription"
+            :title="formData.title"
+            :proposal="previewProposal"
             @on-back="onBack"
           />
         </div>
@@ -193,7 +193,7 @@
       <div v-if="hasToPayFee" class="text-grey-500 text-xs text-end font-inter">
         <p>
           Available balance:
-          {{ useNumberFormatterEth(cashToken?.data?.value?.formatted) || 0 }}
+          {{ useNumberFormatterEth(cashToken?.data?.value?.formatted || 0) }}
           WETH
         </p>
         <p>You'll receive a refund if the proposal succeeds</p>
@@ -285,6 +285,7 @@ import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSe
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
+import { MProposal } from "@/lib/api/types";
 
 /* wagmi */
 const wagmiConfig = useWagmiConfig();
@@ -431,7 +432,7 @@ const proposalTypes = [
     value: "addToList",
     label: "Add actor",
     component: InputListOperation,
-    tokens: [MVotingTokens.Power],
+    votingType: "Standard",
     governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
@@ -441,7 +442,7 @@ const proposalTypes = [
     value: "removeFromList",
     label: "Remove actor",
     component: InputListOperation,
-    tokens: [MVotingTokens.Power],
+    votingType: "Standard",
     governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
@@ -452,7 +453,7 @@ const proposalTypes = [
     value: "removeFromAndAddToList",
     label: "Update actor",
     component: InputListRemoveAddOperation,
-    tokens: [MVotingTokens.Power],
+    votingType: "Standard",
     governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
@@ -463,7 +464,7 @@ const proposalTypes = [
     value: "setKey",
     label: "Update protocol config",
     component: InputProtocolConfigOperation,
-    tokens: [MVotingTokens.Power],
+    votingType: "Standard",
     governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
@@ -474,7 +475,7 @@ const proposalTypes = [
     value: "setKeyGuidance",
     label: "Update protocol guidance",
     component: InputProtocolGuidanceConfigOperation,
-    tokens: [MVotingTokens.Power],
+    votingType: "Standard",
     governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
@@ -489,7 +490,7 @@ const proposalTypes = [
     value: "setProposalFee",
     label: "Proposal fee",
     component: InputGovernanceSetProposalFee,
-    tokens: [MVotingTokens.Power],
+    votingType: "Standard",
     governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
@@ -499,7 +500,7 @@ const proposalTypes = [
     value: "setCashToken",
     label: "Cash token",
     component: InputGovernanceSetCashToken,
-    tokens: [MVotingTokens.Zero],
+    votingType: "Zero",
     governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
@@ -510,7 +511,7 @@ const proposalTypes = [
     label: "Power threshold",
     component: InputGovernanceSetEmergencyProposalThreshold,
     modelValue: formData.proposalValue,
-    tokens: [MVotingTokens.Zero],
+    votingType: "Zero",
     governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
@@ -519,7 +520,7 @@ const proposalTypes = [
     value: "setZeroProposalThresholdRatio",
     label: "Zero threshold",
     component: InputGovernanceSetZeroProposalThreshold,
-    tokens: [MVotingTokens.Zero],
+    votingType: "Zero",
     governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
@@ -538,7 +539,7 @@ const proposalTypes = [
         label: "Add actor",
         isEmergency: true,
         component: InputListOperation,
-        tokens: [MVotingTokens.Power],
+        votingType: "Emergency",
         governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
@@ -549,7 +550,7 @@ const proposalTypes = [
         label: "Remove actor",
         isEmergency: true,
         component: InputListOperation,
-        tokens: [MVotingTokens.Power],
+        votingType: "Emergency",
         governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
@@ -561,7 +562,7 @@ const proposalTypes = [
         label: "Update actor",
         isEmergency: true,
         component: InputListRemoveAddOperation,
-        tokens: [MVotingTokens.Power],
+        votingType: "Emergency",
         governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
@@ -572,7 +573,7 @@ const proposalTypes = [
         label: "Proposal fee",
         isEmergency: true,
         component: InputGovernanceSetProposalFee,
-        tokens: [MVotingTokens.Power],
+        votingType: "Emergency",
         governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
@@ -583,7 +584,7 @@ const proposalTypes = [
         label: "Update protocol config",
         isEmergency: true,
         component: InputProtocolConfigOperation,
-        tokens: [MVotingTokens.Power],
+        votingType: "Emergency",
         governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
@@ -594,7 +595,7 @@ const proposalTypes = [
         value: "setKeyGuidance",
         label: "Update protocol guidance",
         component: InputProtocolGuidanceConfigOperation,
-        tokens: [MVotingTokens.Power],
+        votingType: "Emergency",
         governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         isEmergency: true,
@@ -617,7 +618,7 @@ const proposalTypes = [
         label: "Reset to Power holders",
         isReset: true,
         component: undefined,
-        tokens: [MVotingTokens.Zero],
+        votingType: "Zero",
         governor: ttg.contracts.zeroGovernor,
         abi: zeroGovernorAbi,
         hasToPayFee: false,
@@ -629,7 +630,7 @@ const proposalTypes = [
         label: "Reset to Zero holders",
         isReset: true,
         component: undefined,
-        tokens: [MVotingTokens.Zero],
+        votingType: "Zero",
         governor: ttg.contracts.zeroGovernor,
         abi: zeroGovernorAbi,
         hasToPayFee: false,
@@ -663,6 +664,22 @@ const currentValue = computed(() => {
   ) {
     return formatFee(ttg.getValues.proposalFee!);
   }
+});
+
+const previewProposal = computed(() => {
+  return {
+    proposalLabel: selectedProposalType?.value?.label,
+    proposer: userAccount.value,
+    description: formData.description,
+    proposalType: formData.proposalType,
+    isEmergency: selectedProposalType?.value?.isEmergency as boolean,
+    votingType: selectedProposalType?.value?.votingType,
+    proposalParams: [
+      formData.proposalValue,
+      formData.proposalValue2,
+      formData.proposalValue3,
+    ].filter((e) => e),
+  } as unknown as MProposal;
 });
 
 function onChangeProposalType(option) {
