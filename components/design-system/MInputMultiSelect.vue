@@ -57,13 +57,13 @@
               }}</span>
             </div>
 
-            <div v-for="token in opt.tokens" :key="token">
+            <div>
               <MIconPower
-                v-if="token === MVotingTokens.Power"
+                v-if="['Standard', 'Emergency'].includes(opt.votingType)"
                 class="w-[24px] h-[24px]"
               />
               <MIconZero
-                v-if="token === MVotingTokens.Zero"
+                v-if="['Zero'].includes(opt.votingType)"
                 class="w-[24px] h-[24px]"
               />
             </div>
@@ -86,9 +86,13 @@
               >
                 <span class="mr-8">{{ child.label }}</span>
                 <div class="flex">
-                  <div v-for="token in child.tokens" :key="token">
-                    <MIconPower v-if="token === MVotingTokens.Power" />
-                    <MIconZero v-if="token === MVotingTokens.Zero" />
+                  <div>
+                    <MIconPower
+                      v-if="
+                        ['Standard', 'Emergency'].includes(child.votingType)
+                      "
+                    />
+                    <MIconZero v-if="['Zero'].includes(child.votingType)" />
                   </div>
                 </div>
               </button>
@@ -102,7 +106,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
-import { MVotingTokens } from "@/lib/api/types";
 
 export interface OptionItem {
   value: string;
@@ -111,7 +114,7 @@ export interface OptionItem {
   description: string;
   id: string;
   shortDescription: string;
-  tokens: string[];
+  votingType: "Standard" | "Emergency" | "Zero";
   header?: string;
   isEmergency?: boolean;
   isReset?: boolean;
@@ -120,7 +123,7 @@ export interface OptionItem {
     label: string;
     isEmergency: boolean;
     component: any;
-    tokens: string[];
+    votingType: "Standard" | "Emergency" | "Zero";
     id: string;
   }>;
   submenuText?: string;

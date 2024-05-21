@@ -285,7 +285,7 @@ import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSe
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
-import { MProposal, VotingType } from "@/lib/api/types";
+import { MProposal } from "@/lib/api/types";
 
 /* wagmi */
 const wagmiConfig = useWagmiConfig();
