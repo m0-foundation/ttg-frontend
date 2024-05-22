@@ -12,6 +12,3 @@ jobs:
     secrets: inherit
     permissions:
       contents: write
-    #with:
-      #MASTER_VERSION is used for tagging and release (only on PRODUCTION)
-      #MASTER_VERSION: "0"
