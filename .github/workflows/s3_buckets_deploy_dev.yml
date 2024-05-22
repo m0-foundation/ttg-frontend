@@ -7,8 +7,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-to-dev:
-    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_dev.yml@main
+  deploy-dev:
+    uses: MZero-Labs/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_dev.yml@main
     secrets: inherit
     permissions:
       contents: write
+    if: github.ref_name == 'main'

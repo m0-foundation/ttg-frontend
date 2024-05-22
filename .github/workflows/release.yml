@@ -1,0 +1,32 @@
+# Adding release to the repository
+name: create_release
+
+on:
+  # This workflow is only working via workflow call
+  workflow_call:
+
+jobs:
+  create-release:
+    runs-on: 'ubuntu-latest'
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      contents: write
+    steps:
+
+      # Checking out the GitHub repository on the runner
+    - name: Checkout
+      uses: 'actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608'
+
+    - name: Defining tag
+      run: |
+        echo VERSION=$(jq -r .version package.json) >> $GITHUB_ENV
+
+    - name: Create Release
+      env:
+        GIT_TAG_VERSION: ${{ env.VERSION }}
+      uses: 'ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5'
+      with:
+        generateReleaseNotes: true
+        #bodyFile: "RELEASE_DESCRIPTION.md"
+        tag: ${{ env.GIT_TAG_VERSION }}
+        name: Release ${{ env.GIT_TAG_VERSION }}
