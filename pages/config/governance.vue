@@ -17,11 +17,10 @@
           </h3>
         </template>
         <template #cell(value)="{ value }">
-          <MAddressAvatar
+          <MAddressCopy
             :address="value"
             :short-address="false"
             :show-copy="true"
-            :show-avatar="false"
           />
         </template>
         <template #cell(description)="{ value }">

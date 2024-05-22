@@ -7,6 +7,7 @@
     <p class="text-sm font-inter mb-4">
       Agree or deny the following incoming change
     </p>
+
     <div v-if="currentValue">
       <div
         class="uppercase font-mono bg-[#353835] leading-3 text-[#AEAFAE] text-xs py-2 p-3"
@@ -21,9 +22,13 @@
       </div>
     </div>
     <div
-      class="uppercase font-mono leading-3 bg-[#00CC9B] text-[#0B0B0B] text-xs py-2 p-3"
+      class="font-mono leading-3 bg-[#00CC9B] text-[#0B0B0B] text-xs py-2 p-3 flex justify-between"
     >
-      Incoming Change
+      <p class="uppercase">Incoming Change</p>
+
+      <p>
+        {{ props.proposal?.proposalLabel }}
+      </p>
     </div>
     <div
       id="technical-proposal-incoming-change"
