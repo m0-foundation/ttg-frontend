@@ -14,7 +14,9 @@
 
       <div class="flex justify-between gap-4 mt-8 mb-4">
         <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
+          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
+            Voting power
+          </p>
           <div class="flex items-center align-middle gap-2">
             <p class="text-xl lg:text-xl text-grey-100 mt-2">
               {{
@@ -33,7 +35,9 @@
         </div>
 
         <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter">Token Balance</p>
+          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
+            Token Balance
+          </p>
           <div class="flex items-center align-middle gap-2">
             <p class="lg:text-xl text-grey-100 mt-2">
               {{
@@ -60,7 +64,9 @@
 
       <div class="gap-4 mt-8 mb-4 flex justify-between">
         <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter">Voting power</p>
+          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
+            Voting power
+          </p>
           <div class="flex items-center align-middle gap-2">
             <p class="text-xl lg:text-xl text-grey-100 mt-2">
               {{
@@ -79,7 +85,9 @@
         </div>
 
         <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter">Token Balance</p>
+          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
+            Token Balance
+          </p>
           <div class="flex items-center align-middle gap-2">
             <p class="lg:text-xl text-grey-100 mt-2">
               {{

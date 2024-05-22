@@ -4,7 +4,7 @@
       <NuxtLink to="/proposals">
         <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
       </NuxtLink>
-      <span class="text-gray-500 text-xs">[ Governance ]</span>
+      <span class="text-grey-500 text-sm leading-3">Gov</span>
     </div>
     <div class="flex lg:hidden">
       <button
@@ -13,52 +13,16 @@
       >
         <span class="sr-only">Toggle main manu</span>
         <span aria-hidden="true">
-          <svg
+          <img
             v-show="!props.sidebarOpen"
-            width="48"
-            height="48"
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M16.2051 18.5H31.7949"
-              stroke="white"
-              stroke-linecap="square"
-            />
-            <path
-              d="M16.2051 24.5H31.7949"
-              stroke="white"
-              stroke-linecap="square"
-            />
-            <path
-              d="M16.2051 30.5H31.7949"
-              stroke="white"
-              stroke-linecap="square"
-            />
-            <rect x="0.5" y="0.5" width="47" height="47" stroke="white" />
-          </svg>
-
-          <svg
+            src="/img/mobile/burguer-toggle.svg"
+            alt="Menu"
+          />
+          <img
             v-show="props.sidebarOpen"
-            width="48"
-            height="48"
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect x="0.5" y="0.5" width="47" height="47" stroke="white" />
-            <path
-              d="M18.4881 17.9882L29.5118 29.0118"
-              stroke="white"
-              stroke-linecap="square"
-            />
-            <path
-              d="M18.4882 28.5118L29.5118 17.4882"
-              stroke="white"
-              stroke-linecap="square"
-            />
-          </svg>
+            src="/img/mobile/close-toggle.svg"
+            alt="Close"
+          />
         </span>
       </button>
     </div>

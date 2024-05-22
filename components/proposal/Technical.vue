@@ -10,19 +10,19 @@
 
     <div v-if="currentValue">
       <div
-        class="uppercase font-mono bg-[#353835] leading-3 text-[#AEAFAE] text-xs py-2 pl-6"
+        class="uppercase font-mono bg-[#353835] leading-3 text-[#AEAFAE] text-xs py-2 p-3"
       >
         Current
       </div>
       <div
         id="technical-proposal-current"
-        class="bg-[#0B0B0B] text-grey-100 text-sm py-2 pl-6"
+        class="bg-[#0B0B0B] text-grey-100 text-sm py-2 p-3"
       >
         {{ currentValue }}
       </div>
     </div>
     <div
-      class="font-mono leading-3 bg-[#00CC9B] text-[#0B0B0B] text-xs py-2 px-6 flex justify-between"
+      class="font-mono leading-3 bg-[#00CC9B] text-[#0B0B0B] text-xs py-2 p-3 flex justify-between"
     >
       <p class="uppercase">Incoming Change</p>
 
@@ -32,7 +32,7 @@
     </div>
     <div
       id="technical-proposal-incoming-change"
-      class="bg-[#003327] text-[#00CC9B] text-sm py-2 pl-6"
+      class="bg-[#003327] text-[#00CC9B] text-sm py-2 p-3"
     >
       <div v-if="showParsed">
         <div v-for="(param, index) in incomingValuesParsed" :key="param">
@@ -41,8 +41,8 @@
         </div>
       </div>
 
-      <div v-for="param in incomingValues" v-else :key="param">
-        {{ param }}
+      <div v-for="param in incomingValues" v-else :key="param" :title="param">
+        <span class="break-words">{{ param }}</span>
       </div>
     </div>
   </div>
