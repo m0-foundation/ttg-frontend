@@ -17,7 +17,7 @@
       class="fixed z-50 lg:z-40 inset-0 overflow-y-auto bg-grey-900"
     >
       <div class="flex items-center justify-center min-h-screen">
-        <div class="w-full max-w-xl">
+        <div ref="connectModal" class="w-full max-w-xl">
           <div class="flex flex-wrap flex-col">
             <div class="bg-grey-900 text-white p-3 lg:p-6">
               <p class="text-3xl text-center">Connect Wallet</p>
@@ -79,6 +79,7 @@ const images = {
 };
 
 const open = ref(false);
+const connectModal = ref(null);
 const network = useNetworkStore().getNetwork();
 const chainId = computed(() => network.value.rpc.chainId);
 
@@ -92,4 +93,7 @@ const { connect, connectors } = useConnect({
 });
 
 const openModal = () => (open.value = true);
+const closeModal = () => (open.value = false);
+
+onClickOutside(connectModal, closeModal);
 </script>
