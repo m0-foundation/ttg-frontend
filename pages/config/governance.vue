@@ -45,6 +45,7 @@ const parametersData = [
       "The number of yes votes as a percentage of the total POWER supply required to pass proposals which require a POWER Threshold.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#power-threshold",
     type: "basisPoints",
+    unit: "BPS",
   },
   {
     title: "Zero Proposal Threshold Ratio",
@@ -53,6 +54,7 @@ const parametersData = [
       "The number of yes votes as a percentage of the total ZERO supply required to pass proposals which require a ZERO Threshold.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#zero-threshold",
     type: "basisPoints",
+    unit: "BPS",
   },
   {
     title: "Proposal Fee",
@@ -61,6 +63,7 @@ const parametersData = [
     docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#proposal-fee",
     type: "decimals",
     copyValue: true,
+    unit: "WEI",
   },
   {
     title: "Cash Token",

@@ -12,7 +12,7 @@
           </p>
           <div class="config-key-badge">
             <div v-if="param?.value" class="flex align-center">
-              <span>{{ shortenText(param.value) }}</span>
+              <span>{{ shortenText(param.value) }} {{ param?.unit }}</span>
               <template v-if="param?.copyValue">
                 <MIconSimpleCheck
                   v-if="isJustCopied"
