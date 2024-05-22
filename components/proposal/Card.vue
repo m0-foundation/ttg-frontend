@@ -55,7 +55,7 @@
           >
             <ProposalButtonCastVote
               id="button-cast-yes"
-              :batch="proposal?.votingType !== 'Zero'"
+              :batch="proposal?.votingType === 'Standard'"
               data-test="button-cast-yes"
               :disabled="hasVoted || isDisconnected || !canVote || loading"
               :version="isVoteYesActive"
@@ -67,7 +67,7 @@
             </ProposalButtonCastVote>
             <ProposalButtonCastVote
               id="button-cast-no"
-              :batch="proposal?.votingType !== 'Zero'"
+              :batch="proposal?.votingType === 'Standard'"
               class="cast-vote-button"
               data-test="button-cast-no"
               :disabled="hasVoted || isDisconnected || !canVote || loading"
@@ -180,7 +180,7 @@ function onExecuteProposal() {
 }
 
 function onCast(vote: boolean) {
-  if (["Standard", "Emergency"].includes(props.proposal?.votingType!)) {
+  if (["Standard"].includes(props.proposal?.votingType!)) {
     return onBatchCastSelected(vote);
   } else {
     return onSingleCastSelected(vote);
