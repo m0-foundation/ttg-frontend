@@ -17,7 +17,7 @@
     <div class="flex items-center gap-1" :class="{ 'ml-[22px]': showAvatar }">
       <NuxtLink class="hover:underline" :to="`/profile/${props.address}`">
         <span v-if="ensName">{{ ensName }}</span>
-        <span v-else>{{
+        <span v-else :title="props.address">{{
           shortAddress ? shortenAddress(props.address) : props.address
         }}</span>
       </NuxtLink>

@@ -1,21 +1,23 @@
 <template>
-  <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
-    <PageTitle class="mb-6">Settings</PageTitle>
-
-    <div>
-      <div class="mb-4 w-3/4 text-grey-500">
+  <form class="p-6 mx-auto max-w-3xl" @submit.prevent="onSubmit">
+    <PageTitle class="mb-8 lg:p-0">
+      Settings
+      <template #subtitle>
         For enhanced security measures, we suggest using a custom RPC URL. This
         entails either setting up your own RPC Node or contracting third-party
         services. In the latter scenario, you may opt to utilize a public RPC
         from this
-        <a
+        <NuxtLink
           href="https://chainlist.org/chain/1"
           target="_blank"
           class="underline hover:no-underline"
         >
           list.
-        </a>
-      </div>
+        </NuxtLink>
+      </template>
+    </PageTitle>
+
+    <div>
       <div class="mb-6">
         <div class="flex justify-between text-sm">
           <label>Network Id: </label>

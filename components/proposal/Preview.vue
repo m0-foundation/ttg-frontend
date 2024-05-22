@@ -14,35 +14,50 @@
 
     <MTextLoop class="text-green-900 bg-green-700 text-sm" text="PREVIEW" />
 
-    <div class="bg-white p-6 lg:px-16 lg:py-8 mb-4">
-      <div class="text-green-900 text-xs lg:text-base">
-        <p v-if="address" class="overflow-hidden text-ellipsis">
-          Proposed by
-          <MAddressAvatar :address="address" />
-        </p>
+    <article class="bg-white mb-3 text-black px-4 py-4">
+      <MBadge v-if="proposal?.isEmergency" version="error">
+        Emergency proposal
+      </MBadge>
+
+      <MBadge v-if="proposal?.votingType === 'Zero'"> Zero proposal </MBadge>
+
+      <h2 class="text-[28px] text-grey-1000 font-light leading-10 my-3">
+        {{ title }}
+      </h2>
+
+      <div
+        class="text-grey-400 my-1 font-inter text-xs truncate w-52 lg:w-full"
+      >
+        Proposed by
+        <u><MAddressAvatar :address="proposal?.proposer" /></u>
       </div>
-      <div class="markdown-body" v-html="descriptionHtml"></div>
-    </div>
+
+      <div class="markdown-body mb-8" v-html="onlyDescriptionHtml"></div>
+
+      <ProposalTechnical
+        :proposal="proposal"
+        :current-proposal-values="currentProposalValuesFormatted"
+      />
+    </article>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Hash } from "viem";
-import { marked } from "marked";
-import xss from "xss";
-import { computed } from "vue";
+import { MProposal } from "@/lib/api/types";
 const emit = defineEmits(["on-back"]);
 
 interface PreviewProps {
-  address?: Hash;
-  description: String;
+  title: string;
+  proposal: MProposal;
 }
 
 const props = defineProps<PreviewProps>();
 
-const descriptionHtml = computed(() => {
-  return xss(marked.parse(props.description));
-});
+const ttg = useTtgStore();
+const { getValuesFormatted: currentProposalValuesFormatted } = storeToRefs(ttg);
+const { onlyDescriptionHtml } = useParsedDescriptionTitle(
+  props.proposal?.description,
+);
 
 function onBack() {
   // emit isPreview
