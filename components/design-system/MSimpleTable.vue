@@ -15,7 +15,7 @@
         />
       </div>
     </div>
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto max-sm:max-h-[70dvh]">
       <table class="text-left w-full font-inter">
         <colgroup>
           <template v-for="field in displayedFields" :key="field.key">

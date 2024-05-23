@@ -39,6 +39,6 @@ watch(
 
 <style scoped>
 aside {
-  @apply fixed lg:static w-full h-screen lg:h-auto lg:min-w-[280px] lg:w-auto overflow-hidden  p-6 pt-0 lg:pl-16 hidden lg:block bg-grey-900;
+  @apply fixed lg:static w-full h-dvh lg:h-auto lg:min-w-[280px] lg:w-auto overflow-hidden  p-6 pt-0 lg:pl-16 hidden lg:block bg-grey-900;
 }
 </style>
