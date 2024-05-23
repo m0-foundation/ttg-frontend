@@ -9,7 +9,7 @@
         <input
           v-if="search"
           v-model="inputSearch"
-          class="h-[32px] w-[170px] text-xxs border-grey-600 text-grey-600 placeholder:text-grey-600 bg-transparent font-inter"
+          class="h-[32px] w-[170px] text-xxs border-grey-700 text-grey-600 placeholder:text-grey-600 bg-transparent font-inter"
           placeholder="Search"
           type="text"
         />
@@ -25,7 +25,7 @@
           </template>
         </colgroup>
         <thead
-          class="text-grey-500 text-xs font-light border-b-2 border-grey-700"
+          class="text-grey-500 text-xs font-light font-inter border-b-2 border-grey-700"
         >
           <tr>
             <th

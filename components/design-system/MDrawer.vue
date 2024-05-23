@@ -4,7 +4,7 @@
       <!-- drawer component -->
       <div
         v-show="isOpen"
-        class="fixed bottom-0 z-40 w-full h-screen bg-black/30"
+        class="fixed bottom-0 z-50 lg:z-40 w-full h-screen bg-black/30"
         @click.self="close"
         @keydown.esc="close"
       >

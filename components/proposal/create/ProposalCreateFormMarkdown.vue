@@ -1,6 +1,11 @@
 <template>
   <div :class="{ 'border border-red-500': hasErrors }">
-    <MdEditor v-model="value" language="en-US" theme="dark" />
+    <MdEditor
+      v-model="value"
+      language="en-US"
+      theme="dark"
+      :preview="largerThanSm"
+    />
   </div>
 
   <div class="text-red-500 text-xs my-2 h-4">
@@ -13,6 +18,9 @@
 <script setup lang="ts">
 import { MdEditor } from "md-editor-v3";
 import { ErrorObject } from "@vuelidate/core";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+
+const largerThanSm = useBreakpoints(breakpointsTailwind).greater("sm");
 
 export interface InputProps {
   errors?: ErrorObject[];

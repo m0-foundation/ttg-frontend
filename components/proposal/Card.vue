@@ -78,7 +78,9 @@
               NO
             </ProposalButtonCastVote>
 
-            <div class="text-xxs text-grey-600 uppercase mx-2 font-inter">
+            <div
+              class="text-xxs text-grey-600 uppercase mx-2 font-inter max-sm:w-full"
+            >
               <p v-show="!canVote">Not enough voting power</p>
               <p v-show="hasVoted">Your vote has been submitted</p>
             </div>

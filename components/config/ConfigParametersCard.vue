@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 bg-grey-800 p-8">
+  <div class="flex flex-col gap-4 bg-grey-800 p-4 lg:p-6">
     <div class="flex gap-4 justify-between">
       <div>
         <h3 class="text-xl">{{ param?.title }}</h3>
@@ -12,7 +12,7 @@
           </p>
           <div class="config-key-badge">
             <div v-if="param?.value" class="flex align-center">
-              <span>{{ shortenText(param.value) }}</span>
+              <span>{{ shortenText(param.value) }} {{ param?.unit }}</span>
               <template v-if="param?.copyValue">
                 <MIconSimpleCheck
                   v-if="isJustCopied"
@@ -23,7 +23,7 @@
                 </button>
               </template>
             </div>
-            <span v-else>Parameter not set</span>
+            <span v-else class="text-nowrap">Parameter not set</span>
           </div>
         </div>
         <MDropdown v-if="param?.proposal?.executedEvent" origin="right">

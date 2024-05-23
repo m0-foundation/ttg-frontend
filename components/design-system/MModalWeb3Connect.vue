@@ -14,15 +14,15 @@
       v-if="open"
       id="modal-backdrop"
       ref="modal-backdrop"
-      class="fixed z-40 lg:z-40 inset-0 overflow-y-auto bg-grey-900"
+      class="fixed z-50 lg:z-40 inset-0 overflow-y-auto bg-grey-900"
     >
       <div class="flex items-center justify-center min-h-screen">
-        <div class="w-full max-w-xl">
+        <div ref="connectModal" class="w-full max-w-xl">
           <div class="flex flex-wrap flex-col">
-            <div class="bg-grey-900 text-white p-8">
+            <div class="bg-grey-900 text-white p-3 lg:p-6">
               <p class="text-3xl text-center">Connect Wallet</p>
               <p
-                class="font-inter text-center text-grey-500 leading-normal mt-2"
+                class="font-inter text-center text-grey-500 leading-normal mt-2 max-sm:text-sm"
               >
                 Connect with one of our available wallet providers.
               </p>
@@ -49,7 +49,11 @@
                   data-test="modal-web3-connect-button-close"
                   @click="open = false"
                 >
-                  x
+                  <img
+                    src="/img/mobile/close-toggle.svg"
+                    class="max-h-24"
+                    @click="open = false"
+                  />
                 </button>
               </div>
             </div>
@@ -75,6 +79,7 @@ const images = {
 };
 
 const open = ref(false);
+const connectModal = ref(null);
 const network = useNetworkStore().getNetwork();
 const chainId = computed(() => network.value.rpc.chainId);
 
@@ -88,4 +93,7 @@ const { connect, connectors } = useConnect({
 });
 
 const openModal = () => (open.value = true);
+const closeModal = () => (open.value = false);
+
+onClickOutside(connectModal, closeModal);
 </script>

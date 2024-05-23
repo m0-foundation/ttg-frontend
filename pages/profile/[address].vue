@@ -6,6 +6,7 @@
         <p class="text-white text-md">
           <MAddressAvatar
             :address="address"
+            :short-address="!largerThanSm"
             :show-copy="true"
             :show-avatar="false"
           />
@@ -26,7 +27,9 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
+const largerThanSm = useBreakpoints(breakpointsTailwind).greater("sm");
 const route = useRoute();
 const address = ref(route.params.address as Hash);
 
