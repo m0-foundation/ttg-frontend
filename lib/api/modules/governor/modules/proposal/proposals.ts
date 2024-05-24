@@ -334,8 +334,8 @@ export class Proposals extends GovernorModule {
       noVotes,
       yesVotes,
       proposer,
-      quorum,
-      quorumNumerator,
+      quorum, // The threshold/quorum of yes votes required for the proposal to succeed.
+      quorumNumerator, // The threshold/quorum numerator used to calculate the quorum.
     ] = proposal;
     /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -343,6 +343,7 @@ export class Proposals extends GovernorModule {
       state: ProposalState[state] as keyof typeof ProposalState,
       yesVotes,
       noVotes,
+      quorum,
     };
   }
 
@@ -376,7 +377,7 @@ export class Proposals extends GovernorModule {
 
     return {
       ...proposal,
-      ...pick(mutableProposal, ["yesVotes", "noVotes", "state"]),
+      ...mutableProposal,
       epoch,
       votingType: this.governanceType,
       timestamp: Number(block.timestamp),
