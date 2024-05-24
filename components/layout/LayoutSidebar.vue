@@ -9,8 +9,8 @@
       </span>
     </div>
 
-    <div class="h-full overflow-y-scroll flex flex-col">
-      <div class="max-sm:flex-1">
+    <div class="h-full overflow-y-scroll flex flex-col gap-3">
+      <div>
         <div class="flex flex-col gap-3">
           <MModalWeb3Connect v-if="!isConnected">
             <template #default="{ connect }">
