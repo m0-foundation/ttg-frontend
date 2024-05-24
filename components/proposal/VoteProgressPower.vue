@@ -38,7 +38,7 @@
   </div>
   <div v-if="props.thresholdRatio">
     <span class="text-grey-400 text-xs uppercase whitespace-nowrap">
-      Threshold: {{ props.thresholdRatio * 100 }}% ({{
+      Threshold: {{ thresholdRatioPercentage }}% ({{
         props.thresholdFormatted
       }})
     </span>
@@ -68,4 +68,6 @@ const props = defineProps<Props>();
 const hasVotes = computed(
   () => props.votes?.yes?.count > 0n || props.votes?.no?.count > 0n,
 );
+
+const thresholdRatioPercentage = ((props.thresholdRatio || 1) * 10000) / 100;
 </script>

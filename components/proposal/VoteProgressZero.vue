@@ -30,7 +30,7 @@
     </span>
 
     <span class="text-grey-400 text-xs uppercase whitespace-nowrap ml-2">
-      Threshold: {{ props.thresholdRatio * 100 }}% ({{
+      Threshold: {{ thresholdRatioPercentage }}% ({{
         props.thresholdFormatted
       }})
     </span>
@@ -56,4 +56,6 @@ interface Props {
   };
 }
 const props = defineProps<Props>();
+
+const thresholdRatioPercentage = (props.thresholdRatio * 10000) / 100;
 </script>
