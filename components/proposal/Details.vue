@@ -35,9 +35,8 @@
           :yes-votes="proposal?.yesVotes"
           :no-votes="proposal?.noVotes"
           :version="proposal?.votingType"
-          :power-threshold="powerThreshold"
+          :threshold="proposal?.quorum"
           :power-total-supply="totalSupplyAt[0]"
-          :zero-threshold="zeroThreshold"
           :zero-total-supply="totalSupplyAt[1]"
           class="font-inter"
         />
@@ -95,13 +94,6 @@ useHead({
 
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
-
-const zeroThreshold = computed(() =>
-  basisPointsToDecimal(ttg.getValues.zeroProposalThresholdRatio!),
-);
-const powerThreshold = computed(() =>
-  basisPointsToDecimal(ttg.getValues.emergencyProposalThresholdRatio!),
-);
 
 const votesStore = useVotesStore();
 const votes = computed(() => {
