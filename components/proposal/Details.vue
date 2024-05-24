@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <div>
+  <div class="overflow-x-hidden">
     <article class="bg-white text-black lg:p-4">
       <div class="flex flex-wrap justify-between mb-2">
         <ProposalStatusTimeline

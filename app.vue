@@ -15,7 +15,7 @@
       />
     </Head>
 
-    <div v-if="isLoading" class="flex h-screen">
+    <div v-if="isLoading" class="flex h-dvh">
       <div class="m-auto inline-flex">
         <div>Loading</div>
         <div class="loader-dots"></div>

@@ -45,10 +45,6 @@
                 >Show proposal
               </NuxtLink>
             </li>
-            <li>
-              <NuxtLink to="/proposal/create"> Create new proposal </NuxtLink>
-            </li>
-            <li></li>
           </ul>
         </MDropdown>
       </div>

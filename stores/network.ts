@@ -12,6 +12,8 @@ export const useNetworkStore = defineStore("network", () => {
 
   const getNetwork = () => computed(() => network.value);
   const getTtgAddress = () => computed(() => network.value.contracts.registrar);
+  const getMToken = () =>
+    computed(() => network.value.contracts.zero?.allowedCashTokens?.[1]);
 
-  return { network, getNetwork, getTtgAddress };
+  return { network, getNetwork, getTtgAddress, getMToken };
 });
