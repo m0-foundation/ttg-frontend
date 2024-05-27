@@ -80,6 +80,7 @@
     "apexcharts": "^3.47.0",
     "bs58": "^5.0.0",
     "dayjs": "^1.11.10",
+    "floating-vue": "^5.2.2",
     "lodash": "^4.17.21",
     "marked": "^5.0.1",
     "marked-gfm-heading-id": "^3.1.3",
