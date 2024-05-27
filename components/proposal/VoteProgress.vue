@@ -35,7 +35,8 @@ interface Props {
   yesVotes: bigint;
   noVotes: bigint;
   version: MVotingType;
-  threshold?: bigint; // in bps
+  threshold?: bigint; // in aboslute value
+  thresholdBps?: number; // in basis points
   powerTotalSupply?: bigint;
   zeroTotalSupply?: bigint;
 }
@@ -44,6 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
   noVotes: () => 0n,
   version: "Standard",
   threshold: undefined,
+  thresholdBps: undefined,
   powerTotalSupply: () => 0n,
   zeroTotalSupply: () => 0n,
 });
@@ -157,11 +159,11 @@ const thresholdFormattedZero = computed(() =>
 );
 
 const powerThresholdRatio = computed(
-  () => percentageSafeDiv(props.threshold!, props.powerTotalSupply) / 100,
+  () => basisPointsToPercentage(props.thresholdBps!), //0-100
 );
 
 const zeroThresholdRatio = computed(
-  () => percentageSafeDiv(props.threshold!, props.zeroTotalSupply) / 100,
+  () => basisPointsToPercentage(props.thresholdBps!), //0-100
 );
 
 const thresholdFormatted = computed(() =>

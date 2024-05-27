@@ -13,7 +13,7 @@
     <MProgressBarThreshold
       :yes="props.votes?.yes?.percentage"
       :no="props.votes?.no?.percentage"
-      :threshold="props.thresholdRatio"
+      :threshold="thresholdRatioPercentage"
     />
 
     <div class="bg-red-500 h-2 w-2"></div>
@@ -30,9 +30,7 @@
     </span>
 
     <span class="text-grey-400 text-xs uppercase whitespace-nowrap ml-2">
-      Threshold: {{ thresholdRatioPercentage }}% ({{
-        props.thresholdFormatted
-      }})
+      Threshold: {{ thresholdRatio }}% ({{ props.thresholdFormatted }})
     </span>
   </div>
 </template>
@@ -57,5 +55,5 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const thresholdRatioPercentage = (props.thresholdRatio * 10000) / 100;
+const thresholdRatioPercentage = props.thresholdRatio / 100;
 </script>
