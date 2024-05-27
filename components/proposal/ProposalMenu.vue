@@ -1,5 +1,20 @@
-<template lang="">
+<template>
   <MDropdown>
+    <template #activator>
+      <button>
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          xmlns="http://www.w3.org/2000/svg"
+          class="hover:bg-grey-600 hover:bg-opacity-25 group"
+        >
+          <rect x="10" y="15" width="2" height="2" fill="#11171D" />
+          <rect x="15" y="15" width="2" height="2" fill="#11171D" />
+          <rect x="20" y="15" width="2" height="2" fill="#11171D" />
+        </svg>
+      </button>
+    </template>
     <ul class="dropdown-menu-items">
       <li>
         <a

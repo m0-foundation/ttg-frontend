@@ -196,4 +196,7 @@ function onOut() {
 .emergency {
   @apply border-t-2 border-[#202220];
 }
+.dropdown-menu-items {
+  @apply bg-grey-800 text-grey-200 !important;
+}
 </style>
