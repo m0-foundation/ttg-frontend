@@ -35,9 +35,9 @@
           :yes-votes="proposal?.yesVotes"
           :no-votes="proposal?.noVotes"
           :version="proposal?.votingType"
-          :power-threshold="powerThreshold"
+          :threshold="proposal?.quorum"
+          :threshold-bps="proposal?.quorumNumerator"
           :power-total-supply="totalSupplyAt[0]"
-          :zero-threshold="zeroThreshold"
           :zero-total-supply="totalSupplyAt[1]"
           class="font-inter"
         />
@@ -96,13 +96,6 @@ useHead({
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
-const zeroThreshold = computed(() =>
-  basisPointsToDecimal(ttg.getValues.zeroProposalThresholdRatio!),
-);
-const powerThreshold = computed(() =>
-  basisPointsToDecimal(ttg.getValues.emergencyProposalThresholdRatio!),
-);
-
 const votesStore = useVotesStore();
 const votes = computed(() => {
   if (proposalId.value) {
@@ -110,16 +103,21 @@ const votes = computed(() => {
   }
 });
 
+const pastProposalEpoch = computed(() =>
+  BigInt(proposal.value!.voteStart! - 1),
+);
+
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
     readPowerToken(wagmiConfig, {
       address: ttg!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
-      args: [BigInt(proposal.value!.epoch!) - 1n],
+      args: [pastProposalEpoch.value],
     }),
     readZeroToken(wagmiConfig, {
       address: ttg!.contracts!.zeroToken! as Hash,
-      functionName: "totalSupply",
+      functionName: "pastTotalSupply",
+      args: [pastProposalEpoch.value],
     }),
   ]),
   [0n, 0n],

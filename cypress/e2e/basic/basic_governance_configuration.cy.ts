@@ -32,7 +32,7 @@ describe("Governance configuration", () => {
     })
 
     // non-changeable parameters table
-    cy.get('table').eq(0).find('tbody tr').should('have.length', 6)
+    cy.get('table').eq(0).find('tbody tr').should('have.length', 8)
 
     const nonChangeableConfigParams = [
       "Standard Governor",
@@ -40,7 +40,9 @@ describe("Governance configuration", () => {
       "POWER Token",
       "ZERO Governor",
       "ZERO Token",
-      "Distribution Vault"
+      "Distribution Vault",
+      "Registrar",
+      "M Token"
     ]
 
     nonChangeableConfigParams.forEach((value: string) => {
