@@ -36,6 +36,7 @@
           :no-votes="proposal?.noVotes"
           :version="proposal?.votingType"
           :threshold="proposal?.quorum"
+          :threshold-bps="proposal?.quorumNumerator"
           :power-total-supply="totalSupplyAt[0]"
           :zero-total-supply="totalSupplyAt[1]"
           class="font-inter"
@@ -102,7 +103,9 @@ const votes = computed(() => {
   }
 });
 
-const pastProposalEpoch = computed(() => BigInt(proposal.value!.voteStart!));
+const pastProposalEpoch = computed(() =>
+  BigInt(proposal.value!.voteStart! - 1),
+);
 
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([

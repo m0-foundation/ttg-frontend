@@ -334,8 +334,8 @@ export class Proposals extends GovernorModule {
       noVotes,
       yesVotes,
       proposer,
-      quorum, // The threshold/quorum of yes votes required for the proposal to succeed.
-      quorumNumerator, // The threshold/quorum numerator used to calculate the quorum.
+      quorum, // The threshold/quorum of yes votes required for the proposal to succeed based on the supply at the time of proposal voteStart.
+      quorumNumerator, // The threshold/quorum in BPS (basis points) of yes votes required for the proposal to succeed based on the supply at the time of proposal voteStart.
     ] = proposal;
     /* eslint-enable @typescript-eslint/no-unused-vars */
 
