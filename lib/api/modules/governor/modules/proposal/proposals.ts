@@ -344,6 +344,7 @@ export class Proposals extends GovernorModule {
       yesVotes,
       noVotes,
       quorum,
+      quorumNumerator,
     };
   }
 

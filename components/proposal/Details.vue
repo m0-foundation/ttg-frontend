@@ -102,16 +102,19 @@ const votes = computed(() => {
   }
 });
 
+const pastProposalEpoch = computed(() => BigInt(proposal.value!.voteStart!));
+
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
     readPowerToken(wagmiConfig, {
       address: ttg!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
-      args: [BigInt(proposal.value!.epoch!) - 1n],
+      args: [pastProposalEpoch.value],
     }),
     readZeroToken(wagmiConfig, {
       address: ttg!.contracts!.zeroToken! as Hash,
-      functionName: "totalSupply",
+      functionName: "pastTotalSupply",
+      args: [pastProposalEpoch.value],
     }),
   ]),
   [0n, 0n],
