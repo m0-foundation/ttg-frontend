@@ -48,3 +48,32 @@ h1 {
 :disabled {
   cursor: not-allowed !important;
 }
+
+.dropdown-menu-items {
+  @apply bg-grey-700 shadow-sm shadow-grey-1000 text-grey-200 font-inter;
+}
+.dropdown-menu-items li a {
+  @apply px-6 py-3 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;
+}
+
+.v-popper--theme-dropdown  {
+  .v-popper__wrapper {
+    @apply shadow-md shadow-grey-1000;
+  }
+  .v-popper__inner {
+    @apply border-none rounded-none !important;
+  }
+  .v-popper__arrow-inner {
+    @apply border-grey-700 !important;
+  }
+  
+  .v-popper__arrow-outer {
+    @apply border-grey-700 !important;
+  }
+}
+
+.v-popper--theme-tooltip  {
+  .v-popper__inner {
+    @apply font-inter ;
+  }
+}

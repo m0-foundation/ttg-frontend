@@ -45,6 +45,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@nuxt/devtools",
+    "floating-vue/nuxt",
   ],
   ignore:
     auctionActive === true

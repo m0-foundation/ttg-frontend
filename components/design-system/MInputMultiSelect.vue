@@ -1,11 +1,13 @@
 <template>
-  <div ref="target" class="dropdown inline-block relative w-full font-inter">
+  <VDropdown placement="bottom-start">
     <button
       type="button"
-      class="border border-grey-700 bg-grey-800 py-2 px-4 flex justify-between w-full items-center font-inter"
+      class="border border-grey-700 bg-grey-800 py-2 px-4 flex justify-between w-full items-center font-inter gap-2"
       @click="onOpen"
     >
-      <span class="h-6">{{ selected?.label || props.label || " " }}</span>
+      <span class="h-6 text-nowrap">{{
+        selected?.label || props.label || " "
+      }}</span>
       <div class="flex items-center gap-3 h-full">
         <MBadge
           v-if="selected?.isEmergency || selected?.isReset"
@@ -14,98 +16,117 @@
           >{{ selected.isEmergency ? "Emergency" : "Reset" }} proposal</MBadge
         >
 
-        <img src="/img/icons/arrow.svg" alt="arrow icon" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="9"
+          height="5"
+          viewBox="0 0 9 5"
+          fill="none"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M8.99996 0.000453115L4.75732 4.24309L0.514684 0.000453115H8.99996Z"
+            fill="#EBEBEB"
+          />
+        </svg>
       </div>
     </button>
-    <ul
-      v-show="isMenuOpen"
-      class="absolute z-50 pt-4 bg-grey-800 shadow-grey-1000 shadow-md"
-    >
-      <li
-        v-for="opt in options"
-        :key="opt.value"
-        :data-test="opt.id"
-        class="min-w-[220px]"
-      >
-        <div
-          v-show="opt.header"
-          class="uppercase text-xs text-grey-600 px-4 py-2"
+    <template #popper>
+      <ul class="dropdown-menu-items">
+        <li
+          v-for="opt in options"
+          :key="opt.value"
+          :data-test="opt.id"
+          class="min-w-[220px]"
         >
-          {{ opt.header }}
-        </div>
-
-        <div v-show="!opt.header" :class="[{ emergency: opt.isEmergency }]">
-          <button
-            v-if="opt.children"
-            type="button"
-            class="button"
-            @click="onShowSubmenu(opt)"
+          <div
+            v-show="opt.header"
+            class="uppercase text-xs text-grey-600 px-4 py-2"
           >
-            {{ opt.label }} &rsaquo;
-          </button>
+            {{ opt.header }}
+          </div>
 
-          <button
-            v-else
-            type="button"
-            class="flex justify-between items-center button gap-12 group"
-            @click="onSelect(opt)"
-          >
-            <div class="flex flex-col">
-              <span>{{ opt.label }}</span>
-              <span class="text-xs text-grey-600 group-hover:text-grey-100">{{
-                opt.shortDescription
-              }}</span>
-            </div>
-
-            <div>
-              <MIconPower
-                v-if="['Standard', 'Emergency'].includes(opt.votingType)"
-                class="w-[24px] h-[24px]"
-              />
-              <MIconZero
-                v-if="['Zero'].includes(opt.votingType)"
-                class="w-[24px] h-[24px]"
-              />
-            </div>
-          </button>
-
-          <ul
-            v-show="isSubmenuOpen(opt)"
-            class="flex justify-between items-center sub-menu"
-            :class="{ 'fix-when-emergency': opt.isEmergency }"
-          >
-            <li v-if="opt.submenuText" class="bg-red-700 p-4 text-xs">
-              {{ opt.submenuText }}
-            </li>
-            <li v-for="child in opt.children" :key="child.value">
-              <button
-                type="button"
-                class="flex justify-between items-center button sub-button"
-                :data-test="child.id"
-                @click="onSelect(child)"
-              >
-                <span class="mr-8">{{ child.label }}</span>
-                <div class="flex">
-                  <div>
-                    <MIconPower
-                      v-if="
-                        ['Standard', 'Emergency'].includes(child.votingType)
-                      "
-                    />
-                    <MIconZero v-if="['Zero'].includes(child.votingType)" />
-                  </div>
-                </div>
+          <div v-show="!opt.header" :class="[{ emergency: opt.isEmergency }]">
+            <VDropdown
+              v-if="opt.children"
+              :placement="largerThanSm ? 'right-end' : 'auto'"
+            >
+              <button type="button" class="button">
+                {{ opt.label }} &rsaquo;
               </button>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </div>
+              <template #popper>
+                <ul class="dropdown-menu-items max-w-80">
+                  <li
+                    v-if="opt.submenuText"
+                    class="bg-red-700 text-grey-200 p-4 text-xs"
+                  >
+                    {{ opt.submenuText }}
+                  </li>
+                  <li v-for="child in opt.children" :key="child.value">
+                    <button
+                      type="button"
+                      class="flex justify-between items-center button sub-button"
+                      :data-test="child.id"
+                      @click="onSelect(child)"
+                    >
+                      <span class="mr-8">{{ child.label }}</span>
+                      <div class="flex">
+                        <div>
+                          <MIconPower
+                            v-if="
+                              ['Standard', 'Emergency'].includes(
+                                child.votingType,
+                              )
+                            "
+                          />
+                          <MIconZero
+                            v-if="['Zero'].includes(child.votingType)"
+                          />
+                        </div>
+                      </div>
+                    </button>
+                  </li>
+                </ul>
+              </template>
+            </VDropdown>
+
+            <button
+              v-else
+              type="button"
+              class="flex justify-between items-center button gap-12 group"
+              @click="onSelect(opt)"
+            >
+              <div class="flex flex-col">
+                <span>{{ opt.label }}</span>
+                <span class="text-xs text-grey-600 group-hover:text-grey-100">{{
+                  opt.shortDescription
+                }}</span>
+              </div>
+
+              <div>
+                <MIconPower
+                  v-if="['Standard', 'Emergency'].includes(opt.votingType)"
+                  class="w-[24px] h-[24px]"
+                />
+                <MIconZero
+                  v-if="['Zero'].includes(opt.votingType)"
+                  class="w-[24px] h-[24px]"
+                />
+              </div>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </template>
+  </VDropdown>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { onClickOutside } from "@vueuse/core";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+import { hideAllPoppers } from "floating-vue";
+
+const largerThanSm = useBreakpoints(breakpointsTailwind).greater("sm");
 
 export interface OptionItem {
   value: string;
@@ -139,7 +160,6 @@ const emit = defineEmits<{
   (e: "on-change", option: OptionItem): void;
 }>();
 
-const target = ref(null);
 const isMenuOpen = ref(false);
 const selectedSubmenu = ref<object>({});
 const selected = ref();
@@ -157,18 +177,8 @@ function onOpen() {
 function onOut() {
   isMenuOpen.value = false;
   selectedSubmenu.value = {};
+  hideAllPoppers();
 }
-
-function onShowSubmenu(opt: OptionItem) {
-  selectedSubmenu.value = {}; // only one submenu can be open at a time
-  selectedSubmenu.value = { ...selectedSubmenu.value, [opt.value]: true };
-}
-
-function isSubmenuOpen(opt: OptionItem) {
-  return selectedSubmenu.value[opt.value as keyof typeof selectedSubmenu.value];
-}
-
-onClickOutside(target, onOut);
 </script>
 <style scoped>
 .button {
@@ -179,15 +189,14 @@ onClickOutside(target, onOut);
   @apply hover:bg-grey-600 px-4 py-2;
 }
 
-.sub-menu {
-  @apply bg-grey-800 absolute block text-grey-100 left-full -mt-10 w-max max-w-80;
-}
-
 .fix-when-emergency {
   margin-top: -6rem !important;
 }
 
 .emergency {
   @apply border-t-2 border-[#202220];
+}
+.dropdown-menu-items {
+  @apply bg-grey-800 text-grey-200 !important;
 }
 </style>

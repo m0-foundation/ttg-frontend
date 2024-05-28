@@ -9,7 +9,9 @@
       </span>
     </div>
 
-    <div class="h-full overflow-y-scroll flex flex-col gap-3">
+    <div
+      class="h-full overflow-y-scroll lg:overflow-y-auto flex flex-col gap-3"
+    >
       <div>
         <div class="flex flex-col gap-3">
           <MModalWeb3Connect v-if="!isConnected">
@@ -98,13 +100,19 @@
                   {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
                 </span>
               </div>
-              <span class="text-grey-600 text-xxs">
-                {{
-                  useNumberFormatterCompact(
-                    powerVotingPower?.data?.value?.formatted || 0,
-                  )
-                }}
-              </span>
+              <VTooltip>
+                <span class="text-grey-600 text-xxs">
+                  {{
+                    useNumberFormatterCompact(
+                      powerVotingPower?.data?.value?.formatted || 0,
+                    )
+                  }}
+                </span>
+
+                <template #popper>
+                  {{ powerVotingPower?.data?.value?.formatted }}
+                </template>
+              </VTooltip>
             </div>
           </div>
 
@@ -119,13 +127,19 @@
                   {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
                 </span>
               </div>
-              <span class="text-grey-600 text-xxs">
-                {{
-                  useNumberFormatterCompact(
-                    zeroVotingPower?.data?.value?.formatted || 0,
-                  )
-                }}
-              </span>
+              <VTooltip>
+                <span class="text-grey-600 text-xxs">
+                  {{
+                    useNumberFormatterCompact(
+                      zeroVotingPower?.data?.value?.formatted || 0,
+                    )
+                  }}
+                </span>
+
+                <template #popper>
+                  {{ zeroVotingPower?.data?.value?.formatted }}
+                </template>
+              </VTooltip>
             </div>
           </div>
         </div>
