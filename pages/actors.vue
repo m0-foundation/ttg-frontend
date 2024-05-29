@@ -21,7 +21,7 @@
         </select>
       </template>
       <template #cell(account)="{ value }">
-        <MAddressAvatar :short-address="false" show-copy :address="value" />
+        <MAddressCopy :short-address="false" show-copy :address="value" />
       </template>
       <template #cell(timestamp)="{ value }">
         <span class="text-grey-600">{{
