@@ -1,4 +1,4 @@
-<template lang="">
+<template>
   <div
     :id="version === name ? 'proposal-state' : undefined"
     :class="[{ active: name === version }, 'item']"
@@ -42,7 +42,7 @@ defineProps({
   @apply text-xs lg:text-sm flex items-center font-mono py-1 px-2 lg:px-3;
 }
 .status-button {
-  @apply text-grey-600 uppercase;
+  @apply text-grey-600 uppercase cursor-pointer;
 }
 .status-chevron {
   @apply ml-1;

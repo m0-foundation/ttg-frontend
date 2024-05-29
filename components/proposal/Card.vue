@@ -55,7 +55,7 @@
           >
             <ProposalButtonCastVote
               id="button-cast-yes"
-              :batch="proposal?.votingType !== 'Zero'"
+              :batch="proposal?.votingType === 'Standard'"
               data-test="button-cast-yes"
               :disabled="hasVoted || isDisconnected || !canVote || loading"
               :version="isVoteYesActive"
@@ -67,7 +67,7 @@
             </ProposalButtonCastVote>
             <ProposalButtonCastVote
               id="button-cast-no"
-              :batch="proposal?.votingType !== 'Zero'"
+              :batch="proposal?.votingType === 'Standard'"
               class="cast-vote-button"
               data-test="button-cast-no"
               :disabled="hasVoted || isDisconnected || !canVote || loading"
@@ -78,7 +78,9 @@
               NO
             </ProposalButtonCastVote>
 
-            <div class="text-xxs text-grey-600 uppercase mx-2 font-inter">
+            <div
+              class="text-xxs text-grey-600 uppercase mx-2 font-inter max-sm:w-full"
+            >
               <p v-show="!canVote">Not enough voting power</p>
               <p v-show="hasVoted">Your vote has been submitted</p>
             </div>
@@ -178,7 +180,7 @@ function onExecuteProposal() {
 }
 
 function onCast(vote: boolean) {
-  if (["Standard", "Emergency"].includes(props.proposal?.votingType!)) {
+  if (["Standard"].includes(props.proposal?.votingType!)) {
     return onBatchCastSelected(vote);
   } else {
     return onSingleCastSelected(vote);
@@ -219,10 +221,6 @@ const { power: powerPastVotingPower, zero: zeroPastVotingPower } =
 const canVote = computed(() => {
   if (["Standard"].includes(props.proposal.votingType!)) {
     return powerVotingPower?.data.value?.hasVotingPower;
-  } else if (["Emergency"].includes(props.proposal.votingType!)) {
-    return powerPastVotingPower?.data.value?.hasVotingPower;
-  } else if (["Zero"].includes(props.proposal.votingType!)) {
-    return zeroPastVotingPower?.data.value?.hasVotingPower;
   }
 
   return true;

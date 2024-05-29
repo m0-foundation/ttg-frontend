@@ -7,9 +7,7 @@
         </span>
       </div>
       <div class="lg:shrink">
-        <ul
-          class="flex gap-3 flex-wrap items-center lg:mt-0 text-xs text-white lg:hidden"
-        >
+        <ul class="flex gap-3 flex-wrap items-center footer-link lg:hidden">
           <li>
             <NuxtLink href="https://docs.m0.org/" target="_blank"
               >Documentation</NuxtLink

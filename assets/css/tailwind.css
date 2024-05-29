@@ -1,9 +1,24 @@
 @import "./github-markdown.css";
-@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
 @font-face {
   font-family: "PPFormula";
   src: url("../fonts/PPFormula-SemiCondensedRegular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/Inter-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/IBMPlexMono-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/IBMPlexMono-Medium.woff") format("woff");
+  font-weight: 500
 }
 
 @tailwind base;
@@ -18,7 +33,7 @@
   input,
   select,
   textarea {
-    @apply bg-grey-800 border border-grey-700 font-inter text-grey-100 text-sm focus:invalid:ring-red-600 focus:outline-none focus:border-grey-500 focus:ring-1 focus:ring-grey-500 placeholder:text-grey-500 block w-full p-2.5;
+    @apply bg-grey-800 border rounded-none border-grey-700 font-inter text-grey-100 text-sm focus:invalid:ring-red-600 focus:outline-none focus:border-grey-500 focus:ring-1 focus:ring-grey-500 placeholder:text-grey-500 block w-full p-2.5;
   }
 }
 
@@ -32,4 +47,33 @@ h1 {
 
 :disabled {
   cursor: not-allowed !important;
+}
+
+.dropdown-menu-items {
+  @apply bg-grey-700 shadow-sm shadow-grey-1000 text-grey-200 font-inter;
+}
+.dropdown-menu-items li a {
+  @apply px-6 py-3 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;
+}
+
+.v-popper--theme-dropdown  {
+  .v-popper__wrapper {
+    @apply shadow-md shadow-grey-1000;
+  }
+  .v-popper__inner {
+    @apply border-none rounded-none !important;
+  }
+  .v-popper__arrow-inner {
+    @apply border-grey-700 !important;
+  }
+  
+  .v-popper__arrow-outer {
+    @apply border-grey-700 !important;
+  }
+}
+
+.v-popper--theme-tooltip  {
+  .v-popper__inner {
+    @apply font-inter ;
+  }
 }

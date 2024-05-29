@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <div>
-    <article class="bg-white text-black px-4 py-4">
-      <div class="flex justify-between mb-2">
+  <div class="overflow-x-hidden">
+    <article class="bg-white text-black lg:p-4">
+      <div class="flex flex-wrap justify-between mb-2">
         <ProposalStatusTimeline
           :proposal="proposal"
           :version="proposal?.state"
@@ -22,11 +22,9 @@
         {{ title }}
       </h1>
 
-      <div
-        class="text-grey-400 my-3 font-inter text-xs truncate w-52 lg:w-full"
-      >
+      <div class="text-grey-400 my-3 font-inter text-xs">
         Proposed by
-        <u><MAddressAvatar :address="proposal?.proposer" /></u>
+        <MAddressAvatar :address="proposal?.proposer" />
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
 
@@ -37,9 +35,9 @@
           :yes-votes="proposal?.yesVotes"
           :no-votes="proposal?.noVotes"
           :version="proposal?.votingType"
-          :power-threshold="powerThreshold"
+          :threshold="proposal?.quorum"
+          :threshold-bps="proposal?.quorumNumerator"
           :power-total-supply="totalSupplyAt[0]"
-          :zero-threshold="zeroThreshold"
           :zero-total-supply="totalSupplyAt[1]"
           class="font-inter"
         />
@@ -98,13 +96,6 @@ useHead({
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
-const zeroThreshold = computed(() =>
-  basisPointsToDecimal(ttg.getValues.zeroProposalThresholdRatio!),
-);
-const powerThreshold = computed(() =>
-  basisPointsToDecimal(ttg.getValues.emergencyProposalThresholdRatio!),
-);
-
 const votesStore = useVotesStore();
 const votes = computed(() => {
   if (proposalId.value) {
@@ -112,16 +103,21 @@ const votes = computed(() => {
   }
 });
 
+const pastProposalEpoch = computed(() =>
+  BigInt(proposal.value!.voteStart! - 1),
+);
+
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
     readPowerToken(wagmiConfig, {
       address: ttg!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
-      args: [BigInt(proposal.value!.epoch!) - 1n],
+      args: [pastProposalEpoch.value],
     }),
     readZeroToken(wagmiConfig, {
       address: ttg!.contracts!.zeroToken! as Hash,
-      functionName: "totalSupply",
+      functionName: "pastTotalSupply",
+      args: [pastProposalEpoch.value],
     }),
   ]),
   [0n, 0n],

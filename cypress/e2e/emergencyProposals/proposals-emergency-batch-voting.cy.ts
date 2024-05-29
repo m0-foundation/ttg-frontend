@@ -1,4 +1,4 @@
-describe("Proposals", () => {
+it.skip("Proposals", () => {
   let proposalUrl = "";
   describe("Emergency Add and remove from list", () => {
     const list1 = "minters";

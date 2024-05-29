@@ -1,6 +1,9 @@
-# M^ZERO Governance dApp
+# M^0 Governance dApp
 
-This app is based on Nuxt v3, Vue, and Wagmi
+[Current IPFS Deployment](https://bafybeibbuu7pjl6eq3ispwvgk76en6f74uusibs7vva3plzp4wkghlt7ry.ipfs.cf-ipfs.com/proposals)
+
+<img width="1089" alt="Screenshot 2024-05-14 at 2 04 43 PM" src="https://github.com/MZero-Labs/ttg-frontend/assets/1220854/f63ccd58-99b4-48fd-871f-f6016812f380">
+
 
 ## 1. Contracts
 

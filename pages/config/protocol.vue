@@ -50,6 +50,7 @@ const protocolParametersData = [
       "This amount of time is the period between which Update Collateral must be called by a Minter. If they do not call Update Collateral within this amount of time after their previous call, their on-chain Collateral Value is assumed to be 0 and they will incur Penalty Rate on the next update. It is alterable with a Standard Proposal.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#update-collateral-interval",
     type: "time",
+    unit: "seconds",
   },
   {
     title: "Update Collateral Threshold",
@@ -66,6 +67,7 @@ const protocolParametersData = [
       "The percentage charged on Owed M that is in excess of the amount a Minter is permitted to have generated.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#penalty-rate",
     type: "basisPoints",
+    unit: "BPS",
   },
   {
     title: "Mint Delay",
@@ -74,6 +76,7 @@ const protocolParametersData = [
       "This amount of time is the period between when a Minter has called Propose Mint and when they can first call Mint M.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-delay",
     type: "time",
+    unit: "seconds",
   },
   {
     title: "Mint TTL",
@@ -82,6 +85,7 @@ const protocolParametersData = [
       "This is the amount of time after the Mint Delay that Mint has to be called before the mint proposal expires.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#propose-mint-time-to-live",
     type: "time",
+    unit: "seconds",
   },
   {
     title: "Mint Ratio",
@@ -90,6 +94,7 @@ const protocolParametersData = [
       "This percentage is the fraction of a Minter’s on-chain Collateral Value that they can generate in M. It effectively controls the leverage of a Minter and the over-collateralization of M. It is alterable with a Standard Proposal.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-ratio",
     type: "basisPoints",
+    unit: "BPS",
   },
   {
     title: "Minter Freeze Time",
@@ -98,6 +103,7 @@ const protocolParametersData = [
       "This amount of time is the duration for which a Minter will not be able to call Propose Mint or Mint after having the Freeze method called by a Validator on their address. It is alterable with a Standard Proposal. ",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-freeze-time",
     type: "time",
+    unit: "seconds",
   },
   {
     title: "Minter Rate Model",
@@ -124,6 +130,7 @@ const protocolParametersData = [
     description:
       "This is the annualized rate which continuously accrues on Active Owed M.",
     type: "basisPoints",
+    unit: "BPS",
   },
 
   {
@@ -132,6 +139,7 @@ const protocolParametersData = [
     description:
       "This is the annualized rate which continuously accrues to M that is in addresses on the Earner List.",
     type: "basisPoints",
+    unit: "BPS",
   },
 
   // guidances keys
