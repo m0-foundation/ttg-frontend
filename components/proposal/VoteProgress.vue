@@ -9,8 +9,8 @@
       <div v-else-if="version === 'Emergency'">
         <VoteProgressPower
           :votes="powerVotes"
-          :threshold="props.powerThreshold!"
-          :threshold-formatted="thresholdFormattedPower"
+          :threshold-ratio="thresholdRatio"
+          :threshold-formatted="thresholdFormatted"
         />
       </div>
 
@@ -18,8 +18,8 @@
       <div v-else-if="version === 'Zero'">
         <VoteProgressZero
           :votes="zeroVotes"
-          :threshold="props.zeroThreshold!"
-          :threshold-formatted="thresholdFormattedZero"
+          :threshold-ratio="thresholdRatio"
+          :threshold-formatted="thresholdFormatted"
         />
       </div>
     </div>
@@ -35,8 +35,8 @@ interface Props {
   yesVotes: bigint;
   noVotes: bigint;
   version: MVotingType;
-  zeroThreshold?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
-  powerThreshold?: number;
+  threshold?: bigint; // in aboslute value
+  thresholdBps?: number; // in basis points
   powerTotalSupply?: bigint;
   zeroTotalSupply?: bigint;
 }
@@ -44,8 +44,8 @@ const props = withDefaults(defineProps<Props>(), {
   yesVotes: () => 0n,
   noVotes: () => 0n,
   version: "Standard",
-  zeroThreshold: undefined,
-  powerThreshold: undefined,
+  threshold: undefined,
+  thresholdBps: undefined,
   powerTotalSupply: () => 0n,
   zeroTotalSupply: () => 0n,
 });
@@ -151,18 +151,31 @@ const zeroVotes = computed(() => {
 });
 
 const thresholdFormattedPower = computed(() =>
-  useNumberFormatterCompact(
-    (props.powerTotalSupply * BigInt(props.powerThreshold! * 100)) / 100n,
-  ),
+  useNumberFormatterCompact(props.threshold!),
 );
 
 const thresholdFormattedZero = computed(() =>
-  useNumberFormatterCompact(
-    formatUnits(
-      (props.zeroTotalSupply * BigInt(props.zeroThreshold! * 100)) / 100n,
-      6,
-    ),
-  ),
+  useNumberFormatterCompact(formatUnits(props.threshold!, 6)),
+);
+
+const powerThresholdRatio = computed(
+  () => basisPointsToPercentage(props.thresholdBps!), //0-100
+);
+
+const zeroThresholdRatio = computed(
+  () => basisPointsToPercentage(props.thresholdBps!), //0-100
+);
+
+const thresholdFormatted = computed(() =>
+  props.version === "Emergency"
+    ? thresholdFormattedPower.value
+    : thresholdFormattedZero.value,
+);
+
+const thresholdRatio = computed(() =>
+  props.version === "Emergency"
+    ? powerThresholdRatio.value
+    : zeroThresholdRatio.value,
 );
 </script>
 <style scoped>
