@@ -72,8 +72,18 @@ const listsOptions = computed(() => [
 const selectedList = ref("all");
 
 const filteredLists = computed(() => {
-  if (selectedList.value === "all") return lists.value;
-  return lists.value.filter((obj) => obj.list === selectedList.value);
+  const listsWithoutDuplicates = lists.value.filter((e, i) => {
+    return (
+      lists.value.findIndex((x) => {
+        return x.account == e.account && x.list == e.list;
+      }) == i
+    );
+  });
+
+  if (selectedList.value === "all") return listsWithoutDuplicates;
+  return listsWithoutDuplicates.filter(
+    (obj) => obj.list === selectedList.value,
+  );
 });
 
 onBeforeUnmount(() => {
