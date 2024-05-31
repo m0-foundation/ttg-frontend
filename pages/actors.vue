@@ -33,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+import uniqBy from "lodash/uniqBy";
 import { storeToRefs } from "pinia";
 
 const apiStore = useApiClientStore();
@@ -72,8 +73,15 @@ const listsOptions = computed(() => [
 const selectedList = ref("all");
 
 const filteredLists = computed(() => {
-  if (selectedList.value === "all") return lists.value;
-  return lists.value.filter((obj) => obj.list === selectedList.value);
+  const listsWithoutDuplicates = uniqBy(
+    lists.value,
+    (item) => item.account + item.list,
+  );
+
+  if (selectedList.value === "all") return listsWithoutDuplicates;
+  return listsWithoutDuplicates.filter(
+    (obj) => obj.list === selectedList.value,
+  );
 });
 
 onBeforeUnmount(() => {
