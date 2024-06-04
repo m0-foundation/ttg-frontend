@@ -32,7 +32,10 @@
       </NuxtLink>
     </div>
 
-    <slot />
+    <Suspense>
+      <slot />
+      <template #fallback> Loading... </template>
+    </Suspense>
   </div>
 </template>
 

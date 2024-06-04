@@ -8,7 +8,9 @@
       />
     </MModal>
 
-    <PageTitle class="px-6 lg:p-0 mb-3">Create a proposal</PageTitle>
+    <PageTitle v-if="!isPreview" class="px-6 lg:p-0 mb-3">
+      Create a proposal
+    </PageTitle>
 
     <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
@@ -199,21 +201,22 @@
         <p>You'll receive a refund if the proposal succeeds</p>
       </div>
 
-      <div v-if="isPreview" class="flex justify-end mt-6 gap-6">
-        <button
+      <div v-if="isPreview" class="flex justify-end mt-6 gap-3">
+        <MButton
           class="text-green-700 uppercase"
           data-test="create-proposal-button-back-bottom"
+          version="outline-light"
           @click="onBack"
         >
-          &#60; back
-        </button>
+          Back
+        </MButton>
         <MButton
           v-if="isPreview"
           type="submit"
           :disabled="isDisconnected"
           data-test="create-proposal-button-submit"
         >
-          Submit proposal
+          Submit
         </MButton>
       </div>
       <div v-else class="flex justify-end mt-6">

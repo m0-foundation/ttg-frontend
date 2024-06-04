@@ -1,18 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
-    <div>
-      <button
-        class="text-green-800 uppercase mb-4"
-        data-test="create-proposal-button-back-top"
-        @click="onBack"
-      >
-        &#60; back
-      </button>
-    </div>
-    <h1>Preview your proposal</h1>
-
-    <MTextLoop class="text-green-900 bg-green-700 text-sm" text="PREVIEW" />
+    <PageTitle class="px-6 lg:p-0 mb-3"> Preview your proposal </PageTitle>
 
     <article class="bg-white mb-3 text-black px-4 py-4">
       <MBadge v-if="proposal?.isEmergency" version="error">
@@ -44,7 +33,6 @@
 
 <script setup lang="ts">
 import { MProposal } from "@/lib/api/types";
-const emit = defineEmits(["on-back"]);
 
 interface PreviewProps {
   title: string;
@@ -58,18 +46,9 @@ const { getValuesFormatted: currentProposalValuesFormatted } = storeToRefs(ttg);
 const { onlyDescriptionHtml } = useParsedDescriptionTitle(
   props.proposal?.description,
 );
-
-function onBack() {
-  // emit isPreview
-  emit("on-back");
-}
 </script>
 
 <style scoped>
-h1 {
-  @apply text-3xl font-light mb-12;
-}
-
 .markdown-body {
   box-sizing: border-box;
 }
