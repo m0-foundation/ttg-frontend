@@ -1,5 +1,6 @@
 # Use Cypress base image with pre-installed headless browsers
-FROM cypress/included:latest
+# use node 13.7.1 with node 20.11
+FROM cypress/included:13.7.1
 
 LABEL container.name="ttg-tests"
 LABEL maintainer="m0labs"
