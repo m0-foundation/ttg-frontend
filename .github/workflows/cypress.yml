@@ -4,11 +4,10 @@ on:
     branches:
       - main
   pull_request:
-    types: [opened]
+    types: [ opened ]
   schedule:
     - cron: "0 8 * * *" # Run every day at 8am UTC
   workflow_dispatch:
-    
 
 env:
   DOCKER_REGISTRY: ghcr.io
