@@ -3,14 +3,25 @@
     <div class="px-6 lg:p-0">
       <PageTitle class="items-center">
         <template #default>
-          <span class="capitalize">{{
-            epoch?.current?.type.toLowerCase()
-          }}</span>
-          Epoch:
-          <span class="text-green-700">#{{ epoch?.current?.asNumber }}_</span>
-          <p class="text-grey-600 text-xxs lg:text-xs">
-            {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
-          </p>
+          <div class="flex items-center gap-2">
+            <span class="capitalize">{{
+              epoch?.current?.type.toLowerCase()
+            }}</span>
+            epoch
+            <span class="text-green-700">#{{ phasesEpoch }}</span>
+            <span class="text-grey-600 text-sm">
+              - Epoch #{{ epoch?.current?.asNumber }}
+            </span>
+          </div>
+
+          <div>
+            <p class="text-grey-600 text-xxs lg:text-xs">
+              {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
+              <span class="uppercase text-gray-700 mx-1">
+                (ends {{ nextEpochAsTimeLeft }})
+              </span>
+            </p>
+          </div>
         </template>
         <template #side>
           <NuxtLink to="/proposals/all/">
@@ -129,6 +140,15 @@ const currentEpochAsDate = computed(() => {
 const nextEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
   return toFormat("LLL");
+});
+
+const nextEpochAsTimeLeft = computed(() => {
+  const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
+  return timeAgo;
+});
+
+const phasesEpoch = computed(() => {
+  return Math.ceil(epoch.value.current!.asNumber / 2);
 });
 </script>
 
