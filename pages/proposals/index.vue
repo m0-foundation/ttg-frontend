@@ -20,7 +20,7 @@
             <span class="text-accent-blue">
               {{ useNumberFormatterPrice(powerInflation) }} POWER
             </span>
-            in the next epoch as inflation.
+            as inflation.
           </h5>
           <h5
             v-if="Number(zeroInflation) > 0"
@@ -110,6 +110,7 @@ import {
   useMInflationPowerToken,
   useMInflationZeroToken,
   useMVotingPower,
+  useMDelegates,
 } from "@/lib/hooks";
 
 interface CastedProposal {
@@ -161,6 +162,8 @@ const alerts = useAlertsStore();
 const powerInflation = useMInflationPowerToken();
 const zeroInflation = useMInflationZeroToken();
 const balances = useMBalances(userAccount);
+const { hasDelegatedPower } = useMDelegates(userAccount);
+
 const { power: powerVotingPower } = useMVotingPower(userAccount);
 const hasPowerVotingPower = computed(
   () => powerVotingPower.data.value?.hasVotingPower,
@@ -225,11 +228,19 @@ async function onCastBatchVotes() {
     );
 
     if (hasPowerVotingPower) {
-      alerts.successAlert(
-        `Vote casted successfully! Your Balance will receive the reward of ${useNumberFormatterPrice(
-          toValue(powerInflation),
-        )} POWER tokens in the next epoch.`,
-      );
+      if (hasDelegatedPower) {
+        alerts.successAlert(
+          `Your voting power has increased by ${useNumberFormatterPrice(
+            toValue(powerInflation),
+          )} POWER tokens.`,
+        );
+      } else {
+        alerts.successAlert(
+          `Vote casted successfully! Your Balance has received ${useNumberFormatterPrice(
+            toValue(powerInflation),
+          )} POWER tokens.`,
+        );
+      }
     }
 
     await ttg.fetchTokens();
