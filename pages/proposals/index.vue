@@ -162,11 +162,15 @@ const alerts = useAlertsStore();
 const powerInflation = useMInflationPowerToken();
 const zeroInflation = useMInflationZeroToken();
 const balances = useMBalances(userAccount);
-const { hasDelegatedPower } = useMDelegates(userAccount);
 
 const { power: powerVotingPower } = useMVotingPower(userAccount);
 const hasPowerVotingPower = computed(
   () => powerVotingPower.data.value?.hasVotingPower,
+);
+const isDelegatee = computed(
+  () =>
+    powerVotingPower.data?.value?.value! >
+    balances.powerToken.data?.value?.value!,
 );
 
 useHead({
@@ -228,7 +232,7 @@ async function onCastBatchVotes() {
     );
 
     if (hasPowerVotingPower) {
-      if (hasDelegatedPower) {
+      if (isDelegatee) {
         alerts.successAlert(
           `Your voting power has increased by ${useNumberFormatterPrice(
             toValue(powerInflation),
