@@ -231,20 +231,18 @@ async function onCastBatchVotes() {
       )} ZERO tokens.`,
     );
 
-    if (hasPowerVotingPower) {
-      if (isDelegatee) {
-        alerts.successAlert(
-          `Your voting power has increased by ${useNumberFormatterPrice(
-            toValue(powerInflation),
-          )} POWER tokens.`,
-        );
-      } else {
-        alerts.successAlert(
-          `Vote casted successfully! Your Balance has received ${useNumberFormatterPrice(
-            toValue(powerInflation),
-          )} POWER tokens.`,
-        );
-      }
+    if (isDelegatee) {
+      alerts.successAlert(
+        `Your voting power has increased by ${useNumberFormatterPrice(
+          toValue(powerInflation),
+        )} POWER tokens.`,
+      );
+    } else {
+      alerts.successAlert(
+        `Vote casted successfully! Your Balance has received ${useNumberFormatterPrice(
+          toValue(powerInflation),
+        )} POWER tokens.`,
+      );
     }
 
     await ttg.fetchTokens();
