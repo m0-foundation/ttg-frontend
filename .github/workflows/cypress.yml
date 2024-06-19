@@ -94,6 +94,7 @@ jobs:
         with:
           image: "${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}"
           options: --env TEST_RUN=${{ matrix.test_runs }}
+          shell: bash
           # run: "/app/entrypoint.sh"
           run: |
             # Define the log file
