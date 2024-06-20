@@ -142,10 +142,12 @@ const nextEpochAsDate = computed(() => {
   return toFormat("LLL");
 });
 
-const nextEpochAsTimeLeft = computed(() => {
+const nextEpochAsTimeLeft = ref();
+
+setInterval(() => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
-  return timeAgo;
-});
+  nextEpochAsTimeLeft.value = timeAgo;
+}, 1000);
 
 const phasesEpoch = computed(() => {
   return Math.ceil(epoch.value.current!.asNumber / 2);
