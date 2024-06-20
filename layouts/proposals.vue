@@ -152,7 +152,6 @@ const getTimeLeft = () => {
 const nextEpochAsTimeLeft = ref(getTimeLeft());
 
 onMounted(() => {
-  console.log("mounted");
   setInterval(() => {
     nextEpochAsTimeLeft.value = getTimeLeft();
   }, 1000);
