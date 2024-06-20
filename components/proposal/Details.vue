@@ -72,9 +72,6 @@ export interface ProposalDetailsProps {
 }
 
 const props = defineProps<ProposalDetailsProps>();
-const emit = defineEmits<{
-  (e: "close"): void;
-}>();
 
 const proposalStore = useProposalsStore();
 
