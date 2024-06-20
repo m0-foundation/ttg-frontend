@@ -17,7 +17,10 @@
           <div>
             <p class="text-grey-600 text-xxs lg:text-xs">
               {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
-              <span class="uppercase text-gray-700 mx-1">
+              <span
+                v-if="nextEpochAsTimeLeft"
+                class="uppercase text-gray-700 mx-1"
+              >
                 (ends {{ nextEpochAsTimeLeft }})
               </span>
             </p>
@@ -142,12 +145,18 @@ const nextEpochAsDate = computed(() => {
   return toFormat("LLL");
 });
 
-const nextEpochAsTimeLeft = ref();
-
-setInterval(() => {
+const getTimeLeft = () => {
   const { timeAgo } = useDate(Number(epoch.value.next?.asTimestamp));
-  nextEpochAsTimeLeft.value = timeAgo;
-}, 1000);
+  return timeAgo;
+};
+const nextEpochAsTimeLeft = ref(getTimeLeft());
+
+onMounted(() => {
+  console.log("mounted");
+  setInterval(() => {
+    nextEpochAsTimeLeft.value = getTimeLeft();
+  }, 1000);
+});
 
 const phasesEpoch = computed(() => {
   return Math.ceil(epoch.value.current!.asNumber / 2);
