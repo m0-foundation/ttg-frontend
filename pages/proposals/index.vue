@@ -11,34 +11,31 @@
     >
       <div class="flex flex-col lg:flex-row gap-3 items-start">
         <div>
-          <h5 class="text-grey-800 lg:text-xl tracking-tightest">
-            <div v-if="isDelegatee">
-              <span class="text-accent-blue">Preserve your voting power</span>
-              by
-              <span class="text-accent-blue"> 10% </span>
-              as inflation.
-            </div>
-
-            <div v-else>
-              <span class="text-accent-blue">Preserve your voting power</span>
-              and increase your <span class="text-accent-blue">balance</span> by
-              <span class="text-accent-blue">
-                {{ useNumberFormatterPrice(powerInflation) }} POWER
-              </span>
-              in the next epoch as inflation.
-            </div>
-          </h5>
-
-          <h5
-            v-if="Number(zeroInflation) > 0"
-            class="text-grey-800 lg:text-xl tracking-tightest"
-          >
-            Vote on all proposals in this epoch and receive
-            <span class="text-accent-blue">
-              {{ useNumberFormatterPrice(zeroInflation) }} ZERO
-            </span>
-            as rewards.
-          </h5>
+          <div class="text-grey-800 lg:text-xl tracking-tightest">
+            <span class="text-accent-blue">Vote on all </span>
+            Standard proposals in this epoch to:
+            <ul class="list-disc mx-4 text-sm">
+              <li>
+                Preserve your
+                <span class="text-accent-blue">voting power</span> in the next
+                epoch.
+              </li>
+              <li v-if="Number(powerInflation) != 0">
+                Increase your
+                <span class="text-accent-blue">
+                  balance by {{ useNumberFormatterPrice(powerInflation) }} POWER
+                </span>
+                in the next epoch as inflation.
+              </li>
+              <li v-if="Number(zeroInflation) != 0">
+                Receive
+                <span class="text-accent-blue">
+                  {{ useNumberFormatterPrice(zeroInflation) }} ZERO
+                </span>
+                as rewards
+              </li>
+            </ul>
+          </div>
 
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
             <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
@@ -242,7 +239,7 @@ async function onCastBatchVotes() {
 
     if (isDelegateeStored) {
       alerts.successAlert(
-        "Vote casted successfully! Your POWER voting power has increased by 10%.",
+        "Vote casted successfully! Your POWER voting power has increased.",
       );
     } else {
       alerts.successAlert(
