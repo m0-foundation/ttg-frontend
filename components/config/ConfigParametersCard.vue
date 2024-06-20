@@ -26,8 +26,8 @@
             <span v-else class="text-nowrap">Parameter not set</span>
           </div>
         </div>
-        <div>
-          <MDropdown v-if="param?.proposal?.executedEvent">
+        <div v-if="param?.proposal?.executedEvent">
+          <MDropdown>
             <ul class="dropdown-menu-items">
               <li
                 class="px-6 py-3 text-xxs text-grey-500 border-b border-b-grey-800"
