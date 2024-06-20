@@ -1,6 +1,6 @@
 <template>
   <button
-    class="flex gap-1 items-center justify-center h-9 lg:w-min uppercase px-6"
+    class="flex gap-1 items-center justify-center h-9 max-sm:w-full lg:w-min uppercase px-6"
     :class="version"
   >
     <div class="w-3 h-3 relative">
