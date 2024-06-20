@@ -11,17 +11,24 @@
     >
       <div class="flex flex-col lg:flex-row gap-3 items-start">
         <div>
-          <h5
-            v-if="Number(powerInflation) > 0"
-            class="text-grey-800 lg:text-xl tracking-tightest"
-          >
-            <span class="text-accent-blue">Preserve your voting power</span> and
-            receive
-            <span class="text-accent-blue">
-              {{ useNumberFormatterPrice(powerInflation) }} POWER
-            </span>
-            as inflation.
+          <h5 class="text-grey-800 lg:text-xl tracking-tightest">
+            <div v-if="isDelegatee">
+              <span class="text-accent-blue">Preserve your voting power</span>
+              by
+              <span class="text-accent-blue"> 10% </span>
+              as inflation.
+            </div>
+
+            <div v-else>
+              <span class="text-accent-blue">Preserve your voting power</span>
+              and increase your <span class="text-accent-blue">balance</span> by
+              <span class="text-accent-blue">
+                {{ useNumberFormatterPrice(powerInflation) }} POWER
+              </span>
+              in the next epoch as inflation.
+            </div>
           </h5>
+
           <h5
             v-if="Number(zeroInflation) > 0"
             class="text-grey-800 lg:text-xl tracking-tightest"
@@ -110,7 +117,6 @@ import {
   useMInflationPowerToken,
   useMInflationZeroToken,
   useMVotingPower,
-  useMDelegates,
 } from "@/lib/hooks";
 
 interface CastedProposal {
@@ -202,6 +208,9 @@ async function onCastBatchVotes() {
   await forceSwitchChain();
 
   isLoading.value = true;
+  // slight chance after confirmation the voting power is updated before the check is done,
+  // thus making a copy of value before the transaction
+  const isDelegateeStored = isDelegatee.value;
 
   try {
     const proposalIds = selectedCastProposals.value.map((p) =>
@@ -231,17 +240,15 @@ async function onCastBatchVotes() {
       )} ZERO tokens.`,
     );
 
-    if (isDelegatee) {
+    if (isDelegateeStored) {
       alerts.successAlert(
-        `Your voting power has increased by ${useNumberFormatterPrice(
-          toValue(powerInflation),
-        )} POWER tokens.`,
+        "Vote casted successfully! Your POWER voting power has increased by 10%.",
       );
     } else {
       alerts.successAlert(
-        `Vote casted successfully! Your Balance has received ${useNumberFormatterPrice(
+        `Vote casted successfully! Your will receive ${useNumberFormatterPrice(
           toValue(powerInflation),
-        )} POWER tokens.`,
+        )} POWER tokens in the next epoch.`,
       );
     }
 
