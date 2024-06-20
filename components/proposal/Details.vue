@@ -2,21 +2,21 @@
 <template>
   <div class="overflow-x-hidden">
     <article class="bg-white text-black lg:p-4">
-      <div class="flex flex-wrap justify-between mb-2">
+      <div class="flex justify-between mb-2 gap-3">
         <ProposalStatusTimeline
           :proposal="proposal"
           :version="proposal?.state"
+          class="overflow-x-scroll"
         />
         <div>
           <ProposalMenu :proposal="proposal" />
         </div>
       </div>
 
-      <MBadge v-if="proposal?.isEmergency" version="error">
-        Emergency proposal
-      </MBadge>
-
-      <MBadge v-if="proposal?.votingType === 'Zero'"> Zero proposal </MBadge>
+      <ProposalTypeBadge
+        v-if="proposal?.votingType !== 'Standard'"
+        :type="proposal?.votingType"
+      />
 
       <h1 class="text-[28px] my-3 text-grey-1000 font-light leading-10">
         {{ title }}
@@ -72,6 +72,9 @@ export interface ProposalDetailsProps {
 }
 
 const props = defineProps<ProposalDetailsProps>();
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
 
 const proposalStore = useProposalsStore();
 
