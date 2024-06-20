@@ -29,8 +29,8 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
+      cy.contains("Submit").should("exist");
+      cy.contains("Submit").then(($el) => {
         cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
@@ -61,8 +61,8 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
+      cy.contains("Submit").should("exist");
+      cy.contains("Submit").then(($el) => {
         cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
@@ -87,8 +87,8 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
+      cy.contains("Submit").should("exist");
+      cy.contains("Submit").then(($el) => {
         cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
@@ -112,8 +112,8 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
+      cy.contains("Submit").should("exist");
+      cy.contains("Submit").then(($el) => {
         cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
@@ -141,8 +141,8 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
+      cy.contains("Submit").should("exist");
+      cy.contains("Submit").then(($el) => {
         cy.wrap($el).click();
         cy.get(".complete").invoke("text").should("contain", "Confirmation");
       });
