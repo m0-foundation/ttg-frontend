@@ -17,7 +17,7 @@
             <ul class="list-disc mx-4 text-sm">
               <li>
                 Preserve your
-                <span class="text-accent-blue">voting power</span> in the next
+                <span class="text-accent-blue">voting power</span> for the next
                 epoch.
               </li>
               <li v-if="Number(powerInflation) != 0">
