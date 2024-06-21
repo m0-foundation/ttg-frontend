@@ -2,11 +2,13 @@
   <div class="mb-4 bg-transparent">
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="text-white bg-grey-800 p-8"
+      class="text-white bg-grey-800 p-6 lg:p-8"
     >
-      <div v-if="proposal?.isEmergency" class="flex mb-4">
-        <MBadge version="error">Emergency Proposal</MBadge>
-      </div>
+      <ProposalTypeBadge
+        v-if="proposal.votingType !== 'Standard' || proposal.state !== 'Active'"
+        :type="proposal.votingType"
+        class="mb-4"
+      />
 
       <div class="mb-4">
         <h2 class="text-2xl break-all">
@@ -14,7 +16,7 @@
         </h2>
       </div>
 
-      <div class="text-grey-600 font-inter mb-4">
+      <div class="text-grey-600 font-inter mb-4 break-words">
         {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
 
