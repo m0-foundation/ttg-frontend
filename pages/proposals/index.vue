@@ -11,27 +11,31 @@
     >
       <div class="flex flex-col lg:flex-row gap-3 items-start">
         <div>
-          <h5
-            v-if="Number(powerInflation) > 0"
-            class="text-grey-800 lg:text-xl tracking-tightest"
-          >
-            <span class="text-accent-blue">Preserve your voting power</span> and
-            receive
-            <span class="text-accent-blue">
-              {{ useNumberFormatterPrice(powerInflation) }} POWER
-            </span>
-            in the next epoch as inflation.
-          </h5>
-          <h5
-            v-if="Number(zeroInflation) > 0"
-            class="text-grey-800 lg:text-xl tracking-tightest"
-          >
-            Vote on all proposals in this epoch and receive
-            <span class="text-accent-blue">
-              {{ useNumberFormatterPrice(zeroInflation) }} ZERO
-            </span>
-            as rewards.
-          </h5>
+          <div class="text-grey-800 lg:text-xl tracking-tightest">
+            <span class="text-accent-blue">Vote on all </span>
+            Standard proposals in this epoch to:
+            <ul class="list-disc mx-4 text-sm">
+              <li>
+                Preserve your
+                <span class="text-accent-blue">voting power</span> for the next
+                epoch.
+              </li>
+              <li v-if="Number(powerInflation) != 0">
+                Increase your
+                <span class="text-accent-blue">
+                  balance by {{ useNumberFormatterPrice(powerInflation) }} POWER
+                </span>
+                in the next epoch as inflation.
+              </li>
+              <li v-if="Number(zeroInflation) != 0">
+                Receive
+                <span class="text-accent-blue">
+                  {{ useNumberFormatterPrice(zeroInflation) }} ZERO
+                </span>
+                as rewards
+              </li>
+            </ul>
+          </div>
 
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
             <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
@@ -161,9 +165,15 @@ const alerts = useAlertsStore();
 const powerInflation = useMInflationPowerToken();
 const zeroInflation = useMInflationZeroToken();
 const balances = useMBalances(userAccount);
+
 const { power: powerVotingPower } = useMVotingPower(userAccount);
 const hasPowerVotingPower = computed(
   () => powerVotingPower.data.value?.hasVotingPower,
+);
+const isDelegatee = computed(
+  () =>
+    powerVotingPower.data?.value?.value! >
+    balances.powerToken.data?.value?.value!,
 );
 
 useHead({
@@ -195,6 +205,9 @@ async function onCastBatchVotes() {
   await forceSwitchChain();
 
   isLoading.value = true;
+  // slight chance after confirmation the voting power is updated before the check is done,
+  // thus making a copy of value before the transaction
+  const isDelegateeStored = isDelegatee.value;
 
   try {
     const proposalIds = selectedCastProposals.value.map((p) =>
@@ -224,9 +237,13 @@ async function onCastBatchVotes() {
       )} ZERO tokens.`,
     );
 
-    if (hasPowerVotingPower) {
+    if (isDelegateeStored) {
       alerts.successAlert(
-        `Vote casted successfully! Your Balance will receive the reward of ${useNumberFormatterPrice(
+        "Vote casted successfully! Your POWER voting power has increased.",
+      );
+    } else {
+      alerts.successAlert(
+        `Vote casted successfully! Your will receive ${useNumberFormatterPrice(
           toValue(powerInflation),
         )} POWER tokens in the next epoch.`,
       );

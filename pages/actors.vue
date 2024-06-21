@@ -20,6 +20,11 @@
           </option>
         </select>
       </template>
+
+      <template #cell(list)="{ value }">
+        {{ value.replace("rs", "r") }}
+      </template>
+
       <template #cell(account)="{ value }">
         <MAddressCopy :short-address="false" show-copy :address="value" />
       </template>
