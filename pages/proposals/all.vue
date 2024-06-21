@@ -10,7 +10,7 @@
           <template #pretitle>
             <NuxtLink
               class="text-green-700 hover:text-green-600 text-sm uppercase cursor-pointer"
-              @click="$router.back()"
+              to="/proposals"
             >
               Back
             </NuxtLink>

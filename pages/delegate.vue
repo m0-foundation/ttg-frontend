@@ -287,7 +287,7 @@ async function delegatePower() {
     }
 
     alerts.successAlert(
-      "POWER tokens voting power were delegated Successfully!",
+      "POWER tokens voting power were delegated successfully!",
     );
 
     useDelegate.refetch();
@@ -325,7 +325,7 @@ async function delegateZero() {
     }
 
     alerts.successAlert(
-      "ZERO tokens voting power were delegated Successfully!",
+      "ZERO tokens voting power were delegated successfully!",
     );
     useDelegate.refetch();
   } catch (error) {
