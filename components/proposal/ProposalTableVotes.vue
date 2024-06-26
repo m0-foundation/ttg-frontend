@@ -18,6 +18,9 @@
         </span>
       </a>
     </template>
+    <template #cell(votes)="{ value }">
+      <span>{{ useNumberFormatterCompact(value) }}</span>
+    </template>
   </MSimpleTable>
 </template>
 
@@ -45,10 +48,11 @@ const votes = computed(() => {
   return votesOrdered.map((v: MVote) => ({
     voter: v.voter,
     vote: v.support,
-    votes:
+    votes: parseInt(
       v.token === "zero"
-        ? useNumberFormatterCompact(formatUnits(v.weight as bigint, 6))
-        : useNumberFormatterCompact(String(v.weight)),
+        ? formatUnits(v.weight as bigint, 6)
+        : String(v.weight),
+    ),
     transactionHash: v.transactionHash,
   }));
 });

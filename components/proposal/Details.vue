@@ -6,7 +6,7 @@
         <ProposalStatusTimeline
           :proposal="proposal"
           :version="proposal?.state"
-          class="overflow-x-scroll"
+          class="overflow-x-auto"
         />
         <div>
           <ProposalMenu :proposal="proposal" />
