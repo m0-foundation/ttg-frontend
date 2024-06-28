@@ -24,7 +24,7 @@
       </div>
       <p class="my-1 text-sm text-grey-500">
         Total participation:
-        {{ getParticipationPercentage() }}%
+        {{ getParticipationPercentage }}%
       </p>
     </div>
   </div>
@@ -182,12 +182,12 @@ const thresholdRatio = computed(() =>
     : zeroThresholdRatio.value,
 );
 
-const getParticipationPercentage = () => {
+const getParticipationPercentage = computed(() => {
   return percentageSafeDiv(
     props.yesVotes + props.noVotes,
     props.version === "Zero" ? props.zeroTotalSupply : props.powerTotalSupply,
   );
-};
+});
 </script>
 <style scoped>
 .text-yes {
