@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy-to-staging:
-    uses: MZero-Labs/devops-templates/.github/workflows/s3_buckets_main_staging.yml@main
+    uses: m0-foundation/devops-templates/.github/workflows/s3_buckets_main_staging.yml@main
     secrets: inherit
     permissions:
       contents: write
