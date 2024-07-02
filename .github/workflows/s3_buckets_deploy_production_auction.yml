@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-to-production-auction:
-    uses: MZero-Labs/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_production_auction.yml@main
+    uses: m0-foundation/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_production_auction.yml@main
     secrets: inherit
     permissions:
       contents: write
