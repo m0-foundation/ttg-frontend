@@ -25,8 +25,8 @@ const PORT = 8545;
 const _BLOCK_TIME = 12;
 
 // see file lib/api/modules/epoch/epoch.ts#L17
-const _STARTING_TIMESTAMP = 1_714_154_183;
-const _EPOCH_PERIOD_SECONDS = 900;
+const _STARTING_TIMESTAMP = 1_713_099_600;
+const _EPOCH_PERIOD_SECONDS = 1_296_000;
 
 type ChainServer = {
   address: string;
