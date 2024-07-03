@@ -26,11 +26,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
@@ -96,11 +92,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
