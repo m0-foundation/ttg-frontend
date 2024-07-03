@@ -1,9 +1,9 @@
 <template>
   <div class="inline-block">
     <slot>
-      <a class="underline cursor-pointer" @click="show = true"
-        >Click here to wrap ETH</a
-      >
+      <a class="underline cursor-pointer" @click="show = true">
+        Click here to wrap ETH
+      </a>
     </slot>
     <Teleport to="body">
       <div
@@ -30,8 +30,8 @@
                       formatEther(cashToken?.data?.value?.value || 0n),
                     )
                   }}
-                  WETH</span
-                >
+                  WETH
+                </span>
               </div>
             </div>
 
@@ -42,15 +42,12 @@
             </p>
           </div>
           <div class="flex justify-between">
-            <MButton version="outline-light" class="mt-6" @click="show = false"
-              >Close</MButton
-            >
-            <!-- <MButton version="outline-light" class="mt-6" @click="withdraw"
-              >Widthdraw</MButton
-            > -->
-            <MButton :is-loading="loadingTx" class="mt-6" @click="convert"
-              >Convert</MButton
-            >
+            <MButton version="outline-light" class="mt-6" @click="show = false">
+              Close
+            </MButton>
+            <MButton :is-loading="loadingTx" class="mt-6" @click="convert">
+              Convert
+            </MButton>
           </div>
         </div>
       </div>
