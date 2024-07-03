@@ -144,9 +144,8 @@
         <p>
           Available balance:
           {{ useNumberFormatterEth(cashToken?.data?.value?.formatted || 0) }}
-          WETH
+          WETH. <LazyModalEthWrapper v-if="!userHasEnoughBalance" />
         </p>
-        <p>You'll receive a refund if the proposal succeeds</p>
       </div>
 
       <div v-if="isPreview" class="flex justify-end mt-6 gap-3">

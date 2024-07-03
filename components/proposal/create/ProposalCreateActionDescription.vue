@@ -34,7 +34,7 @@
       <div>
         <label>Voting threshold:</label>
         <div class="proposal-type-detail">
-          <img src="/img/vote.svg" class="w-[24px] h-[24px]" alt="" />
+          <img src="/img/icons/vote.svg" class="w-[24px] h-[24px]" alt="" />
           <div>
             <span v-if="selectedProposalType?.votingType === 'Standard'"
               >Simple majority wins
