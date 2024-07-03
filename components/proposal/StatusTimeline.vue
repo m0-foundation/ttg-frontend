@@ -3,21 +3,7 @@
     <div class="inline-flex text-grey-600 gap-1 lg:gap-2 items-center">
       <div class="text-grey-primary hidden lg:block text-xs">Status:</div>
 
-      <MDropdown>
-        <template #activator>
-          <ProposalStatusBadge
-            :version="version"
-            name="Pending"
-            :show-arrow="true"
-          />
-        </template>
-
-        <ProposalStatusMenu
-          :updated="proposal?.timestamp"
-          :status-block="proposal?.blockNumber"
-          :tx-hash="proposal?.transactionHash"
-        />
-      </MDropdown>
+      <ProposalStatusBadge :version="version" name="Pending" />
 
       <ProposalStatusBadge :version="version" name="Active" />
 
@@ -44,6 +30,7 @@
             name="Executed"
             :show-arrow="true"
             data-test="executed-badge"
+            class="cursor-pointer"
           />
         </template>
 
