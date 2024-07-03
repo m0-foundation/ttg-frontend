@@ -616,6 +616,16 @@ const currentValue = computed(() => {
 });
 
 const previewProposal = computed(() => {
+  const type = formData.proposalType! as string;
+  const parsedProposalWithIncomingValues = (form: Array<any>) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [input1, input2] = form;
+    if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
+      return [useParseCash(input1)];
+    }
+    return form;
+  };
+
   return {
     proposalLabel: selectedProposalType?.value?.label,
     proposer: userAccount.value,
@@ -623,11 +633,13 @@ const previewProposal = computed(() => {
     proposalType: formData.proposalType,
     isEmergency: selectedProposalType?.value?.isEmergency as boolean,
     votingType: selectedProposalType?.value?.votingType,
-    proposalParams: [
-      formData.proposalValue,
-      formData.proposalValue2,
-      formData.proposalValue3,
-    ].filter((e) => e),
+    proposalParams: parsedProposalWithIncomingValues(
+      [
+        formData.proposalValue,
+        formData.proposalValue2,
+        formData.proposalValue3,
+      ].filter((e) => e),
+    ),
   } as unknown as MProposal;
 });
 

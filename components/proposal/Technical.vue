@@ -63,7 +63,7 @@ export interface ProposalProps {
 
 const props = defineProps<ProposalProps>();
 
-const parsedValue = (value: string, type: string) => {
+const parsedIncomingValue = (value: string, type: string) => {
   const formatFee = (value: string) => useFormatCash(value);
 
   if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
@@ -80,8 +80,10 @@ const parsedValue = (value: string, type: string) => {
   }
 
   if (["setCashToken"].includes(type)) {
-    // when is the address or is the fee
-    return value.includes("0x") ? value : formatFee(value);
+    console.log(value, typeof type);
+    if (typeof value === "bigint") return formatFee(value);
+    if (typeof value === "string")
+      return value.includes("0x") ? value : formatFee(value);
   }
 
   return value;
@@ -97,19 +99,20 @@ const showParsed = computed(() =>
   ].includes(props.proposal?.proposalType),
 );
 
-const currentValue = computed(
-  () =>
-    props.currentProposalValues[
-      props.proposal
-        ?.proposalType as keyof ProposalProps["currentProposalValues"]
-    ],
+const currentValue = computed(() =>
+  props.proposal?.proposalType === "setStandardProposalFee"
+    ? props.currentProposalValues["setProposalFee"]
+    : props.currentProposalValues[
+        props.proposal
+          ?.proposalType as keyof ProposalProps["currentProposalValues"]
+      ],
 );
 
 const incomingValues = computed(() => props.proposal?.proposalParams);
 
 const incomingValuesParsed = computed(() =>
   props.proposal?.proposalParams.map((param) =>
-    parsedValue(param, props.proposal?.proposalType),
+    parsedIncomingValue(param, props.proposal?.proposalType),
   ),
 );
 </script>
