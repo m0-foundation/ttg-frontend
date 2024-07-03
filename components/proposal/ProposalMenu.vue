@@ -28,7 +28,7 @@
             )
           "
         >
-          Copy url
+          Copy proposal url
         </a>
       </li>
       <li>
@@ -37,7 +37,16 @@
           data-test="menu-proposal-id"
           @click="copyToClipboard(props?.proposal?.proposalId)"
         >
-          Copy Proposal ID
+          Copy proposal ID
+        </a>
+      </li>
+      <li>
+        <a
+          v-close-popper
+          data-test="menu-proposal-id"
+          @click="copyToClipboard(props?.proposal?.blockNumber)"
+        >
+          Copy block number
         </a>
       </li>
       <li>
@@ -46,7 +55,7 @@
           :href="useBlockExplorer('tx', props?.proposal?.transactionHash)"
           data-test="proposal-link-view-block-explorer"
         >
-          View on Block Explorer
+          View on block explorer
         </a>
       </li>
     </ul>

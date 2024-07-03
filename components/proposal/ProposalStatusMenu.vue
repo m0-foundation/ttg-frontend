@@ -1,7 +1,7 @@
 <template>
   <div class="bg-grey-700 whitespace-nowrap font-inter">
     <div class="p-6 py-3 text-xs">
-      <p class="text-grey-500 font-ppformula">Status updated</p>
+      <p class="text-grey-500 font-ppformula">Executed on</p>
       <p v-if="updated" class="text-grey-100">{{ toFormat("LLL") }}</p>
     </div>
     <hr class="border-grey-1000" />
