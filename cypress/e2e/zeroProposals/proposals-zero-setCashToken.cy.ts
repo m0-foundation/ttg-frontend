@@ -19,8 +19,10 @@ describe("Proposals", () => {
 
       // select cash token proposal
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
-      cy.get("[data-test='proposalTypeSelect']").findByRole('button',{name: /Cash Token/i}).click();
+      // cy.get("[data-test='proposalTypeSelect']").findByRole('button',{name: /Cash Token/i}).click();
 
+      cy.contains("Change cash token").click();
+     
       // select cash token
       cy.get("[data-test='select-cash-token']").should('be.visible').click();
       cy.get("[data-test='Cash Token']").should('be.visible').click();
@@ -36,11 +38,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to ACCESS the ACTIVE proposal", () => {
