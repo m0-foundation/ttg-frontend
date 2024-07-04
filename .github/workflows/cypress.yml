@@ -1,10 +1,7 @@
 ---
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened]
+  push: # This will trigger the workflow for any commit to any branch
+  pull_request: # This will trigger the workflow for any activity on PRs
   schedule:
     - cron: "0 8 * * *" # Run every day at 8am UTC
   workflow_dispatch:
