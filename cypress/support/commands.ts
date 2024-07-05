@@ -42,6 +42,8 @@ declare global {
       executeOneProposal(description: string): Chainable;
 
       clickPreviewProposal(): Chainable;
+      
+      clickSubmitProposal(): Chainable;
 
       mineEpochs(quantity: number): Chainable;
 
@@ -215,6 +217,13 @@ Cypress.Commands.add("clickPreviewProposal", () => {
   cy.get("[data-test='create-proposal-button-preview']")
     .should("exist")
     .click();
+});
+
+Cypress.Commands.add("clickSubmitProposal", () => {
+  cy.get("[data-test='create-proposal-button-submit']").then(($el) => {
+      cy.wrap($el).click();
+      cy.get(".complete").invoke("text").should("contain", "Confirmation");
+    });
 });
 
 Cypress.Commands.add("mineEpochs", (quantity: number) => {

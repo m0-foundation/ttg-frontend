@@ -40,11 +40,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to CREATE a proposal - Update collateral threshold ", () => {
@@ -77,11 +73,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to CREATE a proposal - Penalty rate ", () => {
@@ -115,11 +107,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
 
@@ -162,11 +150,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
 
@@ -201,11 +185,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
 
@@ -253,11 +233,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to CREATE a proposal - Minter freeze time ", () => {
@@ -291,11 +267,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to CREATE a proposal - base_minter_rate", () => {
@@ -328,17 +300,12 @@ describe("Proposals", () => {
 
         cy.clickPreviewProposal();
 
-        cy.contains("Submit proposal").should("exist");
-        cy.contains("Submit proposal").then(($el) => {
-          cy.wrap($el).click();
-          cy.get(".complete").invoke("text").should("contain", "Confirmation");
-        });
+        cy.clickSubmitProposal();
     });
 
 
 
     it("I should be able to CAST vote YES for the proposal", () => {
-
       cy.castYesAllEmergencyProposals();
     });
 
@@ -376,11 +343,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to CREATE a proposal - Minter rate model ", () => {
@@ -414,11 +377,7 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
 
     it("I should be able to CREATE a proposal - earner rate model ", () => {
@@ -452,14 +411,8 @@ describe("Proposals", () => {
 
       cy.clickPreviewProposal();
 
-      cy.contains("Submit proposal").should("exist");
-      cy.contains("Submit proposal").then(($el) => {
-        cy.wrap($el).click();
-        cy.get(".complete").invoke("text").should("contain", "Confirmation");
-      });
+      cy.clickSubmitProposal();
     });
-
-
 
     it("I should be able to CAST vote YES for the proposal", () => {
       cy.castYesAllEmergencyProposals();
@@ -468,12 +421,5 @@ describe("Proposals", () => {
     it("I should be able to EXECUTE the proposal of ADD to a list", () => {
       cy.executeAllProposals();
     });
-
-
-   
-
-    
-
-    
   });
 });
