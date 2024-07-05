@@ -101,10 +101,10 @@ const immutable = computed(() => {
       key: "registrar",
       value: registrarAddress().value,
     },
-    // {
-    //   key: "mToken",
-    //   value: getMToken().value,
-    // },
+    {
+      key: "mToken",
+      value: getMToken().value,
+    },
   ];
 });
 

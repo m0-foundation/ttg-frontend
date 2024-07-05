@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-production-governance:
-    uses: MZero-Labs/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_production_governance.yml@main
+    uses: m0-foundation/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_production_governance.yml@main
     secrets: inherit
     permissions:
       contents: write
@@ -15,7 +15,7 @@ jobs:
   tag:
     if: success() && github.ref_name == 'production'
     needs: [ deploy-production-governance ]
-    uses: MZero-Labs/ttg-frontend/.github/workflows/tag.yml@main
+    uses: m0-foundation/ttg-frontend/.github/workflows/tag.yml@main
     permissions:
       contents: write
 
@@ -23,6 +23,6 @@ jobs:
   release:
     if: success() && github.ref_name == 'production'
     needs: [ deploy-production-governance, tag ]
-    uses: MZero-Labs/ttg-frontend/.github/workflows/release.yml@main
+    uses: m0-foundation/ttg-frontend/.github/workflows/release.yml@main
     permissions:
       contents: write

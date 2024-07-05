@@ -1,10 +1,7 @@
 ---
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened]
+  push: # This will trigger the workflow for any commit to any branch
+  pull_request: # This will trigger the workflow for any activity on PRs
   schedule:
     - cron: "0 8 * * *" # Run every day at 8am UTC
   workflow_dispatch:
@@ -49,7 +46,7 @@ jobs:
         with:
           context: .
           file: "Dockerfile.tests"
-          tags: "${{ env.DOCKER_REGISTRY }}/mzero-labs/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}"
+          tags: "${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}"
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -87,7 +84,7 @@ jobs:
         env:
           DOCKER_IMAGE_NAME: "${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}"
           DOCKER_IMAGE_VERSION: latest
-        run: docker pull ${{ env.DOCKER_REGISTRY }}/mzero-labs/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
+        run: docker pull ${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}
 
       - name: Run Cypress tests
         # 4f65fabd2431ebc8d299f8e5a018d79a769ae185 == v3.0.0
@@ -96,6 +93,6 @@ jobs:
           DOCKER_IMAGE_NAME: "${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}"
           DOCKER_IMAGE_VERSION: latest
         with:
-          image: "${{ env.DOCKER_REGISTRY }}/mzero-labs/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}"
+          image: "${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}"
           options: --env TEST_RUN=${{ matrix.test_runs }}
           run: "/app/entrypoint.sh"

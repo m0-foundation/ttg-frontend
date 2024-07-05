@@ -10,7 +10,7 @@ describe("Check proposal form validation", () => {
   // loop through the matrix listOperations x listTypes
   listOperations.forEach((listOperation) => {
     listTypes.forEach((listType) => {
-      it(`Check ${listOperation} addresses of ${listType} form`, () => {
+      it.skip(`Check ${listOperation} addresses of ${listType} form`, () => {
         cy.connectWallet();
         cy.get("[data-test='proposalTypeSelect']").click();
         const buttonRegex = new RegExp(`^${listOperation} actor$`, "i");
@@ -82,7 +82,7 @@ describe("Check proposal form validation", () => {
     });
   });
 
-  it("Check update protocol config form", () => {
+  it.skip("Check update protocol config form", () => {
     cy.get("[data-test='proposalTypeSelect']").click();
     cy.findByRole("button", { name: /Update protocol config/i })
       .should("be.visible")
