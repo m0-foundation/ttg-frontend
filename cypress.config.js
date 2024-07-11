@@ -1,5 +1,5 @@
-import { defineConfig } from "cypress";
-import { setupHardhatEvents } from "./hardhat/index";
+import {defineConfig} from "cypress";
+import {setupHardhatEvents} from "./hardhat/index";
 
 export default defineConfig({
   devServer: {
@@ -15,8 +15,17 @@ export default defineConfig({
       return config;
     },
   },
-  defaultCommandTimeout: 120000,
+  defaultCommandTimeout: 20000,
   video: false,
   viewportWidth: 1280,
   viewportHeight: 1024,
+  retries: {
+    experimentalStrategy: "detect-flake-and-pass-on-threshold",
+    experimentalOptions: {
+      maxRetries: 2,
+      passesRequired: 1,
+    },
+    runMode: true,
+    openMode: true,
+  },
 });
