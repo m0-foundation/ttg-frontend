@@ -157,3 +157,11 @@ jobs:
             
             # Exit with the main job's exit code
             exit $MAIN_JOB_EXIT_CODE
+
+      - name: Upload Cypress Test Reports
+        uses: actions/upload-artifact@v3
+        if: always() # This ensures artifacts are uploaded even if the job fails
+        with:
+          name: cypress-reports
+          path: |
+            cypress/screenshots/**
