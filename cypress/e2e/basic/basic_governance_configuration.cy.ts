@@ -39,7 +39,7 @@ describe("Governance configuration", () => {
       "ZERO Token",
       "Distribution Vault",
       "Registrar",
-      // "M Token"
+      "M Token",
     ]
 
     // non-changeable parameters table
