@@ -50,6 +50,8 @@ declare global {
       createProposalAddDescription(description: string): Chainable;
 
       validateEthAddress(address: string): Chainable;
+
+      getButton(buttonText: string): Chainable;
     }
   }
 }
@@ -243,5 +245,10 @@ Cypress.Commands.add("validateEthAddress", (address: string) => {
     throw new Error(`Address ${address} is not a valid eth address`);
   }
 });
+
+Cypress.Commands.add('getButton', (buttonText) => {
+  const regEx = new RegExp(buttonText, 'i')
+  cy.findByRole('button', { name: regEx })
+})
 
 export {};
