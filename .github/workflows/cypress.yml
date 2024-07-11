@@ -159,7 +159,8 @@ jobs:
             exit $MAIN_JOB_EXIT_CODE
 
       - name: Upload Cypress Test Reports
-        uses: actions/upload-artifact@v3
+        # 0b2256b8c012f0828dc542b3febcab082c67f72b == v4.3.4
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b
         if: always() # This ensures artifacts are uploaded even if the job fails
         with:
           name: cypress-reports
