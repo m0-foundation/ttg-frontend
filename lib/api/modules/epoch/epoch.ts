@@ -13,8 +13,8 @@ see files:
 export class Epoch {
   client: PublicClient;
 
-  static _STARTING_TIMESTAMP = 1_714_154_183;
-  static _EPOCH_PERIOD_SECONDS = 900;
+  static _STARTING_TIMESTAMP = 1_713_099_600;
+  static _EPOCH_PERIOD_SECONDS = 1_296_000; //15 days in seconds
 
   constructor(client: PublicClient) {
     this.client = client;
