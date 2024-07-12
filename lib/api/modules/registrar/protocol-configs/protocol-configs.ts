@@ -19,12 +19,6 @@ export class ProtocolConfigs extends ApiModule {
     "base_minter_rate",
     "max_earner_rate",
     "guidance",
-    "ecosystem_guidance",
-    "collateral_guidance",
-    "spv_operators_guidance",
-    "validators_guidance",
-    "minters_guidance",
-    "mandatory_contract_guidance",
   ];
 
   keysInAddress = ["minter_rate_model", "earner_rate_model"];
