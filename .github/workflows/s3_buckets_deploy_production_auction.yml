@@ -1,0 +1,12 @@
+name: Build & Upload to PROD AUCTION
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-production-auction:
+    uses: m0-foundation/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_production_auction.yml@main
+    secrets: inherit
+    permissions:
+      contents: write
+    if: github.ref_name == 'auction'
