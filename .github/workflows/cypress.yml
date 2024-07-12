@@ -1,4 +1,6 @@
 ---
+name: cypress_tests
+
 on:
   push: # This will trigger the workflow for any commit to any branch
   pull_request:
