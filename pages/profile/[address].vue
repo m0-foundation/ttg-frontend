@@ -8,7 +8,6 @@
             :address="address"
             :short-address="!largerThanSm"
             :show-copy="true"
-            :show-avatar="false"
           />
         </p>
       </div>

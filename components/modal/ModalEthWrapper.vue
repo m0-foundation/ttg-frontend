@@ -10,42 +10,76 @@
         v-if="show"
         class="fixed top-0 z-50 w-full h-dvh flex items-center justify-center bg-grey-1000 bg-opacity-70"
       >
-        <div ref="dialog" class="p-4 bg-grey-800">
-          <div class="mb-4 text-xl">Convert ETH to WETH</div>
+        <div ref="dialog" class="p-6 bg-grey-800">
+          <div class="mb-2 text-xl flex items-center justify-between">
+            <span>Convert ETH to WETH</span>
+            <button @click="show = false">
+              <img src="/img/modals/close.svg" alt="" srcset="" />
+            </button>
+          </div>
           <div>
-            <p class="text-grey-500 text-sm">
-              To use ETH as an ERC-20 token, you need to wrap it.
+            <p class="text-grey-200 text-inter text-sm">
+              To pay the submission fee, please wrap your ETH. Only ETH as
+              ERC-20 tokens are allowed.
             </p>
 
-            <div class="flex justify-between w-[70%] mx-auto my-6 gap-6">
+            <div class="grid grid-cols-2 my-6 gap-6 font-inter">
               <div>
-                <label class="mb-0">You need:</label>
-                <span>{{ ttgValuesFormatted.setProposalFee }} WETH</span>
+                <div class="mb-3">
+                  <label class="mb-0">Convert:</label>
+                  <span class="text-lg font-ppformula">
+                    {{ useNumberFormatterEth(formatEther(convertionAmount)) }}
+                    ETH
+                  </span>
+                </div>
+                <div class="text-xs text-grey-500">
+                  <p>
+                    Your balance:
+                    <span class="text-nowrap">
+                      {{
+                        useNumberFormatterEth(
+                          formatEther(ethBalance.data.value?.value),
+                        )
+                      }}
+                      ETH
+                    </span>
+                  </p>
+                  <p>
+                    Conversion rate:
+                    <span class="text-nowrap">1 ETH = 1 WETH</span>
+                  </p>
+                </div>
               </div>
               <div>
-                <label class="mb-0">You have:</label>
-                <span>
-                  {{
-                    useNumberFormatterEth(
-                      formatEther(cashToken?.data?.value?.value || 0n),
-                    )
-                  }}
-                  WETH
-                </span>
+                <div class="mb-3">
+                  <label class="mb-0">To:</label>
+                  <span class="text-lg font-ppformula">
+                    {{ useNumberFormatterEth(formatEther(convertionAmount)) }}
+                    WETH
+                  </span>
+                </div>
+                <div class="text-xs text-grey-500">
+                  <p>
+                    Your balance:
+                    <span class="text-nowrap">
+                      {{ cashToken.data.value?.formatted }} WETH
+                    </span>
+                  </p>
+                  <p>
+                    Submission fee:
+                    <span class="text-nowrap">
+                      {{ ttgValuesFormatted?.setProposalFee }} WETH
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
-
-            <p class="text-grey-500 text-xs">
-              You are about to convert
-              {{ useNumberFormatterEth(formatEther(convertionAmount)) }}
-              ETH to the same amount of WETH
-            </p>
           </div>
-          <div class="flex justify-between">
-            <MButton version="outline-light" class="mt-6" @click="show = false">
-              Close
+          <div class="flex justify-end gap-4">
+            <MButton version="outline-light" @click="show = false">
+              Cancel
             </MButton>
-            <MButton :is-loading="loadingTx" class="mt-6" @click="convert">
+            <MButton :is-loading="loadingTx" @click="convert">
               Convert
             </MButton>
           </div>
@@ -57,7 +91,7 @@
 
 <script setup lang="ts">
 import { Hash, formatEther, parseAbi } from "viem";
-import { useAccount } from "use-wagmi";
+import { useAccount, useBalance } from "use-wagmi";
 import { waitForTransactionReceipt, writeContract } from "@wagmi/core";
 import { useMBalances } from "@/lib/hooks";
 
@@ -69,6 +103,7 @@ const alerts = useAlertsStore();
 const ttg = useTtgStore();
 const wagmiConfig = useWagmiConfig();
 const { address: account } = useAccount();
+const ethBalance = useBalance({ address: account });
 const { getValuesFormatted: ttgValuesFormatted, getValues } = storeToRefs(ttg);
 
 const { cashToken, refetch: refetchBalances } = useMBalances(account);
