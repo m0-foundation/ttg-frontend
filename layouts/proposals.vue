@@ -3,33 +3,33 @@
     <div class="px-6 lg:p-0">
       <PageTitle class="items-center">
         <template #default>
-          <div class="flex items-center gap-2">
+          <div>
+            <p class="text-grey-500 text-sm">
+              Total Epochs: #{{ epoch?.current?.asNumber }}
+            </p>
             <span class="capitalize">{{
               epoch?.current?.type.toLowerCase()
             }}</span>
             epoch
             <span class="text-green-700">#{{ phasesEpoch }}</span>
-            <span class="text-grey-600 text-sm">
-              - Epoch #{{ epoch?.current?.asNumber }}
-            </span>
           </div>
 
           <div>
-            <p class="text-grey-600 text-xxs lg:text-xs">
-              {{ currentEpochAsDate }} - {{ nextEpochAsDate }}
-              <span
-                v-if="nextEpochAsTimeLeft"
-                class="uppercase text-gray-700 mx-1"
-              >
-                (ends {{ nextEpochAsTimeLeft }})
+            <div
+              class="flex items-center gap-3 text-grey-500 text-xxs lg:text-xs"
+            >
+              <span> {{ currentEpochAsDate }} - {{ nextEpochAsDate }}</span>
+              <span>·</span>
+              <span v-if="nextEpochAsTimeLeft" class="text-gray-200">
+                Ends {{ nextEpochAsTimeLeft }}
               </span>
-            </p>
+            </div>
           </div>
         </template>
         <template #side>
           <NuxtLink to="/proposals/all/">
             <MNavButton
-              class="text-sm font-ppformula underline normal-case text-grey-600"
+              class="text-sm font-ppformula underline normal-case text-grey-500"
             >
               All proposals
             </MNavButton>
@@ -137,12 +137,12 @@ const { epoch } = storeToRefs(ttg);
 
 const currentEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.current?.asTimestamp));
-  return toFormat("LLL");
+  return toFormat("d MMM, hh:mm A");
 });
 
 const nextEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
-  return toFormat("LLL");
+  return toFormat("d MMM, hh:mm A");
 });
 
 const getTimeLeft = () => {
