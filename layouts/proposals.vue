@@ -137,12 +137,12 @@ const { epoch } = storeToRefs(ttg);
 
 const currentEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.current?.asTimestamp));
-  return toFormat("d MMM, hh:mm A");
+  return toFormat("D MMM, hh:mm A");
 });
 
 const nextEpochAsDate = computed(() => {
   const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
-  return toFormat("d MMM, hh:mm A");
+  return toFormat("D MMM, hh:mm A");
 });
 
 const getTimeLeft = () => {
