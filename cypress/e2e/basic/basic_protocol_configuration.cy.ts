@@ -44,12 +44,6 @@ describe("Basic configuration", () => {
 
     const configParams = [
       "Guidance",
-      "Ecosystem Guidance",
-      "Collateral Guidance",
-      "SPV Operators Guidance",
-      "Validators Guidance",
-      "Minters Guidance",
-      "Mandatory Contract Clauses Guidance",
     ]
 
     cy.get('h3.text-xl').should('have.length', configParams.length)

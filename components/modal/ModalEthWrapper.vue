@@ -13,7 +13,7 @@
         <div ref="dialog" class="p-6 bg-grey-800">
           <div class="mb-2 text-xl flex items-center justify-between">
             <span>Convert ETH to WETH</span>
-            <button>
+            <button @click="show = false">
               <img src="/img/modals/close.svg" alt="" srcset="" />
             </button>
           </div>
