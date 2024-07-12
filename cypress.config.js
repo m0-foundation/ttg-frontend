@@ -1,5 +1,5 @@
-import {defineConfig} from "cypress";
-import {setupHardhatEvents} from "./hardhat/index";
+import { defineConfig } from "cypress";
+import { setupHardhatEvents } from "./hardhat/index";
 
 export default defineConfig({
   devServer: {
@@ -12,6 +12,16 @@ export default defineConfig({
     specPattern: "cypress/e2e/**/*.{cy,spec}.{js,jsx,ts,tsx}",
     async setupNodeEvents(on, config) {
       await setupHardhatEvents(on, config);
+
+      // fix vkCreateInstance: Found no drivers! Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
+      // see: https://github.com/cypress-io/cypress/issues/29085#issuecomment-2013282654
+      on("before:browser:launch", (browser, launchOptions) => {
+        if (browser.family === "chromium") {
+          launchOptions.args.push("--disable-gpu");
+        }
+        return launchOptions;
+      });
+
       return config;
     },
   },
