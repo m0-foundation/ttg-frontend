@@ -168,4 +168,4 @@ jobs:
           name: cypress-reports-${{ matrix.test-runs }}
           if-no-files-found: ignore
           path: |
-            /app/cypress/screenshots/**/*
+            cypress/screenshots/**/*
