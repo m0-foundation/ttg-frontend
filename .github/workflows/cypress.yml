@@ -166,5 +166,6 @@ jobs:
         if: always() # This ensures artifacts are uploaded even if the job fails
         with:
           name: cypress-reports
+          if-no-files-found: ignore
           path: |
-            cypress/screenshots/**
+            cypress/screenshots/
