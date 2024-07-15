@@ -168,4 +168,4 @@ jobs:
           name: cypress-reports
           if-no-files-found: ignore
           path: |
-            /app/cypress/screenshots/
+            ./**
