@@ -14,6 +14,7 @@ import { powerTokenAbi } from "@/lib/sdk";
 export const useTtgStore = defineStore("ttg", {
   state: () => ({
     epoch: {} as MEpoch,
+    values: {} as Partial<MRegistrarStore>,
     contracts: {} as Partial<MRegistrarStore>,
     governors: {
       standard: {} as Partial<MStandardGovernorValues>,
@@ -54,7 +55,7 @@ export const useTtgStore = defineStore("ttg", {
         emergencyProposalThresholdRatio:
           state.governors.emergency.thresholdRatio!,
         zeroProposalThresholdRatio: state.governors.zero.thresholdRatio!,
-        clock: state.governors.standard.clock!,
+        ...state.values,
       };
     },
 
@@ -89,8 +90,14 @@ export const useTtgStore = defineStore("ttg", {
       this.tokens.zero = zeroToken;
     },
 
-    setContracts(params: Partial<MRegistrarStore>) {
-      this.contracts = params;
+    setRegistrarValues({
+      clock,
+      clockPeriod,
+      clockStartingTimestamp,
+      ...contracts
+    }: Partial<MRegistrarStore>) {
+      this.values = { clock, clockPeriod, clockStartingTimestamp };
+      this.contracts = { ...contracts };
     },
 
     setGovernorsValues({
@@ -115,12 +122,7 @@ export const useTtgStore = defineStore("ttg", {
       const [standard, emergency, zero] = await Promise.all([
         api.client.standardGovernor!.getParameters<
           Partial<MStandardGovernorValues>
-        >([
-          "proposalFee",
-          "cashToken",
-          "maxTotalZeroRewardPerActiveEpoch",
-          "clock",
-        ]),
+        >(["proposalFee", "cashToken", "maxTotalZeroRewardPerActiveEpoch"]),
         api.client.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
           "thresholdRatio",
         ]),
@@ -153,7 +155,7 @@ export const useTtgStore = defineStore("ttg", {
       const api = useApiClientStore();
 
       const contractConfig = {
-        address: this.contracts.powerToken!,
+        address: this.values.powerToken!,
         abi: powerTokenAbi,
       };
 
