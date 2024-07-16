@@ -84,62 +84,56 @@
           </ul>
         </nav>
 
-        <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
-          <div class="text-xs flex justify-between">
-            <p>Epoch:</p>
-            <p class="text-grey-600">#{{ epoch }}</p>
+        <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4 font-inter">
+          <div class="text-xxs text-grey-500 flex justify-between">
+            <span>Voting power</span>
+            <span>Balance</span>
           </div>
           <hr class="border-grey-700 border-dashed mb-4 mt-2" />
-          <p class="text-xs mb-2 text-grey-600">POWER tokens</p>
+          <p class="text-xs mb-2 text-grey-500">POWER tokens</p>
 
           <div>
-            <div class="flex justify-between items-center">
-              <div class="flex gap-2">
-                <MIconPower class="h-5 w-5" version="light" />
-                <span class="text-white">
-                  {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
+            <div class="flex justify-between items-end gap-3">
+              <div class="flex gap-2 items-end">
+                <MIconPower class="h-4 w-4" version="light" />
+                <span class="text-grey-200 font-ppformula leading-3">
+                  {{ powerVotingPower?.data.value?.relative?.toFixed(3) }}%
                 </span>
               </div>
-              <VTooltip>
-                <span class="text-grey-600 text-xxs">
-                  {{
-                    useNumberFormatterCompact(
-                      powerVotingPower?.data?.value?.formatted || 0,
-                    )
-                  }}
-                </span>
 
-                <template #popper>
-                  {{ powerVotingPower?.data?.value?.formatted }}
-                </template>
-              </VTooltip>
+              <span class="text-grey-200 text-xxs leading-none">
+                {{
+                  useNumberFormatterPrice(
+                    balancePowerToken?.data.value?.formatted || 0n,
+                    0,
+                    2,
+                  )
+                }}
+              </span>
             </div>
           </div>
 
           <hr class="border-grey-700 border-dashed my-4" />
 
-          <p class="text-xs mb-2 text-grey-600">ZERO tokens</p>
+          <p class="text-xs mb-2 text-grey-500">ZERO tokens</p>
           <div>
-            <div class="flex justify-between items-center">
-              <div class="flex gap-2">
-                <MIconZero version="light" class="h-5 w-5" />
-                <span class="text-white">
-                  {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
+            <div class="flex justify-between items-end gap-3">
+              <div class="flex gap-2 items-end">
+                <MIconZero version="light" class="h-4 w-4" />
+                <span class="text-grey-200 font-ppformula leading-3">
+                  {{ zeroVotingPower?.data.value?.relative?.toFixed(3) }}%
                 </span>
               </div>
-              <VTooltip>
-                <span class="text-grey-600 text-xxs">
-                  {{
-                    useNumberFormatterCompact(
-                      zeroVotingPower?.data?.value?.formatted || 0,
-                    )
-                  }}
-                </span>
 
-                <template #popper>
-                  {{ zeroVotingPower?.data?.value?.formatted }}
-                </template>
-              </VTooltip>
+              <span class="text-grey-200 text-xxs leading-none">
+                {{
+                  useNumberFormatterPrice(
+                    balanceZeroToken?.data.value?.formatted || 0n,
+                    0,
+                    0,
+                  )
+                }}
+              </span>
             </div>
           </div>
         </div>
@@ -171,7 +165,7 @@
 
 <script lang="ts" setup>
 import { useAccount, useDisconnect } from "use-wagmi";
-import { useMVotingPower } from "@/lib/hooks";
+import { useMVotingPower, useMBalances } from "@/lib/hooks";
 
 const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
@@ -184,12 +178,14 @@ const router = useRouter();
 const { currentRoute } = router;
 
 const isTransferEpoch = computed(() => ttg.epoch.current?.type === "TRANSFER");
-const epoch = computed(() => ttg.epoch.current.asNumber);
 
 const config = useRuntimeConfig();
 
 const { power: powerVotingPower, zero: zeroVotingPower } =
   useMVotingPower(address);
+
+const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
+  useMBalances(address);
 
 const auctionActive = computed(() => {
   return config.public.auctionActive as unknown as boolean | string;
