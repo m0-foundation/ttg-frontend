@@ -33,6 +33,9 @@ export class Registrar extends ApiModule {
       "powerToken",
       "zeroToken",
       "vault",
+      "clock",
+      "clockPeriod",
+      "clockStartingTimestamp",
     ]);
   }
 }
