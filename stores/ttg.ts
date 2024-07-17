@@ -14,6 +14,7 @@ import { powerTokenAbi } from "@/lib/sdk";
 export const useTtgStore = defineStore("ttg", {
   state: () => ({
     epoch: {} as MEpoch,
+    values: {} as Partial<MRegistrarStore>,
     contracts: {} as Partial<MRegistrarStore>,
     governors: {
       standard: {} as Partial<MStandardGovernorValues>,
@@ -54,7 +55,7 @@ export const useTtgStore = defineStore("ttg", {
         emergencyProposalThresholdRatio:
           state.governors.emergency.thresholdRatio!,
         zeroProposalThresholdRatio: state.governors.zero.thresholdRatio!,
-        clock: state.governors.standard.clock!,
+        ...state.values,
       };
     },
 
@@ -63,17 +64,20 @@ export const useTtgStore = defineStore("ttg", {
 
   actions: {
     async fetchEpoch(_epoch: number) {
+      console.log("fetching epoch", _epoch);
       const api = useApiClientStore();
       const epochState = await api.client.epoch.getEpochState(_epoch);
       this.epoch = epochState;
 
-      // Re-fetch epoch data when current epoch ends
-      setTimeout(
-        () => {
-          this.fetchEpoch(_epoch! + 1);
-        },
+      const rescheduleTime = Math.ceil(
         (epochState.current.end.timestamp - Date.now() / 1000 + 3) * 1000,
       );
+
+      // if is lower than 1/2 day in miliseconds, start timeout to fetch next epoch
+      if (rescheduleTime < 43200000) {
+        // Re-fetch epoch data when current epoch ends
+        setTimeout(() => this.fetchEpoch(_epoch! + 1), rescheduleTime);
+      }
     },
     async fetchTokens() {
       const api = useApiClientStore();
@@ -89,8 +93,14 @@ export const useTtgStore = defineStore("ttg", {
       this.tokens.zero = zeroToken;
     },
 
-    setContracts(params: Partial<MRegistrarStore>) {
-      this.contracts = params;
+    setRegistrarValues({
+      clock,
+      clockPeriod,
+      clockStartingTimestamp,
+      ...contracts
+    }: Partial<MRegistrarStore>) {
+      this.values = { clock, clockPeriod, clockStartingTimestamp };
+      this.contracts = { ...contracts };
     },
 
     setGovernorsValues({
@@ -115,12 +125,7 @@ export const useTtgStore = defineStore("ttg", {
       const [standard, emergency, zero] = await Promise.all([
         api.client.standardGovernor!.getParameters<
           Partial<MStandardGovernorValues>
-        >([
-          "proposalFee",
-          "cashToken",
-          "maxTotalZeroRewardPerActiveEpoch",
-          "clock",
-        ]),
+        >(["proposalFee", "cashToken", "maxTotalZeroRewardPerActiveEpoch"]),
         api.client.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
           "thresholdRatio",
         ]),
@@ -153,7 +158,7 @@ export const useTtgStore = defineStore("ttg", {
       const api = useApiClientStore();
 
       const contractConfig = {
-        address: this.contracts.powerToken!,
+        address: this.values.powerToken!,
         abi: powerTokenAbi,
       };
 

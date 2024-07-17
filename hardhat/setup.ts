@@ -73,24 +73,12 @@ const getTimestampOfEpochEnd = (epoch) => {
 async function moveToVotingEpoch() {
   const currentTimestamp = await hhHelpers.time.latest();
   const currentEpoch = getEpochFromTimestamp(currentTimestamp);
-  console.log("current block ", await hhHelpers.time.latestBlock());
-  console.log({ currentTimestamp, currentEpoch });
-  if (currentEpoch % 2 === 0) {
-    console.log("current epoch is transfer, must change to voting");
-    console.log("updating...");
-    await hhHelpers.time.increaseTo(getTimestampOfEpochEnd(currentEpoch) + 1); // move to voting epoch
-    const newTimestamp = await hhHelpers.time.latest();
-    const newEpoch = getEpochFromTimestamp(newTimestamp);
-    console.log({
-      newTimestamp,
-      newEpoch,
-      epoch: newEpoch % 2 === 0 ? "transfer" : "voting",
-    });
-    return { epoch: newEpoch, timestamp: newTimestamp };
-  } else {
-    console.log("epoch is voting");
-    return { epoch: currentEpoch, timestamp: currentTimestamp };
-  }
+  // to avoid error from hardhat where  Timestamp  is lower than the current timestamp  then move straight to the next voting epoch
+  const newTimestamp =  currentEpoch % 2 === 0 ? getTimestampOfEpochStart(currentEpoch+1) : getTimestampOfEpochStart(currentEpoch + 2);
+  console.log({ currentEpoch, currentTimestamp });
+  await hhHelpers.time.increaseTo(newTimestamp);
+  const newEpoch = getEpochFromTimestamp(await hhHelpers.time.latest());
+  console.log({ newEpoch,  newTimestamp });
 }
 
 /** Sets up the hardhat environment for use with cypress. */
@@ -111,8 +99,7 @@ export default async function setup(): Promise<
       { hardhat: { mining: hardhatConfig.mining } },
     ]);
 
-    const epoch = await moveToVotingEpoch();
-    console.log({ ...epoch });
+    await moveToVotingEpoch();
   }
 
   hre.tasks[TASK_NODE_GET_PROVIDER].setAction(() => {
@@ -167,8 +154,7 @@ export default async function setup(): Promise<
 
   let [server] = await Promise.all([run, listen]);
 
-  const epoch = await moveToVotingEpoch();
-  console.log({ ...epoch });
+  await moveToVotingEpoch();
 
   return {
     url: "http://" + server.address + ":" + PORT,
@@ -185,7 +171,7 @@ export default async function setup(): Promise<
       const currentTimestamp = await hhHelpers.time.latest();
       const currentEpoch = getEpochFromTimestamp(currentTimestamp);
       const newTimestamp = getTimestampOfEpochStart(currentEpoch + epoch);
-      console.log({ epoch, currentTimestamp, newTimestamp });
+      console.log({ epoch, currentEpoch, currentTimestamp, newTimestamp });
       await hhHelpers.time.setNextBlockTimestamp(newTimestamp);
       await hre.network.provider.send("hardhat_mine", [
         "0x" + blocks.toString(16),

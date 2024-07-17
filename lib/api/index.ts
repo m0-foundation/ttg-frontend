@@ -40,7 +40,7 @@ export class Api {
 
     this.registrar = new Registrar(this.context);
 
-    this.epoch = new Epoch(client);
+    this.epoch = Epoch.instance;
   }
 
   setRpc(rpcUrl: string) {
