@@ -64,17 +64,20 @@ export const useTtgStore = defineStore("ttg", {
 
   actions: {
     async fetchEpoch(_epoch: number) {
+      console.log("fetching epoch", _epoch);
       const api = useApiClientStore();
       const epochState = await api.client.epoch.getEpochState(_epoch);
       this.epoch = epochState;
 
-      // Re-fetch epoch data when current epoch ends
-      setTimeout(
-        () => {
-          this.fetchEpoch(_epoch! + 1);
-        },
+      const rescheduleTime = Math.ceil(
         (epochState.current.end.timestamp - Date.now() / 1000 + 3) * 1000,
       );
+
+      // if is lower than 1/2 day in miliseconds, start timeout to fetch next epoch
+      if (rescheduleTime < 43200000) {
+        // Re-fetch epoch data when current epoch ends
+        setTimeout(() => this.fetchEpoch(_epoch! + 1), rescheduleTime);
+      }
     },
     async fetchTokens() {
       const api = useApiClientStore();
