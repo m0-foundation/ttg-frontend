@@ -108,6 +108,30 @@
         </div>
       </div>
 
+      <div v-if="!hasVoted && selectedVote !== null">
+        <div class="mt-4 mb-3 text-grey-500 font-inter">
+          <label class="flex items-center gap-2 text-xs leading-3 mb-0">
+            <input
+              v-model="reasonForVoteCheckbox"
+              type="checkbox"
+              class="w-3 h-3"
+              data-test="reason-vote-checkbox"
+            />
+            Share with others why you made this choice. This can cost a little
+            more gas fees.
+          </label>
+        </div>
+
+        <textarea
+          v-if="reasonForVoteCheckbox"
+          id="reason-vote"
+          ref="reasonForVoteTextarea"
+          v-model="reasonForVote"
+          class="reason-textarea"
+          data-test="reason-vote-textarea"
+        ></textarea>
+      </div>
+
       <div
         v-if="proposal?.state === 'Succeeded'"
         class="flex justify-between items-center"
@@ -132,7 +156,7 @@
 import truncate from "lodash/truncate";
 import { useAccount, useReadContract, useBlockNumber } from "use-wagmi";
 import { Hash, Abi } from "viem";
-import { useMVotingPower, useMPastVotingPower } from "@/lib/hooks";
+import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
 
 export interface ProposalCardProps {
@@ -146,6 +170,7 @@ const emit = defineEmits<{
   (e: "on-uncast", proposaId: string): void;
   (e: "on-view", proposaId: string): void;
   (e: "on-execute", proposal: MProposal): void;
+  (e: "update-reason-for-vote", value: string, proposalId: string): void;
 }>();
 
 const apiStore = useApiClientStore();
@@ -153,6 +178,22 @@ const apiStore = useApiClientStore();
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
 
 const selectedVote = ref<null | boolean>(null);
+const reasonForVoteCheckbox = ref<boolean | null>(false);
+const reasonForVote = ref<string>("");
+const reasonForVoteTextarea = ref();
+
+watch(reasonForVoteCheckbox, async (value) => {
+  if (value) {
+    await nextTick();
+    reasonForVoteTextarea?.value.focus();
+  } else {
+    reasonForVote.value = "";
+  }
+});
+
+watch(reasonForVote, (value) => {
+  emit("update-reason-for-vote", value, props.proposal.proposalId);
+});
 
 const isVoteYesActive = computed(() => {
   // vote has been casted to Yes
@@ -214,11 +255,8 @@ function onSingleCastSelected(vote: boolean) {
 
 const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
-const pastEpoch = computed(() => BigInt(props.proposal.voteStart - 1));
 
 const { power: powerVotingPower } = useMVotingPower(userAccount);
-const { power: powerPastVotingPower, zero: zeroPastVotingPower } =
-  useMPastVotingPower({ userAccount, epoch: pastEpoch });
 
 const canVote = computed(() => {
   if (["Standard"].includes(props.proposal.votingType!)) {
