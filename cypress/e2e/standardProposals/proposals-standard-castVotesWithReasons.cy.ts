@@ -64,7 +64,7 @@ describe("Proposals", () => {
       });
     
       cy.get("#button-cast-submit").click();
-      cy.get("[data-test='voted']").should("have.length", 1);
+      cy.get("[data-test='voted']").should("have.length", 2);
     });
   });
 });

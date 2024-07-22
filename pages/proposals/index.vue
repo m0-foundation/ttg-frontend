@@ -234,33 +234,17 @@ async function onCastBatchVotes() {
     );
 
     if (anyProposalHasReason && isOnlyOneVote) {
-      hash = await writeStandardGovernor(wagmiConfig, {
-        address: ttg.contracts.standardGovernor as Hash,
-        functionName: "castVoteWithReason",
-        args: [proposalIds[0], votes[0], reasons[0]], // uint256 proposalId, uint8 support, string reason
-        account: userAccount.value,
-      });
+      hash = await castSingleVoteWithReason(
+        proposalIds[0],
+        votes[0],
+        reasons[0],
+      );
     } else if (anyProposalHasReason) {
-      hash = await writeStandardGovernor(wagmiConfig, {
-        address: ttg.contracts.standardGovernor as Hash,
-        functionName: "castVotesWithReason",
-        args: [proposalIds, votes, reasons], // uint256[] proposalId, uint8[] support, string[] reason
-        account: userAccount.value,
-      });
+      hash = await castVotesWithReason(proposalIds, votes, reasons);
     } else if (isOnlyOneVote) {
-      hash = await writeStandardGovernor(wagmiConfig, {
-        address: ttg.contracts.standardGovernor as Hash,
-        functionName: "castVote",
-        args: [proposalIds[0], votes[0]], // uint256 proposalId, uint8 support, string reason
-        account: userAccount.value,
-      });
+      hash = await castSingleVote(proposalIds[0], votes[0]);
     } else {
-      hash = await writeStandardGovernor(wagmiConfig, {
-        address: ttg.contracts.standardGovernor as Hash,
-        functionName: "castVotes",
-        args: [proposalIds, votes], // uint256[] proposalId, uint8[] support
-        account: userAccount.value,
-      });
+      hash = await castVotes(proposalIds, votes);
     }
 
     const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
@@ -306,4 +290,48 @@ async function onCastBatchVotes() {
 
   isLoading.value = false;
 }
+
+const castSingleVoteWithReason = (
+  proposalId: bigint,
+  vote: number,
+  reason: string,
+) => {
+  return writeStandardGovernor(wagmiConfig, {
+    address: ttg.contracts.standardGovernor as Hash,
+    functionName: "castVoteWithReason",
+    args: [proposalId, vote, reason], // uint256 proposalId, uint8 support, string reason
+    account: userAccount.value,
+  });
+};
+
+const castVotesWithReason = (
+  proposalIds: bigint[],
+  votes: number[],
+  reasons: string[],
+) => {
+  return writeStandardGovernor(wagmiConfig, {
+    address: ttg.contracts.standardGovernor as Hash,
+    functionName: "castVotesWithReason",
+    args: [proposalIds, votes, reasons], // uint256[] proposalId, uint8[] support, string[] reason
+    account: userAccount.value,
+  });
+};
+
+const castSingleVote = (proposalId: bigint, vote: number) => {
+  return writeStandardGovernor(wagmiConfig, {
+    address: ttg.contracts.standardGovernor as Hash,
+    functionName: "castVote",
+    args: [proposalId, vote], // uint256 proposalId, uint8 support, string reason
+    account: userAccount.value,
+  });
+};
+
+const castVotes = (proposalIds: bigint[], votes: number[]) => {
+  return writeStandardGovernor(wagmiConfig, {
+    address: ttg.contracts.standardGovernor as Hash,
+    functionName: "castVotes",
+    args: [proposalIds, votes], // uint256[] proposalId, uint8[] support
+    account: userAccount.value,
+  });
+};
 </script>
