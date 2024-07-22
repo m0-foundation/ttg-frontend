@@ -374,7 +374,7 @@ export class Proposals extends GovernorModule {
       blockNumber: BigInt(proposal.blockNumber!),
     });
 
-    const epoch = Epoch.getEpochFromTimestamp(Number(block.timestamp));
+    const epoch = Epoch.instance.getEpochFromTimestamp(Number(block.timestamp));
 
     return {
       ...proposal,
