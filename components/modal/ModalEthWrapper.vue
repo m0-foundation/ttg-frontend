@@ -18,7 +18,7 @@
             </button>
           </div>
           <div>
-            <p class="text-grey-200 text-inter text-sm">
+            <p class="text-grey-200 font-inter text-sm">
               To pay the submission fee, please wrap your ETH. Only ETH as
               ERC-20 tokens are allowed.
             </p>

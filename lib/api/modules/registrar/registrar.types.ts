@@ -6,6 +6,10 @@ export interface MRegistrarValues {
   powerToken: string;
   zeroToken: string;
   vault: string;
+
+  clock: number;
+  clockPeriod: number;
+  clockStartingTimestamp: number;
 }
 
 export interface MRegistrarStore extends MRegistrarValues {

@@ -62,13 +62,18 @@ async function onSetup(rpc: string) {
     },
   });
 
-  const registrarContracts = await api.registrar.getValues();
-  ttg.setContracts(registrarContracts);
+  const registrarValues = await api.registrar.getValues();
+  ttg.setRegistrarValues(registrarValues);
+
+  api.epoch.setEpoch(
+    registrarValues.clockStartingTimestamp,
+    registrarValues.clockPeriod,
+  );
 
   api.setGovernors({
-    standardGovernor: registrarContracts.standardGovernor,
-    zeroGovernor: registrarContracts.zeroGovernor,
-    emergencyGovernor: registrarContracts.emergencyGovernor,
+    standardGovernor: registrarValues.standardGovernor,
+    zeroGovernor: registrarValues.zeroGovernor,
+    emergencyGovernor: registrarValues.emergencyGovernor,
   });
   apiStore.setClient(api);
 
@@ -99,7 +104,7 @@ onMounted(async () => {
 
     await votes.fetchAllVotes().catch((e) => trackError(e, "fetchAllVotes"));
     await ttg
-      .fetchEpoch(ttg.getValues.clock)
+      .fetchEpoch(ttg.values.clock!)
       .catch((e) => trackError(e, "fetchEpoch"));
 
     watchForExecutedResetProposal();

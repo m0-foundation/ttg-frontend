@@ -21,6 +21,22 @@
     <template #cell(votes)="{ value }">
       <span>{{ useNumberFormatterCompact(value) }}</span>
     </template>
+    <template #cell(reason)="{ value }">
+      <div class="flex items-center">
+        <VTooltip v-if="value">
+          <div
+            class="flex justify-center items-center gap-1 text-grey-80 text-xs cursor-pointer"
+          >
+            <MIconEye class="w-5 h-5" /> Read
+          </div>
+          <template #popper>
+            <div class="max-w-80">
+              {{ value }}
+            </div>
+          </template>
+        </VTooltip>
+      </div>
+    </template>
   </MSimpleTable>
 </template>
 
@@ -39,6 +55,7 @@ const props = defineProps<Props>();
 const votesTableHeaders = ref([
   { key: "voter", label: "Address" },
   { key: "votes", label: "Votes", sortable: true },
+  { key: "reason", label: "Reason", sortable: true },
   { key: "vote", label: "Voted", sortable: true },
 ]);
 
@@ -54,6 +71,7 @@ const votes = computed(() => {
         : String(v.weight),
     ),
     transactionHash: v.transactionHash,
+    reason: v.reason,
   }));
 });
 </script>
