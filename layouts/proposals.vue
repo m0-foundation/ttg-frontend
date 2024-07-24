@@ -7,11 +7,23 @@
             <p class="text-grey-500 text-sm">
               Total Epochs: #{{ epoch?.current?.asNumber }}
             </p>
-            <span class="capitalize">{{
-              epoch?.current?.type.toLowerCase()
-            }}</span>
-            epoch
-            <span class="text-green-700">#{{ phasesEpoch }}</span>
+            <VTooltip>
+              <span class="capitalize">
+                {{ epoch?.current?.type.toLowerCase() }} epoch
+              </span>
+              <span class="text-green-700">#{{ phasesEpoch }}</span>
+
+              <template #popper>
+                <span v-if="epoch?.current?.type === 'TRANSFER'">
+                  The Transfer Epoch is a non-voting period where transfers and
+                  delegation are enabled.
+                </span>
+                <span v-else>
+                  The Voting Epoch is where voting takes place on Standard
+                  Proposals and transfers and delegation are disabled.
+                </span>
+              </template>
+            </VTooltip>
           </div>
 
           <div>
