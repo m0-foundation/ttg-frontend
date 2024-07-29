@@ -1,6 +1,7 @@
 import uniqBy from "lodash/uniqBy";
 import { MVote } from "@/lib/api/types";
 import { defineStore } from "pinia";
+import { Hash } from "viem";
 
 export const useVotesStore = defineStore("votes", () => {
   const api = useApiClientStore();
@@ -9,6 +10,14 @@ export const useVotesStore = defineStore("votes", () => {
 
   function getBy(key: keyof MVote, value: string) {
     return computed(() => votes.value.filter((v) => v[key] === value));
+  }
+
+  function getByAddress(address: Hash) {
+    return computed(() =>
+      votes.value.filter(
+        (v) => v.voter?.toLowerCase() === address.toLowerCase(),
+      ),
+    );
   }
 
   function add(newVotes: MVote[]) {
@@ -57,6 +66,7 @@ export const useVotesStore = defineStore("votes", () => {
     fetchVotesZero,
     fetchVotes,
     getBy,
+    getByAddress,
     add,
   };
 });
