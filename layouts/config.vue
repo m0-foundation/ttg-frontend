@@ -8,7 +8,7 @@
       class="flex gap-6 whitespace-nowrap overflow-x-auto text-grey-500 mb-6"
     >
       <NuxtLink
-        to="/config/governance"
+        to="/config/governance/"
         class="link-tab"
         active-class="active-link-tab"
       >
@@ -16,15 +16,26 @@
       </NuxtLink>
 
       <NuxtLink
-        to="/config/protocol"
+        to="/config/protocol/"
         class="link-tab"
         active-class="active-link-tab"
       >
         Protocol
       </NuxtLink>
+
+      <NuxtLink
+        to="/config/guidance/"
+        class="link-tab"
+        active-class="active-link-tab"
+      >
+        Guidance
+      </NuxtLink>
     </div>
 
-    <slot />
+    <Suspense>
+      <slot />
+      <template #fallback> Loading... </template>
+    </Suspense>
   </div>
 </template>
 

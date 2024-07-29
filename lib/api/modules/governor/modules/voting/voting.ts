@@ -1,9 +1,26 @@
-import { parseAbiItem } from "viem";
+import { Hash, formatUnits, parseAbiItem } from "viem";
 import { GovernorModule } from "../GovernorModule";
 import { MVote } from "./voting.types";
+import { GovernanceType } from "../../governor.types";
+import { ApiContext } from "@/lib/api/api-context";
 
 export class Voting extends GovernorModule {
+  governanceType: GovernanceType;
+
+  constructor(
+    governor: Hash,
+    context: ApiContext,
+    governanceType: GovernanceType,
+  ) {
+    super(governor, context);
+    this.governanceType = governanceType;
+  }
+
   async decodeVote(log: any): Promise<MVote> {
+    const token = ["Standard", "Emergency"].includes(this.governanceType)
+      ? "power"
+      : "zero";
+
     const vote = {
       proposalId: log?.args?.proposalId?.toString(),
       reason: log?.args?.reason,
@@ -14,7 +31,8 @@ export class Voting extends GovernorModule {
       blockNumber: Number(log.blockNumber),
       eventName: log.eventName,
       data: log.data,
-    } as MVote;
+      token: token,
+    } as unknown as MVote;
 
     vote.voteId = `${vote.proposalId}_${vote.voter}`;
 

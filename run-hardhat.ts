@@ -1,9 +1,9 @@
 import setup from "./hardhat/setup";
-import deploySpog from "./hardhat/deploy-spog";
+import deployTtg from "./hardhat/deploy-ttg";
 
 async function run() {
   const env = await setup();
-  await deploySpog(env);
+  await deployTtg(env);
 }
 
 run();

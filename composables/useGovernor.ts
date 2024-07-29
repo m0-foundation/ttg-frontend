@@ -13,7 +13,7 @@ export const useGovernor = ({
   votingType?: MVotingType;
   proposalId?: string;
 }) => {
-  const spog = useSpogStore();
+  const ttg = useTtgStore();
   const proposalStore = useProposalsStore();
 
   let type;
@@ -29,21 +29,21 @@ export const useGovernor = ({
 
   if (type === "Standard") {
     return {
-      address: spog.contracts.standardGovernor as Hash,
+      address: ttg.contracts.standardGovernor as Hash,
       abi: standardGovernorAbi,
     };
   }
 
   if (type === "Emergency") {
     return {
-      address: spog.contracts.emergencyGovernor as Hash,
+      address: ttg.contracts.emergencyGovernor as Hash,
       abi: emergencyGovernorAbi,
     };
   }
 
   if (type === "Zero") {
     return {
-      address: spog.contracts.zeroGovernor as Hash,
+      address: ttg.contracts.zeroGovernor as Hash,
       abi: zeroGovernorAbi,
     };
   }

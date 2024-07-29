@@ -24,9 +24,19 @@ export const useParsedDescriptionTitle = (description: string) => {
     return dom.body.innerText;
   });
 
+  const onlyDescriptionHtml = computed(() => {
+    const dom = domParser.parseFromString(html, "text/html");
+    const titleHtml = dom.getElementsByTagName("h1")[0];
+    if (titleHtml) {
+      titleHtml.remove();
+    }
+    return dom.body.innerHTML;
+  });
+
   return {
     html,
     title: title.value,
     onlyDescription: onlyDescription.value,
+    onlyDescriptionHtml: onlyDescriptionHtml.value,
   };
 };

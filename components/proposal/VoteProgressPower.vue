@@ -6,15 +6,15 @@
       {{ props.votes?.yes?.percentage }}%
     </span>
 
-    <span id="vote-yes-percentage" class="text-grey-400 text-xs">
+    <span id="vote-yes-percentage" class="text-grey-500 text-xs">
       ({{ props.votes?.yes?.formatted }})
     </span>
 
     <MProgressBarThreshold
-      v-if="props.threshold"
+      v-if="props.thresholdRatio"
       :yes="props.votes?.yes?.percentage"
       :no="props.votes?.no?.percentage"
-      :threshold="props.threshold"
+      :threshold="thresholdRatioPercentage"
     />
 
     <MProgressBar
@@ -32,22 +32,21 @@
       {{ props.votes?.no?.percentage }}%
     </span>
 
-    <span id="vote-yes-percentage" class="text-grey-400 text-xs">
+    <span id="vote-yes-percentage" class="text-grey-500 text-xs">
       ({{ props.votes?.no?.formatted }})
     </span>
 
-    <span
-      v-if="props.threshold"
-      class="text-grey-400 text-xs uppercase whitespace-nowrap ml-2"
-    >
-      Threshold: {{ props.threshold * 100 }}% ({{ props.thresholdFormatted }})
-    </span>
+    <div v-if="props.thresholdRatio">
+      <span class="text-grey-500 text-xs uppercase whitespace-nowrap">
+        Threshold: {{ thresholdRatio }}% ({{ props.thresholdFormatted }})
+      </span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 interface Props {
-  threshold?: number;
+  thresholdRatio?: number; // in percentage 0-1 i.e: 0.5 = 50%, 1=100%
   thresholdFormatted?: string;
   votes: {
     total: bigint;
@@ -68,4 +67,6 @@ const props = defineProps<Props>();
 const hasVotes = computed(
   () => props.votes?.yes?.count > 0n || props.votes?.no?.count > 0n,
 );
+
+const thresholdRatioPercentage = (props.thresholdRatio || 1) / 100;
 </script>

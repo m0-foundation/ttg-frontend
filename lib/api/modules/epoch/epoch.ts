@@ -1,4 +1,3 @@
-import { PublicClient } from "viem";
 import { EpochTypes, MEpoch } from "./epoch.types";
 
 /*
@@ -11,17 +10,28 @@ see files:
 */
 
 export class Epoch {
-  client: PublicClient;
+  static #instance: Epoch;
 
-  static _STARTING_TIMESTAMP = 1_711_544_399;
-  static _EPOCH_PERIOD_SECONDS = 86400;
+  clockStartingTimestamp!: number;
+  clockPeriod!: number;
 
-  constructor(client: PublicClient) {
-    this.client = client;
+  private constructor() {}
+
+  public static get instance(): Epoch {
+    if (!Epoch.#instance) {
+      Epoch.#instance = new Epoch();
+    }
+
+    return Epoch.#instance;
   }
 
-  async getCurrentBlockTimestamp(): Promise<bigint> {
-    return await this.client.getBlock().then((block) => block.timestamp);
+  setEpoch(clockStartingTimestamp: number, clockPeriod: number) {
+    this.clockStartingTimestamp = Number(clockStartingTimestamp);
+    this.clockPeriod = Number(clockPeriod);
+  }
+
+  getType(epoch: number) {
+    return epoch % 2 === 0 ? EpochTypes.TRANSFER : EpochTypes.VOTING;
   }
 
   getEpochState(currentEpoch: number): MEpoch {
@@ -31,17 +41,18 @@ export class Epoch {
     const currentEpochEndAsTimestamp =
       this.getTimestampOfEpochEnd(currentEpoch);
 
-    const getType = (epoch: number) =>
-      epoch % 2 === 0 ? EpochTypes.TRANSFER : EpochTypes.VOTING;
-
     console.log({
       currentEpoch,
       currentEpochStart: currentEpochStartAsTimestamp,
       currentEpochEnd: currentEpochEndAsTimestamp,
-      type: getType(currentEpoch),
+      type: this.getType(currentEpoch),
     });
 
     return {
+      values: {
+        clockPeriod: this.clockPeriod,
+        clockStartingTimestamp: this.clockStartingTimestamp,
+      },
       current: {
         asNumber: currentEpoch,
         asTimestamp: currentEpochStartAsTimestamp,
@@ -51,7 +62,7 @@ export class Epoch {
         start: {
           timestamp: currentEpochStartAsTimestamp,
         },
-        type: getType(currentEpoch),
+        type: this.getType(currentEpoch),
       },
       next: {
         asNumber: currentEpoch + 1,
@@ -62,23 +73,20 @@ export class Epoch {
         start: {
           timestamp: currentEpochStartAsTimestamp,
         },
-        type: getType(currentEpoch + 1),
+        type: this.getType(currentEpoch + 1),
       },
     };
   }
 
-  static getEpochFromTimestamp(timestamp: number) {
+  getEpochFromTimestamp(timestamp: number) {
     return (
-      Math.floor(
-        (timestamp - Epoch._STARTING_TIMESTAMP) / Epoch._EPOCH_PERIOD_SECONDS
-      ) + 1
+      Math.floor((timestamp - this.clockStartingTimestamp) / this.clockPeriod) +
+      1
     );
   }
 
   getTimestampOfEpochStart(epoch: number) {
-    return (
-      (epoch - 1) * Epoch._EPOCH_PERIOD_SECONDS + Epoch._STARTING_TIMESTAMP
-    );
+    return (epoch - 1) * this.clockPeriod + this.clockStartingTimestamp;
   }
 
   getTimestampOfEpochEnd(epoch: number) {

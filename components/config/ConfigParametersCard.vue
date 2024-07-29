@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 bg-grey-800 p-8">
+  <div class="flex flex-col gap-4 bg-grey-800 p-4 lg:p-6">
     <div class="flex gap-4 justify-between">
       <div>
         <h3 class="text-xl">{{ param?.title }}</h3>
@@ -12,7 +12,7 @@
           </p>
           <div class="config-key-badge">
             <div v-if="param?.value" class="flex align-center">
-              <span>{{ shortenText(param.value) }}</span>
+              <span>{{ shortenText(param.value) }} {{ param?.unit }}</span>
               <template v-if="param?.copyValue">
                 <MIconSimpleCheck
                   v-if="isJustCopied"
@@ -23,34 +23,32 @@
                 </button>
               </template>
             </div>
-            <span v-else>Parameter not set</span>
+            <span v-else class="text-nowrap">Parameter not set</span>
           </div>
         </div>
-        <MDropdown v-if="param?.proposal?.executedEvent" origin="right">
-          <ul class="dropdown-menu-items">
-            <li
-              class="px-6 py-3 text-xxs text-grey-500 border-b border-b-grey-800"
-            >
-              <p>Last updated</p>
-              <p>
-                {{
-                  useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
-                    "LLL",
-                  )
-                }}
-              </p>
-            </li>
-            <li>
-              <NuxtLink :to="`/proposal/${param?.proposal?.proposalId}`"
-                >Show proposal
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/proposal/create"> Create new proposal </NuxtLink>
-            </li>
-            <li></li>
-          </ul>
-        </MDropdown>
+        <div v-if="param?.proposal?.executedEvent">
+          <MDropdown>
+            <ul class="dropdown-menu-items">
+              <li
+                class="px-6 py-3 text-xxs text-grey-500 border-b border-b-grey-800"
+              >
+                <p>Last updated</p>
+                <p>
+                  {{
+                    useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
+                      "LLL",
+                    )
+                  }}
+                </p>
+              </li>
+              <li>
+                <NuxtLink :to="`/proposal/${param?.proposal?.proposalId}`"
+                  >Show proposal
+                </NuxtLink>
+              </li>
+            </ul>
+          </MDropdown>
+        </div>
       </div>
     </div>
     <div
@@ -75,12 +73,14 @@
 import { formatUnits } from "viem";
 import { shortenText } from "@/utils/misc";
 
-const { currentCashToken } = storeToRefs(useSpogStore());
+const { currentCashToken } = storeToRefs(useTtgStore());
 const { isJustCopied, copy } = useCopyClipboard();
 
 defineProps({
-  param: Object,
-  default: () => {},
+  param: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const formattedValue = (param) => {

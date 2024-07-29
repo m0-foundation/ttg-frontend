@@ -34,6 +34,8 @@ export interface MProposalMutable {
   state: MProposalState;
   noVotes: bigint;
   yesVotes: bigint;
+  quorum: bigint;
+  quorumNumerator: number;
 }
 
 export interface MProposal extends ProposalEventLog, MProposalMutable {

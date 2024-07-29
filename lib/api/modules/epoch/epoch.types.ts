@@ -6,6 +6,10 @@ export enum EpochTypes {
 export type EpochType = keyof typeof EpochTypes;
 
 export interface MEpoch {
+  values: {
+    clockPeriod: number;
+    clockStartingTimestamp: number;
+  };
   current: {
     asNumber: number;
     asTimestamp: number;

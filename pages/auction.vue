@@ -168,7 +168,7 @@ import { useMBalances } from "@/lib/hooks";
 const alerts = useAlertsStore();
 const { forceSwitchChain } = useCorrectChain();
 const { address: userAccount } = useAccount();
-const spog = storeToRefs(useSpogStore());
+const ttg = storeToRefs(useTtgStore());
 
 const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
 
@@ -176,7 +176,7 @@ const cashTokenBalance = computed(() => cashToken?.data?.value?.formatted);
 
 const purchaseAmount = ref();
 const isLoadingTransaction = ref(false);
-const { epoch, currentCashToken } = storeToRefs(spog);
+const { epoch, currentCashToken } = storeToRefs(ttg);
 const wagmiConfig = useWagmiConfig();
 const {
   amountLeftToAuction,
@@ -186,7 +186,7 @@ const {
 } = useAuction();
 
 const isTransferEpoch = computed(
-  () => spog.epoch.value.current?.type === "TRANSFER"
+  () => ttg.epoch.value.current?.type === "TRANSFER",
 );
 
 const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
@@ -194,7 +194,7 @@ const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
 const totalPrice = computed(() => {
   if (!currentCost.value || !purchaseAmount.value) return "0";
   return useNumberFormatterEth(
-    formatEther(BigInt(currentCost.value.value) * BigInt(purchaseAmount.value))
+    formatEther(BigInt(currentCost.value.value) * BigInt(purchaseAmount.value)),
   );
 });
 
@@ -213,7 +213,7 @@ async function auctionBuy() {
     });
 
     const hash = await writePowerToken(wagmiConfig, {
-      address: spog.contracts.value.powerToken as Hash,
+      address: ttg.contracts.value.powerToken as Hash,
       functionName: "buy",
       args: [
         1n, // Minimun amount the user is willing to buy
@@ -243,8 +243,8 @@ async function auctionBuy() {
       alerts.successAlert(
         `You bought ${args.amount} Power tokens for ${formatUnits(
           args.cost * args.amount,
-          currentCashToken?.value?.decimals
-        )} ${currentCashToken?.value?.symbol}`
+          currentCashToken?.value?.decimals,
+        )} ${currentCashToken?.value?.symbol}`,
       );
       refetchBalances();
       getAmountLeftToAuction();
@@ -260,18 +260,18 @@ async function auctionBuy() {
 async function writeAllowance(value: string) {
   const allowance = await readContract(wagmiConfig, {
     abi: erc20Abi,
-    address: spog.contracts.value.cashToken as Hash,
+    address: ttg.contracts.value.cashToken as Hash,
     functionName: "allowance",
-    args: [userAccount.value as Hash, spog.contracts.value.powerToken as Hash], // address owner, address spender
+    args: [userAccount.value as Hash, ttg.contracts.value.powerToken as Hash], // address owner, address spender
     account: userAccount.value as Hash,
   });
 
   if (!allowance || allowance < parseEther(value)) {
     const hash = await writeContract(wagmiConfig, {
       abi: erc20Abi,
-      address: spog.contracts.value.cashToken as Hash,
+      address: ttg.contracts.value.cashToken as Hash,
       functionName: "approve",
-      args: [spog.contracts.value.powerToken as Hash, parseEther(value)], // address spender, uint256 amount
+      args: [ttg.contracts.value.powerToken as Hash, parseEther(value)], // address spender, uint256 amount
       account: userAccount.value as Hash,
     });
 

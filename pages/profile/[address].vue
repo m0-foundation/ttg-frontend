@@ -4,7 +4,11 @@
       <div>
         <p class="text-grey-600 text-xs font-inter">Address</p>
         <p class="text-white text-md">
-          {{ address }}
+          <MAddressAvatar
+            :address="address"
+            :short-address="!largerThanSm"
+            :show-copy="true"
+          />
         </p>
       </div>
     </div>
@@ -22,7 +26,9 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
+const largerThanSm = useBreakpoints(breakpointsTailwind).greater("sm");
 const route = useRoute();
 const address = ref(route.params.address as Hash);
 

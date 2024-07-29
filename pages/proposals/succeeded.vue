@@ -23,7 +23,7 @@ import { MProposal } from "@/lib/api/types";
 
 const proposalsStore = useProposalsStore();
 const proposals = computed(() =>
-  proposalsStore.getProposalsByState("Succeeded")
+  proposalsStore.getProposalsByState("Succeeded"),
 );
 
 const { address: userAccount } = useAccount();
@@ -66,15 +66,21 @@ async function onExecute(proposal: MProposal) {
     });
 
     if (txReceipt.status !== "success") {
-      throw new Error("Transaction was rejected");
+      throw txReceipt;
     }
 
     alerts.successAlert("Proposal executed successfully!");
 
     proposalStore.updateProposalById(proposal.proposalId);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error executing proposal", error);
-    alerts.errorAlert("Error while executing proposal");
+    if (error.transactionHash) {
+      alerts.errorAlert(
+        `Error while executing proposal! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`,
+      );
+    } else {
+      alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);
+    }
   } finally {
     isLoading.value = false;
     selectedProposal.value = undefined;

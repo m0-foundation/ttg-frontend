@@ -1,211 +1,191 @@
 <template>
-  <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6 z-50">
-    <NuxtLink to="/">
-      <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
-    </NuxtLink>
-    <span class="text-grey-500 text-sm font-ppformula text-nowrap">
-      [ Governance ]
-    </span>
-  </div>
-
-  <div class="flex flex-col gap-3">
-    <MModalWeb3Connect v-if="!isConnected">
-      <template #default="{ connect }">
-        <MButton
-          class="w-full flex justify-center"
-          data-test="sidebar-button-connect-wallet"
-          @click="connect"
-        >
-          Connect Wallet
-        </MButton>
-      </template>
-    </MModalWeb3Connect>
-
-    <NuxtLink v-if="isAuctionNotActive" class="block" to="/proposal/create/">
-      <MButton
-        :disabled="$route.path === '/proposal/create/'"
-        class="mb-6 w-full flex justify-center"
-        data-test="sidebar-button-create-proposal"
-        :version="isConnected ? 'primary' : 'outline-light'"
-      >
-        Create Proposal
-      </MButton>
-    </NuxtLink>
-  </div>
-
-  <nav class="text-grey-100 mb-6">
-    <ul>
-      <li v-for="item in mainMenuItems" :key="item.to">
-        <NuxtLink
-          v-if="item.isShow"
-          :to="item.path"
-          :class="{
-            'notification-dot': item.notification,
-            active: currentRoute?.path?.includes(item.path),
-          }"
-          :data-test="item.dataTest"
-        >
-          {{ item.title }} {{}}
-        </NuxtLink>
-      </li>
-    </ul>
-  </nav>
-
-  <div v-if="isConnected" class="text-grey-100">
-    <hr class="border-grey-700 my-4" />
-
-    <nav class="text-grey-100 mb-6">
-      <ul>
-        <li v-for="item in profileMenuItems" :key="item.to">
-          <NuxtLink
-            v-if="item.isShow"
-            :to="item.path"
-            :class="{
-              'notification-dot': item?.notification,
-              active: currentRoute?.path?.includes(item.path),
-            }"
-            :data-test="item.dataTest"
-          >
-            {{ item.title }} {{}}
-          </NuxtLink>
-        </li>
-      </ul>
-    </nav>
-
-    <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4">
-      <p class="text-xs mb-2 text-grey-600">POWER tokens</p>
-
-      <div>
-        <div class="flex justify-between items-center">
-          <div class="flex gap-2">
-            <MIconPower
-              class="h-5 w-5"
-              :version="hasDelegatedPower ? 'dark' : 'light'"
-            />
-            <span :class="[hasDelegatedPower ? 'text-grey-600' : 'text-white']">
-              {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
-            </span>
-          </div>
-          <span class="text-grey-600 text-xxs">
-            {{
-              useNumberFormatterCompact(
-                balancePowerToken?.data?.value?.formatted || 0
-              )
-            }}
-          </span>
-        </div>
-        <div
-          v-if="hasDelegatedPower"
-          class="bg-accent-blue p-2 py-1 mt-2 text-center"
-        >
-          <p class="text-xxs font-inter">Voting power is delegated</p>
-        </div>
-
-        <div
-          v-if="hasReceivedPowerVotingPower"
-          class="bg-green-800 p-2 py-1 mt-2 text-left w-fit"
-        >
-          <p class="text-xxs font-inter">Delegatee</p>
-        </div>
-      </div>
-
-      <hr class="border-grey-700 border-dashed my-4" />
-
-      <p class="text-xs mb-2 text-grey-600">ZERO tokens</p>
-      <div>
-        <div class="flex justify-between items-center">
-          <div class="flex gap-2">
-            <MIconZero
-              :version="hasDelegatedZero ? 'dark' : 'light'"
-              class="h-5 w-5"
-            />
-            <span :class="[hasDelegatedZero ? 'text-grey-600' : 'text-white']">
-              {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
-            </span>
-          </div>
-          <span class="text-grey-600 text-xxs">
-            {{
-              useNumberFormatterCompact(
-                balanceZeroToken?.data?.value?.formatted || 0
-              )
-            }}
-          </span>
-        </div>
-        <div
-          v-if="hasDelegatedZero"
-          class="bg-accent-blue p-2 py-1 mt-2 text-center"
-        >
-          <p class="text-xxs font-inter">Voting power is delegated</p>
-        </div>
-
-        <div
-          v-if="hasReceivedZeroVotingPower"
-          class="bg-green-800 p-2 py-1 mt-2 text-left w-fit"
-        >
-          <p class="text-xxs font-inter">Delegatee</p>
-        </div>
-      </div>
-    </div>
-    <div v-else class="mb-4 bg-grey-800 p-4">
-      <p class="bg-red-500 text-white w-fit p-2 text-xs">
-        Wrong network!<br />
-        <button
-          class="text-xxs underline hover:no-underline"
-          @click="forceSwitchChain"
-        >
-          Switch network
-        </button>
-      </p>
+  <div class="h-full flex flex-col">
+    <div class="flex items-end gap-4 leading-4 pt-16 lg:pt-8 mb-6 z-50">
+      <NuxtLink to="/">
+        <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
+      </NuxtLink>
+      <span class="text-grey-500 text-sm font-ppformula text-nowrap">
+        [ Governance ]
+      </span>
     </div>
 
-    <button
-      id="button-disconnect-wallet"
-      type="button"
-      class="block w-full my-4 hover:underline text-left text-xs font-ppformula"
-      data-test="sidebar-button-disconnect"
-      @click="() => disconnect()"
+    <div
+      class="h-full overflow-y-scroll lg:overflow-y-auto flex flex-col gap-3"
     >
-      Disconnect
-    </button>
+      <div>
+        <div class="flex flex-col gap-3">
+          <MModalWeb3Connect v-if="!isConnected">
+            <template #default="{ connect }">
+              <MButton
+                class="w-full flex justify-center"
+                data-test="sidebar-button-connect-wallet"
+                @click="connect"
+              >
+                Connect Wallet
+              </MButton>
+            </template>
+          </MModalWeb3Connect>
+
+          <NuxtLink
+            v-if="isAuctionNotActive"
+            class="block"
+            to="/proposal/create/"
+          >
+            <MButton
+              :disabled="$route.path === '/proposal/create/'"
+              class="mb-6 w-full flex justify-center"
+              data-test="sidebar-button-create-proposal"
+              :version="isConnected ? 'primary' : 'outline-light'"
+            >
+              Create Proposal
+            </MButton>
+          </NuxtLink>
+        </div>
+
+        <nav class="text-grey-100 mb-3 lg:mb-6">
+          <ul>
+            <li
+              v-for="item in mainMenuItems.filter((i) => i.isShow)"
+              :key="item.path"
+            >
+              <NuxtLink
+                :to="item.path"
+                :class="{
+                  'notification-dot': item.notification,
+                  active: currentRoute?.path?.includes(item.path),
+                }"
+                :data-test="item.dataTest"
+              >
+                {{ item.title }} {{}}
+              </NuxtLink>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div v-if="isConnected" class="text-grey-100">
+        <hr class="border-grey-700 my-4" />
+
+        <nav class="text-grey-100 mb-3 lg:mb-6">
+          <ul>
+            <li v-for="item in profileMenuItems" :key="item.to">
+              <NuxtLink
+                v-if="item.isShow"
+                :to="item.path"
+                :class="{
+                  'notification-dot': item?.notification,
+                  active: currentRoute?.path?.includes(item.path),
+                }"
+                :data-test="item.dataTest"
+              >
+                {{ item.title }} {{}}
+              </NuxtLink>
+            </li>
+          </ul>
+        </nav>
+
+        <div v-if="isCorrectChain" class="mb-4 bg-grey-800 p-4 font-inter">
+          <div class="text-xxs text-grey-500 flex justify-between">
+            <span>Voting power</span>
+            <span>Balance</span>
+          </div>
+          <hr class="border-grey-700 border-dashed mb-4 mt-2" />
+          <p class="text-xs mb-2 text-grey-500">POWER tokens</p>
+
+          <div>
+            <div class="flex justify-between items-end gap-3">
+              <div class="flex gap-2 items-end">
+                <MIconPower class="h-4 w-4" version="light" />
+                <span class="text-grey-200 font-ppformula leading-3">
+                  {{ powerVotingPower?.data.value?.relative?.toFixed(3) }}%
+                </span>
+              </div>
+
+              <span class="text-grey-200 text-xxs leading-none">
+                {{
+                  useNumberFormatterPrice(
+                    balancePowerToken?.data.value?.formatted || 0n,
+                    0,
+                    2,
+                  )
+                }}
+              </span>
+            </div>
+          </div>
+
+          <hr class="border-grey-700 border-dashed my-4" />
+
+          <p class="text-xs mb-2 text-grey-500">ZERO tokens</p>
+          <div>
+            <div class="flex justify-between items-end gap-3">
+              <div class="flex gap-2 items-end">
+                <MIconZero version="light" class="h-4 w-4" />
+                <span class="text-grey-200 font-ppformula leading-3">
+                  {{ zeroVotingPower?.data.value?.relative?.toFixed(3) }}%
+                </span>
+              </div>
+
+              <span class="text-grey-200 text-xxs leading-none">
+                {{
+                  useNumberFormatterPrice(
+                    balanceZeroToken?.data.value?.formatted || 0n,
+                    0,
+                    0,
+                  )
+                }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div v-else class="mb-4 bg-grey-800 p-4">
+          <p class="bg-red-500 text-white w-fit p-2 text-xs">
+            Wrong network!<br />
+            <button
+              class="text-xxs underline hover:no-underline"
+              @click="forceSwitchChain"
+            >
+              Switch network
+            </button>
+          </p>
+        </div>
+
+        <button
+          id="button-disconnect-wallet"
+          type="button"
+          class="block w-full my-4 hover:underline text-left text-xs font-ppformula"
+          data-test="sidebar-button-disconnect"
+          @click="() => disconnect()"
+        >
+          Disconnect
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useAccount, useDisconnect } from "use-wagmi";
-import { useMVotingPower, useMBalances, useMDelegates } from "@/lib/hooks";
+import { useMVotingPower, useMBalances } from "@/lib/hooks";
 
 const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
 const { isCorrectChain, forceSwitchChain } = useCorrectChain();
 const { amountLeftToAuction } = useAuction();
 
-const spog = useSpogStore();
+const ttg = useTtgStore();
 const router = useRouter();
 
 const { currentRoute } = router;
 
-const isTransferEpoch = computed(() => spog.epoch.current?.type === "TRANSFER");
+const isTransferEpoch = computed(() => ttg.epoch.current?.type === "TRANSFER");
 
 const config = useRuntimeConfig();
-
-const { hasDelegatedPower, hasDelegatedZero } = useMDelegates(address);
 
 const { power: powerVotingPower, zero: zeroVotingPower } =
   useMVotingPower(address);
 
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
-
-const hasReceivedPowerVotingPower = computed(
-  () =>
-    powerVotingPower?.data?.value?.value! >
-    balancePowerToken.data?.value?.value!
-);
-
-const hasReceivedZeroVotingPower = computed(
-  () =>
-    zeroVotingPower?.data?.value?.value! > balanceZeroToken.data?.value?.value!
-);
 
 const auctionActive = computed(() => {
   return config.public.auctionActive as unknown as boolean | string;
@@ -251,7 +231,7 @@ const mainMenuItems = computed(() => {
     {
       title: "Protocol Fees",
       path: "/fees/",
-      isShow: true,
+      isShow: isAuctionActive.value,
       dataTest: "sidebar-link-fees",
     },
   ];
@@ -263,12 +243,6 @@ const profileMenuItems = computed(() => [
     path: "/profile/me/",
     isShow: isAuctionNotActive.value,
     dataTest: "sidebar-link-my-profile",
-  },
-  {
-    title: "Delegate",
-    path: "/delegate/",
-    isShow: isAuctionNotActive.value,
-    dataTest: "sidebar-link-delegate",
   },
 ]);
 </script>

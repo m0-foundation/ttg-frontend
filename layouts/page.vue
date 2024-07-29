@@ -1,20 +1,13 @@
 <template>
   <div>
-    <header>
-      <div
-        class="w-full flex flex-wrap items-center justify-between mx-auto px-16 py-8"
-      >
-        <a href="/" class="flex items-center">
-          <span
-            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-          >
-            M&#94;ZERO <span class="text-sm text-gray-400">Governance</span>
-          </span>
-        </a>
-      </div>
-    </header>
+    <div class="flex items-end gap-4 leading-4 pt-8 p-6 lg:pl-16">
+      <NuxtLink to="/proposals">
+        <img class="h-[24px]" src="/img/mzero-logo-white.svg" alt="" />
+      </NuxtLink>
+      <span class="text-grey-500 text-sm leading-3">Gov</span>
+    </div>
     <!-- out content -->
-    <div class="mx-auto w-full md:w-3/4 mb-20">
+    <div class="mb-16">
       <NuxtPage />
     </div>
     <LayoutAlerts />

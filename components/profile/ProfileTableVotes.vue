@@ -4,9 +4,7 @@
       <NuxtLink
         class="underline hover:no-underline"
         :to="`/proposal/${item?.proposalId}`"
-        >{{
-          useParsedDescriptionTitle(item.proposal?.description).title
-        }}</NuxtLink
+        >{{ useParsedDescriptionTitle(item.proposal).title }}</NuxtLink
       >
     </template>
     <template #cell(vote)="{ value, item }">
@@ -33,6 +31,7 @@
 
 <script setup lang="ts">
 import { MVote } from "@/lib/api/types";
+import { formatUnits } from "viem";
 
 interface Props {
   votes: MVote[];
@@ -50,9 +49,12 @@ const votesTableHeaders = [
 const votesTableData = computed(() => {
   return props.votes.map((v: MVote) => ({
     proposalId: v.proposalId,
-    proposal: proposals.getProposalById(v.proposalId),
+    proposal: proposals.getProposalById(v.proposalId)?.description,
     vote: v.support,
-    votes: useNumberFormatterCompact(String(v.weight)),
+    votes:
+      v.token === "zero"
+        ? useNumberFormatterCompact(formatUnits(v.weight as bigint, 6))
+        : useNumberFormatterCompact(String(v.weight)),
     transactionHash: v.transactionHash,
   }));
 });

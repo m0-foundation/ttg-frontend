@@ -3,7 +3,7 @@
     <div class="block w-1/2">
       <div
         v-if="hasAllowedCashTokens"
-        class="bg-accent-teal flex flex-col gap-1 p-4 my-2"
+        class="bg-grey-800 bg-opacity-85 flex flex-col gap-1 p-4 my-2"
       >
         <span class="uppercase text-xxs">Parameter description</span>
         <p class="font-inter">
@@ -88,16 +88,16 @@ const address = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const tax = useVModelWrapper<InputProps>(props, emit, "modelValue2"); // in bigint wei already with the selected token's decimals
 const inputTaxAmount = ref();
 
-const spogStore = useSpogStore();
+const ttg = useTtgStore();
 const hasErrors = computed(() => props.modelValueErrors?.length);
 
 const selectedToken = ref<TokenOptionItem>();
 const hasAllowedCashTokens = computed(
-  () => (spogStore.governors.zero.allowedCashTokens?.length ?? 0) > 0,
+  () => (ttg.governors.zero.allowedCashTokens?.length ?? 0) > 0,
 );
 
 const options: TokenOptionItem[] | undefined =
-  spogStore.governors.zero.allowedCashTokens?.map((token) => ({
+  ttg.governors.zero.allowedCashTokens?.map((token) => ({
     value: token.address,
     label: token.symbol,
     id: token.symbol,

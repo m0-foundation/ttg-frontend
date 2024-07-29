@@ -28,7 +28,6 @@ import {
 
 import { ApiContext } from "@/lib/api/api-context";
 import { Epoch } from "@/lib/api/modules/epoch/epoch";
-import { getIpfsHashFromBytes32 } from "@/utils/ipfs";
 
 const ProposalTypesFunctionSelectors = {
   addToList: toFunctionSelector("addToList(bytes32,address)"),
@@ -150,8 +149,8 @@ export class Proposals extends GovernorModule {
         return hexWith32BytesToAddress(value as Hash);
       }
 
-      if (["guidance"].includes(key)) {
-        return getIpfsHashFromBytes32(value);
+      if (key.includes("guidance")) {
+        return value.slice(2);
       }
 
       return decodeAbiParameters([{ type: "uint256" }], value as Hash);
@@ -327,7 +326,7 @@ export class Proposals extends GovernorModule {
   }
 
   decodeReadGetProposal(proposal: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const [
       voteStart,
       voteEnd,
@@ -335,14 +334,17 @@ export class Proposals extends GovernorModule {
       noVotes,
       yesVotes,
       proposer,
-      quorum,
-      quorumNumerator,
+      quorum, // The threshold/quorum of yes votes required for the proposal to succeed based on the supply at the time of proposal voteStart.
+      quorumNumerator, // The threshold/quorum in BPS (basis points) of yes votes required for the proposal to succeed based on the supply at the time of proposal voteStart.
     ] = proposal;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
 
     return {
       state: ProposalState[state] as keyof typeof ProposalState,
       yesVotes,
       noVotes,
+      quorum,
+      quorumNumerator,
     };
   }
 
@@ -372,11 +374,11 @@ export class Proposals extends GovernorModule {
       blockNumber: BigInt(proposal.blockNumber!),
     });
 
-    const epoch = Epoch.getEpochFromTimestamp(Number(block.timestamp));
+    const epoch = Epoch.instance.getEpochFromTimestamp(Number(block.timestamp));
 
     return {
       ...proposal,
-      ...pick(mutableProposal, ["yesVotes", "noVotes", "state"]),
+      ...mutableProposal,
       epoch,
       votingType: this.governanceType,
       timestamp: Number(block.timestamp),

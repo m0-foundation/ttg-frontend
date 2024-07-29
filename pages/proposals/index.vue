@@ -11,27 +11,31 @@
     >
       <div class="flex flex-col lg:flex-row gap-3 items-start">
         <div>
-          <h5
-            v-if="Number(powerInflation) > 0"
-            class="text-grey-800 lg:text-xl tracking-tightest"
-          >
-            <span class="text-accent-blue">Preserve your voting power</span> and
-            receive
-            <span class="text-accent-blue">
-              {{ useNumberFormatterPrice(powerInflation) }} POWER
-            </span>
-            in the next epoch as inflation.
-          </h5>
-          <h5
-            v-if="Number(zeroInflation) > 0"
-            class="text-grey-800 lg:text-xl tracking-tightest"
-          >
-            Vote on all proposals in this epoch and receive
-            <span class="text-accent-blue">
-              {{ useNumberFormatterPrice(zeroInflation) }} ZERO
-            </span>
-            as rewards.
-          </h5>
+          <div class="text-grey-800 lg:text-xl tracking-tightest">
+            <span class="text-accent-blue">Vote on all </span>
+            Standard proposals in this epoch to:
+            <ul class="list-disc mx-4 text-sm">
+              <li>
+                Preserve your
+                <span class="text-accent-blue">voting power</span> for the next
+                epoch.
+              </li>
+              <li v-if="Number(powerInflation) != 0">
+                Increase your
+                <span class="text-accent-blue">
+                  balance by {{ useNumberFormatterPrice(powerInflation) }} POWER
+                </span>
+                in the next epoch as inflation.
+              </li>
+              <li v-if="Number(zeroInflation) != 0">
+                Receive
+                <span class="text-accent-blue">
+                  {{ useNumberFormatterPrice(zeroInflation) }} ZERO
+                </span>
+                as rewards
+              </li>
+            </ul>
+          </div>
 
           <div class="grow flex items-center gap-2 my-2 lg:mb-0">
             <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
@@ -65,6 +69,7 @@
         :loading="isLoading"
         @on-cast="onCast"
         @on-uncast="onUncast"
+        @update-reason-for-vote="updateReasonForVote"
       >
         <template #emptyState>
           <ProposalListEmptyState>
@@ -115,28 +120,29 @@ import {
 interface CastedProposal {
   vote: number;
   proposalId: string;
+  reason?: string;
 }
 
 const selectedCastProposals = ref<Array<CastedProposal>>([]);
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
-const spog = useSpogStore();
+const ttg = useTtgStore();
 
 const activeProposals = computed(() =>
-  proposalsStore.getProposalsByState("Active")
+  proposalsStore.getProposalsByState("Active"),
 );
 
 const standardProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Standard")
+  activeProposals.value.filter((p) => p.votingType === "Standard"),
 );
 
 const mandatoryToVoteProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Standard")
+  activeProposals.value.filter((p) => p.votingType === "Standard"),
 );
 
 const hasProposals = computed(
-  () => mandatoryToVoteProposals && mandatoryToVoteProposals.value.length > 0
+  () => mandatoryToVoteProposals && mandatoryToVoteProposals.value.length > 0,
 );
 
 const isSelectedCastProposalsFull = computed(() => {
@@ -161,9 +167,15 @@ const alerts = useAlertsStore();
 const powerInflation = useMInflationPowerToken();
 const zeroInflation = useMInflationZeroToken();
 const balances = useMBalances(userAccount);
+
 const { power: powerVotingPower } = useMVotingPower(userAccount);
 const hasPowerVotingPower = computed(
-  () => powerVotingPower.data.value?.hasVotingPower
+  () => powerVotingPower.data.value?.hasVotingPower,
+);
+const isDelegatee = computed(
+  () =>
+    powerVotingPower.data?.value?.value! >
+    balances.powerToken.data?.value?.value!,
 );
 
 useHead({
@@ -174,21 +186,27 @@ function onCast(vote: number, proposalId: string) {
   selectedCastProposals.value.push({ vote, proposalId });
 }
 
+function updateReasonForVote(value: string, proposalId: string) {
+  selectedCastProposals.value = selectedCastProposals.value.map((p) => {
+    if (p.proposalId === proposalId) {
+      return { ...p, reason: value };
+    }
+    return p;
+  });
+}
+
 function onUncast(proposalId: string) {
   selectedCastProposals.value = selectedCastProposals.value.filter(
-    (p) => p.proposalId !== proposalId
+    (p) => p.proposalId !== proposalId,
   );
 }
 
 const { data: hasVotedOnAllProposals, ...votedOnAllProposals } =
   useReadContract({
-    address: spog.contracts.standardGovernor as Hash,
+    address: ttg.contracts.standardGovernor as Hash,
     abi: standardGovernorAbi,
     functionName: "hasVotedOnAllProposals",
-    args: [
-      userAccount as Ref<Hash>,
-      BigInt(spog.epoch?.current?.asNumber || 0),
-    ],
+    args: [userAccount as Ref<Hash>, BigInt(ttg.epoch?.current?.asNumber || 0)],
     query: {
       enabled: isConnected,
     },
@@ -198,50 +216,122 @@ async function onCastBatchVotes() {
   await forceSwitchChain();
 
   isLoading.value = true;
+  // slight chance after confirmation the voting power is updated before the check is done,
+  // thus making a copy of value before the transaction
+  const isDelegateeStored = isDelegatee.value;
 
   try {
+    let hash;
+    const reasons = selectedCastProposals.value.map((p) => p.reason || "");
     const proposalIds = selectedCastProposals.value.map((p) =>
-      BigInt(p.proposalId)
+      BigInt(p.proposalId),
     );
     const votes = selectedCastProposals.value.map((p) => p.vote);
 
-    const hash = await writeStandardGovernor(wagmiConfig, {
-      address: spog.contracts.standardGovernor as Hash,
-      functionName: "castVotes",
-      args: [proposalIds, votes], // uint256 proposalId, uint8 support
-      account: userAccount.value,
-    });
+    const isOnlyOneVote = selectedCastProposals.value.length === 1;
+    const anyProposalHasReason = selectedCastProposals.value.some(
+      (p) => p.reason,
+    );
+
+    if (anyProposalHasReason && isOnlyOneVote) {
+      hash = await castSingleVoteWithReason(
+        proposalIds[0],
+        votes[0],
+        reasons[0],
+      );
+    } else if (anyProposalHasReason) {
+      hash = await castVotesWithReason(proposalIds, votes, reasons);
+    } else if (isOnlyOneVote) {
+      hash = await castSingleVote(proposalIds[0], votes[0]);
+    } else {
+      hash = await castVotes(proposalIds, votes);
+    }
 
     const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
       confirmations: 1,
       hash,
     });
+
     if (txReceipt.status !== "success") {
-      throw new Error("Transaction was rejected");
+      throw txReceipt;
     }
 
     alerts.successAlert(
       `Your Balance has received the reward of ${useNumberFormatterPrice(
-        toValue(zeroInflation)
-      )} ZERO tokens.`
+        toValue(zeroInflation),
+      )} ZERO tokens.`,
     );
 
-    if (hasPowerVotingPower) {
+    if (isDelegateeStored) {
       alerts.successAlert(
-        `Vote casted successfully! Your Balance will receive the reward of ${useNumberFormatterPrice(
-          toValue(powerInflation)
-        )} POWER tokens in the next epoch.`
+        "Vote casted successfully! Your POWER voting power has increased.",
+      );
+    } else {
+      alerts.successAlert(
+        `Vote casted successfully! Your will receive ${useNumberFormatterPrice(
+          toValue(powerInflation),
+        )} POWER tokens in the next epoch.`,
       );
     }
 
-    await spog.fetchTokens();
+    await ttg.fetchTokens();
     balances.refetch();
     votedOnAllProposals.refetch();
-  } catch (error) {
-    console.error("Error casting vote", error);
-    alerts.errorAlert("Error when casting vote!");
+  } catch (error: any) {
+    console.log("Error casting vote", { error });
+    if (error.transactionHash) {
+      alerts.errorAlert(
+        `Error when casting vote! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer("tx", error.transactionHash)}>transaction</a>.`,
+      );
+    } else {
+      alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`);
+    }
   }
 
   isLoading.value = false;
 }
+
+const castSingleVoteWithReason = (
+  proposalId: bigint,
+  vote: number,
+  reason: string,
+) => {
+  return writeStandardGovernor(wagmiConfig, {
+    address: ttg.contracts.standardGovernor as Hash,
+    functionName: "castVoteWithReason",
+    args: [proposalId, vote, reason], // uint256 proposalId, uint8 support, string reason
+    account: userAccount.value,
+  });
+};
+
+const castVotesWithReason = (
+  proposalIds: bigint[],
+  votes: number[],
+  reasons: string[],
+) => {
+  return writeStandardGovernor(wagmiConfig, {
+    address: ttg.contracts.standardGovernor as Hash,
+    functionName: "castVotesWithReason",
+    args: [proposalIds, votes, reasons], // uint256[] proposalId, uint8[] support, string[] reason
+    account: userAccount.value,
+  });
+};
+
+const castSingleVote = (proposalId: bigint, vote: number) => {
+  return writeStandardGovernor(wagmiConfig, {
+    address: ttg.contracts.standardGovernor as Hash,
+    functionName: "castVote",
+    args: [proposalId, vote], // uint256 proposalId, uint8 support, string reason
+    account: userAccount.value,
+  });
+};
+
+const castVotes = (proposalIds: bigint[], votes: number[]) => {
+  return writeStandardGovernor(wagmiConfig, {
+    address: ttg.contracts.standardGovernor as Hash,
+    functionName: "castVotes",
+    args: [proposalIds, votes], // uint256[] proposalId, uint8[] support
+    account: userAccount.value,
+  });
+};
 </script>

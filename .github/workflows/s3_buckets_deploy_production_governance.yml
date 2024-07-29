@@ -1,0 +1,28 @@
+name: Build & Upload to PROD GOVERNANCE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-production-governance:
+    uses: m0-foundation/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_production_governance.yml@main
+    secrets: inherit
+    permissions:
+      contents: write
+    if: github.ref_name == 'production'
+
+  # Invoking, in case of successful build of "build-and-upload-to-s3-production", the sub-workflow that will create a tag
+  tag:
+    if: success() && github.ref_name == 'production'
+    needs: [ deploy-production-governance ]
+    uses: m0-foundation/ttg-frontend/.github/workflows/tag.yml@main
+    permissions:
+      contents: write
+
+  # Invoking, in case of successful build of "build-and-upload-to-s3-production" and "tag", the sub-workflow that will create a release
+  release:
+    if: success() && github.ref_name == 'production'
+    needs: [ deploy-production-governance, tag ]
+    uses: m0-foundation/ttg-frontend/.github/workflows/release.yml@main
+    permissions:
+      contents: write

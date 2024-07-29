@@ -1,0 +1,15 @@
+name: Build & Upload to S3 STAGING
+
+on:
+  push:
+    branches:
+      - 'staging'
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    uses: m0-foundation/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_staging.yml@main
+    secrets: inherit
+    permissions:
+      contents: write
+    if: github.ref_name == 'staging'

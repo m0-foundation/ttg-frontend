@@ -17,12 +17,14 @@
           </h3>
         </template>
         <template #cell(value)="{ value }">
-          <MAddressAvatar
+          <MAddressCopy
             :address="value"
             :short-address="false"
             :show-copy="true"
-            :show-avatar="false"
           />
+        </template>
+        <template #cell(description)="{ value }">
+          <div class="max-sm:min-w-72">{{ value }}</div>
         </template>
       </MSimpleTable>
     </section>
@@ -33,9 +35,10 @@
 import { storeToRefs } from "pinia";
 import pick from "lodash/pick";
 
-const spog = useSpogStore();
-const { getValues, contracts } = storeToRefs(spog);
+const ttg = useTtgStore();
+const { getValues, contracts } = storeToRefs(ttg);
 const proposalsStore = useProposalsStore();
+const { getTtgAddress: registrarAddress, getMToken } = useNetworkStore();
 
 const parametersData = [
   {
@@ -43,31 +46,34 @@ const parametersData = [
     key: "emergencyProposalThresholdRatio",
     description:
       "The number of yes votes as a percentage of the total POWER supply required to pass proposals which require a POWER Threshold.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#power-threshold",
     type: "basisPoints",
+    unit: "BPS",
   },
   {
     title: "Zero Proposal Threshold Ratio",
     key: "zeroProposalThresholdRatio",
     description:
       "The number of yes votes as a percentage of the total ZERO supply required to pass proposals which require a ZERO Threshold.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#zero-threshold",
     type: "basisPoints",
+    unit: "BPS",
   },
   {
     title: "Proposal Fee",
     key: "proposalFee",
     description: "The amount paid in CASH to submit any proposal.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#proposal-fee",
     type: "decimals",
     copyValue: true,
+    unit: "WEI",
   },
   {
     title: "Cash Token",
     key: "cashToken",
     description:
       "The internal currency of the TTG. It is used to pay Proposal Fee and to purchase POWER in the Dutch auction. It can be toggled between WETH and M.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters",
+    docs: "https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#cash",
     type: "cashToken",
     copyValue: true,
   },
@@ -89,8 +95,16 @@ const immutable = computed(() => {
         "zeroGovernor",
         "zeroToken",
         "vault",
-      ])
+      ]),
     ),
+    {
+      key: "registrar",
+      value: registrarAddress().value,
+    },
+    {
+      key: "mToken",
+      value: getMToken().value,
+    },
   ];
 });
 
@@ -101,7 +115,7 @@ const mutable = computed(() => {
         "emergencyProposalThresholdRatio",
         "zeroProposalThresholdRatio",
         "proposalFee",
-      ])
+      ]),
     ),
     ...mapToArray(pick(contracts.value, ["cashToken"])),
   ];
@@ -116,7 +130,7 @@ const mutableParametersWithData = computed(() =>
       value: p.value,
       ...parametersData.find((param) => param.key === p.key),
       proposal: proposals.value.find(
-        (proposal) => proposal.proposalParams[0] === p.key
+        (proposal) => proposal.proposalParams[0] === p.key,
       ),
     };
   }),
@@ -125,11 +139,16 @@ const mutableParametersWithData = computed(() =>
 const governanceTablesHeaders = [
   { key: "title", label: "Name", sortable: true },
   { key: "description", label: "Description" },
-  { key: "key", label: "Key" },
   { key: "value", label: "Value" },
 ];
 
 const inmutableParametersData = [
+  {
+    title: "Registrar",
+    key: "registrar",
+    description:
+      "A book of record of TTG-specific contracts and arbitrary key-value pairs and lists.",
+  },
   {
     title: "Standard Governor",
     key: "standardGovernor",
@@ -147,8 +166,7 @@ const inmutableParametersData = [
   {
     title: "POWER Token",
     key: "powerToken",
-    description:
-      "The address of the POWER token contract. It is the governance token of the TTG.",
+    description: "The governance token of the Standard and Emergency Governor.",
     type: "Token",
   },
   {
@@ -161,15 +179,20 @@ const inmutableParametersData = [
   {
     title: "ZERO Token",
     key: "zeroToken",
-    description:
-      "The address of the ZERO token contract. It is the governance token of the ZERO Governor.",
+    description: "The governance token of the Zero Governor.",
     type: "Token",
+  },
+  {
+    title: "M Token",
+    key: "mToken",
+    description:
+      "M is a fungible token that can be generated by a Minter by locking Eligible Collateral in a secure off-chain facility.",
   },
   {
     title: "Distribution Vault",
     key: "vault",
     description:
-      "The address of the Vault contract. It is the contract that holds the collateral backing the TTG.",
+      "It is the contract holding any assets which have accumulated via TTG operations.",
     type: "Address",
   },
 ];

@@ -8,7 +8,9 @@
       />
     </MModal>
 
-    <PageTitle class="px-6 lg:p-0 mb-3">Create a proposal</PageTitle>
+    <PageTitle v-if="!isPreview" class="px-6 lg:p-0 mb-3">
+      Create a proposal
+    </PageTitle>
 
     <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
       <div v-if="isWritting">Writting transaction on blockchain...</div>
@@ -19,8 +21,8 @@
             <span>Define the action to be executed if proposal succeeds</span>
           </div>
 
-          <div class="mb-4">
-            <label for="proposal-type">Proposal type</label>
+          <div class="mb-1">
+            <label for="proposal-type">Action *</label>
             <MInputMultiSelect
               :options="proposalTypes"
               data-test="proposalTypeSelect"
@@ -28,62 +30,10 @@
             />
           </div>
 
-          <div class="my-3">
-            <div v-for="token in selectedProposalType?.tokens" :key="token">
-              <div
-                v-if="token === MVotingTokens.Power"
-                class="p-4 bg-accent-teal"
-              >
-                <div class="mb-2">
-                  <p class="uppercase text-xxs">Standard Proposal</p>
-                </div>
-
-                <div class="flex gap-4">
-                  <MIconPower class="w-[24px] h-[24px]" />
-                  <div>
-                    <span class="font-inter text-grey-100">
-                      Only holders who possess active
-                      <u>{{ MVotingTokens.Power }} tokens</u> will be eligible
-                      to participate in voting for or against the selected
-                      proposal type.
-                    </span>
-                  </div>
-                </div>
-
-                <div
-                  v-if="selectedProposalType?.hasToPayFee"
-                  class="flex gap-4 mt-3"
-                >
-                  <img src="/img/vote.svg" class="w-[24px] h-[24px]" alt="" />
-                  <div>
-                    <span class="font-inter text-grey-100"
-                      >Simple majority wins</span
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <div
-                v-if="token === MVotingTokens.Zero"
-                class="p-4 bg-accent-teal"
-              >
-                <div class="mb-2">
-                  <p class="uppercase text-xxs">Standard Proposal</p>
-                </div>
-                <div class="flex gap-4">
-                  <MIconZero class="w-[24px] h-[24px]" />
-                  <div>
-                    <span class="font-inter text-grey-100">
-                      Only holders who possess active
-                      <u>{{ MVotingTokens.Zero }} tokens</u> will be eligible to
-                      participate in voting for or against the selected proposal
-                      type.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ProposalCreateActionDescription
+            v-if="selectedProposalType"
+            :selected-proposal-type="selectedProposalType"
+          />
 
           <div :class="{ disabled: selectedProposalType === undefined }">
             <div v-show="formData.proposalType">
@@ -108,7 +58,7 @@
             </div>
 
             <div class="mb-6">
-              <label for="title-input">Title*</label>
+              <label for="title-input">Title *</label>
               <MInput
                 id="title-input"
                 v-model="formData.title"
@@ -122,7 +72,7 @@
 
             <div class="mb-6" data-test="description">
               <div class="flex justify-between mb-2">
-                <label for="description">Description*</label>
+                <label for="description">Description *</label>
                 <div
                   class="text-sm text-grey-600 flex items-center gap-1 font-inter"
                 >
@@ -142,24 +92,26 @@
             <div class="mb-6">
               <label for="type-value">IPFS</label>
 
-              <input
+              <MInput
                 v-model="formData.ipfsURL"
                 type="text"
                 placeholder="https://"
                 data-test="create-proposal-input-url-ipfs"
                 class="font-inter"
+                :errors="$validation.ipfsURL.$errors"
               />
             </div>
 
             <div class="mb-6">
               <label for="type-value">Discussion URL:</label>
 
-              <input
+              <MInput
                 v-model="formData.discussionURL"
                 type="text"
                 placeholder="https://"
                 data-test="create-proposal-input-url-discussion"
                 class="font-inter"
+                :errors="$validation.discussionURL.$errors"
               />
             </div>
           </div>
@@ -167,8 +119,8 @@
 
         <div v-if="isPreview">
           <ProposalPreview
-            :address="userAccount"
-            :description="previewDescription"
+            :title="formData.title"
+            :proposal="previewProposal"
             @on-back="onBack"
           />
         </div>
@@ -178,7 +130,7 @@
         <div class="flex items-center gap-2 text-lg">
           Submission tax:
           <div v-if="hasToPayFee" class="flex items-center gap-2">
-            {{ spogValuesFormatted.setProposalFee }}
+            {{ ttgValuesFormatted.setProposalFee }}
             <MIconWeth />
           </div>
           <div v-else class="flex items-center gap-2">
@@ -191,27 +143,27 @@
       <div v-if="hasToPayFee" class="text-grey-500 text-xs text-end font-inter">
         <p>
           Available balance:
-          {{ useNumberFormatterEth(cashToken?.data?.value?.formatted) || 0 }}
-          WETH
+          {{ useNumberFormatterEth(cashToken?.data?.value?.formatted || 0) }}
+          WETH. <LazyModalEthWrapper v-if="!userHasEnoughBalance" />
         </p>
-        <p>You'll receive a refund if the proposal succeeds</p>
       </div>
 
-      <div v-if="isPreview" class="flex justify-end mt-6">
-        <button
-          class="text-green-800 uppercase mx-4"
+      <div v-if="isPreview" class="flex justify-end mt-6 gap-3">
+        <MButton
+          class="text-green-700 uppercase"
           data-test="create-proposal-button-back-bottom"
+          version="outline-light"
           @click="onBack"
         >
-          &#60; back
-        </button>
+          Back
+        </MButton>
         <MButton
           v-if="isPreview"
           type="submit"
           :disabled="isDisconnected"
           data-test="create-proposal-button-submit"
         >
-          Submit proposal
+          Submit
         </MButton>
       </div>
       <div v-else class="flex justify-end mt-6">
@@ -253,20 +205,13 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import {
-  encodeFunctionData,
-  encodeAbiParameters,
-  Hash,
-  erc20Abi,
-  toHex,
-} from "viem";
+import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
 import { useAccount } from "use-wagmi";
-import { required, minLength, maxLength } from "@vuelidate/validators";
+import { required, minLength, maxLength, url } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 
 /* custom libs */
-import { MVotingTokens } from "@/lib/api";
 import {
   stringToHexWith32Bytes,
   addressToHexWith32Bytes,
@@ -281,14 +226,15 @@ import { useMBalances } from "@/lib/hooks";
 import { wait } from "@/utils/misc";
 
 /* components */
-import ProposalInputListOperation from "@/components/proposal/InputListOperation.vue";
-import ProposalInputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
-import ProposalInputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
+import InputListOperation from "@/components/proposal/InputListOperation.vue";
+import InputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
+import InputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
+import InputProtocolGuidanceConfigOperation from "@/components/proposal/InputProtocolGuidanceConfigOperation.vue";
 import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSetCashToken.vue";
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
-import { getBytes32FromIpfsHash } from "@/utils/ipfs";
+import { MProposal } from "@/lib/api/types";
 
 /* wagmi */
 const wagmiConfig = useWagmiConfig();
@@ -325,18 +271,12 @@ const formData = reactive({
   discussionURL: null,
 });
 
-watchEffect(() => {
-  const type = selectedProposalType?.value?.value;
-  const key = formData.proposalValue;
-  if (type === "setKey" && key === "guidance") {
-    formData.ipfsURL = `https://ipfs.io/ipfs/${formData.proposalValue2}`;
-  }
-});
-
 const rules = computed(() => {
   const constRules = {
     description: { required, minLength: minLength(6) },
     title: { required, minLength: minLength(6) },
+    ipfsURL: { url },
+    discussionURL: { url },
   };
 
   const type = selectedProposalType?.value?.value;
@@ -422,15 +362,15 @@ const previewDescription = ref();
 
 const { address: userAccount, isDisconnected } = useAccount();
 const { forceSwitchChain } = useCorrectChain();
-const spog = useSpogStore();
-const { getValuesFormatted: spogValuesFormatted, getValues: spogValues } =
-  storeToRefs(spog);
+const ttg = useTtgStore();
+const { getValuesFormatted: ttgValuesFormatted, getValues: ttgValues } =
+  storeToRefs(ttg);
 
 const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
 
 const userHasEnoughBalance = computed(() => {
   if (!hasToPayFee.value) return true;
-  return cashToken?.data?.value?.value >= BigInt(spogValues.value.proposalFee);
+  return cashToken?.data?.value?.value >= BigInt(ttgValues.value.proposalFee);
 });
 
 const proposalTypes = [
@@ -439,20 +379,20 @@ const proposalTypes = [
   },
   {
     value: "addToList",
-    label: "Add address",
-    component: ProposalInputListOperation,
-    tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    label: "Add actor",
+    component: InputListOperation,
+    votingType: "Standard",
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "addToList",
   },
   {
     value: "removeFromList",
-    label: "Remove address",
-    component: ProposalInputListOperation,
-    tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    label: "Remove actor",
+    component: InputListOperation,
+    votingType: "Standard",
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "removeFromList",
@@ -460,10 +400,10 @@ const proposalTypes = [
 
   {
     value: "removeFromAndAddToList",
-    label: "Replace address",
-    component: ProposalInputListRemoveAddOperation,
-    tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    label: "Update actor",
+    component: InputListRemoveAddOperation,
+    votingType: "Standard",
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "removeFromAndAddToList",
@@ -472,12 +412,23 @@ const proposalTypes = [
   {
     value: "setKey",
     label: "Update protocol config",
-    component: ProposalInputProtocolConfigOperation,
-    tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    component: InputProtocolConfigOperation,
+    votingType: "Standard",
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
     id: "protocolSetKey",
+  },
+
+  {
+    value: "setKeyGuidance",
+    label: "Update protocol guidance",
+    component: InputProtocolGuidanceConfigOperation,
+    votingType: "Standard",
+    governor: ttg.contracts.standardGovernor,
+    abi: standardGovernorAbi,
+    hasToPayFee: true,
+    id: "protocolGuidanceSetKey",
   },
 
   {
@@ -486,40 +437,40 @@ const proposalTypes = [
 
   {
     value: "setProposalFee",
-    label: "Proposal Fee",
+    label: "Update proposal fee",
     component: InputGovernanceSetProposalFee,
-    tokens: [MVotingTokens.Power],
-    governor: spog.contracts.standardGovernor,
+    votingType: "Standard",
+    governor: ttg.contracts.standardGovernor,
     abi: standardGovernorAbi,
     hasToPayFee: true,
   },
 
   {
     value: "setCashToken",
-    label: "Cash Token",
+    label: "Change cash token",
     component: InputGovernanceSetCashToken,
-    tokens: [MVotingTokens.Zero],
-    governor: spog.contracts.zeroGovernor,
+    votingType: "Zero",
+    governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
 
   {
     value: "setEmergencyProposalThresholdRatio",
-    label: "Power threshold",
+    label: "Update power threshold",
     component: InputGovernanceSetEmergencyProposalThreshold,
     modelValue: formData.proposalValue,
-    tokens: [MVotingTokens.Zero],
-    governor: spog.contracts.zeroGovernor,
+    votingType: "Zero",
+    governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
   {
     value: "setZeroProposalThresholdRatio",
-    label: "Zero threshold",
+    label: "Update zero threshold",
     component: InputGovernanceSetZeroProposalThreshold,
-    tokens: [MVotingTokens.Zero],
-    governor: spog.contracts.zeroGovernor,
+    votingType: "Zero",
+    governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
   },
@@ -530,26 +481,26 @@ const proposalTypes = [
     id: "menuEmergency",
     isEmergency: true,
     submenuText:
-      "Emergency proposals it requires a POWER Threshold and is immediately votable and subsequently immediately executable rather than only being votable and executable in the future epochs.",
+      "Emergency Proposals require a POWER (yes) threshold and are immediately voteable. They are also immediately executable upon reaching this threshold, rather than only being executable in the following epoch.",
     children: [
       {
         value: "addToList",
-        label: "Add address",
+        label: "Add actor",
         isEmergency: true,
-        component: ProposalInputListOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        component: InputListOperation,
+        votingType: "Emergency",
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyAddToList",
       },
       {
         value: "removeFromList",
-        label: "Remove address",
+        label: "Remove actor",
         isEmergency: true,
-        component: ProposalInputListOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        component: InputListOperation,
+        votingType: "Emergency",
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyRemoveFromList",
@@ -557,22 +508,22 @@ const proposalTypes = [
 
       {
         value: "removeFromAndAddToList",
-        label: "Update address",
+        label: "Update actor",
         isEmergency: true,
-        component: ProposalInputListRemoveAddOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        component: InputListRemoveAddOperation,
+        votingType: "Emergency",
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencyRemoveFromAndAddToList",
       },
       {
         value: "setStandardProposalFee",
-        label: "Proposal fee",
+        label: "Update proposal fee",
         isEmergency: true,
         component: InputGovernanceSetProposalFee,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        votingType: "Emergency",
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetStandardProposalFee",
@@ -581,12 +532,24 @@ const proposalTypes = [
         value: "setKey",
         label: "Update protocol config",
         isEmergency: true,
-        component: ProposalInputProtocolConfigOperation,
-        tokens: [MVotingTokens.Power],
-        governor: spog.contracts.emergencyGovernor,
+        component: InputProtocolConfigOperation,
+        votingType: "Emergency",
+        governor: ttg.contracts.emergencyGovernor,
         abi: emergencyGovernorAbi,
         hasToPayFee: false,
         id: "emergencySetKey",
+      },
+
+      {
+        value: "setKeyGuidance",
+        label: "Update protocol guidance",
+        component: InputProtocolGuidanceConfigOperation,
+        votingType: "Emergency",
+        governor: ttg.contracts.emergencyGovernor,
+        abi: emergencyGovernorAbi,
+        isEmergency: true,
+        hasToPayFee: false,
+        id: "emergencyGuidanceSetKey",
       },
     ],
   },
@@ -604,8 +567,8 @@ const proposalTypes = [
         label: "Reset to Power holders",
         isReset: true,
         component: undefined,
-        tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
+        votingType: "Zero",
+        governor: ttg.contracts.zeroGovernor,
         abi: zeroGovernorAbi,
         hasToPayFee: false,
         id: "resetToPowerHolders",
@@ -616,8 +579,8 @@ const proposalTypes = [
         label: "Reset to Zero holders",
         isReset: true,
         component: undefined,
-        tokens: [MVotingTokens.Zero],
-        governor: spog.contracts.zeroGovernor,
+        votingType: "Zero",
+        governor: ttg.contracts.zeroGovernor,
         abi: zeroGovernorAbi,
         hasToPayFee: false,
         id: "resetToZeroHolders",
@@ -631,13 +594,13 @@ const currentValue = computed(() => {
     selectedProposalType?.value?.value === "setEmergencyProposalThresholdRatio"
   ) {
     return `${basisPointsToPercentage(
-      spog.getValues.emergencyProposalThresholdRatio!
+      ttg.getValues.emergencyProposalThresholdRatio!,
     )}%`;
   }
 
   if (selectedProposalType?.value?.value === "setZeroProposalThresholdRatio") {
     return `${basisPointsToPercentage(
-      spog.getValues.zeroProposalThresholdRatio!
+      ttg.getValues.zeroProposalThresholdRatio!,
     )}%`;
   }
 
@@ -645,11 +608,39 @@ const currentValue = computed(() => {
 
   if (
     ["setProposalFee", "setStandardProposalFee"].includes(
-      selectedProposalType?.value?.value
+      selectedProposalType?.value?.value,
     )
   ) {
-    return formatFee(spog.getValues.proposalFee!);
+    return formatFee(ttg.getValues.proposalFee!);
   }
+});
+
+const previewProposal = computed(() => {
+  const type = formData.proposalType! as string;
+  const parsedProposalWithIncomingValues = (form: Array<any>) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [input1, input2] = form;
+    if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
+      return [useParseCash(input1)];
+    }
+    return form;
+  };
+
+  return {
+    proposalLabel: selectedProposalType?.value?.label,
+    proposer: userAccount.value,
+    description: formData.description,
+    proposalType: formData.proposalType,
+    isEmergency: selectedProposalType?.value?.isEmergency as boolean,
+    votingType: selectedProposalType?.value?.votingType,
+    proposalParams: parsedProposalWithIncomingValues(
+      [
+        formData.proposalValue,
+        formData.proposalValue2,
+        formData.proposalValue3,
+      ].filter((e) => e),
+    ),
+  } as unknown as MProposal;
 });
 
 function onChangeProposalType(option) {
@@ -689,18 +680,18 @@ async function writeAllowance() {
   // It needs approval to pay for fees
   const allowance = await readContract(wagmiConfig, {
     abi: erc20Abi,
-    address: spog.contracts.cashToken as Hash,
+    address: ttg.contracts.cashToken as Hash,
     functionName: "allowance",
     args: [account as Hash, selectedProposalType.value.governor as Hash], // address owner, address spender
     account,
   });
 
-  const fee = BigInt(spog.getValues.proposalFee!);
+  const fee = BigInt(ttg.getValues.proposalFee!);
   console.log({ allowance, fee });
   if (allowance < fee && hasToPayFee.value) {
     const hash = await writeContract(wagmiConfig, {
       abi: erc20Abi,
-      address: spog.contracts.cashToken as Hash,
+      address: ttg.contracts.cashToken as Hash,
       functionName: "approve",
       args: [selectedProposalType.value.governor as Hash, fee], // address spender, uint256 amount
       account,
@@ -798,7 +789,7 @@ async function onSubmit() {
         unwatchAll();
 
         return navigateTo(`/proposal/${newProposals[0].proposalId}`);
-      }
+      },
     );
 
     const calldatas = buildCalldatas(formDataWithLinks);
@@ -832,9 +823,9 @@ function buildCalldatas(formData) {
       return [stringToHexWith32Bytes(list), address];
     };
 
-    return buildCalldatasSpog(
+    return buildCalldatasTtg(
       type,
-      encondeInputsListOperation({ input1, input2 })
+      encondeInputsListOperation({ input1, input2 }),
     );
   }
 
@@ -851,9 +842,9 @@ function buildCalldatas(formData) {
       return [stringToHexWith32Bytes(list), remove, add];
     };
 
-    return buildCalldatasSpog(
+    return buildCalldatasTtg(
       type,
-      encondeInputsListAddRemoveOperation({ input1, input2, input3 })
+      encondeInputsListAddRemoveOperation({ input1, input2, input3 }),
     );
   }
 
@@ -861,10 +852,6 @@ function buildCalldatas(formData) {
     const getValueEncoded = (inp: any) => {
       if (["minter_rate_model", "earner_rate_model"].includes(key)) {
         return addressToHexWith32Bytes(inp);
-      }
-
-      if (["guidance"].includes(key)) {
-        return getBytes32FromIpfsHash(inp);
       }
 
       if (
@@ -877,7 +864,7 @@ function buildCalldatas(formData) {
       ) {
         return encodeAbiParameters(
           [{ type: "uint256" }],
-          [BigInt(percentageToBasispoints(inp))]
+          [BigInt(percentageToBasispoints(inp))],
         );
       }
 
@@ -887,25 +874,32 @@ function buildCalldatas(formData) {
     const key = input1;
     const value = getValueEncoded(input2);
 
-    return buildCalldatasSpog(type, [stringToHexWith32Bytes(key), value]);
+    return buildCalldatasTtg(type, [stringToHexWith32Bytes(key), value]);
+  }
+
+  if (["setKeyGuidance"].includes(type)) {
+    const key = input1;
+    const value = "0x" + input2;
+
+    return buildCalldatasTtg("setKey", [stringToHexWith32Bytes(key), value]);
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {
-    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ISPOG
-    return buildCalldatasSpog(type, undefined);
+    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ITTG
+    return buildCalldatasTtg(type, undefined);
   }
 
   if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [useParseCash(input1)]
+      [useParseCash(input1)],
     );
-    return buildCalldatasSpog(type, [valueEncoded]);
+    return buildCalldatasTtg(type, [valueEncoded]);
   }
 
   if (["setCashToken"].includes(type)) {
     const newFee = encodeAbiParameters([{ type: "uint256" }], [input2]);
-    return buildCalldatasSpog(type, [input1, newFee]);
+    return buildCalldatasTtg(type, [input1, newFee]);
   }
 
   if (
@@ -916,13 +910,13 @@ function buildCalldatas(formData) {
   ) {
     const valueEncoded = encodeAbiParameters(
       [{ type: "uint256" }],
-      [BigInt(percentageToBasispoints(input1))]
+      [BigInt(percentageToBasispoints(input1))],
     );
-    return buildCalldatasSpog(type, [valueEncoded]);
+    return buildCalldatasTtg(type, [valueEncoded]);
   }
 }
 
-function buildCalldatasSpog(functionName: any, args: any) {
+function buildCalldatasTtg(functionName: any, args: any) {
   return encodeFunctionData({
     abi: selectedProposalType.value.abi,
     functionName,

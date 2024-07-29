@@ -10,9 +10,7 @@
         </span>
       </div>
       <div class="lg:shrink">
-        <ul
-          class="flex gap-3 flex-wrap items-center lg:mt-0 text-xs text-white lg:hidden"
-        >
+        <ul class="flex gap-3 flex-wrap items-center footer-link lg:hidden">
           <li>
             <NuxtLink href="https://docs.m0.org/" target="_blank"
               >Documentation</NuxtLink
@@ -25,9 +23,9 @@
           <span class="text-grey-500 text-xs">Join our community</span>
           <ul class="flex items-center gap-4">
             <li v-for="social in socialLinks" :key="social.name">
-              <a :href="social.url" class="">
+              <NuxtLink target="_blank" :href="social.url">
                 <img :src="social.icon" :alt="`${social.name} logo white`" />
-              </a>
+              </NuxtLink>
             </li>
           </ul>
         </div>
@@ -40,13 +38,8 @@
 const socialLinks = [
   {
     name: "X",
-    url: "https://twitter.com/m0labs",
+    url: "https://twitter.com/m0foundation",
     icon: "/img/socials/x.svg",
-  },
-  {
-    name: "LinkedIn",
-    url: "https://www.linkedin.com/company/m-zero-labs/",
-    icon: "/img/socials/linkedin.svg",
   },
 ];
 </script>

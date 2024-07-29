@@ -9,8 +9,8 @@
       <div v-else-if="version === 'Emergency'">
         <VoteProgressPower
           :votes="powerVotes"
-          :threshold="props.powerThreshold!"
-          :threshold-formatted="thresholdFormattedPower"
+          :threshold-ratio="thresholdRatio"
+          :threshold-formatted="thresholdFormatted"
         />
       </div>
 
@@ -18,10 +18,14 @@
       <div v-else-if="version === 'Zero'">
         <VoteProgressZero
           :votes="zeroVotes"
-          :threshold="props.zeroThreshold!"
-          :threshold-formatted="thresholdFormattedZero"
+          :threshold-ratio="thresholdRatio"
+          :threshold-formatted="thresholdFormatted"
         />
       </div>
+      <p class="my-1 text-sm text-grey-500">
+        Total participation:
+        {{ getParticipationPercentage }}%
+      </p>
     </div>
   </div>
 </template>
@@ -29,13 +33,14 @@
 <script setup lang="ts">
 import { MVotingType } from "@/lib/api/types";
 import { useNumberFormatterCompact } from "@/utils/numberFormatter";
+import { formatUnits } from "viem";
 
 interface Props {
   yesVotes: bigint;
   noVotes: bigint;
   version: MVotingType;
-  zeroThreshold?: number; // range of 0 -> 1 i.e: 0.5 = 50%, 1=100%
-  powerThreshold?: number;
+  threshold?: bigint; // in aboslute value
+  thresholdBps?: number; // in basis points
   powerTotalSupply?: bigint;
   zeroTotalSupply?: bigint;
 }
@@ -43,8 +48,8 @@ const props = withDefaults(defineProps<Props>(), {
   yesVotes: () => 0n,
   noVotes: () => 0n,
   version: "Standard",
-  zeroThreshold: undefined,
-  powerThreshold: undefined,
+  threshold: undefined,
+  thresholdBps: undefined,
   powerTotalSupply: () => 0n,
   zeroTotalSupply: () => 0n,
 });
@@ -125,27 +130,64 @@ const powerVotes = computed(() => {
       );
 });
 
-const zeroVotes = computed(() =>
-  parseVotesForQuorom(
+const zeroVotes = computed(() => {
+  const parsed = parseVotesForQuorom(
     {
       yes: props.yesVotes.toString(),
       no: props.noVotes.toString(),
     },
     props.zeroTotalSupply!,
-  ),
-);
+  );
+
+  return {
+    total: parsed.total,
+    yes: {
+      count: parsed.yes.count,
+      formatted: useNumberFormatterCompact(formatUnits(parsed.yes.count, 6)),
+      percentage: parsed.yes.percentage,
+    },
+    no: {
+      count: parsed.no.count,
+      formatted: useNumberFormatterCompact(formatUnits(parsed.no.count, 6)),
+      percentage: parsed.no.percentage,
+    },
+  };
+});
 
 const thresholdFormattedPower = computed(() =>
-  useNumberFormatterCompact(
-    (props.powerTotalSupply * BigInt(props.powerThreshold! * 100)) / 100n,
-  ),
+  useNumberFormatterCompact(props.threshold!),
 );
 
 const thresholdFormattedZero = computed(() =>
-  useNumberFormatterCompact(
-    (props.zeroTotalSupply * BigInt(props.zeroThreshold! * 100)) / 100n,
-  ),
+  useNumberFormatterCompact(formatUnits(props.threshold!, 6)),
 );
+
+const powerThresholdRatio = computed(
+  () => basisPointsToPercentage(props.thresholdBps!), //0-100
+);
+
+const zeroThresholdRatio = computed(
+  () => basisPointsToPercentage(props.thresholdBps!), //0-100
+);
+
+const thresholdFormatted = computed(() =>
+  props.version === "Emergency"
+    ? thresholdFormattedPower.value
+    : thresholdFormattedZero.value,
+);
+
+const thresholdRatio = computed(() =>
+  props.version === "Emergency"
+    ? powerThresholdRatio.value
+    : zeroThresholdRatio.value,
+);
+
+const getParticipationPercentage = computed(() => {
+  return percentageSafeDiv(
+    props.yesVotes + props.noVotes,
+    props.version === "Zero" ? props.zeroTotalSupply : props.powerTotalSupply,
+  );
+});
 </script>
 <style scoped>
 .text-yes {

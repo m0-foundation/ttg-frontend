@@ -1,14 +1,16 @@
 <template>
-  <MDropdown origin="right">
-    <ul class="token-menu-items">
+  <MDropdown>
+    <ul class="dropdown-menu-items">
       <li>
-        <a @click="copyToClipboard(token?.address)">
+        <a v-close-popper @click="copyTokenAddress(token)">
           <p>{{ `Copy ${token?.symbol} token address` }}</p>
           <p class="text-grey-500 text-xxs">{{ token?.address }}</p>
         </a>
       </li>
-      <li>
-        <a @click="addTokenToWallet"> Add Token to your wallet </a>
+      <li v-if="isConnected">
+        <a v-close-popper @click="addTokenToWallet">
+          Add Token to your wallet
+        </a>
       </li>
       <li>
         <a target="_blank" :href="useBlockExplorer('token', token?.address)">
@@ -21,12 +23,22 @@
 
 <script setup>
 import { copyToClipboard } from "@/utils/misc";
+import { useAccount } from "use-wagmi";
+
 const props = defineProps({
   token: {
     type: Object,
     required: true,
   },
 });
+
+const { isConnected } = useAccount();
+const alerts = useAlertsStore();
+
+async function copyTokenAddress(token) {
+  copyToClipboard(token?.address);
+  alerts.successAlert(`${token?.symbol} token address copied to clipboard`);
+}
 
 async function addTokenToWallet() {
   try {
@@ -47,18 +59,3 @@ async function addTokenToWallet() {
   }
 }
 </script>
-
-<style>
-.token-menu-items {
-  @apply bg-grey-700 shadow-sm shadow-grey-1000 font-inter;
-}
-.token-menu-items li a {
-  @apply p-6 py-4 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;
-}
-
-.dropdown:focus-within .dropdown-menu {
-  opacity: 1;
-  transform: translate(0) scale(1);
-  visibility: visible;
-}
-</style>

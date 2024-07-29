@@ -10,7 +10,6 @@ describe("Governance configuration", () => {
     cy.get("nav").should("contain", "Home");
     cy.get("nav").should("contain", "Actors");
     cy.get("nav").should("contain", "Configs");
-    cy.get("nav").should("contain", "Protocol Fees");
   });
 
   it("I should see all configuration parameters", () => {
@@ -32,17 +31,19 @@ describe("Governance configuration", () => {
       cy.get('h3.text-xl').contains(value)
     })
 
-    // non-changeable parameters table
-    cy.get('table').eq(0).find('tbody tr').should('have.length', 6)
-
     const nonChangeableConfigParams = [
-      "standardGovernor",
-      "emergencyGovernor",
-      "powerToken",
-      "zeroGovernor",
-      "zeroToken",
-      "vault"
+      "Standard Governor",
+      "Emergency Governor",
+      "POWER Token",
+      "ZERO Governor",
+      "ZERO Token",
+      "Distribution Vault",
+      "Registrar",
+      "M Token",
     ]
+
+    // non-changeable parameters table
+    cy.get('table').eq(0).find('tbody tr').should('have.length', nonChangeableConfigParams.length)
 
     nonChangeableConfigParams.forEach((value: string) => {
       cy.get('table').eq(0).find('tbody tr').contains(value)

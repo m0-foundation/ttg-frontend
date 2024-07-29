@@ -1,10 +1,11 @@
 export const useNumberFormatterPrice = (
   number: string | number | bigint,
   decimals: number = 0,
+  maxDigits = 6,
 ) => {
   return new Intl.NumberFormat("en", {
     minimumFractionDigits: decimals,
-    maximumFractionDigits: 6,
+    maximumFractionDigits: maxDigits,
   }).format(Number(number));
 };
 

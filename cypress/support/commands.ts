@@ -36,16 +36,22 @@ declare global {
       castYesOneEmergencyProposal(description: string): Chainable;
 
       castYesAllEmergencyProposals(): Chainable;
+      
+      executeAllProposals(): Chainable;
 
       executeOneProposal(description: string): Chainable;
 
       clickPreviewProposal(): Chainable;
+      
+      clickSubmitProposal(): Chainable;
 
       mineEpochs(quantity: number): Chainable;
 
       createProposalAddDescription(description: string): Chainable;
 
       validateEthAddress(address: string): Chainable;
+
+      getButton(buttonText: string): Chainable;
     }
   }
 }
@@ -162,12 +168,11 @@ Cypress.Commands.add(
 
     cy.contains("article", description).then(($proposal) => {
       cy.wrap($proposal).find("#button-cast-yes").click();
+      cy.get("[data-test='dialog-button-confirm']").click();
+      cy.wrap($proposal).contains("Your vote has been submitted");
+      cy.wait(500);
     });
 
-    cy.get("[data-test='button-tab-pending-execution']").should(
-      "have.length",
-      1
-    );
   }
 );
 
@@ -178,7 +183,19 @@ Cypress.Commands.add("castYesAllEmergencyProposals", () => {
 
   cy.get("article").each(($proposal) => {
     cy.wrap($proposal).find("#button-cast-yes").click();
+    cy.get("[data-test='dialog-button-confirm']").click();
     cy.wrap($proposal).contains("Your vote has been submitted");
+    cy.wait(500);
+  });
+});
+
+Cypress.Commands.add("executeAllProposals", () => {
+  cy.visit("/proposals/succeeded");
+  cy.connectWallet();
+
+  cy.get("article").each(($proposal) => {
+    cy.wrap($proposal).find("#button-proposal-execute").click();
+    // cy.wrap($proposal).contains("Proposal executed successfully!");
     cy.wait(500);
   });
 });
@@ -204,6 +221,13 @@ Cypress.Commands.add("clickPreviewProposal", () => {
     .click();
 });
 
+Cypress.Commands.add("clickSubmitProposal", () => {
+  cy.get("[data-test='create-proposal-button-submit']").then(($el) => {
+      cy.wrap($el).click();
+      cy.get(".complete").invoke("text").should("contain", "Confirmation");
+    });
+});
+
 Cypress.Commands.add("mineEpochs", (quantity: number) => {
   cy.task("mine", quantity).then((blocks) => {
     console.log("mined", blocks);
@@ -221,5 +245,10 @@ Cypress.Commands.add("validateEthAddress", (address: string) => {
     throw new Error(`Address ${address} is not a valid eth address`);
   }
 });
+
+Cypress.Commands.add('getButton', (buttonText) => {
+  const regEx = new RegExp(buttonText, 'i')
+  cy.findByRole('button', { name: regEx })
+})
 
 export {};

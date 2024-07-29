@@ -2,11 +2,13 @@
   <div class="mb-4 bg-transparent">
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="text-white bg-grey-800 p-8"
+      class="text-white bg-grey-800 p-6 lg:p-8"
     >
-      <div v-if="proposal?.isEmergency" class="flex mb-4">
-        <MBadge version="error">Emergency Proposal</MBadge>
-      </div>
+      <ProposalTypeBadge
+        v-if="proposal.votingType !== 'Standard' || proposal.state !== 'Active'"
+        :type="proposal.votingType"
+        class="mb-4"
+      />
 
       <div class="mb-4">
         <h2 class="text-2xl break-all">
@@ -14,7 +16,7 @@
         </h2>
       </div>
 
-      <div class="text-grey-600 font-inter mb-4">
+      <div class="text-grey-600 font-inter mb-4 break-words">
         {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
 
@@ -61,7 +63,7 @@
               :version="isVoteYesActive"
               :is-loading="loading && selectedVote"
               class="cast-vote-button"
-              @click="onCastSelected(true)"
+              @click="onCast(true)"
             >
               YES
             </ProposalButtonCastVote>
@@ -73,12 +75,14 @@
               :disabled="hasVoted || isDisconnected || !canVote || loading"
               :version="isVoteNoActive"
               :is-loading="loading && !selectedVote"
-              @click="onCastSelected(false)"
+              @click="onCast(false)"
             >
               NO
             </ProposalButtonCastVote>
 
-            <div class="text-xxs text-grey-600 uppercase mx-2 font-inter">
+            <div
+              class="text-xxs text-grey-600 uppercase mx-2 font-inter max-sm:w-full"
+            >
               <p v-show="!canVote">Not enough voting power</p>
               <p v-show="hasVoted">Your vote has been submitted</p>
             </div>
@@ -102,6 +106,30 @@
             Vote with ZERO tokens
           </div>
         </div>
+      </div>
+
+      <div v-if="!hasVoted && selectedVote !== null">
+        <div class="mt-4 mb-3 text-grey-500 font-inter">
+          <label class="flex items-center gap-2 text-xs leading-3 mb-0">
+            <input
+              v-model="reasonForVoteCheckbox"
+              type="checkbox"
+              class="w-3 h-3"
+              data-test="reason-vote-checkbox"
+            />
+            Share with others why you made this choice. This can cost a little
+            more gas fees.
+          </label>
+        </div>
+
+        <textarea
+          v-if="reasonForVoteCheckbox"
+          id="reason-vote"
+          ref="reasonForVoteTextarea"
+          v-model="reasonForVote"
+          class="reason-textarea"
+          data-test="reason-vote-textarea"
+        ></textarea>
       </div>
 
       <div
@@ -142,6 +170,7 @@ const emit = defineEmits<{
   (e: "on-uncast", proposaId: string): void;
   (e: "on-view", proposaId: string): void;
   (e: "on-execute", proposal: MProposal): void;
+  (e: "update-reason-for-vote", value: string, proposalId: string): void;
 }>();
 
 const apiStore = useApiClientStore();
@@ -149,6 +178,22 @@ const apiStore = useApiClientStore();
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
 
 const selectedVote = ref<null | boolean>(null);
+const reasonForVoteCheckbox = ref<boolean | null>(false);
+const reasonForVote = ref<string>("");
+const reasonForVoteTextarea = ref();
+
+watch(reasonForVoteCheckbox, async (value) => {
+  if (value) {
+    await nextTick();
+    reasonForVoteTextarea?.value.focus();
+  } else {
+    reasonForVote.value = "";
+  }
+});
+
+watch(reasonForVote, (value) => {
+  emit("update-reason-for-vote", value, props.proposal.proposalId);
+});
 
 const isVoteYesActive = computed(() => {
   // vote has been casted to Yes
@@ -166,7 +211,7 @@ const isVoteNoActive = computed(() => {
 const voteEndTimestamp = ref();
 
 const { onlyDescription, title } = useParsedDescriptionTitle(
-  props.proposal.description
+  props.proposal.description,
 );
 
 function onViewProposal() {
@@ -177,7 +222,15 @@ function onExecuteProposal() {
   emit("on-execute", props.proposal);
 }
 
-function onCastSelected(vote: boolean) {
+function onCast(vote: boolean) {
+  if (["Standard"].includes(props.proposal?.votingType!)) {
+    return onBatchCastSelected(vote);
+  } else {
+    return onSingleCastSelected(vote);
+  }
+}
+
+function onBatchCastSelected(vote: boolean) {
   // no vote has been select then click on any button
   if (selectedVote.value === null) {
     emit("on-cast", Number(vote), props.proposal.proposalId);
@@ -196,22 +249,25 @@ function onCastSelected(vote: boolean) {
   }
 }
 
+function onSingleCastSelected(vote: boolean) {
+  emit("on-cast", Number(vote), props.proposal.proposalId);
+}
+
 const proposalId = computed(() => props.proposal.proposalId);
 const governor = computed(() => useGovernor({ proposalId: proposalId.value }));
 
-const { power: powerVotingPower, zero: zeroVotingPower } =
-  useMVotingPower(userAccount);
+const { power: powerVotingPower } = useMVotingPower(userAccount);
 
 const canVote = computed(() => {
-  if (["Standard", "Emergency"].includes(props.proposal.votingType!)) {
+  if (["Standard"].includes(props.proposal.votingType!)) {
     return powerVotingPower?.data.value?.hasVotingPower;
-  } else if (props.proposal?.votingType === "Zero") {
-    return zeroVotingPower?.data.value?.hasVotingPower;
   }
+
+  return true;
 });
 
 voteEndTimestamp.value = apiStore.client.epoch.getTimestampOfEpochStart(
-  props.proposal.voteEnd
+  props.proposal.voteEnd,
 );
 
 const votesStore = useVotesStore();

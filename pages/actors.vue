@@ -20,8 +20,13 @@
           </option>
         </select>
       </template>
+
+      <template #cell(list)="{ value }">
+        {{ value.replace("rs", "r") }}
+      </template>
+
       <template #cell(account)="{ value }">
-        <MAddressAvatar :short-address="false" show-copy :address="value" />
+        <MAddressCopy :short-address="false" show-copy :address="value" />
       </template>
       <template #cell(timestamp)="{ value }">
         <span class="text-grey-600">{{
@@ -33,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+import uniqBy from "lodash/uniqBy";
 import { storeToRefs } from "pinia";
 
 const apiStore = useApiClientStore();
@@ -72,8 +78,15 @@ const listsOptions = computed(() => [
 const selectedList = ref("all");
 
 const filteredLists = computed(() => {
-  if (selectedList.value === "all") return lists.value;
-  return lists.value.filter((obj) => obj.list === selectedList.value);
+  const listsWithoutDuplicates = uniqBy(
+    lists.value,
+    (item) => item.account + item.list,
+  );
+
+  if (selectedList.value === "all") return listsWithoutDuplicates;
+  return listsWithoutDuplicates.filter(
+    (obj) => obj.list === selectedList.value,
+  );
 });
 
 onBeforeUnmount(() => {

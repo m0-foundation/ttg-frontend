@@ -45,6 +45,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@nuxt/devtools",
+    "floating-vue/nuxt",
   ],
   ignore:
     auctionActive === true
@@ -57,7 +58,7 @@ export default defineNuxtConfig({
           "pages/delegate.vue",
         ]
       : auctionActive === false
-        ? ["pages/auction.vue"]
+        ? ["pages/auction.vue", "pages/fees.vue"]
         : undefined, //no router is ignored
   imports: {
     dirs: ["./stores"],

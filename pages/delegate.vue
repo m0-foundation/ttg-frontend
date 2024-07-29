@@ -12,7 +12,7 @@
           target="_blank"
           class="underline"
         >
-          Learn more.
+          Learn more
         </NuxtLink>
       </template>
     </PageTitle>
@@ -30,7 +30,7 @@
       @submit.prevent="delegatePower"
     >
       <div>
-        <div class="flex justify-between items-center mb-3">
+        <div class="flex justify-between mb-3 gap-4">
           <div>
             <p class="text-xl">POWER Tokens</p>
             <p class="text-grey-600 text-xs">
@@ -39,17 +39,15 @@
               The tokens will remain in your balance.
             </p>
           </div>
-
-          <div class="flex-col gap-2">
-            <div class="flex gap-1 items-center">
-              <MIconPower class="h-6 w-6" />
-              <span class="flex items-center text-2xl">
-                {{ powerVotingPower?.data.value?.relative?.toFixed(2) }}%
-              </span>
-            </div>
-            <div>
-              <span class="text-xxs text-gray-600 uppercase">Voting Power</span>
-            </div>
+          <div class="flex gap-1 items-center">
+            <MIconPower class="h-6 w-6" />
+            <span class="flex items-center text-2xl">
+              {{
+                useNumberFormatterPrice(
+                  balancePowerToken?.data.value?.formatted || 0n,
+                )
+              }}
+            </span>
           </div>
         </div>
 
@@ -83,19 +81,12 @@
           data-test="delegate-power-input-address"
           :errors="$delegatePowerValidation.address?.$errors"
         />
-
         <div
           v-if="hasDelegatedPower"
           class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
         >
-          Voting power delegated to:
+          Delegated to:
           <MAddressAvatar :address="powerDelegates" :short-address="false" />
-        </div>
-        <div
-          v-if="!hasDelegatedPower && powerDelegates"
-          class="px-2 py-1 w-fit text-xs bg-grey-600 text-white"
-        >
-          <p>Self-delegated</p>
         </div>
       </div>
 
@@ -117,7 +108,7 @@
       @submit.prevent="delegateZero"
     >
       <div>
-        <div class="flex justify-between items-center my-3">
+        <div class="flex justify-between my-3 gap-4">
           <div>
             <p class="text-xl">ZERO Tokens</p>
             <p class="text-grey-600 text-xs">
@@ -126,16 +117,15 @@
               The tokens will remain in your balance.
             </p>
           </div>
-          <div class="flex-col gap-2">
-            <div class="flex gap-1 items-center">
-              <MIconZero class="h-6 w-6" />
-              <span class="mx-2 flex items-center text-2xl">
-                {{ zeroVotingPower?.data.value?.relative?.toFixed(2) }}%
-              </span>
-            </div>
-            <div>
-              <span class="text-xxs text-gray-600 uppercase">Voting Power</span>
-            </div>
+          <div class="flex gap-1 items-center">
+            <MIconZero class="h-6 w-6" />
+            <span class="mx-2 flex items-center text-2xl">
+              {{
+                useNumberFormatterPrice(
+                  balanceZeroToken?.data.value?.formatted || 0n,
+                )
+              }}
+            </span>
           </div>
         </div>
         <div class="flex justify-between">
@@ -155,19 +145,12 @@
           data-test="delegate-zero-input-address"
           :errors="$delegateZeroValidation.address?.$errors"
         />
-
         <div
           v-if="hasDelegatedZero"
           class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
         >
-          Voting power delegated to:
+          Delegated to:
           <MAddressAvatar :address="zeroDelegates" :short-address="false" />
-        </div>
-        <div
-          v-if="!hasDelegatedZero && zeroDelegates"
-          class="px-2 py-1 w-fit text-xs bg-grey-600 text-white"
-        >
-          <p>Self-delegated</p>
         </div>
       </div>
 
@@ -198,10 +181,10 @@ import { useAccount } from "use-wagmi";
 import { helpers } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import { useMDelegates, useMVotingPower } from "@/lib/hooks";
+import { useMDelegates, useMBalances } from "@/lib/hooks";
 import { writePowerToken, writeZeroToken } from "@/lib/sdk";
 
-const spog = storeToRefs(useSpogStore());
+const ttg = storeToRefs(useTtgStore());
 const alerts = useAlertsStore();
 
 const { address: userAccount, isConnected } = useAccount();
@@ -214,19 +197,13 @@ const {
   ...useDelegate
 } = useMDelegates(userAccount);
 
-console.log({ hasDelegatedPower });
-const {
-  power: powerVotingPower,
-  zero: zeroVotingPower,
-  ...useVotingPower
-} = useMVotingPower(userAccount);
+const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
+  useMBalances(userAccount);
 
 const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
 const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
 
-const canDelegate = computed(
-  () => spog.epoch.value.current.type === "TRANSFER",
-);
+const canDelegate = computed(() => ttg.epoch.value.current.type === "TRANSFER");
 
 const powerFormData = reactive({
   address: "",
@@ -295,7 +272,7 @@ async function delegatePower() {
     await forceSwitchChain();
 
     const hash = await writePowerToken(wagmiConfig, {
-      address: spog.contracts.value.powerToken as Hash,
+      address: ttg.contracts.value.powerToken as Hash,
       functionName: "delegate",
       args: [powerFormData.address! as Hash],
     });
@@ -310,11 +287,10 @@ async function delegatePower() {
     }
 
     alerts.successAlert(
-      "POWER tokens voting power were delegated Successfully!",
+      "POWER tokens voting power were delegated successfully!",
     );
 
     useDelegate.refetch();
-    useVotingPower.refetch();
   } catch (error) {
     console.error(error);
     alerts.errorAlert("Error while delegating!");
@@ -334,7 +310,7 @@ async function delegateZero() {
     await forceSwitchChain();
 
     const hash = await writeZeroToken(wagmiConfig, {
-      address: spog.contracts.value.zeroToken as Hash,
+      address: ttg.contracts.value.zeroToken as Hash,
       functionName: "delegate",
       args: [zeroFormData.address! as Hash],
     });
@@ -349,10 +325,9 @@ async function delegateZero() {
     }
 
     alerts.successAlert(
-      "ZERO tokens voting power were delegated Successfully!",
+      "ZERO tokens voting power were delegated successfully!",
     );
     useDelegate.refetch();
-    useVotingPower.refetch();
   } catch (error) {
     console.error(error);
     alerts.errorAlert("Error while delegating!");

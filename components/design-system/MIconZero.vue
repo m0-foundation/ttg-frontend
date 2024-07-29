@@ -27,6 +27,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const fill = computed(() =>
-  props.version === "light" ? "#EBEBEB" : "#868886"
+  props.version === "light" ? "#EBEBEB" : "#868886",
 );
 </script>

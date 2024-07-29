@@ -1,32 +1,30 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <div>
-    <article class="bg-white text-black px-4 py-4">
-      <div class="flex justify-between mb-2">
+  <div class="overflow-x-hidden">
+    <article class="bg-white text-black lg:p-4">
+      <div class="flex justify-between mb-2 gap-3">
         <ProposalStatusTimeline
           :proposal="proposal"
           :version="proposal?.state"
+          class="overflow-x-auto"
         />
         <div>
           <ProposalMenu :proposal="proposal" />
         </div>
       </div>
 
-      <MBadge v-if="proposal?.isEmergency" version="error">
-        Emergency proposal
-      </MBadge>
-
-      <MBadge v-if="proposal?.votingType === 'Zero'"> Zero proposal </MBadge>
+      <ProposalTypeBadge
+        v-if="proposal?.votingType !== 'Standard'"
+        :type="proposal?.votingType"
+      />
 
       <h1 class="text-[28px] my-3 text-grey-1000 font-light leading-10">
         {{ title }}
       </h1>
 
-      <div
-        class="text-grey-400 my-3 font-inter text-xs truncate w-52 lg:w-full"
-      >
+      <div class="text-grey-400 my-3 font-inter text-xs">
         Proposed by
-        <u><MAddressAvatar :address="proposal?.proposer" /></u>
+        <MAddressAvatar :address="proposal?.proposer" />
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
 
@@ -37,15 +35,15 @@
           :yes-votes="proposal?.yesVotes"
           :no-votes="proposal?.noVotes"
           :version="proposal?.votingType"
-          :power-threshold="powerThreshold"
+          :threshold="proposal?.quorum"
+          :threshold-bps="proposal?.quorumNumerator"
           :power-total-supply="totalSupplyAt[0]"
-          :zero-threshold="zeroThreshold"
           :zero-total-supply="totalSupplyAt[1]"
           class="font-inter"
         />
       </div>
 
-      <div class="markdown-body mb-8" v-html="onlyDescription"></div>
+      <div class="markdown-body mb-8" v-html="onlyDescriptionHtml"></div>
 
       <ProposalTechnical
         :proposal="proposal"
@@ -78,19 +76,18 @@ const props = defineProps<ProposalDetailsProps>();
 const proposalStore = useProposalsStore();
 
 const proposal = computed(() =>
-  proposalStore.getProposalById(props.proposalId)
+  proposalStore.getProposalById(props.proposalId),
 );
 const proposalId = computed(() => props.proposalId);
 
-const { onlyDescription, title } = useParsedDescriptionTitle(
-  proposal?.value?.description!
+const { onlyDescriptionHtml, title } = useParsedDescriptionTitle(
+  proposal?.value?.description!,
 );
 
-const spog = useSpogStore();
+const ttg = useTtgStore();
 const wagmiConfig = useWagmiConfig();
 
-const { getValuesFormatted: currentProposalValuesFormatted } =
-  storeToRefs(spog);
+const { getValuesFormatted: currentProposalValuesFormatted } = storeToRefs(ttg);
 
 useHead({
   titleTemplate: `%s - Proposal #${proposalId.value}`,
@@ -99,13 +96,6 @@ useHead({
 const { toFormat } = useDate(proposal.value!.timestamp!);
 const proposalCreatedFormatedDate = computed(() => toFormat("LLL"));
 
-const zeroThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.zeroProposalThresholdRatio!)
-);
-const powerThreshold = computed(() =>
-  basisPointsToDecimal(spog.getValues.emergencyProposalThresholdRatio!)
-);
-
 const votesStore = useVotesStore();
 const votes = computed(() => {
   if (proposalId.value) {
@@ -113,19 +103,24 @@ const votes = computed(() => {
   }
 });
 
+const pastProposalEpoch = computed(() =>
+  BigInt(proposal.value!.voteStart! - 1),
+);
+
 const { state: totalSupplyAt, isLoading } = useAsyncState(
   Promise.all([
     readPowerToken(wagmiConfig, {
-      address: spog!.contracts!.powerToken! as Hash,
+      address: ttg!.contracts!.powerToken! as Hash,
       functionName: "pastTotalSupply",
-      args: [BigInt(proposal.value!.epoch!) - 1n],
+      args: [pastProposalEpoch.value],
     }),
     readZeroToken(wagmiConfig, {
-      address: spog!.contracts!.zeroToken! as Hash,
-      functionName: "totalSupply",
+      address: ttg!.contracts!.zeroToken! as Hash,
+      functionName: "pastTotalSupply",
+      args: [pastProposalEpoch.value],
     }),
   ]),
-  [0n, 0n]
+  [0n, 0n],
 );
 
 /*

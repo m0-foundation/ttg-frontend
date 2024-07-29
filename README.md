@@ -1,34 +1,23 @@
-# M^ZERO Governance dApp
+# M^0 Governance dApp
 
-This app is based on Nuxt v3, Vue, and Wagmi
+#### Current decentralized deployments:
+IPFS: [bafybeig4d3u2yuo2aflp7pobps3rh5vlvlofowa6zrpwbpunwzxjtjbeoq](https://bafybeig4d3u2yuo2aflp7pobps3rh5vlvlofowa6zrpwbpunwzxjtjbeoq.ipfs.cf-ipfs.com/proposals)
+
+Arweave: vET9BYjLCjv8cjQDxfwbAzauQdaw92lwy4ZcCskeJN4
+
+<img width="1089" alt="Screenshot 2024-05-14 at 2 04 43 PM" src="https://github.com/MZero-Labs/ttg-frontend/assets/1220854/f63ccd58-99b4-48fd-871f-f6016812f380">
+
 
 ## 1. Contracts
 
 The dApp is based on the TTG contracts in order to run the local testnet. Although it does not keep track of versioning of TTG yet. Meaning, the FE code base has to be updated to latest changes of TTG otherwise it might break.
 
-This will download the TTG contracts and all of their submodules recursively
-
-```bash
-git submodule add git@github.com:MZero-Labs/ttg.git modules/ttg
-```
-
-```bash
-git submodule update --init --recursive
-```
-
-If you need to update the module with the latest commit from remote TTG use this instead:
-
-```bash
-git submodule update --init --recursive --remote
-```
-
-Note: Run `git submodule status` on root / of this repo to find the commit hash of the code based placed in contracts/ folder.
+The repo is hosting the latest abis and bytecodes of ttg at folder `moldules/ttg`
 
 ### 1.2 Update SDK from TTG smart contracts (only when contracts change) - (optional)
 
-1. Do steps on (1.2) item
-2. then run `yarn wagmi generate`
-3. Finally, update the lib/sdk.ts file replace the import `"wagmi/codegen";` to `"@wagmi/core/codegen"`
+1. then run `yarn wagmi generate`
+2. Finally, update the lib/sdk.ts file replace the import `"wagmi/codegen";` to `"@wagmi/core/codegen"`
 
 Depending on contract changes this file must be also updated with correct import dependencies of contracts:
 `/wagmi.config.ts`
@@ -53,12 +42,6 @@ yarn hardhat
 
 This starts a test blockchain on port 8545.
 
-To test with the [rpc-proxy](https://github.com/MZero-Labs/rpc-proxy) on port 3005, clone it and run it in another terminal. It will connect to hardhat.
-
-To test without the rpc-proxy, verify your .env connects to hardhat port 8545 instead of 3005 for RPC
-
-See file `/hardhat.config.js` for configs.
-
 #### 2.1.3 Env vars
 
 This app uses an environment variables locally (not in docker-compose). For local development: See package.json.
@@ -67,9 +50,10 @@ Use in other chains you must create an .env file with this parameters:
 
 ```
 BUILD_ENV=local(hardhat) | development(sepolia) | staging(sepolia) | production(mainnet)
-VITE_APP_IS_AUCTION_ACTIVE=true | false
+VITE_APP_IS_AUCTION_ACTIVE=true | false | undefined
 VITE_APP_RPC_URL_MAIN=string
 VITE_APP_RPC_URL_FALLBACK=string
+VITE_APP_WALLET_CONNECT_PROJECT_ID=string
 ```
 
 For hardhat running there is no need for such file.
@@ -92,7 +76,7 @@ You need have docker installed, the easiest way is [Docker Desktop](https://www.
 
 #### 2.2.1 For Development
 
-The easiest way to run everything for DEVELOPMENT is with docker-compose. Make sure you have SSH access to the `rpc-proxy` repo as well.
+The easiest way to run everything for DEVELOPMENT is with docker-compose.
 
 ```bash
 ssh-add
@@ -108,7 +92,6 @@ docker compose up --build
 This will start:
 
 - a test blockchain Hardhat on port 8545
-- an rpc-proxy on port 3005
 - the Frontend app on port 3000 with live reloading when files change
 
 #### 2.2.2 For Ethereum Mainnet
@@ -182,7 +165,7 @@ This resets the nonce and state for the wallet
 
 ## E2E Test
 
-We use cypress that on every .cy.ts file deploys the TTG contract found on `hardhat/deploy-spog.ts`
+We use cypress that on every .cy.ts file deploys the TTG contract found on `hardhat/deploy-ttg.ts`
 
 To Run specific test or debug:
 

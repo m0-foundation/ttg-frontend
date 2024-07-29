@@ -4,9 +4,10 @@
       My Profile<template #subtitle>
         <MAddressAvatar
           class="text-grey-500 normal-case"
-          :short-address="false"
+          :short-address="!largerThanSm"
           :address="address"
           :show-avatar="false"
+          :show-copy="true"
         />
       </template>
       <template #side>
@@ -36,6 +37,9 @@
 
 <script setup lang="ts">
 import { useAccount } from "use-wagmi";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+
+const largerThanSm = useBreakpoints(breakpointsTailwind).greater("sm");
 const { address } = useAccount();
 
 useHead({

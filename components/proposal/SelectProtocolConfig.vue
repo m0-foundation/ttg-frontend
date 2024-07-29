@@ -18,7 +18,7 @@
 
     <div
       v-show="parameter?.description || parameter?.shortDescription"
-      class="bg-accent-teal flex flex-col gap-3 p-4 mt-2"
+      class="bg-grey-800 bg-opacity-85 flex flex-col gap-3 p-4 mt-2"
     >
       <span class="uppercase text-xxs">Parameter description</span>
       <p class="font-inter">
@@ -107,9 +107,9 @@ const configParams = [
 
   {
     value: "base_minter_rate",
-    label: "Base Minter rate",
+    label: "Base minter rate",
     shortDescription:
-      "Base yearly interest rate that continuously accrues on $M owed to the protocol.",
+      "Base yearly interest rate that continuously accrues on M owed to the protocol.",
   },
 
   {
@@ -121,20 +121,9 @@ const configParams = [
 
   {
     value: "max_earner_rate",
-    label: "Max. Earner rate",
+    label: "Max earner rate",
     shortDescription:
-      "Maximum yearly interest rate that continuously accrues on $M owned by Earners.",
-  },
-
-  {
-    header: "Others",
-  },
-
-  {
-    value: "guidance",
-    label: "Guidance",
-    shortDescription:
-      "IPFS Hash to a document that provides guidance on the protocol.",
+      "Maximum yearly interest rate that continuously accrues on M owned by Earners.",
   },
 ];
 
