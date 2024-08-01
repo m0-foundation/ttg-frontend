@@ -25,8 +25,8 @@ describe("Basic configuration", () => {
       "Mint TTL",
       "Mint Ratio",
       "Minter Freeze Time",
-      "Base Minter rate",
-      "Max Earner rate",
+      "Base Minter Rate",
+      "Max Earner Rate",
     ]
 
     cy.get('h3.text-xl').should('have.length', configParams.length)
