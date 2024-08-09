@@ -38,15 +38,6 @@
             </div>
           </div>
         </template>
-        <template #side>
-          <NuxtLink to="/proposals/all/">
-            <MNavButton
-              class="text-sm font-ppformula underline normal-case text-grey-500"
-            >
-              All proposals
-            </MNavButton>
-          </NuxtLink>
-        </template>
       </PageTitle>
     </div>
 
