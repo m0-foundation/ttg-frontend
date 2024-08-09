@@ -7,14 +7,6 @@
     >
       <template #header-left>
         <PageTitle>
-          <template #pretitle>
-            <NuxtLink
-              class="text-green-700 hover:text-green-600 text-sm uppercase cursor-pointer"
-              to="/proposals"
-            >
-              Back
-            </NuxtLink>
-          </template>
           <template #default>All proposals</template>
         </PageTitle>
       </template>
@@ -24,9 +16,9 @@
         >
           <select
             v-model="selectedType"
-            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
+            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xs p-0 px-2"
           >
-            <option value="all" default>All proposals</option>
+            <option value="all" default>All proposal types</option>
             <option
               v-for="option in proposalTypes"
               :key="option"
@@ -37,7 +29,7 @@
           </select>
           <select
             v-model="selectedEpoch"
-            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
+            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xs p-0 px-2"
           >
             <option :value="0" default>All epochs</option>
             <option
@@ -45,16 +37,6 @@
               :key="option"
               :value="option"
             >
-              {{ option }}
-            </option>
-          </select>
-
-          <select
-            v-model="selectedStatus"
-            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2"
-          >
-            <option value="all" default>All status</option>
-            <option v-for="option in statusTypes" :key="option" :value="option">
               {{ option }}
             </option>
           </select>
