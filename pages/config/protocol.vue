@@ -47,7 +47,7 @@ const protocolParametersData = [
     title: "Update Collateral Interval",
     key: "update_collateral_interval",
     description:
-      "This amount of time is the period between which Update Collateral must be called by a Minter. If they do not call Update Collateral within this amount of time after their previous call, their on-chain Collateral Value is assumed to be 0 and they will incur Penalty Rate on the next update. It is alterable with a Standard Proposal.",
+      "The period within which Update Collateral must be called by a Minter. If not called within this time after their previous call, the on-chain Collateral Value is assumed to be 0 and they will incur Penalty Rate on the next update. It is alterable with a Standard Proposal.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#update-collateral-interval",
     type: "time",
     unit: "seconds",
@@ -56,7 +56,7 @@ const protocolParametersData = [
     title: "Update Collateral Threshold",
     key: "update_collateral_threshold",
     description:
-      "This number of signatures is the minimum number of Validator signatures required to execute Update Collateral.",
+      "The number of Validator signatures required to execute Update Collateral.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#signature-threshold",
     type: "number",
   },
@@ -64,7 +64,7 @@ const protocolParametersData = [
     title: "Penalty Rate",
     key: "penalty_rate",
     description:
-      "The percentage charged on Owed M that is in excess of the amount a Minter is permitted to have generated.",
+      "The percentage charged on Owed $M that exceeds the amount a Minter is permitted to generate.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#penalty-rate",
     type: "basisPoints",
     unit: "BPS",
@@ -73,7 +73,7 @@ const protocolParametersData = [
     title: "Mint Delay",
     key: "mint_delay",
     description:
-      "This amount of time is the period between when a Minter has called Propose Mint and when they can first call Mint M.",
+      "The period between when a Minter has called Propose Mint and when they can first call Mint $M.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-delay",
     type: "time",
     unit: "seconds",
@@ -82,7 +82,7 @@ const protocolParametersData = [
     title: "Mint TTL",
     key: "mint_ttl",
     description:
-      "This is the amount of time after the Mint Delay that Mint has to be called before the mint proposal expires.",
+      "Period after the Mint Delay within which Mint must be called before the mint proposal expires.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#propose-mint-time-to-live",
     type: "time",
     unit: "seconds",
@@ -91,7 +91,7 @@ const protocolParametersData = [
     title: "Mint Ratio",
     key: "mint_ratio",
     description:
-      "This percentage is the fraction of a Minter’s on-chain Collateral Value that they can generate in M. It effectively controls the leverage of a Minter and the over-collateralization of M. It is alterable with a Standard Proposal.",
+      "The percentage that represents the fraction of a Minter’s on-chain Collateral Value they can generate in $M. It effectively controls the leverage of a Minter and the over-collateralization of $M. It is alterable with a Standard Proposal.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-ratio",
     type: "basisPoints",
     unit: "BPS",
@@ -100,7 +100,7 @@ const protocolParametersData = [
     title: "Minter Freeze Time",
     key: "minter_freeze_time",
     description:
-      "This amount of time is the duration for which a Minter will not be able to call Propose Mint or Mint after having the Freeze method called by a Validator on their address. It is alterable with a Standard Proposal. ",
+      "The duration for which a Minter will not be able to call Propose Mint or Mint after having the Freeze method called by a Validator on their address. It is alterable with a Standard Proposal. ",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-freeze-time",
     type: "time",
     unit: "seconds",
@@ -109,7 +109,7 @@ const protocolParametersData = [
     title: "Minter Rate Model",
     key: "minter_rate_model",
     description:
-      "The annualized percentage charged continuously to Minters on their Owed M. It is alterable with a Standard Proposal.",
+      "The annualized percentage charged continuously to Minters on their Owed $M. It is alterable with a Standard Proposal.",
     docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-rate",
     type: "address",
     copyValue: true,
@@ -118,26 +118,26 @@ const protocolParametersData = [
     title: "Earner Rate Model",
     key: "earner_rate_model",
     description:
-      "The annualized percentage paid to M in the Earn Mechanism. If the cumulative M paid out via the Earn Mechanism is going to be greater than the amount of M being generated by the Minter Rate, the Earner Rate is automatically discounted to whichever percentage will reduce this mismatch to 0. ",
+      "The annualized percentage paid to $M in the Earn Mechanism. If the cumulative $M paid out via the Earn Mechanism exceeds the amount of $M being generated by the Minter Rate, the Earner Rate is automatically reduced to eliminate this mismatch to 0. ",
     docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#earner-rate",
     type: "address",
     copyValue: true,
   },
 
   {
-    title: "Base Minter rate",
+    title: "Base Minter Rate",
     key: "base_minter_rate",
     description:
-      "This is the annualized rate which continuously accrues on Active Owed M.",
+      "The annualized rate which continuously accrues on Active Owed $M.",
     type: "basisPoints",
     unit: "BPS",
   },
 
   {
-    title: "Max Earner rate",
+    title: "Max Earner Rate",
     key: "max_earner_rate",
     description:
-      "This is the annualized rate which continuously accrues to M that is in addresses on the Earner List.",
+      "The annualized rate which continuously accrues to $M in addresses on the Earner List.",
     type: "basisPoints",
     unit: "BPS",
   },
@@ -147,7 +147,7 @@ const protocolParametersData = [
     title: "Adopted Guidance",
     key: "guidance",
     description:
-      "This document provides general Adopted guidance for the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
+      "This document provides general Adopted Guidance for the off-chain procedures stakeholders are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
     docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
     type: "guidance",
     copyValue: true,

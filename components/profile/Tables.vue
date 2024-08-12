@@ -50,7 +50,7 @@ const votesStore = useVotesStore();
 watch(
   address,
   () => {
-    votes = votesStore.getBy("voter", address.value);
+    votes = votesStore.getByAddress(address.value);
   },
   { immediate: true },
 );

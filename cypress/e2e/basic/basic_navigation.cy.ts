@@ -8,13 +8,13 @@ describe("Basic navigation", () => {
     cy.findByRole("button", {name: /Create proposal/i}).should("be.visible");
 
     cy.get("nav").should("contain", "Home");
+    cy.get("nav").should("contain", "All proposals");
     cy.get("nav").should("contain", "Actors");
     cy.get("nav").should("contain", "Configs");
   });
 
   it("I should see all proposals page", () => {
-    cy.findByRole("button", {name: /All proposals/i}).click();
-    cy.url().should("include", "/proposals/all");
+    cy.visit("/proposals/all");
 
     cy.get("h1").should("have.length", 1);
     cy.get("h1").should("contain.text", "All proposals");

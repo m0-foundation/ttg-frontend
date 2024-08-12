@@ -3,7 +3,7 @@
   "version": "1.3.7",
   "private": true,
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "scripts": {
     "build-start": "yarn build && yarn start",
