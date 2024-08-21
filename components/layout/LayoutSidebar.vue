@@ -52,7 +52,9 @@
                 :to="item.path"
                 :class="{
                   'notification-dot': item.notification,
-                  active: currentRoute?.path === item.path,
+                  active: item.exactRoute
+                    ? currentRoute?.path === item.path
+                    : currentRoute?.path?.includes(item.path),
                 }"
                 :data-test="item.dataTest"
               >
@@ -206,6 +208,7 @@ const mainMenuItems = computed(() => {
       path: "/proposals/",
       isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-proposals",
+      exactRoute: true,
     },
     {
       title: "All proposals",
