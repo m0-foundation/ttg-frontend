@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <div>
+        <div v-if="!canDelegate">
           <div class="bg-accent-blue p-6 mb-6">
             <span class="uppercase mb-2 text-xs">Warning</span>
             <div class="flex items-start gap-3">
