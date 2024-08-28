@@ -42,7 +42,7 @@ button {
 }
 
 h1 {
-  @apply text-lg lg:text-[28px];
+  @apply text-xl lg:text-[28px];
 }
 
 :disabled {

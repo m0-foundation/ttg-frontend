@@ -20,7 +20,7 @@
     <div v-if="!canDelegate && !isConnected" class="bg-accent-blue p-6 mb-6">
       <span class="uppercase mb-2 text-xs">Warning</span>
       <div class="flex items-center gap-3">
-        <MIconWarning class="w-12" />
+        <MIconWarning class="min-w-6" />
         <p>You need to connect a wallet to delegate your voting power.</p>
       </div>
     </div>
@@ -30,7 +30,7 @@
       @submit.prevent="delegatePower"
     >
       <div>
-        <div class="flex justify-between mb-3 gap-4">
+        <div class="flex max-lg:flex-col justify-between mb-3 gap-3">
           <div>
             <p class="text-xl">POWER Tokens</p>
             <p class="text-grey-500 text-xs">
@@ -39,7 +39,7 @@
               remain in your balance.
             </p>
           </div>
-          <div class="flex gap-1 items-center">
+          <div class="flex gap-3 items-center">
             <MIconPower class="h-6 w-6" />
             <span class="flex items-center text-2xl">
               {{
@@ -52,10 +52,10 @@
         </div>
 
         <div>
-          <div v-if="!canDelegate" class="bg-accent-blue p-6 mb-6">
+          <div class="bg-accent-blue p-6 mb-6">
             <span class="uppercase mb-2 text-xs">Warning</span>
-            <div class="flex items-center gap-3">
-              <MIconWarning class="w-12" />
+            <div class="flex items-start gap-3">
+              <MIconWarning class="min-w-6" />
               <p>
                 The transfer epoch has concluded. You will be able to delegate
                 in the next Transfer epoch.
@@ -64,8 +64,8 @@
           </div>
         </div>
 
-        <div class="flex justify-between">
-          <label class="text-grey-500">Delegation address</label>
+        <div class="flex justify-between mb-1">
+          <label class="text-grey-500 text-xs">Delegation address</label>
           <NuxtLink
             class="text-grey-500 underline text-xs cursor-pointer"
             @click="onUseMyAddressPower"
@@ -77,7 +77,7 @@
           id="input-delegate-power"
           v-model="powerFormData.address"
           type="text"
-          class="w-full border border-gray-600 rounded p-4 mb-2"
+          class="w-full p-4 mb-2"
           data-test="delegate-power-input-address"
           :errors="$delegatePowerValidation.address?.$errors"
         />
@@ -108,7 +108,7 @@
       @submit.prevent="delegateZero"
     >
       <div>
-        <div class="flex justify-between my-3 gap-4">
+        <div class="flex max-lg:flex-col justify-between my-3 gap-3">
           <div>
             <p class="text-xl">ZERO Tokens</p>
             <p class="text-grey-500 text-xs">
@@ -117,9 +117,9 @@
               remain in your balance.
             </p>
           </div>
-          <div class="flex gap-1 items-center">
+          <div class="flex gap-3 items-center">
             <MIconZero class="h-6 w-6" />
-            <span class="mx-2 flex items-center text-2xl">
+            <span class="flex items-center text-2xl">
               {{
                 useNumberFormatterPrice(
                   balanceZeroToken?.data.value?.formatted || 0n,
@@ -128,8 +128,8 @@
             </span>
           </div>
         </div>
-        <div class="flex justify-between">
-          <label class="text-grey-500">Delegation address</label>
+        <div class="flex justify-between mb-1">
+          <label class="text-grey-500 text-xs">Delegation address</label>
           <NuxtLink
             class="text-grey-500 underline text-xs cursor-pointer"
             @click="onUseMyAddressZero"
@@ -141,7 +141,7 @@
           id="input-delegate-zero"
           v-model="zeroFormData.address"
           type="text"
-          class="w-full border border-gray-600 rounded p-4 mb-2"
+          class="w-full p-4 mb-2"
           data-test="delegate-zero-input-address"
           :errors="$delegateZeroValidation.address?.$errors"
         />

@@ -24,6 +24,6 @@ const hasErrors = computed(() => props.errors?.length);
 
 <style scoped>
 .error {
-  @apply border border-red-600;
+  @apply bg-transparent border border-red-600;
 }
 </style>
