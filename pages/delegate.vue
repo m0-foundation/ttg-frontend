@@ -33,10 +33,10 @@
         <div class="flex justify-between mb-3 gap-4">
           <div>
             <p class="text-xl">POWER Tokens</p>
-            <p class="text-grey-600 text-xs">
+            <p class="text-grey-500 text-xs">
               You are delegating
-              <span class="text-grey-500 font-bold">only voting power</span>.
-              The tokens will remain in your balance.
+              <span class="font-bold">only voting power</span>. The tokens will
+              remain in your balance.
             </p>
           </div>
           <div class="flex gap-1 items-center">
@@ -65,9 +65,9 @@
         </div>
 
         <div class="flex justify-between">
-          <label class="text-grey-600">Delegation address</label>
+          <label class="text-grey-500">Delegation address</label>
           <NuxtLink
-            class="text-grey-600 underline text-xs cursor-pointer"
+            class="text-grey-500 underline text-xs cursor-pointer"
             @click="onUseMyAddressPower"
           >
             Use my address
@@ -111,10 +111,10 @@
         <div class="flex justify-between my-3 gap-4">
           <div>
             <p class="text-xl">ZERO Tokens</p>
-            <p class="text-grey-600 text-xs">
+            <p class="text-grey-500 text-xs">
               You are delegating
-              <span class="text-grey-500 font-bold">only voting power</span>.
-              The tokens will remain in your balance.
+              <span class="font-bold">only voting power</span>. The tokens will
+              remain in your balance.
             </p>
           </div>
           <div class="flex gap-1 items-center">
@@ -129,9 +129,9 @@
           </div>
         </div>
         <div class="flex justify-between">
-          <label class="text-grey-600">Delegation address</label>
+          <label class="text-grey-500">Delegation address</label>
           <NuxtLink
-            class="text-grey-600 underline text-xs cursor-pointer"
+            class="text-grey-500 underline text-xs cursor-pointer"
             @click="onUseMyAddressZero"
           >
             Use my address

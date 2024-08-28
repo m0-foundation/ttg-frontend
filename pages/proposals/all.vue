@@ -68,7 +68,7 @@
             </div>
           </div>
         </div>
-        <p class="text-xs text-grey-600 mt-1">
+        <p class="text-xs text-grey-500 mt-1">
           {{ item?.proposalLabel }} · Created:
           {{ useDate(item?.timestamp).toFormat("DD.MM.YY") }}
         </p>
