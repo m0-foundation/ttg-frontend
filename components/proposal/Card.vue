@@ -101,7 +101,10 @@
         </div>
       </div>
 
-      <div class="text-xs text-grey-600 font-inter mt-3">
+      <div
+        v-if="proposal?.state === 'Active'"
+        class="text-xs text-grey-600 font-inter mt-3"
+      >
         <p v-show="!canVote">Not enough voting power</p>
         <p v-show="hasVoted">Your vote has been submitted</p>
       </div>
