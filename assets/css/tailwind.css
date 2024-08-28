@@ -50,7 +50,7 @@ h1 {
 }
 
 .dropdown-menu-items {
-  @apply bg-grey-700 shadow-sm shadow-grey-1000 text-grey-200 font-inter;
+  @apply bg-grey-700 text-grey-200 font-inter;
 }
 .dropdown-menu-items li a {
   @apply px-6 py-3 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;
@@ -58,7 +58,7 @@ h1 {
 
 .v-popper--theme-dropdown  {
   .v-popper__wrapper {
-    @apply shadow-md shadow-grey-1000;
+    @apply shadow-sm shadow-grey-600;
   }
   .v-popper__inner {
     @apply border-none rounded-none !important;
