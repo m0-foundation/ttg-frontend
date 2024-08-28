@@ -22,7 +22,7 @@
         {{ title }}
       </h1>
 
-      <div class="text-grey-400 my-3 font-inter text-xs">
+      <div class="text-grey-500 my-3 font-inter text-xs">
         Proposed by
         <MAddressAvatar :address="proposal?.proposer" />
         at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}

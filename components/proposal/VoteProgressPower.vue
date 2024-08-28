@@ -1,8 +1,6 @@
 <template>
   <div class="flex justify-between gap-2 items-center">
-    <div class="bg-green-800 h-2 w-2"></div>
-
-    <span id="vote-yes-percentage" class="text-green-800 text-xs">
+    <span id="vote-yes-percentage" class="text-grey-500 text-xs">
       {{ props.votes?.yes?.percentage }}%
     </span>
 
@@ -23,11 +21,9 @@
       :has-votes="hasVotes"
     />
 
-    <div class="bg-red-500 h-2 w-2"></div>
-
     <span
       id="vote-no-percentage"
-      class="text-red-500 text-xs flex items-baseline"
+      class="text-grey-500 text-xs flex items-baseline"
     >
       {{ props.votes?.no?.percentage }}%
     </span>
