@@ -16,7 +16,7 @@
         >
           <select
             v-model="selectedType"
-            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xs p-0 px-2"
+            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xs p-0 px-2 appearance-auto"
           >
             <option value="all" default>All proposal types</option>
             <option
@@ -29,7 +29,7 @@
           </select>
           <select
             v-model="selectedEpoch"
-            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xs p-0 px-2"
+            class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xs p-0 px-2 appearance-auto"
           >
             <option :value="0" default>All epochs</option>
             <option
@@ -48,14 +48,14 @@
         <MIconZero v-else-if="['Zero'].includes(value)" />
       </template>
       <template #cell(proposal)="{ item }">
-        <div class="flex gap-4">
+        <div class="lg:flex gap-4 min-w-96">
           <button
             class="underline hover:no-underline text-left"
             @click="() => onViewProposal(item)"
           >
             {{ useParsedDescriptionTitle(item?.description).title }}
           </button>
-          <div class="flex items-center">
+          <div class="flex items-center max-lg:mt-1">
             <div
               class="px-2 py-0.5 text-xxs leading-4"
               :class="{
