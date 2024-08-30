@@ -60,7 +60,7 @@
         </div>
         <MInput
           id="buy-input"
-          v-model="purchaseAmount"
+          v-model="auctionBuyForm.amount"
           class="input"
           type="text"
           placeholder="0"
@@ -91,14 +91,34 @@
             {{ cashToken?.data?.value?.symbol }}
           </span>
         </div>
+        <div class="my-2">
+          <label class="flex items-center gap-2 text-xs leading-3 mb-0">
+            <input
+              v-model="customDestination"
+              type="checkbox"
+              class="w-3 h-3 accent-accent-mint"
+              data-test="reason-vote-checkbox"
+            />
+            Set destination address
+          </label>
+          <MInput
+            v-if="customDestination"
+            id="custom-destination"
+            v-model="auctionBuyForm.destination"
+            class="input mt-2"
+            type="text"
+            placeholder="0x..."
+            :errors="$auctionBuyValidation.destination?.$errors"
+          />
+        </div>
         <MButton
           :disabled="
-            !purchaseAmount ||
+            !auctionBuyForm.amount ||
             !userAccount ||
             isLoadingTransaction ||
             totalPrice > cashTokenBalance
           "
-          class="mt-4 w-full flex justify-center"
+          class="w-full flex justify-center"
           type="submit"
           :is-loading="isLoadingTransaction"
           data-test="button-submit-buy"
@@ -108,9 +128,9 @@
         </MButton>
         <div class="flex items-start gap-2 mt-4">
           <img class="w-4 lg:w-8" src="/img/icon-info.svg" alt="" />
-          <span class="text-xs"
-            >You may purchase any amount up to the specified limit.</span
-          >
+          <span class="text-xs">
+            You may purchase any amount up to the specified limit.
+          </span>
         </div>
       </div>
 
@@ -152,6 +172,7 @@ import {
   Hash,
   formatEther,
   erc20Abi,
+  isAddress,
   parseEther,
   parseAbi,
   decodeEventLog,
@@ -164,6 +185,8 @@ import {
 } from "@wagmi/core";
 import { writePowerToken } from "@/lib/sdk";
 import { useMBalances } from "@/lib/hooks";
+import { helpers } from "@vuelidate/validators";
+import { useVuelidate } from "@vuelidate/core";
 
 const alerts = useAlertsStore();
 const { forceSwitchChain } = useCorrectChain();
@@ -174,7 +197,13 @@ const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
 
 const cashTokenBalance = computed(() => cashToken?.data?.value?.formatted);
 
-const purchaseAmount = ref();
+const auctionBuyForm = reactive({
+  amount: 0,
+  destination: "",
+  loading: false,
+});
+
+const customDestination = ref(false);
 const isLoadingTransaction = ref(false);
 const { epoch, currentCashToken } = storeToRefs(ttg);
 const wagmiConfig = useWagmiConfig();
@@ -192,15 +221,30 @@ const isTransferEpoch = computed(
 const noPowerTokens = computed(() => Number(amountLeftToAuction.value) === 0);
 
 const totalPrice = computed(() => {
-  if (!currentCost.value || !purchaseAmount.value) return "0";
+  if (!currentCost.value || !auctionBuyForm.amount) return "0";
   return useNumberFormatterEth(
-    formatEther(BigInt(currentCost.value.value) * BigInt(purchaseAmount.value)),
+    formatEther(
+      BigInt(currentCost.value.value) * BigInt(auctionBuyForm.amount),
+    ),
   );
 });
 
+const addressValidation = (val: Hash) => isAddress(val);
+const addressValidationRule = {
+  addressValidation: helpers.withMessage("Invalid address", addressValidation),
+};
+
+const auctionBuyRules = {
+  destination: {
+    ...addressValidationRule,
+  },
+};
+
+const $auctionBuyValidation = useVuelidate(auctionBuyRules, auctionBuyForm);
+
 async function setMaxPossiblePurchase() {
   await getAmountLeftToAuction();
-  purchaseAmount.value = Number(amountLeftToAuction.value);
+  auctionBuyForm.amount = Number(amountLeftToAuction.value);
 }
 
 async function auctionBuy() {
@@ -212,13 +256,20 @@ async function auctionBuy() {
       alerts.errorAlert("Error getting approval!");
     });
 
+    if (customDestination.value) {
+      await $auctionBuyValidation.value.$validate();
+      if ($auctionBuyValidation.value.$error) return;
+    }
+
     const hash = await writePowerToken(wagmiConfig, {
       address: ttg.contracts.value.powerToken as Hash,
       functionName: "buy",
       args: [
         1n, // Minimun amount the user is willing to buy
-        BigInt(purchaseAmount.value), // Maximum and IDEAL amount the user is willing to buy
-        userAccount.value as Hash,
+        BigInt(auctionBuyForm.amount), // Maximum and IDEAL amount the user is willing to buy
+        customDestination.value
+          ? (auctionBuyForm.destination as Hash)
+          : (userAccount.value as Hash),
         epoch.value.current?.asNumber, // expiryEpoch_ should send the current epoch as it UP TO this epoch we buy
       ],
       account: userAccount.value as Hash,
@@ -248,6 +299,8 @@ async function auctionBuy() {
       );
       refetchBalances();
       getAmountLeftToAuction();
+
+      auctionBuyForm.amount = 0;
     }
   } catch (error) {
     console.log("ERROR", error);
