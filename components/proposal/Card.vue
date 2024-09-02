@@ -16,7 +16,7 @@
         </h2>
       </div>
 
-      <div class="text-grey-600 font-inter mb-4 break-words">
+      <div class="text-grey-500 font-inter mb-4 break-words">
         {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
 
@@ -48,11 +48,11 @@
 
       <div
         v-if="proposal?.state === 'Active'"
-        class="lg:flex justify-between items-center"
+        class="flex max-sm:flex-col justify-between lg:items-center gap-3"
       >
-        <div>
+        <div class="w-full">
           <div
-            class="inline-flex gap-1 items-center w-full mb-4 lg:mb-0"
+            class="inline-flex gap-1 items-center w-full lg:mb-0"
             role="group"
           >
             <ProposalButtonCastVote
@@ -79,13 +79,6 @@
             >
               NO
             </ProposalButtonCastVote>
-
-            <div
-              class="text-xxs text-grey-600 uppercase mx-2 font-inter max-sm:w-full"
-            >
-              <p v-show="!canVote">Not enough voting power</p>
-              <p v-show="hasVoted">Your vote has been submitted</p>
-            </div>
           </div>
         </div>
 
@@ -108,13 +101,23 @@
         </div>
       </div>
 
+      <div
+        v-if="proposal?.state === 'Active'"
+        class="text-xs text-grey-600 font-inter mt-3"
+      >
+        <p v-show="!canVote">Not enough voting power</p>
+        <p v-show="hasVoted">Your vote has been submitted</p>
+      </div>
+
       <div v-if="!hasVoted && selectedVote !== null">
         <div class="mt-4 mb-3 text-grey-500 font-inter">
-          <label class="flex items-center gap-2 text-xs leading-3 mb-0">
+          <label
+            class="flex items-center gap-2 text-xs leading-3 mb-0 rounded-none"
+          >
             <input
               v-model="reasonForVoteCheckbox"
               type="checkbox"
-              class="w-3 h-3"
+              class="w-3 h-3 accent-accent-mint"
               data-test="reason-vote-checkbox"
             />
             Share with others why you made this choice. This can cost a little
@@ -178,7 +181,7 @@ const apiStore = useApiClientStore();
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
 
 const selectedVote = ref<null | boolean>(null);
-const reasonForVoteCheckbox = ref<boolean | null>(false);
+const reasonForVoteCheckbox = ref<boolean | undefined>(false);
 const reasonForVote = ref<string>("");
 const reasonForVoteTextarea = ref();
 

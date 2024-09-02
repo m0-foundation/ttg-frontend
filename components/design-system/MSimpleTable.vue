@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <div class="lg:flex justify-between items-center mb-1">
       <div class="w-full">
         <slot name="header-left" />
@@ -25,13 +25,13 @@
           </template>
         </colgroup>
         <thead
-          class="text-grey-500 text-xs font-light font-inter border-b-2 border-grey-700"
+          class="text-grey-500 text-xs font-inter border-b-2 border-grey-700"
         >
           <tr>
             <th
               v-for="field in displayedFields"
               :key="field.key"
-              class="p-3"
+              class="p-3 font-normal"
               :class="{
                 'cursor-pointer hover:text-grey-600': field.sortable,
                 'p-2': dense,

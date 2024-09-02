@@ -63,7 +63,7 @@
             Immediately votable
           </span>
           <span v-else>
-            {{ nextEpochAsDate }} (Epoch #{{ epoch?.current?.asNumber }})
+            {{ nextVotingEpochAsDate }} (Epoch #{{ nextVotingEpochNumber }})
           </span>
         </div>
       </div>
@@ -102,9 +102,20 @@ defineProps({
   },
 });
 
-const nextEpochAsDate = computed(() => {
-  const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp));
-  return toFormat("LL");
+const nextVotingEpochAsDate = computed(() => {
+  const nextVotingEpochTimestamp =
+    epoch.value.next?.type === "VOTING"
+      ? epoch.value.next?.asTimestamp
+      : epoch.value.next?.asTimestamp + epoch.value.values.clockPeriod;
+
+  const { toFormat } = useDate(Number(nextVotingEpochTimestamp));
+  return toFormat("LLL");
+});
+
+const nextVotingEpochNumber = computed(() => {
+  return epoch.value.next?.type === "VOTING"
+    ? epoch.value.next?.asNumber
+    : epoch.value.next?.asNumber + 1;
 });
 
 const getDocsLink = (votingType: string) => {
