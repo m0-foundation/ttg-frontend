@@ -2,7 +2,7 @@
   <div class="z-50 shadow-lg alert">
     <div class="items-stretch flex flex-col px-4" :class="type">
       <div
-        class="flex justify-between items-center align-middle gap-2 mt-4 mb-4 min-w-80 max-w-96 max-md:max-w-full max-md:flex-wrap"
+        class="flex justify-between gap-3 mt-4 mb-4 min-w-80 max-w-96 max-md:max-w-full"
       >
         <component
           :is="Icon"
@@ -11,15 +11,13 @@
         />
 
         <div
-          class="text-base items-center align-middle leading-6 self-stretch grow shrink basis-auto max-md:max-w-full font-bold"
+          class="text-base items-center align-middle self-stretch grow shrink basis-auto max-md:max-w-full font-bold"
         >
-          <div v-html="message" />
+          <div class="leading-6 -mt-1" v-html="message" />
         </div>
 
-        <div
-          class="text-md leading-3 uppercase whitespace-nowrap ml-12 max-md:max-w-full justify-between flex gap-2"
-        >
-          <button class="hover:opacity-70" @click="dismiss">✕</button>
+        <div class="flex text-md leading-3 uppercase">
+          <button class="hover:opacity-70 flex" @click="dismiss">✕</button>
         </div>
       </div>
     </div>

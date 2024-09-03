@@ -79,7 +79,7 @@
       </ProposalList>
 
       <div
-        v-show="hasProposals && isConnected"
+        v-show="hasProposals && isConnected && !hasVotedOnAllProposals"
         class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8"
         :class="{
           'bg-grey-700': isSelectedCastProposalsFull,
