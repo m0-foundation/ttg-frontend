@@ -236,12 +236,17 @@ const mainMenuItems = computed(() => {
       dataTest: "sidebar-link-auction",
       notification: amountLeftToAuction.value && isTransferEpoch.value,
     },
-
     {
       title: "Protocol Fees",
       path: "/fees/",
       isShow: isAuctionActive.value,
       dataTest: "sidebar-link-fees",
+    },
+    {
+      title: "Wrap/Unwrap",
+      path: "/wrap/",
+      isShow: isAuctionActive.value,
+      dataTest: "sidebar-link-wrap",
     },
   ];
 });
