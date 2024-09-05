@@ -9,6 +9,8 @@ export interface NetworkConfig {
     zero?: {
       allowedCashTokens?: Hash[];
     };
+    mToken: Hash;
+    wrappedMToken: Hash;
   };
   rpc: {
     chainId: number;
