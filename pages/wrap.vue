@@ -214,4 +214,12 @@ const getTokensBalances = async () => {
 onMounted(async () => {
   await getTokensBalances();
 });
+
+watch(
+  userAccount,
+  () => {
+    getTokensBalances();
+  },
+  { immediate: true },
+);
 </script>
