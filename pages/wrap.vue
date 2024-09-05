@@ -128,7 +128,7 @@ const wrapMToken = async () => {
 
     alerts.successAlert("You successfully wrapped M");
   } catch (error) {
-    alerts.errorAlert("Error", error.shortMessage);
+    alerts.errorAlert("Error");
   } finally {
     getTokensBalances();
     m.input = "";
@@ -179,6 +179,7 @@ async function writeAllowance(value: string) {
   });
 
   if (!allowance || allowance < parseUnits(value, 6)) {
+    alerts.infoAlert("Allowance approval needed");
     const hash = await writeContract(wagmiConfig, {
       abi: erc20Abi,
       address: network.value.contracts.mToken as Hash,
