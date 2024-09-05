@@ -214,12 +214,3 @@ onMounted(async () => {
   await getTokensBalances();
 });
 </script>
-
-<style>
-.token-label {
-  @apply text-grey-500 text-xxs font-inter mb-1;
-}
-.distribute-button {
-  @apply mt-4 text-xs !important;
-}
-</style>
