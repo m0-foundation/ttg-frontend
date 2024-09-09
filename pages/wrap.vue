@@ -8,9 +8,9 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div class="bg-grey-800 p-6">
           <div class="flex items-center gap-6">
-            <img src="/img/tokens/m.svg" alt="M Token" class="w-10 h-10" />
+            <img src="/img/tokens/new-m.svg" alt="M Token" class="w-10 h-10" />
             <div>
-              <h2>M</h2>
+              <h2>$M</h2>
               <p class="text-grey-500">
                 Balance: {{ formatUnits(m.balance, 6) }}
               </p>
@@ -31,12 +31,12 @@
         <div class="bg-grey-800 p-6">
           <div class="flex items-center gap-6">
             <img
-              src="/img/tokens/m.svg"
-              alt="M Token"
-              class="w-10 h-10 rotate-180"
+              src="/img/tokens/wrapped-m.svg"
+              alt="Wrapped M Token"
+              class="w-10 h-10"
             />
             <div>
-              <h2>Wrapped M</h2>
+              <h2>Smart $M</h2>
               <p class="text-grey-500">
                 Balance: {{ formatUnits(wrappedM.balance, 6) }}
               </p>
