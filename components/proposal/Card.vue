@@ -8,7 +8,7 @@
       class="text-white bg-grey-800 p-6 lg:p-8"
     >
       <div
-        v-if="errorProposal"
+        v-if="isProposalWithError"
         class="flex items-center gap-2 mb-2 bg-red-500 p-2 leading-tight"
       >
         <span class="-mb-1">CAUTION: Suspicious or wrong proposal</span>
