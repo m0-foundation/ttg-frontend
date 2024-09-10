@@ -33,7 +33,7 @@
   input,
   select,
   textarea {
-    @apply bg-grey-800 border rounded-none border-grey-700 font-inter text-grey-100 text-sm focus:invalid:ring-red-600 focus:outline-none focus:border-grey-500 focus:ring-1 focus:ring-grey-500 placeholder:text-grey-500 block w-full p-2.5;
+    @apply bg-grey-800 border rounded-none border-grey-700 font-inter text-grey-100 focus:invalid:ring-red-600 focus:outline-none focus:border-grey-500 focus:ring-1 focus:ring-grey-500 placeholder:text-grey-500 block w-full p-2.5;
   }
 }
 
@@ -42,7 +42,7 @@ button {
 }
 
 h1 {
-  @apply text-lg lg:text-[28px];
+  @apply text-xl lg:text-[28px];
 }
 
 :disabled {
@@ -50,7 +50,7 @@ h1 {
 }
 
 .dropdown-menu-items {
-  @apply bg-grey-700 shadow-sm shadow-grey-1000 text-grey-200 font-inter;
+  @apply bg-grey-700 text-grey-200 font-inter;
 }
 .dropdown-menu-items li a {
   @apply px-6 py-3 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;
@@ -58,7 +58,7 @@ h1 {
 
 .v-popper--theme-dropdown  {
   .v-popper__wrapper {
-    @apply shadow-md shadow-grey-1000;
+    @apply shadow-sm shadow-grey-600;
   }
   .v-popper__inner {
     @apply border-none rounded-none !important;

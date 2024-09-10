@@ -1,7 +1,7 @@
 <template>
   <input v-bind="$attrs" v-model="value" :class="{ error: hasErrors }" />
 
-  <div class="text-red-500 text-xs my-2 h-4">
+  <div class="text-red-500 text-xs my-1 h-4 font-inter">
     <p v-for="error of props.errors" :key="error.$uid">
       {{ error.$message }}
     </p>
@@ -24,6 +24,6 @@ const hasErrors = computed(() => props.errors?.length);
 
 <style scoped>
 .error {
-  @apply border border-red-600;
+  @apply bg-transparent border border-red-600;
 }
 </style>

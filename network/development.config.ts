@@ -19,6 +19,8 @@ export default {
         "0x0c941AD94Ca4A52EDAeAbF203b61bdd1807CeEC0", // M token
       ],
     },
+    mToken: "0x0c941AD94Ca4A52EDAeAbF203b61bdd1807CeEC0",
+    wrappedMToken: "0x3Ea1d88B298165A50ace6146A46Eb151bDDc22FD",
   },
   rpc: {
     chainId: 11155111,

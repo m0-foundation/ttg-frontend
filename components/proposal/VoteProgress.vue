@@ -22,7 +22,7 @@
           :threshold-formatted="thresholdFormatted"
         />
       </div>
-      <p class="my-1 text-sm text-grey-500">
+      <p class="my-1 text-xs text-grey-500">
         Total participation:
         {{ getParticipationPercentage }}%
       </p>

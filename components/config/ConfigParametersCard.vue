@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-col gap-4 bg-grey-800 p-4 lg:p-6">
-    <div class="flex gap-4 justify-between">
-      <div>
+    <div class="flex gap-4 justify-between flex-wrap">
+      <div class="lg:flex-1">
         <h3 class="text-xl">{{ param?.title }}</h3>
         <div class="config-key-badge">{{ param?.key }}</div>
       </div>
-      <div class="flex gap-4">
-        <div class="text-end">
+      <div class="flex gap-4 max-lg:order-2 max-lg:w-full">
+        <div class="lg:text-end">
           <p class="lg:text-2xl font-bold">
             {{ formattedValue(param) }}
           </p>
@@ -26,29 +26,29 @@
             <span v-else class="text-nowrap">Parameter not set</span>
           </div>
         </div>
-        <div v-if="param?.proposal?.executedEvent">
-          <MDropdown>
-            <ul class="dropdown-menu-items">
-              <li
-                class="px-6 py-3 text-xxs text-grey-500 border-b border-b-grey-800"
-              >
-                <p>Last updated</p>
-                <p>
-                  {{
-                    useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
-                      "LLL",
-                    )
-                  }}
-                </p>
-              </li>
-              <li>
-                <NuxtLink :to="`/proposal/${param?.proposal?.proposalId}`"
-                  >Show proposal
-                </NuxtLink>
-              </li>
-            </ul>
-          </MDropdown>
-        </div>
+      </div>
+      <div v-if="param?.proposal?.executedEvent" class="max-lg:order-1">
+        <MDropdown>
+          <ul class="dropdown-menu-items">
+            <li
+              class="px-6 py-3 text-xxs text-grey-500 border-b border-b-grey-800"
+            >
+              <p>Last updated</p>
+              <p>
+                {{
+                  useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
+                    "LLL",
+                  )
+                }}
+              </p>
+            </li>
+            <li>
+              <NuxtLink :to="`/proposal/${param?.proposal?.proposalId}`"
+                >Show proposal
+              </NuxtLink>
+            </li>
+          </ul>
+        </MDropdown>
       </div>
     </div>
     <div
