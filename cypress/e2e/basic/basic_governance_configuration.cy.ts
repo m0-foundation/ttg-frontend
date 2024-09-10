@@ -40,6 +40,7 @@ describe("Governance configuration", () => {
       "Distribution Vault",
       "Registrar",
       "M Token",
+      "Smart $M",
     ]
 
     // non-changeable parameters table
