@@ -1,7 +1,7 @@
 <template>
   <div
     class="mb-4 bg-transparent"
-    :class="{ 'border border-red-500': errorProposal }"
+    :class="{ 'border border-red-500': isProposalWithError }"
   >
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
@@ -218,7 +218,7 @@ watch(reasonForVote, (value) => {
   emit("update-reason-for-vote", value, props.proposal.proposalId);
 });
 
-const errorProposal = computed(() => {
+const isProposalWithError = computed(() => {
   return errorProposals?.some((id) => id === props.proposal.proposalId);
 });
 
