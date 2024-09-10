@@ -219,7 +219,7 @@ watch(reasonForVote, (value) => {
 });
 
 const errorProposal = computed(() => {
-  return errorProposals?.some((id) => id === Number(props.proposal.proposalId));
+  return errorProposals?.some((id) => id === props.proposal.proposalId);
 });
 
 const isVoteYesActive = computed(() => {
