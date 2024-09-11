@@ -16,9 +16,8 @@
           <img src="/img/icon-info.svg" class="w-6 h-6" alt="" />
           <template #popper>
             <div class="max-w-80 text-sm">
-              This proposal has been labeled as suspicious or wrong by the
-              foundation. Please be cautious while voting. If not sure, pleaso
-              vote <strong>NO</strong>.
+              This proposal has been labeled as suspicious or wrong by the M^0
+              Foundation. We recommend to vote <b>NO</b>.
             </div>
           </template>
         </VTooltip>
