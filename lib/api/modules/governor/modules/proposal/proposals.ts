@@ -8,9 +8,8 @@ import {
   fromHex,
   toFunctionSelector,
   parseAbiItem,
+  trim,
 } from "viem";
-
-import pick from "lodash/pick";
 
 import { GovernorModule } from "../GovernorModule";
 import { GovernanceType } from "../../governor.types";
@@ -142,8 +141,6 @@ export class Proposals extends GovernorModule {
       removeSelectorFromCallData(calldata),
     );
 
-    const key = hexWith32BytesToString(params[0]);
-
     const decodeValue = (key: string, value: string) => {
       if (["minter_rate_model", "earner_rate_model"].includes(key)) {
         return hexWith32BytesToAddress(value as Hash);
@@ -156,7 +153,10 @@ export class Proposals extends GovernorModule {
       return decodeAbiParameters([{ type: "uint256" }], value as Hash);
     };
 
-    const value = decodeValue(key, params[1]);
+    const tempKey = hexWith32BytesToString(params[0]);
+    const isOtherKey = tempKey.includes("�");
+    const key = isOtherKey ? params[0] : tempKey;
+    const value = isOtherKey ? trim(params[1]) : decodeValue(key, params[1]);
 
     return { proposalType, params: [key, value] };
   }
