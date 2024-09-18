@@ -28,13 +28,13 @@
         class="mb-4"
       />
 
-      <div class="mb-4">
-        <h2 class="text-2xl break-all">
+      <div class="mb-4 text-xl lg:text-2xl break-words">
+        <h3>
           {{ title }}
-        </h2>
+        </h3>
       </div>
 
-      <div class="text-grey-500 font-inter mb-4 break-words">
+      <div class="text-grey-500 max-lg:text-sm font-inter mb-4 break-words">
         {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
 
