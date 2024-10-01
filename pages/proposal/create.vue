@@ -854,20 +854,6 @@ function buildCalldatas(formData) {
         return addressToHexWith32Bytes(inp);
       }
 
-      if (
-        [
-          "penalty_rate",
-          "mint_ratio",
-          "base_minter_rate",
-          "max_earner_rate",
-        ].includes(key)
-      ) {
-        return encodeAbiParameters(
-          [{ type: "uint256" }],
-          [BigInt(percentageToBasispoints(inp))],
-        );
-      }
-
       return encodeAbiParameters([{ type: "uint256" }], [BigInt(inp)]);
     };
 

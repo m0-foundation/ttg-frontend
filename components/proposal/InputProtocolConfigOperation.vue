@@ -53,7 +53,7 @@ const inputs = {
   penalty_rate: {
     component: InputDynamic,
     props: {
-      decorator: "%",
+      decorator: "BPS",
       maska: masks.percentage,
     },
   },
@@ -77,7 +77,7 @@ const inputs = {
   mint_ratio: {
     component: InputDynamic,
     props: {
-      decorator: "%",
+      decorator: "BPS",
       maska: masks.percentage,
     },
   },
@@ -109,7 +109,7 @@ const inputs = {
   base_minter_rate: {
     component: InputDynamic,
     props: {
-      decorator: "%",
+      decorator: "BPS",
       maska: masks.percentage,
     },
   },
@@ -117,7 +117,7 @@ const inputs = {
   max_earner_rate: {
     component: InputDynamic,
     props: {
-      decorator: "%",
+      decorator: "BPS",
       maska: masks.percentage,
     },
   },
