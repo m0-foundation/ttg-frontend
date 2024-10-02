@@ -94,7 +94,6 @@ const inputs = {
     component: InputDynamic,
     props: {
       decorator: "contract",
-      maska: masks.ethereumAddress,
     },
   },
 
@@ -102,7 +101,6 @@ const inputs = {
     component: InputDynamic,
     props: {
       decorator: "contract",
-      maska: masks.ethereumAddress,
     },
   },
 
