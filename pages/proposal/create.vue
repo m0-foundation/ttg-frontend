@@ -123,6 +123,34 @@
             :proposal="previewProposal"
             @on-back="onBack"
           />
+          <div>
+            <div>
+              <div class="flex items-center gap-4 text-sm">
+                <div>
+                  <MIconLoading v-if="simulation.isSimulating" />
+                  <MIconCheck
+                    v-else-if="simulation.resolved && simulation.passed"
+                    class="fill-green-500"
+                  />
+                  <MIconWarning v-else class="fill-red-500" />
+                </div>
+                <div>
+                  <p v-if="simulation.isSimulating">Simulating transaction</p>
+                  <p
+                    v-else-if="simulation.resolved && simulation.passed"
+                    class="text-green-500 font-inter"
+                  >
+                    Transaction simulation result is positive. Transaction
+                    likely to pass.
+                  </p>
+                  <div v-else class="text-red-500 font-inter">
+                    <p>Transaction simulation result shows error</p>
+                    <span class="text-xs">{{ simulation.error }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -204,8 +232,16 @@ import {
   waitForTransactionReceipt,
   writeContract,
   readContract,
+  simulateContract,
 } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
+import {
+  encodeFunctionData,
+  encodeAbiParameters,
+  Hash,
+  erc20Abi,
+  BaseError,
+  ContractFunctionRevertedError,
+} from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength, url } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -244,6 +280,16 @@ let steps = reactive([]);
 
 const stepper = ref(null);
 const modal = ref(null);
+const calldatas = ref();
+const formDataWithLinks = ref();
+
+const simulation = reactive({
+  isSimulating: false,
+  result: [],
+  passed: false,
+  error: "",
+  resolved: false,
+});
 
 useHead({
   titleTemplate: "%s - Create proposal",
@@ -672,6 +718,19 @@ async function onPreview() {
   if (!$validation.value.$error) {
     previewDescription.value = buildDescriptionPayload();
     isPreview.value = true;
+
+    formDataWithLinks.value = {
+      ...formData,
+      description: previewDescription.value,
+    };
+
+    try {
+      calldatas.value = buildCalldatas(formDataWithLinks.value);
+      simulateTransaction(calldatas);
+    } catch (error) {
+      simulation.passed = false;
+      simulation.error = error?.shortMessage;
+    }
   }
 }
 
@@ -742,6 +801,43 @@ async function writeProposal(calldatas, formData) {
   return txReceipt;
 }
 
+const simulateTransaction = async (calldatas) => {
+  simulation.isSimulating = true;
+  try {
+    const { result } = await simulateContract(wagmiConfig, {
+      abi: selectedProposalType.value.abi,
+      address: selectedProposalType.value.governor as Hash,
+      functionName: "propose",
+      args: [
+        [selectedProposalType.value.governor as Hash],
+        [0n],
+        [calldatas.value],
+        formData.description,
+      ],
+      account: userAccount.value,
+    });
+    if (!result) {
+      simulation.passed = false;
+      return;
+    }
+    simulation.result = result;
+    simulation.passed = true;
+  } catch (err) {
+    if (err instanceof BaseError) {
+      const revertError = err.walk(
+        (err) => err instanceof ContractFunctionRevertedError,
+      );
+      if (revertError instanceof ContractFunctionRevertedError) {
+        simulation.error = revertError.data?.errorName ?? "";
+      }
+    }
+    simulation.passed = false;
+  } finally {
+    simulation.resolved = true;
+    simulation.isSimulating = false;
+  }
+};
+
 async function onSubmit() {
   await forceSwitchChain();
 
@@ -774,11 +870,6 @@ async function onSubmit() {
 
     stepper.value.nextStep();
 
-    const formDataWithLinks = {
-      ...formData,
-      description: buildDescriptionPayload(),
-    };
-
     // start listening for proposal event
     const { unwatchAll } = watchProposalCreated(
       async (newProposals: Array<MProposal>) => {
@@ -792,8 +883,9 @@ async function onSubmit() {
       },
     );
 
-    const calldatas = buildCalldatas(formDataWithLinks);
-    await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
+    await writeProposal(calldatas.value, formDataWithLinks.value).catch(
+      catchErrorStep,
+    );
 
     stepper.value.nextStep();
     stepper.value.changeCurrentStep("complete");
@@ -852,20 +944,6 @@ function buildCalldatas(formData) {
     const getValueEncoded = (inp: any) => {
       if (["minter_rate_model", "earner_rate_model"].includes(key)) {
         return addressToHexWith32Bytes(inp);
-      }
-
-      if (
-        [
-          "penalty_rate",
-          "mint_ratio",
-          "base_minter_rate",
-          "max_earner_rate",
-        ].includes(key)
-      ) {
-        return encodeAbiParameters(
-          [{ type: "uint256" }],
-          [BigInt(percentageToBasispoints(inp))],
-        );
       }
 
       return encodeAbiParameters([{ type: "uint256" }], [BigInt(inp)]);
