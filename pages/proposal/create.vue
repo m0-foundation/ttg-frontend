@@ -123,14 +123,32 @@
             :proposal="previewProposal"
             @on-back="onBack"
           />
-          <div v-if="simulation.resolved && simulation.passed">
-            <div class="text-green-500 text-xs font-inter">
-              <p>Simulation result is positive. Transaction likely to pass.</p>
-            </div>
-          </div>
-          <div v-else>
-            <div class="text-red-500 text-xs font-inter">
-              <p>Simulation result shows error: {{ simulation.error }}</p>
+          <div>
+            <div>
+              <div class="flex items-center gap-4 text-sm">
+                <div>
+                  <MIconLoading v-if="simulation.isSimulating" />
+                  <MIconCheck
+                    v-else-if="simulation.resolved && simulation.passed"
+                    class="fill-green-500"
+                  />
+                  <MIconWarning v-else class="fill-red-500" />
+                </div>
+                <div>
+                  <p v-if="simulation.isSimulating">Simulating transaction</p>
+                  <p
+                    v-else-if="simulation.resolved && simulation.passed"
+                    class="text-green-500 font-inter"
+                  >
+                    Transaction simulation result is positive. Transaction
+                    likely to pass.
+                  </p>
+                  <div v-else class="text-red-500 font-inter">
+                    <p>Transaction simulation result shows error</p>
+                    <span class="text-xs">{{ simulation.error }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -706,9 +724,13 @@ async function onPreview() {
       description: previewDescription.value,
     };
 
-    calldatas.value = buildCalldatas(formDataWithLinks.value);
-
-    simulateTransaction(calldatas);
+    try {
+      calldatas.value = buildCalldatas(formDataWithLinks.value);
+      simulateTransaction(calldatas);
+    } catch (error) {
+      simulation.passed = false;
+      simulation.error = error?.shortMessage;
+    }
   }
 }
 
@@ -781,7 +803,6 @@ async function writeProposal(calldatas, formData) {
 
 const simulateTransaction = async (calldatas) => {
   simulation.isSimulating = true;
-  console.log("ENTRO");
   try {
     const { result } = await simulateContract(wagmiConfig, {
       abi: selectedProposalType.value.abi,
@@ -793,8 +814,12 @@ const simulateTransaction = async (calldatas) => {
         [calldatas.value],
         formData.description,
       ],
+      account: userAccount.value,
     });
-    if (!result) return;
+    if (!result) {
+      simulation.passed = false;
+      return;
+    }
     simulation.result = result;
     simulation.passed = true;
   } catch (err) {
@@ -803,13 +828,13 @@ const simulateTransaction = async (calldatas) => {
         (err) => err instanceof ContractFunctionRevertedError,
       );
       if (revertError instanceof ContractFunctionRevertedError) {
-        const errorName = revertError.data?.errorName ?? "";
-        console.log(errorName);
-        // do something with `errorName`
+        simulation.error = revertError.data?.errorName ?? "";
       }
     }
+    simulation.passed = false;
   } finally {
     simulation.resolved = true;
+    simulation.isSimulating = false;
   }
 };
 
