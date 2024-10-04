@@ -1,8 +1,8 @@
-describe("Proposals", () => {
-  const proposalUrl = "";
 
-  const earner = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-  const claimant = "0x14521ECf225E912Feb2C7827CA79Ea13a744d8d5";
+describe("Proposals", () => {
+// needs to be checkesumed
+  const earner = "0xdd82875f0840AAD58a455A70B88eEd9F59ceC7c7";
+  const claimant = "0xdd82875f0840AAD58a455A70B88eEd9F59ceC7c7";
 
   describe("Add a earner", () => {
     const LIST = "earners";
