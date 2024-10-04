@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { ErrorObject } from "@vuelidate/core";
-import { encodeAbiParameters, keccak256, toBytes, bytesToHex } from "viem";
+import { generateKeyEarnerClaimant } from "@/lib/api/utils";
 
 export interface InputProps {
   modelValue: string;
@@ -43,16 +43,6 @@ const key = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const value = useVModelWrapper<InputProps>(props, emit, "modelValue2");
 
 watch(list, (value) => {
-  console.log("watch(list", { value });
-
-  key.value = keccak256(
-    encodeAbiParameters(
-      [{ type: "bytes32" }, { type: "address" }],
-      [
-        bytesToHex(toBytes("wm_claim_override_recipient", { size: 32 })),
-        list.value,
-      ],
-    ),
-  );
+  key.value = generateKeyEarnerClaimant(value);
 });
 </script>
