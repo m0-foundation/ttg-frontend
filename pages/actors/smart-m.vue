@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { Hash, trim } from "viem";
+import { Hash, trim, getAddress } from "viem";
 import { generateKeyEarnerClaimant } from "@/lib/api/utils";
 
 const apiStore = useApiClientStore();
@@ -59,7 +59,7 @@ const fetchEarnerClaimants = async () => {
         if (claimant) {
           return {
             earner: earner.account as Hash,
-            claimant: trim(claimant as Hash),
+            claimant: getAddress(trim(claimant as Hash)),
             key,
           };
         }

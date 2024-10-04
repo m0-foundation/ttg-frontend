@@ -106,6 +106,13 @@ describe("Proposals", () => {
       cy.mineEpochs(1);
     });
 
+    it('check claimant was added', () => {
+      cy.visit("/actors/smart-m/");
+     
+      cy.contains(claimant);
+      cy.contains(earner);
+    })
+
   
   });
 });
