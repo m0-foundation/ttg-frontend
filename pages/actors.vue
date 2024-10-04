@@ -39,7 +39,6 @@
 
 <script setup lang="ts">
 import uniqBy from "lodash/uniqBy";
-import { storeToRefs } from "pinia";
 
 const apiStore = useApiClientStore();
 const listsStore = useListsStore();
@@ -59,7 +58,7 @@ const fetchLists = async () => {
 };
 
 const { isLoading } = useAsyncState(fetchLists(), null);
-const { getFlattenLists: lists } = storeToRefs(listsStore);
+const lists = computed(() => listsStore.getFlattenLists());
 
 const listTableHeaders = [
   {
