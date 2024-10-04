@@ -107,6 +107,10 @@ onMounted(async () => {
       .fetchEpoch(ttg.values.clock!)
       .catch((e) => trackError(e, "fetchEpoch"));
 
+    await ttg
+      .fetchActorsLists()
+      .catch((e) => trackError(e, "fetchActorsLists"));
+
     watchForExecutedResetProposal();
   }
 

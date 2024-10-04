@@ -64,4 +64,26 @@ export class ProtocolConfigs extends ApiModule {
 
     return [...keyValuesBytes, ...keyValuesAddress];
   }
+
+  async getValuesByRawKeys(
+    keys: Hash[],
+  ): Promise<Array<{ key: string; value: string }>> {
+    const values = await this.client.readContract({
+      abi: registrarAbi,
+      address: this.config.registrar as Hash,
+      functionName: "get",
+      args: [keys],
+    });
+
+    return keys
+      .map((key, index) => ({
+        key,
+        value: values[index],
+      }))
+      .filter(
+        (obj) =>
+          obj.value !==
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+      );
+  }
 }

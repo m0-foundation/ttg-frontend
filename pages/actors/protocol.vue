@@ -1,14 +1,14 @@
 <template>
-  <div class="px-6 lg:p-0">
+  <NuxtLayout class="px-6 lg:p-0" name="actors">
     <MSimpleTable
       :search="true"
       :items="filteredLists"
       :fields="listTableHeaders"
-      :loading="isLoading"
     >
       <template #header-left>
-        <PageTitle>Actors</PageTitle>
+        <PageTitle>Protocol actors</PageTitle>
       </template>
+
       <template #header-right>
         <select
           v-model="selectedList"
@@ -34,32 +34,19 @@
         }}</span>
       </template>
     </MSimpleTable>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import uniqBy from "lodash/uniqBy";
-import { storeToRefs } from "pinia";
 
-const apiStore = useApiClientStore();
 const listsStore = useListsStore();
 
 useHead({
-  titleTemplate: "%s - Lists",
+  titleTemplate: "%s - Actors | Protocol",
 });
 
-const fetchLists = async () => {
-  try {
-    const data = await apiStore.client.registrar!.list.getLists();
-    listsStore.setLists(data);
-    console.log("fetched Lists", { data });
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const { isLoading } = useAsyncState(fetchLists(), null);
-const { getFlattenLists: lists } = storeToRefs(listsStore);
+const lists = computed(() => listsStore.getFlattenLists());
 
 const listTableHeaders = [
   {
@@ -87,9 +74,5 @@ const filteredLists = computed(() => {
   return listsWithoutDuplicates.filter(
     (obj) => obj.list === selectedList.value,
   );
-});
-
-onBeforeUnmount(() => {
-  listsStore.setLists([]);
 });
 </script>

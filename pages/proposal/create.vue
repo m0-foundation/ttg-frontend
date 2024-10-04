@@ -205,7 +205,14 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
+import {
+  encodeFunctionData,
+  encodeAbiParameters,
+  Hash,
+  erc20Abi,
+  bytesToHex,
+  toBytes,
+} from "viem";
 import { useAccount } from "use-wagmi";
 import { required, minLength, maxLength, url } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
@@ -234,6 +241,7 @@ import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSe
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
+import InputProtocolEarnerClaimant from "@/components/proposal/InputProtocolEarnerClaimant.vue";
 import { MProposal } from "@/lib/api/types";
 
 /* wagmi */
@@ -311,7 +319,7 @@ const rules = computed(() => {
     };
   }
 
-  if (["setKey"].includes(type)) {
+  if (["setKey", "setKeyAddClaimant", "setKeyGuidance"].includes(type)) {
     return {
       proposalValue: { required },
       proposalValue2: { required },
@@ -473,6 +481,21 @@ const proposalTypes = [
     governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
+  },
+
+  {
+    header: "Earner",
+  },
+
+  {
+    value: "setKeyAddClaimant",
+    label: "Add claimant",
+    component: InputProtocolEarnerClaimant,
+    votingType: "Standard",
+    governor: ttg.contracts.standardGovernor,
+    abi: standardGovernorAbi,
+    hasToPayFee: true,
+    id: "standardProtocolAddClaimant",
   },
 
   {
@@ -882,6 +905,13 @@ function buildCalldatas(formData) {
     const value = "0x" + input2;
 
     return buildCalldatasTtg("setKey", [stringToHexWith32Bytes(key), value]);
+  }
+
+  if (["setKeyAddClaimant"].includes(type)) {
+    const key = input1;
+    const value = input2;
+
+    return buildCalldatasTtg("setKey", [key, addressToHexWith32Bytes(value)]);
   }
 
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {

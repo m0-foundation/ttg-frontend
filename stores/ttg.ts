@@ -172,5 +172,12 @@ export const useTtgStore = defineStore("ttg", {
         contracts,
       });
     },
+
+    async fetchActorsLists() {
+      const api = useApiClientStore();
+      const listsStore = useListsStore();
+      const data = await api.client.registrar!.list.getLists();
+      listsStore.setLists(data);
+    },
   },
 });
