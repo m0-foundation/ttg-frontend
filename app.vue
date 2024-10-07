@@ -112,6 +112,10 @@ onMounted(async () => {
       .catch((e) => trackError(e, "fetchActorsLists"));
 
     watchForExecutedResetProposal();
+
+    setNotifications();
+
+    setServiceWorker();
   }
 
   isLoading.value = false;
@@ -126,6 +130,51 @@ watch(
   },
   { deep: true },
 );
+
+function setServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/worker.js")
+      .catch((error) => console.error("Service Worker Error :", { error }));
+  }
+}
+
+function setNotifications() {
+  // Request desktop notifications permission on page load
+
+  if (!Notification) {
+    console.log("Notification is not compatible");
+    return;
+  }
+
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+
+  // Checking for Service Worker availability
+
+  // registerWebWorkerNotification().then((result) => {
+  //   console.log("Web Worker result", result);
+  // });
+}
+
+// calculate the answer with web worker create from /public/worker.js
+function registerWebWorkerNotification() {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker("/worker.js");
+    worker.postMessage(100);
+    worker.addEventListener(
+      "message",
+      (e) => {
+        if (e.data) {
+          resolve(e.data);
+          worker.terminate();
+        }
+      },
+      false,
+    );
+  });
+}
 </script>
 
 <style>
