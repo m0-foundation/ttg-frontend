@@ -1,9 +1,7 @@
-//worker.js
 /*
 SERVICE WORKER LIFECYCLE
 */
-
-self.addEventListener("install", function (event) {
+self.addEventListener("install", async function (event) {
   console.log("Service Worker installed");
 
   const nowSeconds = Math.floor(Date.now() / 1000);
@@ -11,42 +9,70 @@ self.addEventListener("install", function (event) {
   // schedule notifcation to the upcoming epoch
   const delayms = nextEpochObj.delay * 1000;
   const nextNotificationTime = Date.now() + delayms;
-  localStorage.setItem("nextNotificationTime", nextNotificationTime); // upcoming epoch timestamp milisecods
+  await saveNextNotificationTime("nextNotificationTime", nextNotificationTime); // upcoming epoch timestamp milisecods
 
   console.log("Worker: install", { nextNotificationTime, nextEpochObj });
 
   scheduleNotification(nextNotificationTime, delayms);
 });
 
-function scheduleNotification(nextNotificationTime, delayms) {
-  localStorage.setItem("nextNotificationTime", nextNotificationTime);
+// Check and reschedule notifications when the service worker is activated
+self.addEventListener("activate", function (event) {
+  console.log("Worker activated");
+  event.waitUntil(rescheduleNotification());
+});
 
-  setTimeout(() => {
-    showNotification(nextNotificationTime).then(() => {
-      // when epoch time has arrived Reschedule the next notification
-      scheduleNextNotification();
-    });
+self.addEventListener("fetch", function (event) {
+  console.log("Worker fetch");
+  event.waitUntil(rescheduleNotification());
+});
+
+async function scheduleNotification(nextNotificationTime, delayms) {
+  await saveNextNotificationTime(nextNotificationTime);
+
+  setTimeout(async () => {
+    await showNotification(nextNotificationTime);
+    // Reschedule the next notification
+    await rescheduleNotification();
   }, delayms);
 }
 
-// Check and reschedule notifications when the service worker is activated
-self.addEventListener("activate", function (event) {
-  event.waitUntil(scheduleNextNotification());
-});
+async function rescheduleNotification() {
+  const nextNotificationTime = await getNextNotificationTime();
+  const now = Date.now();
+  const delay = nextNotificationTime - now;
+  console.log("Worker: rescheduleNotification", nextNotificationTime, {
+    delay,
+  });
+  // if the delay is positive is because the notification was not shown
+  if (delay > 0) {
+    scheduleNotification(nextNotificationTime, delay);
+  } else {
+    // If the delay is negative, calculate the next epoch and schedule it
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const nextEpochObj = getNextEpochBasedOnTime(nowSeconds);
+    const delayms = nextEpochObj.delay * 1000;
+    const newNextNotificationTime = nextEpochObj.timestamp * 1000;
+    scheduleNotification(newNextNotificationTime, delayms);
+  }
+}
 
 function showNotification(time) {
   const epoch = getEpochFromTimestamp(time);
   const epochType = getEpochType(epoch);
+  console.log("Worker: showNotification", { time, epoch, epochType });
 
-  const title =
-    epochType === "transfer"
-      ? "Transfer Epoch has started"
-      : "Voting Epoch has started";
+  // const title =
+  //   epochType === "transfer"
+  //     ? "Transfer Epoch has started"
+  //     : "Voting Epoch has started";
 
   const body =
-    epochType === "transfer" ? "Transfer is now allowed" : "It is time to vote";
+    epochType === "transfer"
+      ? "Transfer Epoch has started! Transfer is now allowed."
+      : "Voting Epoch has started! Voting is now allowed.";
 
-  return self.registration.showNotification(`${title} | Mˆ0 Governance`, {
+  return self.registration.showNotification(`${time} | Mˆ0 Governance`, {
     tag: time, // a unique ID
     body: body,
     actions: [
@@ -62,26 +88,6 @@ function showNotification(time) {
     badge: "/favicon.png",
     icon: "/favicon.png",
   });
-}
-
-function scheduleNextNotification() {
-  const nextNotificationTime = parseInt(
-    localStorage.getItem("nextNotificationTime"),
-    10,
-  );
-  const now = Date.now();
-  const delay = nextNotificationTime - now;
-
-  // if the delay is positive is because the notification was not shown
-  if (delay > 0) {
-    scheduleNotification(nextNotificationTime, delay);
-  } else {
-    // If the delay is negative, schedule it immediately
-    showNotification(nextNotificationTime).then(() => {
-      // Reschedule the next notification
-      scheduleNextNotification();
-    });
-  }
 }
 
 self.addEventListener("notificationclick", (event) => {
@@ -176,12 +182,13 @@ function initDB() {
     };
 
     request.onerror = function (event) {
+      console.log("Worker: initDB onerror", { error: event.target.error });
       reject(event.target.error);
     };
   });
 }
 
-function saveNextNotificationTime(time) {
+async function saveNextNotificationTime(time) {
   return initDB().then((db) => {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(["notificationStore"], "readwrite");
@@ -193,6 +200,9 @@ function saveNextNotificationTime(time) {
       };
 
       request.onerror = function (event) {
+        console.log("Worker: initDB save onerror", {
+          error: event.target.error,
+        });
         reject(event.target.error);
       };
     });
@@ -200,7 +210,7 @@ function saveNextNotificationTime(time) {
 }
 
 // Retrieve the next notification time from IndexedDB
-function getNextNotificationTime() {
+async function getNextNotificationTime() {
   return initDB().then((db) => {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(["notificationStore"], "readonly");
@@ -212,6 +222,9 @@ function getNextNotificationTime() {
       };
 
       request.onerror = function (event) {
+        console.log("Worker: initDB get onerror", {
+          error: event.target.error,
+        });
         reject(event.target.error);
       };
     });
