@@ -1,93 +1,91 @@
 /*
 SERVICE WORKER LIFECYCLE
+
+Considerations:
+The user opens the app within that period of epoch at least once, triggering the fetch/activate event to reschedule.
 */
-self.addEventListener("install", async function (event) {
+self.addEventListener("install", function (event) {
   console.log("Service Worker installed");
-
-  const nowSeconds = Math.floor(Date.now() / 1000);
-  const nextEpochObj = getNextEpochBasedOnTime(nowSeconds);
-  // schedule notifcation to the upcoming epoch
-  const delayms = nextEpochObj.delay * 1000;
-  const nextNotificationTime = Date.now() + delayms;
-  await saveNextNotificationTime("nextNotificationTime", nextNotificationTime); // upcoming epoch timestamp milisecods
-
-  console.log("Worker: install", { nextNotificationTime, nextEpochObj });
-
-  scheduleNotification(nextNotificationTime, delayms);
+  self.skipWaiting(); // Immediately activate new service worker
+  event.waitUntil(scheduleNotification());
 });
 
 // Check and reschedule notifications when the service worker is activated
-self.addEventListener("activate", function (event) {
+self.addEventListener("activate", (event) => {
   console.log("Worker activated");
   event.waitUntil(rescheduleNotification());
 });
 
+// Check and reschedule notifications when the service worker is activated
 self.addEventListener("fetch", function (event) {
   console.log("Worker fetch");
   event.waitUntil(rescheduleNotification());
 });
 
-async function scheduleNotification(nextNotificationTime, delayms) {
-  await saveNextNotificationTime(nextNotificationTime);
-
-  setTimeout(async () => {
-    await showNotification(nextNotificationTime);
-    // Reschedule the next notification
-    await rescheduleNotification();
-  }, delayms);
-}
-
 async function rescheduleNotification() {
-  const nextNotificationTime = await getNextNotificationTime();
-  const now = Date.now();
-  const delay = nextNotificationTime - now;
-  console.log("Worker: rescheduleNotification", nextNotificationTime, {
-    delay,
-  });
-  // if the delay is positive is because the notification was not shown
-  if (delay > 0) {
-    scheduleNotification(nextNotificationTime, delay);
-  } else {
-    // If the delay is negative, calculate the next epoch and schedule it
-    const nowSeconds = Math.floor(Date.now() / 1000);
-    const nextEpochObj = getNextEpochBasedOnTime(nowSeconds);
-    const delayms = nextEpochObj.delay * 1000;
-    const newNextNotificationTime = nextEpochObj.timestamp * 1000;
-    scheduleNotification(newNextNotificationTime, delayms);
+  const lastNotificationTime = await getLastNotificationTime();
+  // This means it’s the first time scheduling, or the last notification time wasn’t saved properly.
+  if (!lastNotificationTime) {
+    await scheduleNotification();
   }
 }
 
-function showNotification(time) {
-  const epoch = getEpochFromTimestamp(time);
-  const epochType = getEpochType(epoch);
-  console.log("Worker: showNotification", { time, epoch, epochType });
+async function scheduleNotification() {
+  const now = Date.now();
+  const nextEpochObj = getNextEpoch();
+  const delayms = nextEpochObj.timestamp - now;
+  const nextNotificationTime = nextEpochObj.timestamp; // needs to be in milliseconds
 
-  // const title =
-  //   epochType === "transfer"
-  //     ? "Transfer Epoch has started"
-  //     : "Voting Epoch has started";
+  console.log("Worker: scheduleNotification", nextEpochObj.epoch, delayms);
+
+  /*
+  If the service worker is terminated before the setTimeout callback triggers, the notification won’t be scheduled, 
+  and there won’t be a record of the last notification time.
+  */
+  // Save the next notification time before setting the timeout
+  await saveLastNotificationTime(nextNotificationTime);
+
+  setTimeout(async () => {
+    const epoch = getEpochFromTimestamp(nextNotificationTime / 1000); // needs to be in seconds
+    const epochType = getEpochType(epoch);
+    // Check if the user was already notified for this epoch type
+    const lastNotifiedEpoch = await getLastNotifiedEpoch();
+    console.log("Worker: lastNotifiedEpoch", { lastNotifiedEpoch });
+    if (lastNotifiedEpoch !== epoch) {
+      await showNotification(nextNotificationTime, epoch, epochType);
+      await saveLastNotifiedEpoch(epoch); // Update to the latest notified epoch
+    }
+    scheduleNotification(); // Reschedule next notification
+  }, delayms);
+}
+
+function showNotification(time, epoch, epochType) {
+  console.log("Worker: showNotification", { time, epoch, epochType });
 
   const body =
     epochType === "transfer"
       ? "Transfer Epoch has started! Transfer is now allowed."
       : "Voting Epoch has started! Voting is now allowed.";
 
-  return self.registration.showNotification(`${time} | Mˆ0 Governance`, {
-    tag: time, // a unique ID
-    body: body,
-    actions: [
-      {
-        action: "open",
-        title: "Open governance",
-      },
-      {
-        action: "close",
-        title: "Close notification",
-      },
-    ],
-    badge: "/favicon.png",
-    icon: "/favicon.png",
-  });
+  return self.registration.showNotification(
+    `Epoch #${epoch} | Mˆ0 Governance`,
+    {
+      tag: `epoch-${epoch}`, // a unique ID
+      body: body,
+      actions: [
+        {
+          action: "open",
+          title: "Open governance",
+        },
+        {
+          action: "close",
+          title: "Close notification",
+        },
+      ],
+      badge: "/favicon.png",
+      icon: "/favicon.png",
+    },
+  );
 }
 
 self.addEventListener("notificationclick", (event) => {
@@ -97,24 +95,6 @@ self.addEventListener("notificationclick", (event) => {
     self.clients.openWindow("https://governance.m0.org/");
   }
 });
-
-// Fe sends a message to sw every setup of the app
-// self.addEventListener("message", function (event)
-// {
-//     const data = event.data;
-//     trace("Service Worker => onMessage", data);
-
-//     // This should be conditional, and instead of event.data,
-//     // you might want to pass event.data.myData
-//     // Here unconditional, for simplicity's sake
-//     resolveInstall(data); // Here, we resolve the installConfigPromise
-
-//     if (data)
-//     {
-//         // Do something with the path, like caching it or using it in fetch
-//         // trace("self.onMessage received data:", data);
-//     }
-// });
 
 /*
 EPOCH FUNCTIONS
@@ -128,35 +108,28 @@ EPOCH FUNCTIONS
 const EPOCH_STARTING_TIMESTAMP = 1_714_154_183;
 const EPOCH_PERIOD_SECONDS = 900;
 
-function getNextEpochBasedOnTime(timeseconds) {
+function getNextEpoch() {
   const currentEpoch = getCurrentEpoch();
   const nextEpoch = currentEpoch + 1;
-  const nextEpochTimestamp = getTimestampOfEpochStart(nextEpoch);
-  const delay = nextEpochTimestamp - timeseconds;
+  const nextEpochTimestampSeconds = getTimestampOfEpochStart(nextEpoch);
 
   return {
-    delay,
-    timestamp: nextEpochTimestamp,
+    timestamp: nextEpochTimestampSeconds * 1000,
     epoch: nextEpoch,
     type: getEpochType(nextEpoch),
   };
 }
 
-function getEpochFromTimestamp(timestamp) {
-  return (
-    Math.floor((timestamp - this.clockStartingTimestamp) / this.clockPeriod) + 1
-  );
+function getEpochFromTimestamp(ts) {
+  return Math.floor((ts - EPOCH_STARTING_TIMESTAMP) / EPOCH_PERIOD_SECONDS) + 1;
 }
 
 function getTimestampOfEpochStart(epoch) {
   return (epoch - 1) * EPOCH_PERIOD_SECONDS + EPOCH_STARTING_TIMESTAMP;
 }
 
-function getCurrentEpoch(timestamp = Math.floor(Date.now() / 1000)) {
-  return (
-    Math.floor((timestamp - EPOCH_STARTING_TIMESTAMP) / EPOCH_PERIOD_SECONDS) +
-    1
-  );
+function getCurrentEpoch(ts = Math.floor(Date.now() / 1000)) {
+  return Math.floor((ts - EPOCH_STARTING_TIMESTAMP) / EPOCH_PERIOD_SECONDS) + 1;
 }
 
 function getEpochType(epoch) {
@@ -167,7 +140,6 @@ function getEpochType(epoch) {
 INDEXED DB
 */
 
-// Initialize IndexedDB
 function initDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("m0-governance-notifications", 1);
@@ -188,45 +160,68 @@ function initDB() {
   });
 }
 
-async function saveNextNotificationTime(time) {
-  return initDB().then((db) => {
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["notificationStore"], "readwrite");
-      const store = transaction.objectStore("notificationStore");
-      const request = store.put(time, "nextNotificationTime");
+async function getLastNotificationTime() {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(["notificationStore"], "readonly");
+    const store = transaction.objectStore("notificationStore");
+    const request = store.get("lastNotificationTime");
 
-      request.onsuccess = function () {
-        resolve();
-      };
-
-      request.onerror = function (event) {
-        console.log("Worker: initDB save onerror", {
-          error: event.target.error,
-        });
-        reject(event.target.error);
-      };
-    });
+    request.onsuccess = (event) => resolve(event.target.result || null);
+    request.onerror = (event) => {
+      console.error(
+        "Worker: getLastNotificationTime onerror",
+        event.target.error,
+      );
+      reject(event.target.error);
+    };
   });
 }
 
-// Retrieve the next notification time from IndexedDB
-async function getNextNotificationTime() {
-  return initDB().then((db) => {
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["notificationStore"], "readonly");
-      const store = transaction.objectStore("notificationStore");
-      const request = store.get("nextNotificationTime");
+async function saveLastNotificationTime(time) {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(["notificationStore"], "readwrite");
+    const store = transaction.objectStore("notificationStore");
+    const request = store.put(time, "lastNotificationTime");
 
-      request.onsuccess = function (event) {
-        resolve(event.target.result);
-      };
+    request.onsuccess = () => resolve();
+    request.onerror = (event) => {
+      console.error(
+        "Worker: saveLastNotificationTime onerror",
+        event.target.error,
+      );
+      reject(event.target.error);
+    };
+  });
+}
 
-      request.onerror = function (event) {
-        console.log("Worker: initDB get onerror", {
-          error: event.target.error,
-        });
-        reject(event.target.error);
-      };
-    });
+async function getLastNotifiedEpoch() {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(["notificationStore"], "readonly");
+    const store = transaction.objectStore("notificationStore");
+    const request = store.get("lastNotifiedEpoch");
+
+    request.onsuccess = (event) => resolve(event.target.result || null);
+    request.onerror = (event) => {
+      console.error("Worker: get onerror", event.target.error);
+      reject(event.target.error);
+    };
+  });
+}
+
+async function saveLastNotifiedEpoch(epoch) {
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(["notificationStore"], "readwrite");
+    const store = transaction.objectStore("notificationStore");
+    const request = store.put(epoch, "lastNotifiedEpoch");
+
+    request.onsuccess = () => resolve();
+    request.onerror = (event) => {
+      console.error("Worker: save onerror", event.target.error);
+      reject(event.target.error);
+    };
   });
 }
