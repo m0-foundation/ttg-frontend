@@ -237,10 +237,10 @@ const mainMenuItems = computed(() => {
       notification: amountLeftToAuction.value && isTransferEpoch.value,
     },
     {
-      title: "Protocol Fees",
-      path: "/fees/",
+      title: "Rewards",
+      path: "/rewards/",
       isShow: isAuctionActive.value,
-      dataTest: "sidebar-link-fees",
+      dataTest: "sidebar-link-rewards",
     },
     {
       title: "Wrap/Unwrap",

@@ -1,10 +1,10 @@
 <template>
   <div>
     <PageTitle class="px-6 lg:p-0 mb-8">
-      <template #default>Protocol Fees</template>
+      <template #default>Rewards</template>
       <template #subtitle>
         <p class="text-grey-500 font-inter">
-          In exchange for ZERO holders' guardianship over protocol governance,
+          In exchange for ZERO holders' participation in protocol governance,
           they will receive the remainder of the protocol fees.
           <a
             href="https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/iii.-governance/iii.ii-operation/iii.ii.viii-zero-claiming-of-residual-value"
@@ -17,37 +17,7 @@
       </template>
     </PageTitle>
 
-    <div class="px-6 lg:p-0 my-8">
-      <h3 class="text-sm font-inter text-grey-200 mb-3">
-        Total amount to be distributed among all holders
-      </h3>
-      <div class="flex flex-wrap gap-6 lg:gap-12">
-        <MIconLoading v-if="loadingData" />
-        <div v-for="(token, i) in cashTokens" v-else :key="token.address">
-          <span class="token-label">{{ token.name }}</span>
-          <MTokenAmount
-            :amount="formatUnits(token.distributable, token.decimals)"
-            :image="`/img/tokens/${token.symbol.toLowerCase()}.svg`"
-            :name="token.name"
-            size="20"
-          />
-          <MButton
-            class="distribute-button"
-            :is-loading="token.isDistributing"
-            :disabled="token.isDistributing || token.distributable === 0n"
-            @click="distributeRewards(token, i)"
-          >
-            Distribute
-          </MButton>
-        </div>
-      </div>
-    </div>
-
     <div class="px-6 lg:p-0 my-12">
-      <h3 class="text-sm font-inter text-grey-200 mb-3">
-        Claimable as ZERO holder
-      </h3>
-
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <MIconLoading v-if="loadingData" />
         <div
@@ -58,17 +28,40 @@
         >
           <div class="flex justify-between items-end">
             <div>
-              <h4 class="mb-3">{{ token.name }}</h4>
-              <span class="token-label">Claimable balance</span>
+              <h4 class="mb-3 text-2xl">{{ token.name }}</h4>
+              <span class="token-label">Available for distribution:</span>
+              <div>
+                <span class="text-sm">
+                  {{ token.symbol }}
+                  {{ formatUnits(token.distributable, token.decimals) }}
+                </span>
+              </div>
+            </div>
+
+            <MButton
+              class="min-w-32 flex justify-center"
+              :is-loading="token.isDistributing"
+              :disabled="token.isDistributing || token.distributable === 0n"
+              version="outline-light"
+              @click="distributeRewards(token, i)"
+            >
+              Distribute
+            </MButton>
+          </div>
+          <hr class="my-6 border-grey-700" />
+
+          <div class="flex justify-between items-end">
+            <div>
+              <span class="token-label">Available for claiming:</span>
               <MTokenAmount
-                :amount="token.claimable"
+                :amount="formatUnits(token.claimable, token.decimals)"
                 :image="`/img/tokens/${token.symbol.toLowerCase()}.svg`"
                 :name="token.name"
                 size="30"
               />
             </div>
             <MButton
-              :disabled="token.claimable === 0n || token.isClaiming"
+              class="min-w-32 flex justify-center"
               :is-loading="token.isClaiming"
               @click="claimTokenRewards(token, i)"
               >Claim</MButton
@@ -76,10 +69,6 @@
           </div>
         </div>
       </div>
-
-      <p class="token-label my-3">
-        Residual balance will be claimed to the connected address.
-      </p>
     </div>
   </div>
 </template>
@@ -162,6 +151,7 @@ const getRewardsData = async () => {
         };
       }),
     );
+    console.log(cashTokens.value);
   } finally {
     loadingData.value = false;
   }
@@ -233,8 +223,5 @@ const claimTokenRewards = async (token, index) => {
 <style>
 .token-label {
   @apply text-grey-500 text-xxs font-inter mb-1;
-}
-.distribute-button {
-  @apply mt-4 text-xs !important;
 }
 </style>
