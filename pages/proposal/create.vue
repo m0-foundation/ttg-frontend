@@ -930,34 +930,30 @@ function buildCalldatasTtg(functionName: any, args: any) {
 }
 
 function getKeyBasedValidation(key: string) {
-  if (["minter_rate_model", "earner_rate_model"].includes(key)) {
-    return { required, address: validations.address };
+  switch (key) {
+    case "minter_rate_model":
+    case "earner_rate_model":
+      return { required, address: validations.address };
+    case "base_minter_rate":
+    case "max_earner_rate":
+      return { required, range: validations.range(1, 5000) };
+    case "penalty_rate":
+      return { required, range: validations.range(1, 1000) };
+    case "update_collateral_interval":
+      return { required, range: validations.range(60, 31536000) }; // 1 minute to 1 year
+    case "update_collateral_threshold":
+      return { required, range: validations.range(1, 10) };
+    case "mint_delay":
+      return { required, range: validations.range(60, 86400) }; // 1 minute to 1 day
+    case "mint_ttl":
+      return { required, range: validations.range(3600, 864000) }; // 1 hour to 10 days
+    case "mint_ratio":
+      return { required, range: validations.range(50, 100) }; // Percent range
+    case "minter_freeze_time":
+      return { required, range: validations.range(3600, 2592000) }; // 1 hour to 1 month
+    default:
+      return { required };
   }
-  if (["base_minter_rate", "max_earner_rate"].includes(key)) {
-    return { required, range: validations.range(1, 5000) };
-  }
-  if (["penalty_rate"].includes(key)) {
-    return { required, range: validations.range(1, 1000) };
-  }
-  if (["update_collateral_interval"].includes(key)) {
-    return { required, range: validations.range(60, 31536000) }; // 1 minute to 1 year
-  }
-  if (["update_collateral_threshold"].includes(key)) {
-    return { required, range: validations.range(1, 10) };
-  }
-  if (["mint_delay"].includes(key)) {
-    return { required, range: validations.range(60, 86400) }; // 1 minute to 1 day
-  }
-  if (["mint_ttl"].includes(key)) {
-    return { required, range: validations.range(3600, 864000) }; // 1 hour to 10 days
-  }
-  if (["mint_ratio"].includes(key)) {
-    return { required, range: validations.range(50, 100) }; // Percent range
-  }
-  if (["minter_freeze_time"].includes(key)) {
-    return { required, range: validations.range(3600, 2592000) }; // 1 hour to 1 month
-  }
-  return { required };
 }
 
 function onBack() {
