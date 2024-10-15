@@ -100,9 +100,13 @@ const alerts = useAlertsStore();
 
 const allowedCashTokens = computed(() => ttg.governors.zero.allowedCashTokens);
 
-const claimEpochStart = computed(() =>
-  BigInt(epoch.value.current.asNumber - 50),
-);
+const claimEpochStart = computed(() => {
+  if (!epoch.value.current) return 0n;
+  return epoch.value.current.asNumber > 5000
+    ? BigInt(epoch.value.current.asNumber - 5000)
+    : 1n;
+});
+
 const claimEpochEnd = computed(() => BigInt(epoch.value.current.asNumber - 1));
 
 onMounted(async () => {
@@ -151,7 +155,6 @@ const getRewardsData = async () => {
         };
       }),
     );
-    console.log(cashTokens.value);
   } finally {
     loadingData.value = false;
   }
