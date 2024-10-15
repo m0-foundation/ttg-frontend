@@ -1,22 +1,40 @@
 <template>
-  <div class="mb-4 bg-transparent">
+  <div
+    class="mb-4 bg-transparent"
+    :class="{ 'border border-red-500': isProposalWithError }"
+  >
     <article
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="text-white bg-grey-800 p-6 lg:p-8"
     >
+      <div
+        v-if="isProposalWithError"
+        class="flex items-center gap-2 mb-2 bg-red-500 p-2 leading-tight"
+      >
+        <span class="-mb-1">CAUTION: Suspicious or wrong proposal</span>
+        <VTooltip placement="right">
+          <img src="/img/icon-info.svg" class="w-6 h-6" alt="" />
+          <template #popper>
+            <div class="max-w-80 text-sm">
+              This proposal has been labeled as suspicious or wrong by the M^0
+              Foundation. We recommend to vote <b>NO</b>.
+            </div>
+          </template>
+        </VTooltip>
+      </div>
       <ProposalTypeBadge
         v-if="proposal.votingType !== 'Standard' || proposal.state !== 'Active'"
         :type="proposal.votingType"
         class="mb-4"
       />
 
-      <div class="mb-4">
-        <h2 class="text-2xl break-all">
+      <div class="mb-4 text-xl lg:text-2xl break-words">
+        <h3>
           {{ title }}
-        </h2>
+        </h3>
       </div>
 
-      <div class="text-grey-500 font-inter mb-4 break-words">
+      <div class="text-grey-500 max-lg:text-sm font-inter mb-4 break-words">
         {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
 
@@ -161,6 +179,7 @@ import { useAccount, useReadContract, useBlockNumber } from "use-wagmi";
 import { Hash, Abi } from "viem";
 import { useMVotingPower } from "@/lib/hooks";
 import { MProposal } from "@/lib/api/types";
+import errorProposals from "@/assets/data/error-proposals.json";
 
 export interface ProposalCardProps {
   proposal: MProposal;
@@ -196,6 +215,10 @@ watch(reasonForVoteCheckbox, async (value) => {
 
 watch(reasonForVote, (value) => {
   emit("update-reason-for-vote", value, props.proposal.proposalId);
+});
+
+const isProposalWithError = computed(() => {
+  return errorProposals?.some((id) => id === props.proposal.proposalId);
 });
 
 const isVoteYesActive = computed(() => {

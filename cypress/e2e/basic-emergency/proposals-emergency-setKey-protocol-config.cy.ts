@@ -1,6 +1,6 @@
 describe("Proposals", () => {
   describe("type action: Emergency setKey", () => {
-    const value = "1";
+    const value = "60";
     const key = "mint_delay";
     const description = `Add config ${key} = ${value}`;
     let proposalUrl = "";

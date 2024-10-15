@@ -205,9 +205,15 @@ import {
   writeContract,
   readContract,
 } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters, Hash, erc20Abi } from "viem";
+import {
+  encodeFunctionData,
+  encodeAbiParameters,
+  Hash,
+  erc20Abi,
+  isAddress,
+} from "viem";
 import { useAccount } from "use-wagmi";
-import { required, minLength, maxLength, url } from "@vuelidate/validators";
+import { required, minLength, url, helpers } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 
@@ -271,6 +277,21 @@ const formData = reactive({
   discussionURL: null,
 });
 
+const validations = {
+  address: helpers.withMessage(
+    "Address is not valid",
+    (value: string) => isAddress(value) || !value,
+  ),
+  range: (min: number, max: number) =>
+    helpers.withMessage(
+      `Invalid value, acceptable range is ${min}-${max}`,
+      (value: string) => {
+        const numberValue = Number(value);
+        return numberValue >= min && numberValue <= max;
+      },
+    ),
+};
+
 const rules = computed(() => {
   const constRules = {
     description: { required, minLength: minLength(6) },
@@ -286,8 +307,7 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: {
         required,
-        minLength: minLength(42),
-        maxLength: maxLength(42),
+        addressValidation: validations.address,
       },
       proposalValue3: {},
       ...constRules,
@@ -299,22 +319,21 @@ const rules = computed(() => {
       proposalValue: { required },
       proposalValue2: {
         required,
-        minLength: minLength(42),
-        maxLength: maxLength(42),
+        addressValidation: validations.address,
       },
       proposalValue3: {
         required,
-        minLength: minLength(42),
-        maxLength: maxLength(42),
+        addressValidation: validations.address,
       },
       ...constRules,
     };
   }
 
   if (["setKey"].includes(type)) {
+    const selectedKey = formData.proposalValue || "";
     return {
       proposalValue: { required },
-      proposalValue2: { required },
+      proposalValue2: getKeyBasedValidation(selectedKey),
       proposalValue3: {},
       ...constRules,
     };
@@ -336,7 +355,7 @@ const rules = computed(() => {
     ].includes(type)
   ) {
     return {
-      proposalValue: { required },
+      proposalValue: { required, range: validations.range(10, 100) },
       proposalValue2: {},
       proposalValue3: {},
       ...constRules,
@@ -854,20 +873,6 @@ function buildCalldatas(formData) {
         return addressToHexWith32Bytes(inp);
       }
 
-      if (
-        [
-          "penalty_rate",
-          "mint_ratio",
-          "base_minter_rate",
-          "max_earner_rate",
-        ].includes(key)
-      ) {
-        return encodeAbiParameters(
-          [{ type: "uint256" }],
-          [BigInt(percentageToBasispoints(inp))],
-        );
-      }
-
       return encodeAbiParameters([{ type: "uint256" }], [BigInt(inp)]);
     };
 
@@ -922,6 +927,33 @@ function buildCalldatasTtg(functionName: any, args: any) {
     functionName,
     args,
   });
+}
+
+function getKeyBasedValidation(key: string) {
+  switch (key) {
+    case "minter_rate_model":
+    case "earner_rate_model":
+      return { required, address: validations.address };
+    case "base_minter_rate":
+    case "max_earner_rate":
+      return { required, range: validations.range(1, 5000) };
+    case "penalty_rate":
+      return { required, range: validations.range(1, 1000) };
+    case "update_collateral_interval":
+      return { required, range: validations.range(60, 31536000) }; // 1 minute to 1 year
+    case "update_collateral_threshold":
+      return { required, range: validations.range(1, 10) };
+    case "mint_delay":
+      return { required, range: validations.range(60, 86400) }; // 1 minute to 1 day
+    case "mint_ttl":
+      return { required, range: validations.range(3600, 864000) }; // 1 hour to 10 days
+    case "mint_ratio":
+      return { required, range: validations.range(50, 100) }; // Percent range
+    case "minter_freeze_time":
+      return { required, range: validations.range(3600, 2592000) }; // 1 hour to 1 month
+    default:
+      return { required };
+  }
 }
 
 function onBack() {

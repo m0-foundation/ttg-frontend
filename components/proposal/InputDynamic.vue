@@ -34,7 +34,7 @@
 
     <div
       v-if="props.modelValueErrors?.length"
-      class="text-red-500 text-xs my-2 h-4"
+      class="text-red-500 text-xs my-2 h-4 font-inter"
     >
       <p v-for="error of props.modelValueErrors" :key="error.$uid">
         {{ error.$message }}
@@ -68,8 +68,8 @@ const value = useVModelWrapper<InputProps>(props, emit, "modelValue");
 const hasErrors = computed(() => props.modelValueErrors?.length);
 </script>
 
-<style>
+<style scoped>
 .error {
-  @apply border border-red-500;
+  @apply bg-transparent border border-red-500;
 }
 </style>
