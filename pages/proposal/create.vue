@@ -330,11 +330,20 @@ const rules = computed(() => {
     };
   }
 
-  if (["setKey", "setKeyAddClaimant", "setKeyGuidance"].includes(type)) {
+  if (["setKey", "setKeyGuidance"].includes(type)) {
     const selectedKey = formData.proposalValue || "";
     return {
       proposalValue: { required },
       proposalValue2: getKeyBasedValidation(selectedKey),
+      proposalValue3: {},
+      ...constRules,
+    };
+  }
+
+  if (["setKeyAddClaimant"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: { required, address: validations.address },
       proposalValue3: {},
       ...constRules,
     };
@@ -953,6 +962,7 @@ function buildCalldatasTtg(functionName: any, args: any) {
 }
 
 function getKeyBasedValidation(key: string) {
+  console.log(key);
   switch (key) {
     case "minter_rate_model":
     case "earner_rate_model":
