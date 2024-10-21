@@ -240,6 +240,7 @@ import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSe
 import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
 import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
 import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
+import InputProtocolEarnerClaimant from "@/components/proposal/InputProtocolEarnerClaimant.vue";
 import { MProposal } from "@/lib/api/types";
 
 /* wagmi */
@@ -329,11 +330,20 @@ const rules = computed(() => {
     };
   }
 
-  if (["setKey"].includes(type)) {
+  if (["setKey", "setKeyGuidance"].includes(type)) {
     const selectedKey = formData.proposalValue || "";
     return {
       proposalValue: { required },
       proposalValue2: getKeyBasedValidation(selectedKey),
+      proposalValue3: {},
+      ...constRules,
+    };
+  }
+
+  if (["setKeyAddClaimant"].includes(type)) {
+    return {
+      proposalValue: { required },
+      proposalValue2: { required, address: validations.address },
       proposalValue3: {},
       ...constRules,
     };
@@ -492,6 +502,21 @@ const proposalTypes = [
     governor: ttg.contracts.zeroGovernor,
     abi: zeroGovernorAbi,
     hasToPayFee: false,
+  },
+
+  {
+    header: "Earner",
+  },
+
+  {
+    value: "setKeyAddClaimant",
+    label: "Add claimant",
+    component: InputProtocolEarnerClaimant,
+    votingType: "Standard",
+    governor: ttg.contracts.standardGovernor,
+    abi: standardGovernorAbi,
+    hasToPayFee: true,
+    id: "standardProtocolAddClaimant",
   },
 
   {
@@ -889,6 +914,13 @@ function buildCalldatas(formData) {
     return buildCalldatasTtg("setKey", [stringToHexWith32Bytes(key), value]);
   }
 
+  if (["setKeyAddClaimant"].includes(type)) {
+    const key = input1;
+    const value = input2;
+
+    return buildCalldatasTtg("setKey", [key, addressToHexWith32Bytes(value)]);
+  }
+
   if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {
     // TODO? add checkers if inputs are  addresses that instances of smartcontracts ITTG
     return buildCalldatasTtg(type, undefined);
@@ -930,6 +962,7 @@ function buildCalldatasTtg(functionName: any, args: any) {
 }
 
 function getKeyBasedValidation(key: string) {
+  console.log(key);
   switch (key) {
     case "minter_rate_model":
     case "earner_rate_model":
