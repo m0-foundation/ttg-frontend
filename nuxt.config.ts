@@ -58,7 +58,7 @@ export default defineNuxtConfig({
           "pages/delegate.vue",
         ]
       : auctionActive === false
-        ? ["pages/auction.vue", "pages/fees.vue"]
+        ? ["pages/auction.vue", "pages/rewards.vue"]
         : undefined, //no router is ignored
   imports: {
     dirs: ["./stores"],
