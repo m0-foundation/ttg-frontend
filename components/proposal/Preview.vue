@@ -15,7 +15,7 @@
       </h2>
 
       <div
-        class="text-grey-400 my-1 font-inter text-xs truncate w-52 lg:w-full"
+        class="text-grey-500 my-1 font-inter text-xs truncate w-52 lg:w-full"
       >
         Proposed by
         <u><MAddressAvatar :address="proposal?.proposer" /></u>
