@@ -54,4 +54,4 @@ jobs:
     # Uploading files to S3 bucket
     - name: Sync files to S3 bucket
       run: |
-        aws s3 sync ./.output/public s3://${{ secrets.S3_BUCKET }} --delete
+        aws s3 sync ./.output/public s3://${{ vars.S3_BUCKET }} --delete
