@@ -9,12 +9,10 @@
         selected?.label || props.label || " "
       }}</span>
       <div class="flex items-center gap-3 h-full">
-        <MBadge
+        <ProposalTypeBadge
           v-if="selected?.isEmergency || selected?.isReset"
-          version="error"
-          class="text-xxs"
-          >{{ selected.isEmergency ? "Emergency" : "Reset" }} proposal</MBadge
-        >
+          :type="selected.votingType"
+        />
 
         <svg
           xmlns="http://www.w3.org/2000/svg"

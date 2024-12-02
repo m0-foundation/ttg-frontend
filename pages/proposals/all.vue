@@ -63,16 +63,7 @@
       </template>
       <template #cell(type)="{ item }">
         <div class="flex">
-          <div
-            class="px-2 py-0.5 text-xxs leading-4"
-            :class="{
-              'bg-green-700 text-grey-800': item.votingType === 'Zero',
-              'bg-red-700': item.votingType === 'Emergency',
-              'bg-grey-200 text-grey-800': item.votingType === 'Standard',
-            }"
-          >
-            {{ item.votingType }}
-          </div>
+          <ProposalTypeBadge :type="item.votingType" :proposal-word="false" />
         </div>
       </template>
       <template #cell(state)="{ value }">

@@ -28,9 +28,7 @@
       @on-cast="confirmCastVote"
     >
       <template #emptyState>
-        <ProposalListEmptyState>
-          No emergency proposals
-        </ProposalListEmptyState>
+        <ProposalListEmptyState> No priority proposals </ProposalListEmptyState>
       </template>
     </ProposalList>
   </NuxtLayout>
@@ -45,7 +43,7 @@ import { writeEmergencyGovernor } from "@/lib/sdk";
 const proposalsStore = useProposalsStore();
 
 useHead({
-  titleTemplate: "%s - Emergency proposals",
+  titleTemplate: "%s - Priority proposals",
 });
 
 const { address: userAccount } = useAccount();

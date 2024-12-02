@@ -521,7 +521,7 @@ const proposalTypes = [
 
   {
     value: "emergency",
-    label: "Emergency",
+    label: "Priority",
     id: "menuEmergency",
     isEmergency: true,
     submenuText:
