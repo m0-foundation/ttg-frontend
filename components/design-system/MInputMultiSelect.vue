@@ -57,7 +57,7 @@
                 <ul class="dropdown-menu-items max-w-80">
                   <li
                     v-if="opt.submenuText"
-                    class="bg-red-700 text-grey-200 p-4 text-xs"
+                    class="bg-blue-700 text-grey-200 p-4 text-xs"
                   >
                     {{ opt.submenuText }}
                   </li>
