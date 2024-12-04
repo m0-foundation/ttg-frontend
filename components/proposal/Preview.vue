@@ -4,9 +4,10 @@
     <PageTitle class="px-6 lg:p-0 mb-3"> Preview your proposal </PageTitle>
 
     <article class="bg-white mb-3 text-black px-4 py-4">
-      <MBadge v-if="proposal?.isEmergency" version="error">
-        Emergency proposal
-      </MBadge>
+      <ProposalTypeBadge
+        v-if="proposal.votingType !== 'Standard'"
+        :type="proposal.votingType"
+      />
 
       <MBadge v-if="proposal?.votingType === 'Zero'"> Zero proposal </MBadge>
 

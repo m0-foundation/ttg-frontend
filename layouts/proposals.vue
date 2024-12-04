@@ -61,12 +61,12 @@
 
         <hr v-if="emergency || zero" class="border-l border-grey-600 h-4" />
 
-        <NuxtLink v-if="emergency" to="/proposals/emergency/">
+        <NuxtLink v-if="emergency" to="/proposals/priority/">
           <MNavButton
             class="proposals-nav-button"
             data-test="button-tab-emergency"
           >
-            Emergency <MBadge version="error">{{ emergency }}</MBadge>
+            Priority <MBadge>{{ emergency }}</MBadge>
           </MNavButton>
         </NuxtLink>
 

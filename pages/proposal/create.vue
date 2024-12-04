@@ -521,11 +521,11 @@ const proposalTypes = [
 
   {
     value: "emergency",
-    label: "Emergency",
+    label: "Priority",
     id: "menuEmergency",
     isEmergency: true,
     submenuText:
-      "Emergency Proposals require a POWER (yes) threshold and are immediately voteable. They are also immediately executable upon reaching this threshold, rather than only being executable in the following epoch.",
+      "Priority Proposals require a POWER (yes) threshold and are immediately voteable. They are also immediately executable upon reaching this threshold, rather than only being executable in the following epoch.",
     children: [
       {
         value: "addToList",
