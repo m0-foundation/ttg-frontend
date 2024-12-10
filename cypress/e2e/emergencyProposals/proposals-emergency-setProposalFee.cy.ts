@@ -33,7 +33,7 @@ describe("Proposals", () => {
 
       // cy.wait(1000);
       cy.reload();
-      cy.visit("/proposals/emergency");
+      cy.visit("/proposals/priority");
 
       cy.contains(description).should("exist");
 
@@ -53,7 +53,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description, "emergency");
+      cy.castYesOneOptionalProposal(description, "priority");
     });
 
     it("I should be able to EXECUTE the proposal", () => {
