@@ -42,7 +42,7 @@ const { getTtgAddress: registrarAddress, getMToken } = useNetworkStore();
 
 const parametersData = [
   {
-    title: "Emergency Proposal Threshold Ratio",
+    title: "Priority Proposal Threshold Ratio",
     key: "emergencyProposalThresholdRatio",
     description:
       "The percentage of yes votes from the total POWER supply required to pass proposals which require a POWER Threshold.",

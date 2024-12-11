@@ -9,12 +9,10 @@
         selected?.label || props.label || " "
       }}</span>
       <div class="flex items-center gap-3 h-full">
-        <MBadge
+        <ProposalTypeBadge
           v-if="selected?.isEmergency || selected?.isReset"
-          version="error"
-          class="text-xxs"
-          >{{ selected.isEmergency ? "Emergency" : "Reset" }} proposal</MBadge
-        >
+          :type="selected.votingType"
+        />
 
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +57,7 @@
                 <ul class="dropdown-menu-items max-w-80">
                   <li
                     v-if="opt.submenuText"
-                    class="bg-red-700 text-grey-200 p-4 text-xs"
+                    class="bg-blue-700 text-grey-200 p-4 text-xs"
                   >
                     {{ opt.submenuText }}
                   </li>
