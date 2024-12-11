@@ -177,7 +177,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("castYesAllEmergencyProposals", () => {
-  cy.visit("/proposals/emergency");
+  cy.visit("/proposals/priority");
   cy.connectWallet();
   cy.wait(500);
 

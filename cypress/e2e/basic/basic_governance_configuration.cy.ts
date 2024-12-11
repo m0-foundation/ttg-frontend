@@ -19,7 +19,7 @@ describe("Governance configuration", () => {
 
     // changeable parameters
     const changeableConfigParams = [
-      "Emergency Proposal Threshold Ratio",
+      "Priority Proposal Threshold Ratio",
       "Zero Proposal Threshold Ratio",
       "Proposal Fee",
       "Cash Token",

@@ -35,7 +35,7 @@ describe("Proposals", () => {
       // cy.mineEpochs(2);
       // emergency does not need to forward to next epoch, it will be able to vote on same epoch
 
-      cy.visit("/proposals/emergency");
+      cy.visit("/proposals/priority");
       cy.reload();
 
       cy.contains(description).should("exist");
@@ -57,7 +57,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description, "emergency");
+      cy.castYesOneOptionalProposal(description, "priority");
     });
 
     it("I should be able to EXECUTE the proposal", () => {

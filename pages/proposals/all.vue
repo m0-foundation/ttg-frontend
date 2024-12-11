@@ -55,23 +55,16 @@
           >
             {{ useParsedDescriptionTitle(item?.description).title }}
           </button>
-          <div class="flex items-center max-lg:mt-1">
-            <div
-              class="px-2 py-0.5 text-xxs leading-4"
-              :class="{
-                'bg-green-700 text-grey-800': item.votingType === 'Zero',
-                'bg-red-700': item.votingType === 'Emergency',
-                'bg-grey-200 text-grey-800': item.votingType === 'Standard',
-              }"
-            >
-              {{ item.votingType }}
-            </div>
-          </div>
         </div>
         <p class="text-xs text-grey-500 mt-1">
           {{ item?.proposalLabel }} · Created:
           {{ useDate(item?.timestamp).toFormat("DD.MM.YY") }}
         </p>
+      </template>
+      <template #cell(type)="{ item }">
+        <div class="flex">
+          <ProposalTypeBadge :type="item.votingType" :proposal-word="false" />
+        </div>
       </template>
       <template #cell(state)="{ value }">
         <ProposalStatus :version="value" />
@@ -100,6 +93,7 @@ const proposalsTableHeader = [
   { key: "epoch", label: "Created Epoch", sortable: true },
   { key: "votingType", label: "Token", sortable: false },
   { key: "proposal", label: "Proposal" },
+  { key: "type", label: "Type" },
   { key: "state", label: "Status", sortable: true },
 ];
 
