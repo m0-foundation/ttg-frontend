@@ -595,6 +595,18 @@ const proposalTypes = [
         hasToPayFee: false,
         id: "emergencyGuidanceSetKey",
       },
+
+      {
+        value: "setKeyAddClaimant",
+        label: "Add claimant",
+        component: InputProtocolEarnerClaimant,
+        votingType: "Emergency",
+        governor: ttg.contracts.emergencyGovernor,
+        abi: emergencyGovernorAbi,
+        isEmergency: true,
+        hasToPayFee: false,
+        id: "emergencyProtocolAddClaimant",
+      },
     ],
   },
 
