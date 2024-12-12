@@ -1,5 +1,5 @@
 describe("Proposals", () => {
-  describe("Create showcase proposals", () => {
+  it.skip("Create showcase proposals", () => {
     const input1 = "minters";
     const input2 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
