@@ -1,0 +1,9 @@
+{
+  "sites": [
+    {
+      "slug": "governance-m0",
+      "distDir": ".output/public",
+      "buildCommand": "yarn run build"
+    }
+  ]
+}
