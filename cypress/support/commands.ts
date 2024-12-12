@@ -27,7 +27,7 @@ declare global {
 
       executeProposal(proposalUrl: string): Chainable;
 
-      castYesOneProposal(description: string): Chainable;
+      castYesOneProposal(description: string, type?: string): Chainable;
 
       castYesAllProposals(): Chainable;
 
@@ -133,8 +133,8 @@ Cypress.Commands.add("executeProposal", (proposalUrl: string) => {
   cy.reload();
 });
 
-Cypress.Commands.add("castYesOneProposal", (description: string) => {
-  cy.visit("/proposals/");
+Cypress.Commands.add("castYesOneProposal", (description: string, type = '') => {
+  cy.visit(`/proposals/${type}`);
   cy.connectWallet();
   cy.wait(500);
 
