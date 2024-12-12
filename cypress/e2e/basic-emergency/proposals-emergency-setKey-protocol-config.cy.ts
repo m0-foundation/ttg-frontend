@@ -57,16 +57,11 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneOptionalProposal(description, "priority");
+      cy.castYesOneProposal(description, 'priority');
     });
 
     it("I should be able to EXECUTE the proposal", () => {
       cy.executeOneProposal(description);
-    });
-
-    it("I should be able to check the executed proposal", () => {
-      cy.visit(proposalUrl);
-      cy.get("[data-test='executed-badge']").should("exist");
     });
 
     it("I should be able to check the executed proposal", () => {
