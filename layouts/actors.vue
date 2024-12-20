@@ -16,11 +16,11 @@
       </NuxtLink>
 
       <NuxtLink
-        to="/actors/smart-m/"
+        to="/actors/wm/"
         class="link-tab"
         active-class="active-link-tab"
       >
-        Smart $M
+        $M (wrapped)
       </NuxtLink>
     </div>
 
