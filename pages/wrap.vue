@@ -36,7 +36,7 @@
               class="w-10 h-10"
             />
             <div>
-              <h2>Smart $M</h2>
+              <h2>$M (wrapped)</h2>
               <p class="text-grey-500">
                 Balance: {{ formatUnits(wrappedM.balance, 6) }}
               </p>
