@@ -29,7 +29,7 @@ const apiStore = useApiClientStore();
 const listsStore = useListsStore();
 
 useHead({
-  titleTemplate: "%s - Actors | Smart $M",
+  titleTemplate: "%s - Actors | $M (wrapped)",
 });
 
 const earnersClaimantsHeaders = [

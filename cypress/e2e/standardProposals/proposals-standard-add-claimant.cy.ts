@@ -81,7 +81,7 @@ describe("Add claimant to earner test", () => {
     });
 
     it('Check Claimant was added corretly', () => {
-      cy.visit("/actors/smart-m/");
+      cy.visit("/actors/wm/");
      
       cy.contains(claimant);
       cy.contains(earner);
