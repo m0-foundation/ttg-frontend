@@ -1,6 +1,6 @@
 {
   "name": "mzero-ttg-dapp",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "private": true,
   "engines": {
     "node": ">=18.18"
