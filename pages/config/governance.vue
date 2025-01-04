@@ -1,34 +1,27 @@
 <template>
-  <NuxtLayout class="px-6 lg:p-0" name="config">
-    <section class="flex flex-col gap-4">
-      <ConfigParametersCard
-        v-for="param in mutableParametersWithData"
-        :key="param.key"
-        :param="param"
-      />
+  <section class="flex flex-col gap-4">
+    <ConfigParametersCard
+      v-for="param in mutableParametersWithData"
+      :key="param.key"
+      :param="param"
+    />
 
-      <MSimpleTable
-        :items="inmutableTableData"
-        :fields="governanceTablesHeaders"
-      >
-        <template #header-left>
-          <h3 class="text-grey-500 font-inter mt-4 mb-2">
-            Immutable Parameters
-          </h3>
-        </template>
-        <template #cell(value)="{ value }">
-          <MAddressCopy
-            :address="value"
-            :short-address="false"
-            :show-copy="true"
-          />
-        </template>
-        <template #cell(description)="{ value }">
-          <div class="max-sm:min-w-72">{{ value }}</div>
-        </template>
-      </MSimpleTable>
-    </section>
-  </NuxtLayout>
+    <MSimpleTable :items="inmutableTableData" :fields="governanceTablesHeaders">
+      <template #header-left>
+        <h3 class="text-grey-500 font-inter mt-4 mb-2">Immutable Parameters</h3>
+      </template>
+      <template #cell(value)="{ value }">
+        <MAddressCopy
+          :address="value"
+          :short-address="false"
+          :show-copy="true"
+        />
+      </template>
+      <template #cell(description)="{ value }">
+        <div class="max-sm:min-w-72">{{ value }}</div>
+      </template>
+    </MSimpleTable>
+  </section>
 </template>
 
 <script lang="ts" setup>

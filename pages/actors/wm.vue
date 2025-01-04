@@ -1,24 +1,22 @@
 <template>
-  <NuxtLayout class="px-6 lg:p-0" name="actors">
-    <MSimpleTable
-      :search="true"
-      :items="earnersClaimants"
-      :fields="earnersClaimantsHeaders"
-      :loading="isLoading"
-    >
-      <template #header-left>
-        <PageTitle>Earners Claimants</PageTitle>
-      </template>
+  <MSimpleTable
+    :search="true"
+    :items="earnersClaimants"
+    :fields="earnersClaimantsHeaders"
+    :loading="isLoading"
+  >
+    <template #header-left>
+      <PageTitle>Earners Claimants</PageTitle>
+    </template>
 
-      <template #cell(earner)="{ value }">
-        <MAddressCopy :short-address="false" show-copy :address="value" />
-      </template>
+    <template #cell(earner)="{ value }">
+      <MAddressCopy :short-address="false" show-copy :address="value" />
+    </template>
 
-      <template #cell(claimant)="{ value }">
-        <MAddressCopy :short-address="false" show-copy :address="value" />
-      </template>
-    </MSimpleTable>
-  </NuxtLayout>
+    <template #cell(claimant)="{ value }">
+      <MAddressCopy :short-address="false" show-copy :address="value" />
+    </template>
+  </MSimpleTable>
 </template>
 
 <script setup lang="ts">

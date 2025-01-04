@@ -1,40 +1,38 @@
 <template>
-  <NuxtLayout class="px-6 lg:p-0" name="actors">
-    <MSimpleTable
-      :search="true"
-      :items="filteredLists"
-      :fields="listTableHeaders"
-    >
-      <template #header-left>
-        <PageTitle>Protocol actors</PageTitle>
-      </template>
+  <MSimpleTable
+    :search="true"
+    :items="filteredLists"
+    :fields="listTableHeaders"
+  >
+    <template #header-left>
+      <PageTitle>Protocol actors</PageTitle>
+    </template>
 
-      <template #header-right>
-        <select
-          v-model="selectedList"
-          class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2 font-inter"
-        >
-          <option value="all" default>All roles</option>
-          <option v-for="option in listsOptions" :key="option" :value="option">
-            {{ option }}
-          </option>
-        </select>
-      </template>
+    <template #header-right>
+      <select
+        v-model="selectedList"
+        class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2 font-inter"
+      >
+        <option value="all" default>All roles</option>
+        <option v-for="option in listsOptions" :key="option" :value="option">
+          {{ option }}
+        </option>
+      </select>
+    </template>
 
-      <template #cell(list)="{ value }">
-        {{ value.replace("rs", "r") }}
-      </template>
+    <template #cell(list)="{ value }">
+      {{ value.replace("rs", "r") }}
+    </template>
 
-      <template #cell(account)="{ value }">
-        <MAddressCopy :short-address="false" show-copy :address="value" />
-      </template>
-      <template #cell(timestamp)="{ value }">
-        <span class="text-grey-600">{{
-          useDate(value).toFormat("DD.MM.YYYY")
-        }}</span>
-      </template>
-    </MSimpleTable>
-  </NuxtLayout>
+    <template #cell(account)="{ value }">
+      <MAddressCopy :short-address="false" show-copy :address="value" />
+    </template>
+    <template #cell(timestamp)="{ value }">
+      <span class="text-grey-600">{{
+        useDate(value).toFormat("DD.MM.YYYY")
+      }}</span>
+    </template>
+  </MSimpleTable>
 </template>
 
 <script setup lang="ts">

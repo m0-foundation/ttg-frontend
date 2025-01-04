@@ -1,22 +1,14 @@
 <template>
   <div class="px-6 lg:p-0">
     <PageTitle>
-      <template #default>Configs</template>
+      <template #default>Actors</template>
     </PageTitle>
 
     <div
       class="flex gap-6 whitespace-nowrap overflow-x-auto text-grey-500 mb-6"
     >
       <NuxtLink
-        to="/config/governance/"
-        class="link-tab"
-        active-class="active-link-tab"
-      >
-        Governance
-      </NuxtLink>
-
-      <NuxtLink
-        to="/config/protocol/"
+        to="/actors/protocol/"
         class="link-tab"
         active-class="active-link-tab"
       >
@@ -24,16 +16,16 @@
       </NuxtLink>
 
       <NuxtLink
-        to="/config/guidance/"
+        to="/actors/wm/"
         class="link-tab"
         active-class="active-link-tab"
       >
-        Guidance
+        $M (wrapped)
       </NuxtLink>
     </div>
 
     <Suspense>
-      <slot />
+      <NuxtPage />
       <template #fallback> Loading... </template>
     </Suspense>
   </div>

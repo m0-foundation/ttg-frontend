@@ -1,16 +1,14 @@
 <template>
-  <NuxtLayout class="px-6 lg:p-0" name="config">
-    <section class="flex flex-col gap-4">
-      <MIconLoading v-if="isLoading" />
-      <ConfigParametersCard
-        v-for="param in protocolDataSorted"
-        v-else
-        :key="param.key"
-        :param="param"
-        class="card--config"
-      />
-    </section>
-  </NuxtLayout>
+  <section class="flex flex-col gap-4">
+    <MIconLoading v-if="isLoading" />
+    <ConfigParametersCard
+      v-for="param in protocolDataSorted"
+      v-else
+      :key="param.key"
+      :param="param"
+      class="card--config"
+    />
+  </section>
 </template>
 
 <script setup lang="ts">
