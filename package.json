@@ -69,6 +69,7 @@
     "vite-plugin-node-polyfills": "^0.21.0"
   },
   "dependencies": {
+    "@nuxt/ui-pro": "^1.6.0",
     "@pinia/nuxt": "^0.5.1",
     "@tanstack/vue-query": "^5.28.4",
     "@types/lodash": "^4.17.0",

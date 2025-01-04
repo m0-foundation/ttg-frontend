@@ -41,6 +41,7 @@ export default defineNuxtConfig({
   ],
   // https://tailwindcss.nuxtjs.org/getting-started/setup
   modules: [
+    "@nuxt/ui",
     "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
     "@pinia/nuxt",
@@ -63,6 +64,8 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["./stores"],
   },
+
+  extends: ["@nuxt/ui-pro"],
 
   vite: {
     resolve: {
