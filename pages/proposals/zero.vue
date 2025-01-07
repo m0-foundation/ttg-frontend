@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="proposals">
+  <div>
     <MDialog ref="dialog">
       <template #header> Confirm your voting power </template>
 
@@ -31,7 +31,7 @@
         <ProposalListEmptyState> No Zero proposals </ProposalListEmptyState>
       </template>
     </ProposalList>
-  </NuxtLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -61,21 +61,7 @@ const proposals = computed(() =>
 );
 
 async function confirmCastVote(vote: number, proposalId: string) {
-  await fetchVotingPower(proposalId);
-  if (await dialog.value.open()) {
-    return castVote(vote, proposalId);
-  }
-}
-
-async function fetchVotingPower(proposalId: string) {
-  const proposal = proposalsStore.getProposalById(proposalId);
-  const pastEpoch = proposal!.voteStart - 1;
-
-  votingPower.value = await usePastVotes({
-    address: userAccount.value!,
-    epoch: pastEpoch,
-    token: "zero",
-  });
+  castVote(vote, proposalId);
 }
 
 async function castVote(vote: number, proposalId: string) {

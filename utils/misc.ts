@@ -19,6 +19,7 @@ export const generateRandomId = () =>
   Math.random().toString(32).substring(2, 5);
 
 export const shortenText = (text: string, maxLength = 10): string => {
+  if (!text) return "";
   if (text.length <= maxLength) {
     return text;
   } else {

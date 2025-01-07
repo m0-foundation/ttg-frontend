@@ -1,21 +1,25 @@
 <template>
-  <div v-if="address" class="px-6 lg:p-0">
-    <div class="flex justify-between mb-6">
-      <div>
-        <p class="text-grey-600 text-xs font-inter">Address</p>
-        <p class="text-white text-md">
-          <MAddressAvatar
-            :address="address"
-            :short-address="!largerThanSm"
-            :show-copy="true"
-          />
-        </p>
-      </div>
-    </div>
-    <ProfileBalances class="mb-6" :address="address" />
-    <!-- tables -->
-    <ProfileTables :address="address" />
-  </div>
+  <section v-if="address">
+    <PageTitle>
+      <template #pretitle>
+        <div>Profile /</div>
+      </template>
+      <template #title>
+        <MAddressAvatar
+          class="normal-case"
+          :short-address="true"
+          :address="address"
+          :show-avatar="false"
+        />
+      </template>
+    </PageTitle>
+
+    <UContainer class="py-4">
+      <ProfileBalances :address="address" />
+      <!-- tables -->
+      <ProfileTables :address="address" />
+    </UContainer>
+  </section>
   <div
     v-else
     class="flex flex-col items-center justify-center h-80 text-grey-400"
@@ -26,9 +30,7 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
-import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
-const largerThanSm = useBreakpoints(breakpointsTailwind).greater("sm");
 const route = useRoute();
 const address = ref(route.params.address as Hash);
 

@@ -5,22 +5,20 @@ describe("Governance configuration", () => {
 
   it("I should visit governance config page and see navigation", () => {
     cy.url().should("include", "/config/governance");
-    cy.findByRole("button", {name: /Create proposal/i}).should("be.visible");
 
-    cy.get("nav").should("contain", "Home");
-    cy.get("nav").should("contain", "Actors");
-    cy.get("nav").should("contain", "Configs");
+    cy.checkAppNavigation();
   });
 
   it("I should see all configuration parameters", () => {
     cy.get('h1').should('contain', 'Configs')
-    cy.get('a.link-tab').contains('Governance').should('have.class', 'active-link-tab')
-    cy.get('a.link-tab').contains('Protocol').should('be.visible')
+
+    cy.get('nav').contains('Governance')
+      .and('have.attr', 'href', '/config/governance')
 
     // changeable parameters
     const changeableConfigParams = [
       "Priority Proposal Threshold Ratio",
-      "Zero Proposal Threshold Ratio",
+      "ZERO Proposal Threshold Ratio",
       "Proposal Fee",
       "Cash Token",
     ]

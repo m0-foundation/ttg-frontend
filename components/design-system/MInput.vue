@@ -1,5 +1,10 @@
 <template>
-  <input v-bind="$attrs" v-model="value" :class="{ error: hasErrors }" />
+  <UInput
+    v-bind="$attrs"
+    v-model="value"
+    :class="{ error: hasErrors }"
+    size="lg"
+  />
 
   <div class="text-red-500 text-xs my-1 h-4 font-inter">
     <p v-for="error of props.errors" :key="error.$uid">

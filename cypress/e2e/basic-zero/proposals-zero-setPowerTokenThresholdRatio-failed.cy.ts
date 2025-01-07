@@ -27,7 +27,8 @@ describe("Proposals", () => {
     it("I should be able to see error on  vote YES for the proposal", () => {
       cy.castYesOneOptionalProposal(description, "zero");
 
-      cy.get(".alert", {timeout: 3000}).should("contain.text", 'Transaction not sent! The contract function "castVote" reverted.');
+      cy.get("div[data-test='notifications-container']")
+        .should("contain.text", 'Transaction not sent!');
       
     }); 
   });
