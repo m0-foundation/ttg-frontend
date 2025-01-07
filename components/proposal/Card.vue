@@ -1,11 +1,11 @@
 <template>
-  <div
+  <article
     class="mb-4 bg-transparent"
     :class="{ 'border border-red-500': isProposalWithError }"
   >
     <UCard
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="dark:text-white dark:bg-grey-800 p-6 lg:p-8"
+      class="dark:text-white dark:bg-grey-800"
     >
       <div
         v-if="isProposalWithError"
@@ -170,7 +170,7 @@
         </div>
       </div>
     </UCard>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">
