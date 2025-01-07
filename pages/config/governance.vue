@@ -44,7 +44,7 @@ const parametersData = [
     unit: "BPS",
   },
   {
-    title: "Zero Proposal Threshold Ratio",
+    title: "ZERO Proposal Threshold Ratio",
     key: "zeroProposalThresholdRatio",
     description:
       "The percentage of yes votes from the total ZERO supply required to pass proposals that require a ZERO Threshold.",

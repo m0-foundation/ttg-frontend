@@ -9,7 +9,7 @@
         :type="proposal.votingType"
       />
 
-      <MBadge v-if="proposal?.votingType === 'Zero'"> Zero proposal </MBadge>
+      <MBadge v-if="proposal?.votingType === 'Zero'"> ZERO proposal </MBadge>
 
       <h2 class="text-[28px] text-grey-1000 font-light leading-10 my-3">
         {{ title }}

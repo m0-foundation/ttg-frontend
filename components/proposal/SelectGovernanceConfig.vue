@@ -81,14 +81,14 @@ const configParams = [
     value: "setZeroProposalThresholdRatio",
     label: "ZERO Threshold",
     shortDescription:
-      "Update the number of yes votes required to pass Zero proposals.",
+      "Update the number of yes votes required to pass ZERO proposals.",
     id: "setZeroProposalThresholdRatio",
   },
   {
     value: "setEmergencyProposalThresholdRatio",
-    label: "Power Threshold",
+    label: "POWER Threshold",
     shortDescription:
-      "Update the number of yes votes required to pass Power proposals.",
+      "Update the number of yes votes required to pass POWER proposals.",
     id: "setEmergencyProposalThresholdRatio",
   },
 ];

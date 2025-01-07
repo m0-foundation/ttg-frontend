@@ -17,7 +17,7 @@
         <p class="font-bold mb-2">Reset of the Governance has been executed!</p>
         <span class="">
           New Power tokens are created and distributed pro rata to all existing
-          (excluding inflation) Zero token holders.
+          (excluding inflation) ZERO token holders.
         </span>
         <NuxtLink :to="`/proposal/${proposal.proposalId}`">
           <MButton

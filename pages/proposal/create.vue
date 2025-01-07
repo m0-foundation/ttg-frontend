@@ -41,8 +41,8 @@
                 :is="selectedProposalType.component"
                 v-if="selectedProposalType"
                 v-model="formData.proposalValue"
-                v-model:modelValue2="formData.proposalValue2"
-                v-model:modelValue3="formData.proposalValue3"
+                v-model:model-value2="formData.proposalValue2"
+                v-model:model-value3="formData.proposalValue3"
                 :model-value-errors="$validation.proposalValue?.$errors"
                 :model-value2-errors="$validation.proposalValue2?.$errors"
                 :model-value3-errors="$validation.proposalValue3?.$errors"
@@ -620,7 +620,7 @@ const proposalTypes = [
     children: [
       {
         value: "resetToPowerHolders",
-        label: "Reset to Power holders",
+        label: "Reset to POWER holders",
         isReset: true,
         component: undefined,
         votingType: "Zero",
