@@ -17,6 +17,10 @@ export default defineAppConfig({
     card: {
       rounded: "rounded-none",
     },
+    horizontalNavigation: {
+      inner: "min-w-min",
+      container: "overflow-x-auto",
+    },
     input: {
       rounded: "rounded-none",
     },

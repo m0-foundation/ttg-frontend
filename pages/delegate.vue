@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle class="mb-8 px-6 lg:p-0">
+    <PageTitle>
       <template #pretitle>My Profile /</template>
       <template #title> Delegate</template>
       <template #subtitle>
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <UContainer>
+    <UContainer class="py-4">
       <UCard>
         <form class="font-inter" @submit.prevent="delegatePower">
           <div>
@@ -56,7 +56,7 @@
                 <span class="uppercase mb-2 text-xs">Warning</span>
                 <div class="flex items-start gap-3">
                   <MIconWarning class="min-w-6" />
-                  <p>
+                  <p class="max-lg:text-xs">
                     The transfer epoch has concluded. You will be able to
                     delegate in the next Transfer epoch.
                   </p>
@@ -86,10 +86,7 @@
               class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
             >
               Delegated to:
-              <MAddressAvatar
-                :address="powerDelegates"
-                :short-address="false"
-              />
+              <MAddressAvatar :address="powerDelegates" :short-address="true" />
             </div>
           </div>
 
@@ -152,7 +149,7 @@
               class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
             >
               Delegated to:
-              <MAddressAvatar :address="zeroDelegates" :short-address="false" />
+              <MAddressAvatar :address="zeroDelegates" :short-address="true" />
             </div>
           </div>
 

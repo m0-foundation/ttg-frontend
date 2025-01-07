@@ -12,12 +12,12 @@
       <template #title> My Profile </template>
       <template #top-right>
         <NuxtLink to="/delegate/">
-          <MButton
-            class="w-full justify-center mt-4 lg:mt-0"
+          <UButton
+            class="w-full justify-center"
             data-test="profile-button-redelegate"
           >
-            delegate
-          </MButton>
+            Delegate
+          </UButton>
         </NuxtLink>
       </template>
     </PageTitle>

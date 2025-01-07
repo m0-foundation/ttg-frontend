@@ -11,7 +11,7 @@
             <span v-if="title">{{ title }}</span>
             <slot v-else name="title"></slot>
           </h1>
-          <div class="min-h-[24px] mt-4">
+          <div class="min-h-[24px] mt-4 text-sm lg:text-base">
             <slot name="subtitle"></slot>
           </div>
         </div>
