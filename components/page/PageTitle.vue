@@ -15,7 +15,9 @@
             <slot name="subtitle"></slot>
           </div>
         </div>
-        <slot name="top-right"></slot>
+        <div class="flex-box">
+          <slot name="top-right"></slot>
+        </div>
       </div>
       <slot />
 

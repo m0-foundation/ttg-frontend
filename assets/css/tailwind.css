@@ -38,7 +38,7 @@ h1 {
 }
 
 .dropdown-menu-items {
-  @apply bg-grey-700 text-grey-200 font-inter;
+  @apply dark:bg-grey-700 dark:text-grey-200 font-inter;
 }
 .dropdown-menu-items li a {
   @apply px-6 py-3 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;

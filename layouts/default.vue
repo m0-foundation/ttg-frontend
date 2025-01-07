@@ -7,5 +7,7 @@
     </UMain>
 
     <AppFooter />
+
+    <LayoutAlerts />
   </div>
 </template>

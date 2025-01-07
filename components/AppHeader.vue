@@ -1,11 +1,8 @@
 <template>
-  <UHeader :links="links">
+  <UHeader :links="links" :ui="{ container: 'h-12' }">
     <template #logo>
       <div class="flex items-center gap-4">
-        <img
-          class="h-[var(--header-height)]"
-          src="~/assets/images/m0_white_black.png"
-        />
+        <img class="h-12" src="~/assets/images/m0_white_black.png" />
         {{ name }}
       </div>
     </template>
@@ -15,6 +12,10 @@
         <ConnectButton class="hidden lg:block" />
         <HeaderEcosystemMenu />
       </div>
+    </template>
+
+    <template #center>
+      <UHorizontalNavigation :links="links" class="w-fit hidden lg:block" />
     </template>
 
     <template #panel>

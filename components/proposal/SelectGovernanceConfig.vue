@@ -34,15 +34,15 @@
       </p>
     </div>
 
-    <div
+    <UCard
       v-show="parameter?.description || parameter?.shortDescription"
-      class="bg-grey-800 bg-opacity-85 flex flex-col gap-3 p-4 mt-2"
+      class="bg-grey-200 dark:bg-grey-800 bg-opacity-50 flex flex-col gap-3 p-4 mt-2"
     >
       <span class="uppercase text-xxs">Parameter description</span>
       <p class="font-inter">
         {{ parameter?.description || parameter?.shortDescription }}
       </p>
-    </div>
+    </UCard>
   </div>
 </template>
 

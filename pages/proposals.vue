@@ -27,6 +27,9 @@
           </span>
         </div>
       </template>
+      <template #top-right>
+        <UButton label="Create proposal" color="black" to="/proposal/create" />
+      </template>
       <template #bottom-left>
         <UHorizontalNavigation
           :links="proposalsLinks"
