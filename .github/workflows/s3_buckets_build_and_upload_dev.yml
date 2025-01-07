@@ -19,6 +19,7 @@ jobs:
       VITE_APP_RPC_URL_FALLBACK: ${{ secrets.VITE_APP_RPC_URL_FALLBACK }}
       VITE_APP_IS_AUCTION_ACTIVE: ${{ secrets.VITE_APP_IS_AUCTION_ACTIVE }}
       VITE_APP_WALLET_CONNECT_PROJECT_ID: ${{ secrets.VITE_APP_WALLET_CONNECT_PROJECT_ID }}
+      NUXT_UI_PRO_LICENSE: ${{ secrets.NUXT_UI_PRO_LICENSE }}
     steps:
 
       # Checking out the GitHub repository on the runner
