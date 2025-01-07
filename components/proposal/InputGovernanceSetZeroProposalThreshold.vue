@@ -5,7 +5,7 @@
     :current-value="currentValue"
     decorator="%"
     :maska="masks.percentage"
-    description="Update the number of Yes votes required to pass Zero proposals."
+    description="Update the number of Yes votes required to pass ZERO proposals."
     data-test="proposalValue"
   />
 </template>

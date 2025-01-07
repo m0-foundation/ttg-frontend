@@ -1,11 +1,11 @@
 <template>
-  <div
+  <article
     class="mb-4 bg-transparent"
     :class="{ 'border border-red-500': isProposalWithError }"
   >
-    <article
+    <UCard
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="text-white bg-grey-800 p-6 lg:p-8"
+      class="dark:text-white dark:bg-grey-800"
     >
       <div
         v-if="isProposalWithError"
@@ -100,7 +100,7 @@
           </div>
         </div>
 
-        <div class="font-inter text-xs text-grey-200 whitespace-nowrap">
+        <div class="font-inter text-xs dark:text-grey-200 whitespace-nowrap">
           <div
             v-if="
               proposal?.votingType === 'Standard' ||
@@ -169,8 +169,8 @@
           </MButton>
         </div>
       </div>
-    </article>
-  </div>
+    </UCard>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -240,8 +240,8 @@ const { onlyDescription, title } = useParsedDescriptionTitle(
   props.proposal.description,
 );
 
-function onViewProposal() {
-  emit("on-view", props.proposal.proposalId);
+async function onViewProposal() {
+  await navigateTo(`/proposal/${props.proposal.proposalId}`);
 }
 
 function onExecuteProposal() {

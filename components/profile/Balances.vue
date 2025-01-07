@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- power -->
-    <div class="p-6 bg-grey-800">
+    <UCard>
       <div class="flex justify-between w-full items-center">
         <div class="flex items-center gap-4">
           <MIconPower class="h-8 w-8" />
@@ -14,11 +14,11 @@
 
       <div class="flex justify-between gap-4 mt-8 mb-4">
         <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
+          <p class="dark:text-grey-500 text-xs mb-2 font-inter text-nowrap">
             Voting power
           </p>
           <div class="flex items-center align-middle gap-2">
-            <p class="text-xl lg:text-xl text-grey-100 mt-2">
+            <p class="text-xl lg:text-xl dark:text-grey-100 mt-2">
               {{
                 useNumberFormatterPrice(
                   powerVotingPower?.data.value?.formatted || 0,
@@ -35,11 +35,11 @@
         </div>
 
         <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
+          <p class="dark:text-grey-500 text-xs mb-2 font-inter text-nowrap">
             Token Balance
           </p>
           <div class="flex items-center align-middle gap-2">
-            <p class="lg:text-xl text-grey-100 mt-2">
+            <p class="lg:text-xl dark:text-grey-100 mt-2">
               {{
                 useNumberFormatterPrice(
                   balancePowerToken?.data.value?.formatted || 0n,
@@ -49,13 +49,13 @@
           </div>
         </div>
       </div>
-    </div>
+    </UCard>
     <!-- zero -->
-    <div class="p-6 bg-grey-800">
+    <UCard>
       <div class="flex justify-between w-full items-center">
         <div class="flex items-center gap-4">
           <MIconZero class="h-8 w-8" />
-          <p class="text-xl">Zero Token</p>
+          <p class="text-xl">ZERO Token</p>
         </div>
         <div>
           <ProfileTokenMenu :token="getTokens?.zero" />
@@ -68,7 +68,7 @@
             Voting power
           </p>
           <div class="flex items-center align-middle gap-2">
-            <p class="text-xl lg:text-xl text-grey-100 mt-2">
+            <p class="text-xl lg:text-xl dark:text-grey-100 mt-2">
               {{
                 useNumberFormatterPrice(
                   zeroVotingPower?.data.value?.formatted || 0,
@@ -89,7 +89,7 @@
             Token Balance
           </p>
           <div class="flex items-center align-middle gap-2">
-            <p class="lg:text-xl text-grey-100 mt-2">
+            <p class="lg:text-xl dark:text-grey-100 mt-2">
               {{
                 useNumberFormatterPrice(
                   balanceZeroToken?.data.value?.formatted || 0,
@@ -99,7 +99,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </UCard>
   </div>
 </template>
 

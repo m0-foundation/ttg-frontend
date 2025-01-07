@@ -36,7 +36,7 @@ withDefaults(defineProps<MBadgeProps>(), {
   @apply inline-flex text-xs font-inter px-2 py-1 border-none;
 }
 .Standard {
-  @apply bg-white text-grey-900;
+  @apply bg-grey-100 text-grey-900 bg-opacity-50;
 }
 .Zero {
   @apply bg-green-700 text-green-900;

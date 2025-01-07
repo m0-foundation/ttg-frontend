@@ -1,13 +1,13 @@
 <template>
-  <div
+  <UCard
     v-if="props.description"
-    class="bg-grey-800 bg-opacity-85 flex flex-col gap-1 p-4 my-2"
+    class="bg-grey-200 dark:bg-grey-800 bg-opacity-50 flex flex-col gap-1 p-4 my-2"
   >
     <span class="uppercase text-xxs">Parameter description</span>
     <p class="font-inter">
       {{ props.description }}
     </p>
-  </div>
+  </UCard>
 
   <div class="my-3 mb-4">
     <label for="governance-config-input">Value *</label>

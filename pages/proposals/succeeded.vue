@@ -1,18 +1,16 @@
 <template>
-  <NuxtLayout name="proposals">
-    <ProposalList
-      :proposals="proposals"
-      :loading="isLoading"
-      :selected-proposal="selectedProposal"
-      @on-execute="onExecute"
-    >
-      <template #emptyState>
-        <ProposalListEmptyState>
-          No Proposals to be executed
-        </ProposalListEmptyState>
-      </template>
-    </ProposalList>
-  </NuxtLayout>
+  <ProposalList
+    :proposals="proposals"
+    :loading="isLoading"
+    :selected-proposal="selectedProposal"
+    @on-execute="onExecute"
+  >
+    <template #emptyState>
+      <ProposalListEmptyState>
+        No Proposals to be executed
+      </ProposalListEmptyState>
+    </template>
+  </ProposalList>
 </template>
 
 <script setup lang="ts">

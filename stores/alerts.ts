@@ -1,11 +1,7 @@
-import { MProposal } from "@/lib/api/types";
 import { defineStore } from "pinia";
 
 export const useAlertsStore = defineStore("alerts", () => {
-  const reset = ref<{ show: boolean; proposal?: MProposal }>({
-    show: false,
-    proposal: undefined,
-  });
+  const toasts = useToast();
 
   const items = ref<
     Array<{
@@ -15,51 +11,27 @@ export const useAlertsStore = defineStore("alerts", () => {
       type: "success" | "error" | "info";
     }>
   >([]);
-  const addAlert = ({
-    message,
-    type,
-  }: {
-    message: string;
-    type: "success" | "error" | "info";
-  }) => {
-    const id = generateRandomId();
-    items.value.unshift({ show: true, message, type, id });
-
-    setTimeout(() => {
-      removeAlert(id);
-    }, 10_000); // 10 seconds to automatically close the alert
-  };
-
-  const removeAlert = (id: string) => {
-    items.value = items.value.filter((alert) => alert.id !== id);
-  };
 
   const successAlert = (message: string) => {
-    addAlert({ message, type: "success" });
+    toasts.add({
+      description: message,
+      icon: "i-heroicons-check-circle",
+      color: "green",
+    });
   };
   const errorAlert = (message: string) => {
-    addAlert({ message, type: "error" });
+    toasts.add({
+      description: message,
+      icon: "i-heroicons-x-circle",
+      color: "red",
+    });
   };
   const infoAlert = (message: string) => {
-    addAlert({ message, type: "info" });
-  };
-
-  const showResetAlert = (proposal: MProposal) => {
-    reset.value.show = true;
-    reset.value.proposal = proposal;
-  };
-  const hideResetAlert = () => {
-    reset.value.show = false;
-    reset.value.proposal = undefined;
+    toasts.add({ description: message });
   };
 
   return {
-    reset,
-    showResetAlert,
-    hideResetAlert,
     items,
-    addAlert,
-    removeAlert,
     successAlert,
     infoAlert,
     errorAlert,

@@ -1,14 +1,14 @@
 <template>
   <div>
-    <PageTitle class="mb-8 px-6 lg:p-0">
-      <template #default>Auction</template>
+    <PageTitle>
+      <template #title>Auction</template>
       <template #subtitle>
         This is a Dutch auction, the chart below illustrates the price
         decreasing over time once the auction begins.
       </template>
     </PageTitle>
 
-    <div class="grid grid-cols-3 font-inter">
+    <UContainer class="grid grid-cols-3 font-inter py-4">
       <div
         class="col-span-3 lg:col-span-2 order-2 lg:order-1 bg-grey-800 p-6 lg:p-8 py-10"
       >
@@ -161,7 +161,7 @@
           </p>
         </div>
       </div>
-    </div>
+    </UContainer>
   </div>
 </template>
 

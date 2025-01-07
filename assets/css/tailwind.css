@@ -25,20 +25,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    @apply bg-grey-900 text-grey-100 font-ppformula;
-  }
-
-  input,
-  select,
-  textarea {
-    @apply bg-grey-800 border rounded-none border-grey-700 font-inter text-grey-100 focus:invalid:ring-red-600 focus:outline-none focus:border-grey-500 focus:ring-1 focus:ring-grey-500 placeholder:text-grey-500 block w-full p-2.5;
-  }
-}
-
-button {
-  @apply font-mono;
+body {
+  font-family: "Inter", sans-serif;
 }
 
 h1 {
@@ -50,7 +38,7 @@ h1 {
 }
 
 .dropdown-menu-items {
-  @apply bg-grey-700 text-grey-200 font-inter;
+  @apply dark:bg-grey-700 dark:text-grey-200 font-inter;
 }
 .dropdown-menu-items li a {
   @apply px-6 py-3 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;
