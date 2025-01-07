@@ -1,25 +1,14 @@
 <template>
-  <MSimpleTable
-    :search="true"
-    :items="filteredLists"
-    :fields="listTableHeaders"
-  >
+  <MSimpleTable :items="filteredLists" :fields="listTableHeaders">
     <template #header-left>
-      <PageTitle>Protocol actors</PageTitle>
-    </template>
-
-    <template #header-right>
-      <select
+      <USelectMenu
         v-model="selectedList"
         class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2 font-inter"
-      >
-        <option value="all" default>All roles</option>
-        <option v-for="option in listsOptions" :key="option" :value="option">
-          {{ option }}
-        </option>
-      </select>
+        :options="listsOptions"
+        placeholder="All roles"
+        multiple
+      />
     </template>
-
     <template #cell(list)="{ value }">
       {{ value.replace("rs", "r") }}
     </template>
@@ -41,7 +30,7 @@ import uniqBy from "lodash/uniqBy";
 const listsStore = useListsStore();
 
 useHead({
-  titleTemplate: "%s - Actors | Protocol",
+  titleTemplate: "%s - Actors - Protocol",
 });
 
 const lists = computed(() => listsStore.getFlattenLists());
@@ -60,17 +49,19 @@ const listsOptions = computed(() => [
   ...new Set(lists.value.map((obj) => obj.list)),
 ]);
 
-const selectedList = ref("all");
+const selectedList = ref([]);
 
 const filteredLists = computed(() => {
+  console.log("selectedList", selectedList.value);
   const listsWithoutDuplicates = uniqBy(
     lists.value,
     (item) => item.account + item.list,
   );
 
-  if (selectedList.value === "all") return listsWithoutDuplicates;
-  return listsWithoutDuplicates.filter(
-    (obj) => obj.list === selectedList.value,
+  if (selectedList.value.length === 0) return listsWithoutDuplicates;
+
+  return listsWithoutDuplicates.filter((obj) =>
+    selectedList.value.includes(obj.list),
   );
 });
 </script>

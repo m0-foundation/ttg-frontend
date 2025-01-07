@@ -57,7 +57,7 @@ declare global {
 }
 
 Cypress.Commands.add("connectWallet", () => {
-  cy.get("aside").then(($body) => {
+  cy.get("body").then(($body) => {
     if ($body.find("#button-connect-wallet").length > 0) {
       console.log("not connected");
 

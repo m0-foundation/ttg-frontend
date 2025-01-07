@@ -3,9 +3,9 @@
     <AppHeader />
 
     <UMain>
-      <UContainer>
-        <NuxtPage />
-      </UContainer>
+      <NuxtPage />
     </UMain>
+
+    <AppFooter />
   </div>
 </template>

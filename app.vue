@@ -15,11 +15,8 @@
       />
     </Head>
 
-    <div v-if="isLoading" class="flex h-dvh">
-      <div class="m-auto inline-flex">
-        <div>Loading</div>
-        <div class="loader-dots"></div>
-      </div>
+    <div v-if="isLoading" class="h-dvh flex items-center justify-center">
+      <CommonLoader />
     </div>
     <NuxtLayout v-else />
   </div>

@@ -15,17 +15,24 @@
 </template>
 
 <script setup lang="ts">
-export interface Props {
-  version?: "light" | "dark" | "disabled";
+const colorMode = useColorMode();
+
+export interface IconProps {
+  version?: "light" | "dark";
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  version: "light",
-});
 const colors = {
-  light: "#EBEBEB",
-  dark: "#000D0A",
-  disabled: "#868886",
+  dark: "#EBEBEB",
+  light: "#000D0A",
 };
-const fill = computed(() => colors[props.version]);
+
+const props = withDefaults(defineProps<IconProps>(), {
+  version: undefined,
+});
+
+const fill = computed(() =>
+  props.version
+    ? colors[props.version]
+    : colors[colorMode.value as "light" | "dark"],
+);
 </script>

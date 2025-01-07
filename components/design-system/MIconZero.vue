@@ -17,16 +17,25 @@
   </svg>
 </template>
 
-<script lang="ts" setup>
-export interface Props {
+<script setup lang="ts">
+const colorMode = useColorMode();
+
+export interface IconProps {
   version?: "light" | "dark";
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  version: "light",
+const colors = {
+  dark: "#EBEBEB",
+  light: "#000D0A",
+};
+
+const props = withDefaults(defineProps<IconProps>(), {
+  version: undefined,
 });
 
 const fill = computed(() =>
-  props.version === "light" ? "#EBEBEB" : "#868886",
+  props.version
+    ? colors[props.version]
+    : colors[colorMode.value as "light" | "dark"],
 );
 </script>

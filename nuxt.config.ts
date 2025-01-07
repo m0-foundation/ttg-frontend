@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     color: "color/index.js",
     "mersenne-twister": "mersenne-twister/src/mersenne-twister.js",
   },
+
   runtimeConfig: {
     public: {
       walletConnectProjectId: process.env.VITE_APP_WALLET_CONNECT_PROJECT_ID,
@@ -33,12 +34,19 @@ export default defineNuxtConfig({
       },
     },
   },
+
   ssr: false,
+
+  colorMode: {
+    preference: "light",
+  },
+
   components: [
     "~/components/design-system",
     "~/components/layout",
     "~/components",
   ],
+
   // https://tailwindcss.nuxtjs.org/getting-started/setup
   modules: [
     "@nuxt/ui",
@@ -48,6 +56,8 @@ export default defineNuxtConfig({
     "@nuxt/devtools",
     "floating-vue/nuxt",
   ],
+
+  //no router is ignored
   ignore:
     auctionActive === true
       ? [
@@ -60,7 +70,8 @@ export default defineNuxtConfig({
         ]
       : auctionActive === false
         ? ["pages/auction.vue", "pages/rewards.vue"]
-        : undefined, //no router is ignored
+        : undefined,
+
   imports: {
     dirs: ["./stores"],
   },
@@ -115,4 +126,6 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+
+  compatibilityDate: "2025-01-05",
 });

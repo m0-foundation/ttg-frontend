@@ -240,8 +240,8 @@ const { onlyDescription, title } = useParsedDescriptionTitle(
   props.proposal.description,
 );
 
-function onViewProposal() {
-  emit("on-view", props.proposal.proposalId);
+async function onViewProposal() {
+  await navigateTo(`/proposal/${props.proposal.proposalId}`);
 }
 
 function onExecuteProposal() {

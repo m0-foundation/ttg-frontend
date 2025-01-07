@@ -5,10 +5,6 @@
     :fields="earnersClaimantsHeaders"
     :loading="isLoading"
   >
-    <template #header-left>
-      <PageTitle>Earners Claimants</PageTitle>
-    </template>
-
     <template #cell(earner)="{ value }">
       <MAddressCopy :short-address="false" show-copy :address="value" />
     </template>
@@ -27,7 +23,7 @@ const apiStore = useApiClientStore();
 const listsStore = useListsStore();
 
 useHead({
-  titleTemplate: "%s - Actors | $M (wrapped)",
+  titleTemplate: "%s - Actors - $M (wrapped)",
 });
 
 const earnersClaimantsHeaders = [

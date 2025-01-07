@@ -1,44 +1,30 @@
 <template>
-  <div class="px-6 lg:p-0">
+  <section>
     <PageTitle>
-      <template #default>Actors</template>
+      <template #title>Actors</template>
+      <template #bottom-left>
+        <UHorizontalNavigation :links="actorsLinks" />
+      </template>
     </PageTitle>
 
-    <div
-      class="flex gap-6 whitespace-nowrap overflow-x-auto text-grey-500 mb-6"
-    >
-      <NuxtLink
-        to="/actors/protocol/"
-        class="link-tab"
-        active-class="active-link-tab"
-      >
-        Protocol
-      </NuxtLink>
-
-      <NuxtLink
-        to="/actors/wm/"
-        class="link-tab"
-        active-class="active-link-tab"
-      >
-        $M (wrapped)
-      </NuxtLink>
-    </div>
-
     <Suspense>
-      <NuxtPage />
-      <template #fallback> Loading... </template>
+      <UContainer class="py-4">
+        <NuxtPage />
+      </UContainer>
+      <template #fallback> <CommonLoader /> </template>
     </Suspense>
-  </div>
+  </section>
 </template>
 
-<style>
-.config-key-badge {
-  @apply inline-block py-0.5 px-1.5 bg-grey-700 bg-opacity-85 border border-grey-700 text-grey-500 text-xxs font-inter;
-}
-.link-tab {
-  @apply text-grey-500;
-}
-.active-link-tab {
-  @apply text-grey-200;
-}
-</style>
+<script setup lang="ts">
+const actorsLinks = [
+  {
+    label: "Protocol",
+    to: "/actors/protocol",
+  },
+  {
+    label: "M wrapped",
+    to: "/actors/wm",
+  },
+];
+</script>

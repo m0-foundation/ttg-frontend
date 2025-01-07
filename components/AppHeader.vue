@@ -6,40 +6,48 @@
           class="h-[var(--header-height)]"
           src="~/assets/images/m0_white_black.png"
         />
-        Governance
+        {{ name }}
       </div>
     </template>
 
     <template #right>
       <div class="flex items-center gap-4">
-        <ConnectButton />
+        <ConnectButton class="hidden lg:block" />
         <HeaderEcosystemMenu />
       </div>
+    </template>
+
+    <template #panel>
+      <UAsideLinks :links="links" />
+      <UDivider class="my-4" />
+      <ConnectButton class="lg:hidden" />
     </template>
   </UHeader>
 </template>
 
-<script setup>
+<script setup lang="ts">
+const { name } = useAppConfig();
+
 const links = [
   {
     id: "home",
-    label: "Home",
-    to: "/",
+    label: "Vote",
+    to: "/proposals",
   },
   {
     id: "proposals",
-    label: "Proposals",
-    to: "/proposals/all/",
+    label: "History",
+    to: "/history",
   },
   {
     id: "actors",
     label: "Actors",
-    to: "/actors/protocol/",
+    to: "/actors/protocol",
   },
   {
     id: "config",
     label: "Config",
-    to: "/config/governance/",
+    to: "/config/governance",
   },
   {
     id: "profile",

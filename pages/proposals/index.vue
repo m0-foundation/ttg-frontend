@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="proposals">
+  <div>
     <div
       v-if="
         !hasVotedOnAllProposals &&
@@ -102,7 +102,7 @@
         </MButton>
       </div>
     </div>
-  </NuxtLayout>
+  </div>
 </template>
 
 <script setup lang="ts">

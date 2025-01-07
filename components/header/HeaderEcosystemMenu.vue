@@ -2,10 +2,12 @@
   <UPopover>
     <UButton
       color="white"
-      label="Ecosystem"
       variant="ghost"
       class="font-inter active:bg-gray-300"
     >
+      <template #default>
+        <span class="hidden md:block">Ecosystem</span>
+      </template>
       <template #trailing>
         <img src="~/assets/icons/ecosystem/ecosystem-dots.svg" />
       </template>
@@ -41,6 +43,9 @@
 <script setup>
 import squareBlack from "~/assets/icons/ecosystem/square-black.svg";
 import squareBlue from "~/assets/icons/ecosystem/square-blue.svg";
+import { useDisconnect } from "use-wagmi";
+
+const { disconnect } = useDisconnect();
 
 const apps = [
   {
