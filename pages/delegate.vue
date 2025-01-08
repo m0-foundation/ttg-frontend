@@ -77,7 +77,7 @@
               id="input-delegate-power"
               v-model="powerFormData.address"
               type="text"
-              class="w-full p-4 mb-2"
+              class="w-full mb-2"
               data-test="delegate-power-input-address"
               :errors="$delegatePowerValidation.address?.$errors"
             />
@@ -91,15 +91,14 @@
           </div>
 
           <div class="flex justify-end items-center gap-2 my-4">
-            <MButton
+            <UButton
               id="button-delegate-power"
               type="submit"
               data-test="delegate-button-power-submit"
               :disabled="!isConnected || !canDelegate || powerFormData.loading"
-              :is-loading="powerFormData.loading"
-            >
-              delegate POWER
-            </MButton>
+              :loading="powerFormData.loading"
+              label="Delegate POWER"
+            />
           </div>
         </form>
       </UCard>
@@ -140,7 +139,7 @@
               id="input-delegate-zero"
               v-model="zeroFormData.address"
               type="text"
-              class="w-full p-4 mb-2"
+              class="w-full mb-2"
               data-test="delegate-zero-input-address"
               :errors="$delegateZeroValidation.address?.$errors"
             />
@@ -154,15 +153,14 @@
           </div>
 
           <div class="flex justify-end items-center gap-2 my-2">
-            <MButton
+            <UButton
               id="button-delegate-zero"
               type="submit"
               :disabled="!isConnected || zeroFormData.loading"
               data-test="delegate-button-zero-submit"
-              :is-loading="zeroFormData.loading"
-            >
-              delegate ZERO
-            </MButton>
+              :loading="zeroFormData.loading"
+              label="Delegate ZERO"
+            />
           </div>
         </form>
       </UCard>

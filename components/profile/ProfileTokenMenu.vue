@@ -1,29 +1,11 @@
 <template>
-  <MDropdown>
-    <ul class="dropdown-menu-items">
-      <li>
-        <a v-close-popper @click="copyTokenAddress(token)">
-          <p>{{ `Copy ${token?.symbol} token address` }}</p>
-          <p class="text-grey-500 text-xxs">{{ token?.address }}</p>
-        </a>
-      </li>
-      <li v-if="isConnected">
-        <a v-close-popper @click="addTokenToWallet">
-          Add Token to your wallet
-        </a>
-      </li>
-      <li>
-        <a target="_blank" :href="useBlockExplorer('token', token?.address)">
-          View on Block Explorer
-        </a>
-      </li>
-    </ul>
-  </MDropdown>
+  <UDropdown :items="dropdownItems">
+    <UButton color="gray" icon="i-heroicons-ellipsis-horizontal" />
+  </UDropdown>
 </template>
 
 <script setup>
 import { copyToClipboard } from "@/utils/misc";
-import { useAccount } from "use-wagmi";
 
 const props = defineProps({
   token: {
@@ -32,7 +14,27 @@ const props = defineProps({
   },
 });
 
-const { isConnected } = useAccount();
+const dropdownItems = ref([
+  [
+    {
+      label: `Copy ${props.token?.symbol} token address`,
+      icon: "i-heroicons-clipboard",
+      click: () => copyTokenAddress(props.token),
+    },
+    {
+      label: "Add token to wallet",
+      icon: "i-heroicons-wallet",
+      click: () => addTokenToWallet(),
+    },
+    {
+      label: "View on block explorer",
+      icon: "i-heroicons-globe-alt",
+      to: useBlockExplorer("token", props.token?.address),
+      target: "_blank",
+    },
+  ],
+]);
+
 const alerts = useAlertsStore();
 
 async function copyTokenAddress(token) {

@@ -50,28 +50,35 @@
           class="text-sm underline mt-2"
           >Learn more</a
         >
+        <div v-else />
         <div v-if="param?.proposal?.executedEvent" class="max-lg:order-1">
-          <MDropdown>
-            <ul class="dropdown-menu-items">
-              <li
-                class="px-6 py-3 text-xxs text-grey-500 border-b border-b-grey-800"
-              >
-                <p>Last updated</p>
-                <p>
-                  {{
-                    useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
-                      "LLL",
-                    )
-                  }}
-                </p>
-              </li>
-              <li>
-                <NuxtLink :to="`/proposal/${param?.proposal?.proposalId}`"
-                  >Show proposal
-                </NuxtLink>
-              </li>
-            </ul>
-          </MDropdown>
+          <UPopover>
+            <UButton color="white" icon="i-heroicons-ellipsis-horizontal" />
+
+            <template #panel>
+              <div class="text-xxs">
+                <div class="p-2">
+                  <p>Last updated</p>
+                  <p>
+                    {{
+                      useDate(
+                        param?.proposal?.executedEvent?.timestamp,
+                      ).toFormat("LLL")
+                    }}
+                  </p>
+                </div>
+                <UDivider />
+                <UVerticalNavigation
+                  :links="[
+                    {
+                      label: 'Show proposal',
+                      to: `/proposal/${param?.proposal?.proposalId}`,
+                    },
+                  ]"
+                />
+              </div>
+            </template>
+          </UPopover>
         </div>
       </div>
     </div>

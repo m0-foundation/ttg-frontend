@@ -43,12 +43,12 @@ const links = [
   {
     id: "actors",
     label: "Actors",
-    to: "/actors/protocol",
+    to: "/actors",
   },
   {
     id: "config",
     label: "Config",
-    to: "/config/governance",
+    to: "/config",
   },
   {
     id: "profile",
