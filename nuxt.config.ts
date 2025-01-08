@@ -4,8 +4,6 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 
-console.dir(process.env);
-
 const getAuctionActive = () => {
   if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "true") {
     return true;
@@ -17,12 +15,14 @@ const getAuctionActive = () => {
   return null;
 };
 const auctionActive = getAuctionActive();
-console.log("auctionActive", auctionActive);
+
 export default defineNuxtConfig({
   alias: {
     color: "color/index.js",
     "mersenne-twister": "mersenne-twister/src/mersenne-twister.js",
   },
+
+  css: ["~/assets/css/main.css"],
 
   runtimeConfig: {
     public: {

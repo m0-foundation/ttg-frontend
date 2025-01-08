@@ -99,7 +99,6 @@ function reset() {
 defineExpose({ nextStep, changeCurrentStep, reset });
 
 onUnmounted(() => {
-  console.log("unmounted");
   reset();
 });
 </script>

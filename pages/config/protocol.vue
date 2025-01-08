@@ -26,7 +26,6 @@ const fetchProtocolConfigs = async () => {
       await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues();
     const store = useProtocolConfigsStore();
     store.setProtocolConfigs(data);
-    console.log("fetched configs", { data });
   } catch (error) {
     console.error({ error });
   }

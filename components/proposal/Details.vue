@@ -121,7 +121,6 @@ proposalStore.updateProposalById(props.proposalId);
 const { unwatchAll } = watchVoteCast(proposal.value!.votingType!);
 
 onUnmounted(() => {
-  console.log("unwatching all votes");
   unwatchAll();
 });
 </script>

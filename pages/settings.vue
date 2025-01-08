@@ -65,7 +65,6 @@ useHead({
 });
 
 function onSubmit() {
-  console.log("submitting", customRPC.value);
   const newRpc = unref(customRPC);
   if (!newRpc) return;
   if (newRpc.startsWith("http:"))

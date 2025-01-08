@@ -41,13 +41,6 @@ export class Epoch {
     const currentEpochEndAsTimestamp =
       this.getTimestampOfEpochEnd(currentEpoch);
 
-    console.log({
-      currentEpoch,
-      currentEpochStart: currentEpochStartAsTimestamp,
-      currentEpochEnd: currentEpochEndAsTimestamp,
-      type: this.getType(currentEpoch),
-    });
-
     return {
       values: {
         clockPeriod: this.clockPeriod,

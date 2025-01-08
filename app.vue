@@ -42,7 +42,6 @@ const { rpc } = storeToRefs(apiStore);
 const isLoading = ref(true);
 
 async function onSetup(rpc: string) {
-  console.log("onSetup with rpc", rpc);
   /* setup wagmi client as vue plugin */
   const fallbackRpc = network.value.rpc.values![1];
   const wagmiConfig = useWagmi(rpc, fallbackRpc);
@@ -118,7 +117,6 @@ onMounted(async () => {
 watch(
   rpc,
   (newRpc) => {
-    console.log("rpc has changed", { newRpc });
     onSetup(newRpc!);
   },
   { deep: true },

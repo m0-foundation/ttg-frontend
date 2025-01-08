@@ -71,7 +71,6 @@ async function castVote(vote: number, proposalId: string) {
   isLoading.value = true;
 
   const governor = useGovernor({ proposalId });
-  console.log("cast", { vote, proposalId, governor });
 
   try {
     const hash = await writeContract(wagmiConfig, {

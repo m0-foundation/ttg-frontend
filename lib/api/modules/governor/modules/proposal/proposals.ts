@@ -349,11 +349,6 @@ export class Proposals extends GovernorModule {
   }
 
   async readGetProposal(proposalId: string): Promise<MProposalMutable> {
-    console.log({
-      proposalId,
-      contract: this.contract,
-      governanceType: this.governanceType,
-    });
     const getProposal = await this.client.readContract({
       abi: this.abi,
       address: this.contract,
@@ -442,8 +437,6 @@ export class Proposals extends GovernorModule {
       this.decodeProposalLog(log, this.abi),
     );
 
-    console.log({ governanceType: this.governanceType, proposals });
-
     const contractCallsGetProposal = proposals.map((p) => ({
       abi: this.abi,
       address: this.contract,
@@ -458,11 +451,6 @@ export class Proposals extends GovernorModule {
         contracts: contractCallsGetProposal,
       })
     ).map((res) => res.result);
-
-    console.log({
-      governanceType: this.governanceType,
-      proposalsWithGetProposal,
-    });
 
     const proposalsWithAllData = await Promise.all(
       proposals.map(async (proposal, index) => {

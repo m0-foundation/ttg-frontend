@@ -22,7 +22,6 @@ export default (
     args: [account as Ref<Hash>],
     query: {
       select: (data) => {
-        console.log("delegates", data);
         return String(data);
       },
     },

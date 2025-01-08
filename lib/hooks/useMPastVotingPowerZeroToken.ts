@@ -41,7 +41,6 @@ export default ({
         const [{ result: getPastVotes }, { result: pastTotalSupply }] = data;
         const votingPower = BigInt(getPastVotes as unknown as bigint);
         const totalSupply = BigInt(pastTotalSupply as unknown as bigint);
-        console.log({ votingPower, totalSupply });
         return {
           relative:
             votingPower === 0n

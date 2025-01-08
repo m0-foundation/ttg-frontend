@@ -3,7 +3,6 @@ import { NetworkConfig, getNetworkConfig } from "../network";
 
 export const useNetworkStore = defineStore("network", () => {
   const config: NetworkConfig = getNetworkConfig();
-  console.log({ config });
 
   const network = ref({
     rpc: { ...config.rpc },

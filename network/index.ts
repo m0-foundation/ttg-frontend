@@ -8,8 +8,6 @@ const getNetworkConfig = () => {
   const config = useRuntimeConfig();
   const { node, build } = config.public.env;
 
-  console.log({ node, build });
-
   if (build) {
     if (build === "production") return production;
     if (build === "staging") return staging;
