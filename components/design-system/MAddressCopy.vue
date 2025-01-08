@@ -7,10 +7,13 @@
         </a>
       </div>
 
-      <img v-if="justCopied" class="min-w-5 h-5" src="/img/icons/check.svg" />
-      <button v-else-if="showCopy" @click="copy(props.address)">
-        <img class="min-w-5 h-5 hover:opacity-75" src="/img/icons/copy.svg" />
-      </button>
+      <UButton
+        :icon="justCopied ? 'i-heroicons-check' : 'i-heroicons-clipboard'"
+        variant="ghost"
+        color="gray"
+        size="xs"
+        @click="copy(props.address)"
+      />
     </div>
   </span>
 </template>

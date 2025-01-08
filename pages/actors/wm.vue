@@ -1,18 +1,16 @@
 <template>
-  <MSimpleTable
-    :search="true"
-    :items="earnersClaimants"
-    :fields="earnersClaimantsHeaders"
+  <UTable
     :loading="isLoading"
+    :rows="earnersClaimants || []"
+    :columns="earnersClaimantsHeaders"
   >
-    <template #cell(earner)="{ value }">
-      <MAddressCopy :short-address="false" show-copy :address="value" />
+    <template #earner="{ row }">
+      <MAddressCopy :short-address="false" show-copy :address="row.earner" />
     </template>
-
-    <template #cell(claimant)="{ value }">
-      <MAddressCopy :short-address="false" show-copy :address="value" />
+    <template #claimant="{ row }">
+      <MAddressCopy :short-address="false" show-copy :address="row.claimant" />
     </template>
-  </MSimpleTable>
+  </UTable>
 </template>
 
 <script setup lang="ts">
@@ -30,9 +28,8 @@ const earnersClaimantsHeaders = [
   {
     key: "earner",
     label: "Earner",
-    sortable: true,
   },
-  { key: "claimant", label: "Claimant", sortable: true },
+  { key: "claimant", label: "Claimant" },
 ];
 
 const fetchEarnerClaimants = async () => {

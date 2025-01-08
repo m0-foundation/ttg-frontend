@@ -23,23 +23,16 @@
         class="expired"
       />
 
-      <MDropdown v-else-if="version === 'Executed'">
-        <template #activator>
-          <ProposalStatusBadge
-            :version="version"
-            name="Executed"
-            :show-arrow="true"
-            data-test="executed-badge"
-            class="cursor-pointer"
-          />
-        </template>
-
-        <ProposalStatusMenu
-          :status-block="proposal?.executedEvent?.blockNumber"
-          :tx-hash="proposal?.executedEvent?.transactionHash"
-          :updated="proposal?.executedEvent?.timestamp"
+      <UDropdown v-else-if="version === 'Executed'" :items="dropdownItems">
+        <ProposalStatusBadge
+          :version="version"
+          name="Executed"
+          :show-arrow="true"
+          data-test="executed-badge"
+          class="cursor-pointer"
         />
-      </MDropdown>
+      </UDropdown>
+
       <ProposalStatusBadge v-else :version="version" name="Executed" />
     </div>
   </div>
@@ -53,5 +46,27 @@ export interface Props {
   proposal: MProposal | undefined;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+const { toFormat } = useDate(Number(props?.proposal?.executedEvent?.timestamp));
+
+const dropdownItems = ref([
+  [
+    {
+      label: `Executed on ${toFormat("lll")}`,
+      disabled: true,
+      labelClass: "cursor-auto",
+    },
+    {
+      label: "Copy block number",
+      icon: "i-heroicons-clipboard",
+      click: () => copyToClipboard(props.proposal?.blockNumber),
+    },
+    {
+      label: "View on block explorer",
+      icon: "i-heroicons-globe-alt",
+      to: useBlockExplorer("tx", props.proposal?.transactionHash || ""),
+      target: "_blank",
+    },
+  ],
+]);
 </script>

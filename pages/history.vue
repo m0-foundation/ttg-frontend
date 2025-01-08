@@ -19,39 +19,41 @@
           searchable
         />
       </div>
-      <MSimpleTable
-        class="max-lg:overflow-x-scroll"
-        :items="filteredProposals"
-        :fields="proposalsTableHeader"
+      <UTable
+        class="max-lg:overflow-x-scroll mt-4"
+        :rows="filteredProposals"
+        :columns="proposalsTableHeader"
       >
-        <template #cell(epoch)="{ value }">#{{ value }}</template>
-        <template #cell(votingType)="{ value }">
-          <MIconPower v-if="['Standard', 'Emergency'].includes(value)" />
-          <MIconZero v-else-if="['Zero'].includes(value)" />
+        <template #epoch-data="{ row }"> #{{ row.epoch }} </template>
+        <template #votingType-data="{ row }">
+          <MIconPower
+            v-if="['Standard', 'Emergency'].includes(row.votingType)"
+          />
+          <MIconZero v-else-if="['Zero'].includes(row.votingType)" />
         </template>
-        <template #cell(proposal)="{ item }">
-          <div class="lg:flex gap-4 min-w-96">
-            <button
-              class="underline hover:no-underline text-left"
-              @click="() => onViewProposal(item)"
+        <template #proposal-data="{ row }">
+          <div class="lg:flex gap-4">
+            <NuxtLink
+              class="underline cursor-pointer text-left text-wrap"
+              @click="() => onViewProposal(row)"
             >
-              {{ useParsedDescriptionTitle(item?.description).title }}
-            </button>
+              {{ useParsedDescriptionTitle(row?.description).title }}
+            </NuxtLink>
           </div>
           <p class="text-xs text-grey-500 mt-1">
-            {{ item?.proposalLabel }} · Created:
-            {{ useDate(item?.timestamp).toFormat("DD.MM.YY") }}
+            {{ row?.proposalLabel }} · Created:
+            {{ useDate(row?.timestamp).toFormat("DD.MM.YY") }}
           </p>
         </template>
-        <template #cell(type)="{ item }">
+        <template #type-data="{ row }">
           <div class="flex">
-            <ProposalTypeBadge :type="item.votingType" :proposal-word="false" />
+            <ProposalTypeBadge :type="row.votingType" :proposal-word="false" />
           </div>
         </template>
-        <template #cell(state)="{ value }">
-          <ProposalStatus :version="value" />
+        <template #state-data="{ row }">
+          <ProposalStatus :version="row.state" />
         </template>
-      </MSimpleTable>
+      </UTable>
     </UContainer>
   </section>
 </template>
@@ -69,11 +71,11 @@ const selectedType = ref([]);
 const selectedEpoch = ref([]);
 
 const proposalsTableHeader = [
-  { key: "epoch", label: "Created Epoch", sortable: true },
-  { key: "votingType", label: "Token", sortable: false },
+  { key: "epoch", label: "Epoch" },
+  { key: "votingType", label: "Token" },
   { key: "proposal", label: "Proposal" },
   { key: "type", label: "Type" },
-  { key: "state", label: "Status", sortable: true },
+  { key: "state", label: "Status" },
 ];
 
 const proposalTypes = computed(() => [
@@ -99,7 +101,7 @@ const filteredProposals = computed(() => {
 });
 
 useHead({
-  titleTemplate: "%s - All proposals",
+  titleTemplate: "%s - History",
 });
 
 async function onViewProposal(proposal: MProposal) {

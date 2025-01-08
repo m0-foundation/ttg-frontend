@@ -28,14 +28,28 @@
         </div>
       </template>
       <template #top-right>
-        <UButton label="Create proposal" color="black" to="/proposal/create" />
+        <UButton
+          class="hidden lg:block"
+          label="Create proposal"
+          color="black"
+          to="/proposal/create"
+        />
       </template>
       <template #bottom-left>
         <UHorizontalNavigation
-          :links="proposalsLinks"
+          :links="
+            proposalsLinks.filter((l) => l.badge > 0 || l.label === 'Standard')
+          "
           class="border-b border-gray-200 dark:border-gray-800"
         />
       </template>
+
+      <UButton
+        class="lg:hidden"
+        label="Create proposal"
+        color="black"
+        to="/proposal/create"
+      />
     </PageTitle>
 
     <UContainer class="py-8">
@@ -50,29 +64,33 @@ import { storeToRefs } from "pinia";
 const store = useProposalsStore();
 const ttg = useTtgStore();
 
-const proposalsLinks = [
+const proposalsLinks = computed(() => [
   {
     label: "Standard",
     to: "/proposals/",
-    exact: true,
+    badge: standardProposals.value || 0,
   },
   {
     label: "Priority",
     to: "/proposals/priority/",
+    badge: emergency.value,
   },
   {
     label: "Zero",
     to: "/proposals/zero/",
+    badge: zero.value,
   },
   {
     label: "Pending Execution",
     to: "/proposals/succeeded/",
+    badge: pendingExecution.value,
   },
   {
     label: "Scheduled",
     to: "/proposals/pending/",
+    badge: pending.value,
   },
-];
+]);
 
 const standardProposals = computed(
   () =>

@@ -6,21 +6,19 @@
       :param="param"
     />
 
-    <MSimpleTable :items="inmutableTableData" :fields="governanceTablesHeaders">
-      <template #header-left>
-        <h3 class="text-grey-500 font-inter mt-4 mb-2">Immutable Parameters</h3>
-      </template>
-      <template #cell(value)="{ value }">
+    <UTable
+      class="mt-4"
+      :rows="inmutableTableData"
+      :columns="governanceTablesHeaders"
+    >
+      <template #value-data="{ row }">
         <MAddressCopy
-          :address="value"
+          :address="row.value"
           :short-address="false"
           :show-copy="true"
         />
       </template>
-      <template #cell(description)="{ value }">
-        <div class="max-sm:min-w-72">{{ value }}</div>
-      </template>
-    </MSimpleTable>
+    </UTable>
   </section>
 </template>
 
@@ -134,7 +132,7 @@ const mutableParametersWithData = computed(() =>
 );
 
 const governanceTablesHeaders = [
-  { key: "title", label: "Name", sortable: true },
+  { key: "title", label: "Name" },
   { key: "description", label: "Description" },
   { key: "value", label: "Value" },
 ];
