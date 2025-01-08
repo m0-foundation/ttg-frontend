@@ -17,6 +17,10 @@ export default defineAppConfig({
     card: {
       rounded: "rounded-none",
     },
+    dropdown: {
+      rounded: "rounded-none",
+      width: "w-fit max-w-72",
+    },
     horizontalNavigation: {
       inner: "min-w-min",
       container: "overflow-x-auto",

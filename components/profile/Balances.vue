@@ -12,13 +12,13 @@
         </div>
       </div>
 
-      <div class="flex justify-between gap-4 mt-8 mb-4">
+      <div class="flex justify-between gap-4 mt-6">
         <div>
           <p class="dark:text-grey-500 text-xs mb-2 font-inter text-nowrap">
             Voting power
           </p>
           <div class="flex items-center align-middle gap-2">
-            <p class="text-xl lg:text-xl dark:text-grey-100 mt-2">
+            <p class="text-xl lg:text-xl dark:text-grey-100">
               {{
                 useNumberFormatterPrice(
                   powerVotingPower?.data.value?.formatted || 0,
@@ -39,7 +39,7 @@
             Token Balance
           </p>
           <div class="flex items-center align-middle gap-2">
-            <p class="lg:text-xl dark:text-grey-100 mt-2">
+            <p class="lg:text-xl dark:text-grey-100">
               {{
                 useNumberFormatterPrice(
                   balancePowerToken?.data.value?.formatted || 0n,
@@ -62,13 +62,13 @@
         </div>
       </div>
 
-      <div class="gap-4 mt-8 mb-4 flex justify-between">
+      <div class="gap-4 mt-6 flex justify-between">
         <div>
           <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
             Voting power
           </p>
           <div class="flex items-center align-middle gap-2">
-            <p class="text-xl lg:text-xl dark:text-grey-100 mt-2">
+            <p class="text-xl lg:text-xl dark:text-grey-100">
               {{
                 useNumberFormatterPrice(
                   zeroVotingPower?.data.value?.formatted || 0,
@@ -76,7 +76,7 @@
               }}
             </p>
           </div>
-          <p class="text-xs text-grey-600 mt-2">
+          <p class="text-xs text-grey-600">
             {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
             <span class="mx-1 uppercase text-xxs">
               out of total voting power
@@ -89,7 +89,7 @@
             Token Balance
           </p>
           <div class="flex items-center align-middle gap-2">
-            <p class="lg:text-xl dark:text-grey-100 mt-2">
+            <p class="lg:text-xl dark:text-grey-100">
               {{
                 useNumberFormatterPrice(
                   balanceZeroToken?.data.value?.formatted || 0,

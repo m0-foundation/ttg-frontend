@@ -1,23 +1,37 @@
 <template>
-  <MSimpleTable :items="proposalsTableData" :fields="proposalsTableHeaders">
-    <template #cell(proposal)="{ item }">
+  <UTable :rows="proposalsTableData" :columns="proposalsTableHeaders">
+    <template #proposal-data="{ row }">
       <NuxtLink
         class="underline hover:no-underline"
-        :to="`/proposal/${item?.proposalId}`"
+        :to="`/proposal/${row?.proposalId}`"
+        >{{ useParsedDescriptionTitle(row.proposal).title }}</NuxtLink
       >
-        {{ useParsedDescriptionTitle(item.proposal).title }}
-      </NuxtLink>
     </template>
-    <template #cell(action)="{ value }">
-      <span class="text-grey-600">{{ value }}</span>
+    <template #vote-data="{ row }">
+      <span class="text-grey-600 flex items-center gap-2">
+        <div
+          class="w-2.5 h-2.5"
+          :class="row.vote ? 'bg-green-800' : 'bg-red-700'"
+        ></div>
+        <span class="text-xs uppercase hover:underline">
+          <a
+            :href="useBlockExplorer('tx', row.transactionHash)"
+            target="_blank"
+          >
+            {{ row.vote ? "Yes" : "No" }}
+          </a>
+        </span>
+      </span>
     </template>
-    <template #cell(created)="{ value }">
-      <span class="text-grey-600"> {{ useDate(value).toFormat("LLL") }}</span>
+    <template #created-data="{ row }">
+      <span class="text-grey-600">{{
+        useDate(row.created).toFormat("LLL")
+      }}</span>
     </template>
-    <template #cell(status)="{ value }">
-      <ProposalStatus :version="value" />
+    <template #status-data="{ row }">
+      <ProposalStatus :version="row.status" />
     </template>
-  </MSimpleTable>
+  </UTable>
 </template>
 
 <script setup lang="ts">
@@ -31,8 +45,8 @@ interface Props {
 const props = defineProps<Props>();
 
 const proposalsTableHeaders = [
-  { key: "proposal", label: "Proposal", sortable: true },
-  { key: "action", label: "Action", sortable: true },
+  { key: "proposal", label: "Proposal" },
+  { key: "action", label: "Action" },
   { key: "created", label: "Created", sortable: true },
   { key: "status", label: "Status", sortable: true },
 ];

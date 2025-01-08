@@ -47,10 +47,8 @@ export default defineNuxtConfig({
     "~/components",
   ],
 
-  // https://tailwindcss.nuxtjs.org/getting-started/setup
   modules: [
     "@nuxt/ui",
-    "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@nuxt/devtools",

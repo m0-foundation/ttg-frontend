@@ -1,12 +1,13 @@
 <template>
   <slot :connect="openModal">
-    <MButton
+    <UButton
       id="button-connect-wallet"
       data-test="modal-web3-button-connect-wallet"
+      color="gray"
       @click="openModal"
     >
-      Connect Wallet
-    </MButton>
+      Connect wallet
+    </UButton>
   </slot>
 
   <Teleport to="body">

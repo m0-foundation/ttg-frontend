@@ -8,12 +8,12 @@
       />
     </MModal>
 
-    <PageTitle class="px-6 lg:p-0 mb-3">
+    <PageTitle>
       <template #title>Create a proposal</template>
     </PageTitle>
 
-    <UContainer>
-      <form class="px-6 lg:p-0" @submit.prevent="onSubmit">
+    <UContainer class="py-4">
+      <form @submit.prevent="onSubmit">
         <div v-if="isWritting">Writting transaction on blockchain...</div>
         <div v-else>
           <div v-show="!isPreview">
@@ -1035,7 +1035,7 @@ hr {
 }
 
 .create-steps {
-  @apply flex items-center my-6 font-mono text-xxs lg:text-xs uppercase;
+  @apply flex items-center my-4 font-mono text-xxs lg:text-xs uppercase;
 }
 
 .create-steps .number {
