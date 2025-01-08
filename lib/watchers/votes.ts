@@ -9,7 +9,6 @@ import {
 } from "@/lib/sdk";
 
 export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
-  console.log("watchVoteCast");
   const ttg = storeToRefs(useTtgStore());
   const network = useNetworkStore().getNetwork();
   const api = useApiClientStore();
@@ -18,8 +17,6 @@ export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   const wagmiConfig = useWagmiConfig();
 
   const onEvent = async (logs: Log[], governor: Governor) => {
-    console.log("newVoteCast", logs);
-
     const newVotes = await Promise.all(
       logs.map((log) => governor.voting.decodeVote(log)),
     );
@@ -35,7 +32,6 @@ export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   };
 
   if (votinType === "Standard") {
-    console.log("watchStandard");
     const unwatchStandard = watchStandardGovernorEvent(wagmiConfig, {
       address: ttg.contracts.value.standardGovernor as Hash,
       eventName: "VoteCast",
@@ -51,7 +47,6 @@ export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   }
 
   if (votinType === "Emergency") {
-    console.log("watchEmergencyVotes");
     const unwatchEmergency = watchEmergencyGovernorEvent(wagmiConfig, {
       address: ttg.contracts.value.emergencyGovernor as Hash,
       eventName: "VoteCast",
@@ -67,7 +62,6 @@ export const watchVoteCast = (votinType: "Standard" | "Emergency" | "Zero") => {
   }
 
   if (votinType === "Zero") {
-    console.log("watchZeroVotes");
     const unwatchZero = watchZeroGovernorEvent(wagmiConfig, {
       address: ttg.contracts.value.zeroGovernor as Hash,
       eventName: "VoteCast",

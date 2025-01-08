@@ -55,5 +55,4 @@ const votesTableData = computed(() => {
     transactionHash: v.transactionHash,
   }));
 });
-console.log({ votesTableData });
 </script>

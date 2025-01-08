@@ -9,7 +9,6 @@ import {
 } from "@/lib/sdk";
 
 export const watchProposalCreated = (callbackOnEvent: Function) => {
-  console.log("watchProposalCreated");
   const ttg = storeToRefs(useTtgStore());
   const network = useNetworkStore().getNetwork();
   const api = useApiClientStore();
@@ -17,8 +16,6 @@ export const watchProposalCreated = (callbackOnEvent: Function) => {
   const wagmiConfig = useWagmiConfig();
 
   const onEvent = async (logs, governor) => {
-    console.log("newProposalCreated", { logs });
-
     const newProposals = await Promise.all(
       logs.map((log) => governor.proposals.getProposalFromWatchLog(log)),
     );

@@ -704,7 +704,6 @@ const previewProposal = computed(() => {
 });
 
 function onChangeProposalType(option) {
-  console.log("onChangeProposalType", option);
   formData.proposalType = option.value;
   selectedProposalType.value = option;
   $validation.value.$reset();
@@ -747,7 +746,6 @@ async function writeAllowance() {
   });
 
   const fee = BigInt(ttg.getValues.proposalFee!);
-  console.log({ allowance, fee });
   if (allowance < fee && hasToPayFee.value) {
     const hash = await writeContract(wagmiConfig, {
       abi: erc20Abi,
@@ -774,7 +772,6 @@ async function writeAllowance() {
 
 async function writeProposal(calldatas, formData) {
   const account = userAccount.value;
-  console.log({ selectedProposalType });
   const targets = [selectedProposalType.value.governor as Hash];
 
   const description = formData.description;
@@ -842,8 +839,6 @@ async function onSubmit() {
     // start listening for proposal event
     const { unwatchAll } = watchProposalCreated(
       async (newProposals: Array<MProposal>) => {
-        console.log({ newProposals });
-
         await wait(1000);
 
         unwatchAll();
@@ -978,7 +973,6 @@ function buildCalldatasTtg(functionName: any, args: any) {
 }
 
 function getKeyBasedValidation(key: string) {
-  console.log(key);
   switch (key) {
     case "minter_rate_model":
     case "earner_rate_model":
