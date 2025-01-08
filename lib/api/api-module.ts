@@ -33,7 +33,6 @@ export class ApiModule {
         return { ...acc, ...cur };
       }, {});
 
-      console.log("Get Params", params);
       return params as T;
     };
 

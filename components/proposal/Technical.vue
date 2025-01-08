@@ -80,7 +80,6 @@ const parsedIncomingValue = (value: string, type: string) => {
   }
 
   if (["setCashToken"].includes(type)) {
-    console.log(value, typeof type);
     if (typeof value === "bigint") return formatFee(value);
     if (typeof value === "string")
       return value.includes("0x") ? value : formatFee(value);

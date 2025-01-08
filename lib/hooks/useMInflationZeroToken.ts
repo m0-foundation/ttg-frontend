@@ -25,8 +25,6 @@ export default () => {
     },
   });
 
-  console.log({ getPastVotes });
-
   // wrap promise into ref
   const { state: pastTotalSupplyState } = useAsyncState(
     readZeroTokenPastTotalSupply(wagmiConfig, {
@@ -35,8 +33,6 @@ export default () => {
     }),
     null,
   );
-
-  console.log({ pastTotalSupplyState });
 
   return computed(() => {
     //  return 0 to avoid division by zero

@@ -47,7 +47,6 @@ const listsOptions = computed(() => [
 const selectedList = ref([]);
 
 const filteredLists = computed(() => {
-  console.log("selectedList", selectedList.value);
   const listsWithoutDuplicates = uniqBy(
     lists.value,
     (item) => item.account + item.list,

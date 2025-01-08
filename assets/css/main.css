@@ -21,10 +21,6 @@
   font-weight: 500
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 body {
   font-family: "Inter", sans-serif;
 }
