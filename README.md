@@ -1,9 +1,7 @@
 # M^0 Governance dApp
 
 #### Current decentralized deployments:
-IPFS: [bafybeig4d3u2yuo2aflp7pobps3rh5vlvlofowa6zrpwbpunwzxjtjbeoq](https://bafybeig4d3u2yuo2aflp7pobps3rh5vlvlofowa6zrpwbpunwzxjtjbeoq.ipfs.cf-ipfs.com/proposals)
-
-Arweave: vET9BYjLCjv8cjQDxfwbAzauQdaw92lwy4ZcCskeJN4
+Fleek (IPFS): [governance-m0.on-fleek.app](https://governance-m0.on-fleek.app/)
 
 <img width="1089" alt="Screenshot 2024-05-14 at 2 04 43 PM" src="https://github.com/MZero-Labs/ttg-frontend/assets/1220854/f63ccd58-99b4-48fd-871f-f6016812f380">
 
