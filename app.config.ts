@@ -13,6 +13,9 @@ export default defineAppConfig({
     },
     button: {
       rounded: "rounded-none",
+      default: {
+        color: "gray",
+      },
     },
     card: {
       rounded: "rounded-none",
@@ -20,6 +23,18 @@ export default defineAppConfig({
     dropdown: {
       rounded: "rounded-none",
       width: "w-fit max-w-72",
+    },
+    header: {
+      container: "gap-8",
+      left: "lg:flex-initial",
+      logo: "text-white text-[20px] font-medium",
+      wrapper: "bg-black",
+      links: {
+        wrapper: "gap-x-2 pt-1",
+        base: "font-medium px-2.5 py-0.5 text-gray-200",
+        active: "text-gray-200 bg-gray-700",
+        inactive: "hover:text-gray-200",
+      },
     },
     horizontalNavigation: {
       inner: "min-w-min",
@@ -38,6 +53,11 @@ export default defineAppConfig({
       rounded: "rounded-none",
       popper: {
         placement: "bottom-start",
+      },
+    },
+    table: {
+      td: {
+        base: "text-wrap",
       },
     },
   },

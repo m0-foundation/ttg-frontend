@@ -15,12 +15,22 @@
       />
     </div>
     <div class="flex items-center gap-1" :class="{ 'ml-[22px]': showAvatar }">
-      <NuxtLink class="hover:underline" :to="`/profile/${props.address}`">
+      <NuxtLink
+        v-if="link"
+        class="hover:underline"
+        :to="`/profile/${props.address}`"
+      >
         <span v-if="ensName">{{ ensName }}</span>
         <span v-else :title="props.address">{{
           shortAddress ? shortenAddress(props.address) : props.address
         }}</span>
       </NuxtLink>
+      <span v-else class="leading-tight">
+        <span v-if="ensName">{{ ensName }}</span>
+        <span v-else :title="props.address">{{
+          shortAddress ? shortenAddress(props.address) : props.address
+        }}</span>
+      </span>
 
       <img v-if="justCopied" class="min-w-5 h-5" src="/img/icons/check.svg" />
       <button v-else-if="showCopy" @click="copy(props.address)">
@@ -39,6 +49,7 @@ export interface MAddressAvatar {
   shortAddress?: boolean;
   showAvatar?: boolean;
   showCopy?: boolean;
+  link?: boolean;
 }
 
 const props = withDefaults(defineProps<MAddressAvatar>(), {
@@ -46,6 +57,7 @@ const props = withDefaults(defineProps<MAddressAvatar>(), {
   shortAddress: true,
   showAvatar: true,
   showCopy: false,
+  link: true,
 });
 
 const justCopied = ref(false);

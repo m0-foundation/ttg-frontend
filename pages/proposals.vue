@@ -27,14 +27,6 @@
           </span>
         </div>
       </template>
-      <template #top-right>
-        <UButton
-          class="hidden lg:block"
-          label="Create proposal"
-          color="black"
-          to="/proposal/create"
-        />
-      </template>
       <template #bottom-left>
         <UHorizontalNavigation
           :links="
@@ -43,13 +35,6 @@
           class="border-b border-gray-200 dark:border-gray-800"
         />
       </template>
-
-      <UButton
-        class="lg:hidden"
-        label="Create proposal"
-        color="black"
-        to="/proposal/create"
-      />
     </PageTitle>
 
     <UContainer class="py-8">

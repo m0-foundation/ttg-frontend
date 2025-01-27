@@ -1,20 +1,24 @@
 <template>
   <UPopover>
     <UButton
-      color="white"
-      variant="ghost"
-      class="font-inter active:bg-gray-300"
+      color="black"
+      variant="solid"
+      size="sm"
+      :ui="{ size: { sm: 'text-xs' }, variant: { ghost: 'text-white' } }"
     >
       <template #default>
         <span class="hidden md:block">Ecosystem</span>
       </template>
       <template #trailing>
-        <img src="~/assets/icons/ecosystem/ecosystem-dots.svg" />
+        <img
+          class="w-4 h-4"
+          src="~/assets/icons/ecosystem/ecosystem-dots.svg"
+        />
       </template>
     </UButton>
 
     <template #panel>
-      <div class="p-6 border-none">
+      <div class="p-4 border-none">
         <div class="flex justify-between gap-6">
           <NuxtLink
             v-for="app in apps"
@@ -25,7 +29,7 @@
             class="hover:opacity-90"
           >
             <div class="flex justify-center mb-1">
-              <img :src="app.icon" />
+              <img :src="app.icon" class="h-12" />
             </div>
             <h4 class="text-grey-800 text-sm">{{ app.name }}</h4>
           </NuxtLink>
@@ -41,21 +45,18 @@
 </template>
 
 <script setup>
-import squareBlack from "~/assets/icons/ecosystem/square-black.svg";
-import squareBlue from "~/assets/icons/ecosystem/square-blue.svg";
-import { useDisconnect } from "use-wagmi";
-
-const { disconnect } = useDisconnect();
+import governanceIcon from "~/assets/icons/ecosystem/governance.svg";
+import dashboardIcon from "~/assets/icons/ecosystem/dashboard.svg";
 
 const apps = [
   {
     name: "Governance",
-    icon: squareBlack,
+    icon: governanceIcon,
     link: "https://governance.m0.org",
   },
   {
     name: "Dashboard",
-    icon: squareBlue,
+    icon: dashboardIcon,
     link: "https://dashboard.m0.org",
   },
 ];
