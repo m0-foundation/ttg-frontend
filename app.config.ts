@@ -33,7 +33,7 @@ export default defineAppConfig({
         base: "text-white",
       },
       links: {
-        wrapper: "gap-x-2 pt-1",
+        wrapper: "gap-x-2",
         base: "font-medium px-2.5 py-0.5 text-gray-200",
         active: "text-gray-200 bg-gray-700",
         inactive: "hover:text-gray-200",

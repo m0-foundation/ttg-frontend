@@ -49,6 +49,7 @@
               color="red"
               variant="link"
               size="sm"
+              :padded="false"
               :ui="{ size: { sm: 'text-xs' } }"
               @click="[disconnect(), close()]"
             />
