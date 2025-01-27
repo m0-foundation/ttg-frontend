@@ -1,6 +1,6 @@
 <template>
   <section>
-    <PageTitle title="History" />
+    <PageTitle title="Proposals" />
     <UContainer class="py-4">
       <div class="flex gap-3">
         <USelectMenu

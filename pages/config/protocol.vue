@@ -1,6 +1,6 @@
 <template>
   <section class="flex flex-col gap-4">
-    <MIconLoading v-if="isLoading" />
+    <CommonLoader v-if="isLoading" />
     <ConfigParametersCard
       v-for="param in protocolDataSorted"
       v-else
