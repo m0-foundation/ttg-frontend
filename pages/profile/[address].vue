@@ -10,6 +10,7 @@
           :short-address="true"
           :address="address"
           :show-avatar="false"
+          :link="false"
         />
       </template>
     </PageTitle>
