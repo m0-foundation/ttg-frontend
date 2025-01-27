@@ -3,7 +3,6 @@
     <UContainer>
       <div class="flex justify-between gap-8 py-2 lg:py-4">
         <div>
-          <UBreadcrumb :links="links" divider="/" />
           <div class="min-h-[24px] mb-4">
             <slot name="pretitle"></slot>
           </div>
