@@ -2,18 +2,14 @@
   <UPopover>
     <UButton
       color="black"
-      variant="solid"
-      size="sm"
-      :ui="{ size: { sm: 'text-xs' }, variant: { ghost: 'text-white' } }"
+      :ui="{
+        icon: { size: { md: 'w-4 h-4' } },
+        color: { black: { solid: 'text-white bg-transparent' } },
+      }"
+      trailing-icon="i-mdi-dots-grid"
     >
       <template #default>
-        <span class="hidden md:block">Ecosystem</span>
-      </template>
-      <template #trailing>
-        <img
-          class="w-4 h-4"
-          src="~/assets/icons/ecosystem/ecosystem-dots.svg"
-        />
+        <span class="hidden xl:block">Ecosystem</span>
       </template>
     </UButton>
 

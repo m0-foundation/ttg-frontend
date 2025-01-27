@@ -29,6 +29,9 @@ export default defineAppConfig({
       left: "lg:flex-initial",
       logo: "text-white text-[20px] font-medium",
       wrapper: "bg-black",
+      button: {
+        base: "text-white",
+      },
       links: {
         wrapper: "gap-x-2 pt-1",
         base: "font-medium px-2.5 py-0.5 text-gray-200",

@@ -17,9 +17,7 @@
         <ConnectButton v-if="!isConnected" class="hidden lg:block" />
         <UButton
           v-if="isConnected"
-          size="sm"
           label="Create proposal"
-          :ui="{ size: { sm: 'text-xs' } }"
           to="/proposal/create"
           class="hidden lg:block"
           color="blue"
@@ -45,38 +43,36 @@ import { useAccount } from "use-wagmi";
 const { name } = useAppConfig();
 const { isConnected } = useAccount();
 
-const links = computed(() => {
-  return [
-    {
-      id: "home",
-      label: "Home",
-      to: "/proposals",
-    },
-    {
-      id: "proposals",
-      label: "Proposals",
-      to: "/history",
-    },
-    {
-      id: "actors",
-      label: "Actors",
-      to: "/actors",
-    },
-    {
-      id: "config",
-      label: "Config",
-      to: "/config",
-    },
-    {
-      id: "profile",
-      label: "Profile",
-      to: "/profile/me",
-    },
-  ];
-});
+const links = [
+  {
+    id: "home",
+    label: "Home",
+    to: "/proposals",
+  },
+  {
+    id: "proposals",
+    label: "Proposals",
+    to: "/history",
+  },
+  {
+    id: "actors",
+    label: "Actors",
+    to: "/actors",
+  },
+  {
+    id: "config",
+    label: "Config",
+    to: "/config",
+  },
+];
 
 const panelLinks = [
-  ...links.value,
+  ...links,
+  {
+    id: "profile",
+    label: "Profile",
+    to: "/profile/me",
+  },
   {
     id: "create-proposal",
     label: "Create proposal",

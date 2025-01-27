@@ -3,15 +3,16 @@
     <UPopover>
       <UButton
         color="black"
-        variant="solid"
         trailing-icon="i-heroicons-chevron-down-20-solid"
-        size="sm"
-        :ui="{ icon: { size: { sm: 'w-4 h-4' } }, gap: { sm: 'gap-x-1' } }"
+        :ui="{
+          icon: { size: { md: 'w-4 h-4' } },
+          color: { black: { solid: 'text-white bg-transparent' } },
+        }"
       >
         <MAddressAvatar
           :address="address"
           :link="false"
-          class="text-xs tracking-normal hidden lg:block"
+          class="tracking-normal hidden lg:block"
         />
         <Jazzicon :address="address" class="w-4 h-4 lg:hidden" :diameter="16" />
       </UButton>
