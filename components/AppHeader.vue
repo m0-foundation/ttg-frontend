@@ -1,43 +1,57 @@
 <template>
-  <UHeader :links="links" :ui="{ container: 'h-12' }">
+  <UHeader :links="links">
     <template #logo>
       <div class="flex items-center gap-4">
-        <img class="h-12" src="~/assets/images/m0_white_black.png" />
+        <img class="h-4 w-auto" src="~/assets/logos/m0.svg" />
+        <UDivider
+          orientation="vertical"
+          class="dark:text-red-700 h-10"
+          :ui="{ border: { base: 'dark:border-grey-700 border-grey-700' } }"
+        />
         {{ name }}
       </div>
     </template>
 
     <template #right>
-      <div class="flex items-center gap-4">
-        <ConnectButton class="hidden lg:block" />
+      <div class="flex items-center gap-1.5">
+        <ConnectButton v-if="!isConnected" class="hidden lg:block" />
+        <UButton
+          v-if="isConnected"
+          label="Create proposal"
+          to="/proposal/create"
+          class="hidden lg:block"
+          color="blue"
+        />
+        <HeaderProfilePopover v-if="isConnected" />
         <HeaderEcosystemMenu />
       </div>
     </template>
 
-    <template #center>
-      <UHorizontalNavigation :links="links" class="w-fit hidden lg:block" />
-    </template>
-
     <template #panel>
-      <UAsideLinks :links="links" />
-      <UDivider class="my-4" />
-      <ConnectButton class="lg:hidden" />
+      <UAsideLinks :links="panelLinks" />
+      <div v-if="!isConnected">
+        <UDivider class="my-4" />
+        <ConnectButton class="lg:hidden" />
+      </div>
     </template>
   </UHeader>
 </template>
 
 <script setup lang="ts">
+import { useAccount } from "use-wagmi";
+
 const { name } = useAppConfig();
+const { isConnected } = useAccount();
 
 const links = [
   {
     id: "home",
-    label: "Vote",
+    label: "Home",
     to: "/proposals",
   },
   {
     id: "proposals",
-    label: "History",
+    label: "Proposals",
     to: "/history",
   },
   {
@@ -50,10 +64,19 @@ const links = [
     label: "Config",
     to: "/config",
   },
+];
+
+const panelLinks = [
+  ...links,
   {
     id: "profile",
     label: "Profile",
     to: "/profile/me",
+  },
+  {
+    id: "create-proposal",
+    label: "Create proposal",
+    to: "/proposal/create",
   },
 ];
 </script>

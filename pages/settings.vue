@@ -1,7 +1,7 @@
 <template>
-  <form class="p-6 mx-auto max-w-3xl" @submit.prevent="onSubmit">
-    <PageTitle class="mb-8 lg:p-0">
-      Settings
+  <section>
+    <PageTitle title="Settings">
+      <template #pretitle>App /</template>
       <template #subtitle>
         For enhanced security measures, we suggest using a custom RPC URL. This
         entails either setting up your own RPC Node or contracting third-party
@@ -17,40 +17,38 @@
       </template>
     </PageTitle>
 
-    <div>
-      <div class="mb-6">
-        <div class="flex justify-between text-sm">
-          <label>Network Id: </label>
-          <label class="underline">{{ chainId }}</label>
+    <form class="p-6 mx-auto max-w-3xl" @submit.prevent="onSubmit">
+      <UCard>
+        <div class="mb-6">
+          <div class="flex justify-between text-sm">
+            <label>Network Id: </label>
+            <label class="underline">{{ chainId }}</label>
+          </div>
         </div>
-      </div>
 
-      <div>
-        <label>RPC URL</label>
+        <div>
+          <label>RPC URL</label>
 
-        <input
-          v-model="customRPC"
-          type="text"
-          placeholder="http://..."
-          data-test="settings-input-url-rpc"
-          class="mb-2"
-        />
-      </div>
+          <UInput
+            v-model="customRPC"
+            type="text"
+            placeholder="http://..."
+            data-test="settings-input-url-rpc"
+            class="mb-2"
+          />
+        </div>
 
-      <div class="flex justify-end">
-        <MButton type="submit" data-test="settings-button-submit">
-          Save
-        </MButton>
-      </div>
-    </div>
-  </form>
+        <div class="flex justify-end">
+          <UButton type="submit" data-test="settings-button-submit">
+            Save
+          </UButton>
+        </div>
+      </UCard>
+    </form>
+  </section>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: "page",
-});
-
 const alerts = useAlertsStore();
 const apiStore = useApiClientStore();
 const networkStore = useNetworkStore();
@@ -66,7 +64,7 @@ useHead({
 
 function onSubmit() {
   const newRpc = unref(customRPC);
-  if (!newRpc) return;
+  if (!newRpc) return alerts.errorAlert("RPC URL cannot be empty");
   if (newRpc.startsWith("http:"))
     return alerts.errorAlert("Only https (secure) connections allowed");
 

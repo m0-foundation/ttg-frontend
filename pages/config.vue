@@ -11,7 +11,11 @@
       <UContainer class="py-4">
         <NuxtPage />
       </UContainer>
-      <template #fallback> Loading... </template>
+      <template #fallback>
+        <UContainer>
+          <CommonLoader />
+        </UContainer>
+      </template>
     </Suspense>
   </section>
 </template>

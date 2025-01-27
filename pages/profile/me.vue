@@ -1,14 +1,6 @@
 <template>
   <section>
     <PageTitle>
-      <template #pretitle>
-        <MAddressAvatar
-          class="normal-case"
-          :short-address="!largerThanSm"
-          :address="address"
-          :show-avatar="false"
-        />
-      </template>
       <template #title> My Profile </template>
       <template #top-right>
         <NuxtLink to="/delegate/">
