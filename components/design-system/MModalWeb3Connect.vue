@@ -3,7 +3,7 @@
     <UButton
       id="button-connect-wallet"
       data-test="modal-web3-button-connect-wallet"
-      color="gray"
+      color="primary"
       @click="openModal"
     >
       Connect wallet
