@@ -59,8 +59,19 @@ export default defineAppConfig({
       },
     },
     table: {
+      divide: "divide-gray-200 dark:divide-gray-800",
+      default: {
+        sortButton: {
+          class: "text-grey-500 font-medium",
+        },
+      },
+      th: {
+        color: "text-grey-500",
+        font: "font-medium",
+      },
       td: {
         base: "text-wrap",
+        color: "text-black",
       },
     },
   },
