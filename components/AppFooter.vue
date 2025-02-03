@@ -7,14 +7,22 @@ const links = [];
 <template>
   <UFooter class="bg-[#F1F6FBED] dark:bg-inherit mt-8">
     <template #top>
-      <div class="mb-8 flex gap-2">
-        <template v-if="footer?.links">
+      <div class="mb-8 flex justify-between gap-2">
+        <div v-if="footer?.links">
           <UButton
             v-for="(link, index) of footer?.links"
             :key="index"
             v-bind="{ color: 'gray', variant: 'ghost', ...link }"
           />
-        </template>
+        </div>
+
+        <UButton
+          size="xs"
+          label="Settings"
+          to="/settings"
+          color="gray"
+          variant="link"
+        />
       </div>
       <UFooterColumns
         v-if="links.length"

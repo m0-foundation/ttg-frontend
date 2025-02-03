@@ -19,7 +19,9 @@
 
       <template #panel="{ close }">
         <div class="p-4 w-60">
-          <h3 class="uppercase text-xxs text-grey-500 mb-2">My voting power</h3>
+          <p class="uppercase text-xxs text-grey-500 mb-2 font-semibold">
+            My voting power
+          </p>
           <div class="flex flex-col gap-3">
             <div v-for="token in tokens" :key="token.label">
               <span class="text-sm">
