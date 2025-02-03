@@ -27,7 +27,7 @@
             <div class="flex justify-center mb-1">
               <img :src="app.icon" class="h-12" />
             </div>
-            <h4 class="text-grey-800 text-sm">{{ app.name }}</h4>
+            <h4 class="text-grey-800 text-sm font-inter">{{ app.name }}</h4>
           </NuxtLink>
         </div>
         <UDivider class="my-3" />
