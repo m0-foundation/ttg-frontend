@@ -5,14 +5,14 @@
       <div class="flex gap-3">
         <USelectMenu
           v-model="selectedType"
-          class="h-[32px] w-[170px] text-xs"
+          class="h-[32px] w-[190px] text-xs"
           :options="proposalTypes"
           placeholder="All types"
           multiple
         />
         <USelectMenu
           v-model="selectedEpoch"
-          class="h-[32px] w-[170px] text-xs"
+          class="h-[32px] w-[120px] text-xs"
           :options="epochNumbers"
           placeholder="All epochs"
           multiple
