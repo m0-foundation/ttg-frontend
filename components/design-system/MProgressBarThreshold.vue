@@ -3,7 +3,7 @@
     <div class="overflow-hidden h-2 mb-4 flex justify-between bg-gray-200">
       <div
         :style="`width: ${yes}%`"
-        class="shadow-none flex flex-col text-center whitespace-nowrap justify-center bg-[#5CC99E]"
+        class="shadow-none flex flex-col text-center whitespace-nowrap justify-center bg-accent-success]"
       />
       <div
         :style="`width: ${no}%`"

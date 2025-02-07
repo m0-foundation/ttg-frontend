@@ -15,6 +15,7 @@ module.exports = {
         "secondary-light": "#FFFFFF",
         "accent-blue": "#3759BA",
         "accent-mint": "#07F7BD",
+        "accent-success": "#5CC99E",
         "accent-teal": "#007E89",
         "blue-400": "#2154D9",
         "green-100": "#E6FFF9",

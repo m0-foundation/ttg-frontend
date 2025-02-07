@@ -59,8 +59,6 @@ const filteredLists = computed(() => {
     (item) => item.account + item.list,
   );
 
-  console.log(listsWithoutDuplicates);
-
   if (selectedList.value.length === 0) return listsWithoutDuplicates;
 
   return listsWithoutDuplicates.filter((obj) =>
