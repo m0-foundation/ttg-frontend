@@ -1,6 +1,7 @@
 <template>
   <div class="my-2">
     <UHorizontalNavigation :links="tabsLinks" />
+    <UDivider />
 
     <div v-if="selectedTab === 0">
       <ProfileTableVotes :votes="votes" />

@@ -2,14 +2,21 @@
   <section>
     <USelectMenu
       v-model="selectedList"
-      class="h-[32px] w-[170px] bg-transparent text-grey-100 text-xxs p-0 px-2 font-inter"
+      class="h-[32px] w-[170px]"
       :options="listsOptions"
       placeholder="All roles"
       multiple
-    />
+    >
+      <template #option="{ option }">
+        <span class="capitalize">{{ option }}</span>
+      </template>
+    </USelectMenu>
     <UTable :rows="filteredLists" :columns="listTableHeaders">
       <template #account-data="{ row }">
         <MAddressCopy :short-address="false" show-copy :address="row.account" />
+      </template>
+      <template #list-data="{ row }">
+        <span class="capitalize">{{ row.list }}</span>
       </template>
       <template #timestamp-data="{ row }">
         <span class="text-grey-600">{{

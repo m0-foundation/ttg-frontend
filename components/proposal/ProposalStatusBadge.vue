@@ -39,10 +39,10 @@ defineProps({
 
 <style scoped>
 .item {
-  @apply text-xs lg:text-sm flex items-center font-mono py-1 px-2 lg:px-3;
+  @apply text-xs lg:text-sm flex items-center py-1 px-2 lg:px-3;
 }
 .status-button {
-  @apply text-grey-600 uppercase;
+  @apply text-grey-600 capitalize;
 }
 .active {
   @apply bg-green-900 text-accent-mint;

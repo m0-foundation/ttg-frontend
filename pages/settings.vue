@@ -17,7 +17,7 @@
       </template>
     </PageTitle>
 
-    <form class="p-6 mx-auto max-w-3xl" @submit.prevent="onSubmit">
+    <form class="p-6 mx-auto max-w-5xl" @submit.prevent="onSubmit">
       <UCard>
         <div class="mb-6">
           <div class="flex justify-between text-sm">

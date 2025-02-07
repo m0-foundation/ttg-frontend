@@ -10,7 +10,7 @@
     ]"
   >
     <div>
-      <div class="bg-green-700 h-2" :style="`width: ${width}%`" />
+      <div class="bg-accent-success h-2" :style="`width: ${width}%`" />
     </div>
   </div>
 </template>

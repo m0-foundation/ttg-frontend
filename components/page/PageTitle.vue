@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#F1F6FBED] dark:bg-inherit">
+  <div class="bg-grey-200 dark:bg-inherit">
     <UContainer>
       <div class="flex justify-between gap-8 py-2 lg:py-4">
         <div>
@@ -10,7 +10,7 @@
             <span v-if="title">{{ title }}</span>
             <slot v-else name="title"></slot>
           </h1>
-          <div class="min-h-[20px] mt-2 text-sm">
+          <div class="min-h-[20px] mt-2 text-sm text-grey-500">
             <slot name="subtitle"></slot>
           </div>
         </div>

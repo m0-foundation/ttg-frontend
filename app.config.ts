@@ -13,6 +13,15 @@ export default defineAppConfig({
     },
     button: {
       rounded: "rounded-none",
+      color: {
+        gray: {
+          solid:
+            "disabled:bg-grey-200 disabled:text-grey-500 disabled:border-none bg-[#E9F0F7] hover:bg-grey-200 ring-grey-200 shadow-none",
+        },
+        primary: {
+          solid: "bg-accent-blue hover:bg-blue-400 ring-none text-white",
+        },
+      },
       default: {
         color: "gray",
       },
@@ -28,7 +37,7 @@ export default defineAppConfig({
       container: "gap-8",
       left: "lg:flex-initial",
       logo: "text-white text-[20px] font-medium",
-      wrapper: "bg-black",
+      wrapper: "bg-grey-1000 border-none",
       button: {
         base: "text-white",
       },
@@ -45,29 +54,45 @@ export default defineAppConfig({
     },
     input: {
       rounded: "rounded-none",
+      color: {
+        white: {
+          outline: "shadow-none",
+        },
+      },
     },
     popover: {
       rounded: "rounded-none",
     },
     select: {
       rounded: "rounded-none",
+      color: {
+        white: {
+          outline: "shadow-none",
+        },
+      },
     },
     selectMenu: {
       rounded: "rounded-none",
+      labe: "block",
       popper: {
         placement: "bottom-start",
+      },
+    },
+    tabs: {
+      tab: {
+        font: "font-normal",
       },
     },
     table: {
       divide: "divide-gray-200 dark:divide-gray-800",
       default: {
         sortButton: {
-          class: "text-grey-500 font-medium",
+          class: "text-grey-500 font-normal",
         },
       },
       th: {
         color: "text-grey-500",
-        font: "font-medium",
+        font: "font-normal",
       },
       td: {
         base: "text-wrap",

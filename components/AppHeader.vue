@@ -20,7 +20,7 @@
           label="Create proposal"
           to="/proposal/create"
           class="hidden lg:block"
-          color="blue"
+          color="primary"
         />
         <HeaderProfilePopover v-if="isConnected" />
         <HeaderEcosystemMenu />

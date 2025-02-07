@@ -18,15 +18,20 @@
       </template>
     </PageTitle>
 
-    <div v-if="!canDelegate && !isConnected" class="bg-accent-blue p-6 mb-6">
-      <span class="uppercase mb-2 text-xs">Warning</span>
-      <div class="flex items-center gap-3">
-        <MIconWarning class="min-w-6" />
-        <p>You need to connect a wallet to delegate your voting power.</p>
-      </div>
+    <div
+      v-if="!canDelegate && !isConnected"
+      class="bg-accent-blue text-white p-4 mb-6"
+    >
+      <UContainer>
+        <span class="uppercase mb-2 text-xs">Warning</span>
+        <div class="flex items-center gap-3">
+          <MIconWarning class="min-w-6" />
+          <p>You need to connect a wallet to delegate your voting power.</p>
+        </div>
+      </UContainer>
     </div>
 
-    <UContainer class="py-4">
+    <UContainer :ui="{ constrained: 'max-w-5xl' }" class="py-4">
       <UCard>
         <form class="font-inter" @submit.prevent="delegatePower">
           <div>
@@ -52,7 +57,7 @@
             </div>
 
             <div v-if="!canDelegate">
-              <div class="bg-accent-blue text-grey-200 p-6 mb-6">
+              <div class="bg-accent-blue text-grey-200 p-4 mb-6">
                 <span class="uppercase mb-2 text-xs">Warning</span>
                 <div class="flex items-start gap-3">
                   <MIconWarning class="min-w-6" />

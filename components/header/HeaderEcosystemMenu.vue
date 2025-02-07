@@ -14,7 +14,7 @@
     </UButton>
 
     <template #panel>
-      <div class="p-4 border-none">
+      <div class="p-6 border-none">
         <div class="flex justify-between gap-6">
           <NuxtLink
             v-for="app in apps"
@@ -32,7 +32,11 @@
         </div>
         <UDivider class="my-3" />
         <UVerticalNavigation
-          :ui="{ base: 'font-inter underline text-grey-500', padding: 'p-1' }"
+          :ui="{
+            base: 'font-inter underline text-grey-500 font-regular',
+            padding: 'p-1',
+            font: 'font-normal',
+          }"
           :links="links"
         />
       </div>

@@ -4,10 +4,10 @@
     :rows="earnersClaimants || []"
     :columns="earnersClaimantsHeaders"
   >
-    <template #earner="{ row }">
+    <template #earner-data="{ row }">
       <MAddressCopy :short-address="false" show-copy :address="row.earner" />
     </template>
-    <template #claimant="{ row }">
+    <template #claimant-data="{ row }">
       <MAddressCopy :short-address="false" show-copy :address="row.claimant" />
     </template>
   </UTable>
