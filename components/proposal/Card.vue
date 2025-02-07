@@ -29,9 +29,9 @@
       />
 
       <div class="mb-4 text-xl lg:text-2xl break-words">
-        <h3>
+        <NuxtLink tag="h3" :to="`/proposal/${proposal.proposalId}`">
           {{ title }}
-        </h3>
+        </NuxtLink>
       </div>
 
       <div class="text-grey-500 max-lg:text-sm font-inter mb-4 break-words">
@@ -41,7 +41,7 @@
       <button
         id="show-details"
         type="button"
-        class="uppercase text-xs flex justify-between hover:underline border border-grey-700 w-full p-3 my-4"
+        class="uppercase text-xs flex justify-between hover:underline border border-gray-200 w-full p-3 my-4"
         data-test="proposal-button-show-details"
         @click="onViewProposal"
       >
@@ -135,7 +135,7 @@
             <input
               v-model="reasonForVoteCheckbox"
               type="checkbox"
-              class="w-3 h-3 accent-accent-mint"
+              class="w-3 h-3 accent-alert-success"
               data-test="reason-vote-checkbox"
             />
             Share with others why you made this choice. This can cost a little
@@ -143,14 +143,16 @@
           </label>
         </div>
 
-        <textarea
-          v-if="reasonForVoteCheckbox"
-          id="reason-vote"
-          ref="reasonForVoteTextarea"
-          v-model="reasonForVote"
-          class="reason-textarea"
-          data-test="reason-vote-textarea"
-        ></textarea>
+        <div>
+          <UTextarea
+            v-if="reasonForVoteCheckbox"
+            id="reason-vote"
+            ref="reasonForVoteTextarea"
+            v-model="reasonForVote"
+            class="reason-textarea"
+            data-test="reason-vote-textarea"
+          ></UTextarea>
+        </div>
       </div>
 
       <div

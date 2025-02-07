@@ -23,15 +23,15 @@ withDefaults(defineProps<MButtonProps>(), {
 
 <style>
 .default {
-  @apply text-grey-100 border border-grey-700 bg-grey-700 hover:bg-grey-600;
+  @apply text-grey-900 border border-gray-200 hover:bg-grey-200;
 }
 
 .active {
-  @apply text-grey-900 bg-accent-mint;
+  @apply text-white bg-alert-success;
 }
 
 button:disabled {
-  @apply border border-grey-600   opacity-50 cursor-not-allowed;
+  @apply border border-grey-500   opacity-50 cursor-not-allowed;
 }
 
 button:disabled .outside-circle {
@@ -39,11 +39,11 @@ button:disabled .outside-circle {
 }
 
 .outside-circle {
-  @apply w-3 h-3 left-0 top-0 absolute rounded-full border border-grey-100;
+  @apply w-3 h-3 left-0 top-0 absolute rounded-full border border-grey-500;
 }
 
 .active .outside-circle {
-  @apply border-grey-900;
+  @apply border-white;
 }
 
 .internal-circle {
@@ -51,6 +51,6 @@ button:disabled .outside-circle {
 }
 
 .active .internal-circle {
-  @apply block  bg-grey-900;
+  @apply block  bg-white;
 }
 </style>

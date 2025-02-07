@@ -7,32 +7,23 @@
         hasProposals &&
         hasPowerVotingPower
       "
-      class="p-8 py-6 bg-grey-200 font-inter flex flex-col gap-3 text-grey-600 mb-6"
+      class="p-8 py-6 bg-blue-grey font-inter flex flex-col gap-3 text-[#00315B] mb-6"
     >
-      <div class="flex flex-col lg:flex-row gap-3 items-start">
+      <div class="flex flex-col justify-between lg:flex-row gap-3 items-start">
         <div>
-          <div class="text-grey-800 lg:text-xl tracking-tightest">
-            <span class="text-accent-blue">Vote on all </span>
-            Standard proposals in this epoch to:
+          <div class="lg:text-xl tracking-tightest">
+            <h3 class="text-2xl mb-1">Vote on all Standard proposals</h3>
             <ul class="list-disc mx-4 text-sm">
-              <li>
-                Preserve your
-                <span class="text-accent-blue">voting power</span> for the next
-                epoch.
-              </li>
+              <li>Preserve your voting power for the next epoch.</li>
               <li v-if="Number(powerInflation) != 0">
-                Increase your
-                <span class="text-accent-blue">
-                  balance by {{ useNumberFormatterPrice(powerInflation) }} POWER
-                </span>
-                in the next epoch as inflation.
+                Increase your balance by
+                {{ useNumberFormatterPrice(powerInflation) }} POWER in the next
+                epoch as inflation.
               </li>
               <li v-if="Number(zeroInflation) != 0">
                 Receive
-                <span class="text-accent-blue">
-                  {{ useNumberFormatterPrice(zeroInflation) }} ZERO
-                </span>
-                as rewards
+
+                {{ useNumberFormatterPrice(zeroInflation) }} ZERO as rewards
               </li>
             </ul>
           </div>
@@ -60,7 +51,9 @@
             Learn more
           </a>
         </div>
-        <MIconWarning class="w-8 hidden lg:block" />
+        <div class="w-40 flex justify-center">
+          <img class="h-32" src="/img/common/banner-m.svg" />
+        </div>
       </div>
     </div>
     <div>
@@ -82,13 +75,13 @@
         v-show="hasProposals && isConnected && !hasVotedOnAllProposals"
         class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8"
         :class="{
-          'bg-grey-700': isSelectedCastProposalsFull,
+          'bg-grey-200': isSelectedCastProposalsFull,
         }"
       >
         <span v-if="!isSelectedCastProposalsFull" class="text-xxs">
           Select YES or NO to submit your vote
         </span>
-        <MButton
+        <UButton
           id="button-cast-submit"
           class="w-full lg:w-40 flex justify-center"
           :disabled="
@@ -96,10 +89,12 @@
           "
           :is-loading="isLoading"
           data-test="proposal-button-submit-votes"
+          color="primary"
+          size="lg"
           @click="onCastBatchVotes"
         >
-          submit
-        </MButton>
+          Submit
+        </UButton>
       </div>
     </div>
   </div>

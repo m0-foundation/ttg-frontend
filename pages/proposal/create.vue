@@ -132,11 +132,11 @@
             Submission tax:
             <div v-if="hasToPayFee" class="flex items-center gap-2">
               {{ ttgValuesFormatted.setProposalFee }}
-              <MIconWeth />
+              <MIconWeth class="w-5 h-5" />
             </div>
             <div v-else class="flex items-center gap-2">
               0
-              <MIconWeth />
+              <MIconWeth class="w-5 h-5" />
             </div>
           </div>
         </div>
@@ -167,6 +167,7 @@
             data-test="create-proposal-button-submit"
             label="Submit"
             size="lg"
+            color="primary"
           />
         </div>
         <div v-else class="flex justify-end mt-6">
@@ -176,6 +177,7 @@
             :disabled="isDisconnected || !userHasEnoughBalance"
             label="Preview and submit"
             size="lg"
+            color="primary"
             @click="onPreview"
           />
         </div>

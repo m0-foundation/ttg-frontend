@@ -2,12 +2,12 @@
   <UCard class="flex flex-col gap-4">
     <div class="flex gap-4 justify-between flex-wrap mb-2">
       <div class="lg:flex-1">
-        <h3 class="text-xl">{{ param?.title }}</h3>
+        <h3 class="text-xl font-medium">{{ param?.title }}</h3>
         <UBadge :label="param?.key" color="gray" />
       </div>
       <div class="flex gap-4 max-lg:order-2 max-lg:w-full">
         <div class="lg:text-end">
-          <p class="lg:text-2xl">
+          <p class="lg:text-2xl font-medium">
             {{ formattedValue(param) }}
           </p>
           <UBadge color="gray">
