@@ -3,7 +3,7 @@
     <MdEditor
       v-model="value"
       language="en-US"
-      theme="dark"
+      theme="light"
       :preview="largerThanSm"
     />
   </div>
@@ -39,5 +39,11 @@ const hasErrors = computed(() => props.errors?.length);
 }
 .md-editor-footer-label {
   margin-bottom: 0 !important;
+}
+.md-editor-toolbar-wrapper {
+  @apply bg-grey-200;
+}
+.md-editor {
+  @apply border-[#E0ECF4];
 }
 </style>

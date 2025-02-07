@@ -8,6 +8,7 @@
               ? 'The Transfer Epoch is a non-voting period where transfers and delegation are enabled.'
               : 'The Voting Epoch is where voting takes place on Standard Proposals and transfers and delegation are disabled.'
           "
+          :ui="{ base: 'text-clip h-auto' }"
         >
           <span class="capitalize">{{
             epoch?.current?.type.toLowerCase()
@@ -15,16 +16,17 @@
         </UTooltip>
         <span>
           epoch
-          <span class="text-primary text-2xl">#{{ phasesEpoch }}</span></span
-        >
+          <span class="text-accent-blue max-lg:block text-sm lg:text-2xl">
+            #{{ phasesEpoch }} <span>·</span>
+            <span v-if="nextEpochAsTimeLeft">
+              Ends {{ nextEpochAsTimeLeft }}
+            </span>
+          </span>
+        </span>
       </template>
       <template #subtitle>
         <div class="flex items-center gap-3 text-grey-500 text-xxs lg:text-xs">
           <span> {{ currentEpochAsDate }} - {{ nextEpochAsDate }}</span>
-          <span>·</span>
-          <span v-if="nextEpochAsTimeLeft">
-            Ends {{ nextEpochAsTimeLeft }}
-          </span>
         </div>
       </template>
       <template #bottom-left>

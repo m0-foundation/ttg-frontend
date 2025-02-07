@@ -7,6 +7,7 @@
           <UButton
             class="w-full justify-center"
             data-test="profile-button-redelegate"
+            color="primary"
           >
             Delegate
           </UButton>
@@ -31,9 +32,7 @@
 
 <script setup lang="ts">
 import { useAccount } from "use-wagmi";
-import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
-const largerThanSm = useBreakpoints(breakpointsTailwind).greater("sm");
 const { address } = useAccount();
 
 useHead({

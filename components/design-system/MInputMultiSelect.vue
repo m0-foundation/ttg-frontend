@@ -40,7 +40,7 @@
         >
           <div
             v-show="opt.header"
-            class="uppercase text-xs text-grey-600 px-4 py-2"
+            class="uppercase text-xs text-grey-500 px-4 py-2"
           >
             {{ opt.header }}
           </div>
@@ -105,11 +105,11 @@
               <div>
                 <MIconPower
                   v-if="['Standard', 'Emergency'].includes(opt.votingType)"
-                  class="w-[24px] h-[24px]"
+                  class="w-[16px] h-[16px]"
                 />
                 <MIconZero
                   v-if="['Zero'].includes(opt.votingType)"
-                  class="w-[24px] h-[24px]"
+                  class="w-[16px] h-[16px]"
                 />
               </div>
             </button>
@@ -192,10 +192,10 @@ function onOut() {
 }
 
 .emergency {
-  @apply border-t-2 border-[#202220] border-opacity-20;
+  @apply border-t border-[#202220] border-opacity-20;
 }
 
 .dropdown-menu-items {
-  @apply dark:bg-grey-800 text-grey-600 dark:text-grey-200 !important;
+  @apply dark:bg-grey-800 text-grey-900 dark:text-grey-200 !important;
 }
 </style>

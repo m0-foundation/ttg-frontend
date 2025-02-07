@@ -35,8 +35,8 @@
         :current-proposal-values="currentProposalValuesFormatted"
       />
 
-      <div class="mt-8">
-        <div class="text-grey-900 border-t border-grey-200 border-dashed py-4">
+      <div class="mt-4">
+        <div class="text-grey-900 py-4">
           <h3 class="text-xl">Voters</h3>
         </div>
 

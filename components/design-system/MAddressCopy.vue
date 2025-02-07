@@ -8,12 +8,17 @@
       </div>
 
       <UButton
-        :icon="justCopied ? 'i-heroicons-check' : 'i-heroicons-clipboard'"
         variant="ghost"
         color="gray"
         size="xs"
+        :padded="false"
         @click="copy(props.address)"
-      />
+      >
+        <template #trailing>
+          <MIconCheck v-if="justCopied" />
+          <MIconCopy v-else />
+        </template>
+      </UButton>
     </div>
   </span>
 </template>

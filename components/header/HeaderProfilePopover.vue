@@ -14,11 +14,11 @@
           :link="false"
           class="tracking-normal hidden lg:block"
         />
-        <Jazzicon :address="address" class="w-4 h-4 lg:hidden" :diameter="16" />
+        <Jazzicon :address="address" class="w-5 h-5 lg:hidden" :diameter="16" />
       </UButton>
 
       <template #panel="{ close }">
-        <div class="p-4 w-60">
+        <div class="p-6 w-72">
           <p class="uppercase text-xxs text-grey-500 mb-2 font-semibold">
             My voting power
           </p>
@@ -34,7 +34,7 @@
                     {{ token.votingPower }}%
                   </span>
                 </div>
-                <span class="text-xs text-grey-500 mb-0.5">{{
+                <span class="text-sm text-grey-500 mb-0.5">{{
                   useNumberFormatterPrice(String(token.balance), 0, 2)
                 }}</span>
               </div>
@@ -48,11 +48,11 @@
             />
             <UButton
               label="Disconnect"
-              color="red"
+              color="black"
               variant="link"
               size="sm"
+              class="underline"
               :padded="false"
-              :ui="{ size: { sm: 'text-xs' } }"
               @click="[disconnect(), close()]"
             />
           </div>

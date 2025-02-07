@@ -8,7 +8,7 @@
     </PageTitle>
 
     <Suspense>
-      <UContainer class="py-4">
+      <UContainer :ui="{ constrained: 'max-w-5xl' }" class="py-4">
         <NuxtPage />
       </UContainer>
       <template #fallback>

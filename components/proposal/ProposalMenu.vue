@@ -17,7 +17,7 @@ const url = useRequestURL();
 const dropdownItems = ref([
   [
     {
-      label: "Copy proposal url",
+      label: "Copy proposal URL",
       icon: "i-heroicons-clipboard",
       click: () =>
         copyToClipboard(`${url.origin}/proposal/${props.proposal.proposalId}`),
