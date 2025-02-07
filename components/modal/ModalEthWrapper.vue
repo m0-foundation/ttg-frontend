@@ -10,7 +10,7 @@
         v-if="show"
         class="fixed top-0 z-50 w-full h-dvh flex items-center justify-center bg-grey-1000 bg-opacity-70"
       >
-        <div ref="dialog" class="p-6 bg-grey-800">
+        <div ref="dialog" class="p-6 bg-grey-200">
           <div class="mb-2 text-xl flex items-center justify-between">
             <span>Convert ETH to WETH</span>
             <button @click="show = false">
@@ -18,7 +18,7 @@
             </button>
           </div>
           <div>
-            <p class="text-grey-200 font-inter text-sm">
+            <p class="text-grey-900 font-inter text-sm">
               To pay the submission fee, please wrap your ETH. Only ETH as
               ERC-20 tokens are allowed.
             </p>

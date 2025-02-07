@@ -56,6 +56,7 @@ const proposalsLinks = computed(() => [
     label: "Standard",
     to: "/proposals/",
     badge: standardProposals.value || 0,
+    exact: true,
   },
   {
     label: "Priority",
