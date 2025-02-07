@@ -1,6 +1,6 @@
 {
   "name": "mzero-ttg-dapp",
-  "version": "1.4.6",
+  "version": "2.0.1",
   "private": true,
   "engines": {
     "node": ">=18.18"
@@ -61,7 +61,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^7.5.0-alpha.1",
-    "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3",
     "unplugin-auto-import": "^0.17.5",
@@ -69,6 +68,7 @@
     "vite-plugin-node-polyfills": "^0.21.0"
   },
   "dependencies": {
+    "@nuxt/ui-pro": "^1.6.0",
     "@pinia/nuxt": "^0.5.1",
     "@tanstack/vue-query": "^5.28.4",
     "@types/lodash": "^4.17.0",

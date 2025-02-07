@@ -1,105 +1,83 @@
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- power -->
-    <div class="p-6 bg-grey-800">
+    <UCard class="bg-grey-200">
       <div class="flex justify-between w-full items-center">
-        <div class="flex items-center gap-4">
-          <MIconPower class="h-8 w-8" />
-          <p class="text-xl">POWER Token</p>
-        </div>
+        <h3 class="text-xl">POWER Tokens</h3>
         <div>
           <ProfileTokenMenu :token="getTokens?.power" />
         </div>
       </div>
 
-      <div class="flex justify-between gap-4 mt-8 mb-4">
-        <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
-            Voting power
-          </p>
-          <div class="flex items-center align-middle gap-2">
-            <p class="text-xl lg:text-xl text-grey-100 mt-2">
-              {{
-                useNumberFormatterPrice(
-                  powerVotingPower?.data.value?.formatted || 0,
-                )
-              }}
-            </p>
-          </div>
-          <p class="text-xs text-grey-600 mt-2">
-            {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
-            <span class="mx-1 uppercase text-xxs">
-              out of total voting power
-            </span>
-          </p>
-        </div>
-
-        <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
-            Token Balance
-          </p>
-          <div class="flex items-center align-middle gap-2">
-            <p class="lg:text-xl text-grey-100 mt-2">
-              {{
-                useNumberFormatterPrice(
-                  balancePowerToken?.data.value?.formatted || 0n,
-                )
-              }}
-            </p>
-          </div>
+      <div class="flex justify-between mt-3">
+        <span>My token balance</span>
+        <div class="flex items-center gap-2">
+          <MIconPower class="w-4 h-4" />
+          <span>{{
+            useNumberFormatterPrice(
+              balancePowerToken?.data.value?.formatted || 0n,
+            )
+          }}</span>
         </div>
       </div>
-    </div>
-    <!-- zero -->
-    <div class="p-6 bg-grey-800">
-      <div class="flex justify-between w-full items-center">
-        <div class="flex items-center gap-4">
-          <MIconZero class="h-8 w-8" />
-          <p class="text-xl">Zero Token</p>
+
+      <UDivider class="my-3" />
+
+      <div>
+        <span>Voting power</span>
+        <div class="flex items-center gap-2 mt-2">
+          <MIconPower class="w-5 h-5" />
+          <span class="text-xl font-ppformula leading-none">{{
+            useNumberFormatterPrice(
+              powerVotingPower?.data.value?.formatted || 0n,
+            )
+          }}</span>
         </div>
+        <p class="text-xs text-grey-500 mt-2">
+          {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
+          <span class="mx-1 text-xxs"> out of total voting power </span>
+        </p>
+      </div>
+    </UCard>
+    <!-- zero -->
+    <UCard class="bg-grey-200">
+      <div class="flex justify-between w-full items-center">
+        <h3 class="text-xl">ZERO Tokens</h3>
         <div>
           <ProfileTokenMenu :token="getTokens?.zero" />
         </div>
       </div>
 
-      <div class="gap-4 mt-8 mb-4 flex justify-between">
-        <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
-            Voting power
-          </p>
-          <div class="flex items-center align-middle gap-2">
-            <p class="text-xl lg:text-xl text-grey-100 mt-2">
-              {{
-                useNumberFormatterPrice(
-                  zeroVotingPower?.data.value?.formatted || 0,
-                )
-              }}
-            </p>
-          </div>
-          <p class="text-xs text-grey-600 mt-2">
-            {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
-            <span class="mx-1 uppercase text-xxs">
-              out of total voting power
-            </span>
-          </p>
-        </div>
-
-        <div>
-          <p class="text-grey-500 text-xs mb-2 font-inter text-nowrap">
-            Token Balance
-          </p>
-          <div class="flex items-center align-middle gap-2">
-            <p class="lg:text-xl text-grey-100 mt-2">
-              {{
-                useNumberFormatterPrice(
-                  balanceZeroToken?.data.value?.formatted || 0,
-                )
-              }}
-            </p>
-          </div>
+      <div class="flex justify-between mt-3">
+        <span>My token balance</span>
+        <div class="flex items-center gap-2">
+          <MIconPower class="w-4 h-4" />
+          <span>{{
+            useNumberFormatterPrice(
+              balanceZeroToken?.data.value?.formatted || 0n,
+            )
+          }}</span>
         </div>
       </div>
-    </div>
+
+      <UDivider class="my-3" />
+
+      <div>
+        <span>Voting power</span>
+        <div class="flex items-center gap-2 mt-2">
+          <MIconPower class="w-5 h-5" />
+          <span class="text-xl font-ppformula leading-none">{{
+            useNumberFormatterPrice(
+              zeroVotingPower?.data.value?.formatted || 0n,
+            )
+          }}</span>
+        </div>
+        <p class="text-xs text-grey-500 mt-2">
+          {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
+          <span class="mx-1 text-xxs"> out of total voting power </span>
+        </p>
+      </div>
+    </UCard>
   </div>
 </template>
 

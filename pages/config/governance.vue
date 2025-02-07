@@ -1,34 +1,25 @@
 <template>
-  <NuxtLayout class="px-6 lg:p-0" name="config">
-    <section class="flex flex-col gap-4">
-      <ConfigParametersCard
-        v-for="param in mutableParametersWithData"
-        :key="param.key"
-        :param="param"
-      />
+  <section class="flex flex-col gap-4">
+    <ConfigParametersCard
+      v-for="param in mutableParametersWithData"
+      :key="param.key"
+      :param="param"
+    />
 
-      <MSimpleTable
-        :items="inmutableTableData"
-        :fields="governanceTablesHeaders"
-      >
-        <template #header-left>
-          <h3 class="text-grey-500 font-inter mt-4 mb-2">
-            Immutable Parameters
-          </h3>
-        </template>
-        <template #cell(value)="{ value }">
-          <MAddressCopy
-            :address="value"
-            :short-address="false"
-            :show-copy="true"
-          />
-        </template>
-        <template #cell(description)="{ value }">
-          <div class="max-sm:min-w-72">{{ value }}</div>
-        </template>
-      </MSimpleTable>
-    </section>
-  </NuxtLayout>
+    <UTable
+      class="mt-4"
+      :rows="inmutableTableData"
+      :columns="governanceTablesHeaders"
+    >
+      <template #value-data="{ row }">
+        <MAddressCopy
+          :address="row.value"
+          :short-address="false"
+          :show-copy="true"
+        />
+      </template>
+    </UTable>
+  </section>
 </template>
 
 <script lang="ts" setup>
@@ -51,7 +42,7 @@ const parametersData = [
     unit: "BPS",
   },
   {
-    title: "Zero Proposal Threshold Ratio",
+    title: "ZERO Proposal Threshold Ratio",
     key: "zeroProposalThresholdRatio",
     description:
       "The percentage of yes votes from the total ZERO supply required to pass proposals that require a ZERO Threshold.",
@@ -141,7 +132,7 @@ const mutableParametersWithData = computed(() =>
 );
 
 const governanceTablesHeaders = [
-  { key: "title", label: "Name", sortable: true },
+  { key: "title", label: "Name" },
   { key: "description", label: "Description" },
   { key: "value", label: "Value" },
 ];

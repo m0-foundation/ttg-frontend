@@ -4,8 +4,6 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 
-console.dir(process.env);
-
 const getAuctionActive = () => {
   if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "true") {
     return true;
@@ -17,12 +15,15 @@ const getAuctionActive = () => {
   return null;
 };
 const auctionActive = getAuctionActive();
-console.log("auctionActive", auctionActive);
+
 export default defineNuxtConfig({
   alias: {
     color: "color/index.js",
     "mersenne-twister": "mersenne-twister/src/mersenne-twister.js",
   },
+
+  css: ["~/assets/css/main.css"],
+
   runtimeConfig: {
     public: {
       walletConnectProjectId: process.env.VITE_APP_WALLET_CONNECT_PROJECT_ID,
@@ -33,20 +34,28 @@ export default defineNuxtConfig({
       },
     },
   },
+
   ssr: false,
+
+  colorMode: {
+    preference: "light",
+  },
+
   components: [
     "~/components/design-system",
     "~/components/layout",
     "~/components",
   ],
-  // https://tailwindcss.nuxtjs.org/getting-started/setup
+
   modules: [
-    "@nuxtjs/tailwindcss",
+    "@nuxt/ui",
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@nuxt/devtools",
     "floating-vue/nuxt",
   ],
+
+  //no router is ignored
   ignore:
     auctionActive === true
       ? [
@@ -59,10 +68,13 @@ export default defineNuxtConfig({
         ]
       : auctionActive === false
         ? ["pages/auction.vue", "pages/rewards.vue"]
-        : undefined, //no router is ignored
+        : undefined,
+
   imports: {
     dirs: ["./stores"],
   },
+
+  extends: ["@nuxt/ui-pro"],
 
   vite: {
     resolve: {
@@ -112,4 +124,6 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+
+  compatibilityDate: "2025-01-05",
 });

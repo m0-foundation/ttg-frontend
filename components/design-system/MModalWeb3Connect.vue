@@ -1,12 +1,13 @@
 <template>
   <slot :connect="openModal">
-    <MButton
+    <UButton
       id="button-connect-wallet"
       data-test="modal-web3-button-connect-wallet"
+      color="primary"
       @click="openModal"
     >
-      Connect Wallet
-    </MButton>
+      Connect wallet
+    </UButton>
   </slot>
 
   <Teleport to="body">
@@ -14,13 +15,13 @@
       v-if="open"
       id="modal-backdrop"
       ref="modal-backdrop"
-      class="fixed z-50 lg:z-40 inset-0 overflow-y-auto bg-grey-900"
+      class="fixed z-50 lg:z-40 inset-0 overflow-y-auto bg-grey-1000"
     >
       <div class="flex items-center justify-center min-h-screen">
         <div ref="connectModal" class="w-full max-w-xl">
           <div class="flex flex-wrap flex-col">
             <div class="bg-grey-900 text-white p-3 lg:p-6">
-              <p class="text-3xl text-center">Connect Wallet</p>
+              <p class="text-3xl text-center font-ppformula">Connect Wallet</p>
               <p
                 class="font-inter text-center text-grey-500 leading-normal mt-2 max-sm:text-sm"
               >

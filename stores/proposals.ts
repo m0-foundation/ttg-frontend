@@ -101,7 +101,6 @@ export const useProposalsStore = defineStore("proposals", {
         ...proposalStored,
         ...proposalMutable,
       } as MProposal;
-      console.log("newProposal", { newProposal });
       this.update(newProposal);
     },
   },

@@ -34,15 +34,15 @@
       </p>
     </div>
 
-    <div
+    <UCard
       v-show="parameter?.description || parameter?.shortDescription"
-      class="bg-grey-800 bg-opacity-85 flex flex-col gap-3 p-4 mt-2"
+      class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-3 p-4 mt-2"
     >
-      <span class="uppercase text-xxs">Parameter description</span>
+      <label>Parameter description</label>
       <p class="font-inter">
         {{ parameter?.description || parameter?.shortDescription }}
       </p>
-    </div>
+    </UCard>
   </div>
 </template>
 
@@ -81,14 +81,14 @@ const configParams = [
     value: "setZeroProposalThresholdRatio",
     label: "ZERO Threshold",
     shortDescription:
-      "Update the number of yes votes required to pass Zero proposals.",
+      "Update the number of yes votes required to pass ZERO proposals.",
     id: "setZeroProposalThresholdRatio",
   },
   {
     value: "setEmergencyProposalThresholdRatio",
-    label: "Power Threshold",
+    label: "POWER Threshold",
     shortDescription:
-      "Update the number of yes votes required to pass Power proposals.",
+      "Update the number of yes votes required to pass POWER proposals.",
     id: "setEmergencyProposalThresholdRatio",
   },
 ];

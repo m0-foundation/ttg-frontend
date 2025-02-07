@@ -64,7 +64,6 @@ export const useTtgStore = defineStore("ttg", {
 
   actions: {
     async fetchEpoch(_epoch: number) {
-      console.log("fetching epoch", _epoch);
       const api = useApiClientStore();
       const epochState = await api.client.epoch.getEpochState(_epoch);
       this.epoch = epochState;

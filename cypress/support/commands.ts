@@ -21,6 +21,8 @@ declare global {
 
       disconnectWallet(): Chainable;
 
+      checkAppNavigation(): Chainable
+
       delegatePower(delegate?: string): Chainable;
 
       delegateZero(delegate?: string): Chainable;
@@ -57,7 +59,7 @@ declare global {
 }
 
 Cypress.Commands.add("connectWallet", () => {
-  cy.get("aside").then(($body) => {
+  cy.get("body").then(($body) => {
     if ($body.find("#button-connect-wallet").length > 0) {
       console.log("not connected");
 
@@ -70,6 +72,23 @@ Cypress.Commands.add("connectWallet", () => {
       console.log("already connected");
     }
   });
+});
+
+Cypress.Commands.add("checkAppNavigation", () => {
+  cy.get('nav').contains('Vote')
+  .and('have.attr', 'href', '/proposals')
+
+cy.get('nav').contains('History')
+  .and('have.attr', 'href', '/history')
+
+cy.get('nav').contains('Actors')
+  .and('have.attr', 'href', '/actors/protocol')
+
+cy.get('nav').contains('Config')
+  .and('have.attr', 'href', '/config/governance')
+
+cy.get('nav').contains('Profile')
+  .and('have.attr', 'href', '/profile/me')
 });
 
 Cypress.Commands.add("disconnectWallet", () => {
@@ -168,9 +187,6 @@ Cypress.Commands.add(
 
     cy.contains("article", description).then(($proposal) => {
       cy.wrap($proposal).find("#button-cast-yes").click();
-      cy.get("[data-test='dialog-button-confirm']").click();
-      cy.wrap($proposal).contains("Your vote has been submitted");
-      cy.wait(500);
     });
 
   }

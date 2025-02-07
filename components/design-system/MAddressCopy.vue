@@ -7,10 +7,18 @@
         </a>
       </div>
 
-      <img v-if="justCopied" class="min-w-5 h-5" src="/img/icons/check.svg" />
-      <button v-else-if="showCopy" @click="copy(props.address)">
-        <img class="min-w-5 h-5 hover:opacity-75" src="/img/icons/copy.svg" />
-      </button>
+      <UButton
+        variant="ghost"
+        color="gray"
+        size="xs"
+        :padded="false"
+        @click="copy(props.address)"
+      >
+        <template #trailing>
+          <MIconCheck v-if="justCopied" />
+          <MIconCopy v-else />
+        </template>
+      </UButton>
     </div>
   </span>
 </template>

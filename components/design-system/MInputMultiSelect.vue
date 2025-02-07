@@ -2,7 +2,7 @@
   <VDropdown placement="bottom-start">
     <button
       type="button"
-      class="border border-grey-700 bg-grey-800 py-2 px-4 flex justify-between w-full items-center font-inter gap-2"
+      class="border bg-white dark:border-grey-700 dark:bg-grey-800 py-2 px-4 flex justify-between w-full items-center font-inter gap-2"
       @click="onOpen"
     >
       <span class="h-6 text-nowrap">{{
@@ -40,7 +40,7 @@
         >
           <div
             v-show="opt.header"
-            class="uppercase text-xs text-grey-600 px-4 py-2"
+            class="uppercase text-xs text-grey-500 px-4 py-2"
           >
             {{ opt.header }}
           </div>
@@ -105,11 +105,11 @@
               <div>
                 <MIconPower
                   v-if="['Standard', 'Emergency'].includes(opt.votingType)"
-                  class="w-[24px] h-[24px]"
+                  class="w-[16px] h-[16px]"
                 />
                 <MIconZero
                   v-if="['Zero'].includes(opt.votingType)"
-                  class="w-[24px] h-[24px]"
+                  class="w-[16px] h-[16px]"
                 />
               </div>
             </button>
@@ -180,11 +180,11 @@ function onOut() {
 </script>
 <style scoped>
 .button {
-  @apply font-inter text-left w-full py-2 px-4 hover:bg-grey-600;
+  @apply font-inter text-left w-full py-2 px-4 hover:bg-grey-200;
 }
 
 .sub-button {
-  @apply hover:bg-grey-600 px-4 py-2;
+  @apply hover:bg-grey-200 px-4 py-2;
 }
 
 .fix-when-emergency {
@@ -192,9 +192,10 @@ function onOut() {
 }
 
 .emergency {
-  @apply border-t-2 border-[#202220];
+  @apply border-t border-[#202220] border-opacity-20;
 }
+
 .dropdown-menu-items {
-  @apply bg-grey-800 text-grey-200 !important;
+  @apply dark:bg-grey-800 text-grey-900 dark:text-grey-200 !important;
 }
 </style>

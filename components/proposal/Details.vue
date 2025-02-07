@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="overflow-x-hidden">
-    <article class="bg-white text-black lg:p-4">
+    <article class="bg-white text-black py-4">
       <div class="flex justify-between mb-2 gap-3">
         <ProposalStatusTimeline
           :proposal="proposal"
@@ -11,21 +11,6 @@
         <div>
           <ProposalMenu :proposal="proposal" />
         </div>
-      </div>
-
-      <ProposalTypeBadge
-        v-if="proposal?.votingType !== 'Standard'"
-        :type="proposal?.votingType"
-      />
-
-      <h1 class="text-[28px] my-3 text-grey-1000 font-light leading-10">
-        {{ title }}
-      </h1>
-
-      <div class="text-grey-500 my-3 font-inter text-xs">
-        Proposed by
-        <MAddressAvatar :address="proposal?.proposer" />
-        at Epoch #{{ proposal?.epoch }} - {{ proposalCreatedFormatedDate }}
       </div>
 
       <div v-if="isLoading" class="h-4">Loading...</div>
@@ -50,8 +35,8 @@
         :current-proposal-values="currentProposalValuesFormatted"
       />
 
-      <div class="mt-8">
-        <div class="text-grey-900 border-t border-grey-200 border-dashed py-4">
+      <div class="mt-4">
+        <div class="text-grey-900 py-4">
           <h3 class="text-xl">Voters</h3>
         </div>
 
@@ -136,7 +121,6 @@ proposalStore.updateProposalById(props.proposalId);
 const { unwatchAll } = watchVoteCast(proposal.value!.votingType!);
 
 onUnmounted(() => {
-  console.log("unwatching all votes");
   unwatchAll();
 });
 </script>

@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "PPFormula";
-  src: url("../fonts/PPFormula-SemiCondensedRegular.woff") format("woff");
+  src: url("../fonts/PPFormula-Regular.woff2") format("woff");
 }
 
 @font-face {
@@ -21,28 +21,12 @@
   font-weight: 500
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html {
-    @apply bg-grey-900 text-grey-100 font-ppformula;
-  }
-
-  input,
-  select,
-  textarea {
-    @apply bg-grey-800 border rounded-none border-grey-700 font-inter text-grey-100 focus:invalid:ring-red-600 focus:outline-none focus:border-grey-500 focus:ring-1 focus:ring-grey-500 placeholder:text-grey-500 block w-full p-2.5;
-  }
+body {
+  font-family: "Inter", sans-serif;
 }
 
-button {
-  @apply font-mono;
-}
-
-h1 {
-  @apply text-xl lg:text-[28px];
+h1, h2, h3, h4, h5, h6 {
+  @apply font-ppformula
 }
 
 :disabled {
@@ -50,7 +34,7 @@ h1 {
 }
 
 .dropdown-menu-items {
-  @apply bg-grey-700 text-grey-200 font-inter;
+  @apply dark:bg-grey-700 dark:text-grey-200 font-inter;
 }
 .dropdown-menu-items li a {
   @apply px-6 py-3 block hover:bg-grey-900 whitespace-nowrap cursor-pointer;

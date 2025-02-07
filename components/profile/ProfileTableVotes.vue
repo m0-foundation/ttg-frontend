@@ -1,32 +1,29 @@
 <template>
-  <MSimpleTable :items="votesTableData" :fields="votesTableHeaders">
-    <template #cell(proposal)="{ item }">
+  <UTable :rows="votesTableData" :columns="votesTableHeaders">
+    <template #proposal-data="{ row }">
       <NuxtLink
         class="underline hover:no-underline"
-        :to="`/proposal/${item?.proposalId}`"
-        >{{ useParsedDescriptionTitle(item.proposal).title }}</NuxtLink
+        :to="`/proposal/${row?.proposalId}`"
+        >{{ useParsedDescriptionTitle(row.proposal).title }}</NuxtLink
       >
     </template>
-    <template #cell(vote)="{ value, item }">
+    <template #vote-data="{ row }">
       <span class="text-grey-600 flex items-center gap-2">
         <div
           class="w-2.5 h-2.5"
-          :class="value ? 'bg-green-800' : 'bg-red-700'"
+          :class="row.vote ? 'bg-green-800' : 'bg-red-700'"
         ></div>
         <span class="text-xs uppercase hover:underline">
           <a
-            :href="useBlockExplorer('tx', item.transactionHash)"
+            :href="useBlockExplorer('tx', row.transactionHash)"
             target="_blank"
           >
-            {{ value ? "Yes" : "No" }}
+            {{ row.vote ? "Yes" : "No" }}
           </a>
         </span>
       </span>
     </template>
-    <template #cell(weight)="{ value }">
-      <MAddressAvatar show-copy :address="value" />
-    </template>
-  </MSimpleTable>
+  </UTable>
 </template>
 
 <script setup lang="ts">
@@ -41,7 +38,7 @@ const props = defineProps<Props>();
 const proposals = useProposalsStore();
 
 const votesTableHeaders = [
-  { key: "proposal", label: "Proposal", sortable: true },
+  { key: "proposal", label: "Proposal" },
   { key: "votes", label: "Votes", sortable: true },
   { key: "vote", label: "Vote", sortable: true },
 ];
@@ -58,5 +55,4 @@ const votesTableData = computed(() => {
     transactionHash: v.transactionHash,
   }));
 });
-console.log({ votesTableData });
 </script>

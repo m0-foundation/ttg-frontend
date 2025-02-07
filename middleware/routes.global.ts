@@ -15,13 +15,5 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (to.path === "/") {
       return navigateTo("/proposals/");
     }
-
-    if (to.path === "/config/") {
-      return navigateTo("/config/governance/");
-    }
-
-    if (to.path === "/actors/") {
-      return navigateTo("/actors/protocol/");
-    }
   }
 });

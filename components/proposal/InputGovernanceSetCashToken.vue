@@ -1,15 +1,15 @@
 <template>
   <div class="w-full flex justify-between space-x-4">
     <div class="block w-1/2">
-      <div
+      <UCard
         v-if="hasAllowedCashTokens"
-        class="bg-grey-800 bg-opacity-85 flex flex-col gap-1 p-4 my-2"
+        class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-1 my-2"
       >
-        <span class="uppercase text-xxs">Parameter description</span>
+        <label>Parameter description</label>
         <p class="font-inter">
           Update the currency used for payment when submitting proposal
         </p>
-      </div>
+      </UCard>
 
       <div>
         <div v-if="hasAllowedCashTokens">

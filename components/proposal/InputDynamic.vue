@@ -1,36 +1,33 @@
 <template>
-  <div
+  <UCard
     v-if="props.description"
-    class="bg-grey-800 bg-opacity-85 flex flex-col gap-1 p-4 my-2"
+    class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-1 my-2"
   >
-    <span class="uppercase text-xxs">Parameter description</span>
+    <label>Parameter description</label>
     <p class="font-inter">
       {{ props.description }}
     </p>
-  </div>
+  </UCard>
 
   <div class="my-3 mb-4">
     <label for="governance-config-input">Value *</label>
 
-    <div class="flex">
-      <input
-        v-bind="$attrs"
-        v-model="value"
-        v-maska
-        :data-maska="props.maska?.mask"
-        :data-maska-tokens="props.maska?.tokens"
-        :class="{ error: hasErrors }"
-        class="input"
-      />
-      <span
-        v-if="props.decorator"
-        class="inline-flex items-center px-3 bg-grey-800 border border-l-0 border-grey-700"
-      >
-        <div class="text-gray-600 font-inter whitespace-nowrap">
+    <UInput
+      v-bind="$attrs"
+      v-model="value"
+      v-maska
+      :data-maska="props.maska?.mask"
+      :data-maska-tokens="props.maska?.tokens"
+      :class="{ error: hasErrors }"
+      :trailing="props.decorator"
+      size="lg"
+    >
+      <template #trailing>
+        <span class="text-gray-500 dark:text-gray-400 text-xs">
           {{ props.decorator }}
-        </div>
-      </span>
-    </div>
+        </span>
+      </template>
+    </UInput>
 
     <div
       v-if="props.modelValueErrors?.length"

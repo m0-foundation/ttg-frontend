@@ -1,54 +1,37 @@
 <template>
-  <div class="flex flex-col gap-4 bg-grey-800 p-4 lg:p-6">
-    <div class="flex gap-4 justify-between flex-wrap">
+  <UCard class="flex flex-col gap-4">
+    <div class="flex gap-4 justify-between flex-wrap mb-2">
       <div class="lg:flex-1">
-        <h3 class="text-xl">{{ param?.title }}</h3>
-        <div class="config-key-badge">{{ param?.key }}</div>
+        <h3 class="text-xl font-medium">{{ param?.title }}</h3>
+        <UBadge :label="param?.key" color="gray" />
       </div>
       <div class="flex gap-4 max-lg:order-2 max-lg:w-full">
         <div class="lg:text-end">
-          <p class="lg:text-2xl font-bold">
+          <p class="lg:text-2xl font-medium">
             {{ formattedValue(param) }}
           </p>
-          <div class="config-key-badge">
-            <div v-if="param?.value" class="flex align-center">
-              <span>{{ shortenText(param.value) }} {{ param?.unit }}</span>
-              <template v-if="param?.copyValue">
-                <MIconSimpleCheck
-                  v-if="isJustCopied"
-                  class="min-w-4 h-4 fill-white"
+          <UBadge color="gray">
+            <span>
+              {{
+                param?.value ? shortenText(param.value) : "Parameter not set"
+              }}
+              {{ param?.unit }}
+            </span>
+            <template #trailing>
+              <template v-if="param?.copyValue && param?.value">
+                <UButton
+                  :icon="
+                    isJustCopied ? 'i-heroicons-check' : 'i-heroicons-clipboard'
+                  "
+                  color="gray"
+                  variant="ghost"
+                  size="xs"
+                  @click="copy(param.value)"
                 />
-                <button v-if="!isJustCopied" @click="copy(param.value)">
-                  <MIconCopy class="min-w-4 h-4 hover:opacity-75 fill-white" />
-                </button>
               </template>
-            </div>
-            <span v-else class="text-nowrap">Parameter not set</span>
-          </div>
+            </template>
+          </UBadge>
         </div>
-      </div>
-      <div v-if="param?.proposal?.executedEvent" class="max-lg:order-1">
-        <MDropdown>
-          <ul class="dropdown-menu-items">
-            <li
-              class="px-6 py-3 text-xxs text-grey-500 border-b border-b-grey-800"
-            >
-              <p>Last updated</p>
-              <p>
-                {{
-                  useDate(param?.proposal?.executedEvent?.timestamp).toFormat(
-                    "LLL",
-                  )
-                }}
-              </p>
-            </li>
-            <li>
-              <NuxtLink :to="`/proposal/${param?.proposal?.proposalId}`"
-                >Show proposal
-              </NuxtLink>
-            </li>
-          </ul>
-        </MDropdown>
       </div>
     </div>
     <div
@@ -58,16 +41,48 @@
       <p>
         {{ param?.description }}
       </p>
-      <a
-        v-if="param?.docs"
-        :href="param?.docs"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-sm underline mt-2"
-        >Learn more</a
-      >
+      <div class="flex justify-between items-end">
+        <a
+          v-if="param?.docs"
+          :href="param?.docs"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm underline mt-2"
+          >Learn more</a
+        >
+        <div v-else />
+        <div v-if="param?.proposal?.executedEvent" class="max-lg:order-1">
+          <UPopover>
+            <UButton color="white" icon="i-heroicons-ellipsis-horizontal" />
+
+            <template #panel>
+              <div class="text-xxs">
+                <div class="p-2">
+                  <p>Last updated</p>
+                  <p>
+                    {{
+                      useDate(
+                        param?.proposal?.executedEvent?.timestamp,
+                      ).toFormat("LLL")
+                    }}
+                  </p>
+                </div>
+                <UDivider />
+                <UVerticalNavigation
+                  :links="[
+                    {
+                      label: 'Show proposal',
+                      to: `/proposal/${param?.proposal?.proposalId}`,
+                    },
+                  ]"
+                />
+              </div>
+            </template>
+          </UPopover>
+        </div>
+      </div>
     </div>
-  </div>
+  </UCard>
 </template>
 <script setup>
 import { formatUnits } from "viem";

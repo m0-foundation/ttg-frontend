@@ -25,19 +25,16 @@ export const useVotesStore = defineStore("votes", () => {
   }
 
   async function fetchVotesStandard() {
-    console.log("fetchVotesStandard");
     const votes = await api.client.standardGovernor!.voting!.getAllVotes();
     add(votes);
   }
 
   async function fetchVotesEmergency() {
-    console.log("fetchVotesEmergency");
     const votes = await api.client.emergencyGovernor!.voting!.getAllVotes();
     add(votes);
   }
 
   async function fetchVotesZero() {
-    console.log("fetchVotesZero");
     const votes = await api.client.zeroGovernor!.voting!.getAllVotes();
     add(votes);
   }

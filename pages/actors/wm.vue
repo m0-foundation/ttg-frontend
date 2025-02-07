@@ -1,24 +1,16 @@
 <template>
-  <NuxtLayout class="px-6 lg:p-0" name="actors">
-    <MSimpleTable
-      :search="true"
-      :items="earnersClaimants"
-      :fields="earnersClaimantsHeaders"
-      :loading="isLoading"
-    >
-      <template #header-left>
-        <PageTitle>Earners Claimants</PageTitle>
-      </template>
-
-      <template #cell(earner)="{ value }">
-        <MAddressCopy :short-address="false" show-copy :address="value" />
-      </template>
-
-      <template #cell(claimant)="{ value }">
-        <MAddressCopy :short-address="false" show-copy :address="value" />
-      </template>
-    </MSimpleTable>
-  </NuxtLayout>
+  <UTable
+    :loading="isLoading"
+    :rows="earnersClaimants || []"
+    :columns="earnersClaimantsHeaders"
+  >
+    <template #earner-data="{ row }">
+      <MAddressCopy :short-address="false" show-copy :address="row.earner" />
+    </template>
+    <template #claimant-data="{ row }">
+      <MAddressCopy :short-address="false" show-copy :address="row.claimant" />
+    </template>
+  </UTable>
 </template>
 
 <script setup lang="ts">
@@ -29,16 +21,15 @@ const apiStore = useApiClientStore();
 const listsStore = useListsStore();
 
 useHead({
-  titleTemplate: "%s - Actors | $M (wrapped)",
+  titleTemplate: "%s - Actors - $M (wrapped)",
 });
 
 const earnersClaimantsHeaders = [
   {
     key: "earner",
     label: "Earner",
-    sortable: true,
   },
-  { key: "claimant", label: "Claimant", sortable: true },
+  { key: "claimant", label: "Claimant" },
 ];
 
 const fetchEarnerClaimants = async () => {

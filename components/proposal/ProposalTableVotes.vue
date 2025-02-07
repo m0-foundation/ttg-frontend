@@ -1,29 +1,28 @@
 <template>
-  <MSimpleTable :items="votes" :fields="votesTableHeaders">
-    <template #cell(voter)="{ value }">
-      <MAddressAvatar show-copy :address="value" />
+  <UTable :rows="votes" :columns="votesTableHeaders">
+    <template #voter-data="{ row }">
+      <MAddressAvatar show-copy :address="row.voter" />
     </template>
-
-    <template #cell(vote)="{ value, item }">
+    <template #vote-data="{ row }">
       <a
         class="flex items-center gap-2 cursor-pointer hover:underline"
-        :href="useBlockExplorer('tx', item.transactionHash)"
+        :href="useBlockExplorer('tx', row.transactionHash)"
       >
         <div
           class="w-2.5 h-2.5"
-          :class="value ? 'bg-green-800' : 'bg-red-700'"
+          :class="row.vote ? 'bg-green-800' : 'bg-red-700'"
         ></div>
         <span class="text-xs uppercase">
-          {{ value ? "Yes" : "No" }}
+          {{ row.vote ? "Yes" : "No" }}
         </span>
       </a>
     </template>
-    <template #cell(votes)="{ value }">
-      <span>{{ useNumberFormatterCompact(value) }}</span>
+    <template #votes-data="{ row }">
+      <span>{{ useNumberFormatterCompact(row.votes) }}</span>
     </template>
-    <template #cell(reason)="{ value }">
+    <template #reason-data="{ row }">
       <div class="flex items-center">
-        <VTooltip v-if="value">
+        <VTooltip v-if="row.reason">
           <div
             class="flex justify-center items-center gap-1 text-grey-80 text-xs cursor-pointer"
           >
@@ -31,13 +30,13 @@
           </div>
           <template #popper>
             <div class="max-w-80">
-              {{ value }}
+              {{ row.reason }}
             </div>
           </template>
         </VTooltip>
       </div>
     </template>
-  </MSimpleTable>
+  </UTable>
 </template>
 
 <script setup lang="ts">

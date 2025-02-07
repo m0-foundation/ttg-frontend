@@ -1,5 +1,5 @@
 <template>
-  <div class="my-1 mb-3 p-6 font-inter bg-grey-800 bg-opacity-85">
+  <UCard class="my-1 mb-3 font-inter bg-grey-200 dark:bg-grey-800">
     <div class="grid grid-cols-2 gap-6">
       <div class="col-span-2">
         <label>Proposal type:</label>
@@ -34,7 +34,7 @@
       <div>
         <label>Voting threshold:</label>
         <div class="proposal-type-detail">
-          <img src="/img/icons/vote.svg" class="w-[24px] h-[24px]" alt="" />
+          <MIconVote class="w-6 h-6" />
           <div>
             <span v-if="selectedProposalType?.votingType === 'Standard'"
               >Simple majority wins
@@ -84,7 +84,7 @@
         </p>
       </div>
     </div>
-  </div>
+  </UCard>
 </template>
 
 <script setup lang="ts">

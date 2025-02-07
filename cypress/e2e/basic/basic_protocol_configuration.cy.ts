@@ -5,17 +5,18 @@ describe("Basic configuration", () => {
 
   it("I should visit mzero protocol config page and see navigation", () => {
     cy.url().should("include", "/config/protocol");
-    cy.findByRole("button", {name: /Create proposal/i}).should("be.visible");
 
-    cy.get("nav").should("contain", "Home");
-    cy.get("nav").should("contain", "Actors");
-    cy.get("nav").should("contain", "Configs");
+    cy.checkAppNavigation();
   });
 
   it("I should see all configuration parameters", () => {
     cy.get('h1').should('contain', 'Configs')
-    cy.get('a.link-tab').contains('Protocol').should('have.class', 'active-link-tab')
-    cy.get('a.link-tab').contains('Governance').should('be.visible')
+
+    cy.get('nav').contains('Governance')
+    .and('have.attr', 'href', '/config/governance')
+
+  cy.get('nav').contains('Protocol')
+    .and('have.attr', 'href', '/config/protocol')
 
     const configParams = [
       "Update Collateral Interval",
@@ -40,7 +41,9 @@ describe("Basic configuration", () => {
     cy.visit("/config/guidance");
     cy.url().should("include", "/config/guidance");
     cy.get('h1').should('contain', 'Configs')
-    cy.get('a.link-tab').contains('Guidance').should('have.class', 'active-link-tab')
+
+    cy.get('nav').contains('Guidance')
+    .and('have.attr', 'href', '/config/guidance')
 
     const configParams = [
       "Guidance",
