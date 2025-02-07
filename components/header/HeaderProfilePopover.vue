@@ -18,7 +18,7 @@
       </UButton>
 
       <template #panel="{ close }">
-        <div class="p-6 w-72">
+        <div class="p-6 w-80">
           <p class="uppercase text-xxs text-grey-500 mb-2 font-semibold">
             My voting power
           </p>
@@ -34,9 +34,10 @@
                     {{ token.votingPower }}%
                   </span>
                 </div>
-                <span class="text-sm text-grey-500 mb-0.5">{{
-                  useNumberFormatterPrice(String(token.balance), 0, 2)
-                }}</span>
+                <span class="text-sm text-grey-500 mb-0.5">
+                  <span class="uppercase">{{ token.label }}</span>
+                  {{ useNumberFormatterPrice(String(token.balance), 0, 2) }}
+                </span>
               </div>
             </div>
             <UButton

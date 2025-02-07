@@ -18,13 +18,13 @@
       v-show="hasProposals && isConnected"
       class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8"
       :class="{
-        'bg-grey-700': isSelectedCastProposalsFull,
+        'bg-grey-200': isSelectedCastProposalsFull,
       }"
     >
       <span v-if="!isSelectedCastProposalsFull" class="text-xxs">
         Select YES or NO to submit your vote
       </span>
-      <MButton
+      <UButton
         id="button-cast-submit"
         class="w-full lg:w-40 flex justify-center"
         :disabled="
@@ -32,10 +32,12 @@
         "
         :is-loading="isLoading"
         data-test="proposal-button-submit-votes"
+        color="primary"
+        size="lg"
         @click="onCastBatchVotes"
       >
-        submit
-      </MButton>
+        Submit
+      </UButton>
     </div>
   </div>
 </template>
