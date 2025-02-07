@@ -1007,7 +1007,7 @@ function onBack() {
 
 <style>
 label {
-  @apply text-grey-500 block mb-2 font-medium text-xs font-inter;
+  @apply text-grey-500 block mb-2 text-xs font-inter;
 }
 </style>
 

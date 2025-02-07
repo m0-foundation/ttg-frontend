@@ -18,9 +18,9 @@
 
     <UCard
       v-show="parameter?.description || parameter?.shortDescription"
-      class="bg-grey-200 dark:bg-grey-800 bg-opacity-50 flex flex-col gap-3 mt-2"
+      class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-3 mt-2"
     >
-      <span class="uppercase text-xxs">Parameter description</span>
+      <label>Parameter description</label>
       <p class="font-inter">
         {{ parameter?.description || parameter?.shortDescription }}
       </p>
