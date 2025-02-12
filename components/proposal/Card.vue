@@ -185,6 +185,7 @@ import errorProposals from "@/assets/data/error-proposals.json";
 
 export interface ProposalCardProps {
   proposal: MProposal;
+  selectedVote: boolean | null;
   loading: boolean;
 }
 
@@ -201,7 +202,7 @@ const apiStore = useApiClientStore();
 
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
 
-const selectedVote = ref<null | boolean>(null);
+const selectedVote = ref<null | boolean>(props.selectedVote);
 const reasonForVoteCheckbox = ref<boolean | undefined>(false);
 const reasonForVote = ref<string>("");
 const reasonForVoteTextarea = ref();

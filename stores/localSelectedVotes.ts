@@ -24,6 +24,25 @@ export const useLocalSelectedVotes = defineStore("selectedVotes", {
 
   getters: {
     length: (state) => state.selected.length,
+
+    /**
+     * Returns the vote of the selected proposal
+     *
+     * @param proposalId - The proposal id
+     * @returns The vote of the selected proposal
+     * @returns `null` if the proposal is not selected
+     * @returns `true` if the proposal is selected with a vote of `1`
+     * @returns `false` if the proposal is selected with a vote of `0`
+     */
+    get:
+      (state) =>
+      (proposalId: SelectedVote["proposalId"]): boolean | null => {
+        const selected = state.selected.find(
+          (v) => v.proposalId === proposalId,
+        );
+
+        return selected ? (selected.vote === 0 ? false : true) : null;
+      },
   },
 
   actions: {

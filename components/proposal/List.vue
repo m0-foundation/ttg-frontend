@@ -5,6 +5,7 @@
       <ProposalCard
         :loading="loading"
         :proposal="proposal"
+        :selected-vote="selectedVotes.get(proposal.proposalId)"
         v-bind="$attrs"
         @on-view="onViewProposal"
       />
@@ -27,6 +28,7 @@ export interface ProposalListProps {
 
 const props = defineProps<ProposalListProps>();
 const { proposals } = toRefs(props);
+const selectedVotes = useLocalSelectedVotes();
 
 const hasProposals = computed(
   () => proposals.value && proposals.value.length > 0,
