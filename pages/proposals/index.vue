@@ -32,7 +32,7 @@
             <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
               Votes submitted:
               <span>
-                {{ selectedCastProposals.length }} /
+                {{ selectedVotes.length }} /
                 {{ mandatoryToVoteProposals.length }}
               </span>
             </span>
@@ -112,16 +112,10 @@ import {
   useMVotingPower,
 } from "@/lib/hooks";
 
-interface CastedProposal {
-  vote: number;
-  proposalId: string;
-  reason?: string;
-}
-
-const selectedCastProposals = ref<Array<CastedProposal>>([]);
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
+const selectedVotes = useLocalSelectedVotes();
 const ttg = useTtgStore();
 
 const activeProposals = computed(() =>
@@ -141,17 +135,11 @@ const hasProposals = computed(
 );
 
 const isSelectedCastProposalsFull = computed(() => {
-  return (
-    selectedCastProposals.value.length === mandatoryToVoteProposals.value.length
-  );
+  return selectedVotes.length === mandatoryToVoteProposals.value.length;
 });
 
 const progressBarWidth = computed(() => {
-  return (
-    (selectedCastProposals.value.length /
-      mandatoryToVoteProposals.value.length) *
-    100
-  );
+  return (selectedVotes.length / mandatoryToVoteProposals.value.length) * 100;
 });
 
 const { address: userAccount, isConnected } = useAccount();
@@ -178,22 +166,15 @@ useHead({
 });
 
 function onCast(vote: number, proposalId: string) {
-  selectedCastProposals.value.push({ vote, proposalId });
+  selectedVotes.add({ proposalId, vote });
 }
 
 function updateReasonForVote(value: string, proposalId: string) {
-  selectedCastProposals.value = selectedCastProposals.value.map((p) => {
-    if (p.proposalId === proposalId) {
-      return { ...p, reason: value };
-    }
-    return p;
-  });
+  selectedVotes.update({ proposalId, reason: value });
 }
 
 function onUncast(proposalId: string) {
-  selectedCastProposals.value = selectedCastProposals.value.filter(
-    (p) => p.proposalId !== proposalId,
-  );
+  selectedVotes.remove(proposalId);
 }
 
 const { data: hasVotedOnAllProposals, ...votedOnAllProposals } =
@@ -217,16 +198,22 @@ async function onCastBatchVotes() {
 
   try {
     let hash;
-    const reasons = selectedCastProposals.value.map((p) => p.reason || "");
-    const proposalIds = selectedCastProposals.value.map((p) =>
-      BigInt(p.proposalId),
+    const { reasons, proposalIds, votes } = selectedVotes.selected.reduce(
+      (result, vote) => {
+        result.reasons.push(vote.reason || "");
+        result.proposalIds.push(BigInt(vote.proposalId));
+        result.votes.push(vote.vote);
+        return result;
+      },
+      {
+        reasons: [] as string[],
+        proposalIds: [] as bigint[],
+        votes: [] as number[],
+      },
     );
-    const votes = selectedCastProposals.value.map((p) => p.vote);
 
-    const isOnlyOneVote = selectedCastProposals.value.length === 1;
-    const anyProposalHasReason = selectedCastProposals.value.some(
-      (p) => p.reason,
-    );
+    const isOnlyOneVote = selectedVotes.length === 1;
+    const anyProposalHasReason = selectedVotes.selected.some((p) => p.reason);
 
     if (anyProposalHasReason && isOnlyOneVote) {
       hash = await castSingleVoteWithReason(
@@ -269,6 +256,7 @@ async function onCastBatchVotes() {
       );
     }
 
+    selectedVotes.clean();
     await ttg.fetchTokens();
     balances.refetch();
     votedOnAllProposals.refetch();
