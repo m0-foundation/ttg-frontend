@@ -5,7 +5,6 @@
       <ProposalCard
         :loading="loading"
         :proposal="proposal"
-        :selected-vote="selectedVotes.get(proposal.proposalId)"
         v-bind="$attrs"
         @on-view="onViewProposal"
       />
@@ -23,12 +22,10 @@ import { MProposal } from "@/lib/api/types";
 export interface ProposalListProps {
   proposals: MProposal[];
   loading: boolean;
-  selectedProposal?: string;
 }
 
 const props = defineProps<ProposalListProps>();
 const { proposals } = toRefs(props);
-const selectedVotes = useLocalSelectedVotes();
 
 const hasProposals = computed(
   () => proposals.value && proposals.value.length > 0,

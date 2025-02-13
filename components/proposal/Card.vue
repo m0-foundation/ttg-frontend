@@ -185,7 +185,6 @@ import errorProposals from "@/assets/data/error-proposals.json";
 
 export interface ProposalCardProps {
   proposal: MProposal;
-  selectedVote: boolean | null;
   loading: boolean;
 }
 
@@ -199,9 +198,18 @@ const emit = defineEmits<{
 }>();
 
 const apiStore = useApiClientStore();
-
+const localSelectedVotes = useLocalSelectedVotes();
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
 
+const localStoredVote = localSelectedVotes.get(props.proposal.proposalId);
+const initialSelectedVote =
+  localStoredVote?.vote != null
+    ? localStoredVote.vote === 0
+      ? false
+      : true
+    : null;
+
+const selectedVote = ref<null | boolean>(initialSelectedVote);
 const selectedVote = ref<null | boolean>(props.selectedVote);
 const reasonForVoteCheckbox = ref<boolean | undefined>(false);
 const reasonForVote = ref<string>("");
