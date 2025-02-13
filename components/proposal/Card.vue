@@ -146,7 +146,6 @@
         <div>
           <UTextarea
             v-if="reasonForVoteCheckbox"
-            id="reason-vote"
             ref="reasonForVoteTextarea"
             :value="localStoredVote?.reason || ''"
             class="reason-textarea"
@@ -227,10 +226,11 @@ const reasonForVoteTextarea = ref();
 
 watch(reasonForVoteCheckbox, async (value) => {
   if (value) {
+    // Focus the textarea when enabled
     await nextTick();
-    // FIXME
-    reasonForVoteTextarea?.value.focus();
+    reasonForVoteTextarea.value?.focus();
   } else {
+    // Clean reason when disabled
     emit("update-reason-for-vote", "", props.proposal.proposalId);
   }
 });
