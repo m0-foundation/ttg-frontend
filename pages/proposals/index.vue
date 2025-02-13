@@ -135,7 +135,7 @@ const hasProposals = computed(
 );
 
 const isSelectedCastProposalsFull = computed(() => {
-  return selectedVotes.length === mandatoryToVoteProposals.value.length;
+  return selectedVotes.length >= mandatoryToVoteProposals.value.length;
 });
 
 const progressBarWidth = computed(() => {
