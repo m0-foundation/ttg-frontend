@@ -203,16 +203,13 @@ const { address: userAccount, isConnected, isDisconnected } = useAccount();
 
 const localStoredVote = localSelectedVotes.get(props.proposal.proposalId);
 const initialSelectedVote =
-  localStoredVote?.vote != null
-    ? localStoredVote.vote === 0
-      ? false
-      : true
-    : null;
+  localStoredVote != null ? (localStoredVote.vote === 0 ? false : true) : null;
 
 const selectedVote = ref<null | boolean>(initialSelectedVote);
-const selectedVote = ref<null | boolean>(props.selectedVote);
-const reasonForVoteCheckbox = ref<boolean | undefined>(false);
-const reasonForVote = ref<string>("");
+const reasonForVoteCheckbox = ref<boolean | undefined>(
+  Boolean(localStoredVote?.reason),
+);
+const reasonForVote = ref<string>(localStoredVote?.reason || "");
 const reasonForVoteTextarea = ref();
 
 watch(reasonForVoteCheckbox, async (value) => {
