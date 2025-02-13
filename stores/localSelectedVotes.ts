@@ -32,21 +32,28 @@ export const useLocalSelectedVotes = defineStore("selectedVotes", {
   },
 
   actions: {
-    add({ vote, proposalId }: SelectedVote) {
-      this.selected.push({ vote, proposalId });
+    cast({ vote, proposalId }: SelectedVote) {
+      if (this.get(proposalId)) {
+        this.update({
+          vote,
+          proposalId,
+        });
+      } else {
+        this.selected.push({ vote, proposalId });
+      }
     },
 
     remove(proposalId: SelectedVote["proposalId"]) {
       this.selected = this.selected.filter((v) => v.proposalId !== proposalId);
     },
 
-    update(newSelect: Partial<SelectedVote>) {
-      this.selected = this.selected.map((select) => {
-        if (select.proposalId === newSelect.proposalId) {
-          return { ...select, ...newSelect };
+    update(newCast: Partial<SelectedVote>) {
+      this.selected = this.selected.map((cast) => {
+        if (cast.proposalId === newCast.proposalId) {
+          return { ...cast, ...newCast };
         }
 
-        return select;
+        return cast;
       });
     },
 

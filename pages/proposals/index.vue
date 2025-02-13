@@ -166,7 +166,7 @@ useHead({
 });
 
 function onCast(vote: number, proposalId: string) {
-  selectedVotes.add({ proposalId, vote });
+  selectedVotes.cast({ proposalId, vote });
 }
 
 function updateReasonForVote(value: string, proposalId: string) {
