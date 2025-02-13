@@ -134,6 +134,7 @@ const hasProposals = computed(
   () => mandatoryToVoteProposals && mandatoryToVoteProposals.value.length > 0,
 );
 
+// TODO: fix me
 const isSelectedCastProposalsFull = computed(() => {
   return selectedVotes.length >= mandatoryToVoteProposals.value.length;
 });

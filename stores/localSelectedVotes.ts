@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
+import keyBy from "lodash/keyBy";
 
 type SelectedVote = {
   vote: number;
@@ -29,11 +30,17 @@ export const useLocalSelectedVotes = defineStore("selectedVotes", {
       (state) =>
       (proposalId: SelectedVote["proposalId"]): SelectedVote | undefined =>
         state.selected.find((v) => v.proposalId === proposalId),
+
+    byKey: (state) => keyBy(state.selected, "proposalId"),
   },
 
   actions: {
+    has(proposalId: SelectedVote["proposalId"]) {
+      return Object.hasOwn(this.byKey, proposalId);
+    },
+
     cast({ vote, proposalId }: SelectedVote) {
-      if (this.get(proposalId)) {
+      if (this.has(proposalId)) {
         this.update({
           vote,
           proposalId,
