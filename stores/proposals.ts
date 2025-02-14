@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import orderBy from "lodash/orderBy";
 import uniqBy from "lodash/uniqBy";
+import keyBy from "lodash/keyBy";
 
 import { MProposal, ProposalState } from "@/lib/api/types";
 
@@ -41,6 +42,8 @@ export const useProposalsStore = defineStore("proposals", {
 
   actions: {
     setProposals(proposals: Array<MProposal>) {
+      const localSelectedVotes = useLocalSelectedVotes();
+
       this.data = [];
       this.data = [
         ...orderBy(
@@ -49,7 +52,17 @@ export const useProposalsStore = defineStore("proposals", {
           "desc",
         ),
       ];
+
+      const keyMap = keyBy(this.data, "proposalId");
+
+      // Remove stored votes of past proposals
+      localSelectedVotes.$patch({
+        selected: localSelectedVotes.selected.filter(
+          (cast) => keyMap[cast.proposalId] !== undefined,
+        ),
+      });
     },
+
     push(proposals: Array<MProposal>) {
       this.data = [
         ...orderBy(

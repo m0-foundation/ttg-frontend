@@ -24,8 +24,7 @@
     <ProposalList
       :proposals="proposals"
       :loading="isLoading"
-      :selected-proposal="selectedProposal"
-      @on-cast="confirmCastVote"
+      @on-cast="castVote"
     >
       <template #emptyState>
         <ProposalListEmptyState> No Zero proposals </ProposalListEmptyState>
@@ -59,10 +58,6 @@ const votingPower = ref();
 const proposals = computed(() =>
   proposalsStore.getProposalsTypeZero.filter((p) => p.state === "Active"),
 );
-
-async function confirmCastVote(vote: number, proposalId: string) {
-  castVote(vote, proposalId);
-}
 
 async function castVote(vote: number, proposalId: string) {
   await forceSwitchChain();

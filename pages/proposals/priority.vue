@@ -44,35 +44,41 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
+import keyBy from "lodash/keyBy";
 import { useAccount } from "use-wagmi";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { writeEmergencyGovernor } from "@/lib/sdk";
 
-interface CastedProposal {
-  vote: number;
-  proposalId: string;
-  reason?: string;
-}
-
-const selectedCastProposals = ref<Array<CastedProposal>>([]);
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
+const selectedVotesStore = useLocalSelectedVotes();
 const ttg = useTtgStore();
 
-const activeProposals = computed(() =>
-  proposalsStore.getProposalsByState("Active"),
+const emergencyProposals = computed(() =>
+  proposalsStore
+    .getProposalsByState("Active")
+    .filter((p) => p.votingType === "Emergency"),
 );
 
-const emergencyProposals = computed(() =>
-  activeProposals.value.filter((p) => p.votingType === "Emergency"),
+const emergencyProposalsByKeys = computed(() =>
+  keyBy(emergencyProposals.value, "proposalId"),
 );
+
+const emergencyProposalsVotes = computed(() =>
+  selectedVotesStore.selected.filter(
+    (vote) => emergencyProposalsByKeys.value[vote.proposalId] != undefined,
+  ),
+);
+
 const hasProposals = computed(
   () => emergencyProposals && emergencyProposals.value.length > 0,
 );
 
 const isSelectedCastProposalsFull = computed(() => {
-  return selectedCastProposals.value.length === emergencyProposals.value.length;
+  return emergencyProposals.value.every((item) =>
+    selectedVotesStore.has(item.proposalId),
+  );
 });
 
 const { address: userAccount, isConnected } = useAccount();
@@ -85,22 +91,15 @@ useHead({
 });
 
 function onCast(vote: number, proposalId: string) {
-  selectedCastProposals.value.push({ vote, proposalId });
+  selectedVotesStore.cast({ proposalId, vote });
 }
 
 function onUncast(proposalId: string) {
-  selectedCastProposals.value = selectedCastProposals.value.filter(
-    (p) => p.proposalId !== proposalId,
-  );
+  selectedVotesStore.remove(proposalId);
 }
 
 function updateReasonForVote(value: string, proposalId: string) {
-  selectedCastProposals.value = selectedCastProposals.value.map((p) => {
-    if (p.proposalId === proposalId) {
-      return { ...p, reason: value };
-    }
-    return p;
-  });
+  selectedVotesStore.update({ proposalId, reason: value });
 }
 
 const hasVotedOnAllProposals = ref(false);
@@ -112,14 +111,23 @@ async function onCastBatchVotes() {
 
   try {
     let hash;
-    const reasons = selectedCastProposals.value.map((p) => p.reason || "");
-    const proposalIds = selectedCastProposals.value.map((p) =>
-      BigInt(p.proposalId),
-    );
-    const votes = selectedCastProposals.value.map((p) => p.vote);
+    const { reasons, proposalIds, votes } =
+      emergencyProposalsVotes.value.reduce(
+        (result, vote) => {
+          result.reasons.push(vote.reason || "");
+          result.proposalIds.push(BigInt(vote.proposalId));
+          result.votes.push(vote.vote);
+          return result;
+        },
+        {
+          reasons: [] as string[],
+          proposalIds: [] as bigint[],
+          votes: [] as number[],
+        },
+      );
 
-    const isOnlyOneVote = selectedCastProposals.value.length === 1;
-    const anyProposalHasReason = selectedCastProposals.value.some(
+    const isOnlyOneVote = emergencyProposalsVotes.value.length === 1;
+    const anyProposalHasReason = emergencyProposalsVotes.value.some(
       (p) => p.reason,
     );
 
