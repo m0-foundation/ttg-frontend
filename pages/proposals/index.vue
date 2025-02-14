@@ -275,7 +275,7 @@ async function onCastBatchVotes() {
       );
     }
 
-    selectedVotesStore.clean();
+    selectedVotesStore.removeMany(proposalIds.map(String));
     await ttg.fetchTokens();
     balances.refetch();
     votedOnAllProposals.refetch();
