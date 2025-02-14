@@ -38,12 +38,11 @@
         {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
 
-      <button
-        id="show-details"
-        type="button"
+      <NuxtLink
+        tag="a"
+        :to="`/proposal/${proposal.proposalId}`"
         class="uppercase text-xs flex justify-between hover:underline border border-gray-200 w-full p-3 my-4"
         data-test="proposal-button-show-details"
-        @click="onViewProposal"
       >
         <span>show details </span>
         <svg
@@ -62,7 +61,7 @@
             fill="currentColor"
           />
         </svg>
-      </button>
+      </NuxtLink>
 
       <div
         v-if="proposal?.state === 'Active'"
@@ -241,10 +240,6 @@ const voteEndTimestamp = ref();
 const { onlyDescription, title } = useParsedDescriptionTitle(
   props.proposal.description,
 );
-
-async function onViewProposal() {
-  await navigateTo(`/proposal/${props.proposal.proposalId}`);
-}
 
 function onExecuteProposal() {
   emit("on-execute", props.proposal);
