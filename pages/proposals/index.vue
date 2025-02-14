@@ -32,7 +32,7 @@
             <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
               Votes submitted:
               <span>
-                {{ selectedVotes.length }} /
+                {{ standardProposalsVotes.length }} /
                 {{ mandatoryToVoteProposals.length }}
               </span>
             </span>
@@ -102,6 +102,7 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
+import keyBy from "lodash/keyBy";
 import { useAccount, useReadContract } from "use-wagmi";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { standardGovernorAbi, writeStandardGovernor } from "@/lib/sdk";
@@ -115,7 +116,7 @@ import {
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
-const selectedVotes = useLocalSelectedVotes();
+const selectedVotesStore = useLocalSelectedVotes();
 const ttg = useTtgStore();
 
 const activeProposals = computed(() =>
@@ -124,6 +125,16 @@ const activeProposals = computed(() =>
 
 const standardProposals = computed(() =>
   activeProposals.value.filter((p) => p.votingType === "Standard"),
+);
+
+const standardProposalsByKeys = computed(() =>
+  keyBy(standardProposals.value, "proposalId"),
+);
+
+const standardProposalsVotes = computed(() =>
+  selectedVotesStore.selected.filter(
+    (vote) => standardProposalsByKeys.value[vote.proposalId] != undefined,
+  ),
 );
 
 const mandatoryToVoteProposals = computed(() =>
@@ -135,13 +146,17 @@ const hasProposals = computed(
 );
 
 const isSelectedCastProposalsFull = computed(() => {
-  return mandatoryToVoteProposals.value.every((item) => {
-    selectedVotes.has(item.proposalId);
-  });
+  return mandatoryToVoteProposals.value.every((item) =>
+    selectedVotesStore.has(item.proposalId),
+  );
 });
 
 const progressBarWidth = computed(() => {
-  return (selectedVotes.length / mandatoryToVoteProposals.value.length) * 100;
+  return (
+    (standardProposalsVotes.value.length /
+      mandatoryToVoteProposals.value.length) *
+    100
+  );
 });
 
 const { address: userAccount, isConnected } = useAccount();
@@ -168,15 +183,15 @@ useHead({
 });
 
 function onCast(vote: number, proposalId: string) {
-  selectedVotes.cast({ proposalId, vote });
+  selectedVotesStore.cast({ proposalId, vote });
 }
 
 function updateReasonForVote(value: string, proposalId: string) {
-  selectedVotes.update({ proposalId, reason: value });
+  selectedVotesStore.update({ proposalId, reason: value });
 }
 
 function onUncast(proposalId: string) {
-  selectedVotes.remove(proposalId);
+  selectedVotesStore.remove(proposalId);
 }
 
 const { data: hasVotedOnAllProposals, ...votedOnAllProposals } =
@@ -200,7 +215,7 @@ async function onCastBatchVotes() {
 
   try {
     let hash;
-    const { reasons, proposalIds, votes } = selectedVotes.selected.reduce(
+    const { reasons, proposalIds, votes } = standardProposalsVotes.value.reduce(
       (result, vote) => {
         result.reasons.push(vote.reason || "");
         result.proposalIds.push(BigInt(vote.proposalId));
@@ -214,8 +229,10 @@ async function onCastBatchVotes() {
       },
     );
 
-    const isOnlyOneVote = selectedVotes.length === 1;
-    const anyProposalHasReason = selectedVotes.selected.some((p) => p.reason);
+    const isOnlyOneVote = standardProposalsVotes.value.length === 1;
+    const anyProposalHasReason = standardProposalsVotes.value.some(
+      (p) => p.reason,
+    );
 
     if (anyProposalHasReason && isOnlyOneVote) {
       hash = await castSingleVoteWithReason(
@@ -258,7 +275,7 @@ async function onCastBatchVotes() {
       );
     }
 
-    selectedVotes.clean();
+    selectedVotesStore.clean();
     await ttg.fetchTokens();
     balances.refetch();
     votedOnAllProposals.refetch();

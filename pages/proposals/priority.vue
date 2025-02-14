@@ -44,6 +44,7 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
+import keyBy from "lodash/keyBy";
 import { useAccount } from "use-wagmi";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { writeEmergencyGovernor } from "@/lib/sdk";
@@ -51,7 +52,7 @@ import { writeEmergencyGovernor } from "@/lib/sdk";
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
-const selectedVotes = useLocalSelectedVotes();
+const selectedVotesStore = useLocalSelectedVotes();
 const ttg = useTtgStore();
 
 const emergencyProposals = computed(() =>
@@ -59,13 +60,24 @@ const emergencyProposals = computed(() =>
     .getProposalsByState("Active")
     .filter((p) => p.votingType === "Emergency"),
 );
+
+const emergencyProposalsByKeys = computed(() =>
+  keyBy(emergencyProposals.value, "proposalId"),
+);
+
+const emergencyProposalsVotes = computed(() =>
+  selectedVotesStore.selected.filter(
+    (vote) => emergencyProposalsByKeys.value[vote.proposalId] != undefined,
+  ),
+);
+
 const hasProposals = computed(
   () => emergencyProposals && emergencyProposals.value.length > 0,
 );
 
 const isSelectedCastProposalsFull = computed(() => {
   return emergencyProposals.value.every((item) =>
-    selectedVotes.has(item.proposalId),
+    selectedVotesStore.has(item.proposalId),
   );
 });
 
@@ -79,15 +91,15 @@ useHead({
 });
 
 function onCast(vote: number, proposalId: string) {
-  selectedVotes.cast({ proposalId, vote });
+  selectedVotesStore.cast({ proposalId, vote });
 }
 
 function onUncast(proposalId: string) {
-  selectedVotes.remove(proposalId);
+  selectedVotesStore.remove(proposalId);
 }
 
 function updateReasonForVote(value: string, proposalId: string) {
-  selectedVotes.update({ proposalId, reason: value });
+  selectedVotesStore.update({ proposalId, reason: value });
 }
 
 const hasVotedOnAllProposals = ref(false);
@@ -99,22 +111,25 @@ async function onCastBatchVotes() {
 
   try {
     let hash;
-    const { reasons, proposalIds, votes } = selectedVotes.selected.reduce(
-      (result, vote) => {
-        result.reasons.push(vote.reason || "");
-        result.proposalIds.push(BigInt(vote.proposalId));
-        result.votes.push(vote.vote);
-        return result;
-      },
-      {
-        reasons: [] as string[],
-        proposalIds: [] as bigint[],
-        votes: [] as number[],
-      },
-    );
+    const { reasons, proposalIds, votes } =
+      emergencyProposalsVotes.value.reduce(
+        (result, vote) => {
+          result.reasons.push(vote.reason || "");
+          result.proposalIds.push(BigInt(vote.proposalId));
+          result.votes.push(vote.vote);
+          return result;
+        },
+        {
+          reasons: [] as string[],
+          proposalIds: [] as bigint[],
+          votes: [] as number[],
+        },
+      );
 
-    const isOnlyOneVote = selectedVotes.length === 1;
-    const anyProposalHasReason = selectedVotes.selected.some((p) => p.reason);
+    const isOnlyOneVote = emergencyProposalsVotes.value.length === 1;
+    const anyProposalHasReason = emergencyProposalsVotes.value.some(
+      (p) => p.reason,
+    );
 
     if (anyProposalHasReason && isOnlyOneVote) {
       hash = await castSingleVoteWithReason(
