@@ -191,7 +191,6 @@ const props = defineProps<ProposalCardProps>();
 const emit = defineEmits<{
   (e: "on-cast", vote: number, proposaId: string): void;
   (e: "on-uncast", proposaId: string): void;
-  (e: "on-view", proposaId: string): void;
   (e: "on-execute", proposal: MProposal): void;
   (e: "update-reason-for-vote", value: string, proposalId: string): void;
 }>();
