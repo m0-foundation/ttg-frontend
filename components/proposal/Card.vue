@@ -145,11 +145,17 @@
         <div>
           <UTextarea
             v-if="reasonForVoteCheckbox"
-            id="reason-vote"
             ref="reasonForVoteTextarea"
-            v-model="reasonForVote"
+            :value="localStoredVote?.reason || ''"
             class="reason-textarea"
             data-test="reason-vote-textarea"
+            @input="
+              emit(
+                'update-reason-for-vote',
+                $event.target.value,
+                props.proposal.proposalId,
+              )
+            "
           ></UTextarea>
         </div>
       </div>
@@ -196,25 +202,35 @@ const emit = defineEmits<{
 }>();
 
 const apiStore = useApiClientStore();
-
+const localSelectedVotes = useLocalSelectedVotes();
 const { address: userAccount, isConnected, isDisconnected } = useAccount();
 
-const selectedVote = ref<null | boolean>(null);
-const reasonForVoteCheckbox = ref<boolean | undefined>(false);
-const reasonForVote = ref<string>("");
+const localStoredVote = computed(() =>
+  localSelectedVotes.get(props.proposal.proposalId),
+);
+
+const selectedVote = computed(() =>
+  localStoredVote.value != null
+    ? localStoredVote.value.vote === 0
+      ? false
+      : true
+    : null,
+);
+
+const reasonForVoteCheckbox = ref<boolean | undefined>(
+  Boolean(localStoredVote.value?.reason),
+);
 const reasonForVoteTextarea = ref();
 
 watch(reasonForVoteCheckbox, async (value) => {
   if (value) {
+    // Focus the textarea when enabled
     await nextTick();
-    reasonForVoteTextarea?.value.focus();
+    reasonForVoteTextarea.value?.focus();
   } else {
-    reasonForVote.value = "";
+    // Clean reason when disabled
+    emit("update-reason-for-vote", "", props.proposal.proposalId);
   }
-});
-
-watch(reasonForVote, (value) => {
-  emit("update-reason-for-vote", value, props.proposal.proposalId);
 });
 
 const isProposalWithError = computed(() => {
@@ -256,18 +272,15 @@ function onBatchCastSelected(vote: boolean) {
   // no vote has been select then click on any button
   if (selectedVote.value === null) {
     emit("on-cast", Number(vote), props.proposal.proposalId);
-    selectedVote.value = vote;
   }
   // vote has been select on the same button
   else if (selectedVote.value === vote) {
     emit("on-uncast", props.proposal.proposalId);
-    selectedVote.value = null;
   }
   // vote has been select on the other button
   else if (selectedVote.value !== vote) {
     emit("on-uncast", props.proposal.proposalId);
     emit("on-cast", Number(vote), props.proposal.proposalId);
-    selectedVote.value = vote;
   }
 }
 

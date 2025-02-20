@@ -13,7 +13,6 @@ import { MProposal } from "@/lib/api/types";
 export interface ProposalListProps {
   proposals: MProposal[];
   loading: boolean;
-  selectedProposal?: string;
 }
 
 const props = defineProps<ProposalListProps>();
