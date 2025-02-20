@@ -32,7 +32,7 @@
             <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
               Votes submitted:
               <span>
-                {{ selectedCastProposals.length }} /
+                {{ standardProposalsVotes.length }} /
                 {{ mandatoryToVoteProposals.length }}
               </span>
             </span>
@@ -102,6 +102,7 @@
 
 <script setup lang="ts">
 import { Hash } from "viem";
+import keyBy from "lodash/keyBy";
 import { useAccount, useReadContract } from "use-wagmi";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { standardGovernorAbi, writeStandardGovernor } from "@/lib/sdk";
@@ -112,16 +113,10 @@ import {
   useMVotingPower,
 } from "@/lib/hooks";
 
-interface CastedProposal {
-  vote: number;
-  proposalId: string;
-  reason?: string;
-}
-
-const selectedCastProposals = ref<Array<CastedProposal>>([]);
 const isLoading = ref(false);
 
 const proposalsStore = useProposalsStore();
+const selectedVotesStore = useLocalSelectedVotes();
 const ttg = useTtgStore();
 
 const activeProposals = computed(() =>
@@ -130,6 +125,16 @@ const activeProposals = computed(() =>
 
 const standardProposals = computed(() =>
   activeProposals.value.filter((p) => p.votingType === "Standard"),
+);
+
+const standardProposalsByKeys = computed(() =>
+  keyBy(standardProposals.value, "proposalId"),
+);
+
+const standardProposalsVotes = computed(() =>
+  selectedVotesStore.selected.filter(
+    (vote) => standardProposalsByKeys.value[vote.proposalId] != undefined,
+  ),
 );
 
 const mandatoryToVoteProposals = computed(() =>
@@ -141,14 +146,14 @@ const hasProposals = computed(
 );
 
 const isSelectedCastProposalsFull = computed(() => {
-  return (
-    selectedCastProposals.value.length === mandatoryToVoteProposals.value.length
+  return mandatoryToVoteProposals.value.every((item) =>
+    selectedVotesStore.has(item.proposalId),
   );
 });
 
 const progressBarWidth = computed(() => {
   return (
-    (selectedCastProposals.value.length /
+    (standardProposalsVotes.value.length /
       mandatoryToVoteProposals.value.length) *
     100
   );
@@ -178,22 +183,15 @@ useHead({
 });
 
 function onCast(vote: number, proposalId: string) {
-  selectedCastProposals.value.push({ vote, proposalId });
+  selectedVotesStore.cast({ proposalId, vote });
 }
 
 function updateReasonForVote(value: string, proposalId: string) {
-  selectedCastProposals.value = selectedCastProposals.value.map((p) => {
-    if (p.proposalId === proposalId) {
-      return { ...p, reason: value };
-    }
-    return p;
-  });
+  selectedVotesStore.update({ proposalId, reason: value });
 }
 
 function onUncast(proposalId: string) {
-  selectedCastProposals.value = selectedCastProposals.value.filter(
-    (p) => p.proposalId !== proposalId,
-  );
+  selectedVotesStore.remove(proposalId);
 }
 
 const { data: hasVotedOnAllProposals, ...votedOnAllProposals } =
@@ -217,14 +215,22 @@ async function onCastBatchVotes() {
 
   try {
     let hash;
-    const reasons = selectedCastProposals.value.map((p) => p.reason || "");
-    const proposalIds = selectedCastProposals.value.map((p) =>
-      BigInt(p.proposalId),
+    const { reasons, proposalIds, votes } = standardProposalsVotes.value.reduce(
+      (result, vote) => {
+        result.reasons.push(vote.reason || "");
+        result.proposalIds.push(BigInt(vote.proposalId));
+        result.votes.push(vote.vote);
+        return result;
+      },
+      {
+        reasons: [] as string[],
+        proposalIds: [] as bigint[],
+        votes: [] as number[],
+      },
     );
-    const votes = selectedCastProposals.value.map((p) => p.vote);
 
-    const isOnlyOneVote = selectedCastProposals.value.length === 1;
-    const anyProposalHasReason = selectedCastProposals.value.some(
+    const isOnlyOneVote = standardProposalsVotes.value.length === 1;
+    const anyProposalHasReason = standardProposalsVotes.value.some(
       (p) => p.reason,
     );
 
@@ -269,6 +275,7 @@ async function onCastBatchVotes() {
       );
     }
 
+    selectedVotesStore.removeMany(proposalIds.map(String));
     await ttg.fetchTokens();
     balances.refetch();
     votedOnAllProposals.refetch();
