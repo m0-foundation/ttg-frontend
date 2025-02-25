@@ -4,18 +4,6 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 
-const getAuctionActive = () => {
-  if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "true") {
-    return true;
-  }
-  if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "false") {
-    return false;
-  }
-
-  return null;
-};
-const auctionActive = getAuctionActive();
-
 export default defineNuxtConfig({
   alias: {
     color: "color/index.js",
@@ -27,7 +15,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       walletConnectProjectId: process.env.VITE_APP_WALLET_CONNECT_PROJECT_ID,
-      auctionActive,
       env: {
         node: process.env.NODE_ENV,
         build: process.env.BUILD_ENV,
@@ -54,21 +41,6 @@ export default defineNuxtConfig({
     "@nuxt/devtools",
     "floating-vue/nuxt",
   ],
-
-  //no router is ignored
-  ignore:
-    auctionActive === true
-      ? [
-          "pages/config/*",
-          "pages/profile/*",
-          "pages/proposal/*",
-          "pages/proposals/*",
-          "pages/actors.vue",
-          "pages/delegate.vue",
-        ]
-      : auctionActive === false
-        ? ["pages/auction.vue", "pages/rewards.vue"]
-        : undefined,
 
   imports: {
     dirs: ["./stores"],

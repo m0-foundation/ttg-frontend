@@ -1,10 +1,10 @@
 # M^0 Governance dApp
 
 #### Current decentralized deployments:
+
 Fleek (IPFS): [governance-m0.on-fleek.app](https://governance-m0.on-fleek.app/)
 
 <img width="1089" alt="Screenshot 2024-05-14 at 2 04 43 PM" src="https://github.com/MZero-Labs/ttg-frontend/assets/1220854/f63ccd58-99b4-48fd-871f-f6016812f380">
-
 
 ## 1. Contracts
 
@@ -48,7 +48,6 @@ Use in other chains you must create an .env file with this parameters:
 
 ```
 BUILD_ENV=local(hardhat) | development(sepolia) | staging(sepolia) | production(mainnet)
-VITE_APP_IS_AUCTION_ACTIVE=true | false | undefined
 VITE_APP_RPC_URL_MAIN=string
 VITE_APP_RPC_URL_FALLBACK=string
 VITE_APP_WALLET_CONNECT_PROJECT_ID=string
