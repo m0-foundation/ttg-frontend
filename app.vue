@@ -7,6 +7,17 @@
       <Meta content="/open-graph.jpg" property="og:image" />
       <Meta content="/favicon.jpg" property="twitter:image" />
 
+      <Link
+        href="https://governance.m0.org"
+        rel="alternate"
+        hreflang="x-default"
+      />
+      <Link
+        href="https://governance.m0.org"
+        rel="canonical"
+        hreflang="x-default"
+      />
+
       <Link href="/favicon.png" rel="shortcut icon" type="image/x-icon" />
       <link
         rel="manifest"
