@@ -24,7 +24,8 @@ export const validators = [
   },
   {
     title: "Validator One",
-    cardDescription: "",
+    cardDescription:
+      "Validator One is a team of experts with deep experience in IT security, artificial intelligence, and blockchain, committed to developing innovative and user-friendly solutions that enhance digital trust and security.",
     account: "0xEF1D05E206Af8103619DF7Cb576068e11Fd07270",
     timestamp: 1715827799,
     website: "www.validator-one.com",
