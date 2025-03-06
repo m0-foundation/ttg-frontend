@@ -2,13 +2,13 @@
   <UCard class="flex flex-col gap-4 max-w-lg font-inter mb-4">
     <div class="flex gap-4">
       <UCard class="w-36 h-36 flex items-center justify-center"
-        ><img :src="img" alt="img"
+        ><img :src="`/img/actors/${props.cardImage}`" :alt="`${title} logo`"
       /></UCard>
       <div>
         <h4 class="text-lg font-semibold pb-2">{{ title ? title : "-" }}</h4>
         <div class="flex gap-4 pb-4">
           <div class="text-xs">
-            <span class="text-[#728DA5]">Address:</span>
+            <span class="text-gray-500">Address:</span>
             <p class="text-gray-900 font-bold">
               <MAddressAvatar
                 :short-address="true"
@@ -18,7 +18,7 @@
             </p>
           </div>
           <div class="text-xs">
-            <span class="text-[#728DA5]">Added:</span>
+            <span class="text-gray-500">Added:</span>
             <p class="text-gray-900 font-bold">
               {{ timestamp ? useDate(timestamp).toFormat("DD.MM.YYYY") : "-" }}
             </p>
@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="text-xs">
-          <span class="text-[#728DA5]">Website:</span>
+          <span class="text-gray-500">Website:</span>
           <p class="text-gray-900 font-bold">{{ website ? website : "-" }}</p>
         </div>
       </div>
@@ -83,8 +83,4 @@ const props = defineProps({
     default: "",
   },
 });
-
-const img = computed(
-  () => new URL(`../../assets/images/${props.cardImage}`, import.meta.url).href
-);
 </script>

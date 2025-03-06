@@ -43,7 +43,7 @@
           :timestamp="validator.timestamp"
           :website="validator.website"
           :isMinter="validator.isMinter"
-          :proposalId="validator.executedEvent.args.proposalId"
+          :proposalId="validator.executedEvent?.args.proposalId"
           :cardImage="validator.image"
         />
       </div>
@@ -179,12 +179,24 @@
 import uniqBy from "lodash/uniqBy";
 import { Hash, trim, getAddress } from "viem";
 import { generateKeyEarnerClaimant } from "@/lib/api/utils";
-import { minters, validators } from "@/components/actors/ActorsData";
+import { MProposal } from "@/lib/api/types";
 
 const apiStore = useApiClientStore();
 const proposalsStore = useProposalsStore();
 const selectedCoin = ref("M");
 const listsStore = useListsStore();
+const actorStore = useActorsStore();
+
+interface ActorCard extends MProposal {
+  title: string;
+  cardDescription: string;
+  account: string;
+  timestamp: number;
+  website: string;
+  isMinter: boolean;
+  proposalId: string;
+  image: string;
+}
 
 useHead({
   titleTemplate: "%s - Actors - Protocol",
@@ -194,10 +206,12 @@ const proposals = computed(() => proposalsStore.getProposals);
 const lists = computed(() => listsStore.getFlattenLists());
 const mintersList = computed(() => listsStore.minters);
 const validatorsList = computed(() => listsStore.validators);
+const minters = computed(() => actorStore.minters);
+const validators = computed(() => actorStore.validators);
 
 const combinedMintersList = computed(() => {
   const combinedArray = mintersList.value.map((e) => {
-    const match = minters.find((f) => f.account === e.account);
+    const match = minters.value.find((f) => f.account === e.account);
     const proposal = proposals.value.find(
       (proposal) =>
         proposal.executedEvent?.transactionHash === e.transactionHash
@@ -205,19 +219,19 @@ const combinedMintersList = computed(() => {
 
     return match ? { ...e, ...match, ...proposal } : e;
   });
-  return combinedArray as any;
+  return combinedArray as ActorCard[];
 });
 
 const combinedValidatorsList = computed(() => {
   const combinedArray = validatorsList.value.map((e) => {
-    const match = validators.find((f) => f.account === e.account);
+    const match = validators.value.find((f) => f.account === e.account);
     const proposal = proposals.value.find(
       (proposal) =>
         proposal.executedEvent?.transactionHash === e.transactionHash
     );
     return match ? { ...e, ...match, ...proposal } : e;
   });
-  return combinedArray as any;
+  return combinedArray as ActorCard[];
 });
 
 const filteredEarnerLists = computed(() => {
@@ -267,10 +281,10 @@ const fetchEarnerClaimants = async () => {
           };
         }
       })
-      .filter((item) => item);
+      .filter(Boolean);
   } catch (error) {
     console.error({ error });
-    return error;
+    return undefined;
   }
 };
 
@@ -294,7 +308,7 @@ const earnersClaimantsHeaders = [
     label: "Address",
   },
   { key: "claimant", label: "Claimant" },
-  { key: "timestamp", label: "Erner added" },
+  { key: "timestamp", label: "Earner added" },
   { key: "proposal", label: "Proposal" },
 ];
 </script>
