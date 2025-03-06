@@ -1,5 +1,5 @@
 <template>
-  <UCard class="flex flex-col gap-4 max-w-lg font-inter mb-4">
+  <UCard class="flex flex-col gap-4 max-w-xl font-inter mb-4">
     <div class="flex gap-4">
       <UCard class="w-36 h-36 flex items-center justify-center"
         ><img :src="`/img/actors/${props.cardImage}`" :alt="`${title} logo`"
@@ -38,13 +38,6 @@
     <p class="text-sm text-gray-900 py-4">
       {{ description }}
     </p>
-    <NuxtLink
-      to="https://dashboard.m0.org/"
-      v-if="isMinter"
-      class="w-full text-sm flex items-center justify-center bg-[#E9F0F7] py-1"
-    >
-      Dashboard
-    </NuxtLink>
   </UCard>
 </template>
 
@@ -69,10 +62,6 @@ const props = defineProps({
   website: {
     type: String,
     default: "",
-  },
-  isMinter: {
-    type: Boolean,
-    default: false,
   },
   proposalId: {
     type: String,

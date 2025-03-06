@@ -1,6 +1,6 @@
 <template>
   <section class="flex lg:flex-row flex-col-reverse">
-    <div class="max-w-4xl">
+    <div>
       <h1 class="text-2xl lg:text-[36px] lg:leading-tight">Minters</h1>
       <p class="font-inter text-grey-500 mb-4">
         Minters are primarily incentivized to join the protocol because they
@@ -18,7 +18,6 @@
         :account="minter.account"
         :timestamp="minter.timestamp"
         :website="minter.website"
-        :isMinter="minter.isMinter"
         :proposalId="minter.executedEvent?.args?.proposalId"
         :cardImage="minter.image"
       />
@@ -42,24 +41,11 @@
           :account="validator.account"
           :timestamp="validator.timestamp"
           :website="validator.website"
-          :isMinter="validator.isMinter"
           :proposalId="validator.executedEvent?.args.proposalId"
           :cardImage="validator.image"
         />
       </div>
     </div>
-    <!-- temporary hidden until we have proper texts #smallvictory
-    <div class="lg:pl-8 lg:pt-4 pb-8">
-      <h2 class="text-xl font-ppformula font-bold mb-4">About actors</h2>
-      <p class="font-inter text-grey-500 mb-4">
-        Text what is standard proposals $M combines the benefits and convenience
-        of digital dollars while approximating the risk profile of physical cash
-      </p>
-      <NuxtLink to="/" class="font-inter text-grey-500 underline"
-        >Learn more</NuxtLink
-      >
-    </div>
-    -->
   </section>
 
   <section>
@@ -193,7 +179,6 @@ interface ActorCard extends MProposal {
   account: string;
   timestamp: number;
   website: string;
-  isMinter: boolean;
   proposalId: string;
   image: string;
 }
