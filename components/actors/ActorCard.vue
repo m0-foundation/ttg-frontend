@@ -20,7 +20,7 @@
           <div class="text-xs">
             <span class="text-gray-500">Added:</span>
             <p class="text-gray-900 font-bold">
-              {{ timestamp ? useDate(timestamp).toFormat("DD.MM.YYYY") : "-" }}
+              {{ timestamp ? useDate(timestamp).toFormat("DD MMM YYYY") : "-" }}
             </p>
             <NuxtLink
               :to="`/proposal/${props.proposalId}`"

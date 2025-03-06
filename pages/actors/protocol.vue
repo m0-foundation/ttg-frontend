@@ -85,7 +85,7 @@
 
       <template #timestamp-data="{ row }">
         <span class="text-grey-600">{{
-          useDate(row.timestamp).toFormat("DD.MM.YYYY")
+          useDate(row.timestamp).toFormat("DD MMM YYYY")
         }}</span>
       </template>
       <template #proposal-data="{ row }">
@@ -129,7 +129,7 @@
       </template>
       <template #timestamp-data="{ row }">
         <span class="text-grey-600">{{
-          useDate(row.timestamp).toFormat("DD.MM.YYYY")
+          useDate(row.timestamp).toFormat("DD MMM YYYY")
         }}</span>
       </template>
       <template #proposal-data="{ row }">
