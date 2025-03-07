@@ -26,7 +26,6 @@ export default (
     query: {
       select: (data) => {
         const votingPower = BigInt(data as unknown as bigint);
-        console.log({ votingPower, totalSupply: totalSupply.value });
 
         return {
           relative:
