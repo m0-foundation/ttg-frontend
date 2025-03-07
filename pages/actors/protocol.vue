@@ -1,7 +1,7 @@
 <template>
   <section class="flex lg:flex-row flex-col-reverse">
     <div>
-      <h1 class="text-2xl lg:text-[36px] lg:leading-tight">Minters</h1>
+      <h2 class="text-2xl lg:text-[36px] lg:leading-tight">Minters</h2>
       <p class="font-inter text-grey-500 mb-4">
         Minters are primarily incentivized to join the protocol because they
         want to earn the spread between the yield (net of expenses) on their
@@ -9,26 +9,25 @@
         Mint Ratio will determine the attractiveness of Minting relative to the
         yield spread.
       </p>
-      <ActorCard
-        v-for="minter in combinedMintersList"
-        :key="minter.title"
-        v-bind="minter"
-        :title="minter.title"
-        :description="minter.cardDescription"
-        :account="minter.account"
-        :timestamp="minter.timestamp"
-        :website="minter.website"
-        :proposalId="minter.executedEvent?.args?.proposalId"
-        :cardImage="minter.image"
-      />
-
-      <h1 class="text-2xl lg:text-[36px] lg:leading-tight mt-12">Validators</h1>
+      <div class="block lg:grid grid-cols-2 gap-4">
+        <ActorCard
+          v-for="minter in combinedMintersList"
+          :key="minter.title"
+          v-bind="minter"
+          :title="minter.title"
+          :description="minter.cardDescription"
+          :account="minter.account"
+          :timestamp="minter.timestamp"
+          :website="minter.website"
+          :proposalId="minter.executedEvent?.args?.proposalId"
+          :cardImage="minter.image"
+        />
+      </div>
+      <h2 class="text-2xl lg:text-[36px] lg:leading-tight mt-12">Validators</h2>
       <p class="font-inter text-grey-500 mb-4">
-        Economically, all Validators must be incentivized off-chain or use
-        periphery smart contracts. There is no Validator compensation in the
-        core protocol. This decision was made because the Validator landscape is
-        complex and the chance of accurately encapsulating these complex
-        economic arrangements on-chain was nil.
+        A Validator on the M^0 protocol is an independent entity permissioned by
+        governance to provide timely information about the off-chain collateral
+        used by Minters to generate $M.
       </p>
 
       <div class="block lg:grid grid-cols-2 gap-4">
@@ -49,7 +48,7 @@
   </section>
 
   <section>
-    <h1 class="text-2xl lg:text-[36px] lg:leading-tight mt-12">Earners</h1>
+    <h2 class="text-2xl lg:text-[36px] lg:leading-tight mt-12">Earners</h2>
     <p class="font-inter text-grey-500 mb-4">
       A holders or distributor of $M whose address is approved by governance to
       earn the Earner Rate.
