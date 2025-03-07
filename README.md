@@ -1,16 +1,16 @@
 # M^0 Governance dApp
 
 #### Current decentralized deployments:
+
 Fleek (IPFS): [governance-m0.on-fleek.app](https://governance-m0.on-fleek.app/)
 
 <img width="1089" alt="Screenshot 2024-05-14 at 2 04 43 PM" src="https://github.com/MZero-Labs/ttg-frontend/assets/1220854/f63ccd58-99b4-48fd-871f-f6016812f380">
-
 
 ## 1. Contracts
 
 The dApp is based on the TTG contracts in order to run the local testnet. Although it does not keep track of versioning of TTG yet. Meaning, the FE code base has to be updated to latest changes of TTG otherwise it might break.
 
-The repo is hosting the latest abis and bytecodes of ttg at folder `moldules/ttg`
+The repo is hosting the latest abis and bytecodes of ttg at folder `modules/ttg`
 
 ### 1.2 Update SDK from TTG smart contracts (only when contracts change) - (optional)
 
@@ -48,7 +48,6 @@ Use in other chains you must create an .env file with this parameters:
 
 ```
 BUILD_ENV=local(hardhat) | development(sepolia) | staging(sepolia) | production(mainnet)
-VITE_APP_IS_AUCTION_ACTIVE=true | false | undefined
 VITE_APP_RPC_URL_MAIN=string
 VITE_APP_RPC_URL_FALLBACK=string
 VITE_APP_WALLET_CONNECT_PROJECT_ID=string
@@ -110,7 +109,7 @@ docker compose -f docker-compose.sepolia.yml up
 
 You can access now type `https://localhost:3000` in your browser to access.
 
-### 2.3 Local URL (optinal)
+### 2.3 Local URL (optional)
 
 ```bash
 nano /etc/hosts

@@ -26,11 +26,7 @@
             </template>
           </MModalWeb3Connect>
 
-          <NuxtLink
-            v-if="isAuctionNotActive"
-            class="block"
-            to="/proposal/create/"
-          >
+          <NuxtLink class="block" to="/proposal/create/">
             <MButton
               :disabled="$route.path === '/proposal/create/'"
               class="mb-6 w-full flex justify-center"
@@ -44,10 +40,7 @@
 
         <nav class="text-grey-100 mb-3 lg:mb-6">
           <ul>
-            <li
-              v-for="item in mainMenuItems.filter((i) => i.isShow)"
-              :key="item.path"
-            >
+            <li v-for="item in mainMenuItems" :key="item.path">
               <NuxtLink
                 :to="item.path"
                 :class="{
@@ -70,9 +63,8 @@
 
         <nav class="text-grey-100 mb-3 lg:mb-6">
           <ul>
-            <li v-for="item in profileMenuItems" :key="item.to">
+            <li v-for="item in profileMenuItems" :key="item.path">
               <NuxtLink
-                v-if="item.isShow"
                 :to="item.path"
                 :class="{
                   'notification-dot': item?.notification,
@@ -172,16 +164,9 @@ import { useMVotingPower, useMBalances } from "@/lib/hooks";
 const { isConnected, address } = useAccount();
 const { disconnect } = useDisconnect();
 const { isCorrectChain, forceSwitchChain } = useCorrectChain();
-const { amountLeftToAuction } = useAuction();
-
-const ttg = useTtgStore();
 const router = useRouter();
 
 const { currentRoute } = router;
-
-const isTransferEpoch = computed(() => ttg.epoch.current?.type === "TRANSFER");
-
-const config = useRuntimeConfig();
 
 const { power: powerVotingPower, zero: zeroVotingPower } =
   useMVotingPower(address);
@@ -189,64 +174,32 @@ const { power: powerVotingPower, zero: zeroVotingPower } =
 const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
   useMBalances(address);
 
-const auctionActive = computed(() => {
-  return config.public.auctionActive as unknown as boolean | string;
-});
-
-const isAuctionNotActive = computed(() => {
-  return auctionActive.value !== true;
-});
-
-const isAuctionActive = computed(() => {
-  return auctionActive.value === true || auctionActive.value === "";
-});
-
 const mainMenuItems = computed(() => {
   return [
     {
       title: "Home",
       path: "/proposals/",
-      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-proposals",
+      notification: false,
       exactRoute: true,
     },
     {
       title: "All proposals",
       path: "/proposals/all",
-      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-all-proposals",
+      notification: false,
     },
     {
       title: "Actors",
       path: "/actors/",
-      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-lists",
+      notification: false,
     },
     {
       title: "Configs",
       path: "/config/",
-      isShow: isAuctionNotActive.value,
       dataTest: "sidebar-link-configs",
-    },
-
-    {
-      title: "Auction",
-      path: "/auction/",
-      isShow: isAuctionActive.value,
-      dataTest: "sidebar-link-auction",
-      notification: amountLeftToAuction.value && isTransferEpoch.value,
-    },
-    {
-      title: "Rewards",
-      path: "/rewards/",
-      isShow: isAuctionActive.value,
-      dataTest: "sidebar-link-rewards",
-    },
-    {
-      title: "Wrap/Unwrap",
-      path: "/wrap/",
-      isShow: isAuctionActive.value,
-      dataTest: "sidebar-link-wrap",
+      notification: false,
     },
   ];
 });
@@ -255,8 +208,8 @@ const profileMenuItems = computed(() => [
   {
     title: "My Profile",
     path: "/profile/me/",
-    isShow: isAuctionNotActive.value,
     dataTest: "sidebar-link-my-profile",
+    notification: false,
   },
 ]);
 </script>
@@ -266,6 +219,7 @@ li {
   list-style-type: none;
   @apply text-grey-100 py-1 hover:text-green-700;
 }
+
 .active {
   @apply text-green-700 bg-transparent;
 }
@@ -274,6 +228,7 @@ li {
   content: "_";
   margin-left: -3px;
 }
+
 .notification-dot::after {
   content: "";
   @apply absolute ml-1 bg-accent-mint w-[6px] h-[6px];
