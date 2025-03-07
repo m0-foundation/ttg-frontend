@@ -86,7 +86,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to check the executed proposal", () => {
-      cy.visit("/proposals/all");
+      cy.visit("/history");
 
       cy.get('span:contains("executed")').should("have.length", 2);
     });

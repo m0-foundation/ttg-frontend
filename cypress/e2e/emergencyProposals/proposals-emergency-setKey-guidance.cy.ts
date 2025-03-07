@@ -1,11 +1,11 @@
 describe("Proposals", () => {
   describe("type action: setKey", () => {
     let proposalUrl = "";
-   
-    const input = "5fd924625f6ab16a19cc9807c7c506ae1813490e4ba675f843d5a10e0baacdb8"; //sha256
 
+    const input =
+      "5fd924625f6ab16a19cc9807c7c506ae1813490e4ba675f843d5a10e0baacdb8"; //sha256
 
-    function createProposal(key:string, input:string){
+    function createProposal(key: string, input: string) {
       cy.visit("/proposal/create");
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
@@ -36,7 +36,6 @@ describe("Proposals", () => {
       cy.connectWallet();
     });
 
-
     it("I should be able to CREATE a proposal - Adopted Guidance ", () => {
       createProposal("Adopted guidance", input);
     });
@@ -65,8 +64,6 @@ describe("Proposals", () => {
       createProposal("Mandatory contract guidance", input);
     });
 
-  
-
     it("I should be able to CAST vote YES for the proposal", () => {
       cy.castYesAllEmergencyProposals();
     });
@@ -75,9 +72,9 @@ describe("Proposals", () => {
     });
 
     it("I should be able to check the executed proposal", () => {
-      cy.visit('/proposals/all');
+      cy.visit("/history");
 
-      cy.get('span:contains("executed")').should('have.length', 7);
+      cy.get('span:contains("executed")').should("have.length", 7);
     });
   });
 });
