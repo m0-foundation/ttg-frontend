@@ -1,10 +1,12 @@
+import { randomNumber } from "../../lib/random-number";
+
 describe("Proposals", () => {
   describe("type action: setProposalFee", () => {
     const input =
       "5fd924625f6ab16a19cc9807c7c506ae1813490e4ba675f843d5a10e0baacdb8";
     const description = `Add protocol guidance:${input}`;
 
-    const input2 = "1";
+    const input2 = randomNumber(60, 3153600); // accepted range
     const description2 = `Add Update collateral interval:${input2}`;
 
     let proposalUrl = "";
@@ -41,7 +43,7 @@ describe("Proposals", () => {
       cy.get("[data-test='protocolConfigSelect']").click();
       cy.contains("Update collateral interval").click();
 
-      cy.get("input[data-test='proposalValue2']").type(input2);
+      cy.get("input[data-test='proposalValue2']").type(input2.toString());
       cy.get("input[data-test='title']").type(description2);
 
       cy.createProposalAddDescription(description2);

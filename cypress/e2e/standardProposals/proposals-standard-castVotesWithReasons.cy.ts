@@ -1,3 +1,5 @@
+import { randomNumber } from "../../lib/random-number";
+
 describe("Proposals", () => {
   describe("type action: castVotesWithReason", () => {
     it("I should be able to CREATE a proposal - guidance", () => {
@@ -75,8 +77,3 @@ describe("Proposals", () => {
     });
   });
 });
-
-function randomNumber(from: number, to: number): number {
-  const n = Math.random() * (to - from) + from;
-  return parseInt(n.toString(), 10);
-}
