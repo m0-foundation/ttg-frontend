@@ -14,7 +14,9 @@ export default (
 
   const ttg = storeToRefs(useTtgStore());
   const token = ttg.tokens.value.power;
-  const totalSupply = computed(() => ttg.tokens.value.power.totalSupply.value);
+  const totalSupply = computed<bigint>(
+    () => ttg.tokens.value.power.totalSupply?.value || 0n,
+  );
 
   return useReadContract({
     address: ttg.contracts.value.powerToken as Hash,
@@ -24,12 +26,13 @@ export default (
     query: {
       select: (data) => {
         const votingPower = BigInt(data as unknown as bigint);
+        console.log({ votingPower, totalSupply: totalSupply.value });
 
         return {
           relative:
             votingPower === 0n
               ? 0
-              : Number((votingPower * 100n * 100n) / totalSupply.value) / 100,
+              : (Number(votingPower) / Number(totalSupply.value)) * 100,
           value: votingPower,
           formatted: formatUnits(votingPower, token.decimals || 0),
           hasVotingPower: votingPower > 0n,
