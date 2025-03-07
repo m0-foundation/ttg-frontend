@@ -1,6 +1,7 @@
 describe("Proposals", () => {
   describe("type action: setProposalFee", () => {
-    const input = "5fd924625f6ab16a19cc9807c7c506ae1813490e4ba675f843d5a10e0baacdb8";
+    const input =
+      "5fd924625f6ab16a19cc9807c7c506ae1813490e4ba675f843d5a10e0baacdb8";
     const description = `Add protocol guidance:${input}`;
 
     const input2 = "1";
@@ -14,7 +15,7 @@ describe("Proposals", () => {
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
-      
+
       cy.get("[data-test='protocolGuidanceSetKey']").should("exist").click();
       cy.get("[data-test='guidance-types-select']").click();
       cy.contains("Adopted guidance").click();
@@ -35,7 +36,7 @@ describe("Proposals", () => {
       cy.connectWallet();
 
       cy.get("[data-test='proposalTypeSelect']").should("exist").click();
-      
+
       cy.get("[data-test='protocolSetKey']").should("exist").click();
       cy.get("[data-test='protocolConfigSelect']").click();
       cy.contains("Update collateral interval").click();
@@ -58,7 +59,9 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({ force: true });
+        cy.wrap($proposal)
+          .find("[data-test='proposal-button-show-details']")
+          .click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
@@ -83,9 +86,9 @@ describe("Proposals", () => {
     });
 
     it("I should be able to check the executed proposal", () => {
-      cy.visit('/proposals/all');
+      cy.visit("/proposals/all");
 
-      cy.get('span:contains("executed")').should('have.length', 2);
+      cy.get('span:contains("executed")').should("have.length", 2);
     });
   });
 });
