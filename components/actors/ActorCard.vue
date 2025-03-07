@@ -1,12 +1,24 @@
 <template>
   <UCard class="flex flex-col gap-4 max-w-xl font-inter mb-4">
     <div class="flex gap-4">
-      <UCard class="w-36 h-36 flex items-center justify-center"
-        ><img :src="`/img/actors/${props.cardImage}`" :alt="`${title} logo`"
+      <UCard
+        class="w-36 h-36 flex items-center justify-center border-0 ring-0 shadow-none"
+        ><img
+          :src="`/img/actors/${props.cardImage ? props.cardImage : 'NoActor.svg'}`"
+          :alt="`${title} logo`"
       /></UCard>
       <div>
-        <h4 class="text-lg font-semibold pb-2">{{ title ? title : "-" }}</h4>
-        <div class="flex gap-4 pb-4">
+        <h4 v-if="title" class="text-lg font-semibold pb-2">
+          {{ title }}
+        </h4>
+        <h2 v-else class="text-lg font-semibold pb-2">
+          <MAddressAvatar
+            :short-address="true"
+            :showAvatar="false"
+            :address="account"
+          />
+        </h2>
+        <div class="flex gap-4 pb-4 flex-wrap">
           <div class="text-xs">
             <span class="text-gray-500">Address:</span>
             <p class="text-gray-900 font-bold">
@@ -19,19 +31,24 @@
           </div>
           <div class="text-xs">
             <span class="text-gray-500">Added:</span>
-            <p class="text-gray-900 font-bold">
-              {{ timestamp ? useDate(timestamp).toFormat("DD MMM YYYY") : "-" }}
-            </p>
-            <NuxtLink
-              :to="`/proposal/${props.proposalId}`"
-              class="underline text-gray-900"
-              >Show proposal</NuxtLink
-            >
+            <div class="flex">
+              <p class="text-gray-900 font-bold">
+                {{
+                  timestamp ? useDate(timestamp).toFormat("DD MMM YYYY") : "-"
+                }}
+                ·
+              </p>
+              <NuxtLink
+                :to="`/proposal/${props.proposalId}`"
+                class="underline text-gray-900 ml-1"
+                >Show proposal</NuxtLink
+              >
+            </div>
           </div>
         </div>
-        <div class="text-xs">
+        <div class="text-xs" v-if="website">
           <span class="text-gray-500">Website:</span>
-          <p class="text-gray-900 font-bold">{{ website ? website : "-" }}</p>
+          <p class="text-gray-900 font-bold">{{ website }}</p>
         </div>
       </div>
     </div>
