@@ -190,6 +190,10 @@ Cypress.Commands.add(
 
     cy.contains("article", description).then(($proposal) => {
       cy.wrap($proposal).find("#button-cast-yes").click();
+
+      if (page !== "zero") {
+        cy.get("#button-cast-submit").click();
+      }
     });
   }
 );
@@ -201,10 +205,9 @@ Cypress.Commands.add("castYesAllEmergencyProposals", () => {
 
   cy.get("article").each(($proposal) => {
     cy.wrap($proposal).find("#button-cast-yes").click();
-    cy.get("[data-test='dialog-button-confirm']").click();
-    cy.wrap($proposal).contains("Your vote has been submitted");
-    cy.wait(500);
   });
+
+  cy.get("#button-cast-submit").click();
 });
 
 Cypress.Commands.add("executeAllProposals", () => {
@@ -213,7 +216,6 @@ Cypress.Commands.add("executeAllProposals", () => {
 
   cy.get("article").each(($proposal) => {
     cy.wrap($proposal).find("#button-proposal-execute").click();
-    // cy.wrap($proposal).contains("Proposal executed successfully!");
     cy.wait(500);
   });
 });
