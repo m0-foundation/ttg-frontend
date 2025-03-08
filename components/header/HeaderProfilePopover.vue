@@ -31,7 +31,7 @@
                 <div class="flex items-center gap-2">
                   <component :is="token.icon" class="w-5 h-5" />
                   <span class="text-xl leading-tight">
-                    {{ token.votingPower }}%
+                    {{ token.votingPower.toFixed(4) }}%
                   </span>
                 </div>
                 <span class="text-sm text-grey-500 mb-0.5">
@@ -83,14 +83,14 @@ const tokens = computed(() => {
   return [
     {
       label: "Power",
-      balance: balancePowerToken?.data.value?.formatted || 0n,
-      votingPower: powerVotingPower?.data.value?.relative || 0n,
+      balance: balancePowerToken?.data.value?.formatted || 0,
+      votingPower: powerVotingPower?.data.value?.relative || 0,
       icon: MIconPower,
     },
     {
       label: "Zero",
-      balance: balanceZeroToken?.data.value?.formatted || 0n,
-      votingPower: zeroVotingPower?.data.value?.relative || 0n,
+      balance: balanceZeroToken?.data.value?.formatted || 0,
+      votingPower: zeroVotingPower?.data.value?.relative || 0,
       icon: MIconZero,
     },
   ];
