@@ -47,7 +47,9 @@ describe("Emergency Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({ force: true });
+        cy.wrap($proposal)
+          .find("[data-test='proposal-button-show-details']")
+          .click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);

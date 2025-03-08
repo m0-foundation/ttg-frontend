@@ -41,7 +41,9 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({ force: true });
+        cy.wrap($proposal)
+          .find("[data-test='proposal-button-show-details']")
+          .click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
@@ -57,7 +59,7 @@ describe("Proposals", () => {
     });
 
     it("I should be able to CAST vote YES for the proposal", () => {
-      cy.castYesOneProposal(description, 'priority');
+      cy.castYesOneProposal(description, "priority");
     });
 
     it("I should be able to EXECUTE the proposal", () => {
