@@ -1,4 +1,4 @@
-describe("Proposals", () => {
+describe("Standard: remove and add to list", () => {
   let proposalUrl = "";
   const LIST = "minters";
   const add1 = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";

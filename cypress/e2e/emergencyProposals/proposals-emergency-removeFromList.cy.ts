@@ -1,4 +1,4 @@
-describe("Proposals", () => {
+describe("Emergency Proposals: remove from list", () => {
   const LIST = "minters";
   let proposalUrl = "";
 

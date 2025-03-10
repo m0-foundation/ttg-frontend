@@ -1,6 +1,6 @@
 import { randomNumber } from "../../lib/random-number";
 
-describe("Proposals", () => {
+describe("Basic Emergency", () => {
   describe("type action: Emergency setKey", () => {
     const value = randomNumber(60, 86400).toString();
     const key = "mint_delay";

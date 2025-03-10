@@ -1,6 +1,6 @@
 const LIST = "minters";
 
-describe("Proposals", () => {
+describe("Basic Standard", () => {
   let proposalUrl = "";
 
   describe("Add an Address to the list: minters", () => {

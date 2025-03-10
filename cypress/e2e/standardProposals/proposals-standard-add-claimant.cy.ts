@@ -1,6 +1,5 @@
-
-describe("Add claimant to earner test", () => {
-// needs to be checkesumed
+describe("Standard: Add claimant to earner test", () => {
+  // needs to be checkesumed
   const earner = "0xdd82875f0840AAD58a455A70B88eEd9F59ceC7c7";
   const claimant = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 
@@ -80,11 +79,11 @@ describe("Add claimant to earner test", () => {
       cy.mineEpochs(1);
     });
 
-    it('Check Claimant was added corretly', () => {
+    it("Check Claimant was added corretly", () => {
       cy.visit("/actors/wm/");
-     
+
       cy.contains(claimant);
       cy.contains(earner);
-    })
-  })
+    });
+  });
 });

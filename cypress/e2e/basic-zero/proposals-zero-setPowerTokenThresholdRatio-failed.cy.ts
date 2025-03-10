@@ -1,6 +1,6 @@
 import { randomNumber } from "../../lib/random-number";
 
-describe("Proposals", () => {
+describe("Basic Zero", () => {
   describe("type action: setThresholdRatio should fail", () => {
     const input1 = randomNumber(10, 100).toString();
     const description = `Set Power Token Threshold Ratio to ${input1}`;
