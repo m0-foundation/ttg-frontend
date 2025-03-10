@@ -1,6 +1,8 @@
+import { randomNumber } from "../../lib/random-number";
+
 describe("Proposals", () => {
   describe("type action: Emergency setKey", () => {
-    const value = "60";
+    const value = randomNumber(10, 100).toString();
     const key = "mint_delay";
     const description = `Add config ${key} = ${value}`;
     let proposalUrl = "";

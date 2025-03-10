@@ -1,7 +1,9 @@
+import { randomNumber } from "@/cypress/lib/random-number";
+
 describe("Proposals", () => {
   describe("type action: setThresholdRatio for Power Token", () => {
-    const input1 = "20";
-    const description = "Set Power Token Threshold Ratio to 20";
+    const input1 = randomNumber(10, 40).toString();
+    const description = `Set Power Token Threshold Ratio to ${input1}`;
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
