@@ -1,7 +1,7 @@
 describe("Proposals", () => {
   describe("type action: setThresholdRatio for Power Token", () => {
-    const input1 = "15";
-    const description = "Set Power Token Threshold Ratio to 15";
+    const input1 = "20";
+    const description = "Set Power Token Threshold Ratio to 20";
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
