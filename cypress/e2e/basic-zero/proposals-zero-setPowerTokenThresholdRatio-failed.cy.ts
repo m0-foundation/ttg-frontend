@@ -1,11 +1,12 @@
+import { randomNumber } from "../../lib/random-number";
+
 describe("Proposals", () => {
   describe("type action: setThresholdRatio should fail", () => {
-    const input1 = "15";
-    const description = "Set Power Token Threshold Ratio to 15";
+    const input1 = randomNumber(10, 100).toString();
+    const description = `Set Power Token Threshold Ratio to ${input1}`;
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
-
       cy.visit("/proposal/create");
       cy.connectWallet();
 
@@ -22,14 +23,13 @@ describe("Proposals", () => {
       cy.clickSubmitProposal();
     });
 
-
-
     it("I should be able to see error on  vote YES for the proposal", () => {
       cy.castYesOneOptionalProposal(description, "zero");
 
-      cy.get("div[data-test='notifications-container']")
-        .should("contain.text", 'Transaction not sent!');
-      
-    }); 
+      cy.get("div[data-test='notifications-container']").should(
+        "contain.text",
+        "Transaction not sent!",
+      );
+    });
   });
 });
