@@ -47,8 +47,13 @@
           </div>
         </div>
         <div class="text-xs" v-if="website">
-          <span class="text-gray-500">Website:</span>
-          <p class="text-gray-900 font-bold">{{ website }}</p>
+          <div class="text-gray-500">Website:</div>
+          <NuxtLink
+            :to="`http://${website}`"
+            class="text-gray-900 font-bold underline"
+            target="_blank"
+            >{{ website }}</NuxtLink
+          >
         </div>
       </div>
     </div>
