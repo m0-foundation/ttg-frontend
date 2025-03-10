@@ -4,7 +4,7 @@ name: cypress_tests
 on:
   push: # This will trigger the workflow for any commit to any branch
   pull_request:
-    types: [ opened, closed ]
+    types: [opened, closed]
     branches:
       - main
   schedule:
@@ -63,14 +63,14 @@ jobs:
       fail-fast: false
       matrix:
         test_runs: [
-          "basic",
-          "basic-standard",
-          "basic-emergency",
-          "basic-zero",
-          # "standardProposals",
-          # "emergencyProposals",
-          # "zeroProposals"
-        ]
+            "basic",
+            "basic-standard",
+            "basic-emergency",
+            "basic-zero",
+            # "standardProposals",
+            # "emergencyProposals",
+            # "zeroProposals"
+          ]
     steps:
       - name: Set Branch Name to Lowercase
         run: |
@@ -147,16 +147,16 @@ jobs:
             echo "*****            Repeat the full log file              *****"
             echo "************************************************************"
             echo ""
-            
+
             cat $LOG_FILE
-            
+
             # Display the main job's exit code
             echo "Main job finished with exit code $MAIN_JOB_EXIT_CODE."
-            
+
             if [ $MAIN_JOB_EXIT_CODE -eq 255 ]; then
               echo "Found ECONNRESET and exited error code $MAIN_JOB_EXIT_CODE."
             fi
-            
+
             # Exit with the main job's exit code
             exit $MAIN_JOB_EXIT_CODE
 
@@ -167,4 +167,4 @@ jobs:
         with:
           name: cypress-reports
           path: |
-            cypress/screenshots/**
+            /app/cypress/screenshots/**
