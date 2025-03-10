@@ -2,13 +2,10 @@
   <section>
     <PageTitle>
       <template #title>Actors</template>
-      <template #bottom-left>
-        <UHorizontalNavigation :links="actorsLinks" />
-      </template>
     </PageTitle>
 
     <Suspense>
-      <UContainer class="py-6">
+      <UContainer class="py-10">
         <NuxtPage />
       </UContainer>
       <template #fallback> <CommonLoader /> </template>
