@@ -20,6 +20,7 @@
         />
       </div>
       <UTable
+        data-test="history-table"
         class="max-lg:overflow-x-scroll mt-4"
         :rows="filteredProposals"
         :columns="proposalsTableHeader"
@@ -91,7 +92,7 @@ const filteredProposals = computed(() => {
 
   if (selectedType.value.length)
     results = results.filter((obj) =>
-      selectedType.value.includes(obj.proposalLabel),
+      selectedType.value.includes(obj.proposalLabel)
     );
 
   if (selectedEpoch.value.length)

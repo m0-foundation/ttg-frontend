@@ -16,14 +16,13 @@ export const watchForExecutedResetProposal = () => {
     );
   });
 
-  watch(resetProposals, (resetProposals) => {
+  const unsub = watch(resetProposals, (resetProposals) => {
     const lastestResetProposal = maxBy(resetProposals, "blockNumber");
 
     if (lastestResetProposal) {
       if (lastestResetProposal.voteEnd! + 6 >= ttg.epoch.current.asNumber) {
-        alerts.showResetAlert(lastestResetProposal);
-      } else {
-        alerts.hideResetAlert();
+        alerts.successAlert("Reset of the Governance has been executed!");
+        unsub();
       }
     }
   });

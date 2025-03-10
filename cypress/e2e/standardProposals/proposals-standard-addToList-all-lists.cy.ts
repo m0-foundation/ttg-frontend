@@ -1,4 +1,4 @@
-describe("Proposals", () => {
+describe("Standard: add to list", () => {
   const proposalUrl = "";
   const LIST1 = "minters";
   const LIST2 = "validators";

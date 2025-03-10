@@ -1,7 +1,9 @@
-describe("Proposals", () => {
+import { randomNumber } from "../../lib/random-number";
+
+describe("Basic Zero", () => {
   describe("type action: setThresholdRatio for Power Token", () => {
-    const input1 = "15";
-    const description = "Set Power Token Threshold Ratio to 15";
+    const input1 = randomNumber(10, 100).toString();
+    const description = `Set Power Token Threshold Ratio to ${input1}`;
     let proposalUrl = "";
 
     it("I should be able to CREATE a proposal", () => {
@@ -31,7 +33,9 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({ force: true });
+        cy.wrap($proposal)
+          .find("[data-test='proposal-button-show-details']")
+          .click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
