@@ -2,7 +2,7 @@ import { randomNumber } from "../../lib/random-number";
 
 describe("Proposals", () => {
   describe("type action: setThresholdRatio for Power Token", () => {
-    const input1 = randomNumber(10, 40).toString();
+    const input1 = randomNumber(10, 100).toString();
     const description = `Set Power Token Threshold Ratio to ${input1}`;
     let proposalUrl = "";
 
