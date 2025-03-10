@@ -167,4 +167,4 @@ jobs:
         with:
           name: cypress-reports
           path: |
-            /app/cypress/screenshots/**
+            /app/cypress
