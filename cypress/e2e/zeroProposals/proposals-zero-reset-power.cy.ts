@@ -2,20 +2,18 @@ describe("Proposals", () => {
   describe("Emergency proposal for type action: AddToList", () => {
     const title = "Reset Power";
     const description = "Test proposal to reset power governor";
-    const tableSelector = "table-cells-powerToken";
+    const tableSelector = "powerToken-value";
 
     let oldGovernor = "";
     let newGovernor = "";
 
     it("Get old Governor", () => {
       cy.visit("/config/governance");
-      cy.get(`[data-test="${tableSelector}"]`)
-        .last()
-        .then(($el) => {
-          oldGovernor = $el.text();
-          cy.log("Old governor", oldGovernor);
-          cy.validateEthAddress(oldGovernor);
-        });
+      cy.get(`[data-test="${tableSelector}"]`).then(($el) => {
+        oldGovernor = $el.text();
+        cy.log("Old governor", oldGovernor);
+        cy.validateEthAddress(oldGovernor);
+      });
     });
 
     it("I should be able to CREATE a proposal to Reset", () => {
@@ -47,7 +45,9 @@ describe("Proposals", () => {
       cy.contains(description).should("exist");
 
       cy.contains("article", description).then(($proposal) => {
-        cy.wrap($proposal).find("#show-details").click({force: true});
+        cy.wrap($proposal)
+          .find("[data-test='proposal-button-show-details']")
+          .click({ force: true });
       });
 
       cy.url().should("match", /proposal\/([0-9])\w+/g);
@@ -74,13 +74,11 @@ describe("Proposals", () => {
     it("I should be able to check the executed proposal", () => {
       cy.visit("/config/governance");
 
-      cy.get(`[data-test="${tableSelector}"]`)
-        .last()
-        .then(($el) => {
-          newGovernor = $el.text();
-          cy.log(newGovernor);
-          cy.validateEthAddress(newGovernor);
-        });
+      cy.get(`[data-test="${tableSelector}"]`).then(($el) => {
+        newGovernor = $el.text();
+        cy.log(newGovernor);
+        cy.validateEthAddress(newGovernor);
+      });
 
       cy.then(() => {
         expect(newGovernor).to.not.equal(oldGovernor);
