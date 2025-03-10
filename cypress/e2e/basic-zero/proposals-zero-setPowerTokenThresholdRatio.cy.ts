@@ -1,4 +1,4 @@
-import { randomNumber } from "@/cypress/lib/random-number";
+import { randomNumber } from "../../lib/random-number";
 
 describe("Proposals", () => {
   describe("type action: setThresholdRatio for Power Token", () => {
