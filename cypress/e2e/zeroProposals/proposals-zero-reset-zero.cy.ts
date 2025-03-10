@@ -2,7 +2,7 @@ describe("Emergency Proposals", () => {
   describe("Emergency proposal for type action: Reset Zero Token", () => {
     const title = "Reset Zero";
     const description = "Test proposal to reset zero governor";
-    const tableSelector = "table-cells-zeroToken";
+    const tableSelector = "zeroToken-value";
 
     let oldTokenAddr = "";
     let newTokenAddr = "";
