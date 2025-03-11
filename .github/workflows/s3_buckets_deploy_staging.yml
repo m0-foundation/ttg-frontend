@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy-staging:
-    uses: m0-foundation/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_staging.yml@main
+    uses: m0-foundation/ttg-frontend/.github/workflows/s3_buckets_build_and_upload_staging.yml@staging
     secrets: inherit
     permissions:
       contents: write
