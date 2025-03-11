@@ -12,12 +12,12 @@ describe("Basic navigation", () => {
     cy.visit("/history");
 
     cy.get("h1").should("have.length", 1);
-    cy.get("h1").should("contain.text", "History");
+    cy.get("h1").should("contain.text", "Proposals");
 
-    cy.get("table.w-full").find("tbody tr").should("exist");
+    cy.get("[data-test='history-table']").should("exist");
   });
 
   it("I should be able to connect/disconnect wallet", () => {
     cy.connectWallet();
-  })
+  });
 });

@@ -1,10 +1,8 @@
 # M^0 Governance dApp
 
 #### Current decentralized deployments:
+
 Fleek (IPFS): [governance-m0.on-fleek.app](https://governance-m0.on-fleek.app/)
-
-<img width="1089" alt="Screenshot 2024-05-14 at 2 04 43 PM" src="https://github.com/MZero-Labs/ttg-frontend/assets/1220854/f63ccd58-99b4-48fd-871f-f6016812f380">
-
 
 ## 1. Contracts
 
@@ -30,7 +28,7 @@ Make sure to install the dependencies:
 yarn install
 ```
 
-#### 2.1.2 Local development with hardhat
+#### 2.1.2 Start the local blockchain
 
 In one terminal:
 
@@ -38,43 +36,29 @@ In one terminal:
 yarn hardhat
 ```
 
-This starts a test blockchain on port 8545.
+This starts a test blockchain on port `8545`.
 
-#### 2.1.3 Env vars
+#### 2.1.4 Setup the Frontend app
 
-This app uses an environment variables locally (not in docker-compose). For local development: See package.json.
-
-Use in other chains you must create an .env file with this parameters:
+Set up your environment variables:
 
 ```
-BUILD_ENV=local(hardhat) | development(sepolia) | staging(sepolia) | production(mainnet)
-VITE_APP_IS_AUCTION_ACTIVE=true | false | undefined
-VITE_APP_RPC_URL_MAIN=string
-VITE_APP_RPC_URL_FALLBACK=string
-VITE_APP_WALLET_CONNECT_PROJECT_ID=string
+cp env.example .env
 ```
 
-For hardhat running there is no need for such file.
+And set `BUILD_ENV` to `local`
 
-At deployment, github actions will inject these variables at build time.
-
-#### 2.1.4 RUN
-
-In another terminal, run:
+Run the app:
 
 ```bash
 yarn dev
 ```
 
-This starts the development server on `http://localhost:3000`
+The app will be available at `http://localhost:3000`
 
 ### 2.2 Running with docker-compose
 
-You need have docker installed, the easiest way is [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-
-#### 2.2.1 For Development
-
-The easiest way to run everything for DEVELOPMENT is with docker-compose.
+If you prefer using Docker to run the app, you can do it with docker-compose:
 
 ```bash
 ssh-add
@@ -89,48 +73,29 @@ docker compose up --build
 
 This will start:
 
-- a test blockchain Hardhat on port 8545
-- the Frontend app on port 3000 with live reloading when files change
+- a test blockchain Hardhat on port `8545`
+- the Frontend app on port `3000` with live reloading when files change
 
-#### 2.2.2 For Ethereum Mainnet
+There are other alternate chain configurations for Docker:
 
-Just need run this command
+- mainnet: `docker compose -f docker-compose.mainnet.yml up`
+- sepolia: `docker compose -f docker-compose.sepolia.yml up`
 
-```bash
-docker compose -f docker-compose.mainnet.yml up
+## 3. Testing locally
+
+### 3.1 Populating data
+
+Cypress can be used to quickly setting up your local environment. With Cypress you can automate proposal creation and epoch forwarding to set Transfer or Voting epochs.
+
+Take a look at available tests by running
+
+```sh
+yarn cy:open
 ```
 
-#### 2.2.3 For Ethereum Sepolia
+Then, modify the test of your interest on `./cypress` to only run the steps you need.
 
-Just need run this command
-
-```bash
-docker compose -f docker-compose.sepolia.yml up
-```
-
-You can access now type `https://localhost:3000` in your browser to access.
-
-### 2.3 Local URL (optinal)
-
-```bash
-nano /etc/hosts
-```
-
-add this line
-
-```bash
-127.0.0.1 governance.m0.local
-```
-
-or
-
-```bash
-sudo bash -c 'echo "127.0.0.1 governance.m0.local" >>  /etc/hosts'
-```
-
-Thus, just need to type `governance.m0.local` in your browser to access the governance app.
-
-## Testing with Metamask
+### 3.2 Pre-funded accounts
 
 You can test everything locally with 5 pre-funded accounts.
 
@@ -163,7 +128,7 @@ This resets the nonce and state for the wallet
 
 ## E2E Test
 
-We use cypress that on every .cy.ts file deploys the TTG contract found on `hardhat/deploy-ttg.ts`
+We use cypress that on every `.cy.ts` file deploys the TTG contract found on `hardhat/deploy-ttg.ts`
 
 To Run specific test or debug:
 
@@ -200,21 +165,6 @@ yarn preview
 ```
 
 Check out the NUXT [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## GIT tag problem
-
-If you ever encounted a error while pushing about tags error, try this:
-
-```
-git tag -d $(git tag -l)
-```
-
-```
-git fetch
-```
-
-try push it again.
-
 
 ## 🤝 Contributing
 

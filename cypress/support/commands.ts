@@ -21,7 +21,7 @@ declare global {
 
       disconnectWallet(): Chainable;
 
-      checkAppNavigation(): Chainable
+      checkAppNavigation(): Chainable;
 
       delegatePower(delegate?: string): Chainable;
 
@@ -38,13 +38,13 @@ declare global {
       castYesOneEmergencyProposal(description: string): Chainable;
 
       castYesAllEmergencyProposals(): Chainable;
-      
+
       executeAllProposals(): Chainable;
 
       executeOneProposal(description: string): Chainable;
 
       clickPreviewProposal(): Chainable;
-      
+
       clickSubmitProposal(): Chainable;
 
       mineEpochs(quantity: number): Chainable;
@@ -75,20 +75,23 @@ Cypress.Commands.add("connectWallet", () => {
 });
 
 Cypress.Commands.add("checkAppNavigation", () => {
-  cy.get('nav').contains('Vote')
-  .and('have.attr', 'href', '/proposals')
+  const navbarList = '[data-test="main-navigation"] ul';
 
-cy.get('nav').contains('History')
-  .and('have.attr', 'href', '/history')
+  cy.get(navbarList)
+    .contains("a", "Home")
+    .and("have.attr", "href", "/proposals");
 
-cy.get('nav').contains('Actors')
-  .and('have.attr', 'href', '/actors/protocol')
+  cy.get(navbarList)
+    .contains("a", "Actors")
+    .and("have.attr", "href", "/actors");
 
-cy.get('nav').contains('Config')
-  .and('have.attr', 'href', '/config/governance')
+  cy.get(navbarList)
+    .contains("a", "Proposals")
+    .and("have.attr", "href", "/history");
 
-cy.get('nav').contains('Profile')
-  .and('have.attr', 'href', '/profile/me')
+  cy.get(navbarList)
+    .contains("a", "Config")
+    .and("have.attr", "href", "/config");
 });
 
 Cypress.Commands.add("disconnectWallet", () => {
@@ -96,7 +99,7 @@ Cypress.Commands.add("disconnectWallet", () => {
     if ($body.find("[data-test='sidebar-button-disconnect']").length > 0) {
       cy.log("connected, init disconnect");
       cy.get("[data-test='sidebar-button-disconnect']").click();
-      cy.findByRole("button", {name: /Connect wallet/i}).should("be.visible");
+      cy.findByRole("button", { name: /Connect wallet/i }).should("be.visible");
     } else {
       // Element does not exist, do something else
       console.log("already disconnected");
@@ -114,10 +117,10 @@ Cypress.Commands.add("delegatePower", (delegate?: string) => {
     console.log("type");
   } else {
     // self delegate
-    cy.get("#button-use-my-address-power").click({force: true});
+    cy.get("#button-use-my-address-power").click({ force: true });
   }
 
-  cy.get("#button-delegate-power").click({force: true});
+  cy.get("#button-delegate-power").click({ force: true });
   cy.wait(500);
   cy.reload();
 });
@@ -132,10 +135,10 @@ Cypress.Commands.add("delegateZero", (delegate?: string) => {
     console.log("type");
   } else {
     // self delegate
-    cy.get("#button-use-my-address-zero").click({force: true});
+    cy.get("#button-use-my-address-zero").click({ force: true });
   }
 
-  cy.get("#button-delegate-zero").click({force: true});
+  cy.get("#button-delegate-zero").click({ force: true });
   cy.wait(500);
   // cy.reload();
 });
@@ -152,7 +155,7 @@ Cypress.Commands.add("executeProposal", (proposalUrl: string) => {
   cy.reload();
 });
 
-Cypress.Commands.add("castYesOneProposal", (description: string, type = '') => {
+Cypress.Commands.add("castYesOneProposal", (description: string, type = "") => {
   cy.visit(`/proposals/${type}`);
   cy.connectWallet();
   cy.wait(500);
@@ -187,8 +190,11 @@ Cypress.Commands.add(
 
     cy.contains("article", description).then(($proposal) => {
       cy.wrap($proposal).find("#button-cast-yes").click();
-    });
 
+      if (page !== "zero") {
+        cy.get("#button-cast-submit").click();
+      }
+    });
   }
 );
 
@@ -199,10 +205,9 @@ Cypress.Commands.add("castYesAllEmergencyProposals", () => {
 
   cy.get("article").each(($proposal) => {
     cy.wrap($proposal).find("#button-cast-yes").click();
-    cy.get("[data-test='dialog-button-confirm']").click();
-    cy.wrap($proposal).contains("Your vote has been submitted");
-    cy.wait(500);
   });
+
+  cy.get("#button-cast-submit").click();
 });
 
 Cypress.Commands.add("executeAllProposals", () => {
@@ -211,7 +216,6 @@ Cypress.Commands.add("executeAllProposals", () => {
 
   cy.get("article").each(($proposal) => {
     cy.wrap($proposal).find("#button-proposal-execute").click();
-    // cy.wrap($proposal).contains("Proposal executed successfully!");
     cy.wait(500);
   });
 });
@@ -239,9 +243,9 @@ Cypress.Commands.add("clickPreviewProposal", () => {
 
 Cypress.Commands.add("clickSubmitProposal", () => {
   cy.get("[data-test='create-proposal-button-submit']").then(($el) => {
-      cy.wrap($el).click();
-      cy.get(".complete").invoke("text").should("contain", "Confirmation");
-    });
+    cy.wrap($el).click();
+    cy.get(".complete").invoke("text").should("contain", "Confirmation");
+  });
 });
 
 Cypress.Commands.add("mineEpochs", (quantity: number) => {
@@ -262,9 +266,9 @@ Cypress.Commands.add("validateEthAddress", (address: string) => {
   }
 });
 
-Cypress.Commands.add('getButton', (buttonText) => {
-  const regEx = new RegExp(buttonText, 'i')
-  cy.findByRole('button', { name: regEx })
-})
+Cypress.Commands.add("getButton", (buttonText) => {
+  const regEx = new RegExp(buttonText, "i");
+  cy.findByRole("button", { name: regEx });
+});
 
 export {};

@@ -13,6 +13,7 @@
     >
       <template #value-data="{ row }">
         <MAddressCopy
+          :data-test="`${row.key}-value`"
           :address="row.value"
           :short-address="false"
           :show-copy="true"

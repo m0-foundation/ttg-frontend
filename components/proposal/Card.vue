@@ -1,5 +1,6 @@
 <template>
   <article
+    data-test="proposal-card"
     class="mb-4 bg-transparent"
     :class="{ 'border border-red-500': isProposalWithError }"
   >
@@ -226,7 +227,7 @@ watch(reasonForVoteCheckbox, async (value) => {
   if (value) {
     // Focus the textarea when enabled
     await nextTick();
-    reasonForVoteTextarea.value?.focus();
+    reasonForVoteTextarea.value?.focus?.();
   } else {
     // Clean reason when disabled
     emit("update-reason-for-vote", "", props.proposal.proposalId);
