@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-grey-200 dark:bg-inherit">
+  <div class="bg-light-gray dark:bg-inherit">
     <UContainer>
       <div class="flex justify-between gap-8 py-2 lg:py-4">
         <div>
           <div class="min-h-[20px] mb-2 text-sm">
             <slot name="pretitle"></slot>
           </div>
-          <h1 class="text-2xl lg:text-[40px] lg:leading-tight my-2">
+          <h1 class="text-3xl lg:text-[40px] lg:leading-tight my-2">
             <span v-if="title">{{ title }}</span>
             <slot v-else name="title"></slot>
           </h1>
@@ -31,10 +31,10 @@
 </template>
 
 <script setup>
-defineProps({
-  title: {
-    type: String,
-    default: "",
-  },
-});
+  defineProps({
+    title: {
+      type: String,
+      default: '',
+    },
+  })
 </script>

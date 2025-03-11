@@ -3,8 +3,7 @@
     <div class="block w-1/2">
       <UCard
         v-if="hasAllowedCashTokens"
-        class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-1 my-2"
-      >
+        class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-1 my-2">
         <label>Parameter description</label>
         <p class="font-inter">
           Update the currency used for payment when submitting proposal
@@ -21,8 +20,7 @@
             :options="options"
             :class="{ error: hasErrors }"
             description="Update the currency used for payment when submitting proposal"
-            @on-change="handleChangeList"
-          />
+            @on-change="handleChangeList" />
           <span class="text-xxs">
             {{ address }}
           </span>
@@ -34,8 +32,7 @@
             :maska="masks.ethereumAddress"
             description="Update the currency used for payment when submitting proposal"
             placeholder="Token Address"
-            data-test="proposalValue"
-          />
+            data-test="proposalValue" />
         </div>
 
         <div class="text-red-500 text-xs my-2 h-4">
@@ -55,77 +52,79 @@
         placeholder="Amount"
         data-test="proposalValue2"
         :decorator="selectedToken?.symbol"
-        :disabled="hasAllowedCashTokens && !selectedToken"
-      />
+        :disabled="hasAllowedCashTokens && !selectedToken" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ErrorObject } from "@vuelidate/core";
-import { parseUnits, Hash } from "viem";
-import { masks } from "@/utils/masks";
+  import { ErrorObject } from '@vuelidate/core'
+  import { parseUnits, Hash } from 'viem'
+  import { masks } from '@/utils/masks'
 
-export interface InputProps {
-  modelValue: string;
-  modelValue2: number;
-  modelValueErrors?: ErrorObject[];
-  modelValue2Errors?: ErrorObject[];
-}
-
-interface TokenOptionItem {
-  value: Hash;
-  label?: string;
-  id?: string;
-  decimals?: number;
-  symbol?: string;
-}
-
-const props = defineProps<InputProps>();
-const emit = defineEmits(["update:modelValue", "update:modelValue2"]);
-
-const address = useVModelWrapper<InputProps>(props, emit, "modelValue");
-const tax = useVModelWrapper<InputProps>(props, emit, "modelValue2"); // in bigint wei already with the selected token's decimals
-const inputTaxAmount = ref();
-
-const ttg = useTtgStore();
-const hasErrors = computed(() => props.modelValueErrors?.length);
-
-const selectedToken = ref<TokenOptionItem>();
-const hasAllowedCashTokens = computed(
-  () => (ttg.governors.zero.allowedCashTokens?.length ?? 0) > 0,
-);
-
-const options: TokenOptionItem[] | undefined =
-  ttg.governors.zero.allowedCashTokens?.map((token) => ({
-    value: token.address,
-    label: token.symbol,
-    id: token.symbol,
-    decimals: token.decimals,
-    symbol: token.symbol,
-  }));
-
-function handleChangeList(option: any) {
-  address.value = option.value;
-  selectedToken.value = option;
-  inputTaxAmount.value = undefined;
-}
-
-tax.value = computed(() => {
-  if (!inputTaxAmount.value) return undefined;
-  if (hasAllowedCashTokens.value) {
-    return parseUnits(inputTaxAmount.value, selectedToken.value?.decimals || 0);
+  export interface InputProps {
+    modelValue: string
+    modelValue2: number
+    modelValueErrors?: ErrorObject[]
+    modelValue2Errors?: ErrorObject[]
   }
-  return inputTaxAmount.value;
-});
+
+  interface TokenOptionItem {
+    value: Hash
+    label?: string
+    id?: string
+    decimals?: number
+    symbol?: string
+  }
+
+  const props = defineProps<InputProps>()
+  const emit = defineEmits(['update:modelValue', 'update:modelValue2'])
+
+  const address = useVModelWrapper<InputProps>(props, emit, 'modelValue')
+  const tax = useVModelWrapper<InputProps>(props, emit, 'modelValue2') // in bigint wei already with the selected token's decimals
+  const inputTaxAmount = ref()
+
+  const ttg = useTtgStore()
+  const hasErrors = computed(() => props.modelValueErrors?.length)
+
+  const selectedToken = ref<TokenOptionItem>()
+  const hasAllowedCashTokens = computed(
+    () => (ttg.governors.zero.allowedCashTokens?.length ?? 0) > 0,
+  )
+
+  const options: TokenOptionItem[] | undefined =
+    ttg.governors.zero.allowedCashTokens?.map((token) => ({
+      value: token.address,
+      label: token.symbol,
+      id: token.symbol,
+      decimals: token.decimals,
+      symbol: token.symbol,
+    }))
+
+  function handleChangeList(option: any) {
+    address.value = option.value
+    selectedToken.value = option
+    inputTaxAmount.value = undefined
+  }
+
+  tax.value = computed(() => {
+    if (!inputTaxAmount.value) return undefined
+    if (hasAllowedCashTokens.value) {
+      return parseUnits(
+        inputTaxAmount.value,
+        selectedToken.value?.decimals || 0,
+      )
+    }
+    return inputTaxAmount.value
+  })
 </script>
 
 <style scoped>
-.error {
-  @apply border border-red-500;
-}
+  .error {
+    @apply border border-red-500;
+  }
 
-.error--message {
-  @apply text-red-500 text-xs my-2 h-4;
-}
+  .error--message {
+    @apply text-red-500 text-xs my-2 h-4;
+  }
 </style>

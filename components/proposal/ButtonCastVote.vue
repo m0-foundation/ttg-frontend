@@ -6,15 +6,15 @@
 </template>
 
 <script lang="ts" setup>
-export interface Props {
-  version: "default" | "active";
-  batch: boolean;
-}
+  export interface Props {
+    version: 'default' | 'active'
+    batch: boolean
+  }
 
-const props = withDefaults(defineProps<Props>(), {
-  version: "default",
-  batch: false,
-});
+  const props = withDefaults(defineProps<Props>(), {
+    version: 'default',
+    batch: false,
+  })
 
-const version = computed(() => props.version);
+  const version = computed(() => props.version)
 </script>

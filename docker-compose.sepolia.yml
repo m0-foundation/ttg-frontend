@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
   ttg-frontend:
     build:
@@ -7,7 +7,7 @@ services:
     image: m0/ttg-frontend
     container_name: ttg-frontend
     restart: always
-    command: ["yarn", "run", "build-start"]
+    command: ['yarn', 'run', 'build-start']
     environment:
       - BUILD_ENV=staging
       - NODE_ENV=production
@@ -15,7 +15,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - "80:3000"
+      - '80:3000'
     networks:
       - ttg-network
     hostname: governance.m0.local

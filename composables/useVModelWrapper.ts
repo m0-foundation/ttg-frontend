@@ -1,4 +1,4 @@
-import { computed } from "vue";
+import { computed } from 'vue'
 
 export function useVModelWrapper<T>(
   props: DefineProps<T>,
@@ -8,5 +8,5 @@ export function useVModelWrapper<T>(
   return computed({
     get: () => props[prop],
     set: (value) => emit(`update:${String(prop)}`, value),
-  });
+  })
 }

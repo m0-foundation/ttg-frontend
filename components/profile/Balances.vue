@@ -13,11 +13,13 @@
         <span>My token balance</span>
         <div class="flex items-center gap-2">
           <MIconPower class="w-4 h-4" />
-          <span>{{
-            useNumberFormatterPrice(
-              balancePowerToken?.data.value?.formatted || 0n,
-            )
-          }}</span>
+          <span>
+            {{
+              useNumberFormatterPrice(
+                balancePowerToken?.data.value?.formatted || 0n,
+              )
+            }}
+          </span>
         </div>
       </div>
 
@@ -27,15 +29,17 @@
         <span>Voting power</span>
         <div class="flex items-center gap-2 mt-2">
           <MIconPower class="w-5 h-5" />
-          <span class="text-xl font-ppformula leading-none">{{
-            useNumberFormatterPrice(
-              powerVotingPower?.data.value?.formatted || 0n,
-            )
-          }}</span>
+          <span class="text-xl font-ppformula leading-none">
+            {{
+              useNumberFormatterPrice(
+                powerVotingPower?.data.value?.formatted || 0n,
+              )
+            }}
+          </span>
         </div>
         <p class="text-xs text-grey-500 mt-2">
           {{ powerVotingPower?.data.value?.relative?.toFixed(4) }}%
-          <span class="mx-1 text-xxs"> out of total voting power </span>
+          <span class="mx-1 text-xxs">out of total voting power</span>
         </p>
       </div>
     </UCard>
@@ -52,11 +56,13 @@
         <span>My token balance</span>
         <div class="flex items-center gap-2">
           <MIconPower class="w-4 h-4" />
-          <span>{{
-            useNumberFormatterPrice(
-              balanceZeroToken?.data.value?.formatted || 0n,
-            )
-          }}</span>
+          <span>
+            {{
+              useNumberFormatterPrice(
+                balanceZeroToken?.data.value?.formatted || 0n,
+              )
+            }}
+          </span>
         </div>
       </div>
 
@@ -66,15 +72,17 @@
         <span>Voting power</span>
         <div class="flex items-center gap-2 mt-2">
           <MIconPower class="w-5 h-5" />
-          <span class="text-xl font-ppformula leading-none">{{
-            useNumberFormatterPrice(
-              zeroVotingPower?.data.value?.formatted || 0n,
-            )
-          }}</span>
+          <span class="text-xl font-ppformula leading-none">
+            {{
+              useNumberFormatterPrice(
+                zeroVotingPower?.data.value?.formatted || 0n,
+              )
+            }}
+          </span>
         </div>
         <p class="text-xs text-grey-500 mt-2">
           {{ zeroVotingPower?.data.value?.relative?.toFixed(4) }}%
-          <span class="mx-1 text-xxs"> out of total voting power </span>
+          <span class="mx-1 text-xxs">out of total voting power</span>
         </p>
       </div>
     </UCard>
@@ -82,22 +90,22 @@
 </template>
 
 <script setup lang="ts">
-import { Hash } from "viem";
-import { storeToRefs } from "pinia";
-import { useMBalances, useMVotingPower } from "@/lib/hooks";
+  import { Hash } from 'viem'
+  import { storeToRefs } from 'pinia'
+  import { useMBalances, useMVotingPower } from '@/lib/hooks'
 
-const props = defineProps<{
-  address: Ref<Hash>;
-}>();
+  const props = defineProps<{
+    address: Ref<Hash>
+  }>()
 
-const address = toRef(props, "address");
+  const address = toRef(props, 'address')
 
-const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
-  useMBalances(address);
+  const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
+    useMBalances(address)
 
-const { power: powerVotingPower, zero: zeroVotingPower } =
-  useMVotingPower(address);
+  const { power: powerVotingPower, zero: zeroVotingPower } =
+    useMVotingPower(address)
 
-const ttg = useTtgStore();
-const { getTokens } = storeToRefs(ttg);
+  const ttg = useTtgStore()
+  const { getTokens } = storeToRefs(ttg)
 </script>

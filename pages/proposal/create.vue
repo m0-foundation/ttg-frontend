@@ -4,8 +4,7 @@
       <MTransactionsStepper
         ref="stepper"
         title="Submitting your proposal"
-        :steps="steps"
-      />
+        :steps="steps" />
     </MModal>
 
     <PageTitle>
@@ -27,14 +26,12 @@
               <MInputMultiSelect
                 :options="proposalTypes"
                 data-test="proposalTypeSelect"
-                @on-change="onChangeProposalType"
-              />
+                @on-change="onChangeProposalType" />
             </div>
 
             <ProposalCreateActionDescription
               v-if="selectedProposalType"
-              :selected-proposal-type="selectedProposalType"
-            />
+              :selected-proposal-type="selectedProposalType" />
 
             <div :class="{ disabled: selectedProposalType === undefined }">
               <div v-show="formData.proposalType">
@@ -49,8 +46,7 @@
                   :model-value3-errors="$validation.proposalValue3?.$errors"
                   :placeholder="selectedProposalType.placeholder"
                   :current-value="currentValue"
-                  :selected-proposal-type="selectedProposalType"
-                />
+                  :selected-proposal-type="selectedProposalType" />
               </div>
 
               <div class="create-steps">
@@ -67,16 +63,14 @@
                   type="text"
                   placeholder="Title"
                   :errors="$validation.title.$errors"
-                  class="font-inter"
-                />
+                  class="font-inter" />
               </div>
 
               <div class="mb-6" data-test="description">
                 <div class="flex justify-between mb-2">
                   <label for="description">Description *</label>
                   <div
-                    class="text-sm text-grey-600 flex items-center gap-1 font-inter"
-                  >
+                    class="text-sm text-grey-600 flex items-center gap-1 font-inter">
                     <img src="/img/icon-markdown.svg" class="h-[14px]" />
                     Markdown supported
                   </div>
@@ -86,8 +80,7 @@
                   v-model="formData.description"
                   data-test="description"
                   name="description"
-                  :errors="$validation.description.$errors"
-                />
+                  :errors="$validation.description.$errors" />
               </div>
 
               <div class="mb-6">
@@ -99,8 +92,7 @@
                   placeholder="https://"
                   data-test="create-proposal-input-url-ipfs"
                   class="font-inter"
-                  :errors="$validation.ipfsURL.$errors"
-                />
+                  :errors="$validation.ipfsURL.$errors" />
               </div>
 
               <div class="mb-6">
@@ -112,8 +104,7 @@
                   placeholder="https://"
                   data-test="create-proposal-input-url-discussion"
                   class="font-inter"
-                  :errors="$validation.discussionURL.$errors"
-                />
+                  :errors="$validation.discussionURL.$errors" />
               </div>
             </div>
           </div>
@@ -122,8 +113,7 @@
             <ProposalPreview
               :title="formData.title"
               :proposal="previewProposal"
-              @on-back="onBack"
-            />
+              @on-back="onBack" />
           </div>
         </div>
 
@@ -143,12 +133,12 @@
 
         <div
           v-if="hasToPayFee"
-          class="text-grey-500 text-xs text-end font-inter"
-        >
+          class="text-grey-500 text-xs text-end font-inter">
           <p>
             Available balance:
             {{ useNumberFormatterEth(cashToken?.data?.value?.formatted || 0) }}
-            WETH. <LazyModalEthWrapper v-if="!userHasEnoughBalance" />
+            WETH.
+            <LazyModalEthWrapper v-if="!userHasEnoughBalance" />
           </p>
         </div>
 
@@ -158,8 +148,7 @@
             color="gray"
             label="Back"
             size="lg"
-            @click="onBack"
-          />
+            @click="onBack" />
           <UButton
             v-if="isPreview"
             type="submit"
@@ -167,8 +156,7 @@
             data-test="create-proposal-button-submit"
             label="Submit"
             size="lg"
-            color="primary"
-          />
+            color="primary" />
         </div>
         <div v-else class="flex justify-end mt-6">
           <UButton
@@ -178,8 +166,7 @@
             label="Preview and submit"
             size="lg"
             color="primary"
-            @click="onPreview"
-          />
+            @click="onPreview" />
         </div>
       </form>
       <div class="text-end text-grey-500 font-inter text-xs px-6 lg:px-0 my-3">
@@ -189,8 +176,7 @@
             <template #default="{ connect }">
               <button
                 class="font-inter underline text-nowrap cursor-pointer"
-                @click="connect"
-              >
+                @click="connect">
                 connect your wallet
               </button>
             </template>
@@ -206,841 +192,844 @@
 </template>
 
 <script setup lang="ts">
-import {
-  waitForTransactionReceipt,
-  writeContract,
-  readContract,
-} from "@wagmi/core";
-import {
-  encodeFunctionData,
-  encodeAbiParameters,
-  Hash,
-  erc20Abi,
-  isAddress,
-} from "viem";
-import { useAccount } from "use-wagmi";
-import { required, minLength, url, helpers } from "@vuelidate/validators";
-import { useVuelidate } from "@vuelidate/core";
-import { storeToRefs } from "pinia";
+  import {
+    waitForTransactionReceipt,
+    writeContract,
+    readContract,
+  } from '@wagmi/core'
+  import {
+    encodeFunctionData,
+    encodeAbiParameters,
+    Hash,
+    erc20Abi,
+    isAddress,
+  } from 'viem'
+  import { useAccount } from 'use-wagmi'
+  import { required, minLength, url, helpers } from '@vuelidate/validators'
+  import { useVuelidate } from '@vuelidate/core'
+  import { storeToRefs } from 'pinia'
 
-/* custom libs */
-import {
-  stringToHexWith32Bytes,
-  addressToHexWith32Bytes,
-} from "@/lib/api/utils";
-import { watchProposalCreated } from "@/lib/watchers";
-import {
-  standardGovernorAbi,
-  emergencyGovernorAbi,
-  zeroGovernorAbi,
-} from "@/lib/sdk";
-import { useMBalances } from "@/lib/hooks";
-import { wait } from "@/utils/misc";
+  /* custom libs */
+  import {
+    stringToHexWith32Bytes,
+    addressToHexWith32Bytes,
+  } from '@/lib/api/utils'
+  import { watchProposalCreated } from '@/lib/watchers'
+  import {
+    standardGovernorAbi,
+    emergencyGovernorAbi,
+    zeroGovernorAbi,
+  } from '@/lib/sdk'
+  import { useMBalances } from '@/lib/hooks'
+  import { wait } from '@/utils/misc'
 
-/* components */
-import InputListOperation from "@/components/proposal/InputListOperation.vue";
-import InputListRemoveAddOperation from "@/components/proposal/InputListRemoveAddOperation.vue";
-import InputProtocolConfigOperation from "@/components/proposal/InputProtocolConfigOperation.vue";
-import InputProtocolGuidanceConfigOperation from "@/components/proposal/InputProtocolGuidanceConfigOperation.vue";
-import InputGovernanceSetCashToken from "@/components/proposal/InputGovernanceSetCashToken.vue";
-import InputGovernanceSetZeroProposalThreshold from "@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue";
-import InputGovernanceSetEmergencyProposalThreshold from "@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue";
-import InputGovernanceSetProposalFee from "@/components/proposal/InputGovernanceSetProposalFee.vue";
-import InputProtocolEarnerClaimant from "@/components/proposal/InputProtocolEarnerClaimant.vue";
-import { MProposal } from "@/lib/api/types";
+  /* components */
+  import InputListOperation from '@/components/proposal/InputListOperation.vue'
+  import InputListRemoveAddOperation from '@/components/proposal/InputListRemoveAddOperation.vue'
+  import InputProtocolConfigOperation from '@/components/proposal/InputProtocolConfigOperation.vue'
+  import InputProtocolGuidanceConfigOperation from '@/components/proposal/InputProtocolGuidanceConfigOperation.vue'
+  import InputGovernanceSetCashToken from '@/components/proposal/InputGovernanceSetCashToken.vue'
+  import InputGovernanceSetZeroProposalThreshold from '@/components/proposal/InputGovernanceSetZeroProposalThreshold.vue'
+  import InputGovernanceSetEmergencyProposalThreshold from '@/components/proposal/InputGovernanceSetEmergencyProposalThreshold.vue'
+  import InputGovernanceSetProposalFee from '@/components/proposal/InputGovernanceSetProposalFee.vue'
+  import InputProtocolEarnerClaimant from '@/components/proposal/InputProtocolEarnerClaimant.vue'
+  import { MProposal } from '@/lib/api/types'
 
-/* wagmi */
-const wagmiConfig = useWagmiConfig();
+  /* wagmi */
+  const wagmiConfig = useWagmiConfig()
 
-/* control stepper */
-let steps = reactive([]);
+  /* control stepper */
+  let steps = reactive([])
 
-const stepper = ref(null);
-const modal = ref(null);
+  const stepper = ref(null)
+  const modal = ref(null)
 
-useHead({
-  titleTemplate: "%s - Create proposal",
-});
+  useHead({
+    titleTemplate: '%s - Create proposal',
+  })
 
-function onCloseModal() {
-  stepper.value.reset();
-  throw new Error("rejected by user");
-}
+  function onCloseModal() {
+    stepper.value.reset()
+    throw new Error('rejected by user')
+  }
 
-/* control Form */
+  /* control Form */
 
-const isPreview = ref(false);
-const selectedProposalType = ref();
-const isWritting = ref(false);
+  const isPreview = ref(false)
+  const selectedProposalType = ref()
+  const isWritting = ref(false)
 
-const formData = reactive({
-  proposalType: null,
-  proposalValue: null,
-  proposalValue2: null,
-  proposalValue3: null,
-  title: null,
-  description: "",
-  ipfsURL: null,
-  discussionURL: null,
-});
+  const formData = reactive({
+    proposalType: null,
+    proposalValue: null,
+    proposalValue2: null,
+    proposalValue3: null,
+    title: null,
+    description: '',
+    ipfsURL: null,
+    discussionURL: null,
+  })
 
-const validations = {
-  address: helpers.withMessage(
-    "Address is not valid",
-    (value: string) => isAddress(value) || !value,
-  ),
-  range: (min: number, max: number) =>
-    helpers.withMessage(
-      `Invalid value, acceptable range is ${min}-${max}`,
-      (value: string) => {
-        const numberValue = Number(value);
-        return numberValue >= min && numberValue <= max;
-      },
+  const validations = {
+    address: helpers.withMessage(
+      'Address is not valid',
+      (value: string) => isAddress(value) || !value,
     ),
-};
-
-const rules = computed(() => {
-  const constRules = {
-    description: { required, minLength: minLength(6) },
-    title: { required, minLength: minLength(6) },
-    ipfsURL: { url },
-    discussionURL: { url },
-  };
-
-  const type = selectedProposalType?.value?.value;
-
-  if (["addToList", "removeFromList"].includes(type)) {
-    return {
-      proposalValue: { required },
-      proposalValue2: {
-        required,
-        addressValidation: validations.address,
-      },
-      proposalValue3: {},
-      ...constRules,
-    };
+    range: (min: number, max: number) =>
+      helpers.withMessage(
+        `Invalid value, acceptable range is ${min}-${max}`,
+        (value: string) => {
+          const numberValue = Number(value)
+          return numberValue >= min && numberValue <= max
+        },
+      ),
   }
 
-  if (["removeFromAndAddToList"].includes(type)) {
-    return {
-      proposalValue: { required },
-      proposalValue2: {
-        required,
-        addressValidation: validations.address,
-      },
-      proposalValue3: {
-        required,
-        addressValidation: validations.address,
-      },
-      ...constRules,
-    };
-  }
-
-  if (["setKey", "setKeyGuidance"].includes(type)) {
-    const selectedKey = formData.proposalValue || "";
-    return {
-      proposalValue: { required },
-      proposalValue2: getKeyBasedValidation(selectedKey),
-      proposalValue3: {},
-      ...constRules,
-    };
-  }
-
-  if (["setKeyAddClaimant"].includes(type)) {
-    return {
-      proposalValue: { required },
-      proposalValue2: { required, address: validations.address },
-      proposalValue3: {},
-      ...constRules,
-    };
-  }
-
-  if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
-    return {
-      proposalValue: { required },
-      proposalValue2: {},
-      proposalValue3: {},
-      ...constRules,
-    };
-  }
-
-  if (
-    [
-      "setEmergencyProposalThresholdRatio",
-      "setZeroProposalThresholdRatio",
-    ].includes(type)
-  ) {
-    return {
-      proposalValue: { required, range: validations.range(10, 100) },
-      proposalValue2: {},
-      proposalValue3: {},
-      ...constRules,
-    };
-  }
-
-  // default (type === "reset")
-  return {
-    proposalValue: {},
-    proposalValue2: {},
-    proposalValue3: {},
-    ...constRules,
-  };
-});
-
-const hasToPayFee = computed(() => {
-  return selectedProposalType?.value?.hasToPayFee;
-});
-
-const $validation = useVuelidate(rules, formData);
-
-const previewDescription = ref();
-
-const { address: userAccount, isDisconnected } = useAccount();
-const { forceSwitchChain } = useCorrectChain();
-const ttg = useTtgStore();
-const { getValuesFormatted: ttgValuesFormatted, getValues: ttgValues } =
-  storeToRefs(ttg);
-
-const { cashToken, refetch: refetchBalances } = useMBalances(userAccount);
-
-const userHasEnoughBalance = computed(() => {
-  if (!hasToPayFee.value) return true;
-  return cashToken?.data?.value?.value >= BigInt(ttgValues.value.proposalFee);
-});
-
-const proposalTypes = [
-  {
-    header: "protocol",
-  },
-  {
-    value: "addToList",
-    label: "Add actor",
-    component: InputListOperation,
-    votingType: "Standard",
-    governor: ttg.contracts.standardGovernor,
-    abi: standardGovernorAbi,
-    hasToPayFee: true,
-    id: "addToList",
-  },
-  {
-    value: "removeFromList",
-    label: "Remove actor",
-    component: InputListOperation,
-    votingType: "Standard",
-    governor: ttg.contracts.standardGovernor,
-    abi: standardGovernorAbi,
-    hasToPayFee: true,
-    id: "removeFromList",
-  },
-
-  {
-    value: "removeFromAndAddToList",
-    label: "Update actor",
-    component: InputListRemoveAddOperation,
-    votingType: "Standard",
-    governor: ttg.contracts.standardGovernor,
-    abi: standardGovernorAbi,
-    hasToPayFee: true,
-    id: "removeFromAndAddToList",
-  },
-
-  {
-    value: "setKey",
-    label: "Update protocol config",
-    component: InputProtocolConfigOperation,
-    votingType: "Standard",
-    governor: ttg.contracts.standardGovernor,
-    abi: standardGovernorAbi,
-    hasToPayFee: true,
-    id: "protocolSetKey",
-  },
-
-  {
-    value: "setKeyGuidance",
-    label: "Update protocol guidance",
-    component: InputProtocolGuidanceConfigOperation,
-    votingType: "Standard",
-    governor: ttg.contracts.standardGovernor,
-    abi: standardGovernorAbi,
-    hasToPayFee: true,
-    id: "protocolGuidanceSetKey",
-  },
-
-  {
-    header: "governance",
-  },
-
-  {
-    value: "setProposalFee",
-    label: "Update proposal fee",
-    component: InputGovernanceSetProposalFee,
-    votingType: "Standard",
-    governor: ttg.contracts.standardGovernor,
-    abi: standardGovernorAbi,
-    hasToPayFee: true,
-  },
-
-  {
-    value: "setCashToken",
-    label: "Change cash token",
-    component: InputGovernanceSetCashToken,
-    votingType: "Zero",
-    governor: ttg.contracts.zeroGovernor,
-    abi: zeroGovernorAbi,
-    hasToPayFee: false,
-  },
-
-  {
-    value: "setEmergencyProposalThresholdRatio",
-    label: "Update power threshold",
-    component: InputGovernanceSetEmergencyProposalThreshold,
-    modelValue: formData.proposalValue,
-    votingType: "Zero",
-    governor: ttg.contracts.zeroGovernor,
-    abi: zeroGovernorAbi,
-    hasToPayFee: false,
-  },
-  {
-    value: "setZeroProposalThresholdRatio",
-    label: "Update zero threshold",
-    component: InputGovernanceSetZeroProposalThreshold,
-    votingType: "Zero",
-    governor: ttg.contracts.zeroGovernor,
-    abi: zeroGovernorAbi,
-    hasToPayFee: false,
-  },
-
-  {
-    header: "Earner",
-  },
-
-  {
-    value: "setKeyAddClaimant",
-    label: "Add claimant",
-    component: InputProtocolEarnerClaimant,
-    votingType: "Standard",
-    governor: ttg.contracts.standardGovernor,
-    abi: standardGovernorAbi,
-    hasToPayFee: true,
-    id: "standardProtocolAddClaimant",
-  },
-
-  {
-    value: "emergency",
-    label: "Priority",
-    id: "menuEmergency",
-    isEmergency: true,
-    submenuText:
-      "Priority Proposals require a POWER (yes) threshold and are immediately voteable. They are also immediately executable upon reaching this threshold, rather than only being executable in the following epoch.",
-    children: [
-      {
-        value: "addToList",
-        label: "Add actor",
-        isEmergency: true,
-        component: InputListOperation,
-        votingType: "Emergency",
-        governor: ttg.contracts.emergencyGovernor,
-        abi: emergencyGovernorAbi,
-        hasToPayFee: false,
-        id: "emergencyAddToList",
-      },
-      {
-        value: "removeFromList",
-        label: "Remove actor",
-        isEmergency: true,
-        component: InputListOperation,
-        votingType: "Emergency",
-        governor: ttg.contracts.emergencyGovernor,
-        abi: emergencyGovernorAbi,
-        hasToPayFee: false,
-        id: "emergencyRemoveFromList",
-      },
-
-      {
-        value: "removeFromAndAddToList",
-        label: "Update actor",
-        isEmergency: true,
-        component: InputListRemoveAddOperation,
-        votingType: "Emergency",
-        governor: ttg.contracts.emergencyGovernor,
-        abi: emergencyGovernorAbi,
-        hasToPayFee: false,
-        id: "emergencyRemoveFromAndAddToList",
-      },
-      {
-        value: "setStandardProposalFee",
-        label: "Update proposal fee",
-        isEmergency: true,
-        component: InputGovernanceSetProposalFee,
-        votingType: "Emergency",
-        governor: ttg.contracts.emergencyGovernor,
-        abi: emergencyGovernorAbi,
-        hasToPayFee: false,
-        id: "emergencySetStandardProposalFee",
-      },
-      {
-        value: "setKey",
-        label: "Update protocol config",
-        isEmergency: true,
-        component: InputProtocolConfigOperation,
-        votingType: "Emergency",
-        governor: ttg.contracts.emergencyGovernor,
-        abi: emergencyGovernorAbi,
-        hasToPayFee: false,
-        id: "emergencySetKey",
-      },
-
-      {
-        value: "setKeyGuidance",
-        label: "Update protocol guidance",
-        component: InputProtocolGuidanceConfigOperation,
-        votingType: "Emergency",
-        governor: ttg.contracts.emergencyGovernor,
-        abi: emergencyGovernorAbi,
-        isEmergency: true,
-        hasToPayFee: false,
-        id: "emergencyGuidanceSetKey",
-      },
-
-      {
-        value: "setKeyAddClaimant",
-        label: "Add claimant",
-        component: InputProtocolEarnerClaimant,
-        votingType: "Emergency",
-        governor: ttg.contracts.emergencyGovernor,
-        abi: emergencyGovernorAbi,
-        isEmergency: true,
-        hasToPayFee: false,
-        id: "emergencyProtocolAddClaimant",
-      },
-    ],
-  },
-
-  {
-    value: "reset",
-    label: "Reset",
-    isReset: true,
-    submenuText:
-      "The Reset proposals allows a yes threshold of ZERO holders to change the current governor of the system to a new version with a new POWER token.",
-    id: "menuReset",
-    children: [
-      {
-        value: "resetToPowerHolders",
-        label: "Reset to POWER holders",
-        isReset: true,
-        component: undefined,
-        votingType: "Zero",
-        governor: ttg.contracts.zeroGovernor,
-        abi: zeroGovernorAbi,
-        hasToPayFee: false,
-        id: "resetToPowerHolders",
-      },
-
-      {
-        value: "resetToZeroHolders",
-        label: "Reset to Zero holders",
-        isReset: true,
-        component: undefined,
-        votingType: "Zero",
-        governor: ttg.contracts.zeroGovernor,
-        abi: zeroGovernorAbi,
-        hasToPayFee: false,
-        id: "resetToZeroHolders",
-      },
-    ],
-  },
-];
-
-const currentValue = computed(() => {
-  if (
-    selectedProposalType?.value?.value === "setEmergencyProposalThresholdRatio"
-  ) {
-    return `${basisPointsToPercentage(
-      ttg.getValues.emergencyProposalThresholdRatio!,
-    )}%`;
-  }
-
-  if (selectedProposalType?.value?.value === "setZeroProposalThresholdRatio") {
-    return `${basisPointsToPercentage(
-      ttg.getValues.zeroProposalThresholdRatio!,
-    )}%`;
-  }
-
-  const formatFee = (value: string) => useFormatCash(value);
-
-  if (
-    ["setProposalFee", "setStandardProposalFee"].includes(
-      selectedProposalType?.value?.value,
-    )
-  ) {
-    return formatFee(ttg.getValues.proposalFee!);
-  }
-});
-
-const previewProposal = computed(() => {
-  const type = formData.proposalType! as string;
-  const parsedProposalWithIncomingValues = (form: Array<any>) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [input1, input2] = form;
-    if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
-      return [useParseCash(input1)];
+  const rules = computed(() => {
+    const constRules = {
+      description: { required, minLength: minLength(6) },
+      title: { required, minLength: minLength(6) },
+      ipfsURL: { url },
+      discussionURL: { url },
     }
-    return form;
-  };
 
-  return {
-    proposalLabel: selectedProposalType?.value?.label,
-    proposer: userAccount.value,
-    description: formData.description,
-    proposalType: formData.proposalType,
-    isEmergency: selectedProposalType?.value?.isEmergency as boolean,
-    votingType: selectedProposalType?.value?.votingType,
-    proposalParams: parsedProposalWithIncomingValues(
+    const type = selectedProposalType?.value?.value
+
+    if (['addToList', 'removeFromList'].includes(type)) {
+      return {
+        proposalValue: { required },
+        proposalValue2: {
+          required,
+          addressValidation: validations.address,
+        },
+        proposalValue3: {},
+        ...constRules,
+      }
+    }
+
+    if (['removeFromAndAddToList'].includes(type)) {
+      return {
+        proposalValue: { required },
+        proposalValue2: {
+          required,
+          addressValidation: validations.address,
+        },
+        proposalValue3: {
+          required,
+          addressValidation: validations.address,
+        },
+        ...constRules,
+      }
+    }
+
+    if (['setKey', 'setKeyGuidance'].includes(type)) {
+      const selectedKey = formData.proposalValue || ''
+      return {
+        proposalValue: { required },
+        proposalValue2: getKeyBasedValidation(selectedKey),
+        proposalValue3: {},
+        ...constRules,
+      }
+    }
+
+    if (['setKeyAddClaimant'].includes(type)) {
+      return {
+        proposalValue: { required },
+        proposalValue2: { required, address: validations.address },
+        proposalValue3: {},
+        ...constRules,
+      }
+    }
+
+    if (['setProposalFee', 'setStandardProposalFee'].includes(type)) {
+      return {
+        proposalValue: { required },
+        proposalValue2: {},
+        proposalValue3: {},
+        ...constRules,
+      }
+    }
+
+    if (
       [
-        formData.proposalValue,
-        formData.proposalValue2,
-        formData.proposalValue3,
-      ].filter((e) => e),
-    ),
-  } as unknown as MProposal;
-});
+        'setEmergencyProposalThresholdRatio',
+        'setZeroProposalThresholdRatio',
+      ].includes(type)
+    ) {
+      return {
+        proposalValue: { required, range: validations.range(10, 100) },
+        proposalValue2: {},
+        proposalValue3: {},
+        ...constRules,
+      }
+    }
 
-function onChangeProposalType(option) {
-  formData.proposalType = option.value;
-  selectedProposalType.value = option;
-  $validation.value.$reset();
-  formData.proposalValue = null;
-  formData.proposalValue2 = null;
-  formData.proposalValue3 = null;
-}
+    // default (type === "reset")
+    return {
+      proposalValue: {},
+      proposalValue2: {},
+      proposalValue3: {},
+      ...constRules,
+    }
+  })
 
-function buildDescriptionPayload() {
-  const addHyperlink = (text, url) => (url ? `[${text}](${url})` : "");
+  const hasToPayFee = computed(() => {
+    return selectedProposalType?.value?.hasToPayFee
+  })
 
-  const descriptionPayload = [
-    `# ${formData.title}`,
-    formData.description,
-    "\n\n---",
-    addHyperlink("Discussion", formData.discussionURL),
-    addHyperlink("IPFS", formData.ipfsURL),
-  ].join("\n\n");
+  const $validation = useVuelidate(rules, formData)
 
-  return descriptionPayload;
-}
+  const previewDescription = ref()
 
-async function onPreview() {
-  await $validation.value.$validate();
-  if (!$validation.value.$error) {
-    previewDescription.value = buildDescriptionPayload();
-    isPreview.value = true;
+  const { address: userAccount, isDisconnected } = useAccount()
+  const { forceSwitchChain } = useCorrectChain()
+  const ttg = useTtgStore()
+  const { getValuesFormatted: ttgValuesFormatted, getValues: ttgValues } =
+    storeToRefs(ttg)
+
+  const { cashToken, refetch: refetchBalances } = useMBalances(userAccount)
+
+  const userHasEnoughBalance = computed(() => {
+    if (!hasToPayFee.value) return true
+    return cashToken?.data?.value?.value >= BigInt(ttgValues.value.proposalFee)
+  })
+
+  const proposalTypes = [
+    {
+      header: 'protocol',
+    },
+    {
+      value: 'addToList',
+      label: 'Add actor',
+      component: InputListOperation,
+      votingType: 'Standard',
+      governor: ttg.contracts.standardGovernor,
+      abi: standardGovernorAbi,
+      hasToPayFee: true,
+      id: 'addToList',
+    },
+    {
+      value: 'removeFromList',
+      label: 'Remove actor',
+      component: InputListOperation,
+      votingType: 'Standard',
+      governor: ttg.contracts.standardGovernor,
+      abi: standardGovernorAbi,
+      hasToPayFee: true,
+      id: 'removeFromList',
+    },
+
+    {
+      value: 'removeFromAndAddToList',
+      label: 'Update actor',
+      component: InputListRemoveAddOperation,
+      votingType: 'Standard',
+      governor: ttg.contracts.standardGovernor,
+      abi: standardGovernorAbi,
+      hasToPayFee: true,
+      id: 'removeFromAndAddToList',
+    },
+
+    {
+      value: 'setKey',
+      label: 'Update protocol config',
+      component: InputProtocolConfigOperation,
+      votingType: 'Standard',
+      governor: ttg.contracts.standardGovernor,
+      abi: standardGovernorAbi,
+      hasToPayFee: true,
+      id: 'protocolSetKey',
+    },
+
+    {
+      value: 'setKeyGuidance',
+      label: 'Update protocol guidance',
+      component: InputProtocolGuidanceConfigOperation,
+      votingType: 'Standard',
+      governor: ttg.contracts.standardGovernor,
+      abi: standardGovernorAbi,
+      hasToPayFee: true,
+      id: 'protocolGuidanceSetKey',
+    },
+
+    {
+      header: 'governance',
+    },
+
+    {
+      value: 'setProposalFee',
+      label: 'Update proposal fee',
+      component: InputGovernanceSetProposalFee,
+      votingType: 'Standard',
+      governor: ttg.contracts.standardGovernor,
+      abi: standardGovernorAbi,
+      hasToPayFee: true,
+    },
+
+    {
+      value: 'setCashToken',
+      label: 'Change cash token',
+      component: InputGovernanceSetCashToken,
+      votingType: 'Zero',
+      governor: ttg.contracts.zeroGovernor,
+      abi: zeroGovernorAbi,
+      hasToPayFee: false,
+    },
+
+    {
+      value: 'setEmergencyProposalThresholdRatio',
+      label: 'Update power threshold',
+      component: InputGovernanceSetEmergencyProposalThreshold,
+      modelValue: formData.proposalValue,
+      votingType: 'Zero',
+      governor: ttg.contracts.zeroGovernor,
+      abi: zeroGovernorAbi,
+      hasToPayFee: false,
+    },
+    {
+      value: 'setZeroProposalThresholdRatio',
+      label: 'Update zero threshold',
+      component: InputGovernanceSetZeroProposalThreshold,
+      votingType: 'Zero',
+      governor: ttg.contracts.zeroGovernor,
+      abi: zeroGovernorAbi,
+      hasToPayFee: false,
+    },
+
+    {
+      header: 'Earner',
+    },
+
+    {
+      value: 'setKeyAddClaimant',
+      label: 'Add claimant',
+      component: InputProtocolEarnerClaimant,
+      votingType: 'Standard',
+      governor: ttg.contracts.standardGovernor,
+      abi: standardGovernorAbi,
+      hasToPayFee: true,
+      id: 'standardProtocolAddClaimant',
+    },
+
+    {
+      value: 'emergency',
+      label: 'Priority',
+      id: 'menuEmergency',
+      isEmergency: true,
+      submenuText:
+        'Priority Proposals require a POWER (yes) threshold and are immediately voteable. They are also immediately executable upon reaching this threshold, rather than only being executable in the following epoch.',
+      children: [
+        {
+          value: 'addToList',
+          label: 'Add actor',
+          isEmergency: true,
+          component: InputListOperation,
+          votingType: 'Emergency',
+          governor: ttg.contracts.emergencyGovernor,
+          abi: emergencyGovernorAbi,
+          hasToPayFee: false,
+          id: 'emergencyAddToList',
+        },
+        {
+          value: 'removeFromList',
+          label: 'Remove actor',
+          isEmergency: true,
+          component: InputListOperation,
+          votingType: 'Emergency',
+          governor: ttg.contracts.emergencyGovernor,
+          abi: emergencyGovernorAbi,
+          hasToPayFee: false,
+          id: 'emergencyRemoveFromList',
+        },
+
+        {
+          value: 'removeFromAndAddToList',
+          label: 'Update actor',
+          isEmergency: true,
+          component: InputListRemoveAddOperation,
+          votingType: 'Emergency',
+          governor: ttg.contracts.emergencyGovernor,
+          abi: emergencyGovernorAbi,
+          hasToPayFee: false,
+          id: 'emergencyRemoveFromAndAddToList',
+        },
+        {
+          value: 'setStandardProposalFee',
+          label: 'Update proposal fee',
+          isEmergency: true,
+          component: InputGovernanceSetProposalFee,
+          votingType: 'Emergency',
+          governor: ttg.contracts.emergencyGovernor,
+          abi: emergencyGovernorAbi,
+          hasToPayFee: false,
+          id: 'emergencySetStandardProposalFee',
+        },
+        {
+          value: 'setKey',
+          label: 'Update protocol config',
+          isEmergency: true,
+          component: InputProtocolConfigOperation,
+          votingType: 'Emergency',
+          governor: ttg.contracts.emergencyGovernor,
+          abi: emergencyGovernorAbi,
+          hasToPayFee: false,
+          id: 'emergencySetKey',
+        },
+
+        {
+          value: 'setKeyGuidance',
+          label: 'Update protocol guidance',
+          component: InputProtocolGuidanceConfigOperation,
+          votingType: 'Emergency',
+          governor: ttg.contracts.emergencyGovernor,
+          abi: emergencyGovernorAbi,
+          isEmergency: true,
+          hasToPayFee: false,
+          id: 'emergencyGuidanceSetKey',
+        },
+
+        {
+          value: 'setKeyAddClaimant',
+          label: 'Add claimant',
+          component: InputProtocolEarnerClaimant,
+          votingType: 'Emergency',
+          governor: ttg.contracts.emergencyGovernor,
+          abi: emergencyGovernorAbi,
+          isEmergency: true,
+          hasToPayFee: false,
+          id: 'emergencyProtocolAddClaimant',
+        },
+      ],
+    },
+
+    {
+      value: 'reset',
+      label: 'Reset',
+      isReset: true,
+      submenuText:
+        'The Reset proposals allows a yes threshold of ZERO holders to change the current governor of the system to a new version with a new POWER token.',
+      id: 'menuReset',
+      children: [
+        {
+          value: 'resetToPowerHolders',
+          label: 'Reset to POWER holders',
+          isReset: true,
+          component: undefined,
+          votingType: 'Zero',
+          governor: ttg.contracts.zeroGovernor,
+          abi: zeroGovernorAbi,
+          hasToPayFee: false,
+          id: 'resetToPowerHolders',
+        },
+
+        {
+          value: 'resetToZeroHolders',
+          label: 'Reset to Zero holders',
+          isReset: true,
+          component: undefined,
+          votingType: 'Zero',
+          governor: ttg.contracts.zeroGovernor,
+          abi: zeroGovernorAbi,
+          hasToPayFee: false,
+          id: 'resetToZeroHolders',
+        },
+      ],
+    },
+  ]
+
+  const currentValue = computed(() => {
+    if (
+      selectedProposalType?.value?.value ===
+      'setEmergencyProposalThresholdRatio'
+    ) {
+      return `${basisPointsToPercentage(
+        ttg.getValues.emergencyProposalThresholdRatio!,
+      )}%`
+    }
+
+    if (
+      selectedProposalType?.value?.value === 'setZeroProposalThresholdRatio'
+    ) {
+      return `${basisPointsToPercentage(
+        ttg.getValues.zeroProposalThresholdRatio!,
+      )}%`
+    }
+
+    const formatFee = (value: string) => useFormatCash(value)
+
+    if (
+      ['setProposalFee', 'setStandardProposalFee'].includes(
+        selectedProposalType?.value?.value,
+      )
+    ) {
+      return formatFee(ttg.getValues.proposalFee!)
+    }
+  })
+
+  const previewProposal = computed(() => {
+    const type = formData.proposalType! as string
+    const parsedProposalWithIncomingValues = (form: Array<any>) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [input1, input2] = form
+      if (['setProposalFee', 'setStandardProposalFee'].includes(type)) {
+        return [useParseCash(input1)]
+      }
+      return form
+    }
+
+    return {
+      proposalLabel: selectedProposalType?.value?.label,
+      proposer: userAccount.value,
+      description: formData.description,
+      proposalType: formData.proposalType,
+      isEmergency: selectedProposalType?.value?.isEmergency as boolean,
+      votingType: selectedProposalType?.value?.votingType,
+      proposalParams: parsedProposalWithIncomingValues(
+        [
+          formData.proposalValue,
+          formData.proposalValue2,
+          formData.proposalValue3,
+        ].filter((e) => e),
+      ),
+    } as unknown as MProposal
+  })
+
+  function onChangeProposalType(option) {
+    formData.proposalType = option.value
+    selectedProposalType.value = option
+    $validation.value.$reset()
+    formData.proposalValue = null
+    formData.proposalValue2 = null
+    formData.proposalValue3 = null
   }
-}
 
-async function writeAllowance() {
-  const account = userAccount.value;
-  // It needs approval to pay for fees
-  const allowance = await readContract(wagmiConfig, {
-    abi: erc20Abi,
-    address: ttg.contracts.cashToken as Hash,
-    functionName: "allowance",
-    args: [account as Hash, selectedProposalType.value.governor as Hash], // address owner, address spender
-    account,
-  });
+  function buildDescriptionPayload() {
+    const addHyperlink = (text, url) => (url ? `[${text}](${url})` : '')
 
-  const fee = BigInt(ttg.getValues.proposalFee!);
-  if (allowance < fee && hasToPayFee.value) {
-    const hash = await writeContract(wagmiConfig, {
+    const descriptionPayload = [
+      `# ${formData.title}`,
+      formData.description,
+      '\n\n---',
+      addHyperlink('Discussion', formData.discussionURL),
+      addHyperlink('IPFS', formData.ipfsURL),
+    ].join('\n\n')
+
+    return descriptionPayload
+  }
+
+  async function onPreview() {
+    await $validation.value.$validate()
+    if (!$validation.value.$error) {
+      previewDescription.value = buildDescriptionPayload()
+      isPreview.value = true
+    }
+  }
+
+  async function writeAllowance() {
+    const account = userAccount.value
+    // It needs approval to pay for fees
+    const allowance = await readContract(wagmiConfig, {
       abi: erc20Abi,
       address: ttg.contracts.cashToken as Hash,
-      functionName: "approve",
-      args: [selectedProposalType.value.governor as Hash, fee], // address spender, uint256 amount
+      functionName: 'allowance',
+      args: [account as Hash, selectedProposalType.value.governor as Hash], // address owner, address spender
       account,
-    });
+    })
 
-    stepper.value.changeCurrentStep("pending");
+    const fee = BigInt(ttg.getValues.proposalFee!)
+    if (allowance < fee && hasToPayFee.value) {
+      const hash = await writeContract(wagmiConfig, {
+        abi: erc20Abi,
+        address: ttg.contracts.cashToken as Hash,
+        functionName: 'approve',
+        args: [selectedProposalType.value.governor as Hash, fee], // address spender, uint256 amount
+        account,
+      })
+
+      stepper.value.changeCurrentStep('pending')
+
+      const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        confirmations: 1,
+        hash,
+      })
+      // Fail tx
+      if (txReceipt.status !== 'success') {
+        throw new Error('Transaction was not successful')
+      }
+
+      return txReceipt
+    }
+  }
+
+  async function writeProposal(calldatas, formData) {
+    const account = userAccount.value
+    const targets = [selectedProposalType.value.governor as Hash]
+
+    const description = formData.description
+    const values = [0n] // do not change
+
+    const hash = await writeContract(wagmiConfig, {
+      abi: selectedProposalType.value.abi,
+      address: selectedProposalType.value.governor as Hash,
+      functionName: 'propose',
+      args: [targets, values, [calldatas], description],
+      account,
+    })
+
+    stepper.value.changeCurrentStep('pending')
 
     const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
       confirmations: 1,
       hash,
-    });
+    })
     // Fail tx
-    if (txReceipt.status !== "success") {
-      throw new Error("Transaction was not successful");
+    if (txReceipt.status !== 'success') {
+      throw new Error('Transaction was rejected')
     }
 
-    return txReceipt;
-  }
-}
-
-async function writeProposal(calldatas, formData) {
-  const account = userAccount.value;
-  const targets = [selectedProposalType.value.governor as Hash];
-
-  const description = formData.description;
-  const values = [0n]; // do not change
-
-  const hash = await writeContract(wagmiConfig, {
-    abi: selectedProposalType.value.abi,
-    address: selectedProposalType.value.governor as Hash,
-    functionName: "propose",
-    args: [targets, values, [calldatas], description],
-    account,
-  });
-
-  stepper.value.changeCurrentStep("pending");
-
-  const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-    confirmations: 1,
-    hash,
-  });
-  // Fail tx
-  if (txReceipt.status !== "success") {
-    throw new Error("Transaction was rejected");
+    return txReceipt
   }
 
-  return txReceipt;
-}
+  async function onSubmit() {
+    await forceSwitchChain()
 
-async function onSubmit() {
-  await forceSwitchChain();
+    const catchErrorStep = (error) => {
+      console.error({ error })
+      stepper.value.changeCurrentStep('error')
+      throw error
+    }
 
-  const catchErrorStep = (error) => {
-    console.error({ error });
-    stepper.value.changeCurrentStep("error");
-    throw error;
-  };
+    try {
+      steps = reactive([
+        {
+          title: 'Allowance',
+          status: 'current',
+        },
+        {
+          title: 'Create Proposal',
+          status: 'incomplete',
+        },
+        {
+          title: 'Confirmation',
+          status: 'incomplete',
+          message: 'Searching for the event of the transaction...',
+        },
+      ])
 
-  try {
-    steps = reactive([
-      {
-        title: "Allowance",
-        status: "current",
-      },
-      {
-        title: "Create Proposal",
-        status: "incomplete",
-      },
-      {
-        title: "Confirmation",
-        status: "incomplete",
-        message: "Searching for the event of the transaction...",
-      },
-    ]);
+      modal.value.open()
 
-    modal.value.open();
+      await writeAllowance().catch(catchErrorStep)
 
-    await writeAllowance().catch(catchErrorStep);
+      stepper.value.nextStep()
 
-    stepper.value.nextStep();
-
-    const formDataWithLinks = {
-      ...formData,
-      description: buildDescriptionPayload(),
-    };
-
-    // start listening for proposal event
-    const { unwatchAll } = watchProposalCreated(
-      async (newProposals: Array<MProposal>) => {
-        await wait(1000);
-
-        unwatchAll();
-
-        return navigateTo(`/proposal/${newProposals[0].proposalId}`);
-      },
-    );
-
-    const calldatas = buildCalldatas(formDataWithLinks);
-    await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep);
-
-    stepper.value.nextStep();
-    stepper.value.changeCurrentStep("complete");
-    refetchBalances();
-  } catch (error) {
-    console.error({ error });
-    catchErrorStep(error);
-  }
-}
-
-function buildCalldatas(formData) {
-  const {
-    proposalType: type,
-    proposalValue: input1,
-    proposalValue2: input2,
-    proposalValue3: input3,
-  } = formData;
-
-  if (["addToList", "removeFromList"].includes(type)) {
-    const encondeInputsListOperation = ({
-      input1: list,
-      input2: address,
-    }: {
-      input1: string;
-      input2: string;
-    }) => {
-      return [stringToHexWith32Bytes(list), address];
-    };
-
-    return buildCalldatasTtg(
-      type,
-      encondeInputsListOperation({ input1, input2 }),
-    );
-  }
-
-  if (["removeFromAndAddToList"].includes(type)) {
-    const encondeInputsListAddRemoveOperation = ({
-      input1: list,
-      input2: remove,
-      input3: add,
-    }: {
-      input1: string;
-      input2: string;
-      input3: string;
-    }) => {
-      return [stringToHexWith32Bytes(list), remove, add];
-    };
-
-    return buildCalldatasTtg(
-      type,
-      encondeInputsListAddRemoveOperation({ input1, input2, input3 }),
-    );
-  }
-
-  if (["setKey"].includes(type)) {
-    const getValueEncoded = (inp: any) => {
-      if (["minter_rate_model", "earner_rate_model"].includes(key)) {
-        return addressToHexWith32Bytes(inp);
+      const formDataWithLinks = {
+        ...formData,
+        description: buildDescriptionPayload(),
       }
 
-      return encodeAbiParameters([{ type: "uint256" }], [BigInt(inp)]);
-    };
+      // start listening for proposal event
+      const { unwatchAll } = watchProposalCreated(
+        async (newProposals: Array<MProposal>) => {
+          await wait(1000)
 
-    const key = input1;
-    const value = getValueEncoded(input2);
+          unwatchAll()
 
-    return buildCalldatasTtg(type, [stringToHexWith32Bytes(key), value]);
+          return navigateTo(`/proposal/${newProposals[0].proposalId}`)
+        },
+      )
+
+      const calldatas = buildCalldatas(formDataWithLinks)
+      await writeProposal(calldatas, formDataWithLinks).catch(catchErrorStep)
+
+      stepper.value.nextStep()
+      stepper.value.changeCurrentStep('complete')
+      refetchBalances()
+    } catch (error) {
+      console.error({ error })
+      catchErrorStep(error)
+    }
   }
 
-  if (["setKeyGuidance"].includes(type)) {
-    const key = input1;
-    const value = "0x" + input2;
+  function buildCalldatas(formData) {
+    const {
+      proposalType: type,
+      proposalValue: input1,
+      proposalValue2: input2,
+      proposalValue3: input3,
+    } = formData
 
-    return buildCalldatasTtg("setKey", [stringToHexWith32Bytes(key), value]);
+    if (['addToList', 'removeFromList'].includes(type)) {
+      const encondeInputsListOperation = ({
+        input1: list,
+        input2: address,
+      }: {
+        input1: string
+        input2: string
+      }) => {
+        return [stringToHexWith32Bytes(list), address]
+      }
+
+      return buildCalldatasTtg(
+        type,
+        encondeInputsListOperation({ input1, input2 }),
+      )
+    }
+
+    if (['removeFromAndAddToList'].includes(type)) {
+      const encondeInputsListAddRemoveOperation = ({
+        input1: list,
+        input2: remove,
+        input3: add,
+      }: {
+        input1: string
+        input2: string
+        input3: string
+      }) => {
+        return [stringToHexWith32Bytes(list), remove, add]
+      }
+
+      return buildCalldatasTtg(
+        type,
+        encondeInputsListAddRemoveOperation({ input1, input2, input3 }),
+      )
+    }
+
+    if (['setKey'].includes(type)) {
+      const getValueEncoded = (inp: any) => {
+        if (['minter_rate_model', 'earner_rate_model'].includes(key)) {
+          return addressToHexWith32Bytes(inp)
+        }
+
+        return encodeAbiParameters([{ type: 'uint256' }], [BigInt(inp)])
+      }
+
+      const key = input1
+      const value = getValueEncoded(input2)
+
+      return buildCalldatasTtg(type, [stringToHexWith32Bytes(key), value])
+    }
+
+    if (['setKeyGuidance'].includes(type)) {
+      const key = input1
+      const value = '0x' + input2
+
+      return buildCalldatasTtg('setKey', [stringToHexWith32Bytes(key), value])
+    }
+
+    if (['setKeyAddClaimant'].includes(type)) {
+      const key = input1
+      const value = input2
+
+      return buildCalldatasTtg('setKey', [key, addressToHexWith32Bytes(value)])
+    }
+
+    if (['resetToPowerHolders', 'resetToZeroHolders'].includes(type)) {
+      // TODO? add checkers if inputs are  addresses that instances of smartcontracts ITTG
+      return buildCalldatasTtg(type, undefined)
+    }
+
+    if (['setProposalFee', 'setStandardProposalFee'].includes(type)) {
+      const valueEncoded = encodeAbiParameters(
+        [{ type: 'uint256' }],
+        [useParseCash(input1)],
+      )
+      return buildCalldatasTtg(type, [valueEncoded])
+    }
+
+    if (['setCashToken'].includes(type)) {
+      const newFee = encodeAbiParameters([{ type: 'uint256' }], [input2])
+      return buildCalldatasTtg(type, [input1, newFee])
+    }
+
+    if (
+      [
+        'setEmergencyProposalThresholdRatio',
+        'setZeroProposalThresholdRatio',
+      ].includes(type)
+    ) {
+      const valueEncoded = encodeAbiParameters(
+        [{ type: 'uint256' }],
+        [BigInt(percentageToBasispoints(input1))],
+      )
+      return buildCalldatasTtg(type, [valueEncoded])
+    }
   }
 
-  if (["setKeyAddClaimant"].includes(type)) {
-    const key = input1;
-    const value = input2;
-
-    return buildCalldatasTtg("setKey", [key, addressToHexWith32Bytes(value)]);
+  function buildCalldatasTtg(functionName: any, args: any) {
+    return encodeFunctionData({
+      abi: selectedProposalType.value.abi,
+      functionName,
+      args,
+    })
   }
 
-  if (["resetToPowerHolders", "resetToZeroHolders"].includes(type)) {
-    // TODO? add checkers if inputs are  addresses that instances of smartcontracts ITTG
-    return buildCalldatasTtg(type, undefined);
+  function getKeyBasedValidation(key: string) {
+    switch (key) {
+      case 'minter_rate_model':
+      case 'earner_rate_model':
+        return { required, address: validations.address }
+      case 'base_minter_rate':
+      case 'max_earner_rate':
+        return { required, range: validations.range(1, 5000) }
+      case 'penalty_rate':
+        return { required, range: validations.range(1, 1000) }
+      case 'update_collateral_interval':
+        return { required, range: validations.range(60, 31536000) } // 1 minute to 1 year
+      case 'update_collateral_threshold':
+        return { required, range: validations.range(1, 10) }
+      case 'mint_delay':
+        return { required, range: validations.range(60, 86400) } // 1 minute to 1 day
+      case 'mint_ttl':
+        return { required, range: validations.range(3600, 864000) } // 1 hour to 10 days
+      case 'mint_ratio':
+        return { required, range: validations.range(50, 100) } // Percent range
+      case 'minter_freeze_time':
+        return { required, range: validations.range(3600, 2592000) } // 1 hour to 1 month
+      default:
+        return { required }
+    }
   }
 
-  if (["setProposalFee", "setStandardProposalFee"].includes(type)) {
-    const valueEncoded = encodeAbiParameters(
-      [{ type: "uint256" }],
-      [useParseCash(input1)],
-    );
-    return buildCalldatasTtg(type, [valueEncoded]);
+  function onBack() {
+    isPreview.value = false
+    previewDescription.value = null
   }
-
-  if (["setCashToken"].includes(type)) {
-    const newFee = encodeAbiParameters([{ type: "uint256" }], [input2]);
-    return buildCalldatasTtg(type, [input1, newFee]);
-  }
-
-  if (
-    [
-      "setEmergencyProposalThresholdRatio",
-      "setZeroProposalThresholdRatio",
-    ].includes(type)
-  ) {
-    const valueEncoded = encodeAbiParameters(
-      [{ type: "uint256" }],
-      [BigInt(percentageToBasispoints(input1))],
-    );
-    return buildCalldatasTtg(type, [valueEncoded]);
-  }
-}
-
-function buildCalldatasTtg(functionName: any, args: any) {
-  return encodeFunctionData({
-    abi: selectedProposalType.value.abi,
-    functionName,
-    args,
-  });
-}
-
-function getKeyBasedValidation(key: string) {
-  switch (key) {
-    case "minter_rate_model":
-    case "earner_rate_model":
-      return { required, address: validations.address };
-    case "base_minter_rate":
-    case "max_earner_rate":
-      return { required, range: validations.range(1, 5000) };
-    case "penalty_rate":
-      return { required, range: validations.range(1, 1000) };
-    case "update_collateral_interval":
-      return { required, range: validations.range(60, 31536000) }; // 1 minute to 1 year
-    case "update_collateral_threshold":
-      return { required, range: validations.range(1, 10) };
-    case "mint_delay":
-      return { required, range: validations.range(60, 86400) }; // 1 minute to 1 day
-    case "mint_ttl":
-      return { required, range: validations.range(3600, 864000) }; // 1 hour to 10 days
-    case "mint_ratio":
-      return { required, range: validations.range(50, 100) }; // Percent range
-    case "minter_freeze_time":
-      return { required, range: validations.range(3600, 2592000) }; // 1 hour to 1 month
-    default:
-      return { required };
-  }
-}
-
-function onBack() {
-  isPreview.value = false;
-  previewDescription.value = null;
-}
 </script>
 
 <style>
-label {
-  @apply text-grey-500 block mb-2 text-xs font-inter;
-}
+  label {
+    @apply text-grey-500 block mb-2 text-xs font-inter;
+  }
 </style>
 
 <style scoped>
-h1 {
-  @apply text-3xl font-light mb-12;
-}
+  h1 {
+    @apply text-3xl font-light mb-12;
+  }
 
-hr {
-  border-top: 1px dashed #979797;
-}
+  hr {
+    border-top: 1px dashed #979797;
+  }
 
-#info-text * {
-  @apply my-4;
-}
+  #info-text * {
+    @apply my-4;
+  }
 
-.error {
-  @apply border border-red-500;
-}
+  .error {
+    @apply border border-red-500;
+  }
 
-.create-steps {
-  @apply flex items-center my-4 font-mono text-xxs lg:text-xs uppercase;
-}
+  .create-steps {
+    @apply flex items-center my-4 font-mono text-xxs lg:text-xs uppercase;
+  }
 
-.create-steps .number {
-  @apply text-accent-blue text-xxs lg:text-xs tracking-[8px];
-}
+  .create-steps .number {
+    @apply text-accent-blue text-xxs lg:text-xs tracking-[8px];
+  }
 
-.disabled {
-  /* selectedProposalType */
-  pointer-events: none;
-  opacity: 0.4;
-}
+  .disabled {
+    /* selectedProposalType */
+    pointer-events: none;
+    opacity: 0.4;
+  }
 </style>

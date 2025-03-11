@@ -2,7 +2,7 @@
   <div>
     <PageTitle>
       <template #pretitle>My Profile /</template>
-      <template #title> Delegate</template>
+      <template #title>Delegate</template>
       <template #subtitle>
         Both POWER and ZERO owners may delegate their voting power to an
         arbitrary Ethereum address during the Transfer Epoch. Delegated POWER
@@ -11,8 +11,7 @@
         <NuxtLink
           href="https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.ii-operation/iii.ii.vii-delegation"
           target="_blank"
-          class="underline"
-        >
+          class="underline">
           Learn more
         </NuxtLink>
       </template>
@@ -20,8 +19,7 @@
 
     <div
       v-if="!canDelegate && !isConnected"
-      class="bg-accent-blue text-white p-4 mb-6"
-    >
+      class="bg-accent-blue text-white p-4 mb-6">
       <UContainer>
         <span class="uppercase mb-2 text-xs">Warning</span>
         <div class="flex items-center gap-3">
@@ -40,8 +38,8 @@
                 <p class="text-xl">POWER Tokens</p>
                 <p class="text-grey-500 text-xs">
                   You are delegating
-                  <span class="font-bold">only voting power</span>. The tokens
-                  will remain in your balance.
+                  <span class="font-bold">only voting power</span>
+                  . The tokens will remain in your balance.
                 </p>
               </div>
               <div class="flex gap-3 items-center">
@@ -73,8 +71,7 @@
               <label class="text-grey-500 text-xs">Delegation address</label>
               <NuxtLink
                 class="text-grey-500 underline text-xs cursor-pointer"
-                @click="onUseMyAddressPower"
-              >
+                @click="onUseMyAddressPower">
                 Use my address
               </NuxtLink>
             </div>
@@ -84,12 +81,10 @@
               type="text"
               class="w-full mb-2"
               data-test="delegate-power-input-address"
-              :errors="$delegatePowerValidation.address?.$errors"
-            />
+              :errors="$delegatePowerValidation.address?.$errors" />
             <div
               v-if="hasDelegatedPower"
-              class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
-            >
+              class="px-2 py-1 w-fit text-xs text-white bg-accent-blue">
               Delegated to:
               <MAddressAvatar :address="powerDelegates" :short-address="true" />
             </div>
@@ -102,8 +97,7 @@
               data-test="delegate-button-power-submit"
               :disabled="!isConnected || !canDelegate || powerFormData.loading"
               :loading="powerFormData.loading"
-              label="Delegate POWER"
-            />
+              label="Delegate POWER" />
           </div>
         </form>
       </UCard>
@@ -116,8 +110,8 @@
                 <p class="text-xl">ZERO Tokens</p>
                 <p class="text-grey-500 text-xs">
                   You are delegating
-                  <span class="font-bold">only voting power</span>. The tokens
-                  will remain in your balance.
+                  <span class="font-bold">only voting power</span>
+                  . The tokens will remain in your balance.
                 </p>
               </div>
               <div class="flex gap-3 items-center">
@@ -135,8 +129,7 @@
               <label class="text-grey-500 text-xs">Delegation address</label>
               <NuxtLink
                 class="text-grey-500 underline text-xs cursor-pointer"
-                @click="onUseMyAddressZero"
-              >
+                @click="onUseMyAddressZero">
                 Use my address
               </NuxtLink>
             </div>
@@ -146,12 +139,10 @@
               type="text"
               class="w-full mb-2"
               data-test="delegate-zero-input-address"
-              :errors="$delegateZeroValidation.address?.$errors"
-            />
+              :errors="$delegateZeroValidation.address?.$errors" />
             <div
               v-if="hasDelegatedZero"
-              class="px-2 py-1 w-fit text-xs text-white bg-accent-blue"
-            >
+              class="px-2 py-1 w-fit text-xs text-white bg-accent-blue">
               Delegated to:
               <MAddressAvatar :address="zeroDelegates" :short-address="true" />
             </div>
@@ -164,8 +155,7 @@
               :disabled="!isConnected || zeroFormData.loading"
               data-test="delegate-button-zero-submit"
               :loading="zeroFormData.loading"
-              label="Delegate ZERO"
-            />
+              label="Delegate ZERO" />
           </div>
         </form>
       </UCard>
@@ -179,166 +169,171 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-import { Hash, isAddress } from "viem";
-import { useAccount } from "use-wagmi";
-import { helpers } from "@vuelidate/validators";
-import { useVuelidate } from "@vuelidate/core";
-import { waitForTransactionReceipt } from "@wagmi/core";
-import { useMDelegates, useMBalances } from "@/lib/hooks";
-import { writePowerToken, writeZeroToken } from "@/lib/sdk";
+  import { storeToRefs } from 'pinia'
+  import { Hash, isAddress } from 'viem'
+  import { useAccount } from 'use-wagmi'
+  import { helpers } from '@vuelidate/validators'
+  import { useVuelidate } from '@vuelidate/core'
+  import { waitForTransactionReceipt } from '@wagmi/core'
+  import { useMDelegates, useMBalances } from '@/lib/hooks'
+  import { writePowerToken, writeZeroToken } from '@/lib/sdk'
 
-const ttg = storeToRefs(useTtgStore());
-const alerts = useAlertsStore();
+  const ttg = storeToRefs(useTtgStore())
+  const alerts = useAlertsStore()
 
-const { address: userAccount, isConnected } = useAccount();
+  const { address: userAccount, isConnected } = useAccount()
 
-const {
-  powerDelegates,
-  zeroDelegates,
-  hasDelegatedPower,
-  hasDelegatedZero,
-  ...useDelegate
-} = useMDelegates(userAccount);
+  const {
+    powerDelegates,
+    zeroDelegates,
+    hasDelegatedPower,
+    hasDelegatedZero,
+    ...useDelegate
+  } = useMDelegates(userAccount)
 
-const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
-  useMBalances(userAccount);
+  const { powerToken: balancePowerToken, zeroToken: balanceZeroToken } =
+    useMBalances(userAccount)
 
-const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!);
-const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!);
+  const onUseMyAddressPower = () => (powerFormData.address = userAccount.value!)
+  const onUseMyAddressZero = () => (zeroFormData.address = userAccount.value!)
 
-const canDelegate = computed(() => ttg.epoch.value.current.type === "TRANSFER");
+  const canDelegate = computed(
+    () => ttg.epoch.value.current.type === 'TRANSFER',
+  )
 
-const powerFormData = reactive({
-  address: "",
-  loading: false,
-});
+  const powerFormData = reactive({
+    address: '',
+    loading: false,
+  })
 
-const zeroFormData = reactive({
-  address: "",
-  loading: false,
-});
+  const zeroFormData = reactive({
+    address: '',
+    loading: false,
+  })
 
-const addressValidation = (val: Hash) => isAddress(val);
-const addressValidationDelegatePower = (val: Hash) =>
-  val !== powerDelegates.value;
-const addressValidationDelegateZero = (val: Hash) =>
-  val !== zeroDelegates.value;
+  const addressValidation = (val: Hash) => isAddress(val)
+  const addressValidationDelegatePower = (val: Hash) =>
+    val !== powerDelegates.value
+  const addressValidationDelegateZero = (val: Hash) =>
+    val !== zeroDelegates.value
 
-const addressValidationRule = {
-  addressValidation: helpers.withMessage("Invalid address", addressValidation),
-};
-
-const delegatePowerValidationRule = {
-  delegatePowerValidation: helpers.withMessage(
-    "Please enter a different address than the one you've currently provided.",
-    addressValidationDelegatePower,
-  ),
-};
-
-const delegateZeroValidationRule = {
-  delegatePowerValidation: helpers.withMessage(
-    "Please enter a different address than the one you've currently provided.",
-    addressValidationDelegateZero,
-  ),
-};
-
-const powerRules = {
-  address: {
-    ...addressValidationRule,
-    ...delegatePowerValidationRule,
-  },
-};
-
-const zeroRules = {
-  address: {
-    ...addressValidationRule,
-    ...delegateZeroValidationRule,
-  },
-};
-
-const $delegatePowerValidation = useVuelidate(powerRules, powerFormData);
-const $delegateZeroValidation = useVuelidate(zeroRules, zeroFormData);
-
-const { forceSwitchChain } = useCorrectChain();
-const wagmiConfig = useWagmiConfig();
-
-useHead({
-  titleTemplate: "%s - Delegate",
-});
-
-async function delegatePower() {
-  await $delegatePowerValidation.value.$validate();
-  if ($delegatePowerValidation.value.$error) return;
-  powerFormData.loading = true;
-
-  try {
-    await forceSwitchChain();
-
-    const hash = await writePowerToken(wagmiConfig, {
-      address: ttg.contracts.value.powerToken as Hash,
-      functionName: "delegate",
-      args: [powerFormData.address! as Hash],
-    });
-
-    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-      confirmations: 1,
-      hash,
-    });
-
-    if (txReceipt.status !== "success") {
-      throw new Error("Transaction was rejected");
-    }
-
-    alerts.successAlert(
-      "POWER tokens voting power were delegated successfully!",
-    );
-
-    useDelegate.refetch();
-  } catch (error) {
-    console.error(error);
-    alerts.errorAlert("Error while delegating!");
-  } finally {
-    powerFormData.loading = false;
-    powerFormData.address = "";
-    $delegatePowerValidation.value.$reset();
+  const addressValidationRule = {
+    addressValidation: helpers.withMessage(
+      'Invalid address',
+      addressValidation,
+    ),
   }
-}
 
-async function delegateZero() {
-  await $delegateZeroValidation.value.$validate();
-  if ($delegateZeroValidation.value.$error) return;
-  zeroFormData.loading = true;
-
-  try {
-    await forceSwitchChain();
-
-    const hash = await writeZeroToken(wagmiConfig, {
-      address: ttg.contracts.value.zeroToken as Hash,
-      functionName: "delegate",
-      args: [zeroFormData.address! as Hash],
-    });
-
-    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-      confirmations: 1,
-      hash,
-    });
-
-    if (txReceipt.status !== "success") {
-      throw new Error("Transaction was rejected");
-    }
-
-    alerts.successAlert(
-      "ZERO tokens voting power were delegated successfully!",
-    );
-    useDelegate.refetch();
-  } catch (error) {
-    console.error(error);
-    alerts.errorAlert("Error while delegating!");
-  } finally {
-    zeroFormData.loading = false;
-    zeroFormData.address = "";
-    $delegateZeroValidation.value.$reset();
+  const delegatePowerValidationRule = {
+    delegatePowerValidation: helpers.withMessage(
+      "Please enter a different address than the one you've currently provided.",
+      addressValidationDelegatePower,
+    ),
   }
-}
+
+  const delegateZeroValidationRule = {
+    delegatePowerValidation: helpers.withMessage(
+      "Please enter a different address than the one you've currently provided.",
+      addressValidationDelegateZero,
+    ),
+  }
+
+  const powerRules = {
+    address: {
+      ...addressValidationRule,
+      ...delegatePowerValidationRule,
+    },
+  }
+
+  const zeroRules = {
+    address: {
+      ...addressValidationRule,
+      ...delegateZeroValidationRule,
+    },
+  }
+
+  const $delegatePowerValidation = useVuelidate(powerRules, powerFormData)
+  const $delegateZeroValidation = useVuelidate(zeroRules, zeroFormData)
+
+  const { forceSwitchChain } = useCorrectChain()
+  const wagmiConfig = useWagmiConfig()
+
+  useHead({
+    titleTemplate: '%s - Delegate',
+  })
+
+  async function delegatePower() {
+    await $delegatePowerValidation.value.$validate()
+    if ($delegatePowerValidation.value.$error) return
+    powerFormData.loading = true
+
+    try {
+      await forceSwitchChain()
+
+      const hash = await writePowerToken(wagmiConfig, {
+        address: ttg.contracts.value.powerToken as Hash,
+        functionName: 'delegate',
+        args: [powerFormData.address! as Hash],
+      })
+
+      const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        confirmations: 1,
+        hash,
+      })
+
+      if (txReceipt.status !== 'success') {
+        throw new Error('Transaction was rejected')
+      }
+
+      alerts.successAlert(
+        'POWER tokens voting power were delegated successfully!',
+      )
+
+      useDelegate.refetch()
+    } catch (error) {
+      console.error(error)
+      alerts.errorAlert('Error while delegating!')
+    } finally {
+      powerFormData.loading = false
+      powerFormData.address = ''
+      $delegatePowerValidation.value.$reset()
+    }
+  }
+
+  async function delegateZero() {
+    await $delegateZeroValidation.value.$validate()
+    if ($delegateZeroValidation.value.$error) return
+    zeroFormData.loading = true
+
+    try {
+      await forceSwitchChain()
+
+      const hash = await writeZeroToken(wagmiConfig, {
+        address: ttg.contracts.value.zeroToken as Hash,
+        functionName: 'delegate',
+        args: [zeroFormData.address! as Hash],
+      })
+
+      const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        confirmations: 1,
+        hash,
+      })
+
+      if (txReceipt.status !== 'success') {
+        throw new Error('Transaction was rejected')
+      }
+
+      alerts.successAlert(
+        'ZERO tokens voting power were delegated successfully!',
+      )
+      useDelegate.refetch()
+    } catch (error) {
+      console.error(error)
+      alerts.errorAlert('Error while delegating!')
+    } finally {
+      zeroFormData.loading = false
+      zeroFormData.address = ''
+      $delegateZeroValidation.value.$reset()
+    }
+  }
 </script>

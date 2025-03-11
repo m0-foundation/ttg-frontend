@@ -1,30 +1,29 @@
-import maxBy from "lodash/maxBy";
-import { useProposalsStore } from "@/stores/proposals";
-import { useAlertsStore } from "@/stores/alerts";
+import maxBy from 'lodash/maxBy'
+import { useProposalsStore } from '@/stores/proposals'
+import { useAlertsStore } from '@/stores/alerts'
 
 export const watchForExecutedResetProposal = () => {
-  const proposals = useProposalsStore();
-  const alerts = useAlertsStore();
-  const ttg = useTtgStore();
+  const proposals = useProposalsStore()
+  const alerts = useAlertsStore()
+  const ttg = useTtgStore()
 
   const resetProposals = computed(() => {
     return proposals.data.filter(
       (p) =>
-        ["resetToPowerHolders", "resetToZeroHolders"].includes(
+        ['resetToPowerHolders', 'resetToZeroHolders'].includes(
           p.proposalType,
-        ) && p.state === "Executed",
-    );
-  });
+        ) && p.state === 'Executed',
+    )
+  })
 
-  watch(resetProposals, (resetProposals) => {
-    const lastestResetProposal = maxBy(resetProposals, "blockNumber");
+  const unsub = watch(resetProposals, (resetProposals) => {
+    const lastestResetProposal = maxBy(resetProposals, 'blockNumber')
 
     if (lastestResetProposal) {
       if (lastestResetProposal.voteEnd! + 6 >= ttg.epoch.current.asNumber) {
-        alerts.showResetAlert(lastestResetProposal);
-      } else {
-        alerts.hideResetAlert();
+        alerts.successAlert('Reset of the Governance has been executed!')
+        unsub()
       }
     }
-  });
-};
+  })
+}

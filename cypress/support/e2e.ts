@@ -14,36 +14,36 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import "./commands";
+import './commands'
 
-import { JsonRpcProvider } from "@ethersproject/providers";
-import { Wallet } from "@ethersproject/wallet";
-import { Eip1193 } from "../lib/eip1193";
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { Wallet } from '@ethersproject/wallet'
+import { Eip1193 } from '../lib/eip1193'
 
-import redeploy from "../lib/redeploy";
+import redeploy from '../lib/redeploy'
 
 before(async () => {
-  await redeploy();
-});
+  await redeploy()
+})
 
-Cypress.on("window:before:load", (win) => {
+Cypress.on('window:before:load', (win) => {
   // private key of first hardhat user
   const pk =
-    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
-  const provider = new JsonRpcProvider("http://localhost:8545");
-  const signer = new Wallet(pk, provider);
-  win.ethereum = new Eip1193(signer);
-});
+  const provider = new JsonRpcProvider('http://localhost:8545')
+  const signer = new Wallet(pk, provider)
+  win.ethereum = new Eip1193(signer)
+})
 
-const cypressLogOriginal = Cypress.log;
-const cypressLogDomainsHidden = ["http://localhost:8545", "127.0.0.1:8545"];
+const cypressLogOriginal = Cypress.log
+const cypressLogDomainsHidden = ['http://localhost:8545', '127.0.0.1:8545']
 // @ts-ignore
 Cypress.log = function (options: Cypress.LogConfig) {
-  const logFetchIs = ["fetch"].includes(options.displayName);
+  const logFetchIs = ['fetch'].includes(options.displayName)
   const logFetchDomainMatch =
-    logFetchIs && cypressLogDomainsHidden.find((d) => options.url.includes(d));
-  if (logFetchDomainMatch) return;
+    logFetchIs && cypressLogDomainsHidden.find((d) => options.url.includes(d))
+  if (logFetchDomainMatch) return
 
-  return cypressLogOriginal(options);
-};
+  return cypressLogOriginal(options)
+}

@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
-import { Hash } from "viem";
+import { defineStore } from 'pinia'
+import { Hash } from 'viem'
 import {
   IToken,
   MGovernorValues,
@@ -7,11 +7,11 @@ import {
   MProposalsActionTypes,
   MStandardGovernorValues,
   MZeroGovernorValues,
-} from "../lib/api/types";
-import { MRegistrarStore } from "@/lib/api/modules/registrar/registrar.types";
-import { powerTokenAbi } from "@/lib/sdk";
+} from '../lib/api/types'
+import { MRegistrarStore } from '@/lib/api/modules/registrar/registrar.types'
+import { powerTokenAbi } from '@/lib/sdk'
 
-export const useTtgStore = defineStore("ttg", {
+export const useTtgStore = defineStore('ttg', {
   state: () => ({
     epoch: {} as MEpoch,
     values: {} as Partial<MRegistrarStore>,
@@ -44,9 +44,9 @@ export const useTtgStore = defineStore("ttg", {
           state.governors.emergency.thresholdRatio!,
         setZeroProposalThresholdRatio: state.governors.zero.thresholdRatio!,
         setCashToken: state.contracts.cashToken as Hash,
-      };
+      }
 
-      return values;
+      return values
     },
 
     getValues: (state) => {
@@ -56,7 +56,7 @@ export const useTtgStore = defineStore("ttg", {
           state.governors.emergency.thresholdRatio!,
         zeroProposalThresholdRatio: state.governors.zero.thresholdRatio!,
         ...state.values,
-      };
+      }
     },
 
     getTokens: (state) => state.tokens,
@@ -64,32 +64,32 @@ export const useTtgStore = defineStore("ttg", {
 
   actions: {
     async fetchEpoch(_epoch: number) {
-      const api = useApiClientStore();
-      const epochState = await api.client.epoch.getEpochState(_epoch);
-      this.epoch = epochState;
+      const api = useApiClientStore()
+      const epochState = await api.client.epoch.getEpochState(_epoch)
+      this.epoch = epochState
 
       const rescheduleTime = Math.ceil(
         (epochState.current.end.timestamp - Date.now() / 1000 + 3) * 1000,
-      );
+      )
 
       // if is lower than 1/2 day in miliseconds, start timeout to fetch next epoch
       if (rescheduleTime < 43200000) {
         // Re-fetch epoch data when current epoch ends
-        setTimeout(() => this.fetchEpoch(_epoch! + 1), rescheduleTime);
+        setTimeout(() => this.fetchEpoch(_epoch! + 1), rescheduleTime)
       }
     },
     async fetchTokens() {
-      const api = useApiClientStore();
+      const api = useApiClientStore()
 
       const [cashToken, powerToken, zeroToken] = await Promise.all([
         api.getToken(this.contracts.cashToken as Hash),
         api.getToken(this.contracts.powerToken as Hash),
         api.getToken(this.contracts.zeroToken as Hash),
-      ]);
+      ])
 
-      this.tokens.cash = cashToken;
-      this.tokens.power = powerToken;
-      this.tokens.zero = zeroToken;
+      this.tokens.cash = cashToken
+      this.tokens.power = powerToken
+      this.tokens.zero = zeroToken
     },
 
     setRegistrarValues({
@@ -98,8 +98,8 @@ export const useTtgStore = defineStore("ttg", {
       clockStartingTimestamp,
       ...contracts
     }: Partial<MRegistrarStore>) {
-      this.values = { clock, clockPeriod, clockStartingTimestamp };
-      this.contracts = { ...contracts };
+      this.values = { clock, clockPeriod, clockStartingTimestamp }
+      this.contracts = { ...contracts }
     },
 
     setGovernorsValues({
@@ -107,76 +107,76 @@ export const useTtgStore = defineStore("ttg", {
       emergency,
       zero,
     }: {
-      standard: Partial<MStandardGovernorValues>;
-      emergency: Partial<MGovernorValues>;
-      zero: Partial<MGovernorValues>;
+      standard: Partial<MStandardGovernorValues>
+      emergency: Partial<MGovernorValues>
+      zero: Partial<MGovernorValues>
     }) {
       this.governors = {
         standard,
         emergency,
         zero,
-      };
+      }
     },
 
     async fetchGovernorsValues() {
-      const api = useApiClientStore();
+      const api = useApiClientStore()
 
       const [standard, emergency, zero] = await Promise.all([
         api.client.standardGovernor!.getParameters<
           Partial<MStandardGovernorValues>
-        >(["proposalFee", "cashToken", "maxTotalZeroRewardPerActiveEpoch"]),
+        >(['proposalFee', 'cashToken', 'maxTotalZeroRewardPerActiveEpoch']),
         api.client.emergencyGovernor!.getParameters<Partial<MGovernorValues>>([
-          "thresholdRatio",
+          'thresholdRatio',
         ]),
         api.client.zeroGovernor!.getParameters<Partial<MZeroGovernorValues>>([
-          "thresholdRatio",
+          'thresholdRatio',
         ]),
-      ]);
+      ])
 
-      const network = useNetworkStore();
+      const network = useNetworkStore()
       const allowedCashTokens =
-        network.network.contracts.zero?.allowedCashTokens;
+        network.network.contracts.zero?.allowedCashTokens
       if (allowedCashTokens) {
         const [weth, M] = await Promise.all([
           api.getToken(allowedCashTokens[0] as Hash),
           api.getToken(allowedCashTokens[1] as Hash),
-        ]);
-        zero.allowedCashTokens = [weth, M];
+        ])
+        zero.allowedCashTokens = [weth, M]
       }
 
-      this.contracts.cashToken = standard.cashToken;
+      this.contracts.cashToken = standard.cashToken
 
       this.setGovernorsValues({
         standard,
         emergency,
         zero,
-      });
+      })
     },
 
     fetchPowerTokenValue(values: string[]) {
-      const api = useApiClientStore();
+      const api = useApiClientStore()
 
       const contractConfig = {
         address: this.values.powerToken!,
         abi: powerTokenAbi,
-      };
+      }
 
       const contracts = values.map((value) => ({
         ...contractConfig,
         functionName: value,
-      }));
+      }))
 
       return api.client.context.client.multicall({
         multicallAddress: api.client.context.config.multicall3,
         contracts,
-      });
+      })
     },
 
     async fetchActorsLists() {
-      const api = useApiClientStore();
-      const listsStore = useListsStore();
-      const data = await api.client.registrar!.list.getLists();
-      listsStore.setLists(data);
+      const api = useApiClientStore()
+      const listsStore = useListsStore()
+      const data = await api.client.registrar!.list.getLists()
+      listsStore.setLists(data)
     },
   },
-});
+})
