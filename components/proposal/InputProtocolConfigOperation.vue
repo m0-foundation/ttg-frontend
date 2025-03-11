@@ -3,8 +3,7 @@
     <SelectProtocolConfig
       v-model="key"
       class="mb-4"
-      :errors="props.modelValueErrors"
-    />
+      :errors="props.modelValueErrors" />
 
     <div>
       <component
@@ -16,122 +15,121 @@
         class="input"
         type="text"
         data-test="proposalValue2"
-        :model-value-errors="props.modelValue2Errors"
-      />
+        :model-value-errors="props.modelValue2Errors" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ErrorObject } from "@vuelidate/core";
-import InputDynamic from "./InputDynamic.vue";
-import { masks } from "@/utils/masks";
+  import { ErrorObject } from '@vuelidate/core'
+  import InputDynamic from './InputDynamic.vue'
+  import { masks } from '@/utils/masks'
 
-export interface InputProps {
-  modelValue: string;
-  modelValue2: string;
-  modelValueErrors?: ErrorObject[];
-  modelValue2Errors?: ErrorObject[];
-}
+  export interface InputProps {
+    modelValue: string
+    modelValue2: string
+    modelValueErrors?: ErrorObject[]
+    modelValue2Errors?: ErrorObject[]
+  }
 
-const inputs = {
-  update_collateral_interval: {
-    component: InputDynamic,
-    props: {
-      decorator: "seconds",
-      maska: masks.seconds,
+  const inputs = {
+    update_collateral_interval: {
+      component: InputDynamic,
+      props: {
+        decorator: 'seconds',
+        maska: masks.seconds,
+      },
     },
-  },
 
-  update_collateral_threshold: {
-    component: InputDynamic,
-    props: {
-      maska: masks.interger,
+    update_collateral_threshold: {
+      component: InputDynamic,
+      props: {
+        maska: masks.interger,
+      },
     },
-  },
 
-  penalty_rate: {
-    component: InputDynamic,
-    props: {
-      decorator: "BPS",
-      maska: masks.percentage,
+    penalty_rate: {
+      component: InputDynamic,
+      props: {
+        decorator: 'BPS',
+        maska: masks.percentage,
+      },
     },
-  },
 
-  mint_delay: {
-    component: InputDynamic,
-    props: {
-      decorator: "seconds",
-      maska: masks.seconds,
+    mint_delay: {
+      component: InputDynamic,
+      props: {
+        decorator: 'seconds',
+        maska: masks.seconds,
+      },
     },
-  },
 
-  mint_ttl: {
-    component: InputDynamic,
-    props: {
-      decorator: "seconds",
-      maska: masks.seconds,
+    mint_ttl: {
+      component: InputDynamic,
+      props: {
+        decorator: 'seconds',
+        maska: masks.seconds,
+      },
     },
-  },
 
-  mint_ratio: {
-    component: InputDynamic,
-    props: {
-      decorator: "BPS",
-      maska: masks.percentage,
+    mint_ratio: {
+      component: InputDynamic,
+      props: {
+        decorator: 'BPS',
+        maska: masks.percentage,
+      },
     },
-  },
 
-  minter_freeze_time: {
-    component: InputDynamic,
-    props: {
-      decorator: "seconds",
-      maska: masks.seconds,
+    minter_freeze_time: {
+      component: InputDynamic,
+      props: {
+        decorator: 'seconds',
+        maska: masks.seconds,
+      },
     },
-  },
 
-  minter_rate_model: {
-    component: InputDynamic,
-    props: {
-      decorator: "contract",
+    minter_rate_model: {
+      component: InputDynamic,
+      props: {
+        decorator: 'contract',
+      },
     },
-  },
 
-  earner_rate_model: {
-    component: InputDynamic,
-    props: {
-      decorator: "contract",
+    earner_rate_model: {
+      component: InputDynamic,
+      props: {
+        decorator: 'contract',
+      },
     },
-  },
 
-  base_minter_rate: {
-    component: InputDynamic,
-    props: {
-      decorator: "BPS",
-      maska: masks.percentage,
+    base_minter_rate: {
+      component: InputDynamic,
+      props: {
+        decorator: 'BPS',
+        maska: masks.percentage,
+      },
     },
-  },
 
-  max_earner_rate: {
-    component: InputDynamic,
-    props: {
-      decorator: "BPS",
-      maska: masks.percentage,
+    max_earner_rate: {
+      component: InputDynamic,
+      props: {
+        decorator: 'BPS',
+        maska: masks.percentage,
+      },
     },
-  },
-};
+  }
 
-const props = defineProps<InputProps>();
-const emit = defineEmits(["update:modelValue", "update:modelValue2"]);
+  const props = defineProps<InputProps>()
+  const emit = defineEmits(['update:modelValue', 'update:modelValue2'])
 
-const key = useVModelWrapper<InputProps>(props, emit, "modelValue");
-const value = useVModelWrapper<InputProps>(props, emit, "modelValue2");
+  const key = useVModelWrapper<InputProps>(props, emit, 'modelValue')
+  const value = useVModelWrapper<InputProps>(props, emit, 'modelValue2')
 
-const selectedInput = computed(() => key.value);
+  const selectedInput = computed(() => key.value)
 </script>
 
 <style>
-.error {
-  @apply border border-red-500;
-}
+  .error {
+    @apply border border-red-500;
+  }
 </style>

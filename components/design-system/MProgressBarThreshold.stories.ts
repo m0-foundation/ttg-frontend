@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-import MProgressBarThreshold from "./MProgressBarThreshold.vue";
+import MProgressBarThreshold from './MProgressBarThreshold.vue'
 
 // More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 const meta = {
-  title: "DS/MProgressBarThreshold",
+  title: 'DS/MProgressBarThreshold',
   component: MProgressBarThreshold,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/vue/writing-docs/autodocs
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     yes: {
-      control: "number",
+      control: 'number',
     },
     no: {
-      control: "number",
+      control: 'number',
     },
     threshold: {
-      control: "number",
+      control: 'number',
     },
   },
   render: (args) => ({
@@ -24,23 +24,23 @@ const meta = {
       MProgressBarThreshold,
     },
     setup() {
-      return { args };
+      return { args }
     },
     template: `
       <MProgressBarThreshold v-bind="args" />
     `,
   }),
-} satisfies Meta<typeof MProgressBarThreshold>;
+} satisfies Meta<typeof MProgressBarThreshold>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
  * See https://storybook.js.org/docs/vue/api/csf
  * to learn how to use render functions.
  */
 
-export const Default: Story = {};
+export const Default: Story = {}
 
 export const Yes100: Story = {
   args: {
@@ -48,4 +48,4 @@ export const Yes100: Story = {
     no: 0,
     threshold: 0.5,
   },
-};
+}

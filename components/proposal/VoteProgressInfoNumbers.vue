@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts" setup>
-export interface Props {
-  againts: string;
-  for: string;
-}
+  export interface Props {
+    againts: string
+    for: string
+  }
 
-const props = defineProps<Props>();
+  const props = defineProps<Props>()
 </script>

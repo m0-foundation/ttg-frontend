@@ -31,10 +31,10 @@
 </template>
 
 <script setup>
-defineProps({
-  title: {
-    type: String,
-    default: "",
-  },
-});
+  defineProps({
+    title: {
+      type: String,
+      default: '',
+    },
+  })
 </script>

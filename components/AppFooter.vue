@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const { footer } = useAppConfig();
+  const { footer } = useAppConfig()
 
-const links = [];
+  const links = []
 </script>
 
 <template>
@@ -12,8 +12,7 @@ const links = [];
           <UButton
             v-for="(link, index) of footer?.links"
             :key="index"
-            v-bind="{ color: 'gray', variant: 'ghost', ...link }"
-          />
+            v-bind="{ color: 'gray', variant: 'ghost', ...link }" />
         </div>
 
         <UButton
@@ -21,29 +20,25 @@ const links = [];
           label="Settings"
           to="/settings"
           color="gray"
-          variant="link"
-        />
+          variant="link" />
       </div>
       <UFooterColumns
         v-if="links.length"
         :links="links"
         class="mb-12"
-        :ui="{ label: 'text-base', base: 'text-xs', list: 'mt-4 space-y-2' }"
-      >
+        :ui="{ label: 'text-base', base: 'text-xs', list: 'mt-4 space-y-2' }">
         <template #top>
           <UFormGroup
             name="email"
             label="Subscribe to our newsletter"
-            size="lg"
-          >
+            size="lg">
             <UInput type="email" :ui="{ icon: { trailing: { pointer: '' } } }">
               <template #trailing>
                 <UButton
                   type="submit"
                   size="2xs"
                   color="black"
-                  label="Subscribe"
-                />
+                  label="Subscribe" />
               </template>
             </UInput>
           </UFormGroup>

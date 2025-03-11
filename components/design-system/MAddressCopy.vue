@@ -12,8 +12,7 @@
         color="gray"
         size="xs"
         :padded="false"
-        @click="copy(props.address)"
-      >
+        @click="copy(props.address)">
         <template #trailing>
           <MIconCheck v-if="justCopied" />
           <MIconCopy v-else />
@@ -23,26 +22,26 @@
   </span>
 </template>
 <script setup lang="ts">
-export interface MAddressCopy {
-  address: string;
-  shortAddress?: boolean;
-  showCopy?: boolean;
-}
+  export interface MAddressCopy {
+    address: string
+    shortAddress?: boolean
+    showCopy?: boolean
+  }
 
-const props = withDefaults(defineProps<MAddressCopy>(), {
-  address: "",
-  shortAddress: true,
-  showAvatar: true,
-  showCopy: false,
-});
+  const props = withDefaults(defineProps<MAddressCopy>(), {
+    address: '',
+    shortAddress: true,
+    showAvatar: true,
+    showCopy: false,
+  })
 
-const justCopied = ref(false);
+  const justCopied = ref(false)
 
-function copy(address: string) {
-  copyToClipboard(address);
-  justCopied.value = true;
-  setTimeout(() => {
-    justCopied.value = false;
-  }, 2000);
-}
+  function copy(address: string) {
+    copyToClipboard(address)
+    justCopied.value = true
+    setTimeout(() => {
+      justCopied.value = false
+    }, 2000)
+  }
 </script>

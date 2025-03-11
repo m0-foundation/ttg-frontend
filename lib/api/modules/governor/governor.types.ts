@@ -1,21 +1,21 @@
-import { IToken } from "../../types";
-import { MVotingType } from "./modules/proposal/proposal.types";
+import { IToken } from '../../types'
+import { MVotingType } from './modules/proposal/proposal.types'
 
 export interface MGovernorValues {
-  thresholdRatio: string;
+  thresholdRatio: string
 }
 
 export interface MZeroGovernorValues extends MGovernorValues {
-  allowedCashTokens: IToken[];
+  allowedCashTokens: IToken[]
 }
 
 export interface MStandardGovernorValues {
-  cashToken: string;
-  proposalFee: string;
-  maxTotalZeroRewardPerActiveEpoch: string;
-  clock: number; // epoch
+  cashToken: string
+  proposalFee: string
+  maxTotalZeroRewardPerActiveEpoch: string
+  clock: number // epoch
 }
 
-export type GovernanceType = MVotingType;
+export type GovernanceType = MVotingType
 
-export type MGovernorState = MGovernorValues;
+export type MGovernorState = MGovernorValues

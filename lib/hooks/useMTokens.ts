@@ -1,9 +1,9 @@
-import useMTokenPower from "./useMTokenPower";
-import useMTokenZero from "./useMTokenZero";
+import useMTokenPower from './useMTokenPower'
+import useMTokenZero from './useMTokenZero'
 
 export default () => {
-  const powerToken = useMTokenPower();
-  const zeroToken = useMTokenZero();
+  const powerToken = useMTokenPower()
+  const zeroToken = useMTokenZero()
 
-  return { powerToken, zeroToken };
-};
+  return { powerToken, zeroToken }
+}

@@ -4,8 +4,7 @@
       v-model="value"
       language="en-US"
       theme="light"
-      :preview="largerThanSm"
-    />
+      :preview="largerThanSm" />
   </div>
 
   <div class="text-red-500 text-xs my-2 h-4">
@@ -16,34 +15,34 @@
 </template>
 
 <script setup lang="ts">
-import { MdEditor } from "md-editor-v3";
-import { ErrorObject } from "@vuelidate/core";
-import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+  import { MdEditor } from 'md-editor-v3'
+  import { ErrorObject } from '@vuelidate/core'
+  import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 
-const largerThanSm = useBreakpoints(breakpointsTailwind).greater("sm");
+  const largerThanSm = useBreakpoints(breakpointsTailwind).greater('sm')
 
-export interface InputProps {
-  errors?: ErrorObject[];
-  modelValue: any;
-}
+  export interface InputProps {
+    errors?: ErrorObject[]
+    modelValue: any
+  }
 
-const props = defineProps<InputProps>();
-const emit = defineEmits(["update:modelValue"]);
-const value = useVModelWrapper<InputProps>(props, emit, "modelValue");
-const hasErrors = computed(() => props.errors?.length);
+  const props = defineProps<InputProps>()
+  const emit = defineEmits(['update:modelValue'])
+  const value = useVModelWrapper<InputProps>(props, emit, 'modelValue')
+  const hasErrors = computed(() => props.errors?.length)
 </script>
 
 <style>
-.md-editor-dark {
-  --md-bk-color: theme("colors.white");
-}
-.md-editor-footer-label {
-  margin-bottom: 0 !important;
-}
-.md-editor-toolbar-wrapper {
-  @apply bg-grey-200;
-}
-.md-editor {
-  @apply border-[#E0ECF4];
-}
+  .md-editor-dark {
+    --md-bk-color: theme('colors.white');
+  }
+  .md-editor-footer-label {
+    margin-bottom: 0 !important;
+  }
+  .md-editor-toolbar-wrapper {
+    @apply bg-grey-200;
+  }
+  .md-editor {
+    @apply border-[#E0ECF4];
+  }
 </style>

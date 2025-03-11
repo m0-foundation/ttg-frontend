@@ -5,15 +5,15 @@
 replicaCount: 1
 
 image:
-  repository: "ghcr.io/mzero-labs/ttg-frontend"
+  repository: 'ghcr.io/mzero-labs/ttg-frontend'
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: 'latest'
 
 imagePullSecrets: {}
 
-nameOverride: ""
-fullnameOverride: "ttg-frontend"
+nameOverride: ''
+fullnameOverride: 'ttg-frontend'
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -22,17 +22,19 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: ''
 
 podAnnotations:
   # to exclude from fluentbit-logging:
   #fluentbit.io/exclude: "true"
   fluentbit.io/parser_stdout: crosslend-nginx-access-log
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -53,7 +55,8 @@ service:
 
 ingress:
   enabled: false
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
@@ -64,7 +67,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following

@@ -1,20 +1,20 @@
-import { Hash } from "viem";
+import { Hash } from 'viem'
 
 export interface NetworkConfig {
-  network: "sepolia" | "mainnet" | "hardhat";
+  network: 'sepolia' | 'mainnet' | 'hardhat'
   contracts: {
-    registrar: Hash;
-    multicall3: Hash;
-    deploymentBlock: number;
+    registrar: Hash
+    multicall3: Hash
+    deploymentBlock: number
     zero?: {
-      allowedCashTokens?: Hash[];
-    };
-    mToken: Hash;
-    wrappedMToken: Hash;
-  };
+      allowedCashTokens?: Hash[]
+    }
+    mToken: Hash
+    wrappedMToken: Hash
+  }
   rpc: {
-    chainId: number;
-    default?: string;
-    values?: string[];
-  };
+    chainId: number
+    default?: string
+    values?: string[]
+  }
 }

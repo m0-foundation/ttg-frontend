@@ -11,8 +11,7 @@
         v-if="version === 'Defeated'"
         :version="version"
         name="Defeated"
-        class="defeated"
-      />
+        class="defeated" />
 
       <ProposalStatusBadge v-else :version="version" name="Succeeded" />
 
@@ -20,8 +19,7 @@
         v-if="version === 'Expired'"
         :version="version"
         name="Expired"
-        class="expired"
-      />
+        class="expired" />
 
       <UDropdown v-else-if="version === 'Executed'" :items="dropdownItems">
         <ProposalStatusBadge
@@ -29,8 +27,7 @@
           name="Executed"
           :show-arrow="true"
           data-test="executed-badge"
-          class="cursor-pointer"
-        />
+          class="cursor-pointer" />
       </UDropdown>
 
       <ProposalStatusBadge v-else :version="version" name="Executed" />
@@ -39,34 +36,36 @@
 </template>
 
 <script setup lang="ts">
-import { MProposal } from "@/lib/api/types";
+  import { MProposal } from '@/lib/api/types'
 
-export interface Props {
-  version: string;
-  proposal: MProposal | undefined;
-}
+  export interface Props {
+    version: string
+    proposal: MProposal | undefined
+  }
 
-const props = defineProps<Props>();
-const { toFormat } = useDate(Number(props?.proposal?.executedEvent?.timestamp));
+  const props = defineProps<Props>()
+  const { toFormat } = useDate(
+    Number(props?.proposal?.executedEvent?.timestamp),
+  )
 
-const dropdownItems = ref([
-  [
-    {
-      label: `Executed on ${toFormat("lll")}`,
-      disabled: true,
-      labelClass: "cursor-auto",
-    },
-    {
-      label: "Copy block number",
-      icon: "i-heroicons-clipboard",
-      click: () => copyToClipboard(props.proposal?.blockNumber),
-    },
-    {
-      label: "View on block explorer",
-      icon: "i-heroicons-globe-alt",
-      to: useBlockExplorer("tx", props.proposal?.transactionHash || ""),
-      target: "_blank",
-    },
-  ],
-]);
+  const dropdownItems = ref([
+    [
+      {
+        label: `Executed on ${toFormat('lll')}`,
+        disabled: true,
+        labelClass: 'cursor-auto',
+      },
+      {
+        label: 'Copy block number',
+        icon: 'i-heroicons-clipboard',
+        click: () => copyToClipboard(props.proposal?.blockNumber),
+      },
+      {
+        label: 'View on block explorer',
+        icon: 'i-heroicons-globe-alt',
+        to: useBlockExplorer('tx', props.proposal?.transactionHash || ''),
+        target: '_blank',
+      },
+    ],
+  ])
 </script>

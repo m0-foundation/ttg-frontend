@@ -1,11 +1,11 @@
-import { createApp } from "vue";
+import { createApp } from 'vue'
 
 export const useComponentToHtml = (
   Component: Component,
   props: Data | null | undefined,
 ) => {
-  const component = document.createElement("div");
-  createApp(Component, props).mount(component);
+  const component = document.createElement('div')
+  createApp(Component, props).mount(component)
 
-  return { html: component.innerHTML };
-};
+  return { html: component.innerHTML }
+}

@@ -8,20 +8,20 @@
       <UContainer class="py-10">
         <NuxtPage />
       </UContainer>
-      <template #fallback> <CommonLoader /> </template>
+      <template #fallback><CommonLoader /></template>
     </Suspense>
   </section>
 </template>
 
 <script setup lang="ts">
-const actorsLinks = [
-  {
-    label: "Protocol",
-    to: "/actors/protocol",
-  },
-  {
-    label: "M wrapped",
-    to: "/actors/wm",
-  },
-];
+  const actorsLinks = [
+    {
+      label: 'Protocol',
+      to: '/actors/protocol',
+    },
+    {
+      label: 'M wrapped',
+      to: '/actors/wm',
+    },
+  ]
 </script>

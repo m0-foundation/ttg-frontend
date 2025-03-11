@@ -225,7 +225,6 @@ Release branches are used for production deployments.
 
 1. The branch `release/x.x.x` can now be deleted in GitHub.
 
-
 ### Hotfix
 
 Hotfix branch is used to patch or fix something in production.
@@ -237,8 +236,8 @@ Hotfix branch is used to patch or fix something in production.
 
 Releasing the hotfix branch involves the same steps as a `release/*` branch. Including version bumping. Refer to the section above for detailed steps.
 
-
 ### Additional guidelines
+
 - Git commits: We follow (non-strictly) [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 - Pull requests: The title follows conventional commits as well. Description is a must. Please include screenshots or videos for visual changes, testing evidence and any other relevant information for reviewers. Explain why and what changed not how.
 - Approvals: Get at least one approval.

@@ -1,4 +1,4 @@
-import type { StorybookConfig } from '@storybook/vue3-vite';
+import type { StorybookConfig } from '@storybook/vue3-vite'
 
 const config: StorybookConfig = {
   stories: [
@@ -20,5 +20,5 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
-};
-export default config;
+}
+export default config

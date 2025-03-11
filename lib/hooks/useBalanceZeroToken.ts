@@ -1,6 +1,6 @@
-import { storeToRefs } from "pinia";
-import { Hash } from "viem";
-import { useBalance } from "use-wagmi";
+import { storeToRefs } from 'pinia'
+import { Hash } from 'viem'
+import { useBalance } from 'use-wagmi'
 
 export default (
   userAccount:
@@ -8,10 +8,10 @@ export default (
     | globalThis.Ref<`0x${string}`>
     | globalThis.Ref<`0x${string}` | undefined>,
 ) => {
-  const store = useTtgStore();
-  const ttg = storeToRefs(store);
+  const store = useTtgStore()
+  const ttg = storeToRefs(store)
   // keep the reactivity alive
-  const account = ref(userAccount);
+  const account = ref(userAccount)
 
   return useBalance({
     address: account,
@@ -20,5 +20,5 @@ export default (
     query: {
       enabled: true,
     },
-  });
-};
+  })
+}

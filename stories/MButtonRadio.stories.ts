@@ -1,20 +1,20 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-import MButtonRadio from "../components/design-system/MButtonRadio.vue";
+import MButtonRadio from '../components/design-system/MButtonRadio.vue'
 
 // More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 const meta = {
-  title: "Example/MButtonRadio",
+  title: 'Example/MButtonRadio',
   component: MButtonRadio,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/vue/writing-docs/autodocs
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     version: {
-      control: "select",
-      options: ["default", "active"],
+      control: 'select',
+      options: ['default', 'active'],
     },
     disabled: {
-      control: "boolean",
+      control: 'boolean',
       options: [false, true],
     },
   },
@@ -24,7 +24,7 @@ const meta = {
       MButtonRadio,
     },
     setup() {
-      return { args };
+      return { args }
     },
     template: `
       <MButtonRadio v-bind="args">
@@ -32,25 +32,25 @@ const meta = {
       </MButtonRadio>
     `,
   }),
-} satisfies Meta<typeof MButtonRadio>;
+} satisfies Meta<typeof MButtonRadio>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    version: "default",
+    version: 'default',
   },
-};
+}
 
 export const Active: Story = {
   args: {
-    version: "active",
+    version: 'active',
   },
-};
+}
 
 export const Disabled: Story = {
   args: {
     disabled: true,
   },
-};
+}

@@ -1,14 +1,13 @@
 <template>
   <section>
     <PageTitle>
-      <template #title> My Profile </template>
+      <template #title>My Profile</template>
       <template #top-right>
         <NuxtLink to="/delegate/">
           <UButton
             class="w-full justify-center"
             data-test="profile-button-redelegate"
-            color="primary"
-          >
+            color="primary">
             Delegate
           </UButton>
         </NuxtLink>
@@ -23,19 +22,18 @@
     </UContainer>
     <div
       v-else
-      class="flex flex-col items-center justify-center h-80 text-grey-600"
-    >
+      class="flex flex-col items-center justify-center h-80 text-grey-600">
       User not connected
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { useAccount } from "use-wagmi";
+  import { useAccount } from 'use-wagmi'
 
-const { address } = useAccount();
+  const { address } = useAccount()
 
-useHead({
-  titleTemplate: "%s - My profile",
-});
+  useHead({
+    titleTemplate: '%s - My profile',
+  })
 </script>
