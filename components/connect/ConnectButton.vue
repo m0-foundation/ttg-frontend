@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { useAccount, useDisconnect } from "use-wagmi";
+  import { useAccount, useDisconnect } from 'use-wagmi'
 
-const { isConnected } = useAccount();
-const { disconnect } = useDisconnect();
+  const { isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
 </script>

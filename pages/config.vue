@@ -21,18 +21,18 @@
 </template>
 
 <script setup lang="ts">
-const configLinks = [
-  {
-    label: "Governance",
-    to: "/config/governance",
-  },
-  {
-    label: "Protocol",
-    to: "/config/protocol",
-  },
-  {
-    label: "Guidance",
-    to: "/config/guidance",
-  },
-];
+  const configLinks = [
+    {
+      label: 'Governance',
+      to: '/config/governance',
+    },
+    {
+      label: 'Protocol',
+      to: '/config/protocol',
+    },
+    {
+      label: 'Guidance',
+      to: '/config/guidance',
+    },
+  ]
 </script>

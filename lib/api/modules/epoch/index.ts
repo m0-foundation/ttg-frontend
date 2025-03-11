@@ -1,1 +1,1 @@
-export { Epoch } from "./epoch";
+export { Epoch } from './epoch'

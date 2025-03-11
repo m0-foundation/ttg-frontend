@@ -1,8 +1,7 @@
 <template>
   <UCard
     v-if="props.description"
-    class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-1 my-2"
-  >
+    class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-1 my-2">
     <label>Parameter description</label>
     <p class="font-inter">
       {{ props.description }}
@@ -20,8 +19,7 @@
       :data-maska-tokens="props.maska?.tokens"
       :class="{ error: hasErrors }"
       :trailing="props.decorator"
-      size="lg"
-    >
+      size="lg">
       <template #trailing>
         <span class="text-gray-500 dark:text-gray-400 text-xs">
           {{ props.decorator }}
@@ -31,8 +29,7 @@
 
     <div
       v-if="props.modelValueErrors?.length"
-      class="text-red-500 text-xs my-2 h-4 font-inter"
-    >
+      class="text-red-500 text-xs my-2 h-4 font-inter">
       <p v-for="error of props.modelValueErrors" :key="error.$uid">
         {{ error.$message }}
       </p>
@@ -45,28 +42,28 @@
 </template>
 
 <script setup lang="ts">
-import { ErrorObject } from "@vuelidate/core";
+  import { ErrorObject } from '@vuelidate/core'
 
-export interface InputProps {
-  description?: string;
-  currentValue?: string;
-  decorator?: string;
-  maska?: {
-    mask: string;
-    tokens?: string;
-  };
-  modelValue: any;
-  modelValueErrors?: ErrorObject[];
-}
+  export interface InputProps {
+    description?: string
+    currentValue?: string
+    decorator?: string
+    maska?: {
+      mask: string
+      tokens?: string
+    }
+    modelValue: any
+    modelValueErrors?: ErrorObject[]
+  }
 
-const props = defineProps<InputProps>();
-const emit = defineEmits(["update:modelValue"]);
-const value = useVModelWrapper<InputProps>(props, emit, "modelValue");
-const hasErrors = computed(() => props.modelValueErrors?.length);
+  const props = defineProps<InputProps>()
+  const emit = defineEmits(['update:modelValue'])
+  const value = useVModelWrapper<InputProps>(props, emit, 'modelValue')
+  const hasErrors = computed(() => props.modelValueErrors?.length)
 </script>
 
 <style scoped>
-.error {
-  @apply bg-transparent border border-red-500;
-}
+  .error {
+    @apply bg-transparent border border-red-500;
+  }
 </style>

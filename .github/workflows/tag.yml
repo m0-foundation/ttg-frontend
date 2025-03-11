@@ -16,23 +16,22 @@ jobs:
     permissions:
       contents: write
     steps:
-
       # Checking out the GitHub repository on the runner
-    - name: Checkout
-      uses: 'actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608'
+      - name: Checkout
+        uses: 'actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608'
 
-    - name: Defining tag
-      run: |
-        echo VERSION=$(jq -r .version package.json) >> $GITHUB_ENV
+      - name: Defining tag
+        run: |
+          echo VERSION=$(jq -r .version package.json) >> $GITHUB_ENV
 
-    # pushing tags to repo
-    - name: Publish tag
-      env:
-        GIT_TAG_VERSION: ${{ env.VERSION }}
-      run: |
-        PROJECT_URL="$(echo ${{ env.CI_PROJECT_URL }} | sed 's/https:\/\///').git/"
-        git remote set-url origin https://oauth2:${{ secrets.GITHUB_TOKEN }}@${PROJECT_URL}
-        git tag ${{ env.GIT_TAG_VERSION }}
-        git push origin --tags -o ci.skip
-        shred -u .git/config
-        echo "${{ github.event.repository.name }} version is: ${{ env.GIT_TAG_VERSION }}"
+      # pushing tags to repo
+      - name: Publish tag
+        env:
+          GIT_TAG_VERSION: ${{ env.VERSION }}
+        run: |
+          PROJECT_URL="$(echo ${{ env.CI_PROJECT_URL }} | sed 's/https:\/\///').git/"
+          git remote set-url origin https://oauth2:${{ secrets.GITHUB_TOKEN }}@${PROJECT_URL}
+          git tag ${{ env.GIT_TAG_VERSION }}
+          git push origin --tags -o ci.skip
+          shred -u .git/config
+          echo "${{ github.event.repository.name }} version is: ${{ env.GIT_TAG_VERSION }}"

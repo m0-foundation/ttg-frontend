@@ -3,25 +3,24 @@
     <img
       class="loader"
       src="~/assets/icons/ecosystem/square-black.svg"
-      alt="logo"
-    />
+      alt="logo" />
   </div>
 </template>
 
 <style scoped>
-.loader {
-  animation: moveCube 1s infinite linear;
-}
+  .loader {
+    animation: moveCube 1s infinite linear;
+  }
 
-@keyframes moveCube {
-  0% {
-    transform: translateY(-10px);
+  @keyframes moveCube {
+    0% {
+      transform: translateY(-10px);
+    }
+    50% {
+      transform: translateY(10px);
+    }
+    100% {
+      transform: translateY(-10px);
+    }
   }
-  50% {
-    transform: translateY(10px);
-  }
-  100% {
-    transform: translateY(-10px);
-  }
-}
 </style>

@@ -8,7 +8,7 @@
       <UContainer class="lg:py-10 py-4">
         <NuxtPage />
       </UContainer>
-      <template #fallback> <CommonLoader /> </template>
+      <template #fallback><CommonLoader /></template>
     </Suspense>
   </section>
 </template>

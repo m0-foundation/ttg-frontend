@@ -1,28 +1,28 @@
-import { URL, fileURLToPath } from "node:url";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
+import { URL, fileURLToPath } from 'node:url'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
-import AutoImport from "unplugin-auto-import/vite";
-import Components from "unplugin-vue-components/vite";
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
 
 const getAuctionActive = () => {
-  if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "true") {
-    return true;
+  if (process.env.VITE_APP_IS_AUCTION_ACTIVE === 'true') {
+    return true
   }
-  if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "false") {
-    return false;
+  if (process.env.VITE_APP_IS_AUCTION_ACTIVE === 'false') {
+    return false
   }
 
-  return null;
-};
-const auctionActive = getAuctionActive();
+  return null
+}
+const auctionActive = getAuctionActive()
 
 export default defineNuxtConfig({
   alias: {
-    color: "color/index.js",
-    "mersenne-twister": "mersenne-twister/src/mersenne-twister.js",
+    color: 'color/index.js',
+    'mersenne-twister': 'mersenne-twister/src/mersenne-twister.js',
   },
 
-  css: ["~/assets/css/main.css"],
+  css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
     public: {
@@ -38,62 +38,62 @@ export default defineNuxtConfig({
   ssr: false,
 
   colorMode: {
-    preference: "light",
+    preference: 'light',
   },
 
   components: [
-    "~/components/design-system",
-    "~/components/layout",
-    "~/components",
+    '~/components/design-system',
+    '~/components/layout',
+    '~/components',
   ],
 
   modules: [
-    "@nuxt/ui",
-    "@vueuse/nuxt",
-    "@pinia/nuxt",
-    "@nuxt/devtools",
-    "floating-vue/nuxt",
+    '@nuxt/ui',
+    '@vueuse/nuxt',
+    '@pinia/nuxt',
+    '@nuxt/devtools',
+    'floating-vue/nuxt',
   ],
 
   //no router is ignored
   ignore:
     auctionActive === true
       ? [
-          "pages/config/*",
-          "pages/profile/*",
-          "pages/proposal/*",
-          "pages/proposals/*",
-          "pages/actors.vue",
-          "pages/delegate.vue",
+          'pages/config/*',
+          'pages/profile/*',
+          'pages/proposal/*',
+          'pages/proposals/*',
+          'pages/actors.vue',
+          'pages/delegate.vue',
         ]
       : auctionActive === false
-        ? ["pages/auction.vue", "pages/rewards.vue"]
+        ? ['pages/auction.vue', 'pages/rewards.vue']
         : undefined,
 
   imports: {
-    dirs: ["./stores"],
+    dirs: ['./stores'],
   },
 
-  extends: ["@nuxt/ui-pro"],
+  extends: ['@nuxt/ui-pro'],
 
   vite: {
     resolve: {
       alias: {
-        "~": fileURLToPath(new URL("./", import.meta.url)),
-        "@": fileURLToPath(new URL("./", import.meta.url)),
+        '~': fileURLToPath(new URL('./', import.meta.url)),
+        '@': fileURLToPath(new URL('./', import.meta.url)),
         // Add any other aliases you use in your code base
         // https://nuxt.com/docs/api/configuration/nuxt-config/#alias
       },
     },
     plugins: [
       AutoImport({
-        imports: ["vue", "vue-router"],
-        dirs: ["./composables"],
+        imports: ['vue', 'vue-router'],
+        dirs: ['./composables'],
         vueTemplate: true,
       }),
       Components({
         dirs: [
-          "./components/**/*",
+          './components/**/*',
           // Component folders that should be auto-imported
         ],
         dts: true,
@@ -102,7 +102,7 @@ export default defineNuxtConfig({
       nodePolyfills({
         // To exclude specific polyfills, add them to this list.
         exclude: [
-          "fs", // Excludes the polyfill for `fs` and `node:fs`.
+          'fs', // Excludes the polyfill for `fs` and `node:fs`.
         ],
         // Whether to polyfill `node:` protocol imports.
         protocolImports: true,
@@ -113,7 +113,7 @@ export default defineNuxtConfig({
   nitro: {
     esbuild: {
       options: {
-        target: "esnext",
+        target: 'esnext',
       },
     },
   },
@@ -125,5 +125,5 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: "2025-01-05",
-});
+  compatibilityDate: '2025-01-05',
+})

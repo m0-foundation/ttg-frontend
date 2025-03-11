@@ -12,8 +12,7 @@
             :name="currentCashToken?.symbol"
             :image="`/img/tokens/${currentCashToken?.symbol?.toLowerCase()}.png`"
             :size="24"
-            :amount="useNumberFormatterEth(formatEther(currentCost.value))"
-          />
+            :amount="useNumberFormatterEth(formatEther(currentCost.value))" />
         </div>
         <div>
           <span class="text-xs">Rate projection</span>
@@ -27,8 +26,7 @@
             name="power"
             image="/img/tokens/power.svg"
             :size="24"
-            :amount="useNumberFormatterEth(amountLeftToAuction)"
-          />
+            :amount="useNumberFormatterEth(amountLeftToAuction)" />
         </div>
         <div class="flex items-center">
           <NuxtLink to="/auction" class="text-xs">
@@ -45,9 +43,9 @@
 </template>
 
 <script setup lang="ts">
-import { formatEther } from "viem";
-import { storeToRefs } from "pinia";
+  import { formatEther } from 'viem'
+  import { storeToRefs } from 'pinia'
 
-const { currentCost, amountLeftToAuction } = useAuction();
-const { currentCashToken } = storeToRefs(useTtgStore());
+  const { currentCost, amountLeftToAuction } = useAuction()
+  const { currentCashToken } = storeToRefs(useTtgStore())
 </script>

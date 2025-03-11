@@ -2,10 +2,10 @@
   <div class="proposal-type-badge" :class="type">
     <VTooltip>
       <span>
-        <span class="capitalize">{{
-          type === "Emergency" ? "Priority" : type
-        }}</span>
-        <span v-if="proposalWord"> proposal</span>
+        <span class="capitalize">
+          {{ type === 'Emergency' ? 'Priority' : type }}
+        </span>
+        <span v-if="proposalWord">proposal</span>
       </span>
 
       <template #popper>
@@ -20,28 +20,28 @@
 </template>
 
 <script lang="ts" setup>
-export interface MBadgeProps {
-  type: "Standard" | "Emergency" | "Zero";
-  proposalWord: boolean;
-}
+  export interface MBadgeProps {
+    type: 'Standard' | 'Emergency' | 'Zero'
+    proposalWord: boolean
+  }
 
-withDefaults(defineProps<MBadgeProps>(), {
-  type: "Standard",
-  proposalWord: true,
-});
+  withDefaults(defineProps<MBadgeProps>(), {
+    type: 'Standard',
+    proposalWord: true,
+  })
 </script>
 
 <style scoped>
-.proposal-type-badge {
-  @apply inline-flex text-xs font-inter px-2 py-1 border-none;
-}
-.Standard {
-  @apply bg-grey-100 text-grey-900 bg-opacity-100;
-}
-.Zero {
-  @apply bg-green-700 text-green-900;
-}
-.Emergency {
-  @apply bg-blue-700 text-white;
-}
+  .proposal-type-badge {
+    @apply inline-flex text-xs font-inter px-2 py-1 border-none;
+  }
+  .Standard {
+    @apply bg-grey-100 text-grey-900 bg-opacity-100;
+  }
+  .Zero {
+    @apply bg-green-700 text-green-900;
+  }
+  .Emergency {
+    @apply bg-blue-700 text-white;
+  }
 </style>

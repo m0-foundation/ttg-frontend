@@ -3,23 +3,23 @@ export const useNumberFormatterPrice = (
   decimals: number = 0,
   maxDigits = 6,
 ) => {
-  return new Intl.NumberFormat("en", {
+  return new Intl.NumberFormat('en', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: maxDigits,
-  }).format(Number(number));
-};
+  }).format(Number(number))
+}
 
 export const useNumberFormatterCompact = (number: string | number | bigint) => {
-  const nf = new Intl.NumberFormat("en", { notation: "compact" });
-  const formatted = nf.format(Number(number));
-  return formatted;
-};
+  const nf = new Intl.NumberFormat('en', { notation: 'compact' })
+  const formatted = nf.format(Number(number))
+  return formatted
+}
 
 export function useNumberFormatterEth(value: number | bigint | string): string {
-  const number = Number(value);
-  if (isNaN(number)) return "0";
+  const number = Number(value)
+  if (isNaN(number)) return '0'
   // TODO: Improve this formatter
-  const formatter: Intl.NumberFormat = new Intl.NumberFormat("en-US", {
+  const formatter: Intl.NumberFormat = new Intl.NumberFormat('en-US', {
     maximumFractionDigits:
       number > 100_000
         ? 0
@@ -40,7 +40,7 @@ export function useNumberFormatterEth(value: number | bigint | string): string {
                       : number > 0.000000000000001
                         ? 16
                         : 18,
-  });
+  })
 
-  return formatter.format(Number(value));
+  return formatter.format(Number(value))
 }

@@ -1,11 +1,11 @@
-import { defineStore } from "pinia";
-import orderBy from "lodash/orderBy";
-import uniqBy from "lodash/uniqBy";
-import keyBy from "lodash/keyBy";
+import { defineStore } from 'pinia'
+import orderBy from 'lodash/orderBy'
+import uniqBy from 'lodash/uniqBy'
+import keyBy from 'lodash/keyBy'
 
-import { MProposal, ProposalState } from "@/lib/api/types";
+import { MProposal, ProposalState } from '@/lib/api/types'
 
-export const useProposalsStore = defineStore("proposals", {
+export const useProposalsStore = defineStore('proposals', {
   state: () => ({
     data: [] as MProposal[],
   }),
@@ -15,106 +15,106 @@ export const useProposalsStore = defineStore("proposals", {
 
     getProposalById: (state) => {
       return (pId: string) =>
-        state.data.find((p) => p.proposalId.toString() === pId);
+        state.data.find((p) => p.proposalId.toString() === pId)
     },
     getProposalsByState: (state) => (status: keyof typeof ProposalState) =>
       state.data.filter((p) => p.state === status),
     getProposalsByExcludedState: (state) => {
       return (pState: keyof typeof ProposalState) =>
-        state.data.filter((p) => p.state !== pState);
+        state.data.filter((p) => p.state !== pState)
     },
 
     getProposalsTypeEmergency: (state) => {
-      return state.data.filter((p) => p.isEmergency);
+      return state.data.filter((p) => p.isEmergency)
     },
 
     getProposalsTypeZero: (state) => {
-      return state.data.filter((p) => p.votingType === "Zero");
+      return state.data.filter((p) => p.votingType === 'Zero')
     },
 
     getProposalsByProposer: (state) => {
       return (proposer: string) =>
         state.data.filter(
           (p) => p.proposer.toLowerCase() === proposer.toLowerCase(),
-        );
+        )
     },
   },
 
   actions: {
     setProposals(proposals: Array<MProposal>) {
-      const localSelectedVotes = useLocalSelectedVotes();
+      const localSelectedVotes = useLocalSelectedVotes()
 
-      this.data = [];
+      this.data = []
       this.data = [
         ...orderBy(
-          uniqBy([...this.data, ...proposals], "proposalId"),
-          "blockNumber",
-          "desc",
+          uniqBy([...this.data, ...proposals], 'proposalId'),
+          'blockNumber',
+          'desc',
         ),
-      ];
+      ]
 
-      const keyMap = keyBy(this.data, "proposalId");
+      const keyMap = keyBy(this.data, 'proposalId')
 
       // Remove stored votes of past proposals
       localSelectedVotes.$patch({
         selected: localSelectedVotes.selected.filter(
           (cast) => keyMap[cast.proposalId] !== undefined,
         ),
-      });
+      })
     },
 
     push(proposals: Array<MProposal>) {
       this.data = [
         ...orderBy(
-          uniqBy([...this.data, ...proposals], "proposalId"),
-          "blockNumber",
-          "desc",
+          uniqBy([...this.data, ...proposals], 'proposalId'),
+          'blockNumber',
+          'desc',
         ),
-      ];
+      ]
     },
 
     update(proposal: MProposal) {
       const proposalIndex = this.data.findIndex(
         (p) => p.proposalId === proposal.proposalId,
-      );
+      )
       if (proposalIndex !== -1) {
-        this.data[proposalIndex] = proposal;
+        this.data[proposalIndex] = proposal
       }
     },
 
     updateProposalByKey(proposalId: string, key: keyof MProposal, value: any) {
-      const proposalStore = this.data.find((p) => p.proposalId === proposalId);
+      const proposalStore = this.data.find((p) => p.proposalId === proposalId)
       if (proposalStore) {
-        const newProposal = { ...proposalStore, [key]: value } as MProposal;
-        this.update(newProposal);
+        const newProposal = { ...proposalStore, [key]: value } as MProposal
+        this.update(newProposal)
       }
     },
 
     async fetchAllProposals() {
-      const api = useApiClientStore();
+      const api = useApiClientStore()
 
       const [standard, emergency, zero] = await Promise.all([
         api.client.standardGovernor!.proposals.getProposals(),
         api.client.emergencyGovernor!.proposals.getProposals(),
         api.client.zeroGovernor!.proposals.getProposals(),
-      ]);
-      const allProposals = [...standard, ...emergency, ...zero];
-      this.setProposals(allProposals);
+      ])
+      const allProposals = [...standard, ...emergency, ...zero]
+      this.setProposals(allProposals)
     },
 
     async updateProposalById(proposalId: string) {
-      const api = useApiClientStore();
-      const proposalStored = this.getProposalById(proposalId);
-      const client = api.getApiByGovernor(proposalStored!.votingType!);
+      const api = useApiClientStore()
+      const proposalStored = this.getProposalById(proposalId)
+      const client = api.getApiByGovernor(proposalStored!.votingType!)
 
       const proposalMutable =
-        await client!.proposals!.getProposalMutableDataById(proposalId);
+        await client!.proposals!.getProposalMutableDataById(proposalId)
 
       const newProposal = {
         ...proposalStored,
         ...proposalMutable,
-      } as MProposal;
-      this.update(newProposal);
+      } as MProposal
+      this.update(newProposal)
     },
   },
-});
+})

@@ -9,58 +9,58 @@ import {
   toFunctionSelector,
   parseAbiItem,
   trim,
-} from "viem";
+} from 'viem'
 
-import { GovernorModule } from "../GovernorModule";
-import { GovernanceType } from "../../governor.types";
+import { GovernorModule } from '../GovernorModule'
+import { GovernanceType } from '../../governor.types'
 import {
   MProposalMutable,
   MProposal,
   ProposalEventLog,
   ProposalState,
-} from "./proposal.types";
+} from './proposal.types'
 import {
   hexWith32BytesToString,
   removeSelectorFromCallData,
   hexWith32BytesToAddress,
-} from "@/lib/api/utils";
+} from '@/lib/api/utils'
 
-import { ApiContext } from "@/lib/api/api-context";
-import { Epoch } from "@/lib/api/modules/epoch/epoch";
+import { ApiContext } from '@/lib/api/api-context'
+import { Epoch } from '@/lib/api/modules/epoch/epoch'
 
 const ProposalTypesFunctionSelectors = {
-  addToList: toFunctionSelector("addToList(bytes32,address)"),
-  removeFromList: toFunctionSelector("removeFromList(bytes32,address)"),
+  addToList: toFunctionSelector('addToList(bytes32,address)'),
+  removeFromList: toFunctionSelector('removeFromList(bytes32,address)'),
   removeFromAndAddToList: toFunctionSelector(
-    "removeFromAndAddToList(bytes32,address,address)",
+    'removeFromAndAddToList(bytes32,address,address)',
   ),
-  setKey: toFunctionSelector("setKey(bytes32,bytes32)"),
+  setKey: toFunctionSelector('setKey(bytes32,bytes32)'),
 
-  resetToPowerHolders: toFunctionSelector("resetToPowerHolders()"),
-  resetToZeroHolders: toFunctionSelector("resetToZeroHolders()"),
-  setProposalFee: toFunctionSelector("setProposalFee(uint256)"),
-  setCashToken: toFunctionSelector("setCashToken(address,uint256)"),
-  setStandardProposalFee: toFunctionSelector("setStandardProposalFee(uint256)"),
+  resetToPowerHolders: toFunctionSelector('resetToPowerHolders()'),
+  resetToZeroHolders: toFunctionSelector('resetToZeroHolders()'),
+  setProposalFee: toFunctionSelector('setProposalFee(uint256)'),
+  setCashToken: toFunctionSelector('setCashToken(address,uint256)'),
+  setStandardProposalFee: toFunctionSelector('setStandardProposalFee(uint256)'),
   setEmergencyProposalThresholdRatio: toFunctionSelector(
-    "setEmergencyProposalThresholdRatio(uint16)",
+    'setEmergencyProposalThresholdRatio(uint16)',
   ),
   setZeroProposalThresholdRatio: toFunctionSelector(
-    "setZeroProposalThresholdRatio(uint16)",
+    'setZeroProposalThresholdRatio(uint16)',
   ),
-};
+}
 
 const ProposalLabels = {
-  setProposalFee: "Change Proposal Fee",
-  addToList: "Add to list",
-  removeFromList: "Remove from list",
-  removeFromAndAddToList: "Remove from and Add to List",
-  setKey: "Set Config",
-  resetToPowerHolders: "Reset to Power Holders",
-  resetToZeroHolders: "Reset to Zero Holders",
-  setEmergencyProposalThresholdRatio: "Update Power Threshold",
-  setZeroProposalThresholdRatio: "Update Zero Threshold",
-  setCashToken: "Set Cash Token",
-};
+  setProposalFee: 'Change Proposal Fee',
+  addToList: 'Add to list',
+  removeFromList: 'Remove from list',
+  removeFromAndAddToList: 'Remove from and Add to List',
+  setKey: 'Set Config',
+  resetToPowerHolders: 'Reset to Power Holders',
+  resetToZeroHolders: 'Reset to Zero Holders',
+  setEmergencyProposalThresholdRatio: 'Update Power Threshold',
+  setZeroProposalThresholdRatio: 'Update Zero Threshold',
+  setCashToken: 'Set Cash Token',
+}
 
 type IParams =
   | readonly [`0x${string}`, `0x${string}`]
@@ -70,12 +70,12 @@ type IParams =
   | readonly [number]
   | readonly [`0x${string}`, bigint]
   | string[]
-  | string;
+  | string
 
 export class Proposals extends GovernorModule {
-  fromBlock: bigint;
-  abi: Abi;
-  governanceType: GovernanceType;
+  fromBlock: bigint
+  abi: Abi
+  governanceType: GovernanceType
 
   constructor(
     governor: Hash,
@@ -83,121 +83,121 @@ export class Proposals extends GovernorModule {
     abi: Abi,
     governanceType: GovernanceType,
   ) {
-    super(governor, context);
-    this.governanceType = governanceType;
-    this.abi = abi;
-    this.fromBlock = this.config.deploymentBlock; // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
+    super(governor, context)
+    this.governanceType = governanceType
+    this.abi = abi
+    this.fromBlock = this.config.deploymentBlock // is necessary for getLogs, otherwise gets from latest blocks, but inrelanvent for peforfmance
   }
 
   decodeProposalTypeAddToList(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
-        { name: "list_", type: "bytes32" },
-        { name: "account_", type: "address" },
+        { name: 'list_', type: 'bytes32' },
+        { name: 'account_', type: 'address' },
       ],
       removeSelectorFromCallData(calldata),
-    );
+    )
     return {
       proposalType,
       params: [hexWith32BytesToString(params[0]), params[1]],
-    };
+    }
   }
 
   decodeProposalRemoveFromList(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
-        { name: "list_", type: "bytes32" },
-        { name: "account_", type: "address" },
+        { name: 'list_', type: 'bytes32' },
+        { name: 'account_', type: 'address' },
       ],
       removeSelectorFromCallData(calldata),
-    );
+    )
     return {
       proposalType,
       params: [hexWith32BytesToString(params[0]), params[1]],
-    };
+    }
   }
 
   decodeProposalRemoveFromAndAddToList(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
-        { name: "list_", type: "bytes32" },
-        { name: "accountToRemove", type: "address" },
-        { name: "accountToAdd", type: "address" },
+        { name: 'list_', type: 'bytes32' },
+        { name: 'accountToRemove', type: 'address' },
+        { name: 'accountToAdd', type: 'address' },
       ],
       removeSelectorFromCallData(calldata),
-    );
+    )
     return {
       proposalType,
       params: [hexWith32BytesToString(params[0]), params[1], params[2]],
-    };
+    }
   }
 
   decodeProposalTypeSetKey(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
       [
-        { name: "key_", type: "bytes32" },
-        { name: "value_", type: "bytes32" },
+        { name: 'key_', type: 'bytes32' },
+        { name: 'value_', type: 'bytes32' },
       ],
       removeSelectorFromCallData(calldata),
-    );
+    )
 
     const decodeValue = (key: string, value: string) => {
-      if (["minter_rate_model", "earner_rate_model"].includes(key)) {
-        return hexWith32BytesToAddress(value as Hash);
+      if (['minter_rate_model', 'earner_rate_model'].includes(key)) {
+        return hexWith32BytesToAddress(value as Hash)
       }
 
-      if (key.includes("guidance")) {
-        return value.slice(2);
+      if (key.includes('guidance')) {
+        return value.slice(2)
       }
 
-      return decodeAbiParameters([{ type: "uint256" }], value as Hash);
-    };
+      return decodeAbiParameters([{ type: 'uint256' }], value as Hash)
+    }
 
-    const tempKey = hexWith32BytesToString(params[0]);
-    const isOtherKey = tempKey.includes("�");
-    const key = isOtherKey ? params[0] : tempKey;
-    const value = isOtherKey ? trim(params[1]) : decodeValue(key, params[1]);
+    const tempKey = hexWith32BytesToString(params[0])
+    const isOtherKey = tempKey.includes('�')
+    const key = isOtherKey ? params[0] : tempKey
+    const value = isOtherKey ? trim(params[1]) : decodeValue(key, params[1])
 
-    return { proposalType, params: [key, value] };
+    return { proposalType, params: [key, value] }
   }
 
   decodeProposalTypeReset(proposalType: string) {
-    return { proposalType, params: [] };
+    return { proposalType, params: [] }
   }
 
   decodeProposalTypeSetCashToken(calldata: Hash) {
     const params = decodeAbiParameters(
       [
-        { name: "newCashToken_", type: "address" },
-        { name: "newProposalFee_", type: "uint256" },
+        { name: 'newCashToken_', type: 'address' },
+        { name: 'newProposalFee_', type: 'uint256' },
       ],
       removeSelectorFromCallData(calldata),
-    );
-    return { proposalType: "setCashToken", params };
+    )
+    return { proposalType: 'setCashToken', params }
   }
 
   decodeProposalTypeSetProposalFee(calldata: Hash, proposalType: string) {
     const params = decodeAbiParameters(
-      [{ name: "newProposalFee_", type: "uint256" }],
+      [{ name: 'newProposalFee_', type: 'uint256' }],
       removeSelectorFromCallData(calldata),
-    );
-    return { proposalType, params };
+    )
+    return { proposalType, params }
   }
 
   decodeProposalTypeSetEmergencyProposalThresholdRatio(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newThresholdRatio_", type: "uint16" }],
+      [{ name: 'newThresholdRatio_', type: 'uint16' }],
       removeSelectorFromCallData(calldata),
-    );
-    return { proposalType: "setEmergencyProposalThresholdRatio", params };
+    )
+    return { proposalType: 'setEmergencyProposalThresholdRatio', params }
   }
 
   decodeProposalTypeSetZeroProposalThresholdRatio(calldata: Hash) {
     const params = decodeAbiParameters(
-      [{ name: "newThresholdRatio_", type: "uint16" }],
+      [{ name: 'newThresholdRatio_', type: 'uint16' }],
       removeSelectorFromCallData(calldata),
-    );
-    return { proposalType: "setZeroProposalThresholdRatio", params };
+    )
+    return { proposalType: 'setZeroProposalThresholdRatio', params }
   }
 
   decodeProposalTypes(
@@ -206,68 +206,62 @@ export class Proposals extends GovernorModule {
   ): { proposalType: string; params: IParams } {
     switch (selector) {
       case ProposalTypesFunctionSelectors.addToList:
-        return this.decodeProposalTypeAddToList(calldata, "addToList");
-        break;
+        return this.decodeProposalTypeAddToList(calldata, 'addToList')
+        break
 
       case ProposalTypesFunctionSelectors.removeFromList:
-        return this.decodeProposalRemoveFromList(calldata, "removeFromList");
-        break;
+        return this.decodeProposalRemoveFromList(calldata, 'removeFromList')
+        break
 
       case ProposalTypesFunctionSelectors.removeFromAndAddToList:
         return this.decodeProposalRemoveFromAndAddToList(
           calldata,
-          "removeFromAndAddToList",
-        );
-        break;
+          'removeFromAndAddToList',
+        )
+        break
 
       case ProposalTypesFunctionSelectors.setKey:
-        return this.decodeProposalTypeSetKey(calldata, "setKey");
-        break;
+        return this.decodeProposalTypeSetKey(calldata, 'setKey')
+        break
 
       case ProposalTypesFunctionSelectors.resetToZeroHolders:
-        return this.decodeProposalTypeReset("resetToZeroHolders");
-        break;
+        return this.decodeProposalTypeReset('resetToZeroHolders')
+        break
 
       case ProposalTypesFunctionSelectors.resetToPowerHolders:
-        return this.decodeProposalTypeReset("resetToPowerHolders");
-        break;
+        return this.decodeProposalTypeReset('resetToPowerHolders')
+        break
 
       case ProposalTypesFunctionSelectors.setProposalFee:
-        return this.decodeProposalTypeSetProposalFee(
-          calldata,
-          "setProposalFee",
-        );
-        break;
+        return this.decodeProposalTypeSetProposalFee(calldata, 'setProposalFee')
+        break
 
       case ProposalTypesFunctionSelectors.setStandardProposalFee:
-        return this.decodeProposalTypeSetProposalFee(
-          calldata,
-          "setProposalFee",
-        );
-        break;
+        return this.decodeProposalTypeSetProposalFee(calldata, 'setProposalFee')
+        break
 
       case ProposalTypesFunctionSelectors.setEmergencyProposalThresholdRatio:
         return this.decodeProposalTypeSetEmergencyProposalThresholdRatio(
           calldata,
-        );
-        break;
+        )
+        break
 
       case ProposalTypesFunctionSelectors.setZeroProposalThresholdRatio:
-        return this.decodeProposalTypeSetZeroProposalThresholdRatio(calldata);
-        break;
+        return this.decodeProposalTypeSetZeroProposalThresholdRatio(calldata)
+        break
 
       case ProposalTypesFunctionSelectors.setCashToken:
-        return this.decodeProposalTypeSetCashToken(calldata);
-        break;
+        return this.decodeProposalTypeSetCashToken(calldata)
+        break
 
       default:
-        return { proposalType: "unknown", params: [] };
-        break;
+        return { proposalType: 'unknown', params: [] }
+        break
     }
   }
 
   toString<T>(array: Array<T | any>) {
-    return array.length > 0 ? array.map((v) => String(v)) : [];
+    return array.length > 0 ? array.map((v) => String(v)) : []
   }
 
   decodeProposalLog(log: Log, abi: Abi): Partial<MProposal> {
@@ -275,28 +269,26 @@ export class Proposals extends GovernorModule {
       abi,
       data: log?.data,
       topics: log?.topics,
-    });
+    })
 
-    const event = args as ProposalEventLog;
+    const event = args as ProposalEventLog
 
     if (event) {
-      event.calldatas = event.callDatas as Array<Hash>;
+      event.calldatas = event.callDatas as Array<Hash>
 
-      const calldataContent = event.calldatas[0] as Hash;
+      const calldataContent = event.calldatas[0] as Hash
 
-      const selector = bytesToHex(
-        fromHex(calldataContent, "bytes").slice(0, 4),
-      );
+      const selector = bytesToHex(fromHex(calldataContent, 'bytes').slice(0, 4))
 
-      const isEmergency = this.isEmergencyProposal();
+      const isEmergency = this.isEmergencyProposal()
 
       const { proposalType, params } = this.decodeProposalTypes(
         selector,
         calldataContent,
-      );
+      )
 
       const proposalLabel =
-        ProposalLabels[proposalType as keyof typeof ProposalLabels];
+        ProposalLabels[proposalType as keyof typeof ProposalLabels]
 
       const proposal: Partial<MProposal> = {
         isEmergency,
@@ -317,12 +309,12 @@ export class Proposals extends GovernorModule {
         proposalParams: this.toString([...params]),
         proposalLabel,
         governor: this.contract,
-      };
+      }
 
-      return proposal;
+      return proposal
     }
 
-    return {} as MProposal;
+    return {} as MProposal
   }
 
   decodeReadGetProposal(proposal: any) {
@@ -336,7 +328,7 @@ export class Proposals extends GovernorModule {
       proposer,
       quorum, // The threshold/quorum of yes votes required for the proposal to succeed based on the supply at the time of proposal voteStart.
       quorumNumerator, // The threshold/quorum in BPS (basis points) of yes votes required for the proposal to succeed based on the supply at the time of proposal voteStart.
-    ] = proposal;
+    ] = proposal
     /* eslint-enable @typescript-eslint/no-unused-vars */
 
     return {
@@ -345,31 +337,31 @@ export class Proposals extends GovernorModule {
       noVotes,
       quorum,
       quorumNumerator,
-    };
+    }
   }
 
   async readGetProposal(proposalId: string): Promise<MProposalMutable> {
     const getProposal = await this.client.readContract({
       abi: this.abi,
       address: this.contract,
-      functionName: "getProposal",
+      functionName: 'getProposal',
       args: [BigInt(proposalId)],
-    });
-    return this.decodeReadGetProposal(getProposal);
+    })
+    return this.decodeReadGetProposal(getProposal)
   }
 
   async presenterProposal({
     proposal,
     mutableProposal,
   }: {
-    proposal: Partial<MProposal>;
-    mutableProposal: MProposalMutable;
+    proposal: Partial<MProposal>
+    mutableProposal: MProposalMutable
   }): Promise<MProposal> {
     const block = await this.client.getBlock({
       blockNumber: BigInt(proposal.blockNumber!),
-    });
+    })
 
-    const epoch = Epoch.instance.getEpochFromTimestamp(Number(block.timestamp));
+    const epoch = Epoch.instance.getEpochFromTimestamp(Number(block.timestamp))
 
     return {
       ...proposal,
@@ -377,34 +369,34 @@ export class Proposals extends GovernorModule {
       epoch,
       votingType: this.governanceType,
       timestamp: Number(block.timestamp),
-    } as MProposal;
+    } as MProposal
   }
 
   getProposalMutableDataById(proposalId: string): Promise<MProposalMutable> {
-    return this.readGetProposal(proposalId);
+    return this.readGetProposal(proposalId)
   }
 
   isEmergencyProposal() {
-    return this.governanceType === "Emergency";
+    return this.governanceType === 'Emergency'
   }
 
   async getRawExecutedLogs() {
     return await this.client.getLogs({
       address: this.contract as Hash,
       fromBlock: this.fromBlock,
-      event: parseAbiItem("event ProposalExecuted(uint256 proposalId)"),
-    });
+      event: parseAbiItem('event ProposalExecuted(uint256 proposalId)'),
+    })
   }
 
   async findExecutedEvent(proposalId: string, logs: Log[]) {
     const executedEvent = logs.find(
       (p) => String(p.args.proposalId) === proposalId,
-    );
+    )
 
     if (executedEvent) {
       const block = await this.client.getBlock({
         blockNumber: executedEvent.blockNumber as bigint,
-      });
+      })
 
       return {
         ...executedEvent,
@@ -413,9 +405,9 @@ export class Proposals extends GovernorModule {
         args: {
           proposalId: String(executedEvent.args.proposalId),
         },
-      };
+      }
     }
-    return null;
+    return null
   }
 
   async getProposals(): Promise<Array<MProposal>> {
@@ -423,63 +415,63 @@ export class Proposals extends GovernorModule {
       address: this.contract as Hash,
       fromBlock: this.fromBlock,
       event: parseAbiItem(
-        "event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] callDatas, uint256 voteStart, uint256 voteEnd, string description)",
+        'event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] callDatas, uint256 voteStart, uint256 voteEnd, string description)',
       ),
-    });
+    })
 
     if (rawLogs.length === 0) {
-      return [];
+      return []
     }
 
-    const rawExecutedLogs = await this.getRawExecutedLogs();
+    const rawExecutedLogs = await this.getRawExecutedLogs()
 
     const proposals = rawLogs.map((log: Log) =>
       this.decodeProposalLog(log, this.abi),
-    );
+    )
 
     const contractCallsGetProposal = proposals.map((p) => ({
       abi: this.abi,
       address: this.contract,
-      functionName: "getProposal",
+      functionName: 'getProposal',
       args: [BigInt(p.proposalId!)],
-    }));
+    }))
 
-    const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address;
+    const defaultMulticall3 = this.client.chain?.contracts?.multicall3?.address
     const proposalsWithGetProposal = (
       await this.client.multicall({
         multicallAddress: (this.config.multicall3 ?? defaultMulticall3) as Hash,
         contracts: contractCallsGetProposal,
       })
-    ).map((res) => res.result);
+    ).map((res) => res.result)
 
     const proposalsWithAllData = await Promise.all(
       proposals.map(async (proposal, index) => {
         const proposalData: MProposalMutable = this.decodeReadGetProposal(
           proposalsWithGetProposal[index],
-        );
+        )
 
         const proposalPresented = await this.presenterProposal({
           proposal,
           mutableProposal: proposalData,
-        });
+        })
 
         const executedEvent = await this.findExecutedEvent(
           proposal.proposalId!,
           rawExecutedLogs,
-        );
+        )
 
         if (executedEvent) {
           return {
             ...proposalPresented,
             executedEvent,
-          };
+          }
         } else {
-          return proposalPresented;
+          return proposalPresented
         }
       }),
-    );
+    )
 
-    return proposalsWithAllData as MProposal[];
+    return proposalsWithAllData as MProposal[]
   }
 
   async getProposalFromWatchLog({
@@ -487,19 +479,19 @@ export class Proposals extends GovernorModule {
     args,
     ...log
   }: any): Promise<MProposal> {
-    const calldataContent = args.callDatas[0] as Hash;
+    const calldataContent = args.callDatas[0] as Hash
 
-    const selector = bytesToHex(fromHex(calldataContent, "bytes").slice(0, 4));
+    const selector = bytesToHex(fromHex(calldataContent, 'bytes').slice(0, 4))
 
-    const isEmergency = this.isEmergencyProposal();
+    const isEmergency = this.isEmergencyProposal()
 
     const { proposalType, params } = this.decodeProposalTypes(
       selector,
       calldataContent,
-    );
+    )
 
     const proposalLabel =
-      ProposalLabels[proposalType as keyof typeof ProposalLabels];
+      ProposalLabels[proposalType as keyof typeof ProposalLabels]
 
     const proposal: Partial<MProposal> = {
       isEmergency,
@@ -520,17 +512,17 @@ export class Proposals extends GovernorModule {
       proposalParams: this.toString([...params]),
       proposalLabel,
       governor: this.contract,
-    };
+    }
 
     const mutableProposal = await this.readGetProposal(
       proposal.proposalId!.toString(),
-    );
+    )
 
     const proposalPresented = await this.presenterProposal({
       proposal,
       mutableProposal,
-    });
+    })
 
-    return proposalPresented;
+    return proposalPresented
   }
 }
