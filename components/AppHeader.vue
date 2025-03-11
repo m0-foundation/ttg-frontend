@@ -2,7 +2,7 @@
   <UHeader :links="links" data-test="main-navigation">
     <template #logo>
       <div class="flex items-center gap-4">
-        <img class="h-4 w-auto" src="~/assets/logos/m0.svg" />
+        <img class="h-4 w-auto" src="/public/img/logos/m0.svg" alt="M^0 Logo" />
         <UDivider
           orientation="vertical"
           class="dark:text-red-700 h-10"
