@@ -6,8 +6,7 @@
         <UDivider
           orientation="vertical"
           class="dark:text-red-700 h-10"
-          :ui="{ border: { base: 'dark:border-grey-700 border-grey-700' } }"
-        />
+          :ui="{ border: { base: 'dark:border-grey-700 border-grey-700' } }" />
         {{ name }}
       </div>
     </template>
@@ -20,8 +19,7 @@
           label="Create proposal"
           to="/proposal/create"
           class="hidden lg:block"
-          color="primary"
-        />
+          color="primary" />
         <HeaderProfilePopover v-if="isConnected" />
         <HeaderEcosystemMenu />
       </div>
@@ -38,45 +36,45 @@
 </template>
 
 <script setup lang="ts">
-import { useAccount } from "use-wagmi";
+  import { useAccount } from 'use-wagmi'
 
-const { name } = useAppConfig();
-const { isConnected } = useAccount();
+  const { name } = useAppConfig()
+  const { isConnected } = useAccount()
 
-const links = [
-  {
-    id: "home",
-    label: "Home",
-    to: "/proposals",
-  },
-  {
-    id: "proposals",
-    label: "Proposals",
-    to: "/history",
-  },
-  {
-    id: "actors",
-    label: "Actors",
-    to: "/actors",
-  },
-  {
-    id: "config",
-    label: "Config",
-    to: "/config",
-  },
-];
+  const links = [
+    {
+      id: 'home',
+      label: 'Home',
+      to: '/proposals',
+    },
+    {
+      id: 'proposals',
+      label: 'Proposals',
+      to: '/history',
+    },
+    {
+      id: 'actors',
+      label: 'Actors',
+      to: '/actors',
+    },
+    {
+      id: 'config',
+      label: 'Config',
+      to: '/config',
+    },
+  ]
 
-const panelLinks = [
-  ...links,
-  {
-    id: "profile",
-    label: "Profile",
-    to: "/profile/me",
-  },
-  {
-    id: "create-proposal",
-    label: "Create proposal",
-    to: "/proposal/create",
-  },
-];
+  const panelLinks = [
+    ...links,
+    {
+      id: 'profile',
+      label: 'Profile',
+      to: '/profile/me',
+    },
+    {
+      id: 'create-proposal',
+      label: 'Create proposal',
+      to: '/proposal/create',
+    },
+  ]
 </script>

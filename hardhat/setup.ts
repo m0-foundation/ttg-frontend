@@ -1,41 +1,41 @@
 // @ts-nocheck
-import http from "node:http";
-import hre from "hardhat";
+import http from 'node:http'
+import hre from 'hardhat'
 import {
   TASK_NODE,
   TASK_NODE_GET_PROVIDER,
   TASK_NODE_SERVER_READY,
-} from "hardhat/builtin-tasks/task-names";
-import { EthereumProvider, HardhatNetworkAccountsConfig } from "hardhat/types";
+} from 'hardhat/builtin-tasks/task-names'
+import { EthereumProvider, HardhatNetworkAccountsConfig } from 'hardhat/types'
 
-import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
-import * as hhHelpers from "@nomicfoundation/hardhat-network-helpers";
-import { toExternallyOwnedAccounts } from "./accounts";
+import { ExternallyOwnedAccount } from '@ethersproject/abstract-signer'
+import * as hhHelpers from '@nomicfoundation/hardhat-network-helpers'
+import { toExternallyOwnedAccounts } from './accounts'
 
 export interface Network {
   /** The network's JSON-RPC address. */
-  url: string;
+  url: string
   /** Accounts configured via hardhat's {@link https://hardhat.org/hardhat-network/reference/#accounts}. */
-  accounts: ExternallyOwnedAccount[];
+  accounts: ExternallyOwnedAccount[]
 }
 
-const PORT = 8545;
+const PORT = 8545
 
 // see file hardhat.config.js#L12
-const _BLOCK_TIME = 12;
+const _BLOCK_TIME = 12
 
 // see file lib/api/modules/epoch/epoch.ts#L17
-const _STARTING_TIMESTAMP = 1_713_099_600;
-const _EPOCH_PERIOD_SECONDS = 1_296_000;
+const _STARTING_TIMESTAMP = 1_713_099_600
+const _EPOCH_PERIOD_SECONDS = 1_296_000
 
 type ChainServer = {
-  address: string;
-  port: number;
-  close: () => Promise<void>;
-  provider: EthereumProvider;
-  mine: (blocks: number) => Promise<void>;
-};
-const chainServers: ChainServer[] = [];
+  address: string
+  port: number
+  close: () => Promise<void>
+  provider: EthereumProvider
+  mine: (blocks: number) => Promise<void>
+}
+const chainServers: ChainServer[] = []
 
 /**
  * Initializes a chain server.
@@ -46,72 +46,77 @@ function runChainServer(chainId: number): Promise<ChainServer> {
 
   const run = hre.run(TASK_NODE, { port: PORT + chainId })
   return new Promise((resolve) =>
-    hre.tasks[TASK_NODE_SERVER_READY].setAction(async ({ address, port, provider, server }) => {
-      const close = async () => {
-        await Promise.all([server.close(), run])
-      }
-      chainServers[chainId] = { address, port, close, provider }
-      resolve(chainServers[chainId])
-    })
+    hre.tasks[TASK_NODE_SERVER_READY].setAction(
+      async ({ address, port, provider, server }) => {
+        const close = async () => {
+          await Promise.all([server.close(), run])
+        }
+        chainServers[chainId] = { address, port, close, provider }
+        resolve(chainServers[chainId])
+      },
+    ),
   )
 }
 
 const getEpochFromTimestamp = (timestamp: number) => {
   return (
     Math.floor((timestamp - _STARTING_TIMESTAMP) / _EPOCH_PERIOD_SECONDS) + 1
-  );
-};
+  )
+}
 
 const getTimestampOfEpochStart = (epoch) => {
-  return _STARTING_TIMESTAMP + (epoch - 1) * _EPOCH_PERIOD_SECONDS;
-};
+  return _STARTING_TIMESTAMP + (epoch - 1) * _EPOCH_PERIOD_SECONDS
+}
 
 const getTimestampOfEpochEnd = (epoch) => {
-  return getTimestampOfEpochStart(epoch + 1);
-};
+  return getTimestampOfEpochStart(epoch + 1)
+}
 
 async function moveToVotingEpoch() {
-  const currentTimestamp = await hhHelpers.time.latest();
-  const currentEpoch = getEpochFromTimestamp(currentTimestamp);
+  const currentTimestamp = await hhHelpers.time.latest()
+  const currentEpoch = getEpochFromTimestamp(currentTimestamp)
   // to avoid error from hardhat where  Timestamp  is lower than the current timestamp  then move straight to the next voting epoch
-  const newTimestamp =  currentEpoch % 2 === 0 ? getTimestampOfEpochStart(currentEpoch+1) : getTimestampOfEpochStart(currentEpoch + 2);
-  console.log({ currentEpoch, currentTimestamp });
-  await hhHelpers.time.increaseTo(newTimestamp);
-  const newEpoch = getEpochFromTimestamp(await hhHelpers.time.latest());
-  console.log({ newEpoch,  newTimestamp });
+  const newTimestamp =
+    currentEpoch % 2 === 0
+      ? getTimestampOfEpochStart(currentEpoch + 1)
+      : getTimestampOfEpochStart(currentEpoch + 2)
+  console.log({ currentEpoch, currentTimestamp })
+  await hhHelpers.time.increaseTo(newTimestamp)
+  const newEpoch = getEpochFromTimestamp(await hhHelpers.time.latest())
+  console.log({ newEpoch, newTimestamp })
 }
 
 /** Sets up the hardhat environment for use with cypress. */
 export default async function setup(): Promise<
   Network & {
     /** Resets the hardhat environment. Call before a spec to reset the environment. */
-    reset: () => Promise<void>;
+    reset: () => Promise<void>
     /** Tears down the hardhat environment. Call after a run to clean up the environment. */
-    close: () => Promise<void>;
-    mine: (blocks: number) => Promise<void>;
+    close: () => Promise<void>
+    mine: (blocks: number) => Promise<void>
   }
 > {
-  const hardhatConfig = hre.config.networks.hardhat;
-  const defaultChainId = hardhatConfig.chainId;
+  const hardhatConfig = hre.config.networks.hardhat
+  const defaultChainId = hardhatConfig.chainId
 
   async function reset() {
-    await hre.network.provider.send("hardhat_reset", [
+    await hre.network.provider.send('hardhat_reset', [
       { hardhat: { mining: hardhatConfig.mining } },
-    ]);
+    ])
 
-    await moveToVotingEpoch();
+    await moveToVotingEpoch()
   }
 
   hre.tasks[TASK_NODE_GET_PROVIDER].setAction(() => {
     // Use the network provider, which was redefined as part of reset(chainId).
-    const provider = hre.network.provider;
+    const provider = hre.network.provider
 
-    const request = provider.request;
+    const request = provider.request
     provider.request = (...args) => {
-      return request.call(provider, ...args);
-    };
-    return provider;
-  });
+      return request.call(provider, ...args)
+    }
+    return provider
+  })
 
   // Initializes the servers.
   const forwardingServer = http.createServer((req, res) => {
@@ -126,64 +131,63 @@ export default async function setup(): Promise<
         },
         (response) => {
           for (const header in response.headers) {
-            res.setHeader(header, response.headers[header]!);
+            res.setHeader(header, response.headers[header]!)
           }
-          response.pipe(res);
-        }
-      )
-    );
-  });
+          response.pipe(res)
+        },
+      ),
+    )
+  })
   const listen = new Promise<void>((resolve) =>
-    forwardingServer.listen(PORT, resolve)
-  );
+    forwardingServer.listen(PORT, resolve),
+  )
 
-  const run = runChainServer(defaultChainId);
+  const run = runChainServer(defaultChainId)
 
   // Deriving ExternallyOwnedAccounts is computationally intensive, so we do it while waiting for the server to come up.
   const accounts = toExternallyOwnedAccounts(
-    hre.network.config.accounts as HardhatNetworkAccountsConfig
-  );
+    hre.network.config.accounts as HardhatNetworkAccountsConfig,
+  )
   if (accounts.length > 4) {
     process.stderr.write(
-      `${accounts.length} hardhat accounts specified - consider specifying fewer.\n`
-    );
+      `${accounts.length} hardhat accounts specified - consider specifying fewer.\n`,
+    )
     process.stderr.write(
-      "Specifying multiple hardhat accounts will noticeably slow your test startup time.\n\n"
-    );
+      'Specifying multiple hardhat accounts will noticeably slow your test startup time.\n\n',
+    )
   }
 
-  let [server] = await Promise.all([run, listen]);
+  let [server] = await Promise.all([run, listen])
 
-  await moveToVotingEpoch();
+  await moveToVotingEpoch()
 
   return {
-    url: "http://" + server.address + ":" + PORT,
+    url: 'http://' + server.address + ':' + PORT,
     accounts,
     reset,
     close: async () => {
       await Promise.all([
         new Promise((resolve) => forwardingServer.close(resolve)),
         ...chainServers.map((server) => server.close()),
-      ]);
+      ])
     },
     mine: async (epoch) => {
-      const blocks = (_EPOCH_PERIOD_SECONDS / _BLOCK_TIME) * epoch;
-      const currentTimestamp = await hhHelpers.time.latest();
-      const currentEpoch = getEpochFromTimestamp(currentTimestamp);
-      const newTimestamp = getTimestampOfEpochStart(currentEpoch + epoch);
-      console.log({ epoch, currentEpoch, currentTimestamp, newTimestamp });
-      await hhHelpers.time.setNextBlockTimestamp(newTimestamp);
-      await hre.network.provider.send("hardhat_mine", [
-        "0x" + blocks.toString(16),
-      ]);
+      const blocks = (_EPOCH_PERIOD_SECONDS / _BLOCK_TIME) * epoch
+      const currentTimestamp = await hhHelpers.time.latest()
+      const currentEpoch = getEpochFromTimestamp(currentTimestamp)
+      const newTimestamp = getTimestampOfEpochStart(currentEpoch + epoch)
+      console.log({ epoch, currentEpoch, currentTimestamp, newTimestamp })
+      await hhHelpers.time.setNextBlockTimestamp(newTimestamp)
+      await hre.network.provider.send('hardhat_mine', [
+        '0x' + blocks.toString(16),
+      ])
 
-      console.log("mine", {
+      console.log('mine', {
         blocks,
         newBlock: await hhHelpers.time.latestBlock(),
-      });
+      })
 
-      return blocks;
+      return blocks
     },
-  };
+  }
 }
-

@@ -1,5 +1,5 @@
-import useVotingPowerZeroToken from "./useVotingPowerZeroToken";
-import useVotingPowerPowerToken from "./useVotingPowerPowerToken";
+import useVotingPowerZeroToken from './useVotingPowerZeroToken'
+import useVotingPowerPowerToken from './useVotingPowerPowerToken'
 
 export default (
   userAccount:
@@ -7,15 +7,15 @@ export default (
     | globalThis.Ref<`0x${string}`>
     | globalThis.Ref<`0x${string}` | undefined>,
 ) => {
-  const power = useVotingPowerPowerToken(userAccount);
-  const zero = useVotingPowerZeroToken(userAccount);
+  const power = useVotingPowerPowerToken(userAccount)
+  const zero = useVotingPowerZeroToken(userAccount)
 
   return {
     power,
     zero,
     refetch: () => {
-      power.refetch();
-      zero.refetch();
+      power.refetch()
+      zero.refetch()
     },
-  };
-};
+  }
+}

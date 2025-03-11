@@ -5,31 +5,28 @@
         v-if="ensAvatar"
         class="w-4 h-4 rounded-full"
         :src="ensAvatar"
-        alt=""
-      />
+        alt="" />
       <Jazzicon
         v-else
         class="flex items-center"
         :address="props?.address"
-        :diameter="16"
-      />
+        :diameter="16" />
     </div>
     <div class="flex items-center gap-1" :class="{ 'ml-[22px]': showAvatar }">
       <NuxtLink
         v-if="link"
         class="hover:underline"
-        :to="`/profile/${props.address}`"
-      >
+        :to="`/profile/${props.address}`">
         <span v-if="ensName">{{ ensName }}</span>
-        <span v-else :title="props.address">{{
-          shortAddress ? shortenAddress(props.address) : props.address
-        }}</span>
+        <span v-else :title="props.address">
+          {{ shortAddress ? shortenAddress(props.address) : props.address }}
+        </span>
       </NuxtLink>
       <span v-else class="leading-tight">
         <span v-if="ensName">{{ ensName }}</span>
-        <span v-else :title="props.address">{{
-          shortAddress ? shortenAddress(props.address) : props.address
-        }}</span>
+        <span v-else :title="props.address">
+          {{ shortAddress ? shortenAddress(props.address) : props.address }}
+        </span>
       </span>
 
       <UButton
@@ -38,8 +35,7 @@
         color="gray"
         size="xs"
         :padded="false"
-        @click="copy(props.address)"
-      >
+        @click="copy(props.address)">
         <template #trailing>
           <MIconCheck v-if="justCopied" />
           <MIconCopy v-else />
@@ -49,41 +45,41 @@
   </span>
 </template>
 <script setup lang="ts">
-import { useEnsAvatar, useEnsName } from "use-wagmi";
-import { Hash, Address } from "viem";
-import { Jazzicon } from "vue3-jazzicon/src/components";
+  import { useEnsAvatar, useEnsName } from 'use-wagmi'
+  import { Hash, Address } from 'viem'
+  import { Jazzicon } from 'vue3-jazzicon/src/components'
 
-export interface MAddressAvatar {
-  address: Hash | undefined;
-  shortAddress?: boolean;
-  showAvatar?: boolean;
-  showCopy?: boolean;
-  link?: boolean;
-}
+  export interface MAddressAvatar {
+    address: Hash | undefined
+    shortAddress?: boolean
+    showAvatar?: boolean
+    showCopy?: boolean
+    link?: boolean
+  }
 
-const props = withDefaults(defineProps<MAddressAvatar>(), {
-  address: undefined,
-  shortAddress: true,
-  showAvatar: true,
-  showCopy: false,
-  link: true,
-});
+  const props = withDefaults(defineProps<MAddressAvatar>(), {
+    address: undefined,
+    shortAddress: true,
+    showAvatar: true,
+    showCopy: false,
+    link: true,
+  })
 
-const justCopied = ref(false);
+  const justCopied = ref(false)
 
-function copy(address: Address) {
-  copyToClipboard(address);
-  justCopied.value = true;
-  setTimeout(() => {
-    justCopied.value = false;
-  }, 2000);
-}
+  function copy(address: Address) {
+    copyToClipboard(address)
+    justCopied.value = true
+    setTimeout(() => {
+      justCopied.value = false
+    }, 2000)
+  }
 
-const { data: ensName } = useEnsName({
-  address: props.address,
-});
+  const { data: ensName } = useEnsName({
+    address: props.address,
+  })
 
-const { data: ensAvatar } = useEnsAvatar({
-  name: ensName,
-});
+  const { data: ensAvatar } = useEnsAvatar({
+    name: ensName,
+  })
 </script>

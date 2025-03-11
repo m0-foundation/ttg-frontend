@@ -21,8 +21,7 @@
           :timestamp="minter.timestamp"
           :website="minter.website"
           :proposalId="minter.executedEvent?.args?.proposalId"
-          :cardImage="minter.image"
-        />
+          :cardImage="minter.image" />
       </div>
       <h2 class="!text-3xl lg:text-[36px] lg:leading-tight mt-12">
         Validators
@@ -44,8 +43,7 @@
           :timestamp="validator.timestamp"
           :website="validator.website"
           :proposalId="validator.executedEvent?.args.proposalId"
-          :cardImage="validator.image"
-        />
+          :cardImage="validator.image" />
       </div>
     </div>
   </section>
@@ -61,34 +59,32 @@
       <span
         class="relative items-center gap-1.5 px-6 py-3.5 rounded-md font-medium text-sm before:absolute before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-900 after:rounded-full cursor-pointer"
         :class="selectedCoin === 'M' ? 'after:bg-primary-500' : ''"
-        @click="selectedCoin = 'M'"
-        >$M</span
-      >
+        @click="selectedCoin = 'M'">
+        $M
+      </span>
       <span
         class="relative items-center gap-1.5 px-2.5 py-3.5 rounded-md font-medium text-sm before:absolute before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-900 after:rounded-full cursor-pointer"
         :class="selectedCoin === 'WrappedM' ? 'after:bg-primary-500' : ''"
-        @click="selectedCoin = 'WrappedM'"
-        >$M (Wrapped)</span
-      >
+        @click="selectedCoin = 'WrappedM'">
+        $M (Wrapped)
+      </span>
     </div>
 
     <UTable
       :rows="filteredEarnerLists"
       :columns="listTableHeaders"
-      v-if="selectedCoin === 'M'"
-    >
+      v-if="selectedCoin === 'M'">
       <template #account-data="{ row }">
         <MAddressAvatar
           :short-address="false"
           show-copy
-          :address="row.account"
-        />
+          :address="row.account" />
       </template>
 
       <template #timestamp-data="{ row }">
-        <span class="text-grey-600">{{
-          useDate(row.timestamp).toFormat("DD MMM YYYY")
-        }}</span>
+        <span class="text-grey-600">
+          {{ useDate(row.timestamp).toFormat('DD MMM YYYY') }}
+        </span>
       </template>
       <template #proposal-data="{ row }">
         <UPopover>
@@ -101,8 +97,7 @@
                     label: 'Executed Earner Proposal',
                     to: `/proposal/${row.proposalId}`,
                   },
-                ]"
-              />
+                ]" />
             </div>
           </template>
         </UPopover>
@@ -113,26 +108,23 @@
       v-else
       :loading="isLoading"
       :rows="earnersClaimants || []"
-      :columns="earnersClaimantsHeaders"
-    >
+      :columns="earnersClaimantsHeaders">
       <template #earner-data="{ row }">
         <MAddressAvatar
           :short-address="false"
           show-copy
-          :address="row.earner"
-        />
+          :address="row.earner" />
       </template>
       <template #claimant-data="{ row }">
         <MAddressAvatar
           :short-address="true"
           show-copy
-          :address="row.claimant"
-        />
+          :address="row.claimant" />
       </template>
       <template #timestamp-data="{ row }">
-        <span class="text-grey-600">{{
-          useDate(row.timestamp).toFormat("DD MMM YYYY")
-        }}</span>
+        <span class="text-grey-600">
+          {{ useDate(row.timestamp).toFormat('DD MMM YYYY') }}
+        </span>
       </template>
       <template #proposal-data="{ row }">
         <UPopover>
@@ -145,16 +137,14 @@
                     label: 'Executed Earner Proposal',
                     to: `/proposal/${row.proposalId}`,
                   },
-                ]"
-              />
+                ]" />
               <UVerticalNavigation
                 :links="[
                   {
                     label: 'Executed Claimant Proposal',
                     to: `/proposal/${row.proposalId}`,
                   },
-                ]"
-              />
+                ]" />
             </div>
           </template>
         </UPopover>
@@ -164,138 +154,141 @@
 </template>
 
 <script setup lang="ts">
-import uniqBy from "lodash/uniqBy";
-import { Hash, trim, getAddress } from "viem";
-import { generateKeyEarnerClaimant } from "@/lib/api/utils";
-import { MProposal } from "@/lib/api/types";
+  import uniqBy from 'lodash/uniqBy'
+  import { Hash, trim, getAddress } from 'viem'
+  import { generateKeyEarnerClaimant } from '@/lib/api/utils'
+  import { MProposal } from '@/lib/api/types'
 
-const apiStore = useApiClientStore();
-const proposalsStore = useProposalsStore();
-const selectedCoin = ref("M");
-const listsStore = useListsStore();
-const actorStore = useActorsStore();
+  const apiStore = useApiClientStore()
+  const proposalsStore = useProposalsStore()
+  const selectedCoin = ref('M')
+  const listsStore = useListsStore()
+  const actorStore = useActorsStore()
 
-interface ActorCard extends MProposal {
-  title: string;
-  cardDescription: string;
-  account: string;
-  timestamp: number;
-  website: string;
-  proposalId: string;
-  image: string;
-}
+  interface ActorCard extends MProposal {
+    title: string
+    cardDescription: string
+    account: string
+    timestamp: number
+    website: string
+    proposalId: string
+    image: string
+  }
 
-useHead({
-  titleTemplate: "%s - Actors - Protocol",
-});
+  useHead({
+    titleTemplate: '%s - Actors - Protocol',
+  })
 
-const proposals = computed(() => proposalsStore.getProposals);
-const lists = computed(() => listsStore.getFlattenLists());
-const mintersList = computed(() => listsStore.minters);
-const validatorsList = computed(() => listsStore.validators);
-const minters = computed(() => actorStore.minters);
-const validators = computed(() => actorStore.validators);
+  const proposals = computed(() => proposalsStore.getProposals)
+  const lists = computed(() => listsStore.getFlattenLists())
+  const mintersList = computed(() => listsStore.minters)
+  const validatorsList = computed(() => listsStore.validators)
+  const minters = computed(() => actorStore.minters)
+  const validators = computed(() => actorStore.validators)
 
-const combinedMintersList = computed(() => {
-  const combinedArray = mintersList.value.map((e) => {
-    const match = minters.value.find((f) => f.account === e.account);
-    const proposal = proposals.value.find(
-      (proposal) =>
-        proposal.executedEvent?.transactionHash === e.transactionHash
-    );
-
-    return match ? { ...e, ...match, ...proposal } : e;
-  });
-  return combinedArray as ActorCard[];
-});
-
-const combinedValidatorsList = computed(() => {
-  const combinedArray = validatorsList.value.map((e) => {
-    const match = validators.value.find((f) => f.account === e.account);
-    const proposal = proposals.value.find(
-      (proposal) =>
-        proposal.executedEvent?.transactionHash === e.transactionHash
-    );
-    return match ? { ...e, ...match, ...proposal } : e;
-  });
-  return combinedArray as ActorCard[];
-});
-
-const filteredEarnerLists = computed(() => {
-  const listsWithoutDuplicates = uniqBy(
-    lists.value,
-    (item) => item.account + item.list
-  )
-    .filter((item) => item.list === "earners")
-    .map((item) => {
+  const combinedMintersList = computed(() => {
+    const combinedArray = mintersList.value.map((e) => {
+      const match = minters.value.find((f) => f.account === e.account)
       const proposal = proposals.value.find(
         (proposal) =>
-          proposal.executedEvent?.transactionHash === item.transactionHash
-      );
-      return { ...item, ...proposal };
-    });
+          proposal.executedEvent?.transactionHash === e.transactionHash,
+      )
 
-  return listsWithoutDuplicates;
-});
+      return match ? { ...e, ...match, ...proposal } : e
+    })
+    return combinedArray as ActorCard[]
+  })
 
-const fetchEarnerClaimants = async () => {
-  try {
-    if (!listsStore.earners) return undefined;
+  const combinedValidatorsList = computed(() => {
+    const combinedArray = validatorsList.value.map((e) => {
+      const match = validators.value.find((f) => f.account === e.account)
+      const proposal = proposals.value.find(
+        (proposal) =>
+          proposal.executedEvent?.transactionHash === e.transactionHash,
+      )
+      return match ? { ...e, ...match, ...proposal } : e
+    })
+    return combinedArray as ActorCard[]
+  })
 
-    const keys = listsStore.earners?.map((earner) =>
-      generateKeyEarnerClaimant(earner.account as Hash)
-    );
-
-    const claimants =
-      await apiStore.client.registrar!.protocolConfigs.getValuesByRawKeys(keys);
-
-    return listsStore.earners
-      .map((earner) => {
-        const key = generateKeyEarnerClaimant(earner.account as Hash);
-        const claimant = claimants.find((c: any) => c.key === key)?.value;
+  const filteredEarnerLists = computed(() => {
+    const listsWithoutDuplicates = uniqBy(
+      lists.value,
+      (item) => item.account + item.list,
+    )
+      .filter((item) => item.list === 'earners')
+      .map((item) => {
         const proposal = proposals.value.find(
           (proposal) =>
-            proposal.executedEvent?.transactionHash === earner.transactionHash
-        );
-
-        if (claimant) {
-          return {
-            earner: earner.account as Hash,
-            claimant: getAddress(trim(claimant as Hash)),
-            timestamp: earner.timestamp,
-            proposalId: proposal?.proposalId,
-            key,
-          };
-        }
+            proposal.executedEvent?.transactionHash === item.transactionHash,
+        )
+        return { ...item, ...proposal }
       })
-      .filter(Boolean);
-  } catch (error) {
-    console.error({ error });
-    return undefined;
+
+    return listsWithoutDuplicates
+  })
+
+  const fetchEarnerClaimants = async () => {
+    try {
+      if (!listsStore.earners) return undefined
+
+      const keys = listsStore.earners?.map((earner) =>
+        generateKeyEarnerClaimant(earner.account as Hash),
+      )
+
+      const claimants =
+        await apiStore.client.registrar!.protocolConfigs.getValuesByRawKeys(
+          keys,
+        )
+
+      return listsStore.earners
+        .map((earner) => {
+          const key = generateKeyEarnerClaimant(earner.account as Hash)
+          const claimant = claimants.find((c: any) => c.key === key)?.value
+          const proposal = proposals.value.find(
+            (proposal) =>
+              proposal.executedEvent?.transactionHash ===
+              earner.transactionHash,
+          )
+
+          if (claimant) {
+            return {
+              earner: earner.account as Hash,
+              claimant: getAddress(trim(claimant as Hash)),
+              timestamp: earner.timestamp,
+              proposalId: proposal?.proposalId,
+              key,
+            }
+          }
+        })
+        .filter(Boolean)
+    } catch (error) {
+      console.error({ error })
+      return undefined
+    }
   }
-};
 
-const { isLoading, state: earnersClaimants } = useAsyncState(
-  fetchEarnerClaimants(),
-  null
-);
+  const { isLoading, state: earnersClaimants } = useAsyncState(
+    fetchEarnerClaimants(),
+    null,
+  )
 
-const listTableHeaders = [
-  {
-    key: "account",
-    label: "Address",
-  },
-  { key: "timestamp", label: "Updated", sortable: true },
-  { key: "proposal", label: "Proposal" },
-];
+  const listTableHeaders = [
+    {
+      key: 'account',
+      label: 'Address',
+    },
+    { key: 'timestamp', label: 'Updated', sortable: true },
+    { key: 'proposal', label: 'Proposal' },
+  ]
 
-const earnersClaimantsHeaders = [
-  {
-    key: "earner",
-    label: "Address",
-  },
-  { key: "claimant", label: "Claimant" },
-  { key: "timestamp", label: "Earner added" },
-  { key: "proposal", label: "Proposal" },
-];
+  const earnersClaimantsHeaders = [
+    {
+      key: 'earner',
+      label: 'Address',
+    },
+    { key: 'claimant', label: 'Claimant' },
+    { key: 'timestamp', label: 'Earner added' },
+    { key: 'proposal', label: 'Proposal' },
+  ]
 </script>

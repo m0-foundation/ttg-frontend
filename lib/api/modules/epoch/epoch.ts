@@ -1,4 +1,4 @@
-import { EpochTypes, MEpoch } from "./epoch.types";
+import { EpochTypes, MEpoch } from './epoch.types'
 
 /*
 unused vars but usefull to control hardhat and cypress
@@ -10,36 +10,35 @@ see files:
 */
 
 export class Epoch {
-  static #instance: Epoch;
+  static #instance: Epoch
 
-  clockStartingTimestamp!: number;
-  clockPeriod!: number;
+  clockStartingTimestamp!: number
+  clockPeriod!: number
 
   private constructor() {}
 
   public static get instance(): Epoch {
     if (!Epoch.#instance) {
-      Epoch.#instance = new Epoch();
+      Epoch.#instance = new Epoch()
     }
 
-    return Epoch.#instance;
+    return Epoch.#instance
   }
 
   setEpoch(clockStartingTimestamp: number, clockPeriod: number) {
-    this.clockStartingTimestamp = Number(clockStartingTimestamp);
-    this.clockPeriod = Number(clockPeriod);
+    this.clockStartingTimestamp = Number(clockStartingTimestamp)
+    this.clockPeriod = Number(clockPeriod)
   }
 
   getType(epoch: number) {
-    return epoch % 2 === 0 ? EpochTypes.TRANSFER : EpochTypes.VOTING;
+    return epoch % 2 === 0 ? EpochTypes.TRANSFER : EpochTypes.VOTING
   }
 
   getEpochState(currentEpoch: number): MEpoch {
     const currentEpochStartAsTimestamp =
-      this.getTimestampOfEpochStart(currentEpoch);
+      this.getTimestampOfEpochStart(currentEpoch)
 
-    const currentEpochEndAsTimestamp =
-      this.getTimestampOfEpochEnd(currentEpoch);
+    const currentEpochEndAsTimestamp = this.getTimestampOfEpochEnd(currentEpoch)
 
     return {
       values: {
@@ -68,21 +67,21 @@ export class Epoch {
         },
         type: this.getType(currentEpoch + 1),
       },
-    };
+    }
   }
 
   getEpochFromTimestamp(timestamp: number) {
     return (
       Math.floor((timestamp - this.clockStartingTimestamp) / this.clockPeriod) +
       1
-    );
+    )
   }
 
   getTimestampOfEpochStart(epoch: number) {
-    return (epoch - 1) * this.clockPeriod + this.clockStartingTimestamp;
+    return (epoch - 1) * this.clockPeriod + this.clockStartingTimestamp
   }
 
   getTimestampOfEpochEnd(epoch: number) {
-    return this.getTimestampOfEpochStart(epoch + 1);
+    return this.getTimestampOfEpochStart(epoch + 1)
   }
 }

@@ -8,7 +8,7 @@
         <div class="text-grey-500 my-3 font-inter text-xs">
           Proposed by
           <MAddressAvatar :address="proposal?.proposer" />
-          at Epoch #{{ proposal?.epoch }} - {{ formatedProposedDate("LLL") }}
+          at Epoch #{{ proposal?.epoch }} - {{ formatedProposedDate('LLL') }}
         </div>
       </template>
     </PageTitle>
@@ -19,17 +19,17 @@
 </template>
 
 <script setup lang="ts">
-const proposalStore = useProposalsStore();
+  const proposalStore = useProposalsStore()
 
-const route = useRoute();
-const proposalId = route.params.proposal_id as string;
+  const route = useRoute()
+  const proposalId = route.params.proposal_id as string
 
-const proposal = computed(() => proposalStore.getProposalById(proposalId));
+  const proposal = computed(() => proposalStore.getProposalById(proposalId))
 
-const { title } = useParsedDescriptionTitle(proposal?.value?.description!);
-const { toFormat: formatedProposedDate } = useDate(proposal.value!.timestamp!);
+  const { title } = useParsedDescriptionTitle(proposal?.value?.description!)
+  const { toFormat: formatedProposedDate } = useDate(proposal.value!.timestamp!)
 
-useHead({
-  titleTemplate: `%s - Proposal #${proposalId}`,
-});
+  useHead({
+    titleTemplate: `%s - Proposal #${proposalId}`,
+  })
 </script>

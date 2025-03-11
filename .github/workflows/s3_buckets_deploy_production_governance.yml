@@ -14,7 +14,7 @@ jobs:
   # Invoking, in case of successful build of "build-and-upload-to-s3-production", the sub-workflow that will create a tag
   tag:
     if: success() && github.ref_name == 'main'
-    needs: [ deploy-production-governance ]
+    needs: [deploy-production-governance]
     uses: m0-foundation/ttg-frontend/.github/workflows/tag.yml@main
     permissions:
       contents: write
@@ -22,7 +22,7 @@ jobs:
   # Invoking, in case of successful build of "build-and-upload-to-s3-production" and "tag", the sub-workflow that will create a release
   release:
     if: success() && github.ref_name == 'main'
-    needs: [ deploy-production-governance, tag ]
+    needs: [deploy-production-governance, tag]
     uses: m0-foundation/ttg-frontend/.github/workflows/release.yml@main
     permissions:
       contents: write

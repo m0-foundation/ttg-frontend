@@ -1,26 +1,26 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-import MButton from "../components/design-system/MButton.vue";
+import MButton from '../components/design-system/MButton.vue'
 
 // More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 const meta = {
-  title: "DS/MButton",
+  title: 'DS/MButton',
   component: MButton,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/vue/writing-docs/autodocs
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     version: {
-      control: "select",
+      control: 'select',
       options: [
-        "primary",
-        "secondary-light",
-        "secondary-dark",
-        "outline-light",
-        "outline-dark",
+        'primary',
+        'secondary-light',
+        'secondary-dark',
+        'outline-light',
+        'outline-dark',
       ],
     },
     isLoading: {
-      control: "boolean",
+      control: 'boolean',
       options: [false, true],
     },
   },
@@ -29,7 +29,7 @@ const meta = {
       MButton,
     },
     setup() {
-      return { args };
+      return { args }
     },
     template: `
       <MButton v-bind="args">
@@ -37,10 +37,10 @@ const meta = {
       </MButton>
     `,
   }),
-} satisfies Meta<typeof MButton>;
+} satisfies Meta<typeof MButton>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
  * See https://storybook.js.org/docs/vue/api/csf
@@ -49,30 +49,30 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    version: "primary",
+    version: 'primary',
   },
-};
+}
 
 export const SecondaryLight: Story = {
   args: {
-    version: "secondary-light",
+    version: 'secondary-light',
   },
-};
+}
 
 export const SecondaryDark: Story = {
   args: {
-    version: "secondary-dark",
+    version: 'secondary-dark',
   },
-};
+}
 
 export const OutlineLight: Story = {
   args: {
-    version: "outline-light",
+    version: 'outline-light',
   },
-};
+}
 
 export const OutlineDark: Story = {
   args: {
-    version: "outline-dark",
+    version: 'outline-dark',
   },
-};
+}

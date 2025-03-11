@@ -1,3 +1,3 @@
 <script setup>
-navigateTo("/actors/protocol");
+  navigateTo('/actors/protocol')
 </script>

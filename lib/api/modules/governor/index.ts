@@ -1,1 +1,1 @@
-export { Governor } from "./governor";
+export { Governor } from './governor'

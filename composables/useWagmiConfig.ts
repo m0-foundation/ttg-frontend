@@ -1,8 +1,8 @@
-import { Config } from "@wagmi/core";
+import { Config } from '@wagmi/core'
 
 export const useWagmiConfig = () => {
-  const nuxtApp = useNuxtApp();
+  const nuxtApp = useNuxtApp()
   // use the same wagmi config as  use-wagmi
-  const config: Config = nuxtApp.vueApp._context.provides["use-wagmi-config"];
-  return config;
-};
+  const config: Config = nuxtApp.vueApp._context.provides['use-wagmi-config']
+  return config
+}

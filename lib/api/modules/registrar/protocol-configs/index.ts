@@ -1,1 +1,1 @@
-export { ProtocolConfigs } from "./protocol-configs";
+export { ProtocolConfigs } from './protocol-configs'

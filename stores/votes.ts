@@ -1,15 +1,15 @@
-import uniqBy from "lodash/uniqBy";
-import { MVote } from "@/lib/api/types";
-import { defineStore } from "pinia";
-import { Hash } from "viem";
+import uniqBy from 'lodash/uniqBy'
+import { MVote } from '@/lib/api/types'
+import { defineStore } from 'pinia'
+import { Hash } from 'viem'
 
-export const useVotesStore = defineStore("votes", () => {
-  const api = useApiClientStore();
+export const useVotesStore = defineStore('votes', () => {
+  const api = useApiClientStore()
 
-  const votes = ref<Array<MVote>>([]);
+  const votes = ref<Array<MVote>>([])
 
   function getBy(key: keyof MVote, value: string) {
-    return computed(() => votes.value.filter((v) => v[key] === value));
+    return computed(() => votes.value.filter((v) => v[key] === value))
   }
 
   function getByAddress(address: Hash) {
@@ -17,26 +17,26 @@ export const useVotesStore = defineStore("votes", () => {
       votes.value.filter(
         (v) => v.voter?.toLowerCase() === address.toLowerCase(),
       ),
-    );
+    )
   }
 
   function add(newVotes: MVote[]) {
-    votes.value = [...uniqBy([...votes.value, ...newVotes], "voteId")];
+    votes.value = [...uniqBy([...votes.value, ...newVotes], 'voteId')]
   }
 
   async function fetchVotesStandard() {
-    const votes = await api.client.standardGovernor!.voting!.getAllVotes();
-    add(votes);
+    const votes = await api.client.standardGovernor!.voting!.getAllVotes()
+    add(votes)
   }
 
   async function fetchVotesEmergency() {
-    const votes = await api.client.emergencyGovernor!.voting!.getAllVotes();
-    add(votes);
+    const votes = await api.client.emergencyGovernor!.voting!.getAllVotes()
+    add(votes)
   }
 
   async function fetchVotesZero() {
-    const votes = await api.client.zeroGovernor!.voting!.getAllVotes();
-    add(votes);
+    const votes = await api.client.zeroGovernor!.voting!.getAllVotes()
+    add(votes)
   }
 
   async function fetchAllVotes() {
@@ -44,15 +44,15 @@ export const useVotesStore = defineStore("votes", () => {
       fetchVotesStandard(),
       fetchVotesEmergency(),
       fetchVotesZero(),
-    ]);
+    ])
   }
 
-  async function fetchVotes(votingType: "Standard" | "Emergency" | "Zero") {
-    return votingType === "Standard"
+  async function fetchVotes(votingType: 'Standard' | 'Emergency' | 'Zero') {
+    return votingType === 'Standard'
       ? await fetchVotesStandard()
-      : votingType === "Emergency"
+      : votingType === 'Emergency'
         ? await fetchVotesEmergency()
-        : await fetchVotesZero();
+        : await fetchVotesZero()
   }
 
   return {
@@ -65,5 +65,5 @@ export const useVotesStore = defineStore("votes", () => {
     getBy,
     getByAddress,
     add,
-  };
-});
+  }
+})

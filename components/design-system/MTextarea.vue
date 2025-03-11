@@ -3,26 +3,25 @@
   <p
     v-for="error of props.errors"
     :key="error.$uid"
-    class="text-red-500 text-xs my-2"
-  >
+    class="text-red-500 text-xs my-2">
     {{ error.$message }}
   </p>
 </template>
 
 <script setup lang="ts">
-import { ErrorObject } from "@vuelidate/core";
+  import { ErrorObject } from '@vuelidate/core'
 
-export interface InputProps {
-  errors?: ErrorObject[];
-}
+  export interface InputProps {
+    errors?: ErrorObject[]
+  }
 
-const props = defineProps<InputProps>();
+  const props = defineProps<InputProps>()
 
-const hasErrors = computed(() => props.errors?.length);
+  const hasErrors = computed(() => props.errors?.length)
 </script>
 
 <style>
-.error {
-  @apply border border-red-500;
-}
+  .error {
+    @apply border border-red-500;
+  }
 </style>

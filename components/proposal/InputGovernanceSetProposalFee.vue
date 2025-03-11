@@ -6,25 +6,24 @@
     :decorator="currentCashToken?.symbol"
     :maska="maskTokenByDecimals(currentCashToken?.decimals)"
     description="Update the fee charged for submitting proposals."
-    data-test="proposalValue"
-  />
+    data-test="proposalValue" />
 </template>
 
 <script setup lang="ts">
-import { ErrorObject } from "@vuelidate/core";
-import { storeToRefs } from "pinia";
-import InputDynamic from "./InputDynamic.vue";
-import { maskTokenByDecimals } from "@/utils/masks";
+  import { ErrorObject } from '@vuelidate/core'
+  import { storeToRefs } from 'pinia'
+  import InputDynamic from './InputDynamic.vue'
+  import { maskTokenByDecimals } from '@/utils/masks'
 
-export interface InputProps {
-  currentValue?: string;
-  modelValue: any;
-  modelValueErrors?: ErrorObject[];
-}
+  export interface InputProps {
+    currentValue?: string
+    modelValue: any
+    modelValueErrors?: ErrorObject[]
+  }
 
-const { currentCashToken } = storeToRefs(useTtgStore());
+  const { currentCashToken } = storeToRefs(useTtgStore())
 
-const props = defineProps<InputProps>();
-const emit = defineEmits(["update:modelValue"]);
-const value = useVModelWrapper<InputProps>(props, emit, "modelValue");
+  const props = defineProps<InputProps>()
+  const emit = defineEmits(['update:modelValue'])
+  const value = useVModelWrapper<InputProps>(props, emit, 'modelValue')
 </script>
