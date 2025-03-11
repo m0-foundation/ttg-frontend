@@ -21,7 +21,7 @@
         <div class="flex gap-4 pb-4 flex-wrap">
           <div class="text-xs">
             <span class="text-gray-500">Address:</span>
-            <p class="text-gray-900 font-bold">
+            <p class="text-gray-900 font-medium">
               <MAddressAvatar
                 :short-address="true"
                 :showAvatar="false"
@@ -32,7 +32,7 @@
           <div class="text-xs">
             <span class="text-gray-500">Added:</span>
             <div class="flex">
-              <p class="text-gray-900 font-bold">
+              <p class="text-gray-900 font-medium">
                 {{
                   timestamp ? useDate(timestamp).toFormat("DD MMM YYYY") : "-"
                 }}
