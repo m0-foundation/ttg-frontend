@@ -7,6 +7,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return navigateTo('/settings')
   }
 
+  if (to.path === '/actors/protocol') {
+    return navigateTo('/actors')
+  }
+
   if (config.public.auctionActive === true) {
     if (to.path === '/') {
       return navigateTo('/auction/')
