@@ -20,7 +20,7 @@
         <div class="flex gap-4 pb-4 flex-wrap">
           <div class="text-xs">
             <span class="text-gray-500">Address:</span>
-            <p class="text-gray-900 font-bold">
+            <p class="text-gray-900 font-medium">
               <MAddressAvatar
                 :short-address="true"
                 :showAvatar="false"
@@ -30,7 +30,7 @@
           <div class="text-xs">
             <span class="text-gray-500">Added:</span>
             <div class="flex">
-              <p class="text-gray-900 font-bold">
+              <p class="text-gray-900 font-medium">
                 {{
                   timestamp ? useDate(timestamp).toFormat('DD MMM YYYY') : '-'
                 }}
@@ -45,8 +45,13 @@
           </div>
         </div>
         <div class="text-xs" v-if="website">
-          <span class="text-gray-500">Website:</span>
-          <p class="text-gray-900 font-bold">{{ website }}</p>
+          <div class="text-gray-500">Website:</div>
+          <NuxtLink
+            :to="`http://${website}`"
+            class="text-gray-900 font-bold underline"
+            target="_blank"
+            >{{ website }}</NuxtLink
+          >
         </div>
       </div>
     </div>

@@ -21,6 +21,7 @@ module.exports = {
         'alert-error': '#DA1E28',
         'blue-grey': '#C1C5DD',
         'blue-400': '#2154D9',
+        'light-gray': '#F6F8FF',
         'green-100': '#E6FFF9',
         'green-200': '#CCFFF3',
         'green-300': '#99FFE7',

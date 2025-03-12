@@ -5,23 +5,10 @@
     </PageTitle>
 
     <Suspense>
-      <UContainer class="py-10">
+      <UContainer class="lg:py-10 py-4">
         <NuxtPage />
       </UContainer>
       <template #fallback><CommonLoader /></template>
     </Suspense>
   </section>
 </template>
-
-<script setup lang="ts">
-  const actorsLinks = [
-    {
-      label: 'Protocol',
-      to: '/actors/protocol',
-    },
-    {
-      label: 'M wrapped',
-      to: '/actors/wm',
-    },
-  ]
-</script>
