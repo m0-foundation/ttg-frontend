@@ -126,7 +126,7 @@
               class="w-3 h-3 accent-alert-success"
               data-test="reason-vote-checkbox" />
             Share with others why you made this choice. This can cost a little
-            more gas fees.
+            more in gas fees.
           </label>
         </div>
 
