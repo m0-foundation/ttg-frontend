@@ -982,7 +982,7 @@
       case 'mint_ttl':
         return { required, range: validations.range(3600, 864000) } // 1 hour to 10 days
       case 'mint_ratio':
-        return { required, range: validations.range(50, 100) } // Percent range
+        return { required, range: validations.range(100, 10000) } // BPS range
       case 'minter_freeze_time':
         return { required, range: validations.range(3600, 2592000) } // 1 hour to 1 month
       default:

@@ -5,7 +5,7 @@
         <span class="capitalize">
           {{ type === 'Emergency' ? 'Priority' : type }}
         </span>
-        <span v-if="proposalWord">proposal</span>
+        <span v-if="proposalWord"> proposal</span>
       </span>
 
       <template #popper>
