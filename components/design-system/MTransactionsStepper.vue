@@ -8,7 +8,7 @@
         <div :class="['step', step.status]" role="alert">
           <div class="flex gap-6">
             <div>
-              <h3 class="font-medium flex">
+              <h3 class="font-medium flex text-grey-200">
                 <span v-if="step.status === 'complete'">[⎷]</span>
                 <span v-else-if="step.status === 'error'">[x]</span>
                 <span v-else-if="step.status === 'pending'" class="flex">
@@ -37,12 +37,12 @@
               </h3>
             </div>
             <div>
-              <h3>
+              <h3 class="text-grey-100">
                 {{ step.title }}
               </h3>
               <p
                 v-if="index === currentStep"
-                class="text-sm text-grey-100 font-inter mb-0">
+                class="text-sm text-grey-200 font-inter mb-0">
                 {{ step.message ? step.message : messages[step.status] }}
               </p>
             </div>
