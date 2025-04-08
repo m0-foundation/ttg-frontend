@@ -1,5 +1,5 @@
-import useMPastVotingPowerZeroToken from "./useMPastVotingPowerZeroToken";
-import useMPastVotingPowerPowerToken from "./useMPastVotingPowerPowerToken";
+import useMPastVotingPowerZeroToken from './useMPastVotingPowerZeroToken'
+import useMPastVotingPowerPowerToken from './useMPastVotingPowerPowerToken'
 
 export default ({
   epoch,
@@ -8,18 +8,18 @@ export default ({
   userAccount:
     | globalThis.Ref<undefined>
     | globalThis.Ref<`0x${string}`>
-    | globalThis.Ref<`0x${string}` | undefined>;
-  epoch: globalThis.Ref<bigint>;
+    | globalThis.Ref<`0x${string}` | undefined>
+  epoch: globalThis.Ref<bigint>
 }) => {
-  const power = useMPastVotingPowerPowerToken({ userAccount, epoch });
-  const zero = useMPastVotingPowerZeroToken({ userAccount, epoch });
+  const power = useMPastVotingPowerPowerToken({ userAccount, epoch })
+  const zero = useMPastVotingPowerZeroToken({ userAccount, epoch })
 
   return {
     power,
     zero,
     refetch: () => {
-      power.refetch();
-      zero.refetch();
+      power.refetch()
+      zero.refetch()
     },
-  };
-};
+  }
+}

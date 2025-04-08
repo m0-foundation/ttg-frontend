@@ -1,26 +1,26 @@
-import { fallback, http } from "@wagmi/core";
-import { mainnet, sepolia, hardhat } from "@wagmi/core/chains";
+import { fallback, http } from '@wagmi/core'
+import { mainnet, sepolia, hardhat } from '@wagmi/core/chains'
 // connectors
 import {
   injected,
   walletConnect,
   coinbaseWallet,
   safe,
-} from "@wagmi/connectors";
+} from '@wagmi/connectors'
 
 // use wagmi
-import { createConfig } from "use-wagmi";
+import { createConfig } from 'use-wagmi'
 
 export const useWagmi = (rpc: string, fallbackRpc?: string) => {
-  const config = useRuntimeConfig();
+  const config = useRuntimeConfig()
 
   return createConfig({
     chains: [hardhat, mainnet, sepolia],
     connectors:
-      config.public.env.node === "production"
+      config.public.env.node === 'production'
         ? [
             walletConnect({ projectId: config.public.walletConnectProjectId }),
-            coinbaseWallet({ appName: "TTG" }),
+            coinbaseWallet({ appName: 'TTG' }),
             safe({
               allowedDomains: [/app.safe.global$/],
             }),
@@ -28,8 +28,8 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
         : [
             injected({
               target: {
-                id: "windowProvider",
-                name: "Window Provider",
+                id: 'windowProvider',
+                name: 'Window Provider',
                 provider: window.ethereum,
               },
             }),
@@ -39,5 +39,5 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
       [sepolia.id]: fallback([http(rpc), http(fallbackRpc)]),
       [hardhat.id]: http(rpc),
     },
-  });
-};
+  })
+}

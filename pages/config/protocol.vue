@@ -6,226 +6,225 @@
       v-else
       :key="param.key"
       :param="param"
-      class="card--config"
-    />
+      class="card--config" />
   </section>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
+  import { storeToRefs } from 'pinia'
 
-useHead({
-  titleTemplate: "%s - Protocol configurations",
-});
+  useHead({
+    titleTemplate: '%s - Protocol configurations',
+  })
 
-const apiStore = useApiClientStore();
+  const apiStore = useApiClientStore()
 
-const fetchProtocolConfigs = async () => {
-  try {
-    const data =
-      await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues();
-    const store = useProtocolConfigsStore();
-    store.setProtocolConfigs(data);
-  } catch (error) {
-    console.error({ error });
+  const fetchProtocolConfigs = async () => {
+    try {
+      const data =
+        await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues()
+      const store = useProtocolConfigsStore()
+      store.setProtocolConfigs(data)
+    } catch (error) {
+      console.error({ error })
+    }
   }
-};
 
-const { isLoading } = useAsyncState(fetchProtocolConfigs(), null);
+  const { isLoading } = useAsyncState(fetchProtocolConfigs(), null)
 
-const store = useProtocolConfigsStore();
-const proposalsStore = useProposalsStore();
-const { getProtocolConfigsWithoutGuidances } = storeToRefs(store);
+  const store = useProtocolConfigsStore()
+  const proposalsStore = useProposalsStore()
+  const { getProtocolConfigsWithoutGuidances } = storeToRefs(store)
 
-const proposals = computed(() => proposalsStore.getProposals);
+  const proposals = computed(() => proposalsStore.getProposals)
 
-const protocolParametersData = [
-  {
-    title: "Update Collateral Interval",
-    key: "update_collateral_interval",
-    description:
-      "The period within which Update Collateral must be called by a Minter. If not called within this time after their previous call, the on-chain Collateral Value is assumed to be 0 and they will incur Penalty Rate on the next update. It is alterable with a Standard Proposal.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#update-collateral-interval",
-    type: "time",
-    unit: "seconds",
-  },
-  {
-    title: "Update Collateral Threshold",
-    key: "update_collateral_threshold",
-    description:
-      "The number of Validator signatures required to execute Update Collateral.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#signature-threshold",
-    type: "number",
-  },
-  {
-    title: "Penalty Rate",
-    key: "penalty_rate",
-    description:
-      "The percentage charged on Owed $M that exceeds the amount a Minter is permitted to generate.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#penalty-rate",
-    type: "basisPoints",
-    unit: "BPS",
-  },
-  {
-    title: "Mint Delay",
-    key: "mint_delay",
-    description:
-      "The period between when a Minter has called Propose Mint and when they can first call Mint $M.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-delay",
-    type: "time",
-    unit: "seconds",
-  },
-  {
-    title: "Mint TTL",
-    key: "mint_ttl",
-    description:
-      "Period after the Mint Delay within which Mint must be called before the mint proposal expires.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#propose-mint-time-to-live",
-    type: "time",
-    unit: "seconds",
-  },
-  {
-    title: "Mint Ratio",
-    key: "mint_ratio",
-    description:
-      "The percentage that represents the fraction of a Minter’s on-chain Collateral Value they can generate in $M. It effectively controls the leverage of a Minter and the over-collateralization of $M. It is alterable with a Standard Proposal.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-ratio",
-    type: "basisPoints",
-    unit: "BPS",
-  },
-  {
-    title: "Minter Freeze Time",
-    key: "minter_freeze_time",
-    description:
-      "The duration for which a Minter will not be able to call Propose Mint or Mint after having the Freeze method called by a Validator on their address. It is alterable with a Standard Proposal. ",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-freeze-time",
-    type: "time",
-    unit: "seconds",
-  },
-  {
-    title: "Minter Rate Model",
-    key: "minter_rate_model",
-    description:
-      "The annualized percentage charged continuously to Minters on their Owed $M. It is alterable with a Standard Proposal.",
-    docs: "https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-rate",
-    type: "address",
-    copyValue: true,
-  },
-  {
-    title: "Earner Rate Model",
-    key: "earner_rate_model",
-    description:
-      "The annualized percentage paid to $M in the Earn Mechanism. If the cumulative $M paid out via the Earn Mechanism exceeds the amount of $M being generated by the Minter Rate, the Earner Rate is automatically reduced to eliminate this mismatch to 0. ",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#earner-rate",
-    type: "address",
-    copyValue: true,
-  },
+  const protocolParametersData = [
+    {
+      title: 'Update Collateral Interval',
+      key: 'update_collateral_interval',
+      description:
+        'The period within which Update Collateral must be called by a Minter. If not called within this time after their previous call, the on-chain Collateral Value is assumed to be 0 and they will incur Penalty Rate on the next update. It is alterable with a Standard Proposal.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#update-collateral-interval',
+      type: 'time',
+      unit: 'seconds',
+    },
+    {
+      title: 'Update Collateral Threshold',
+      key: 'update_collateral_threshold',
+      description:
+        'The number of Validator signatures required to execute Update Collateral.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#signature-threshold',
+      type: 'number',
+    },
+    {
+      title: 'Penalty Rate',
+      key: 'penalty_rate',
+      description:
+        'The percentage charged on Owed $M that exceeds the amount a Minter is permitted to generate.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#penalty-rate',
+      type: 'basisPoints',
+      unit: 'BPS',
+    },
+    {
+      title: 'Mint Delay',
+      key: 'mint_delay',
+      description:
+        'The period between when a Minter has called Propose Mint and when they can first call Mint $M.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-delay',
+      type: 'time',
+      unit: 'seconds',
+    },
+    {
+      title: 'Mint TTL',
+      key: 'mint_ttl',
+      description:
+        'Period after the Mint Delay within which Mint must be called before the mint proposal expires.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#propose-mint-time-to-live',
+      type: 'time',
+      unit: 'seconds',
+    },
+    {
+      title: 'Mint Ratio',
+      key: 'mint_ratio',
+      description:
+        'The percentage that represents the fraction of a Minter’s on-chain Collateral Value they can generate in $M. It effectively controls the leverage of a Minter and the over-collateralization of $M. It is alterable with a Standard Proposal.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#mint-ratio',
+      type: 'basisPoints',
+      unit: 'BPS',
+    },
+    {
+      title: 'Minter Freeze Time',
+      key: 'minter_freeze_time',
+      description:
+        'The duration for which a Minter will not be able to call Propose Mint or Mint after having the Freeze method called by a Validator on their address. It is alterable with a Standard Proposal. ',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-freeze-time',
+      type: 'time',
+      unit: 'seconds',
+    },
+    {
+      title: 'Minter Rate Model',
+      key: 'minter_rate_model',
+      description:
+        'The annualized percentage charged continuously to Minters on their Owed $M. It is alterable with a Standard Proposal.',
+      docs: 'https://docs.m0.org/m-0-documentation-portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#minter-rate',
+      type: 'address',
+      copyValue: true,
+    },
+    {
+      title: 'Earner Rate Model',
+      key: 'earner_rate_model',
+      description:
+        'The annualized percentage paid to $M in the Earn Mechanism. If the cumulative $M paid out via the Earn Mechanism exceeds the amount of $M being generated by the Minter Rate, the Earner Rate is automatically reduced to eliminate this mismatch to 0. ',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/ii.-protocol/ii.iii-governance-controlled-protocol-parameters#earner-rate',
+      type: 'address',
+      copyValue: true,
+    },
 
-  {
-    title: "Base Minter Rate",
-    key: "base_minter_rate",
-    description:
-      "The annualized rate which continuously accrues on Active Owed $M.",
-    type: "basisPoints",
-    unit: "BPS",
-  },
+    {
+      title: 'Base Minter Rate',
+      key: 'base_minter_rate',
+      description:
+        'The annualized rate which continuously accrues on Active Owed $M.',
+      type: 'basisPoints',
+      unit: 'BPS',
+    },
 
-  {
-    title: "Max Earner Rate",
-    key: "max_earner_rate",
-    description:
-      "The annualized rate which continuously accrues to $M in addresses on the Earner List.",
-    type: "basisPoints",
-    unit: "BPS",
-  },
+    {
+      title: 'Max Earner Rate',
+      key: 'max_earner_rate',
+      description:
+        'The annualized rate which continuously accrues to $M in addresses on the Earner List.',
+      type: 'basisPoints',
+      unit: 'BPS',
+    },
 
-  // guidances keys
-  {
-    title: "Adopted Guidance",
-    key: "guidance",
-    description:
-      "This document provides general Adopted Guidance for the off-chain procedures stakeholders are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
-    type: "guidance",
-    copyValue: true,
-  },
-  {
-    title: "Ecosystem Guidance",
-    key: "ecosystem_guidance",
-    description:
-      "This document provides guidance for the Ecosystem of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
-    type: "guidance",
-    copyValue: true,
-  },
-  {
-    title: "Collateral Guidance",
-    key: "collateral_guidance",
-    description:
-      "This document provides guidance for the Collaterals of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
-    type: "guidance",
-    copyValue: true,
-  },
-  {
-    title: "SPV Operators Guidance",
-    key: "spv_operators_guidance",
-    description:
-      "This document provides guidance for the SPV Operators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
-    type: "guidance",
-    copyValue: true,
-  },
-  {
-    title: "Validators Guidance",
-    key: "validators_guidance",
-    description:
-      "This document provides guidance for the Validators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
-    type: "guidance",
-    copyValue: true,
-  },
-  {
-    title: "Minters Guidance",
-    key: "minters_guidance",
-    description:
-      "This document provides guidance for the Minters of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
-    type: "guidance",
-    copyValue: true,
-  },
-  {
-    title: "Mandatory Contract Clauses Guidance",
-    key: "mandatory_contract_guidance",
-    description:
-      "This document provides guidance for the Mandatory Contracts of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.",
-    docs: "https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance",
-    type: "guidance",
-    copyValue: true,
-  },
-];
+    // guidances keys
+    {
+      title: 'Adopted Guidance',
+      key: 'guidance',
+      description:
+        'This document provides general Adopted Guidance for the off-chain procedures stakeholders are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      type: 'guidance',
+      copyValue: true,
+    },
+    {
+      title: 'Ecosystem Guidance',
+      key: 'ecosystem_guidance',
+      description:
+        'This document provides guidance for the Ecosystem of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      type: 'guidance',
+      copyValue: true,
+    },
+    {
+      title: 'Collateral Guidance',
+      key: 'collateral_guidance',
+      description:
+        'This document provides guidance for the Collaterals of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      type: 'guidance',
+      copyValue: true,
+    },
+    {
+      title: 'SPV Operators Guidance',
+      key: 'spv_operators_guidance',
+      description:
+        'This document provides guidance for the SPV Operators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      type: 'guidance',
+      copyValue: true,
+    },
+    {
+      title: 'Validators Guidance',
+      key: 'validators_guidance',
+      description:
+        'This document provides guidance for the Validators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      type: 'guidance',
+      copyValue: true,
+    },
+    {
+      title: 'Minters Guidance',
+      key: 'minters_guidance',
+      description:
+        'This document provides guidance for the Minters of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      type: 'guidance',
+      copyValue: true,
+    },
+    {
+      title: 'Mandatory Contract Clauses Guidance',
+      key: 'mandatory_contract_guidance',
+      description:
+        'This document provides guidance for the Mandatory Contracts of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
+      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      type: 'guidance',
+      copyValue: true,
+    },
+  ]
 
-const protocolDataSorted = computed(() => {
-  // Add custom and proposal data to parameters and sort it to show custom parameters first
-  return getProtocolConfigsWithoutGuidances.value
-    .map((p) => ({
-      value: p.value,
-      key: p.key,
-      ...protocolParametersData.find((param) => param.key === p.key),
-      proposal: proposals.value.find(
-        (proposal) =>
-          proposal.proposalParams[0] === p.key &&
-          proposal.executedEvent?.timestamp,
-      ),
-    }))
-    .sort((a, b) => {
-      if (a.description && !b.description) {
-        return -1;
-      } else if (!a.description && b.description) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-});
+  const protocolDataSorted = computed(() => {
+    // Add custom and proposal data to parameters and sort it to show custom parameters first
+    return getProtocolConfigsWithoutGuidances.value
+      .map((p) => ({
+        value: p.value,
+        key: p.key,
+        ...protocolParametersData.find((param) => param.key === p.key),
+        proposal: proposals.value.find(
+          (proposal) =>
+            proposal.proposalParams[0] === p.key &&
+            proposal.executedEvent?.timestamp,
+        ),
+      }))
+      .sort((a, b) => {
+        if (a.description && !b.description) {
+          return -1
+        } else if (!a.description && b.description) {
+          return 1
+        } else {
+          return 0
+        }
+      })
+  })
 </script>

@@ -1,8 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtRouteMiddleware((to, from) => {
-  const apiStore = useApiClientStore();
+  const apiStore = useApiClientStore()
 
-  if (to.path !== "/settings" && apiStore.rpc === undefined) {
-    return navigateTo("/settings");
+  if (to.path !== '/settings' && apiStore.rpc === undefined) {
+    return navigateTo('/settings')
   }
-});
+
+  if (to.path === '/actors/protocol') {
+    return navigateTo('/actors')
+  }
+})

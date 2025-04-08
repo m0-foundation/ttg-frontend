@@ -8,17 +8,17 @@
 </template>
 
 <script setup lang="ts">
-import { MProposal } from "@/lib/api/types";
+  import { MProposal } from '@/lib/api/types'
 
-export interface ProposalListProps {
-  proposals: MProposal[];
-  loading: boolean;
-}
+  export interface ProposalListProps {
+    proposals: MProposal[]
+    loading: boolean
+  }
 
-const props = defineProps<ProposalListProps>();
-const { proposals } = toRefs(props);
+  const props = defineProps<ProposalListProps>()
+  const { proposals } = toRefs(props)
 
-const hasProposals = computed(
-  () => proposals.value && proposals.value.length > 0,
-);
+  const hasProposals = computed(
+    () => proposals.value && proposals.value.length > 0,
+  )
 </script>

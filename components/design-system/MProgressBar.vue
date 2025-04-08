@@ -7,8 +7,7 @@
         'bg-red-500': hasVotes,
         'bg-gray-200': !hasVotes,
       },
-    ]"
-  >
+    ]">
     <div>
       <div class="bg-accent-success h-2" :style="`width: ${width}%`" />
     </div>
@@ -16,12 +15,12 @@
 </template>
 
 <script lang="ts" setup>
-export interface MProgressBarProps {
-  width: number;
-  hasVotes: boolean;
-}
+  export interface MProgressBarProps {
+    width: number
+    hasVotes: boolean
+  }
 
-withDefaults(defineProps<MProgressBarProps>(), {
-  width: 0,
-});
+  withDefaults(defineProps<MProgressBarProps>(), {
+    width: 0,
+  })
 </script>

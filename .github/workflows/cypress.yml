@@ -4,11 +4,11 @@ name: cypress_tests
 on:
   push: # This will trigger the workflow for any commit to any branch
   pull_request:
-    types: [ opened, closed ]
+    types: [opened, closed]
     branches:
       - main
   schedule:
-    - cron: "0 8 * * *" # Run every day at 8am UTC
+    - cron: '0 8 * * *' # Run every day at 8am UTC
   workflow_dispatch:
 
 env:
@@ -45,12 +45,12 @@ jobs:
         # 2cdde995de11925a030ce8070c3d77a52ffcf1c0 == v5.3.0
         uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0
         env:
-          DOCKER_IMAGE_NAME: "${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}"
+          DOCKER_IMAGE_NAME: '${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}'
           DOCKER_IMAGE_VERSION: latest
         with:
           context: .
-          file: "Dockerfile.tests"
-          tags: "${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}"
+          file: 'Dockerfile.tests'
+          tags: '${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}'
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -63,14 +63,14 @@ jobs:
       fail-fast: false
       matrix:
         test_runs: [
-          "basic",
-          "basic-standard",
-          "basic-emergency",
-          "basic-zero",
-          # "standardProposals",
-          # "emergencyProposals",
-          # "zeroProposals"
-        ]
+            'basic',
+            'basic-standard',
+            'basic-emergency',
+            'basic-zero',
+            # "standardProposals",
+            # "emergencyProposals",
+            # "zeroProposals"
+          ]
     steps:
       - name: Set Branch Name to Lowercase
         run: |
@@ -86,18 +86,18 @@ jobs:
 
       - name: Pull docker image to local runner
         env:
-          DOCKER_IMAGE_NAME: "${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}"
+          DOCKER_IMAGE_NAME: '${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}'
           DOCKER_IMAGE_VERSION: latest
-        run: "docker pull ${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}"
+        run: 'docker pull ${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}'
 
       - name: Run Cypress tests
         # 4f65fabd2431ebc8d299f8e5a018d79a769ae185 == v3.0.0
         uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185
         env:
-          DOCKER_IMAGE_NAME: "${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}"
+          DOCKER_IMAGE_NAME: '${{ github.event.repository.name }}-${{ env.GITHUB_REF_LC }}'
           DOCKER_IMAGE_VERSION: latest
         with:
-          image: "${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}"
+          image: '${{ env.DOCKER_REGISTRY }}/m0-foundation/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_VERSION }}'
           options: --env TEST_RUN=${{ matrix.test_runs }}
           shell: bash
           # run: "/app/entrypoint.sh"
@@ -147,16 +147,16 @@ jobs:
             echo "*****            Repeat the full log file              *****"
             echo "************************************************************"
             echo ""
-            
+
             cat $LOG_FILE
-            
+
             # Display the main job's exit code
             echo "Main job finished with exit code $MAIN_JOB_EXIT_CODE."
-            
+
             if [ $MAIN_JOB_EXIT_CODE -eq 255 ]; then
               echo "Found ECONNRESET and exited error code $MAIN_JOB_EXIT_CODE."
             fi
-            
+
             # Exit with the main job's exit code
             exit $MAIN_JOB_EXIT_CODE
 
@@ -167,4 +167,4 @@ jobs:
         with:
           name: cypress-reports
           path: |
-            cypress/screenshots/**
+            /app/cypress

@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-upload-to-s3-dev:
-    runs-on: "ubuntu-20.04"
+    runs-on: 'ubuntu-20.04'
     environment: DEV
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
@@ -22,11 +22,11 @@ jobs:
     steps:
       # Checking out the GitHub repository on the runner
       - name: Checkout
-        uses: "actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608"
+        uses: 'actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608'
 
         # Installing Node v20
       - name: Install Node v20
-        uses: "actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8"
+        uses: 'actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8'
         with:
           node-version: 20
 
@@ -39,7 +39,7 @@ jobs:
 
       # Logging into AWS
       - name: Setup AWS CLI
-        uses: "aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502"
+        uses: 'aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502'
         with:
           aws-access-key-id: ${{ secrets.M0_DEV_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.M0_DEV_AWS_SECRET_ACCESS_KEY }}

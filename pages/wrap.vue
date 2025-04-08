@@ -21,8 +21,7 @@
             <MButton
               :is-loading="m.isWraping"
               :disable="m.isWraping"
-              @click="wrapMToken"
-            >
+              @click="wrapMToken">
               Wrap
             </MButton>
           </div>
@@ -33,8 +32,7 @@
             <img
               src="/img/tokens/wrapped-m.svg"
               alt="Wrapped M Token"
-              class="w-10 h-10"
-            />
+              class="w-10 h-10" />
             <div>
               <h2>$M (wrapped)</h2>
               <p class="text-grey-500">
@@ -47,8 +45,7 @@
             <MButton
               :is-loading="wrappedM.isUnwraping"
               :disable="wrappedM.isUnwraping"
-              @click="unwrapMToken"
-            >
+              @click="unwrapMToken">
               Unwrap
             </MButton>
           </div>
@@ -59,167 +56,167 @@
 </template>
 
 <script setup lang="ts">
-import { Hash, erc20Abi, formatUnits, parseUnits } from "viem";
-import {
-  readContract,
-  writeContract,
-  waitForTransactionReceipt,
-} from "@wagmi/core";
-import { useAccount } from "use-wagmi";
-import wrapperAbi from "@/assets/abis/wrapper.json";
+  import { Hash, erc20Abi, formatUnits, parseUnits } from 'viem'
+  import {
+    readContract,
+    writeContract,
+    waitForTransactionReceipt,
+  } from '@wagmi/core'
+  import { useAccount } from 'use-wagmi'
+  import wrapperAbi from '@/assets/abis/wrapper.json'
 
-useHead({
-  titleTemplate: "%s - Wrap/Unwrap",
-});
+  useHead({
+    titleTemplate: '%s - Wrap/Unwrap',
+  })
 
-const alerts = useAlertsStore();
-const wagmiConfig = useWagmiConfig();
-const { address: userAccount } = useAccount();
-const network = useNetworkStore().getNetwork();
+  const alerts = useAlertsStore()
+  const wagmiConfig = useWagmiConfig()
+  const { address: userAccount } = useAccount()
+  const network = useNetworkStore().getNetwork()
 
-const m = reactive({
-  input: "",
-  balance: 0n,
-  isWraping: false,
-});
+  const m = reactive({
+    input: '',
+    balance: 0n,
+    isWraping: false,
+  })
 
-const wrappedM = reactive({
-  input: "",
-  balance: 0n,
-  isUnwraping: false,
-});
+  const wrappedM = reactive({
+    input: '',
+    balance: 0n,
+    isUnwraping: false,
+  })
 
-const getBalances = async (token: Hash) => {
-  try {
-    return await readContract(wagmiConfig, {
-      abi: erc20Abi,
-      address: token as Hash,
-      functionName: "balanceOf",
-      args: [userAccount.value as Hash], // address token
-    });
-  } catch (error) {
-    return 0n;
-  }
-};
-
-const wrapMToken = async () => {
-  if (!m.input) return;
-  m.isWraping = true;
-  try {
-    await writeAllowance(m.input).catch(() => {
-      alerts.errorAlert("Error getting approval!");
-    });
-
-    const tx = await writeContract(wagmiConfig, {
-      abi: wrapperAbi,
-      address: network.value.contracts.wrappedMToken as Hash,
-      functionName: "wrap",
-      args: [userAccount.value as Hash, parseUnits(m.input, 6)], // address token
-    });
-
-    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-      confirmations: 1,
-      hash: tx,
-    });
-
-    if (txReceipt.status !== "success") {
-      throw new Error("Transaction was rejected");
+  const getBalances = async (token: Hash) => {
+    try {
+      return await readContract(wagmiConfig, {
+        abi: erc20Abi,
+        address: token as Hash,
+        functionName: 'balanceOf',
+        args: [userAccount.value as Hash], // address token
+      })
+    } catch (error) {
+      return 0n
     }
-
-    alerts.successAlert("You successfully wrapped M");
-  } catch (error) {
-    alerts.errorAlert("Error");
-  } finally {
-    getTokensBalances();
-    m.input = "";
-    m.isWraping = false;
   }
-};
 
-const unwrapMToken = async () => {
-  if (!wrappedM.input) return;
-  wrappedM.isUnwraping = true;
-  try {
-    const tx = await writeContract(wagmiConfig, {
-      abi: wrapperAbi,
-      address: network.value.contracts.wrappedMToken as Hash,
-      functionName: "unwrap",
-      args: [userAccount.value as Hash, parseUnits(wrappedM.input, 6)], // address token
-    });
+  const wrapMToken = async () => {
+    if (!m.input) return
+    m.isWraping = true
+    try {
+      await writeAllowance(m.input).catch(() => {
+        alerts.errorAlert('Error getting approval!')
+      })
 
-    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-      confirmations: 1,
-      hash: tx,
-    });
+      const tx = await writeContract(wagmiConfig, {
+        abi: wrapperAbi,
+        address: network.value.contracts.wrappedMToken as Hash,
+        functionName: 'wrap',
+        args: [userAccount.value as Hash, parseUnits(m.input, 6)], // address token
+      })
 
-    if (txReceipt.status !== "success") {
-      throw new Error("Transaction was rejected");
+      const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        confirmations: 1,
+        hash: tx,
+      })
+
+      if (txReceipt.status !== 'success') {
+        throw new Error('Transaction was rejected')
+      }
+
+      alerts.successAlert('You successfully wrapped M')
+    } catch (error) {
+      alerts.errorAlert('Error')
+    } finally {
+      getTokensBalances()
+      m.input = ''
+      m.isWraping = false
     }
-
-    alerts.successAlert("You successfully unwrapped M");
-  } catch (error) {
-    alerts.errorAlert("Error", error.shortMessage);
-  } finally {
-    getTokensBalances();
-    wrappedM.input = "";
-    wrappedM.isUnwraping = false;
   }
-};
 
-async function writeAllowance(value: string) {
-  const allowance = await readContract(wagmiConfig, {
-    abi: erc20Abi,
-    address: network.value.contracts.mToken as Hash,
-    functionName: "allowance",
-    args: [
-      userAccount.value as Hash,
-      network.value.contracts.wrappedMToken as Hash,
-    ], // address owner, address spender
-    account: userAccount.value as Hash,
-  });
+  const unwrapMToken = async () => {
+    if (!wrappedM.input) return
+    wrappedM.isUnwraping = true
+    try {
+      const tx = await writeContract(wagmiConfig, {
+        abi: wrapperAbi,
+        address: network.value.contracts.wrappedMToken as Hash,
+        functionName: 'unwrap',
+        args: [userAccount.value as Hash, parseUnits(wrappedM.input, 6)], // address token
+      })
 
-  if (!allowance || allowance < parseUnits(value, 6)) {
-    alerts.infoAlert("Allowance approval needed");
-    const hash = await writeContract(wagmiConfig, {
+      const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        confirmations: 1,
+        hash: tx,
+      })
+
+      if (txReceipt.status !== 'success') {
+        throw new Error('Transaction was rejected')
+      }
+
+      alerts.successAlert('You successfully unwrapped M')
+    } catch (error) {
+      alerts.errorAlert('Error', error.shortMessage)
+    } finally {
+      getTokensBalances()
+      wrappedM.input = ''
+      wrappedM.isUnwraping = false
+    }
+  }
+
+  async function writeAllowance(value: string) {
+    const allowance = await readContract(wagmiConfig, {
       abi: erc20Abi,
       address: network.value.contracts.mToken as Hash,
-      functionName: "approve",
+      functionName: 'allowance',
       args: [
+        userAccount.value as Hash,
         network.value.contracts.wrappedMToken as Hash,
-        parseUnits(value, 6),
-      ], // address spender, uint256 amount
+      ], // address owner, address spender
       account: userAccount.value as Hash,
-    });
+    })
 
-    const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-      confirmations: 1,
-      hash,
-    });
-    // Fail tx
-    if (txReceipt.status !== "success") {
-      throw new Error("Transaction was not successful");
+    if (!allowance || allowance < parseUnits(value, 6)) {
+      alerts.infoAlert('Allowance approval needed')
+      const hash = await writeContract(wagmiConfig, {
+        abi: erc20Abi,
+        address: network.value.contracts.mToken as Hash,
+        functionName: 'approve',
+        args: [
+          network.value.contracts.wrappedMToken as Hash,
+          parseUnits(value, 6),
+        ], // address spender, uint256 amount
+        account: userAccount.value as Hash,
+      })
+
+      const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        confirmations: 1,
+        hash,
+      })
+      // Fail tx
+      if (txReceipt.status !== 'success') {
+        throw new Error('Transaction was not successful')
+      }
+
+      return txReceipt
     }
-
-    return txReceipt;
   }
-}
 
-const getTokensBalances = async () => {
-  m.balance = await getBalances(network.value.contracts.mToken as Hash);
-  wrappedM.balance = await getBalances(
-    network.value.contracts.wrappedMToken as Hash,
-  );
-};
+  const getTokensBalances = async () => {
+    m.balance = await getBalances(network.value.contracts.mToken as Hash)
+    wrappedM.balance = await getBalances(
+      network.value.contracts.wrappedMToken as Hash,
+    )
+  }
 
-onMounted(async () => {
-  await getTokensBalances();
-});
+  onMounted(async () => {
+    await getTokensBalances()
+  })
 
-watch(
-  userAccount,
-  () => {
-    getTokensBalances();
-  },
-  { immediate: true },
-);
+  watch(
+    userAccount,
+    () => {
+      getTokensBalances()
+    },
+    { immediate: true },
+  )
 </script>

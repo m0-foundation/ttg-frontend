@@ -1,16 +1,16 @@
-import { Hash } from "viem";
+import { Hash } from 'viem'
 
 export const useBlockExplorer = (type: string, hash: Hash | string) => {
-  const network = useNetworkStore().getNetwork();
-  const { chains } = useWagmiConfig();
+  const network = useNetworkStore().getNetwork()
+  const { chains } = useWagmiConfig()
 
   const currentNetwork = computed(() => {
-    return chains.find((chain) => chain.id === network.value.rpc.chainId);
-  });
+    return chains.find((chain) => chain.id === network.value.rpc.chainId)
+  })
 
-  const explorerUrl = currentNetwork?.value?.blockExplorers?.default?.url;
+  const explorerUrl = currentNetwork?.value?.blockExplorers?.default?.url
 
   if (explorerUrl) {
-    return new URL(`${type}/${hash}`, explorerUrl).toString();
+    return new URL(`${type}/${hash}`, explorerUrl).toString()
   }
-};
+}

@@ -1,12 +1,12 @@
-import { PublicClient } from "viem";
-import { IApiConfig } from "./types";
+import { PublicClient } from 'viem'
+import { IApiConfig } from './types'
 
 export class ApiContext {
-  client: PublicClient;
-  config: IApiConfig;
+  client: PublicClient
+  config: IApiConfig
 
   constructor(client: PublicClient, config: IApiConfig) {
-    this.client = client;
-    this.config = config;
+    this.client = client
+    this.config = config
   }
 }

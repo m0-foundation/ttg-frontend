@@ -1,1 +1,1 @@
-export { Voting } from "./voting";
+export { Voting } from './voting'
