@@ -15,7 +15,10 @@
     </PageTitle>
 
     <UContainer class="py-4">
-      <ProfileBalances :address="address" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <ProfileBalances :address="address" type="POWER" />
+        <ProfileBalances :address="address" type="ZERO" />
+      </div>
       <!-- tables -->
       <ProfileTables :address="address" />
     </UContainer>
