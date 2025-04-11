@@ -5,7 +5,7 @@
       Agree or deny the following incoming change
     </p>
 
-    <div v-if="currentValue">
+    <div v-if="currentValue && isActiveProposal">
       <div
         class="uppercase font-mono bg-[#353835] leading-3 text-[#AEAFAE] text-xs py-2 p-3">
         Current
@@ -54,6 +54,9 @@
     }
   }
 
+  const protocolKeysAndValues = ref()
+  const apiStore = useApiClientStore()
+
   const props = defineProps<ProposalProps>()
 
   const parsedIncomingValue = (value: string, type: string) => {
@@ -81,6 +84,8 @@
     return value
   }
 
+  const isActiveProposal = computed(() => props.proposal.state === 'Active')
+  
   const showParsed = computed(() =>
     [
       'setProposalFee',
@@ -91,14 +96,12 @@
     ].includes(props.proposal?.proposalType),
   )
 
-  const currentValue = computed(() =>
-    props.proposal?.proposalType === 'setStandardProposalFee'
-      ? props.currentProposalValues['setProposalFee']
-      : props.currentProposalValues[
-          props.proposal
-            ?.proposalType as keyof ProposalProps['currentProposalValues']
-        ],
-  )
+const currentValue = computed(() => {
+  if (!protocolKeysAndValues.value) return null
+  return protocolKeysAndValues.value.find((item: { key: string }) =>
+    incomingValues.value?.[0].includes(item.key)
+  ).value
+})
 
   const incomingValues = computed(() => props.proposal?.proposalParams)
 
@@ -107,4 +110,20 @@
       parsedIncomingValue(param, props.proposal?.proposalType),
     ),
   )
+
+  const fetchProtocolConfigs = async () => {
+    try {
+      protocolKeysAndValues.value =
+        await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues()
+      const store = useProtocolConfigsStore()
+      store.setProtocolConfigs(protocolKeysAndValues.value)
+    } catch (error) {
+      console.error({ error })
+    }
+  }
+
+  onMounted(() => {
+    if(isActiveProposal) fetchProtocolConfigs()
+  })
+
 </script>
