@@ -22,7 +22,7 @@
 
 <style>
   .default {
-    @apply text-grey-900 border border-gray-200 hover:bg-grey-200;
+    @apply text-grey-900 border border-gray-200 hover:bg-[#F3F8FC];
   }
 
   .active {
@@ -30,15 +30,15 @@
   }
 
   button:disabled {
-    @apply border border-grey-500   opacity-50 cursor-not-allowed;
+    @apply border border-none bg-[#C4D9E8] text-grey-500 opacity-75 hover:bg-[#C4D9E8];
   }
 
   button:disabled .outside-circle {
-    @apply border border-grey-100 text-grey-100 bg-transparent cursor-not-allowed;
+    @apply border text-grey-100 bg-transparent border border-grey-500;
   }
 
   .outside-circle {
-    @apply w-3 h-3 left-0 top-0 absolute rounded-full border border-grey-500;
+    @apply w-3 h-3 left-0 top-0 absolute rounded-full;
   }
 
   .active .outside-circle {

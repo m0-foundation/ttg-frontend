@@ -34,7 +34,7 @@ export default defineAppConfig({
       width: 'w-fit max-w-72',
     },
     header: {
-      container: 'gap-8',
+      container: 'gap-8 h-[72px]',
       left: 'lg:flex-initial',
       logo: 'text-white text-[20px] font-medium',
       wrapper: 'bg-grey-1000 border-none',
@@ -42,9 +42,9 @@ export default defineAppConfig({
         base: 'text-white',
       },
       links: {
-        wrapper: 'gap-x-2',
-        base: 'font-medium px-2.5 py-0.5 text-gray-200',
-        active: 'text-gray-200 bg-gray-700',
+        wrapper: 'gap-x-3',
+        base: 'font-normal px-3 py-1.5 text-gray-200 text-[16px]',
+        active: 'text-gray-200 bg-gray-800',
         inactive: 'hover:text-gray-200',
       },
     },
@@ -101,7 +101,7 @@ export default defineAppConfig({
     },
   },
   footer: {
-    credits: '© 2024 M^0 FOUNDATION',
+    credits: '© 2024 M0 FOUNDATION',
     links: [
       {
         icon: 'i-simple-icons-x',

@@ -2,10 +2,10 @@
   <section>
     <PageTitle :title="title">
       <template #pretitle>
-        <ProposalTypeBadge :type="proposal?.votingType" />
+        <ProposalTypeBadge :type="proposal?.votingType"/>
       </template>
       <template #subtitle>
-        <div class="text-grey-500 my-3 font-inter text-xs">
+        <div class="text-grey-600 my-3 font-inter text-sm">
           Proposed by
           <MAddressAvatar :address="proposal?.proposer" />
           at Epoch #{{ proposal?.epoch }} - {{ formatedProposedDate('LLL') }}

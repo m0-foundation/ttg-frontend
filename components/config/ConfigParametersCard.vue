@@ -1,16 +1,16 @@
 <template>
-  <UCard class="flex flex-col gap-4">
+  <UCard class="flex flex-col gap-4 shadow-none">
     <div class="flex gap-4 justify-between flex-wrap mb-2">
       <div class="lg:flex-1">
-        <h3 class="text-xl font-medium">{{ param?.title }}</h3>
-        <UBadge :label="param?.key" color="gray" />
+        <h2 class="text-2xl font-normal">{{ param?.title }}</h2>
+        <UBadge :label="param?.key" color="gray" variant="soft" class="font-mono bg-gray-100" />
       </div>
       <div class="flex gap-4 max-lg:order-2 max-lg:w-full">
         <div class="lg:text-end">
-          <p class="lg:text-2xl font-medium">
+          <p class="lg:text-2xl font-medium font-ppformula">
             {{ formattedValue(param) }}
           </p>
-          <UBadge color="gray">
+          <UBadge color="gray" variant="soft" class="font-mono bg-gray-100">
             <span>
               {{
                 param?.value ? shortenText(param.value) : 'Parameter not set'
@@ -31,30 +31,12 @@
             </template>
           </UBadge>
         </div>
-      </div>
-    </div>
-    <div
-      v-if="param?.docs || param?.description"
-      class="font-inter text-grey-500">
-      <p>
-        {{ param?.description }}
-      </p>
-      <div class="flex justify-between items-end">
-        <a
-          v-if="param?.docs"
-          :href="param?.docs"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-sm underline mt-2">
-          Learn more
-        </a>
-        <div v-else />
         <div v-if="param?.proposal?.executedEvent" class="max-lg:order-1">
           <UPopover>
-            <UButton color="white" icon="i-heroicons-ellipsis-horizontal" />
+            <UButton color="white" variant="link" icon="i-heroicons-ellipsis-horizontal" />
 
             <template #panel>
-              <div class="text-xxs">
+              <div class="text-xs">
                 <div class="p-2">
                   <p>Last updated</p>
                   <p>
@@ -77,6 +59,24 @@
             </template>
           </UPopover>
         </div>
+      </div>
+    </div>
+    <div
+      v-if="param?.docs || param?.description"
+      class="font-inter text-grey-900 lg:w-3/4">
+      <p>
+        {{ param?.description }}
+      </p>
+      <div class="flex gap-3 items-center mt-2">
+        <a
+          v-if="param?.docs"
+          :href="param?.docs"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-xs underline text-grey-600">
+          Learn more
+        </a>
+        <div v-else />
       </div>
     </div>
   </UCard>
