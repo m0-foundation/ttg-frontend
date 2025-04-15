@@ -38,18 +38,18 @@
   }
 
   .outside-circle {
-    @apply w-3 h-3 left-0 top-0 absolute rounded-full;
+    @apply border border-grey-500 w-3 h-3 left-0 top-0 absolute rounded-full;
   }
 
   .active .outside-circle {
-    @apply border-white;
+    @apply border border-white;
   }
 
   .internal-circle {
-    @apply hidden w-1.5 h-1.5 left-[3px] top-[3px] absolute rounded-full;
+    @apply border border-grey-500 hidden w-1.5 h-1.5 left-[3px] top-[3px] absolute rounded-full;
   }
 
   .active .internal-circle {
-    @apply block  bg-white;
+    @apply block  bg-white border-white;
   }
 </style>

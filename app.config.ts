@@ -29,6 +29,9 @@ export default defineAppConfig({
     card: {
       rounded: 'rounded-none',
     },
+    container: {
+      constrained: 'max-w-[1344px]'
+    },
     dropdown: {
       rounded: 'rounded-none',
       width: 'w-fit max-w-72',
