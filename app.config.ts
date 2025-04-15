@@ -19,7 +19,7 @@ export default defineAppConfig({
             'disabled:bg-grey-200 disabled:text-grey-500 disabled:border-none bg-[#E9F0F7] hover:bg-grey-200 ring-grey-200 shadow-none',
         },
         primary: {
-          solid: 'bg-accent-blue hover:bg-blue-400 ring-none text-white',
+          solid: 'bg-accent-blue hover:bg-blue-400 ring-none text-white px-5 py-2 hover:outline-none',
         },
       },
       default: {
@@ -42,10 +42,10 @@ export default defineAppConfig({
         base: 'text-white',
       },
       links: {
-        wrapper: 'gap-x-3',
-        base: 'font-normal px-3 py-1.5 text-gray-200 text-[16px]',
-        active: 'text-gray-200 bg-gray-800',
-        inactive: 'hover:text-gray-200',
+        wrapper: 'gap-x-2',
+        base: 'font-normal px-4 py-3 text-white text-[16px]',
+        active: 'text-white hover:bg-[#1d2024]',
+        inactive: 'hover:text-white hover:bg-[#1d2024]',
       },
     },
     horizontalNavigation: {

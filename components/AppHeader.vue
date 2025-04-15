@@ -21,7 +21,6 @@
           class="hidden lg:block"
           color="primary" />
         <HeaderProfilePopover v-if="isConnected" />
-        <HeaderEcosystemMenu />
       </div>
     </template>
 
