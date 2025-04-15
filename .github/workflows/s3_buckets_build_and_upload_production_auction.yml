@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-upload-to-s3-production-auction:
-    runs-on: 'ubuntu-20.04'
+    runs-on: 'ubuntu-latest'
     environment: AUCTION
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
