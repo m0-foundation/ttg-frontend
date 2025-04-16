@@ -70,7 +70,7 @@
       target: '_blank',
     },
     {
-      label: 'M^0 Foundation',
+      label: 'M0 Foundation',
       to: 'https://m0.org',
       target: '_blank',
     },

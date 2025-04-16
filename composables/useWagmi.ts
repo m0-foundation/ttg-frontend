@@ -26,6 +26,7 @@ export const useWagmi = (rpc: string, fallbackRpc?: string) => {
             }),
           ]
         : [
+            walletConnect({ projectId: config.public.walletConnectProjectId }),
             injected({
               target: {
                 id: 'windowProvider',

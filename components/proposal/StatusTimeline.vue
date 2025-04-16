@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-between">
-    <div class="inline-flex text-grey-600 gap-1 lg:gap-2 items-center">
-      <div class="text-grey-primary hidden lg:block text-xs">Status:</div>
+    <div class="inline-flex text-grey-600 gap-1 lg:gap-1 items-center">
+      <div class="text-gray-500 hidden lg:block text-sm">Status:</div>
 
       <ProposalStatusBadge :version="version" name="Pending" />
 

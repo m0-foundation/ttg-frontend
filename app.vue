@@ -1,7 +1,7 @@
 <template>
   <div>
     <Head>
-      <Title>M^0 | Governance</Title>
+      <Title>M0 | Governance</Title>
       <Meta charset="utf-8"></Meta>
       <Meta content="width=device-width, initial-scale=1" name="viewport" />
       <Meta content="/open-graph.jpg" property="og:image" />

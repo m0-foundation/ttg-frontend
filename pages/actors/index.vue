@@ -1,7 +1,7 @@
 <template>
   <section class="flex lg:flex-row flex-col-reverse">
     <div>
-      <h2 class="text-2xl lg:text-[34px] lg:leading-tight">Minters</h2>
+      <h2 class="text-2xl lg:text-[28px] lg:leading-tight">Minters</h2>
 
       <p class="font-inter text-grey-600 mb-4">
         Minters are primarily incentivized to join the protocol because they
@@ -23,9 +23,9 @@
           :proposalId="minter.executedEvent?.args?.proposalId"
           :cardImage="minter.image" />
       </div>
-      <h2 class="text-2xl lg:text-[36px] lg:leading-tight mt-12">Validators</h2>
-      <p class="font-inter text-grey-500 mb-4">
-        A Validator on the M^0 protocol is an independent entity permissioned by
+      <h2 class="text-2xl lg:text-[28px] lg:leading-tight mt-12">Validators</h2>
+      <p class="font-inter text-grey-600 mb-4">
+        A Validator on the M0 protocol is an independent entity permissioned by
         governance to provide timely information about the off-chain collateral
         used by Minters to generate $M.
       </p>
@@ -47,8 +47,8 @@
   </section>
 
   <section>
-    <h2 class="text-2xl lg:text-[36px] lg:leading-tight mt-12">Earners</h2>
-    <p class="font-inter text-grey-500 mb-4">
+    <h2 class="text-2xl lg:text-[28px] lg:leading-tight mt-12">Earners</h2>
+    <p class="font-inter text-grey-600 mb-4">
       A holders or distributor of $M whose address is approved by governance to
       earn the Earner Rate.
     </p>
