@@ -22,8 +22,7 @@
     "preview": "nuxt preview",
     "sb:build": "storybook build",
     "sb": "storybook dev -p 6006",
-    "start": "npx serve .output/public",
-    "start:railway": "serve .output/public",
+    "start": "serve .output/public",
     "test:build": "npx http-server .output/public",
     "test": "cypress run --headless --browser chrome"
   },
