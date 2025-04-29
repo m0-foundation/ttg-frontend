@@ -4,8 +4,6 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 
-console.dir(process.env);
-
 const getAuctionActive = () => {
   if (process.env.VITE_APP_IS_AUCTION_ACTIVE === "true") {
     return true;
