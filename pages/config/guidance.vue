@@ -43,7 +43,7 @@
       key: 'guidance',
       description:
         'This document provides general Adopted guidance for the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      docs: 'https://docs.m0.org/home/getting-started/whitepaper/offchain-ecosystem/#vi-guidance',
       type: 'guidance',
       copyValue: true,
     },
@@ -52,7 +52,7 @@
       key: 'ecosystem_guidance',
       description:
         'This document provides guidance for the Ecosystem of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      docs: 'https://docs.m0.org/home/getting-started/whitepaper/offchain-ecosystem/#vi-guidance',
       type: 'guidance',
       copyValue: true,
     },
@@ -61,7 +61,7 @@
       key: 'collateral_guidance',
       description:
         'This document provides guidance for the Collaterals of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      docs: 'https://docs.m0.org/home/getting-started/whitepaper/offchain-ecosystem/#vi-guidance',
       type: 'guidance',
       copyValue: true,
     },
@@ -70,7 +70,7 @@
       key: 'spv_operators_guidance',
       description:
         'This document provides guidance for the SPV Operators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      docs: 'https://docs.m0.org/home/getting-started/whitepaper/offchain-ecosystem/#vi-guidance',
       type: 'guidance',
       copyValue: true,
     },
@@ -79,7 +79,7 @@
       key: 'validators_guidance',
       description:
         'This document provides guidance for the Validators of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      docs: 'https://docs.m0.org/home/getting-started/whitepaper/offchain-ecosystem/#vi-guidance',
       type: 'guidance',
       copyValue: true,
     },
@@ -88,7 +88,7 @@
       key: 'minters_guidance',
       description:
         'This document provides guidance for the Minters of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      docs: 'https://docs.m0.org/home/getting-started/whitepaper/offchain-ecosystem/#vi-guidance',
       type: 'guidance',
       copyValue: true,
     },
@@ -97,7 +97,7 @@
       key: 'mandatory_contract_guidance',
       description:
         'This document provides guidance for the Mandatory Contracts of the off-chain procedures they are expected to follow. It is displayed in the TTG as a hash to ensure readers can remain confident in the provenance of the version they are consuming.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/v.-off-chain-ecosystem/v.i-guidance',
+      docs: 'https://docs.m0.org/home/getting-started/whitepaper/offchain-ecosystem/#vi-guidance',
       type: 'guidance',
       copyValue: true,
     },
