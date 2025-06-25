@@ -27,23 +27,27 @@
         :type="proposal.votingType"
         class="mb-4" />
 
-      <div class="mb-4 text-xl lg:text-2xl break-words font-ppformula hover:underline decoration-1 underline-offset-2">
-        <NuxtLink tag="h3" :to="`/proposal/${proposal.proposalId}`" class="flex text-gray-900">
+      <div
+        class="mb-4 text-xl lg:text-2xl break-words font-ppformula hover:underline decoration-1 underline-offset-2">
+        <NuxtLink
+          tag="h3"
+          :to="`/proposal/${proposal.proposalId}`"
+          class="flex text-gray-900">
           {{ title }}
           <svg
-          class="h-6"
-          width="18"
-          height="15"
-          viewBox="0 0 18 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <rect x="0.5" y="0.5" width="17" height="14"/>
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M 14.767 3.938 L 14.767 3.108 L 13.936 3.108 L 8.767 3.108 L 8.767 4.108 L 12.935 4.108 L 8.767 8.274 L 9.602 9.108 L 13.767 4.939 L 13.767 9.108 L 14.767 9.108 L 14.767 3.938 Z"
-            fill="currentColor" />
-        </svg>
+            class="h-6"
+            width="18"
+            height="15"
+            viewBox="0 0 18 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="17" height="14" />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M 14.767 3.938 L 14.767 3.108 L 13.936 3.108 L 8.767 3.108 L 8.767 4.108 L 12.935 4.108 L 8.767 8.274 L 9.602 9.108 L 13.767 4.939 L 13.767 9.108 L 14.767 9.108 L 14.767 3.938 Z"
+              fill="currentColor" />
+          </svg>
         </NuxtLink>
       </div>
 
