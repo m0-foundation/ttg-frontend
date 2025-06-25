@@ -3,7 +3,11 @@
     <div class="flex gap-4 justify-between flex-wrap mb-2">
       <div class="lg:flex-1">
         <h2 class="text-2xl font-normal">{{ param?.title }}</h2>
-        <UBadge :label="param?.key" color="gray" variant="soft" class="font-mono bg-gray-100" />
+        <UBadge
+          :label="param?.key"
+          color="gray"
+          variant="soft"
+          class="font-mono bg-gray-100" />
       </div>
       <div class="flex gap-4 max-lg:order-2 max-lg:w-full">
         <div class="lg:text-end">
@@ -33,7 +37,10 @@
         </div>
         <div v-if="param?.proposal?.executedEvent" class="max-lg:order-1">
           <UPopover>
-            <UButton color="white" variant="link" icon="i-heroicons-ellipsis-horizontal" />
+            <UButton
+              color="white"
+              variant="link"
+              icon="i-heroicons-ellipsis-horizontal" />
 
             <template #panel>
               <div class="text-xs">

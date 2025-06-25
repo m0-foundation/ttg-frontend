@@ -50,7 +50,6 @@
 <script setup lang="ts">
   import { MProposal } from '@/lib/api/types'
 
-  
   export interface ProposalProps {
     proposal: MProposal
     currentProposalValues: {
@@ -62,11 +61,12 @@
   }
   const props = defineProps<ProposalProps>()
 
-
   const apiStore = useApiClientStore()
 
-  const { data: protocolKeysAndValues } = await useAsyncData('protocolKeysAndValues', () =>
-    apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues(),
+  const { data: protocolKeysAndValues } = await useAsyncData(
+    'protocolKeysAndValues',
+    () =>
+      apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues(),
   )
 
   const parsedIncomingValue = (value: string, type: string) => {

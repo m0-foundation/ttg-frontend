@@ -49,9 +49,9 @@
           <NuxtLink
             :to="`http://${website}`"
             class="text-gray-900 font-normal underline"
-            target="_blank"
-            >{{ website }}</NuxtLink
-          >
+            target="_blank">
+            {{ website }}
+          </NuxtLink>
         </div>
       </div>
     </div>

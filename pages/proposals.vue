@@ -25,7 +25,8 @@
         </span>
       </template>
       <template #subtitle>
-        <div class="flex items-center gap-3 text-grey-500 text-small lg:text-small">
+        <div
+          class="flex items-center gap-3 text-grey-500 text-small lg:text-small">
           <span>{{ currentEpochAsDate }} - {{ nextEpochAsDate }}</span>
         </div>
       </template>
