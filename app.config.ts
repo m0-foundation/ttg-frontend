@@ -19,7 +19,8 @@ export default defineAppConfig({
             'disabled:bg-grey-200 disabled:text-grey-500 disabled:border-none bg-[#E9F0F7] hover:bg-grey-200 ring-grey-200 shadow-none',
         },
         primary: {
-          solid: 'bg-accent-blue hover:bg-blue-400 ring-none text-white px-5 py-2 hover:outline-none',
+          solid:
+            'bg-accent-blue hover:bg-blue-400 ring-none text-white px-5 py-2 hover:outline-none',
         },
       },
       default: {
@@ -30,7 +31,7 @@ export default defineAppConfig({
       rounded: 'rounded-none',
     },
     container: {
-      constrained: 'max-w-[1344px]'
+      constrained: 'max-w-[1344px]',
     },
     dropdown: {
       rounded: 'rounded-none',
