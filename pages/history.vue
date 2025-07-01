@@ -2,54 +2,58 @@
   <section>
     <PageTitle title="Proposals" />
     <UContainer class="py-4">
-      <div class="flex gap-3">
-        <USelectMenu
-          v-model="selectedType"
-          class="h-[32px] w-[190px] text-xs"
-          :options="proposalTypes"
-          placeholder="All types"
-          multiple />
-        <USelectMenu
-          v-model="selectedEpoch"
-          class="h-[32px] w-[120px] text-xs"
-          :options="epochNumbers"
-          placeholder="All epochs"
-          multiple
-          searchable />
-      </div>
-      <UTable
-        data-test="history-table"
-        class="max-lg:overflow-x-scroll mt-4"
-        :rows="filteredProposals"
-        :columns="proposalsTableHeader">
-        <template #epoch-data="{ row }">#{{ row.epoch }}</template>
-        <template #votingType-data="{ row }">
-          <MIconPower
-            v-if="['Standard', 'Emergency'].includes(row.votingType)" />
-          <MIconZero v-else-if="['Zero'].includes(row.votingType)" />
-        </template>
-        <template #proposal-data="{ row }">
-          <div class="lg:flex gap-4">
-            <NuxtLink
-              class="underline cursor-pointer text-left text-wrap"
-              @click="() => onViewProposal(row)">
-              {{ useParsedDescriptionTitle(row?.description).title }}
-            </NuxtLink>
-          </div>
-          <p class="text-xs text-grey-500 mt-1">
-            {{ row?.proposalLabel }} · Created:
-            {{ useDate(row?.timestamp).toFormat('DD.MM.YY') }}
-          </p>
-        </template>
-        <template #type-data="{ row }">
-          <div class="flex">
-            <ProposalTypeBadge :type="row.votingType" :proposal-word="false" />
-          </div>
-        </template>
-        <template #state-data="{ row }">
-          <ProposalStatus :version="row.state" />
-        </template>
-      </UTable>
+      <CommonCard>
+        <div class="flex gap-3">
+          <USelectMenu
+            v-model="selectedType"
+            class="h-[32px] w-[190px] text-xs"
+            :options="proposalTypes"
+            placeholder="All types"
+            multiple />
+          <USelectMenu
+            v-model="selectedEpoch"
+            class="h-[32px] w-[120px] text-xs"
+            :options="epochNumbers"
+            placeholder="All epochs"
+            multiple
+            searchable />
+        </div>
+        <UTable
+          data-test="history-table"
+          class="overflow-x-auto mt-4"
+          :rows="filteredProposals"
+          :columns="proposalsTableHeader">
+          <template #epoch-data="{ row }">#{{ row.epoch }}</template>
+          <template #votingType-data="{ row }">
+            <MIconPower
+              v-if="['Standard', 'Emergency'].includes(row.votingType)" />
+            <MIconZero v-else-if="['Zero'].includes(row.votingType)" />
+          </template>
+          <template #proposal-data="{ row }">
+            <div class="lg:flex gap-4">
+              <NuxtLink
+                class="underline cursor-pointer text-left text-wrap"
+                @click="() => onViewProposal(row)">
+                {{ useParsedDescriptionTitle(row?.description).title }}
+              </NuxtLink>
+            </div>
+            <p class="text-xs text-grey-500 mt-1">
+              {{ row?.proposalLabel }} · Created:
+              {{ useDate(row?.timestamp).toFormat('DD.MM.YY') }}
+            </p>
+          </template>
+          <template #type-data="{ row }">
+            <div class="flex">
+              <ProposalTypeBadge
+                :type="row.votingType"
+                :proposal-word="false" />
+            </div>
+          </template>
+          <template #state-data="{ row }">
+            <ProposalStatus :version="row.state" />
+          </template>
+        </UTable>
+      </CommonCard>
     </UContainer>
   </section>
 </template>
@@ -67,7 +71,7 @@
   const selectedEpoch = ref([])
 
   const proposalsTableHeader = [
-    { key: 'epoch', label: 'Epoch' },
+    { key: 'epoch', label: 'Epoch', sortable: true },
     { key: 'votingType', label: 'Token' },
     { key: 'proposal', label: 'Proposal' },
     { key: 'type', label: 'Type' },

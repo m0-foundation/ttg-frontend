@@ -1,5 +1,5 @@
 <template>
-  <UCard class="flex flex-col gap-4 max-w-xl font-inter mb-4 shadow-none">
+  <CommonCard class="flex flex-col gap-4 max-w-xl font-inter mb-4 shadow-none">
     <div class="flex gap-4">
       <UCard
         class="w-36 h-36 flex items-center justify-center border-0 ring-0 shadow-none">
@@ -58,7 +58,7 @@
     <p class="text-sm text-gray-900 py-4">
       {{ description }}
     </p>
-  </UCard>
+  </CommonCard>
 </template>
 
 <script setup lang="ts">

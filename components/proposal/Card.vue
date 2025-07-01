@@ -3,7 +3,7 @@
     data-test="proposal-card"
     class="mb-4 bg-transparent"
     :class="{ 'border border-red-500': isProposalWithError }">
-    <UCard
+    <CommonCard
       :data-test="hasVoted ? 'voted' : 'not-voted'"
       class="dark:text-white dark:bg-grey-800 shadow-none hover:border-gray-400">
       <div
@@ -157,7 +157,7 @@
           </MButton>
         </div>
       </div>
-    </UCard>
+    </CommonCard>
   </article>
 </template>
 

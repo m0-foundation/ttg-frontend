@@ -1,45 +1,44 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <div class="overflow-x-hidden">
-    <article class="bg-white text-black py-4">
-      <div class="flex justify-between mb-2 gap-3">
-        <ProposalStatusTimeline
+  <div class="flex flex-col gap-4">
+    <CommonCard>
+      <article>
+        <div class="flex justify-between gap-3">
+          <ProposalStatusTimeline
+            :proposal="proposal"
+            :version="proposal?.state"
+            class="overflow-x-auto" />
+          <div>
+            <ProposalMenu :proposal="proposal" />
+          </div>
+        </div>
+
+        <div v-if="isLoading" class="h-4">Loading...</div>
+        <div v-else>
+          <ProposalVoteProgress
+            v-if="proposal?.state !== 'Pending'"
+            :yes-votes="proposal?.yesVotes"
+            :no-votes="proposal?.noVotes"
+            :version="proposal?.votingType"
+            :threshold="proposal?.quorum"
+            :threshold-bps="proposal?.quorumNumerator"
+            :power-total-supply="totalSupplyAt[0]"
+            :zero-total-supply="totalSupplyAt[1]"
+            class="font-inter" />
+        </div>
+
+        <div class="markdown-body mb-8" v-html="onlyDescriptionHtml"></div>
+
+        <ProposalTechnical
           :proposal="proposal"
-          :version="proposal?.state"
-          class="overflow-x-auto" />
-        <div>
-          <ProposalMenu :proposal="proposal" />
-        </div>
-      </div>
-
-      <div v-if="isLoading" class="h-4">Loading...</div>
-      <div v-else>
-        <ProposalVoteProgress
-          v-if="proposal?.state !== 'Pending'"
-          :yes-votes="proposal?.yesVotes"
-          :no-votes="proposal?.noVotes"
-          :version="proposal?.votingType"
-          :threshold="proposal?.quorum"
-          :threshold-bps="proposal?.quorumNumerator"
-          :power-total-supply="totalSupplyAt[0]"
-          :zero-total-supply="totalSupplyAt[1]"
-          class="font-inter" />
-      </div>
-
-      <div class="markdown-body mb-8" v-html="onlyDescriptionHtml"></div>
-
-      <ProposalTechnical
-        :proposal="proposal"
-        :current-proposal-values="currentProposalValuesFormatted" />
-
-      <div class="mt-4">
-        <div class="text-grey-900 py-4">
-          <h3 class="text-xl">Voters</h3>
-        </div>
-
+          :current-proposal-values="currentProposalValuesFormatted" />
+      </article>
+    </CommonCard>
+    <CommonCard title="Voters">
+      <div class="overflow-x-hidden max-h-[430px] overflow-y-auto">
         <ProposalTableVotes :votes="votes?.value" />
       </div>
-    </article>
+    </CommonCard>
   </div>
 </template>
 

@@ -6,13 +6,21 @@
         trailing-icon="i-heroicons-chevron-down-20-solid"
         :ui="{
           icon: { size: { md: 'w-4 h-4' } },
-          color: { black: { solid: 'text-white bg-transparent' } },
+          color: {
+            black: {
+              solid:
+                'text-grey-900 bg-grey-200 hover:bg-slate-100 cursor-pointer',
+            },
+          },
         }">
         <MAddressAvatar
           :address="address"
           :link="false"
           class="tracking-normal hidden lg:block" />
-        <Jazzicon :address="address" class="w-5 h-5 lg:hidden" :diameter="16" />
+        <Jazzicon
+          :address="address"
+          class="w-5 h-5 mt-1 lg:hidden"
+          :diameter="16" />
       </UButton>
 
       <template #panel="{ close }">

@@ -29,11 +29,13 @@
       </UContainer>
     </div>
 
-    <UContainer :ui="{ constrained: 'max-w-5xl' }" class="py-4">
-      <UCard>
+    <UContainer
+      :ui="{ constrained: 'max-w-5xl' }"
+      class="py-4 flex flex-col gap-4">
+      <CommonCard>
         <form class="font-inter" @submit.prevent="delegatePower">
           <div>
-            <div class="flex max-lg:flex-col justify-between mb-3 gap-3">
+            <div class="flex max-lg:flex-col justify-between gap-3">
               <div>
                 <p class="text-xl">POWER Tokens</p>
                 <p class="text-grey-500 text-xs">
@@ -90,7 +92,7 @@
             </div>
           </div>
 
-          <div class="flex justify-end items-center gap-2 my-4">
+          <div class="flex justify-end items-center gap-2">
             <UButton
               id="button-delegate-power"
               type="submit"
@@ -100,12 +102,12 @@
               label="Delegate POWER" />
           </div>
         </form>
-      </UCard>
+      </CommonCard>
 
-      <UCard>
+      <CommonCard>
         <form class="font-inter" @submit.prevent="delegateZero">
           <div>
-            <div class="flex max-lg:flex-col justify-between my-3 gap-3">
+            <div class="flex max-lg:flex-col justify-between gap-3">
               <div>
                 <p class="text-xl">ZERO Tokens</p>
                 <p class="text-grey-500 text-xs">
@@ -148,7 +150,7 @@
             </div>
           </div>
 
-          <div class="flex justify-end items-center gap-2 my-2">
+          <div class="flex justify-end items-center gap-2">
             <UButton
               id="button-delegate-zero"
               type="submit"
@@ -158,7 +160,7 @@
               label="Delegate ZERO" />
           </div>
         </form>
-      </UCard>
+      </CommonCard>
 
       <p class="px-6 text-grey-600 text-xxs lg:text-sm font-mono text-end mt-6">
         /* The delegated tokens will be available for voting starting from the

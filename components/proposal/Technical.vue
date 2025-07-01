@@ -1,5 +1,5 @@
 <template>
-  <div data-test="technical-proposal" class="py-4">
+  <div data-test="technical-proposal" class="mt-4">
     <h3 class="text-xl">Technical Proposal</h3>
     <p class="text-sm text-grey-500 mb-4">
       Agree or deny the following incoming change

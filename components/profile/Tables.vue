@@ -2,14 +2,15 @@
   <div class="my-2">
     <UHorizontalNavigation :links="tabsLinks" />
     <UDivider />
+    <CommonCard>
+      <div v-if="selectedTab === 0">
+        <ProfileTableVotes :votes="votes" />
+      </div>
 
-    <div v-if="selectedTab === 0">
-      <ProfileTableVotes :votes="votes" />
-    </div>
-
-    <div v-if="selectedTab === 1">
-      <ProfileTableProposals :proposals="proposalsCreated" />
-    </div>
+      <div v-if="selectedTab === 1">
+        <ProfileTableProposals :proposals="proposalsCreated" />
+      </div>
+    </CommonCard>
   </div>
 </template>
 
