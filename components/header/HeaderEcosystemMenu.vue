@@ -7,7 +7,7 @@
         color: {
           black: {
             solid:
-              'text-grey-900 bg-grey-200 font-weight-400 shadow-none hover:bg-slate-100 cursor-pointer',
+              'text-grey-500 bg-white font-weight-400 shadow-none hover:bg-slate-100 cursor-pointer',
           },
         },
       }"

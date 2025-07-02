@@ -22,7 +22,7 @@ export default defineAppConfig({
             'disabled:bg-grey-200 disabled:text-grey-500 disabled:border-none bg-[#E9F0F7] hover:bg-grey-200 ring-grey-200 shadow-none',
         },
         primary: {
-          solid: 'bg-accent-blue hover:bg-blue-400 ring-none text-white',
+          solid: 'bg-accent-blue hover:bg-blue-400 ring-none text-white shadow-none',
         },
       },
       default: {
@@ -47,12 +47,12 @@ export default defineAppConfig({
         wrapper: 'bg-white',
       },
       button: {
-        base: 'text-grey-900 bg-grey-200 hover:bg-slate-100',
+        base: 'text-grey-900 hover:bg-slate-100',
       },
       links: {
-        base: 'font-medium py-3 text-grey-900 text-sm',
-        inactive: 'hover:text-grey-600 text-grey-900',
-        active: 'text-grey-600',
+        base: 'font-medium py-3 text-sm',
+        inactive: 'hover:text-grey-500 text-grey-900',
+        active: 'text-grey-500',
       },
     },
     horizontalNavigation: {
@@ -80,9 +80,10 @@ export default defineAppConfig({
     },
     selectMenu: {
       rounded: 'rounded-none',
-      labe: 'block',
+      label: 'block',
       popper: {
-        placement: 'bottom-start',
+        placement: 'bottom',
+        padding: '6',
       },
     },
     tabs: {

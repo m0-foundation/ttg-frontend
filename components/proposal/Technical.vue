@@ -1,6 +1,6 @@
 <template>
-  <div data-test="technical-proposal" class="mt-4">
-    <h3 class="text-xl">Technical Proposal</h3>
+  <div data-test="technical-proposal" class="mt-4 p-4 bg-slate-100 border">
+    <h2 class="text-2xl">Technical Proposal</h2>
     <p class="text-sm text-grey-500 mb-4">
       Agree or deny the following incoming change
     </p>

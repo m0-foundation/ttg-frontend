@@ -47,19 +47,11 @@ h6 {
 }
 
 .v-popper--theme-dropdown {
-  .v-popper__wrapper {
-    @apply shadow-sm shadow-grey-600;
-  }
+
   .v-popper__inner {
     @apply border-none rounded-none !important;
   }
-  .v-popper__arrow-inner {
-    @apply border-grey-700 !important;
-  }
-
-  .v-popper__arrow-outer {
-    @apply border-grey-700 !important;
-  }
+  
 }
 
 .v-popper--theme-tooltip {

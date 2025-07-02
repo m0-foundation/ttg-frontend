@@ -9,7 +9,7 @@
           color: {
             black: {
               solid:
-                'text-grey-900 bg-grey-200 hover:bg-slate-100 cursor-pointer',
+                'text-grey-900 bg-white hover:bg-slate-100 cursor-pointer shadow-none',
             },
           },
         }">

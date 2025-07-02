@@ -1,11 +1,11 @@
 <template>
   <article
     data-test="proposal-card"
-    class="mb-4 bg-transparent"
+    class="mb-2 bg-transparent"
     :class="{ 'border border-red-500': isProposalWithError }">
     <CommonCard
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="dark:text-white dark:bg-grey-800 shadow-none hover:border-gray-400">
+      class="dark:text-white dark:bg-grey-800 shadow-none">
       <div
         v-if="isProposalWithError"
         class="flex items-center gap-2 mb-2 bg-red-500 p-2 leading-tight">
