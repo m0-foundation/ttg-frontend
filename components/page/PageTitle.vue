@@ -8,7 +8,7 @@
           </div>
           <div class="max-w-4xl">
             <h1
-              class="lg:text-[32px] text-[28px] tracking-tighter font-medium my-2">
+              class="lg:text-[32px] text-[28px] tracking-tighter leading-[135%] font-medium my-2">
               <span v-if="title">{{ title }}</span>
               <slot v-else name="title"></slot>
             </h1>
