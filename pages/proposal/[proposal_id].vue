@@ -8,7 +8,8 @@
         <div class="text-grey-600 my-3 font-inter text-sm">
           Proposed by
           <MAddressAvatar :address="proposal?.proposer" />
-          at Epoch #{{ proposal?.epoch }} - {{ formatedProposedDate('LLL') }}
+          <span class="px-2">·</span>
+          Epoch #{{ proposal?.epoch }} ({{ formatedProposedDate('LLL') }})
         </div>
       </template>
     </PageTitle>

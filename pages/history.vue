@@ -1,7 +1,7 @@
 <template>
   <section>
     <PageTitle title="Proposals" />
-    <UContainer class="py-4">
+    <UContainer>
       <CommonCard>
         <div class="flex gap-3">
           <USelectMenu

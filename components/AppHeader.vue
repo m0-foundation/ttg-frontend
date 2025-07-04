@@ -13,13 +13,13 @@
     <template #right>
       <div class="flex items-center gap-1.5">
         <ConnectButton v-if="!isConnected" class="hidden lg:block" />
+        <HeaderProfilePopover v-if="isConnected" />
         <UButton
           v-if="isConnected"
           label="Create proposal"
           to="/proposal/create"
           class="hidden lg:block"
           color="primary" />
-        <HeaderProfilePopover v-if="isConnected" />
         <HeaderEcosystemMenu />
       </div>
     </template>

@@ -5,9 +5,9 @@
       <template #top-right>
         <NuxtLink to="/delegate/">
           <UButton
-            class="w-full justify-center"
+            class="w-full justify-center bg-slate-200 hover:bg-slate-300"
             data-test="profile-button-redelegate"
-            color="primary">
+            variant="soft">
             Delegate
           </UButton>
         </NuxtLink>

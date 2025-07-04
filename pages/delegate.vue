@@ -1,7 +1,9 @@
 <template>
   <div>
     <PageTitle>
-      <template #pretitle>My Profile /</template>
+      <template #pretitle>
+        <NuxtLink href="/profile/me" class="underline">My profile</NuxtLink>
+      </template>
       <template #title>Delegate</template>
       <template #subtitle>
         Both POWER and ZERO owners may delegate their voting power to an
@@ -29,143 +31,163 @@
       </UContainer>
     </div>
 
-    <UContainer
-      :ui="{ constrained: 'max-w-5xl' }"
-      class="py-4 flex flex-col gap-4">
-      <CommonCard>
-        <form class="font-inter" @submit.prevent="delegatePower">
-          <div>
-            <div class="flex max-lg:flex-col justify-between gap-3">
-              <div>
-                <p class="text-xl">POWER Tokens</p>
-                <p class="text-grey-500 text-xs">
-                  You are delegating
-                  <span class="font-bold">only voting power</span>
-                  . The tokens will remain in your balance.
-                </p>
-              </div>
-              <div class="flex gap-3 items-center">
-                <MIconPower class="h-6 w-6" />
-                <span class="flex items-center text-2xl">
-                  {{
-                    useNumberFormatterPrice(
-                      balancePowerToken?.data.value?.formatted || 0n,
-                    )
-                  }}
-                </span>
-              </div>
-            </div>
-
-            <div v-if="!canDelegate">
-              <div class="bg-accent-blue text-grey-200 p-4 mb-6">
-                <span class="uppercase mb-2 text-xs">Warning</span>
-                <div class="flex items-start gap-3">
-                  <MIconWarning class="min-w-6" />
-                  <p class="max-lg:text-xs">
-                    The transfer epoch has concluded. You will be able to
-                    delegate in the next Transfer epoch.
+    <UContainer class="py-4 flex flex-col gap-4">
+      <div class="flex lg:flex-row flex-col gap-4">
+        <CommonCard class="flex-1">
+          <form class="font-inter" @submit.prevent="delegatePower">
+            <div>
+              <div class="flex max-lg:flex-col justify-between gap-3">
+                <div>
+                  <p class="text-xl">POWER Tokens</p>
+                  <p class="text-grey-500 text-sm">
+                    You are delegating
+                    <span class="font-bold">only voting power.</span>
+                    The tokens will remain in your balance.
                   </p>
                 </div>
+                <div class="flex gap-3 items-center">
+                  <MIconPower class="h-6 w-6" />
+                  <span class="flex items-center text-2xl">
+                    {{
+                      useNumberFormatterPrice(
+                        balancePowerToken?.data.value?.formatted || 0n,
+                      )
+                    }}
+                  </span>
+                </div>
+              </div>
+
+              <div v-if="!canDelegate">
+                <div class="bg-accent-blue text-grey-200 p-4 mb-6">
+                  <span class="uppercase mb-2 text-xs">Warning</span>
+                  <div class="flex items-start gap-3">
+                    <MIconWarning class="min-w-6" />
+                    <p class="max-lg:text-xs">
+                      The transfer epoch has concluded. You will be able to
+                      delegate in the next Transfer epoch.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-between mb-1 mt-6">
+                <label class="text-grey-500 text-xs">Delegation address</label>
+                <NuxtLink
+                  class="text-grey-500 underline text-xs cursor-pointer"
+                  @click="onUseMyAddressPower">
+                  Use my address
+                </NuxtLink>
+              </div>
+              <MInput
+                id="input-delegate-power"
+                v-model="powerFormData.address"
+                type="text"
+                class="w-full mb-2"
+                data-test="delegate-power-input-address"
+                :errors="$delegatePowerValidation.address?.$errors" />
+              <div
+                v-if="hasDelegatedPower"
+                class="px-2 py-1 w-fit text-xs text-white bg-accent-blue">
+                Delegated to:
+                <MAddressAvatar
+                  :address="powerDelegates"
+                  :short-address="true" />
               </div>
             </div>
 
-            <div class="flex justify-between mb-1">
-              <label class="text-grey-500 text-xs">Delegation address</label>
-              <NuxtLink
-                class="text-grey-500 underline text-xs cursor-pointer"
-                @click="onUseMyAddressPower">
-                Use my address
-              </NuxtLink>
+            <div class="flex justify-end items-center gap-2">
+              <UButton
+                id="button-delegate-power"
+                type="submit"
+                data-test="delegate-button-power-submit"
+                :disabled="
+                  !isConnected || !canDelegate || powerFormData.loading
+                "
+                :loading="powerFormData.loading"
+                label="Delegate POWER" />
             </div>
-            <MInput
-              id="input-delegate-power"
-              v-model="powerFormData.address"
-              type="text"
-              class="w-full mb-2"
-              data-test="delegate-power-input-address"
-              :errors="$delegatePowerValidation.address?.$errors" />
-            <div
-              v-if="hasDelegatedPower"
-              class="px-2 py-1 w-fit text-xs text-white bg-accent-blue">
-              Delegated to:
-              <MAddressAvatar :address="powerDelegates" :short-address="true" />
-            </div>
-          </div>
+          </form>
+        </CommonCard>
 
-          <div class="flex justify-end items-center gap-2">
-            <UButton
-              id="button-delegate-power"
-              type="submit"
-              data-test="delegate-button-power-submit"
-              :disabled="!isConnected || !canDelegate || powerFormData.loading"
-              :loading="powerFormData.loading"
-              label="Delegate POWER" />
-          </div>
-        </form>
-      </CommonCard>
-
-      <CommonCard>
-        <form class="font-inter" @submit.prevent="delegateZero">
-          <div>
-            <div class="flex max-lg:flex-col justify-between gap-3">
-              <div>
-                <p class="text-xl">ZERO Tokens</p>
-                <p class="text-grey-500 text-xs">
-                  You are delegating
-                  <span class="font-bold">only voting power</span>
-                  . The tokens will remain in your balance.
-                </p>
+        <CommonCard class="flex-1">
+          <form class="font-inter" @submit.prevent="delegateZero">
+            <div>
+              <div class="flex max-lg:flex-col justify-between gap-3">
+                <div>
+                  <p class="text-xl">ZERO Tokens</p>
+                  <p class="text-grey-500 text-sm">
+                    You are delegating
+                    <span class="font-bold">only voting power.</span>
+                    The tokens will remain in your balance.
+                  </p>
+                </div>
+                <div class="flex gap-3 items-center">
+                  <MIconZero class="h-6 w-6" />
+                  <span class="flex items-center text-2xl">
+                    {{
+                      useNumberFormatterPrice(
+                        balanceZeroToken?.data.value?.formatted || 0n,
+                      )
+                    }}
+                  </span>
+                </div>
               </div>
-              <div class="flex gap-3 items-center">
-                <MIconZero class="h-6 w-6" />
-                <span class="flex items-center text-2xl">
-                  {{
-                    useNumberFormatterPrice(
-                      balanceZeroToken?.data.value?.formatted || 0n,
-                    )
-                  }}
-                </span>
+              <div class="flex justify-between mb-1 mt-6">
+                <label class="text-grey-500 text-xs">Delegation address</label>
+                <NuxtLink
+                  class="text-grey-500 underline text-xs cursor-pointer"
+                  @click="onUseMyAddressZero">
+                  Use my address
+                </NuxtLink>
+              </div>
+              <MInput
+                id="input-delegate-zero"
+                v-model="zeroFormData.address"
+                type="text"
+                class="w-full mb-2"
+                data-test="delegate-zero-input-address"
+                :errors="$delegateZeroValidation.address?.$errors" />
+              <div
+                v-if="hasDelegatedZero"
+                class="px-2 py-1 w-fit text-xs text-white bg-accent-blue">
+                Delegated to:
+                <MAddressAvatar
+                  :address="zeroDelegates"
+                  :short-address="true" />
               </div>
             </div>
-            <div class="flex justify-between mb-1">
-              <label class="text-grey-500 text-xs">Delegation address</label>
-              <NuxtLink
-                class="text-grey-500 underline text-xs cursor-pointer"
-                @click="onUseMyAddressZero">
-                Use my address
-              </NuxtLink>
-            </div>
-            <MInput
-              id="input-delegate-zero"
-              v-model="zeroFormData.address"
-              type="text"
-              class="w-full mb-2"
-              data-test="delegate-zero-input-address"
-              :errors="$delegateZeroValidation.address?.$errors" />
-            <div
-              v-if="hasDelegatedZero"
-              class="px-2 py-1 w-fit text-xs text-white bg-accent-blue">
-              Delegated to:
-              <MAddressAvatar :address="zeroDelegates" :short-address="true" />
-            </div>
-          </div>
 
-          <div class="flex justify-end items-center gap-2">
-            <UButton
-              id="button-delegate-zero"
-              type="submit"
-              :disabled="!isConnected || zeroFormData.loading"
-              data-test="delegate-button-zero-submit"
-              :loading="zeroFormData.loading"
-              label="Delegate ZERO" />
-          </div>
-        </form>
-      </CommonCard>
+            <div class="flex justify-end items-center gap-2">
+              <UButton
+                id="button-delegate-zero"
+                type="submit"
+                :disabled="!isConnected || zeroFormData.loading"
+                data-test="delegate-button-zero-submit"
+                :loading="zeroFormData.loading"
+                label="Delegate ZERO" />
+            </div>
+          </form>
+        </CommonCard>
+      </div>
 
-      <p class="px-6 text-grey-600 text-xxs lg:text-sm font-mono text-end mt-6">
-        /* The delegated tokens will be available for voting starting from the
-        next epoch. */
-      </p>
+      <div
+        class="inline-flex grow-0 items-center gap-1 rounded-full px-2 py-0.5 text-sm font-medium text-yellow-800">
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01M4.93 19h14.14c1.12 0 1.68-1.34.89-2.11L13.41 5.6c-.58-.59-1.53-.59-2.11 0L4.04 16.89c-.79.77-.23 2.11.89 2.11z" />
+        </svg>
+        <span>
+          The delegated tokens will be available for voting starting from the
+          next epoch.
+        </span>
+      </div>
     </UContainer>
   </div>
 </template>
