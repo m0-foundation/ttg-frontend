@@ -3,6 +3,25 @@
 @font-face {
   font-family: 'PPFormula';
   src: url('../fonts/PPFormula-Regular.woff2') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPFormula';
+  src: url('../fonts/PPFormula-Medium.woff2') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPFormula';
+  src: url('../fonts/PPFormula-Bold.woff2') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {

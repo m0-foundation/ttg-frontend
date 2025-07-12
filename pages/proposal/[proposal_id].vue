@@ -5,7 +5,7 @@
         <ProposalTypeBadge :type="proposal?.votingType" />
       </template>
       <template #subtitle>
-        <div class="text-grey-600 my-3 font-inter text-sm">
+        <div class="text-grey-600 font-inter text-sm">
           Proposed by
           <MAddressAvatar :address="proposal?.proposer" />
           <span class="px-2">·</span>

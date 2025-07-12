@@ -11,11 +11,7 @@
           },
         },
       }"
-      trailing-icon="i-mdi-dots-grid">
-      <template #default>
-        <span class="font-normal text hidden xl:block">Ecosystem</span>
-      </template>
-    </UButton>
+      trailing-icon="i-mdi-dots-grid"></UButton>
 
     <template #panel>
       <div class="p-6 border-none">
