@@ -35,7 +35,7 @@
       key: 'emergencyProposalThresholdRatio',
       description:
         'The percentage of yes votes from the total POWER supply required to pass proposals which require a POWER Threshold.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#power-threshold',
+      docs: 'https://docs.m0.org/home/resources/glossary#power',
       type: 'basisPoints',
       unit: 'BPS',
     },
@@ -44,7 +44,7 @@
       key: 'zeroProposalThresholdRatio',
       description:
         'The percentage of yes votes from the total ZERO supply required to pass proposals that require a ZERO Threshold.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#zero-threshold',
+      docs: 'https://docs.m0.org/home/resources/glossary#zero',
       type: 'basisPoints',
       unit: 'BPS',
     },
@@ -52,7 +52,6 @@
       title: 'Proposal Fee',
       key: 'proposalFee',
       description: 'The amount paid in CASH to submit any proposal.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#proposal-fee',
       type: 'decimals',
       copyValue: true,
       unit: 'WEI',
@@ -62,7 +61,6 @@
       key: 'cashToken',
       description:
         'The internal currency of the TTG. Used to pay the Proposal Fee and to purchase POWER in the Dutch auction. It can be toggled between WETH and $M.',
-      docs: 'https://docs.m0.org/portal/overview/whitepaper/iii.-governance/iii.iii-governance-controlled-ttg-parameters#cash',
       type: 'cashToken',
       copyValue: true,
     },

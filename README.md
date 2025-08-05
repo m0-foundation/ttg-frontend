@@ -213,6 +213,10 @@ Release branches are used for production deployments.
 
 1. Populate the release to `develop`
 
+   Do it via a pull request (suggested). Example: [#399](https://github.com/m0-foundation/ttg-frontend/pull/399)
+
+   Do it manually:
+
    ```sh
    git checkout develop
    git pull origin develop

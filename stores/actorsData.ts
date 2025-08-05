@@ -5,7 +5,7 @@ export const useActorsStore = defineStore('actors', () => {
     {
       title: 'MXON',
       cardDescription:
-        'MXON is the first minter on the M^0 network and ensures $M is backed by short-term US treasuries stored in best-in-class structures.',
+        'MXON is the first minter on the M0 network and ensures $M is backed by short-term US treasuries stored in best-in-class structures.',
       account: '0x7F7489582b64ABe46c074A45d758d701c2CA5446',
       timestamp: 1715826803,
       website: 'mxon.co',

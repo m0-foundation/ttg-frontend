@@ -19,7 +19,8 @@ export default defineAppConfig({
             'disabled:bg-grey-200 disabled:text-grey-500 disabled:border-none bg-[#E9F0F7] hover:bg-grey-200 ring-grey-200 shadow-none',
         },
         primary: {
-          solid: 'bg-accent-blue hover:bg-blue-400 ring-none text-white',
+          solid:
+            'bg-accent-blue hover:bg-blue-400 ring-none text-white px-5 py-2 hover:outline-none',
         },
       },
       default: {
@@ -29,12 +30,15 @@ export default defineAppConfig({
     card: {
       rounded: 'rounded-none',
     },
+    container: {
+      constrained: 'max-w-[1344px]',
+    },
     dropdown: {
       rounded: 'rounded-none',
       width: 'w-fit max-w-72',
     },
     header: {
-      container: 'gap-8',
+      container: 'gap-8 h-[72px]',
       left: 'lg:flex-initial',
       logo: 'text-white text-[20px] font-medium',
       wrapper: 'bg-grey-1000 border-none',
@@ -43,9 +47,9 @@ export default defineAppConfig({
       },
       links: {
         wrapper: 'gap-x-2',
-        base: 'font-medium px-2.5 py-0.5 text-gray-200',
-        active: 'text-gray-200 bg-gray-700',
-        inactive: 'hover:text-gray-200',
+        base: 'font-normal px-4 py-3 text-white text-[16px]',
+        active: 'text-white hover:bg-[#1d2024]',
+        inactive: 'hover:text-white hover:bg-[#1d2024]',
       },
     },
     horizontalNavigation: {
@@ -101,7 +105,7 @@ export default defineAppConfig({
     },
   },
   footer: {
-    credits: '© 2024 M^0 FOUNDATION',
+    credits: '© 2024 M0 FOUNDATION',
     links: [
       {
         icon: 'i-simple-icons-x',

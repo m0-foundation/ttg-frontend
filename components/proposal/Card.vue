@@ -5,7 +5,7 @@
     :class="{ 'border border-red-500': isProposalWithError }">
     <UCard
       :data-test="hasVoted ? 'voted' : 'not-voted'"
-      class="dark:text-white dark:bg-grey-800">
+      class="dark:text-white dark:bg-grey-800 shadow-none hover:border-gray-400">
       <div
         v-if="isProposalWithError"
         class="flex items-center gap-2 mb-2 bg-red-500 p-2 leading-tight">
@@ -14,7 +14,7 @@
           <img src="/img/icon-info.svg" class="w-6 h-6" alt="" />
           <template #popper>
             <div class="max-w-80 text-sm">
-              This proposal has been labeled as suspicious or wrong by the M^0
+              This proposal has been labeled as suspicious or wrong by the M0
               Foundation. We recommend to vote
               <b>NO</b>
               .
@@ -27,37 +27,33 @@
         :type="proposal.votingType"
         class="mb-4" />
 
-      <div class="mb-4 text-xl lg:text-2xl break-words">
-        <NuxtLink tag="h3" :to="`/proposal/${proposal.proposalId}`">
+      <div
+        class="mb-4 text-xl lg:text-2xl break-words font-ppformula hover:underline decoration-1 underline-offset-2">
+        <NuxtLink
+          tag="h3"
+          :to="`/proposal/${proposal.proposalId}`"
+          class="flex text-gray-900">
           {{ title }}
+          <svg
+            class="h-6"
+            width="18"
+            height="15"
+            viewBox="0 0 18 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="17" height="14" />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M 14.767 3.938 L 14.767 3.108 L 13.936 3.108 L 8.767 3.108 L 8.767 4.108 L 12.935 4.108 L 8.767 8.274 L 9.602 9.108 L 13.767 4.939 L 13.767 9.108 L 14.767 9.108 L 14.767 3.938 Z"
+              fill="currentColor" />
+          </svg>
         </NuxtLink>
       </div>
 
-      <div class="text-grey-500 max-lg:text-sm font-inter mb-4 break-words">
+      <div class="text-grey-600 max-lg:text-sm font-inter mb-4 break-words">
         {{ truncate(onlyDescription, { length: 450 }) }}
       </div>
-
-      <NuxtLink
-        tag="a"
-        :to="`/proposal/${proposal.proposalId}`"
-        class="uppercase text-xs flex justify-between hover:underline border border-gray-200 w-full p-3 my-4"
-        data-test="proposal-button-show-details">
-        <span>show details</span>
-        <svg
-          class="h-4 mr-2"
-          width="18"
-          height="15"
-          viewBox="0 0 18 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <rect x="0.5" y="0.5" width="17" height="14" stroke="currentColor" />
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M 14.767 3.938 L 14.767 3.108 L 13.936 3.108 L 8.767 3.108 L 8.767 4.108 L 12.935 4.108 L 8.767 8.274 L 9.602 9.108 L 13.767 4.939 L 13.767 9.108 L 14.767 9.108 L 14.767 3.938 Z"
-            fill="currentColor" />
-        </svg>
-      </NuxtLink>
 
       <div
         v-if="proposal?.state === 'Active'"
@@ -111,13 +107,13 @@
 
       <div
         v-if="proposal?.state === 'Active'"
-        class="text-xs text-grey-600 font-inter mt-3">
+        class="text-xs text-grey-600 font-inter mt-2">
         <p v-show="!canVote">Not enough voting power</p>
         <p v-show="hasVoted">Your vote has been submitted</p>
       </div>
 
       <div v-if="!hasVoted && selectedVote !== null">
-        <div class="mt-4 mb-3 text-grey-500 font-inter">
+        <div class="mt-4 mb-3 text-grey-600 font-inter">
           <label
             class="flex items-center gap-2 text-xs leading-3 mb-0 rounded-none">
             <input

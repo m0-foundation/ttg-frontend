@@ -1,5 +1,5 @@
 <template>
-  <UCard class="flex flex-col gap-4 max-w-xl font-inter mb-4">
+  <UCard class="flex flex-col gap-4 max-w-xl font-inter mb-4 shadow-none">
     <div class="flex gap-4">
       <UCard
         class="w-36 h-36 flex items-center justify-center border-0 ring-0 shadow-none">
@@ -8,7 +8,7 @@
           :alt="`${title} logo`" />
       </UCard>
       <div>
-        <h4 v-if="title" class="text-lg font-semibold pb-2">
+        <h4 v-if="title" class="text-lg font-semibold pb-2 font-inter">
           {{ title }}
         </h4>
         <h2 v-else class="text-lg font-semibold pb-2">
@@ -48,10 +48,10 @@
           <div class="text-gray-500">Website:</div>
           <NuxtLink
             :to="`http://${website}`"
-            class="text-gray-900 font-bold underline"
-            target="_blank"
-            >{{ website }}</NuxtLink
-          >
+            class="text-gray-900 font-normal underline"
+            target="_blank">
+            {{ website }}
+          </NuxtLink>
         </div>
       </div>
     </div>
