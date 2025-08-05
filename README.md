@@ -8,7 +8,7 @@ Fleek (IPFS): [governance-m0.on-fleek.app](https://governance-m0.on-fleek.app/)
 
 The dApp is based on the TTG contracts in order to run the local testnet. Although it does not keep track of versioning of TTG yet. Meaning, the FE code base has to be updated to latest changes of TTG otherwise it might break.
 
-The repo is hosting the latest abis and bytecodes of ttg at folder `moldules/ttg`
+The repo is hosting the latest abis and bytecodes of ttg at folder `modules/ttg`
 
 ### 1.2 Update SDK from TTG smart contracts (only when contracts change) - (optional)
 
