@@ -1,36 +1,38 @@
 <template>
-  <div class="flex justify-between">
-    <div class="inline-flex text-grey-600 gap-1 lg:gap-1 items-center">
-      <div class="text-gray-500 hidden lg:block text-sm">Status:</div>
+  <div>
+    <div class="text-gray-900 text-base mb-4">Status:</div>
 
-      <ProposalStatusBadge :version="version" name="Pending" />
+    <div class="flex flex-col text-grey-600 gap-1 lg:gap-1 items-center">
+      <div class="relative ms-4">
+        <div class="absolute left-[3.5px] h-full w-[1px] bg-gray-200"></div>
 
-      <ProposalStatusBadge :version="version" name="Active" />
+        <ProposalStatusBadge :version="version" name="Pending" />
 
-      <ProposalStatusBadge
-        v-if="version === 'Defeated'"
-        :version="version"
-        name="Defeated"
-        class="defeated" />
+        <ProposalStatusBadge :version="version" name="Active" />
 
-      <ProposalStatusBadge v-else :version="version" name="Succeeded" />
-
-      <ProposalStatusBadge
-        v-if="version === 'Expired'"
-        :version="version"
-        name="Expired"
-        class="expired" />
-
-      <UDropdown v-else-if="version === 'Executed'" :items="dropdownItems">
         <ProposalStatusBadge
+          v-if="version === 'Defeated'"
           :version="version"
-          name="Executed"
-          :show-arrow="true"
-          data-test="executed-badge"
-          class="cursor-pointer" />
-      </UDropdown>
+          name="Defeated" />
 
-      <ProposalStatusBadge v-else :version="version" name="Executed" />
+        <ProposalStatusBadge v-else :version="version" name="Succeeded" />
+
+        <ProposalStatusBadge
+          v-if="version === 'Expired'"
+          :version="version"
+          name="Expired" />
+
+        <UDropdown v-else-if="version === 'Executed'" :items="dropdownItems">
+          <ProposalStatusBadge
+            :version="version"
+            name="Executed"
+            :show-arrow="true"
+            data-test="executed-badge"
+            class="cursor-pointer" />
+        </UDropdown>
+
+        <ProposalStatusBadge v-else :version="version" name="Executed" />
+      </div>
     </div>
   </div>
 </template>

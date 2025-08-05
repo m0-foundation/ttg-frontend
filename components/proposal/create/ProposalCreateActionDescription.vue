@@ -1,7 +1,8 @@
 <template>
-  <UCard class="my-1 mb-3 font-inter bg-grey-200 dark:bg-grey-800">
-    <div class="grid grid-cols-2 gap-6">
-      <div class="col-span-2">
+  <UCard
+    class="my-1 mb-3 font-inter text-grey-900 bg-[#D9E2FF] dark:bg-grey-800 shadow-none">
+    <div class="flex flex-col gap-6">
+      <div class="col-span-2 font-semibold">
         <label>Proposal type:</label>
         <span v-if="selectedProposalType?.votingType === 'Standard'">
           Standard proposals
@@ -14,7 +15,7 @@
         </span>
         <NuxtLink
           :href="getDocsLink(selectedProposalType?.votingType)"
-          class="underline text-xs text-grey-500 block"
+          class="underline text-xs text-grey-500 block font-normal"
           target="_blank">
           Learn more
         </NuxtLink>

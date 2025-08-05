@@ -1,5 +1,5 @@
 <template>
-  <UCard class="bg-grey-200">
+  <CommonCard>
     <div class="flex justify-between w-full items-center">
       <h3 class="text-xl">{{ props.type }} Tokens</h3>
       <div>
@@ -13,7 +13,8 @@
     <div class="flex justify-between mt-3">
       <span>My token balance</span>
       <div class="flex items-center gap-2">
-        <MIconPower class="w-4 h-4" />
+        <MIconPower v-if="props.type === 'POWER'" class="w-4 h-4" />
+        <MIconZero v-else class="w-4 h-4" />
         <span>
           {{
             useNumberFormatterPrice(
@@ -31,7 +32,8 @@
     <div>
       <span>Voting power</span>
       <div class="flex items-center gap-2 mt-2">
-        <MIconPower class="w-5 h-5" />
+        <MIconPower v-if="props.type === 'POWER'" class="w-5 h-5" />
+        <MIconZero v-else class="w-5 h-5" />
         <span class="text-xl font-ppformula leading-none">
           {{
             useNumberFormatterPrice(
@@ -51,7 +53,7 @@
         <span class="mx-1 text-xxs">out of total voting power</span>
       </p>
     </div>
-  </UCard>
+  </CommonCard>
 </template>
 
 <script setup lang="ts">

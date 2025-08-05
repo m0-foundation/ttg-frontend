@@ -2,25 +2,25 @@
   <UHeader :links="links" data-test="main-navigation">
     <template #logo>
       <div class="flex items-center gap-4">
-        <img class="h-6 w-auto" src="/public/img/logos/m0.png" alt="M0 Logo" />
-        <UDivider
-          orientation="vertical"
-          class="dark:text-red-700 h-10"
-          :ui="{ border: { base: 'dark:border-grey-700 border-grey-700' } }" />
-        {{ name }}
+        <img
+          class="h-12 w-auto"
+          src="/public/img/logos/m0-black.svg"
+          alt="M0 Logo" />
+        <div class="mt-2">{{ name }}</div>
       </div>
     </template>
 
     <template #right>
       <div class="flex items-center gap-1.5">
         <ConnectButton v-if="!isConnected" class="hidden lg:block" />
+        <HeaderProfilePopover v-if="isConnected" />
         <UButton
           v-if="isConnected"
           label="Create proposal"
           to="/proposal/create"
           class="hidden lg:block"
           color="primary" />
-        <HeaderProfilePopover v-if="isConnected" />
+        <HeaderEcosystemMenu />
       </div>
     </template>
 

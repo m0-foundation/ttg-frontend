@@ -1,15 +1,22 @@
 <template>
   <div class="my-2">
-    <UHorizontalNavigation :links="tabsLinks" />
+    <UHorizontalNavigation
+      :links="tabsLinks"
+      class="border-none mt-4"
+      :ui="{
+        active: 'text-grey-900 after:bg-grey-900 ',
+        base: 'px-4 hover:before:bg-transparent before:rounded-none',
+      }" />
     <UDivider />
+    <CommonCard>
+      <div v-if="selectedTab === 0">
+        <ProfileTableVotes :votes="votes" />
+      </div>
 
-    <div v-if="selectedTab === 0">
-      <ProfileTableVotes :votes="votes" />
-    </div>
-
-    <div v-if="selectedTab === 1">
-      <ProfileTableProposals :proposals="proposalsCreated" />
-    </div>
+      <div v-if="selectedTab === 1">
+        <ProfileTableProposals :proposals="proposalsCreated" />
+      </div>
+    </CommonCard>
   </div>
 </template>
 

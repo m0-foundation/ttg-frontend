@@ -75,10 +75,12 @@
             </div>
           </div>
           <div class="flex justify-end gap-4">
-            <MButton version="outline-light" @click="show = false">
+            <MButton version="secondary-light" @click="show = false">
               Cancel
             </MButton>
-            <MButton :is-loading="loadingTx" @click="convert">Convert</MButton>
+            <MButton :is-loading="loadingTx" color="primary" @click="convert">
+              Convert
+            </MButton>
           </div>
         </div>
       </div>
