@@ -7,12 +7,14 @@
         hasProposals &&
         hasPowerVotingPower
       "
-      class="p-8 py-6 bg-blue-grey font-inter flex flex-col gap-3 text-[#00315B] mb-6">
-      <div class="flex flex-col justify-between lg:flex-row gap-3 items-start">
-        <div>
+      class="p-8 py-6 bg-blue-grey font-inter flex flex-col gap-3 text-[#00315B] mb-2 lg:bg-[url('/img/common/banner-bg.svg')] lg:bg-no-repeat lg:bg-right lg:bg-[length:100%]">
+      <div class="flex flex-col lg:flex-row gap-3 items-start">
+        <div class="flex flex-row space-between">
           <div class="lg:text-xl tracking-tightest">
-            <h3 class="text-2xl mb-1">Vote on all Standard proposals</h3>
-            <ul class="list-disc mx-4 text-sm">
+            <div class="text-lg font-medium">
+              Vote on all Standard proposals
+            </div>
+            <ul class="list-disc mx-4 mt-2 text-sm">
               <li>Preserve your voting power for the next epoch.</li>
               <li v-if="Number(powerInflation) != 0">
                 Increase your balance by
@@ -21,35 +23,31 @@
               </li>
               <li v-if="Number(zeroInflation) != 0">
                 Receive
-
                 {{ useNumberFormatterPrice(zeroInflation) }} ZERO as rewards
               </li>
             </ul>
-          </div>
+            <a
+              class="text-xs underline hover:no-underline"
+              href="https://docs.m0.org/home/getting-started/whitepaper/governance/"
+              target="_blank">
+              Learn more
+            </a>
 
-          <div class="grow flex items-center gap-2 my-2 lg:mb-0">
-            <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
-              Votes submitted:
-              <span>
-                {{ standardProposalsVotes.length }} /
-                {{ mandatoryToVoteProposals.length }}
+            <div class="grow flex items-center gap-2 mt-2 lg:mb-0">
+              <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
+                Votes submitted:
+                <span>
+                  {{ standardProposalsVotes.length }} /
+                  {{ mandatoryToVoteProposals.length }}
+                </span>
               </span>
-            </span>
-            <div class="w-full lg:h-1/3 bg-white rounded-sm h-1.5">
-              <div
-                class="bg-accent-blue h-1.5 rounded-sm"
-                :style="`width: ${hasVotedOnAllProposals ? 100 : progressBarWidth}%`"></div>
+              <div class="w-full lg:h-1/3 bg-white rounded-sm h-1.5">
+                <div
+                  class="bg-accent-blue h-1.5 rounded-sm"
+                  :style="`width: ${hasVotedOnAllProposals ? 100 : progressBarWidth}%`"></div>
+              </div>
             </div>
           </div>
-          <a
-            class="text-xs underline hover:no-underline"
-            href="https://docs.m0.org/portal/overview/whitepaper/iii.-governance"
-            target="_blank">
-            Learn more
-          </a>
-        </div>
-        <div class="w-40 flex justify-center">
-          <img class="h-32" src="/img/common/banner-m.svg" />
         </div>
       </div>
     </div>

@@ -85,7 +85,7 @@
               @click="onSelect(opt)">
               <div class="flex flex-col">
                 <span>{{ opt.label }}</span>
-                <span class="text-xs text-grey-600 group-hover:text-grey-100">
+                <span class="text-xs text-grey-600 group-hover:text-grey-600">
                   {{ opt.shortDescription }}
                 </span>
               </div>

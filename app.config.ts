@@ -7,6 +7,9 @@ export default defineAppConfig({
       slide: {
         height: '5rem',
       },
+      light: {
+        background: '243 248 252',
+      },
     },
     badge: {
       rounded: 'rounded-none',
@@ -19,8 +22,7 @@ export default defineAppConfig({
             'disabled:bg-grey-200 disabled:text-grey-500 disabled:border-none bg-[#E9F0F7] hover:bg-grey-200 ring-grey-200 shadow-none',
         },
         primary: {
-          solid:
-            'bg-accent-blue hover:bg-blue-400 ring-none text-white px-5 py-2 hover:outline-none',
+          solid: 'bg-accent-blue hover:bg-blue-400 ring-none text-white shadow-none',
         },
       },
       default: {
@@ -38,18 +40,19 @@ export default defineAppConfig({
       width: 'w-fit max-w-72',
     },
     header: {
-      container: 'gap-8 h-[72px]',
-      left: 'lg:flex-initial',
-      logo: 'text-white text-[20px] font-medium',
-      wrapper: 'bg-grey-1000 border-none',
+      container: 'gap-8 h-[70px] max-w-none border-b border-b-grey-100',
+      logo: 'text-900 text-[20px] font-semibold font-ppformula',
+      wrapper: 'bg-white text-grey-900 border-none',
+      panel: {
+        wrapper: 'bg-white',
+      },
       button: {
-        base: 'text-white',
+        base: 'text-grey-900 hover:bg-slate-100',
       },
       links: {
-        wrapper: 'gap-x-2',
-        base: 'font-normal px-4 py-3 text-white text-[16px]',
-        active: 'text-white hover:bg-[#1d2024]',
-        inactive: 'hover:text-white hover:bg-[#1d2024]',
+        base: 'font-medium py-3 text-sm',
+        inactive: 'hover:text-grey-500 text-grey-900',
+        active: 'text-grey-500',
       },
     },
     horizontalNavigation: {
@@ -77,9 +80,10 @@ export default defineAppConfig({
     },
     selectMenu: {
       rounded: 'rounded-none',
-      labe: 'block',
+      label: 'block',
       popper: {
-        placement: 'bottom-start',
+        placement: 'bottom',
+        padding: '6',
       },
     },
     tabs: {
@@ -91,25 +95,29 @@ export default defineAppConfig({
       divide: 'divide-gray-200 dark:divide-gray-800',
       default: {
         sortButton: {
-          class: 'text-grey-500 font-normal',
+          class: 'text-grey-600 font-normal',
         },
       },
       th: {
-        color: 'text-grey-500',
+        color: 'text-grey-600',
         font: 'font-normal',
       },
       td: {
         base: 'text-wrap',
-        color: 'text-black',
+        color: 'text-grey-900',
+      },
+      tr: {
+        selected: 'bg-grey-200 dark:bg-grey-800/50',
+        active: 'hover:bg-grey-200 dark:hover:bg-grey-800/50 cursor-pointer',
       },
     },
   },
   footer: {
-    credits: '© 2024 M0 FOUNDATION',
+    credits: `© ${new Date().getFullYear()} M0 FOUNDATION`,
     links: [
       {
         icon: 'i-simple-icons-x',
-        to: 'https://x.com/m0foundation',
+        to: 'https://x.com/m0',
         target: '_blank',
         'aria-label': 'X - Twitter',
       },

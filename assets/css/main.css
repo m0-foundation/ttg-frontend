@@ -3,6 +3,25 @@
 @font-face {
   font-family: 'PPFormula';
   src: url('../fonts/PPFormula-Regular.woff2') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPFormula';
+  src: url('../fonts/PPFormula-Medium.woff2') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPFormula';
+  src: url('../fonts/PPFormula-Bold.woff2') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -47,19 +66,11 @@ h6 {
 }
 
 .v-popper--theme-dropdown {
-  .v-popper__wrapper {
-    @apply shadow-sm shadow-grey-600;
-  }
+
   .v-popper__inner {
     @apply border-none rounded-none !important;
   }
-  .v-popper__arrow-inner {
-    @apply border-grey-700 !important;
-  }
-
-  .v-popper__arrow-outer {
-    @apply border-grey-700 !important;
-  }
+  
 }
 
 .v-popper--theme-tooltip {

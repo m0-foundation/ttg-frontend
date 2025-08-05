@@ -279,32 +279,40 @@
   margin-bottom: 16px;
   font-weight: 600;
   line-height: 1.25;
+  font-family: Inter, Arial, sans-serif;
 }
 
-.markdown-body h2 {
+.markdown-body h1 {
   font-weight: 600;
   padding-bottom: 0.3em;
   font-size: 1.5em;
   border-bottom: 1px solid hsla(210, 18%, 87%, 1);
 }
 
-.markdown-body h3 {
-  font-weight: 600;
+.markdown-body h2 {
+  font-weight: 500;
+  padding-bottom: 0.3em;
   font-size: 1.25em;
+  border-bottom: 1px solid hsla(210, 18%, 87%, 1);
 }
 
-.markdown-body h4 {
-  font-weight: 600;
+.markdown-body h3 {
+  font-weight: 500;
   font-size: 1em;
 }
 
-.markdown-body h5 {
-  font-weight: 600;
+.markdown-body h4 {
+  font-weight: 500;
   font-size: 0.875em;
 }
 
+.markdown-body h5 {
+  font-weight: 500;
+  font-size: 0.7em;
+}
+
 .markdown-body h6 {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.85em;
   color: #57606a;
 }

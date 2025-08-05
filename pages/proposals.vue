@@ -14,10 +14,9 @@
           </span>
         </UTooltip>
         <span>
-          epoch
-          <span class="text-accent-blue max-lg:block text-sm lg:text-2xl">
-            #{{ phasesEpoch }}
-            <span>·</span>
+          epoch #{{ phasesEpoch }}
+          <span class="text-accent-blue max-lg:block text-xl lg:text-2xl">
+            <span class="lg:inline hidden px-2">·</span>
             <span v-if="nextEpochAsTimeLeft">
               Ends {{ nextEpochAsTimeLeft }}
             </span>
@@ -26,8 +25,13 @@
       </template>
       <template #subtitle>
         <div
-          class="flex items-center gap-3 text-grey-500 text-small lg:text-small">
-          <span>{{ currentEpochAsDate }} - {{ nextEpochAsDate }}</span>
+          class="flex items-center gap-3 text-grey-500 text-sm lg:text-small">
+          <span>
+            Started at {{ currentEpochAsDate }}
+            <span class="px-2">·</span>
+            Ending at
+            {{ nextEpochAsDate }}
+          </span>
         </div>
       </template>
       <template #bottom-left>
@@ -35,11 +39,18 @@
           :links="
             proposalsLinks.filter((l) => l.badge > 0 || l.label === 'Standard')
           "
-          class="border-b border-gray-200 dark:border-gray-800" />
+          class="border-b border-gray-200 dark:border-gray-800"
+          :ui="{
+            active: 'text-grey-900 after:bg-grey-900',
+            base: 'px-4 hover:before:bg-transparent before:rounded-none',
+            badge: {
+              base: 'bg-accent-blue text-white ring-none rounded-none',
+            },
+          }" />
       </template>
     </PageTitle>
 
-    <UContainer class="py-8">
+    <UContainer class="py-4">
       <NuxtPage />
     </UContainer>
   </div>
@@ -108,12 +119,12 @@
 
   const currentEpochAsDate = computed(() => {
     const { toFormat } = useDate(Number(epoch.value.current?.asTimestamp))
-    return toFormat('D MMM, hh:mm A')
+    return toFormat('D MMMM, hh:mm A')
   })
 
   const nextEpochAsDate = computed(() => {
     const { toFormat } = useDate(Number(epoch.value.next?.asTimestamp))
-    return toFormat('D MMM, hh:mm A')
+    return toFormat('D MMMM, hh:mm A')
   })
 
   const getTimeLeft = () => {

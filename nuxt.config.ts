@@ -12,7 +12,7 @@ const getAuctionActive = () => {
     return false
   }
 
-  return null
+  return undefined
 }
 const auctionActive = getAuctionActive()
 
@@ -67,7 +67,7 @@ export default defineNuxtConfig({
           'pages/delegate.vue',
         ]
       : auctionActive === false
-        ? ['pages/auction.vue', 'pages/rewards.vue']
+        ? ['pages/auction.vue']
         : undefined,
 
   imports: {

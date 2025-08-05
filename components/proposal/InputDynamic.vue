@@ -1,7 +1,7 @@
 <template>
   <UCard
     v-if="props.description"
-    class="bg-grey-200 dark:bg-grey-800 flex flex-col gap-1 my-2">
+    class="bg-slate-100 dark:bg-grey-800 flex flex-col gap-1 my-2 shadow-none">
     <label>Parameter description</label>
     <p class="font-inter">
       {{ props.description }}

@@ -5,18 +5,17 @@
       :key="param.key"
       :param="param" />
 
-    <UTable
-      class="mt-4"
-      :rows="inmutableTableData"
-      :columns="governanceTablesHeaders">
-      <template #value-data="{ row }">
-        <MAddressCopy
-          :data-test="`${row.key}-value`"
-          :address="row.value"
-          :short-address="false"
-          :show-copy="true" />
-      </template>
-    </UTable>
+    <CommonCard>
+      <UTable :rows="inmutableTableData" :columns="governanceTablesHeaders">
+        <template #value-data="{ row }">
+          <MAddressCopy
+            :data-test="`${row.key}-value`"
+            :address="row.value"
+            :short-address="false"
+            :show-copy="true" />
+        </template>
+      </UTable>
+    </CommonCard>
   </section>
 </template>
 

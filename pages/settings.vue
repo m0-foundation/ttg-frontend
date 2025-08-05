@@ -17,7 +17,7 @@
     </PageTitle>
 
     <form class="p-6 mx-auto max-w-5xl" @submit.prevent="onSubmit">
-      <UCard>
+      <CommonCard>
         <div class="mb-6">
           <div class="flex justify-between text-sm">
             <label>Network Id:</label>
@@ -41,7 +41,7 @@
             Save
           </UButton>
         </div>
-      </UCard>
+      </CommonCard>
     </form>
   </section>
 </template>

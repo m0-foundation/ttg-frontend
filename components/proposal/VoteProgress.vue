@@ -1,4 +1,5 @@
 <template>
+  <div class="text-gray-900 text-base mb-4">Participation:</div>
   <div>
     <div class="my-6">
       <!-- Power or Emergency -->

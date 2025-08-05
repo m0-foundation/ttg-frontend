@@ -1,7 +1,7 @@
 <template>
   <section class="flex lg:flex-row flex-col-reverse">
     <div>
-      <h2 class="text-2xl lg:text-[28px] lg:leading-tight">Minters</h2>
+      <h2 class="text-2xl lg:text-2xl lg:leading-tight mb-2">Minters</h2>
 
       <p class="font-inter text-grey-600 mb-4">
         Minters are primarily incentivized to join the protocol because they
@@ -23,14 +23,16 @@
           :proposalId="minter.executedEvent?.args?.proposalId"
           :cardImage="minter.image" />
       </div>
-      <h2 class="text-2xl lg:text-[28px] lg:leading-tight mt-12">Validators</h2>
+      <h2 class="text-2xl lg:text-2xl lg:leading-tight mb-2 mt-12">
+        Validators
+      </h2>
       <p class="font-inter text-grey-600 mb-4">
         A Validator on the M0 protocol is an independent entity permissioned by
         governance to provide timely information about the off-chain collateral
         used by Minters to generate $M.
       </p>
 
-      <div class="block lg:grid grid-cols-2 gap-4">
+      <div class="block lg:grid grid-cols-2 gap-2">
         <ActorCard
           v-for="validator in combinedValidatorsList"
           :key="validator.title"
@@ -53,101 +55,107 @@
       earn the Earner Rate.
     </p>
 
-    <div class="flex border-b border-[#E0ECF4] mb-4">
+    <div class="flex">
       <span
         class="relative items-center gap-1.5 px-6 py-3.5 rounded-md font-medium text-sm before:absolute before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-900 after:rounded-full cursor-pointer"
-        :class="selectedCoin === 'M' ? 'after:bg-primary-500' : ''"
+        :class="selectedCoin === 'M' ? 'after:bg-black' : ''"
         @click="selectedCoin = 'M'">
         $M
       </span>
       <span
         class="relative items-center gap-1.5 px-2.5 py-3.5 rounded-md font-medium text-sm before:absolute before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-900 after:rounded-full cursor-pointer"
-        :class="selectedCoin === 'WrappedM' ? 'after:bg-primary-500' : ''"
+        :class="selectedCoin === 'WrappedM' ? 'after:bg-black' : ''"
         @click="selectedCoin = 'WrappedM'">
         $M (Wrapped)
       </span>
     </div>
 
-    <UTable
-      :rows="filteredEarnerLists"
-      :columns="listTableHeaders"
-      v-if="selectedCoin === 'M'">
-      <template #account-data="{ row }">
-        <MAddressAvatar
-          :short-address="false"
-          show-copy
-          :address="row.account" />
-      </template>
+    <CommonCard>
+      <UTable
+        :rows="filteredEarnerLists"
+        :columns="listTableHeaders"
+        v-if="selectedCoin === 'M'">
+        <template #account-data="{ row }">
+          <MAddressAvatar
+            :short-address="false"
+            show-copy
+            :address="row.account" />
+        </template>
 
-      <template #timestamp-data="{ row }">
-        <span class="text-grey-600">
-          {{ useDate(row.timestamp).toFormat('DD MMM YYYY') }}
-        </span>
-      </template>
-      <template #proposal-data="{ row }">
-        <UPopover>
-          <UButton color="white" icon="i-heroicons-ellipsis-horizontal" />
-          <template #panel>
-            <div class="text-xxs p-4">
-              <UVerticalNavigation
-                :links="[
-                  {
-                    label: 'Executed Earner Proposal',
-                    to: `/proposal/${row.proposalId}`,
-                  },
-                ]" />
-            </div>
-          </template>
-        </UPopover>
-      </template>
-    </UTable>
+        <template #timestamp-data="{ row }">
+          <span class="text-grey-600">
+            {{ useDate(row.timestamp).toFormat('DD MMM YYYY') }}
+          </span>
+        </template>
+        <template #proposal-data="{ row }">
+          <UPopover>
+            <UButton
+              color="white"
+              size="xs"
+              variant="ghost"
+              icon="i-heroicons-ellipsis-horizontal" />
+            <template #panel>
+              <div class="text-xxs p-2">
+                <UVerticalNavigation
+                  :links="[
+                    {
+                      label: 'Executed Earner Proposal',
+                      to: `/proposal/${row.proposalId}`,
+                    },
+                  ]" />
+              </div>
+            </template>
+          </UPopover>
+        </template>
+      </UTable>
 
-    <UTable
-      v-else
-      :loading="isLoading"
-      :rows="earnersClaimants || []"
-      :columns="earnersClaimantsHeaders">
-      <template #earner-data="{ row }">
-        <MAddressAvatar
-          :short-address="false"
-          show-copy
-          :address="row.earner" />
-      </template>
-      <template #claimant-data="{ row }">
-        <MAddressAvatar
-          :short-address="true"
-          show-copy
-          :address="row.claimant" />
-      </template>
-      <template #timestamp-data="{ row }">
-        <span class="text-grey-600">
-          {{ useDate(row.timestamp).toFormat('DD MMM YYYY') }}
-        </span>
-      </template>
-      <template #proposal-data="{ row }">
-        <UPopover>
-          <UButton color="white" icon="i-heroicons-ellipsis-horizontal" />
-          <template #panel>
-            <div class="text-xxs p-4">
-              <UVerticalNavigation
-                :links="[
-                  {
-                    label: 'Executed Earner Proposal',
-                    to: `/proposal/${row.proposalId}`,
-                  },
-                ]" />
-              <UVerticalNavigation
-                :links="[
-                  {
-                    label: 'Executed Claimant Proposal',
-                    to: `/proposal/${row.proposalId}`,
-                  },
-                ]" />
-            </div>
-          </template>
-        </UPopover>
-      </template>
-    </UTable>
+      <UTable
+        v-else
+        :loading="isLoading"
+        :rows="earnersClaimants || []"
+        :columns="earnersClaimantsHeaders">
+        <template #earner-data="{ row }">
+          <MAddressAvatar
+            :short-address="false"
+            show-copy
+            :address="row.earner" />
+        </template>
+        <template #claimant-data="{ row }">
+          <MAddressAvatar
+            :short-address="true"
+            show-copy
+            :address="row.claimant" />
+        </template>
+        <template #timestamp-data="{ row }">
+          <span class="text-grey-600">
+            {{ useDate(row.timestamp).toFormat('DD MMM YYYY') }}
+          </span>
+        </template>
+        <template #proposal-data="{ row }">
+          <UPopover>
+            <UButton color="white" icon="i-heroicons-ellipsis-horizontal" />
+            <template #panel>
+              <div class="text-xxs p-4">
+                <UVerticalNavigation
+                  :links="[
+                    {
+                      label: 'Executed Earner Proposal',
+                      to: `/proposal/${row.proposalId}`,
+                    },
+                  ]" />
+                <UVerticalNavigation
+                  :links="[
+                    {
+                      label: 'Executed Claimant Proposal',
+                      to: `/proposal/${row.proposalId}`,
+                    },
+                  ]" />
+              </div>
+            </template>
+          </UPopover>
+        </template>
+      </UTable>
+    </CommonCard>
   </section>
 </template>
 
@@ -286,7 +294,7 @@
       label: 'Address',
     },
     { key: 'claimant', label: 'Claimant' },
-    { key: 'timestamp', label: 'Earner added' },
+    { key: 'timestamp', label: 'Earner added', sortable: true },
     { key: 'proposal', label: 'Proposal' },
   ]
 </script>

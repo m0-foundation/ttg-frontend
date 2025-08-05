@@ -1,6 +1,6 @@
 <template>
-  <div :class="['w-full', 'h-2', 'bg-gray-200']">
-    <div class="overflow-hidden h-2 mb-4 flex justify-between bg-gray-200">
+  <div :class="['w-full', 'h-3', 'bg-gray-200']">
+    <div class="overflow-hidden h-3 mb-4 flex justify-between bg-gray-200">
       <div
         :style="`width: ${yes}%`"
         class="shadow-none flex flex-col text-center whitespace-nowrap justify-center bg-accent-success" />
