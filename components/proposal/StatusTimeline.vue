@@ -4,7 +4,8 @@
 
     <div class="flex flex-col text-grey-600 gap-1 lg:gap-1 items-center">
       <div class="relative ms-4">
-        <div class="absolute left-[3.5px] h-full w-[1px] bg-gray-200"></div>
+        <div
+          class="absolute left-[3.5px] top-[10px] h-[140px] w-[1px] bg-gray-200"></div>
 
         <ProposalStatusBadge :version="version" name="Pending" />
 
@@ -55,16 +56,16 @@
       {
         label: `Executed on ${toFormat('lll')}`,
         disabled: true,
-        labelClass: 'cursor-auto',
+        labelClass: 'cursor-auto text-grey-600',
       },
       {
         label: 'Copy block number',
-        icon: 'i-heroicons-clipboard',
+        icon: 'i-heroicons-cube-transparent',
         click: () => copyToClipboard(props.proposal?.blockNumber),
       },
       {
         label: 'View on block explorer',
-        icon: 'i-heroicons-globe-alt',
+        icon: 'i-heroicons-cube',
         to: useBlockExplorer('tx', props.proposal?.transactionHash || ''),
         target: '_blank',
       },

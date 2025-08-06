@@ -3,12 +3,12 @@
     <UButton
       v-for="(item, index) in flatDropdownItems"
       :key="index"
-      :icon="item.icon"
+      :icon="copiedIndex === index ? 'i-heroicons-check' : item.icon"
       variant="ghost"
-      class="justify-start"
+      class="justify-start font-normal text-grey-600"
       size="xs"
-      @click="handleClick(item)">
-      {{ item.label }}
+      @click="handleClick(item, index)">
+      {{ copiedIndex === index ? 'Copied' : item.label }}
     </UButton>
   </div>
 
@@ -34,7 +34,7 @@
     [
       {
         label: 'Copy proposal URL',
-        icon: 'i-heroicons-clipboard',
+        icon: 'i-heroicons-globe-alt',
         click: () =>
           copyToClipboard(
             `${url.origin}/proposal/${props.proposal.proposalId}`,
@@ -42,17 +42,17 @@
       },
       {
         label: 'Copy proposal ID',
-        icon: 'i-heroicons-clipboard',
+        icon: 'i-heroicons-document-text',
         click: () => copyToClipboard(props.proposal.proposalId),
       },
       {
         label: 'Copy block number',
-        icon: 'i-heroicons-clipboard',
+        icon: 'i-heroicons-cube-transparent',
         click: () => copyToClipboard(props.proposal.blockNumber),
       },
       {
         label: 'View on block explorer',
-        icon: 'i-heroicons-globe-alt',
+        icon: 'i-heroicons-cube',
         to: useBlockExplorer('tx', props.proposal.transactionHash),
         target: '_blank',
       },
@@ -62,9 +62,19 @@
   // Flatten dropdown items for list rendering
   const flatDropdownItems = computed(() => dropdownItems.value.flat())
 
-  function handleClick(item: any) {
+  const copiedIndex = ref<number | null>(null)
+
+  function handleClick(item: any, index: number) {
     if (item.click) {
       item.click()
+
+      // Show "Copied" temporarily if it’s a copy action
+      if (item.label.startsWith('Copy')) {
+        copiedIndex.value = index
+        setTimeout(() => {
+          copiedIndex.value = null
+        }, 2000)
+      }
     } else if (item.to) {
       window.open(item.to, item.target || '_self')
     }
