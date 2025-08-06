@@ -3,7 +3,7 @@
     <PageTitle :title="title">
       <template #pretitle>
         <button
-          @click="goBack"
+          @click="$router.back()"
           class="flex flex-inline items-center text-grey-600">
           <svg
             class="w-4 h-4"
@@ -50,10 +50,4 @@
   useHead({
     titleTemplate: `%s - Proposal #${proposalId}`,
   })
-
-  function goBack() {
-    window.history.length > 1
-      ? window.history.back()
-      : (window.location.href = '/') // fallback
-  }
 </script>
