@@ -22,7 +22,8 @@ export default defineAppConfig({
             'disabled:bg-grey-200 disabled:text-grey-500 disabled:border-none bg-[#E9F0F7] hover:bg-grey-200 ring-grey-200 shadow-none',
         },
         primary: {
-          solid: 'bg-accent-blue hover:bg-blue-400 ring-none text-white shadow-none',
+          solid:
+            'bg-accent-blue hover:bg-blue-400 ring-none text-white shadow-none',
         },
       },
       default: {
