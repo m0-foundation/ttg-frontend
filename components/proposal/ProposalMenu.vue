@@ -53,10 +53,7 @@
       {
         label: 'View on block explorer',
         icon: 'i-heroicons-cube',
-        to: useBlockExplorer(
-          'tx',
-          props.proposal.executedEvent?.transactionHash || '',
-        ),
+        to: useBlockExplorer('tx', props.proposal?.transactionHash || ''),
         target: '_blank',
       },
     ],
