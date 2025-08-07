@@ -6,7 +6,6 @@
         <div class="flex lg:flex-row flex-col gap-16">
           <div class="w-full lg:w-2/3">
             <div class="markdown-body mb-8" v-html="onlyDescriptionHtml"></div>
-
             <ProposalTechnical
               :proposal="proposal"
               :current-proposal-values="currentProposalValuesFormatted" />

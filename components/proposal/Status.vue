@@ -35,7 +35,7 @@
 </script>
 <style scoped>
   div {
-    @apply capitalize w-fit font-medium text-sm text-center;
+    @apply capitalize w-fit font-normal text-sm text-center;
   }
 
   .pending {

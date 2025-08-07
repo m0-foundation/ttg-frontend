@@ -74,19 +74,20 @@
         <span v-if="!isSelectedCastProposalsFull" class="text-xxs">
           Select YES or NO to submit your vote
         </span>
-        <UButton
+        <MButton
           id="button-cast-submit"
           class="w-full lg:w-40 flex justify-center"
           :disabled="
             !isSelectedCastProposalsFull || hasVotedOnAllProposals || isLoading
           "
           :is-loading="isLoading"
+          :class="{ '!bg-slate-200 cursor-not-allowed': isLoading }"
           data-test="proposal-button-submit-votes"
           color="primary"
           size="lg"
           @click="onCastBatchVotes">
           Submit
-        </UButton>
+        </MButton>
       </div>
     </div>
   </div>

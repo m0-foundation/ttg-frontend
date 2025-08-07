@@ -46,7 +46,8 @@
             <div class="flex">
               <ProposalTypeBadge
                 :type="row.votingType"
-                :proposal-word="false" />
+                :proposal-word="false"
+                class="!text-xs" />
             </div>
           </template>
           <template #state-data="{ row }">
