@@ -66,11 +66,9 @@ h6 {
 }
 
 .v-popper--theme-dropdown {
-
   .v-popper__inner {
     @apply border-none rounded-none !important;
   }
-  
 }
 
 .v-popper--theme-tooltip {

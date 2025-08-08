@@ -61,12 +61,16 @@
       {
         label: 'Copy block number',
         icon: 'i-heroicons-cube-transparent',
-        click: () => copyToClipboard(props.proposal?.blockNumber),
+        click: () =>
+          copyToClipboard(props.proposal?.executedEvent?.blockNumber),
       },
       {
         label: 'View on block explorer',
         icon: 'i-heroicons-cube',
-        to: useBlockExplorer('tx', props.proposal?.transactionHash || ''),
+        to: useBlockExplorer(
+          'tx',
+          props.proposal?.executedEvent?.transactionHash || '',
+        ),
         target: '_blank',
       },
     ],
