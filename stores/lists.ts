@@ -1,8 +1,14 @@
 import { defineStore } from 'pinia'
 import { MLists, MListEvent } from '@/lib/api/types'
+import redactedActorsData from '@/assets/data/redacted-actors.json'
 
 export const useListsStore = defineStore('lists', () => {
   const lists = ref<Array<MLists>>([])
+  const redactedActors = ref<Set<string>>(
+    new Set(
+      (redactedActorsData as string[]).map((actor) => actor.toLowerCase()),
+    ),
+  )
 
   const getFlattenLists = () => {
     const flattenLists: MListEvent[] = []
@@ -14,16 +20,23 @@ export const useListsStore = defineStore('lists', () => {
     return flattenLists
   }
 
-  const earners = computed(
-    () => lists.value.find((list: MLists) => list.earners)?.earners!,
+  const filterRedacted = (list: MListEvent[] | undefined) =>
+    list?.filter(
+      (item) => !redactedActors.value.has(item.account.toLowerCase()),
+    ) || []
+
+  const earners = computed(() =>
+    filterRedacted(lists.value.find((list: MLists) => list.earners)?.earners),
   )
 
-  const minters = computed(
-    () => lists.value.find((list: MLists) => list.minters)?.minters!,
+  const minters = computed(() =>
+    filterRedacted(lists.value.find((list: MLists) => list.minters)?.minters),
   )
 
-  const validators = computed(
-    () => lists.value.find((list: MLists) => list.validators)?.validators!,
+  const validators = computed(() =>
+    filterRedacted(
+      lists.value.find((list: MLists) => list.validators)?.validators,
+    ),
   )
 
   const setLists = (_lists: Array<MLists>) => {
