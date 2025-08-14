@@ -1,0 +1,16 @@
+query emergencyGovernorVoteCasts {
+  emergencyGovernorVoteCasts(first: 10000) {
+    proposalId
+    support
+    id
+    reason
+    blockTimestamp
+    blockNumber
+    proposalId
+    reason
+    support
+    transactionHash
+    voter
+    weight
+  }
+}
