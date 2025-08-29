@@ -28,6 +28,7 @@ export default defineNuxtConfig({
     public: {
       walletConnectProjectId: process.env.VITE_APP_WALLET_CONNECT_PROJECT_ID,
       auctionActive,
+      GQL_HOST: 'https://protocol-api.m0.org/graphql',
       env: {
         node: process.env.NODE_ENV,
         build: process.env.BUILD_ENV,
@@ -53,6 +54,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxt/devtools',
     'floating-vue/nuxt',
+    'nuxt-graphql-client',
   ],
 
   //no router is ignored
@@ -124,6 +126,4 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-
-  compatibilityDate: '2025-01-05',
 })
