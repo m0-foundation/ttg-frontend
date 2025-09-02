@@ -12,6 +12,16 @@ export const useActorsStore = defineStore('actors', () => {
       isMinter: true,
       image: 'MXON.png',
     },
+    {
+      title: 'Bridge',
+      cardDescription:
+        'Bridge, a stablecoin orchestration and issuance platform, is the first U.S.-regulated issuer on the M0 network.',
+      account: '0xCD1394d24e1E404F9eB3609F872B0736bEcb9d74',
+      timestamp: 1754542800,
+      website: 'bridge.xyz',
+      isMinter: true,
+      image: 'bridge.png',
+    },
   ]
 
   const validators = [
