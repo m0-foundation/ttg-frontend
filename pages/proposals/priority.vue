@@ -142,7 +142,9 @@
     const proposalStatus: Record<string, boolean> = {}
     votedStatusResults.value.forEach((r, index) => {
       const proposalId = rawEmergencyProposals.value[index].proposalId
-      proposalStatus[proposalId] = r.result as boolean
+      if (r.status === 'success') {
+        proposalStatus[proposalId] = Boolean(r.result)
+      }
     })
     return proposalStatus
   })
