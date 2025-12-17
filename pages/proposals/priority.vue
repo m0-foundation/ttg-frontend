@@ -131,6 +131,9 @@
 
   const { data: votedStatusResults } = useReadContracts({
     contracts: votedStatusContracts,
+    query: {
+      enabled: computed(() => votedStatusContracts.value.length > 0),
+    },
   })
 
   const proposalsVotedStatus = computed<Record<string, boolean>>(() => {
