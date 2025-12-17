@@ -40,10 +40,9 @@
 </template>
 
 <script setup lang="ts">
-  import { Hash, createPublicClient, http } from 'viem'
-  import { mainnet } from 'viem/chains'
+  import { Hash } from 'viem'
   import keyBy from 'lodash/keyBy'
-  import { useAccount } from 'use-wagmi'
+  import { useAccount, useReadContracts } from 'use-wagmi'
   import { waitForTransactionReceipt } from '@wagmi/core'
   import { writeEmergencyGovernor, emergencyGovernorAbi } from '@/lib/sdk'
 
@@ -101,7 +100,6 @@
   const { forceSwitchChain } = useCorrectChain()
   const wagmiConfig = useWagmiConfig()
   const alerts = useAlertsStore()
-  const networkStore = useNetworkStore()
 
   useHead({
     titleTemplate: '%s - Priority proposals',
@@ -119,23 +117,9 @@
     selectedVotesStore.update({ proposalId, reason: value })
   }
 
-  const publicClient = createPublicClient({
-    chain: mainnet,
-    transport: http(),
-  })
-
-  const proposalsVotedStatus = ref<Record<string, boolean>>({})
-  watchEffect(async () => {
-    if (
-      !isConnected.value ||
-      !userAccount.value ||
-      rawEmergencyProposals.value.length === 0
-    ) {
-      proposalsVotedStatus.value = {}
-      return
-    }
-
-    const calls = rawEmergencyProposals.value.map((p) => {
+  const votedStatusContracts = computed(() => {
+    if (!isConnected.value || !userAccount.value) return []
+    return rawEmergencyProposals.value.map((p) => {
       return {
         address: ttg.contracts.emergencyGovernor as `0x${string}`,
         abi: emergencyGovernorAbi,
@@ -143,18 +127,21 @@
         args: [BigInt(p.proposalId), userAccount.value],
       }
     })
+  })
 
-    const results = await publicClient.multicall({
-      contracts: calls,
-    })
+  const { data: votedStatusResults } = useReadContracts({
+    contracts: votedStatusContracts,
+  })
+
+  const proposalsVotedStatus = computed<Record<string, boolean>>(() => {
+    if (!votedStatusResults.value) return {}
 
     const proposalStatus: Record<string, boolean> = {}
-    results.forEach((r, index) => {
+    votedStatusResults.value.forEach((r, index) => {
       const proposalId = rawEmergencyProposals.value[index].proposalId
       proposalStatus[proposalId] = r.result as boolean
     })
-
-    proposalsVotedStatus.value = proposalStatus
+    return proposalStatus
   })
 
   async function onCastBatchVotes() {
