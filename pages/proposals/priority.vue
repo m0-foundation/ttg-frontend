@@ -42,9 +42,9 @@
 <script setup lang="ts">
   import { Hash } from 'viem'
   import keyBy from 'lodash/keyBy'
-  import { useAccount } from 'use-wagmi'
+  import { useAccount, useReadContracts } from 'use-wagmi'
   import { waitForTransactionReceipt } from '@wagmi/core'
-  import { writeEmergencyGovernor } from '@/lib/sdk'
+  import { writeEmergencyGovernor, emergencyGovernorAbi } from '@/lib/sdk'
 
   const isLoading = ref(false)
 
@@ -52,14 +52,26 @@
   const selectedVotesStore = useLocalSelectedVotes()
   const ttg = useTtgStore()
 
-  const emergencyProposals = computed(() =>
+  // keep a raw version to use as source on watchEffect
+  const rawEmergencyProposals = computed(() =>
     proposalsStore
       .getProposalsByState('Active')
       .filter((p) => p.votingType === 'Emergency'),
   )
 
+  const emergencyProposals = computed(() =>
+    rawEmergencyProposals.value.map((p) => ({
+      ...p,
+      hasVoted: proposalsVotedStatus.value[p.proposalId] || false,
+    })),
+  )
+
+  const proposalsToVoteOn = computed(() =>
+    emergencyProposals.value.filter((p) => !p.hasVoted),
+  )
+
   const emergencyProposalsByKeys = computed(() =>
-    keyBy(emergencyProposals.value, 'proposalId'),
+    keyBy(proposalsToVoteOn.value, 'proposalId'),
   )
 
   const emergencyProposalsVotes = computed(() =>
@@ -68,13 +80,19 @@
     ),
   )
 
-  const hasProposals = computed(
-    () => emergencyProposals && emergencyProposals.value.length > 0,
-  )
+  const hasProposals = computed(() => emergencyProposals.value?.length > 0)
 
   const isSelectedCastProposalsFull = computed(() => {
-    return emergencyProposals.value.every((item) =>
+    if (proposalsToVoteOn.value.length === 0) return false
+    return proposalsToVoteOn.value.every((item) =>
       selectedVotesStore.has(item.proposalId),
+    )
+  })
+
+  const hasVotedOnAllProposals = computed(() => {
+    return (
+      emergencyProposals.value.length > 0 &&
+      proposalsToVoteOn.value.length === 0
     )
   })
 
@@ -99,7 +117,37 @@
     selectedVotesStore.update({ proposalId, reason: value })
   }
 
-  const hasVotedOnAllProposals = ref(false)
+  const votedStatusContracts = computed(() => {
+    if (!isConnected.value || !userAccount.value) return []
+    return rawEmergencyProposals.value.map((p) => {
+      return {
+        address: ttg.contracts.emergencyGovernor as `0x${string}`,
+        abi: emergencyGovernorAbi,
+        functionName: 'hasVoted',
+        args: [BigInt(p.proposalId), userAccount.value],
+      }
+    })
+  })
+
+  const { data: votedStatusResults } = useReadContracts({
+    contracts: votedStatusContracts,
+    query: {
+      enabled: computed(() => votedStatusContracts.value.length > 0),
+    },
+  })
+
+  const proposalsVotedStatus = computed<Record<string, boolean>>(() => {
+    if (!votedStatusResults.value) return {}
+
+    const proposalStatus: Record<string, boolean> = {}
+    votedStatusResults.value.forEach((r, index) => {
+      const proposalId = rawEmergencyProposals.value[index].proposalId
+      if (r.status === 'success') {
+        proposalStatus[proposalId] = Boolean(r.result)
+      }
+    })
+    return proposalStatus
+  })
 
   async function onCastBatchVotes() {
     await forceSwitchChain()
@@ -152,7 +200,7 @@
       }
 
       alerts.successAlert('Vote casted successfully!')
-      hasVotedOnAllProposals.value = true
+      selectedVotesStore.removeMany(proposalIds.map(String))
 
       await ttg.fetchTokens()
     } catch (error: any) {
