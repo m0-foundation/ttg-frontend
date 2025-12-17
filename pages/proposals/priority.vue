@@ -53,14 +53,18 @@
   const selectedVotesStore = useLocalSelectedVotes()
   const ttg = useTtgStore()
 
-  const emergencyProposals = computed(() =>
+  // keep a raw version to use as source on watchEffect
+  const rawEmergencyProposals = computed(() =>
     proposalsStore
       .getProposalsByState('Active')
-      .filter((p) => p.votingType === 'Emergency')
-      .map((p) => ({
-        ...p,
-        hasVoted: proposalsVotedStatus.value[p.proposalId] || false,
-      })),
+      .filter((p) => p.votingType === 'Emergency'),
+  )
+
+  const emergencyProposals = computed(() =>
+    rawEmergencyProposals.value.map((p) => ({
+      ...p,
+      hasVoted: proposalsVotedStatus.value[p.proposalId] || false,
+    })),
   )
 
   const proposalsToVoteOn = computed(() =>
@@ -97,6 +101,7 @@
   const { forceSwitchChain } = useCorrectChain()
   const wagmiConfig = useWagmiConfig()
   const alerts = useAlertsStore()
+  const networkStore = useNetworkStore()
 
   useHead({
     titleTemplate: '%s - Priority proposals',
@@ -124,13 +129,13 @@
     if (
       !isConnected.value ||
       !userAccount.value ||
-      emergencyProposals.value.length === 0
+      rawEmergencyProposals.value.length === 0
     ) {
       proposalsVotedStatus.value = {}
       return
     }
 
-    const calls = emergencyProposals.value.map((p) => {
+    const calls = rawEmergencyProposals.value.map((p) => {
       return {
         address: ttg.contracts.emergencyGovernor as `0x${string}`,
         abi: emergencyGovernorAbi,
@@ -142,11 +147,10 @@
     const results = await publicClient.multicall({
       contracts: calls,
     })
-    console.log(results)
 
     const proposalStatus: Record<string, boolean> = {}
     results.forEach((r, index) => {
-      const proposalId = emergencyProposals.value[index].proposalId
+      const proposalId = rawEmergencyProposals.value[index].proposalId
       proposalStatus[proposalId] = r.result as boolean
     })
 
