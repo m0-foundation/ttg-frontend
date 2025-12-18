@@ -26,7 +26,7 @@
     @apply font-inter font-medium text-sm px-4 py-2 text-center flex items-center;
   }
   button:disabled {
-    @apply cursor-not-allowed bg-transparent border border-grey-700 hover:border-grey-700 text-grey-600 hover:bg-transparent;
+    @apply cursor-not-allowed bg-slate-300 border border-grey-700 hover:border-grey-700 text-grey-600 hover:bg-slate-300;
   }
   .primary {
     @apply text-white bg-accent-blue hover:bg-blue-800;
