@@ -168,80 +168,24 @@ Check out the NUXT [deployment documentation](https://nuxt.com/docs/getting-star
 
 ## 🤝 Contributing
 
-- `main` reflects the production-ready state.
-- `develop`, reflects the state with the latest delivered development changes for the next release.
-
-Below you will a guide for the most common scenarios. Please refer to [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/) for a more in-depth explanation.
+We use a single-branch workflow with `main` as the source of truth.
+Railway preview URLs are our micro-staging environment for validating changes before merge.
+Once a PR is merged, the code is promoted to production.
 
 ### Feature branches
 
 We use feature branches to develop new features or fix existing ones.
 
-- Branch off from: `develop`
-- Must merge back into: `develop`
-- Branch naming convention: `WEB3-1234/scope-of-the-changes-or-ticket-title`. Where WEB3-1234 matches the Jira ticket.
-- Open a pull request to incorporate your changes back to `develop`.
-- ⚠️ Merge strategy: Squash and merge.
-
-### Release branches
-
-Release branches are used for production deployments.
-
-- Branch off from: `develop`
-- Must merge back into: `main` **and** `develop`
-- Branch naming convention: `release/x.x.x`. Where `x.x.x` is the release version.
-- ⚠️ Merge strategy: Merge commit.
-
-1. Create a new release branch
-
-   ```sh
-   git fetch
-   git checkout -b release/x.x.x origin/develop
-   ```
-
-1. Bump the version in `package.json`, `apps/server/package.json`, and `apps/web/package.json`. The release naming must match the version.
-
-1. Push your changes to GitHub and open a pull request against `main`.
-
-1. Wait for the pull request to get approved. Use a "Merge commit" to merge the pull request.
-
-1. Let the team know about the upcoming deploy.
-
-1. Run the workflow [Build & Upload to PROD Governance](https://github.com/m0-foundation/ttg-frontend/actions/workflows/s3_buckets_deploy_production_governance.yml) targeting the `main` branch.
-
-1. Monitor the action, and let the team know once changes are live.
-
-1. Populate the release to `develop`
-
-   Do it via a pull request (suggested). Example: [#399](https://github.com/m0-foundation/ttg-frontend/pull/399)
-
-   Do it manually:
-
-   ```sh
-   git checkout develop
-   git pull origin develop
-
-   # merge into develop
-   git merge --no-ff release/x.x.x
-
-   git push origin develop
-   ```
-
-1. The branch `release/x.x.x` can now be deleted in GitHub.
-
-### Hotfix
-
-Hotfix branch is used to patch or fix something in production.
-
 - Branch off from: `main`
-- Must merge back into: `main` **and** `develop`, **and** any outgoing `release/x.x.x` branch.
-- Branch naming convention: `hotfix/x.x.x`. Where `x.x.x` is the release version.
-- ⚠️ Merge strategy: Merge commit.
-
-Releasing the hotfix branch involves the same steps as a `release/*` branch. Including version bumping. Refer to the section above for detailed steps.
+- Must merge back into: `main`
+- Branch naming convention: `FS-1234/scope-of-the-changes-or-ticket-title`. Where FS-1234 matches the Linear ticket.
+- Open a pull request to incorporate your changes back to `main`.
+- Use the Railway preview URL as the micro-staging environment for QA and review.
+- If a feature should not be promoted yet, keep it in the PR until it is ready to ship.
+- ⚠️ Merge strategy: Squash and merge.
 
 ### Additional guidelines
 
 - Git commits: We follow (non-strictly) [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 - Pull requests: The title follows conventional commits as well. Description is a must. Please include screenshots or videos for visual changes, testing evidence and any other relevant information for reviewers. Explain why and what changed not how.
-- Approvals: Get at least one approval.
+- Approvals are optional. You are free to request reviews from specific team members if you want extra eyes on your changes. Ultimately, you are responsible for the quality of your code.
