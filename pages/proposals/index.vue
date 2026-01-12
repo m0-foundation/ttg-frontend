@@ -36,7 +36,7 @@
         </a>
       </div>
     </div>
-    <div class="lg:w-2/3 w-full">
+    <div class="w-full">
       <ProposalList
         :proposals="standardProposals"
         :loading="isLoading"
@@ -57,7 +57,7 @@
         hasProposals &&
         hasPowerVotingPower
       "
-      class="lg:w-1/3 w-full py-4 px-6 lg:py-9 lg:px-9 bg-[#E0ECF5] font-inter flex flex-col gap-3 text-[#00315B] sticky lg:top-[86px] bottom-0">
+      class="lg:w-1/3 w-full py-4 px-6 lg:py-9 lg:px-9 bg-[#E0ECF5] font-inter flex flex-col gap-3 text-[#00315B] sticky lg:top-[86px] bottom-0 min-w-[360px]">
       <div>
         <img
           src="/img/common/banner-m.svg"

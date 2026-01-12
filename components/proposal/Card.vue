@@ -72,26 +72,28 @@
     </NuxtLink>
     <CommonCard class="!py-0">
       <div class="flex flex-col xl:flex-row justify-between items-start">
-        <div class="xl:pt-1 xl:pb-0 pb-3">
+        <div class="xl:pb-0 pb-3">
           <div
             v-if="proposal?.proposalLabel === 'Add to list'"
-            class="flex lg:flex-row flex-col items-start lg:items-center text-sm">
+            class="flex xl:flex-row flex-col items-start xl:items-center text-sm">
             <div
               class="inline-flex font-inter px-2 py-1 border-none bg-[#EAF2FF]">
               Add {{ incomingValues[0] }}
             </div>
-            <div class="text-slate-500 py-2 lg:px-2">
+            <div class="text-slate-500 py-2 xl:px-2">
               {{ incomingValues[1] }}
             </div>
           </div>
-          <div v-else class="flex items-center">
+          <div
+            v-else
+            class="flex flex-col xl:flex-row justify-between items-start xl:items-center">
             <div
               class="bg-[#87ECBF] text-sm inline-flex font-inter px-2 py-1 border-none whitespace-nowrap">
               {{ proposal?.proposalLabel }}
             </div>
             <div
               id="technical-proposal-incoming-change"
-              class="text-sm py-2 p-3">
+              class="text-sm py-2 xl:px-2">
               <div v-if="showParsed">
                 <div
                   v-for="(param, index) in incomingValuesParsed"
@@ -105,8 +107,8 @@
                 <div v-if="incomingValues">
                   <span>
                     <span class="block text-slate-500">
-                      {{ truncate(incomingValues[0], { length: 50 }) }}
-                      {{ incomingValues[1] ? `: ${incomingValues[1]}` : '' }}
+                      {{ truncate(incomingValues[0], { length: 50 })
+                      }}{{ incomingValues[1] ? `: ${incomingValues[1]}` : '' }}
                     </span>
                   </span>
                 </div>
