@@ -57,16 +57,17 @@
         hasProposals &&
         hasPowerVotingPower
       "
-      class="lg:w-1/3 w-full py-4 px-6 lg:py-9 lg:px-9 bg-[#E0ECF5] font-inter flex flex-col gap-3 text-[#00315B] sticky lg:top-[86px] bottom-0 min-w-[360px]">
+      class="lg:w-2/5 w-full py-4 px-6 lg:py-9 lg:px-9 bg-[#E0ECF5] font-inter flex flex-col gap-3 text-[#00315B] sticky lg:top-[86px] bottom-0">
       <div>
         <img
           src="/img/common/banner-m.svg"
-          class="w-[64px] -mt-4 mb-4 lg:block hidden" />
+          class="w-[56px] -mt-4 mb-4 lg:block hidden" />
         <div>
-          <h3 class="lg:text-xl text-base font-medium lg:block hidden">
+          <h3
+            class="lg:text-xl text-base font-medium lg:block hidden font-inter">
             Voting is in progress...
           </h3>
-          <div class="lg:text-sm text-sm text-slate-500 mt-4 lg:block hidden">
+          <div class="lg:text-sm text-sm text-slate-500 mt-2 lg:block hidden">
             By voting on all standard proposals, you will
             <strong>preserve your voting power</strong>
             and
@@ -85,7 +86,7 @@
             </span>
           </div>
           <a
-            class="text-xs text-slate-500 underline hover:no-underline mt-3 lg:block hidden"
+            class="text-xs text-slate-500 underline hover:no-underline mt-1 lg:block hidden"
             href="https://docs.m0.org/home/fundamentals/whitepaper/governance/"
             target="_blank">
             Learn more

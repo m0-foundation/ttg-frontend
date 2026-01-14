@@ -72,7 +72,7 @@
     </NuxtLink>
     <CommonCard class="!py-0">
       <div class="flex flex-col xl:flex-row justify-between items-start">
-        <div class="xl:pb-0 pb-3">
+        <div>
           <div
             v-if="proposal?.proposalLabel === 'Add to list'"
             class="flex xl:flex-row flex-col items-start xl:items-center text-sm">
@@ -107,8 +107,18 @@
                 <div v-if="incomingValues">
                   <span>
                     <span class="block text-slate-500">
-                      {{ truncate(incomingValues[0], { length: 50 })
-                      }}{{ incomingValues[1] ? `: ${incomingValues[1]}` : '' }}
+                      This proposal sets
+                      <strong>
+                        {{ truncate(incomingValues[0], { length: 50 }) }}
+                        {{
+                          incomingValues[1]
+                            ? ` to
+                      ${incomingValues[1]}
+                      `
+                            : ''
+                        }}
+                      </strong>
+                      as raw on-chain value.
                     </span>
                   </span>
                 </div>
@@ -121,7 +131,7 @@
           <div
             v-if="proposal?.state === 'Active'"
             class="flex max-sm:flex-col justify-between lg:items-center gap-3">
-            <div class="w-full">
+            <div class="w-full xl:pt-0 pt-3">
               <div
                 class="inline-flex gap-1 items-center w-full lg:mb-0"
                 role="group">
