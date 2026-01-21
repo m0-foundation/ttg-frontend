@@ -7,8 +7,7 @@
       </h2>
 
       <p class="text-xl font-inter text-grey-600 mb-8 max-w-[760px]">
-        Minters are permissioned entities that interact with the MinterGateway
-        to issue and manage $M.
+        Minters are permissioned entities that issue and manage $M.
       </p>
       <div class="block lg:grid grid-cols-2 gap-4">
         <ActorCard
