@@ -7,7 +7,9 @@
       </h2>
 
       <p class="text-xl font-inter text-grey-600 mb-8 max-w-[760px]">
-        Minters are permissioned entities that issue and manage $M.
+        A Minter is an entity that connects to the M0 protocol and is
+        permissioned by governance to manage the M0 network supply. The M0
+        protocol has been specifically designed to support multiple Minters.
       </p>
       <div class="block lg:grid grid-cols-2 gap-4">
         <ActorCard
