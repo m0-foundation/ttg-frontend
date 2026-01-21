@@ -7,12 +7,13 @@
           :src="`/img/actors/${props.cardImage ? props.cardImage : 'NoActor.svg'}`"
           :alt="`${title}`"
           class="max-h-[40px] max-w-[240px]" />
-
-        <!-- 
-      <h4 v-if="title" class="text-xl font-semibold font-inter">
-        {{ title }}
-      </h4>
-      --></div>
+      </div>
+      <h2 v-if="!title" class="text-lg font-semibold pb-2">
+        <MAddressAvatar
+          :short-address="true"
+          :showAvatar="false"
+          :address="account" />
+      </h2>
       <p class="text-base text-gray-500 py-4">
         {{ description }}
       </p>

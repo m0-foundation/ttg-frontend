@@ -1,6 +1,6 @@
 <template>
   <section class="flex lg:flex-row flex-col-reverse">
-    <div>
+    <div class="w-full">
       <h2
         class="text-2xl lg:text-2xl lg:leading-tight font-inter font-medium mb-2">
         Minters
