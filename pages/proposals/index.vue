@@ -343,7 +343,8 @@
         )
       }
 
-      selectedVotesStore.removeMany(proposalIds.map(String))
+      //selectedVotesStore.removeMany(proposalIds.map(String))
+      //Commented to keep the state of the selected vote button
       await ttg.fetchTokens()
       balances.refetch()
       votedOnAllProposals.refetch()

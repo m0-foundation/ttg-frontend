@@ -29,7 +29,16 @@
     @apply text-white bg-alert-success;
   }
   #button-cast-no.active {
-    @apply bg-alert-error;
+    @apply bg-alert-error text-white;
+  }
+  #button-cast-yes.active {
+    @apply bg-alert-success text-white;
+  }
+  #button-cast-yes.active .outside-circle {
+    @apply border-white;
+  }
+  #button-cast-no.active .outside-circle {
+    @apply border-white;
   }
 
   button:disabled {

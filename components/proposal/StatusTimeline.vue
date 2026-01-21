@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="text-gray-900 text-base mb-4">Status:</div>
+    <div class="text-gray-500 text-sm mb-4 font-semibold">Status:</div>
 
     <div class="flex flex-col text-grey-600 gap-1 lg:gap-1 items-center">
       <div class="relative ms-4">
         <div
-          class="absolute left-[3.5px] top-[10px] h-[140px] w-[1px] bg-gray-200"></div>
+          class="absolute left-[3.5px] top-[10px] h-[108px] w-[1px] bg-gray-200"></div>
 
         <ProposalStatusBadge :version="version" name="Pending" />
 

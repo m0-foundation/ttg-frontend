@@ -52,7 +52,7 @@
         <div class="text-grey-1000 max-lg:text-sm font-inter break-words">
           {{
             expanded
-              ? truncate(onlyDescription, { length: 1300 })
+              ? truncate(onlyDescription, { length: 1000 })
               : truncate(onlyDescription, { length: 500 })
           }}
         </div>
@@ -85,6 +85,17 @@
             </div>
           </div>
           <div
+            v-else-if="proposal?.proposalLabel === 'Remove from list'"
+            class="flex xl:flex-row flex-col items-start xl:items-center text-sm">
+            <div
+              class="inline-flex font-inter px-2 py-1 border-none bg-[#FFCBCB]">
+              Remove {{ incomingValues[0] }}
+            </div>
+            <div class="text-slate-500 py-2 xl:px-2">
+              {{ incomingValues[1] }}
+            </div>
+          </div>
+          <div
             v-else
             class="flex flex-col xl:flex-row justify-between items-start xl:items-center">
             <div
@@ -111,11 +122,7 @@
                       <strong>
                         {{ truncate(incomingValues[0], { length: 50 }) }}
                         {{
-                          incomingValues[1]
-                            ? ` to
-                      ${incomingValues[1]}
-                      `
-                            : ''
+                          incomingValues[1] ? ` to ${incomingValues[1]}` : ''
                         }}
                       </strong>
                       as raw on-chain value.
@@ -160,6 +167,20 @@
               </div>
             </div>
           </div>
+          <div
+            v-if="proposal?.state === 'Succeeded'"
+            class="flex justify-between items-center">
+            <div class="inline-flex gap-1" role="group">
+              <MButton
+                id="button-proposal-execute"
+                version="primary"
+                data-test="proposal-button-execute"
+                :disabled="isDisconnected || loading"
+                @click="onExecuteProposal()">
+                Execute
+              </MButton>
+            </div>
+          </div>
 
           <div
             v-if="proposal?.state === 'Active'"
@@ -199,21 +220,6 @@
               props.proposal.proposalId,
             )
           "></UTextarea>
-      </div>
-
-      <div
-        v-if="proposal?.state === 'Succeeded'"
-        class="flex justify-between items-center">
-        <div class="inline-flex gap-1" role="group">
-          <MButton
-            id="button-proposal-execute"
-            data-test="proposal-button-execute"
-            :disabled="isDisconnected || loading"
-            :is-loading="loading"
-            @click="onExecuteProposal()">
-            Execute
-          </MButton>
-        </div>
       </div>
     </CommonCard>
   </article>
