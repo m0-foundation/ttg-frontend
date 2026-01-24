@@ -35,8 +35,23 @@
       </p>
     </div>
 
-    <div v-else-if="props.currentValue" class="text-xs text-grey-600 my-2">
+    <div
+      v-else-if="props.currentValue && props.decorator === '%'"
+      class="text-xs text-grey-600 my-2">
       Current: {{ props.currentValue }}
+    </div>
+    <div
+      v-else-if="props.currentValue && props.decorator === 'contract'"
+      class="text-xs text-grey-600 my-2">
+      Current: {{ props.currentValue }}
+    </div>
+    <div
+      v-else-if="props.currentValue && props.decorator != null"
+      class="text-xs text-grey-600 my-2">
+      Current: {{ formattedValueCurrent(props.decorator) }} ({{
+        props.currentValue
+      }}) | New value:
+      <strong>{{ formattedValue(props.decorator) }}</strong>
     </div>
   </div>
 </template>
@@ -60,6 +75,32 @@
   const emit = defineEmits(['update:modelValue'])
   const value = useVModelWrapper<InputProps>(props, emit, 'modelValue')
   const hasErrors = computed(() => props.modelValueErrors?.length)
+
+  const formattedValue = (decorator?: string) => {
+    if (!props.decorator) return
+    if (value.value == null || value.value == undefined || value.value == 0)
+      return `-`
+    if (props.decorator === 'BPS') {
+      return `${basisPointsToPercentage(value.value)}%`
+    } else if (props.decorator === 'seconds') {
+      return `${value.value >= 7200 ? value.value / 3600 + ' hours' : value.value / 60 + ' minutes'}`
+    } else {
+      return `${value.value}`
+    }
+    return
+  }
+  const formattedValueCurrent = (decorator?: string) => {
+    if (!props.decorator) return
+    const current = Number(props.currentValue)
+    if (props.decorator === 'BPS') {
+      return `${basisPointsToPercentage(current)}%`
+    } else if (props.decorator === 'seconds') {
+      return `${current >= 7200 ? current / 3600 + ' hours' : current / 60 + ' minutes'}`
+    } else {
+      return `${current}`
+    }
+    return
+  }
 </script>
 
 <style scoped>
