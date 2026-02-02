@@ -1016,7 +1016,7 @@
       case 'max_earner_rate':
         return { required, range: validations.range(1, 5000) }
       case 'penalty_rate':
-        return { required, range: validations.range(1, 1000) }
+        return { required, range: validations.range(0, 1000) }
       case 'update_collateral_interval':
         return { required, range: validations.range(60, 31536000) } // 1 minute to 1 year
       case 'update_collateral_threshold':
