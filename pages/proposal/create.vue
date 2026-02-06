@@ -1,237 +1,265 @@
 <template>
   <div>
-    <MModal ref="modal" @on-closed="onCloseModal">
-      <MTransactionsStepper
-        ref="stepper"
-        title="Submitting your proposal"
-        :steps="steps" />
-    </MModal>
-
     <PageTitle>
       <template #title>Create a proposal</template>
     </PageTitle>
 
-    <UContainer class="pb-4">
-      <form @submit.prevent="onSubmit">
-        <div v-if="isWritting">Writting transaction on blockchain...</div>
-        <div v-else>
-          <div
-            v-show="!isPreview"
-            class="flex lg:flex-row flex-col gap-16 relative">
-            <div class="lg:w-2/3 w-full">
-              <div class="create-steps">
-                <div class="number">[1]</div>
-                <span>
-                  Define the action to be executed if proposal succeeds
-                </span>
-              </div>
-
-              <div class="mb-6">
-                <label for="proposal-type">Action *</label>
-                <MInputMultiSelect
-                  :options="proposalTypes"
-                  data-test="proposalTypeSelect"
-                  @on-change="onChangeProposalType" />
-              </div>
-
-              <div :class="{ disabled: selectedProposalType === undefined }">
-                <div v-show="formData.proposalType">
-                  <component
-                    :is="selectedProposalType.component"
-                    v-if="selectedProposalType"
-                    v-model="formData.proposalValue"
-                    v-model:model-value2="formData.proposalValue2"
-                    v-model:model-value3="formData.proposalValue3"
-                    :model-value-errors="$validation.proposalValue?.$errors"
-                    :model-value2-errors="$validation.proposalValue2?.$errors"
-                    :model-value3-errors="$validation.proposalValue3?.$errors"
-                    :placeholder="selectedProposalType.placeholder"
-                    :current-value="currentValue"
-                    :selected-proposal-type="selectedProposalType" />
-                </div>
-
-                <div class="create-steps">
-                  <div class="number">[2]</div>
-                  <span>Name your proposal and add description</span>
-                </div>
-
-                <div class="mb-6">
-                  <label for="title-input">Title *</label>
-                  <MInput
-                    id="title-input"
-                    v-model="formData.title"
-                    data-test="title"
-                    type="text"
-                    placeholder="Title"
-                    :errors="$validation.title.$errors"
-                    class="font-inter" />
-                </div>
-
-                <div class="mb-6" data-test="description">
-                  <div class="flex justify-between mb-2">
-                    <label for="description">Description *</label>
-                    <div
-                      class="text-sm text-grey-600 flex items-center gap-1 font-inter">
-                      <img src="/img/icon-markdown.svg" class="h-[14px]" />
-                      Markdown supported
-                    </div>
-                  </div>
-
-                  <ProposalCreateFormMarkdown
-                    v-model="formData.description"
-                    data-test="description"
-                    name="description"
-                    :errors="$validation.description.$errors" />
-                </div>
-
-                <div class="mb-6">
-                  <label for="type-value">IPFS</label>
-
-                  <MInput
-                    v-model="formData.ipfsURL"
-                    type="text"
-                    placeholder="https://"
-                    data-test="create-proposal-input-url-ipfs"
-                    class="font-inter"
-                    :errors="$validation.ipfsURL.$errors" />
-                </div>
-
-                <div class="mb-6">
-                  <label for="type-value">Discussion URL:</label>
-
-                  <MInput
-                    v-model="formData.discussionURL"
-                    type="text"
-                    placeholder="https://"
-                    data-test="create-proposal-input-url-discussion"
-                    class="font-inter"
-                    :errors="$validation.discussionURL.$errors" />
-                </div>
-
-                <div class="flex justify-end font-inter">
-                  <div class="flex items-center gap-2 text-lg">
-                    Submission tax:
-                    <div v-if="hasToPayFee" class="flex items-center gap-2">
-                      {{ ttgValuesFormatted.setProposalFee }}
-                      <MIconWeth class="w-5 h-5" />
-                    </div>
-                    <div v-else class="flex items-center gap-2">
-                      0
-                      <MIconWeth class="w-5 h-5" />
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  v-if="hasToPayFee"
-                  class="text-grey-500 text-sm text-end font-inter">
-                  <p>
-                    Available balance:
-                    {{
-                      useNumberFormatterEth(
-                        cashToken?.data?.value?.formatted || 0,
-                      )
-                    }}
-                    WETH.
-                    <LazyModalEthWrapper v-if="!userHasEnoughBalance" />
-                  </p>
-                </div>
-
-                <div class="flex justify-end mt-6">
-                  <UButton
-                    type="button"
-                    data-test="create-proposal-button-preview"
-                    :disabled="isDisconnected || !userHasEnoughBalance"
-                    label="Preview and submit"
-                    size="lg"
-                    color="primary"
-                    @click="onPreview" />
-                </div>
-
-                <div
-                  class="text-end text-grey-500 font-inter text-xs px-6 lg:px-0 my-3">
-                  <p v-if="isDisconnected">
-                    Please,
-                    <MModalWeb3Connect>
-                      <template #default="{ connect }">
-                        <button
-                          class="font-inter underline text-nowrap cursor-pointer"
-                          @click="connect">
-                          connect your wallet
-                        </button>
-                      </template>
-                    </MModalWeb3Connect>
-                    to proceed. Your proposal will not be lost.
-                  </p>
-                  <div
-                    v-else-if="!userHasEnoughBalance"
-                    class="inline-flex grow-0 items-center gap-1 rounded-full px-2 py-0.5 text-sm font-medium text-yellow-800">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 text-yellow-500"
-                      viewBox="0 0 32 32"
-                      fill="currentColor"
-                      aria-hidden="true">
-                      <path
-                        fill="none"
-                        d="M16,26a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,16,26Zm-1.125-5h2.25V12h-2.25Z" />
-                      <path
-                        d="M16.002,6.171h-.004L4.649,28H27.349l.002-.003ZM14.875,12h2.25v9h-2.25ZM16,26a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,16,26Z" />
-                      <path
-                        d="M29,30H3a1,1,0,0,1-.887-1.461l13-25a1,1,0,0,1,1.774,0l13,25A1,1,0,0,1,29,30ZM4.651,28H27.349l.002-.003L16.002,6.171h-.004L4.649,27.997Z" />
-                    </svg>
-
-                    <span>
-                      You don't have enough balance to submit proposal.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="lg:w-1/3 w-full">
-              <ProposalCreateActionDescription
-                v-if="selectedProposalType"
-                :selected-proposal-type="selectedProposalType" />
-            </div>
-          </div>
-          <div v-if="isPreview">
-            <ProposalPreview
-              :title="formData.title"
-              :proposal="previewProposal"
-              @on-back="onBack" />
-          </div>
-          <div v-if="isPreview" class="flex flex-col mt-6 gap-3">
-            <div class="flex items-center justify-end gap-2 text-lg">
-              Submission tax:
-              <div v-if="hasToPayFee" class="flex items-center gap-2">
-                {{ ttgValuesFormatted.setProposalFee }}
-                <MIconWeth class="w-5 h-5" />
-              </div>
-              <div v-else class="flex items-center gap-2">
-                0
-                <MIconWeth class="w-5 h-5" />
-              </div>
-            </div>
-            <div class="flex justify-end gap-3">
-              <UButton
-                data-test="create-proposal-button-back-bottom"
-                color="gray"
-                label="Back"
-                size="lg"
-                @click="onBack" />
-              <UButton
-                v-if="isPreview"
-                type="submit"
-                :disabled="isDisconnected"
-                data-test="create-proposal-button-submit"
-                label="Submit"
-                size="lg"
-                color="primary" />
-            </div>
-          </div>
+    <template v-if="!isPageAuthenticated">
+      <UContainer class="pb-4">
+        <div class="flex justify-center items-center min-h-[40vh]">
+          <UCard class="w-full max-w-sm">
+            <UFormGroup
+              label="Enter password to access this page"
+              name="page-password">
+              <MInput
+                id="page-password"
+                v-model="pagePassword"
+                type="password"
+                placeholder="Password"
+                class="w-full"
+                @keyup.enter="onPasswordSubmit" />
+            </UFormGroup>
+            <UButton
+              label="Submit"
+              size="lg"
+              color="primary"
+              class="w-full"
+              @click="onPasswordSubmit" />
+          </UCard>
         </div>
-      </form>
-    </UContainer>
+      </UContainer>
+    </template>
+
+    <template v-else>
+      <MModal ref="modal" @on-closed="onCloseModal">
+        <MTransactionsStepper
+          ref="stepper"
+          title="Submitting your proposal"
+          :steps="steps" />
+      </MModal>
+
+      <UContainer class="pb-4">
+        <form @submit.prevent="onSubmit">
+          <div v-if="isWritting">Writting transaction on blockchain...</div>
+          <div v-else>
+            <div
+              v-show="!isPreview"
+              class="flex lg:flex-row flex-col gap-16 relative">
+              <div class="lg:w-2/3 w-full">
+                <div class="create-steps">
+                  <div class="number">[1]</div>
+                  <span>
+                    Define the action to be executed if proposal succeeds
+                  </span>
+                </div>
+
+                <div class="mb-6">
+                  <label for="proposal-type">Action *</label>
+                  <MInputMultiSelect
+                    :options="proposalTypes"
+                    data-test="proposalTypeSelect"
+                    @on-change="onChangeProposalType" />
+                </div>
+
+                <div :class="{ disabled: selectedProposalType === undefined }">
+                  <div v-show="formData.proposalType">
+                    <component
+                      :is="selectedProposalType.component"
+                      v-if="selectedProposalType"
+                      v-model="formData.proposalValue"
+                      v-model:model-value2="formData.proposalValue2"
+                      v-model:model-value3="formData.proposalValue3"
+                      :model-value-errors="$validation.proposalValue?.$errors"
+                      :model-value2-errors="$validation.proposalValue2?.$errors"
+                      :model-value3-errors="$validation.proposalValue3?.$errors"
+                      :placeholder="selectedProposalType.placeholder"
+                      :current-value="currentValue"
+                      :selected-proposal-type="selectedProposalType" />
+                  </div>
+
+                  <div class="create-steps">
+                    <div class="number">[2]</div>
+                    <span>Name your proposal and add description</span>
+                  </div>
+
+                  <div class="mb-6">
+                    <label for="title-input">Title *</label>
+                    <MInput
+                      id="title-input"
+                      v-model="formData.title"
+                      data-test="title"
+                      type="text"
+                      placeholder="Title"
+                      :errors="$validation.title.$errors"
+                      class="font-inter" />
+                  </div>
+
+                  <div class="mb-6" data-test="description">
+                    <div class="flex justify-between mb-2">
+                      <label for="description">Description *</label>
+                      <div
+                        class="text-sm text-grey-600 flex items-center gap-1 font-inter">
+                        <img src="/img/icon-markdown.svg" class="h-[14px]" />
+                        Markdown supported
+                      </div>
+                    </div>
+
+                    <ProposalCreateFormMarkdown
+                      v-model="formData.description"
+                      data-test="description"
+                      name="description"
+                      :errors="$validation.description.$errors" />
+                  </div>
+
+                  <div class="mb-6">
+                    <label for="type-value">IPFS</label>
+
+                    <MInput
+                      v-model="formData.ipfsURL"
+                      type="text"
+                      placeholder="https://"
+                      data-test="create-proposal-input-url-ipfs"
+                      class="font-inter"
+                      :errors="$validation.ipfsURL.$errors" />
+                  </div>
+
+                  <div class="mb-6">
+                    <label for="type-value">Discussion URL:</label>
+
+                    <MInput
+                      v-model="formData.discussionURL"
+                      type="text"
+                      placeholder="https://"
+                      data-test="create-proposal-input-url-discussion"
+                      class="font-inter"
+                      :errors="$validation.discussionURL.$errors" />
+                  </div>
+
+                  <div class="flex justify-end font-inter">
+                    <div class="flex items-center gap-2 text-lg">
+                      Submission tax:
+                      <div v-if="hasToPayFee" class="flex items-center gap-2">
+                        {{ ttgValuesFormatted.setProposalFee }}
+                        <MIconWeth class="w-5 h-5" />
+                      </div>
+                      <div v-else class="flex items-center gap-2">
+                        0
+                        <MIconWeth class="w-5 h-5" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    v-if="hasToPayFee"
+                    class="text-grey-500 text-sm text-end font-inter">
+                    <p>
+                      Available balance:
+                      {{
+                        useNumberFormatterEth(
+                          cashToken?.data?.value?.formatted || 0,
+                        )
+                      }}
+                      WETH.
+                      <LazyModalEthWrapper v-if="!userHasEnoughBalance" />
+                    </p>
+                  </div>
+
+                  <div class="flex justify-end mt-6">
+                    <UButton
+                      type="button"
+                      data-test="create-proposal-button-preview"
+                      :disabled="isDisconnected || !userHasEnoughBalance"
+                      label="Preview and submit"
+                      size="lg"
+                      color="primary"
+                      @click="onPreview" />
+                  </div>
+
+                  <div
+                    class="text-end text-grey-500 font-inter text-xs px-6 lg:px-0 my-3">
+                    <p v-if="isDisconnected">
+                      Please,
+                      <MModalWeb3Connect>
+                        <template #default="{ connect }">
+                          <button
+                            class="font-inter underline text-nowrap cursor-pointer"
+                            @click="connect">
+                            connect your wallet
+                          </button>
+                        </template>
+                      </MModalWeb3Connect>
+                      to proceed. Your proposal will not be lost.
+                    </p>
+                    <div
+                      v-else-if="!userHasEnoughBalance"
+                      class="inline-flex grow-0 items-center gap-1 rounded-full px-2 py-0.5 text-sm font-medium text-yellow-800">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 text-yellow-500"
+                        viewBox="0 0 32 32"
+                        fill="currentColor"
+                        aria-hidden="true">
+                        <path
+                          fill="none"
+                          d="M16,26a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,16,26Zm-1.125-5h2.25V12h-2.25Z" />
+                        <path
+                          d="M16.002,6.171h-.004L4.649,28H27.349l.002-.003ZM14.875,12h2.25v9h-2.25ZM16,26a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,16,26Z" />
+                        <path
+                          d="M29,30H3a1,1,0,0,1-.887-1.461l13-25a1,1,0,0,1,1.774,0l13,25A1,1,0,0,1,29,30ZM4.651,28H27.349l.002-.003L16.002,6.171h-.004L4.649,27.997Z" />
+                      </svg>
+
+                      <span>
+                        You don't have enough balance to submit proposal.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="lg:w-1/3 w-full">
+                <ProposalCreateActionDescription
+                  v-if="selectedProposalType"
+                  :selected-proposal-type="selectedProposalType" />
+              </div>
+            </div>
+            <div v-if="isPreview">
+              <ProposalPreview
+                :title="formData.title"
+                :proposal="previewProposal"
+                @on-back="onBack" />
+            </div>
+            <div v-if="isPreview" class="flex flex-col mt-6 gap-3">
+              <div class="flex items-center justify-end gap-2 text-lg">
+                Submission tax:
+                <div v-if="hasToPayFee" class="flex items-center gap-2">
+                  {{ ttgValuesFormatted.setProposalFee }}
+                  <MIconWeth class="w-5 h-5" />
+                </div>
+                <div v-else class="flex items-center gap-2">
+                  0
+                  <MIconWeth class="w-5 h-5" />
+                </div>
+              </div>
+              <div class="flex justify-end gap-3">
+                <UButton
+                  data-test="create-proposal-button-back-bottom"
+                  color="gray"
+                  label="Back"
+                  size="lg"
+                  @click="onBack" />
+                <UButton
+                  v-if="isPreview"
+                  type="submit"
+                  :disabled="isDisconnected"
+                  data-test="create-proposal-button-submit"
+                  label="Submit"
+                  size="lg"
+                  color="primary" />
+              </div>
+            </div>
+          </div>
+        </form>
+      </UContainer>
+    </template>
   </div>
 </template>
 
@@ -278,6 +306,21 @@
   import InputGovernanceSetProposalFee from '@/components/proposal/InputGovernanceSetProposalFee.vue'
   import InputProtocolEarnerClaimant from '@/components/proposal/InputProtocolEarnerClaimant.vue'
   import { MProposal } from '@/lib/api/types'
+
+  /* password gate */
+  const config = useRuntimeConfig()
+  const alerts = useAlertsStore()
+  const isPageAuthenticated = ref(!config.public.createPassword)
+  const pagePassword = ref('')
+
+  function onPasswordSubmit() {
+    if (pagePassword.value === config.public.createPassword) {
+      isPageAuthenticated.value = true
+      alerts.successAlert('Access granted')
+    } else {
+      alerts.errorAlert('Incorrect password')
+    }
+  }
 
   /* wagmi */
   const wagmiConfig = useWagmiConfig()

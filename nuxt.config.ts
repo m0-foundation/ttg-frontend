@@ -27,6 +27,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       walletConnectProjectId: process.env.VITE_APP_WALLET_CONNECT_PROJECT_ID,
+      createPassword: process.env.VITE_APP_CREATE_PASSWORD || '',
       auctionActive,
       env: {
         node: process.env.NODE_ENV,
