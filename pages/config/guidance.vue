@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-col gap-4">
+  <section class="flex flex-col gap-2">
     <MIconLoading v-if="isLoading" />
     <ConfigParametersCard
       v-for="param in protocolDataSorted"

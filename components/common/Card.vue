@@ -1,6 +1,6 @@
 <template>
   <UCard
-    class="shadow-none border-gray-100 border ring-0 lg:pb-0 pb-4"
+    class="shadow-none border-gray-100 border ring-0"
     :ui="{
       header: {
         padding: 'pb-0',

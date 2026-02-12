@@ -724,6 +724,49 @@
     },
   ]
 
+  const apiStore = useApiClientStore()
+
+  const fetchProtocolConfigs = async () => {
+    try {
+      const data =
+        await apiStore.client.registrar!.protocolConfigs.getAllProtocolKeysAndValues()
+      const store = useProtocolConfigsStore()
+      store.setProtocolConfigs(data)
+    } catch (error) {
+      console.error({ error })
+    }
+  }
+
+  const { isLoading } = useAsyncState(fetchProtocolConfigs(), null)
+
+  const store = useProtocolConfigsStore()
+  const proposalsStore = useProposalsStore()
+  const { getProtocolConfigsWithoutGuidances } = storeToRefs(store)
+
+  const protocolDataSorted = computed(() => {
+    // Add custom and proposal data to parameters and sort it to show custom parameters first
+    return getProtocolConfigsWithoutGuidances.value
+      .map((p) => ({
+        value: p.value,
+        key: p.key,
+        ...protocolParametersData.find((param) => param.key === p.key),
+        proposal: proposals.value.find(
+          (proposal) =>
+            proposal.proposalParams[0] === p.key &&
+            proposal.executedEvent?.timestamp,
+        ),
+      }))
+      .sort((a, b) => {
+        if (a.description && !b.description) {
+          return -1
+        } else if (!a.description && b.description) {
+          return 1
+        } else {
+          return 0
+        }
+      })
+  })
+
   const currentValue = computed(() => {
     if (
       selectedProposalType?.value?.value ===
@@ -750,6 +793,20 @@
       )
     ) {
       return formatFee(ttg.getValues.proposalFee!)
+    }
+
+    if (formData.proposalValue === 'update_collateral_interval') {
+      const item = getProtocolConfigsWithoutGuidances.value.find(
+        (p) => p.key === 'update_collateral_interval',
+      )
+
+      return item ? item.value : ''
+    } else {
+      const item = getProtocolConfigsWithoutGuidances.value.find(
+        (p) => p.key === formData.proposalValue,
+      )
+
+      return item ? item.value : ''
     }
   })
 

@@ -33,7 +33,7 @@
 
 <style scoped>
   .proposal-type-badge {
-    @apply inline-flex text-sm font-inter px-2 py-1 border-none;
+    @apply inline-flex text-xs font-inter px-2 py-1 border-none;
   }
   .Standard {
     @apply bg-slate-200 text-grey-600;

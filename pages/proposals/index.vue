@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex lg:flex-row flex-col items-start gap-4">
     <div
       v-if="
         !hasVotedOnAllProposals &&
@@ -7,51 +7,36 @@
         hasProposals &&
         hasPowerVotingPower
       "
-      class="p-8 py-6 bg-blue-grey font-inter flex flex-col gap-3 text-[#00315B] mb-2 lg:bg-[url('/img/common/banner-bg.svg')] lg:bg-no-repeat lg:bg-right lg:bg-[length:100%]">
-      <div class="flex flex-col lg:flex-row gap-3 items-start">
-        <div class="flex flex-row space-between">
-          <div class="lg:text-xl tracking-tightest">
-            <div class="text-lg font-medium">
-              Vote on all Standard proposals
-            </div>
-            <ul class="list-disc mx-4 mt-2 text-sm">
-              <li>Preserve your voting power for the next epoch.</li>
-              <li v-if="Number(powerInflation) != 0">
-                Increase your balance by
-                {{ useNumberFormatterPrice(powerInflation) }} POWER in the next
-                epoch as inflation.
-              </li>
-              <li v-if="Number(zeroInflation) != 0">
-                Receive
-                {{ useNumberFormatterPrice(zeroInflation) }} ZERO as rewards
-              </li>
-            </ul>
-            <a
-              class="text-xs underline hover:no-underline"
-              href="https://docs.m0.org/home/getting-started/whitepaper/governance/"
-              target="_blank">
-              Learn more
-            </a>
-
-            <div class="grow flex items-center gap-2 mt-2 lg:mb-0">
-              <span class="text-xxs lg:text-x text-nowrap uppercase flex gap-3">
-                Votes submitted:
-                <span>
-                  {{ standardProposalsVotes.length }} /
-                  {{ mandatoryToVoteProposals.length }}
-                </span>
-              </span>
-              <div class="w-full lg:h-1/3 bg-white rounded-sm h-1.5">
-                <div
-                  class="bg-accent-blue h-1.5 rounded-sm"
-                  :style="`width: ${hasVotedOnAllProposals ? 100 : progressBarWidth}%`"></div>
-              </div>
-            </div>
-          </div>
+      class="lg:hidden flex w-full py-4 px-4 bg-[#E0ECF5] font-inter flex-col gap-3 text-[#00315B]">
+      <div>
+        <h3 class="lg:text-xl text-base font-medium">
+          Voting is in progress...
+        </h3>
+        <div class="lg:text-base text-sm text-slate-500 mt-4">
+          By voting on all standard proposals, you will
+          <strong>preserve your voting power</strong>
+          and
+          <span v-if="Number(powerInflation) != 0">
+            increase your balance by
+            <strong>{{ useNumberFormatterPrice(powerInflation) }} POWER</strong>
+            in the next epoch as inflation.
+          </span>
+          <span v-if="Number(zeroInflation) != 0">
+            <strong>
+              receive {{ useNumberFormatterPrice(zeroInflation) }} ZERO
+            </strong>
+            as rewards.
+          </span>
         </div>
+        <a
+          class="text-xs text-slate-500 underline hover:no-underline mt-3 lg:block hidden"
+          href="https://docs.m0.org/home/fundamentals/whitepaper/governance/"
+          target="_blank">
+          Learn more
+        </a>
       </div>
     </div>
-    <div>
+    <div class="w-full">
       <ProposalList
         :proposals="standardProposals"
         :loading="isLoading"
@@ -64,30 +49,116 @@
           </ProposalListEmptyState>
         </template>
       </ProposalList>
+    </div>
+    <div
+      v-if="
+        !hasVotedOnAllProposals &&
+        isConnected &&
+        hasProposals &&
+        hasPowerVotingPower
+      "
+      class="lg:w-2/5 w-full py-4 px-6 lg:py-9 lg:px-9 bg-[#E0ECF5] font-inter flex flex-col gap-3 text-[#00315B] sticky lg:top-[86px] bottom-0">
+      <div>
+        <img
+          src="/img/common/banner-m.svg"
+          class="w-[56px] -mt-4 mb-4 lg:block hidden" />
+        <div>
+          <h3
+            class="lg:text-xl text-base font-medium lg:block hidden font-inter">
+            Voting is in progress...
+          </h3>
+          <div class="lg:text-sm text-sm text-slate-500 mt-2 lg:block hidden">
+            By voting on all standard proposals, you will
+            <strong>preserve your voting power</strong>
+            and
+            <span v-if="Number(powerInflation) != 0">
+              increase your balance by
+              <strong>
+                {{ useNumberFormatterPrice(powerInflation) }} POWER
+              </strong>
+              in the next epoch as inflation.
+            </span>
+            <span v-if="Number(zeroInflation) != 0">
+              <strong>
+                receive {{ useNumberFormatterPrice(zeroInflation) }} ZERO
+              </strong>
+              as rewards.
+            </span>
+          </div>
+          <a
+            class="text-xs text-slate-500 underline hover:no-underline mt-1 lg:block hidden"
+            href="https://docs.m0.org/home/fundamentals/whitepaper/governance/"
+            target="_blank">
+            Learn more
+          </a>
 
-      <div
-        v-show="hasProposals && isConnected && !hasVotedOnAllProposals"
-        class="lg:flex justify-end items-center gap-4 mt-6 py-4 px-8"
-        :class="{
-          'bg-grey-200': isSelectedCastProposalsFull,
-        }">
-        <span v-if="!isSelectedCastProposalsFull" class="text-xxs">
-          Select YES or NO to submit your vote
-        </span>
-        <MButton
-          id="button-cast-submit"
-          class="w-full lg:w-40 flex justify-center"
-          :disabled="
-            !isSelectedCastProposalsFull || hasVotedOnAllProposals || isLoading
-          "
-          :is-loading="isLoading"
-          :class="{ '!bg-slate-200 cursor-not-allowed': isLoading }"
-          data-test="proposal-button-submit-votes"
-          color="primary"
-          size="lg"
-          @click="onCastBatchVotes">
-          Submit
-        </MButton>
+          <div
+            class="text-xs w-full flex flex-col items-stretch gap-2 lg:pt-6 pt-0 lg:mb-0">
+            <div class="flex gap-8 w-full items-center">
+              <div class="w-full flex flex-col gap-1">
+                <span class="text-slate-500">Votes selected:</span>
+                <div class="w-full bg-white h-1">
+                  <div
+                    class="bg-accent-blue h-1"
+                    :style="`width: ${hasVotedOnAllProposals ? 100 : progressBarWidth}%`"></div>
+                </div>
+              </div>
+              <span class="whitespace-nowrap font-ppformula text-lg">
+                {{ standardProposalsVotes.length }} /
+                {{ mandatoryToVoteProposals.length }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="mt-6"
+          :class="{
+            '!bg-slate-200': isSelectedCastProposalsFull,
+          }">
+          <MButton
+            :disabled="
+              !isSelectedCastProposalsFull ||
+              hasVotedOnAllProposals ||
+              isLoading
+            "
+            id="button-cast-submit"
+            class="w-full flex justify-center"
+            :is-loading="isLoading"
+            :class="{ '!bg-grey-200 cursor-not-allowed': isLoading }"
+            data-test="proposal-button-submit-votes"
+            color="primary"
+            size="lg"
+            @click="onCastBatchVotes">
+            Submit
+          </MButton>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="!isConnected && hasProposals"
+      class="lg:w-1/3 w-full py-4 px-6 lg:py-9 lg:px-9 bg-[#E0ECF5] font-inter flex flex-col gap-3 text-[#00315B] sticky lg:top-[86px] bottom-0">
+      <div>
+        <img
+          src="/img/common/banner-m.svg"
+          class="w-[64px] -mt-4 mb-4 lg:block hidden" />
+        <div>
+          <h3 class="lg:text-xl text-base font-medium lg:block hidden">
+            Voting is in progress...
+          </h3>
+          <div class="lg:text-sm text-sm text-slate-500 mt-4 lg:block hidden">
+            Voting is currently in progress under M0 onchain governance system,
+            the Two Token Governor (TTG). This mechanism uses two utility
+            tokens—POWER and ZERO—to ensure active, accountable participation
+            and credible neutrality in governance.
+          </div>
+          <a
+            class="text-xs text-slate-500 underline hover:no-underline mt-3 lg:block hidden"
+            href="https://docs.m0.org/home/fundamentals/whitepaper/governance/"
+            target="_blank">
+            Learn more
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -272,7 +343,8 @@
         )
       }
 
-      selectedVotesStore.removeMany(proposalIds.map(String))
+      //selectedVotesStore.removeMany(proposalIds.map(String))
+      //Commented to keep the state of the selected vote button
       await ttg.fetchTokens()
       balances.refetch()
       votedOnAllProposals.refetch()

@@ -22,17 +22,17 @@
   const options = [
     {
       value: 'minters',
-      label: 'Minters',
+      label: 'Minter',
       id: 'list_minters',
     },
     {
       value: 'validators',
-      label: 'Validators',
+      label: 'Validator',
       id: 'list_validators',
     },
     {
       value: 'earners',
-      label: 'Earners',
+      label: 'Earner',
       id: 'list_earners',
     },
   ]

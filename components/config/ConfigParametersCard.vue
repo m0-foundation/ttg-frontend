@@ -1,8 +1,8 @@
 <template>
-  <UCard class="flex flex-col gap-4 shadow-none">
+  <UCard class="flex flex-col gap-4 shadow-none ring-0 border-slate-100 border">
     <div class="flex gap-4 justify-between flex-wrap mb-2">
       <div class="lg:flex-1">
-        <h2 class="text-2xl font-normal">{{ param?.title }}</h2>
+        <h2 class="text-xl font-inter font-medium">{{ param?.title }}</h2>
         <UBadge
           :label="param?.key"
           color="gray"
@@ -11,7 +11,7 @@
       </div>
       <div class="flex gap-4 max-lg:order-2 max-lg:w-full">
         <div class="lg:text-end">
-          <p class="lg:text-2xl font-medium font-ppformula">
+          <p class="lg:text-xl font-medium">
             {{ formattedValue(param) }}
           </p>
           <UBadge color="gray" variant="soft" class="font-mono bg-gray-100">
@@ -70,7 +70,7 @@
     </div>
     <div
       v-if="param?.docs || param?.description"
-      class="font-inter text-grey-900 lg:w-3/4">
+      class="text-base text-grey-600 lg:w-3/4 mt-6">
       <p>
         {{ param?.description }}
       </p>
