@@ -84,10 +84,9 @@
       return `${basisPointsToPercentage(value.value)}%`
     } else if (props.decorator === 'seconds') {
       return `${value.value >= 7200 ? value.value / 3600 + ' hours' : value.value / 60 + ' minutes'}`
-    } else {
-      return `${value.value}`
     }
-    return
+    
+    return `${value.value}`
   }
   const formattedValueCurrent = (decorator?: string) => {
     if (!props.decorator) return
@@ -96,10 +95,9 @@
       return `${basisPointsToPercentage(current)}%`
     } else if (props.decorator === 'seconds') {
       return `${current >= 7200 ? current / 3600 + ' hours' : current / 60 + ' minutes'}`
-    } else {
-      return `${current}`
     }
-    return
+
+    return `${current}`
   }
 </script>
 

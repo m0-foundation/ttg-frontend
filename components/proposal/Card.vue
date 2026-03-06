@@ -105,7 +105,7 @@
             <div
               id="technical-proposal-incoming-change"
               class="text-sm py-2 xl:px-2">
-              <div v-if="showParsed">
+              <div v-if="proposal?.proposalType">
                 <div
                   v-for="(param, index) in incomingValuesParsed"
                   :key="param">
