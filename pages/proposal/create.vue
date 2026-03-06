@@ -698,6 +698,7 @@
 
   const store = useProtocolConfigsStore()
   const proposalsStore = useProposalsStore()
+  const proposals = computed(() => proposalsStore.getProposals)
   const { getProtocolConfigsWithoutGuidances } = storeToRefs(store)
 
   const protocolDataSorted = computed(() => {
