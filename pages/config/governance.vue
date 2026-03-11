@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-col gap-4">
+  <section class="flex flex-col gap-2">
     <ConfigParametersCard
       v-for="param in mutableParametersWithData"
       :key="param.key"
@@ -34,7 +34,7 @@
       key: 'emergencyProposalThresholdRatio',
       description:
         'The percentage of yes votes from the total POWER supply required to pass proposals which require a POWER Threshold.',
-      docs: 'https://docs.m0.org/home/resources/glossary#power',
+      docs: 'https://docs.m0.org/home/fundamentals/whitepaper/governance#power-threshold',
       type: 'basisPoints',
       unit: 'BPS',
     },
@@ -43,7 +43,7 @@
       key: 'zeroProposalThresholdRatio',
       description:
         'The percentage of yes votes from the total ZERO supply required to pass proposals that require a ZERO Threshold.',
-      docs: 'https://docs.m0.org/home/resources/glossary#zero',
+      docs: 'https://docs.m0.org/home/fundamentals/whitepaper/governance#zero-threshold',
       type: 'basisPoints',
       unit: 'BPS',
     },

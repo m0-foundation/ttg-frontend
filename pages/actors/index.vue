@@ -1,14 +1,15 @@
 <template>
   <section class="flex lg:flex-row flex-col-reverse">
-    <div>
-      <h2 class="text-2xl lg:text-2xl lg:leading-tight mb-2">Minters</h2>
+    <div class="w-full">
+      <h2
+        class="text-2xl lg:text-2xl lg:leading-tight font-inter font-medium mb-2">
+        Minters
+      </h2>
 
-      <p class="font-inter text-grey-600 mb-4">
-        Minters are primarily incentivized to join the protocol because they
-        want to earn the spread between the yield (net of expenses) on their
-        Eligible Collateral and the protocol’s Minter Rate. In addition, the
-        Mint Ratio will determine the attractiveness of Minting relative to the
-        yield spread.
+      <p class="text-xl font-inter text-grey-600 mb-8 max-w-[760px]">
+        A Minter is an entity that connects to the M0 protocol and is
+        permissioned by governance to manage the M0 network supply. The M0
+        protocol has been specifically designed to support multiple Minters.
       </p>
       <div class="block lg:grid grid-cols-2 gap-4">
         <ActorCard
@@ -23,16 +24,16 @@
           :proposalId="minter.executedEvent?.args?.proposalId"
           :cardImage="minter.image" />
       </div>
-      <h2 class="text-2xl lg:text-2xl lg:leading-tight mb-2 mt-12">
+      <h2
+        class="text-2xl lg:text-2xl lg:leading-tight font-inter font-medium mb-2 mt-16">
         Validators
       </h2>
-      <p class="font-inter text-grey-600 mb-4">
-        A Validator on the M0 protocol is an independent entity permissioned by
-        governance to provide timely information about the off-chain collateral
-        used by Minters to generate $M.
+      <p class="font-inter text-xl text-grey-600 mb-8 max-w-[760px]">
+        Validators are governance-approved, independent entities that supply
+        timely data on the off-chain collateral used by Minters to issue $M.
       </p>
 
-      <div class="block lg:grid grid-cols-2 gap-2">
+      <div class="block lg:grid grid-cols-2 gap-4">
         <ActorCard
           v-for="validator in combinedValidatorsList"
           :key="validator.title"
@@ -49,8 +50,11 @@
   </section>
 
   <section>
-    <h2 class="text-2xl lg:text-[28px] lg:leading-tight mt-12">Earners</h2>
-    <p class="font-inter text-grey-600 mb-4">
+    <h2
+      class="text-2xl lg:text-2xl lg:leading-tight font-inter font-medium mb-2 mt-16">
+      Earners
+    </h2>
+    <p class="font-inter text-xl text-grey-600 mb-4 max-w-[760px]">
       A holders or distributor of $M whose address is approved by governance to
       earn the Earner Rate.
     </p>
@@ -133,7 +137,11 @@
         </template>
         <template #proposal-data="{ row }">
           <UPopover>
-            <UButton color="white" icon="i-heroicons-ellipsis-horizontal" />
+            <UButton
+              color="white"
+              size="xs"
+              variant="ghost"
+              icon="i-heroicons-ellipsis-horizontal" />
             <template #panel>
               <div class="text-xxs p-4">
                 <UVerticalNavigation

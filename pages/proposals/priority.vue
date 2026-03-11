@@ -29,6 +29,7 @@
           !isSelectedCastProposalsFull || hasVotedOnAllProposals || isLoading
         "
         :is-loading="isLoading"
+        :class="{ '!bg-grey-200 cursor-not-allowed': isLoading }"
         data-test="proposal-button-submit-votes"
         color="primary"
         size="lg"

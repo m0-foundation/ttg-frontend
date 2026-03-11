@@ -22,6 +22,26 @@ export const useActorsStore = defineStore('actors', () => {
       isMinter: true,
       image: 'bridge.png',
     },
+    {
+      title: '1Money',
+      cardDescription:
+        '1Money is the first vertically integrated, full-stack infrastructure company providing a unified technology layer across the lifecycle of stablecoins and real-world assets (RWAs).',
+      account: '0x1D5B695D13F231A605D231631C688Fb33477B249',
+      timestamp: 1764190980,
+      website: '1moneynetwork.com',
+      isMinter: true,
+      image: '1money.png',
+    },
+    {
+      title: 'MoonPay',
+      cardDescription:
+        'MoonPay simplifies access to buy, sell and trade crypto using everyday payment methods like cards, Apple Pay, PayPal and Venmo, while also providing simple tools to send, receive and manage stablecoins.',
+      account: '0x5d238f4eaC94dA0A635eE39fA389a4754395D5D9',
+      timestamp: 1765946940,
+      website: 'moonpay.com/business/issuance',
+      isMinter: true,
+      image: 'moonpay.png',
+    },
   ]
 
   const validators = [

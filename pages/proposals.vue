@@ -39,12 +39,11 @@
           :links="
             proposalsLinks.filter((l) => l.badge > 0 || l.label === 'Standard')
           "
-          class="border-b border-gray-200 dark:border-gray-800"
           :ui="{
             active: 'text-grey-900 after:bg-grey-900',
-            base: 'px-4 hover:before:bg-transparent before:rounded-none',
+            base: 'hover:before:bg-transparent before:rounded-none',
             badge: {
-              base: 'bg-accent-blue text-white ring-none rounded-none',
+              base: 'bg-accent-blue text-white ring-0 rounded-none',
             },
           }" />
       </template>

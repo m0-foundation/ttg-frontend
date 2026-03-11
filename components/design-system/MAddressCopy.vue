@@ -6,7 +6,6 @@
           {{ shortAddress ? shortenAddress(props.address) : props.address }}
         </a>
       </div>
-
       <UButton
         variant="ghost"
         color="gray"
@@ -22,6 +21,8 @@
   </span>
 </template>
 <script setup lang="ts">
+  import { shortenAddress } from '@/utils/address'
+
   export interface MAddressCopy {
     address: string
     shortAddress?: boolean

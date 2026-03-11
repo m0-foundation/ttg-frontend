@@ -1,7 +1,7 @@
 <template>
-  <div class="relative mb-4">
+  <div class="relative mb-2">
     <div
-      :class="[{ current: name === version }]"
+      :class="[{ currentdot: name === version }]"
       class="absolute -left-0.5 top-2 w-3 h-3 bg-slate-200 border-2 border-white rounded-full z-10"></div>
     <div class="ps-6">
       <div
@@ -44,18 +44,21 @@
 
 <style scoped>
   .item {
-    @apply text-sm lg:text-sm bg-white flex items-center py-1 px-2;
+    @apply text-sm lg:text-sm bg-transparent flex items-center py-1 px-2;
   }
   .status-button {
-    @apply text-grey-600 capitalize;
+    @apply text-grey-300 capitalize;
   }
   .current {
-    @apply bg-green-900 text-accent-mint;
+    @apply text-green-900 font-semibold;
+  }
+  .currentdot {
+    @apply bg-slate-600;
   }
   .defeated {
-    @apply bg-red-600 text-white !important;
+    @apply text-red-600 !important;
   }
   .expired {
-    @apply bg-red-600 text-white !important;
+    @apply text-red-600 !important;
   }
 </style>

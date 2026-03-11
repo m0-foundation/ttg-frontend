@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light-gray dark:bg-inherit">
+  <div class="dark:bg-inherit">
     <UContainer>
       <div class="flex justify-between gap-2 py-4 mt-2">
         <div>
@@ -8,7 +8,7 @@
           </div>
           <div class="max-w-4xl">
             <h1
-              class="lg:text-[32px] text-[28px] tracking-tighter leading-[135%] font-medium my-2">
+              class="lg:text-[32px] text-[28px] tracking-tighter leading-[135%] my-2 font-medium">
               <span v-if="title">{{ title }}</span>
               <slot v-else name="title"></slot>
             </h1>

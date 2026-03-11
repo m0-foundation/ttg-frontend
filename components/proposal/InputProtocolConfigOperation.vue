@@ -15,7 +15,8 @@
         class="input"
         type="text"
         data-test="proposalValue2"
-        :model-value-errors="props.modelValue2Errors" />
+        :model-value-errors="props.modelValue2Errors"
+        :current-value="currentValue" />
     </div>
   </div>
 </template>
@@ -26,6 +27,7 @@
   import { masks } from '@/utils/masks'
 
   export interface InputProps {
+    currentValue: string
     modelValue: string
     modelValue2: string
     modelValueErrors?: ErrorObject[]

@@ -13,25 +13,50 @@
           <div class="w-full lg:w-1/3">
             <div v-if="isLoading" class="h-4">Loading...</div>
             <div v-else>
-              <ProposalVoteProgress
+              <div
+                v-if="proposal?.state === 'Succeeded'"
+                class="flex w-full bg-[#CDF7E4] font-inter flex-col gap-3 text-slate-900 mb-6 border-slate-200 border">
+                <div class="flex flex-row gap-6 py-4 px-4 font-semibold">
+                  Proposal has succeeded and is ready to be executed.
+                  <img
+                    src="/img/common/succeeded.svg"
+                    class="w-[56px] lg:block hidden" />
+                </div>
+
+                <div class="w-full bg-white py-4 px-4" role="group">
+                  <MButton
+                    id="button-proposal-execute"
+                    data-test="proposal-button-execute"
+                    class="w-full flex items-center justify-center"
+                    :disabled="isDisconnected || isLoadingTx"
+                    @click="onExecuteProposal()">
+                    Execute
+                  </MButton>
+                </div>
+              </div>
+
+              <div
                 v-if="proposal?.state !== 'Pending'"
-                :yes-votes="proposal?.yesVotes"
-                :no-votes="proposal?.noVotes"
-                :version="proposal?.votingType"
-                :threshold="proposal?.quorum"
-                :threshold-bps="proposal?.quorumNumerator"
-                :power-total-supply="totalSupplyAt[0]"
-                :zero-total-supply="totalSupplyAt[1]"
-                class="font-inter" />
+                class="mb-6 p-4 bg-slate-50">
+                <ProposalVoteProgress
+                  :yes-votes="proposal?.yesVotes"
+                  :no-votes="proposal?.noVotes"
+                  :version="proposal?.votingType"
+                  :threshold="proposal?.quorum"
+                  :threshold-bps="proposal?.quorumNumerator"
+                  :power-total-supply="totalSupplyAt[0]"
+                  :zero-total-supply="totalSupplyAt[1]"
+                  class="font-inter" />
+              </div>
             </div>
-            <hr class="border-gray-200 my-6" />
-            <div class="flex justify-between gap-3">
+
+            <div class="mb-6 p-4 bg-slate-50 flex justify-between gap-3">
               <ProposalStatusTimeline
                 :proposal="proposal"
                 :version="proposal?.state"
                 class="overflow-x-auto" />
             </div>
-            <hr class="border-gray-200 my-6" />
+
             <div>
               <ProposalMenu :proposal="proposal" :asList="true" />
             </div>
@@ -49,9 +74,16 @@
 
 <script setup lang="ts">
   import { storeToRefs } from 'pinia'
-  import { Hash } from 'viem'
+  import { useAccount } from 'use-wagmi'
   import { readPowerToken, readZeroToken } from '@/lib/sdk'
   import { watchVoteCast } from '@/lib/watchers'
+
+  import { keccak256, toHex, Hash, Abi } from 'viem'
+  import { waitForTransactionReceipt, writeContract } from '@wagmi/core'
+
+  const { address: userAccount, isConnected, isDisconnected } = useAccount()
+  const { forceSwitchChain } = useCorrectChain()
+  const alerts = useAlertsStore()
 
   export interface ProposalDetailsProps {
     proposalId: string
@@ -125,4 +157,59 @@ Thus need to find all events. What could be done is to fetch only votes of propo
   onUnmounted(() => {
     unwatchAll()
   })
+
+  const isLoadingTx = ref(false)
+  const selectedProposal = ref<string | undefined>(undefined)
+
+  async function onExecuteProposal() {
+    await forceSwitchChain()
+
+    const p = proposal.value
+    if (!p) return
+
+    const governor = useGovernor({ proposalId: p.proposalId })
+
+    const { description, calldatas } = p
+    const hashedDescription = keccak256(toHex(description))
+    const targets = [governor?.address as Hash]
+    const values = [BigInt(0)] // do not change
+
+    selectedProposal.value = p.proposalId
+    isLoadingTx.value = true
+    try {
+      const hash = await writeContract(wagmiConfig, {
+        abi: governor!.abi as Abi,
+        address: governor!.address as Hash,
+        functionName: 'execute',
+        args: [targets, values, calldatas as Hash[], hashedDescription], // (targets, values, calldatas, hashedDescription
+        account: userAccount.value,
+        value: BigInt(0),
+      })
+
+      const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        confirmations: 1,
+        hash,
+      })
+
+      if (txReceipt.status !== 'success') {
+        throw txReceipt
+      }
+
+      alerts.successAlert('Proposal executed successfully!')
+
+      proposalStore.updateProposalById(p.proposalId)
+    } catch (error: any) {
+      console.error('Error executing proposal', error)
+      if (error.transactionHash) {
+        alerts.errorAlert(
+          `Error while executing proposal! <br/> See <a class="underline" target="_blank" href=${useBlockExplorer('tx', error.transactionHash)}>transaction</a>.`,
+        )
+      } else {
+        alerts.errorAlert(`Transaction not sent! ${error.shortMessage}`)
+      }
+    } finally {
+      isLoadingTx.value = false
+      selectedProposal.value = undefined
+    }
+  }
 </script>

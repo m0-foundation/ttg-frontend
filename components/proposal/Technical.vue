@@ -1,7 +1,7 @@
 <template>
-  <div data-test="technical-proposal" class="mt-4 p-4 bg-slate-100 border">
-    <h2 class="text-2xl">Technical Proposal</h2>
-    <p class="text-sm text-grey-600 mb-4">
+  <div data-test="technical-proposal" class="mt-4 p-4 bg-slate-50">
+    <h2 class="text-xl font-inter font-semibold">Technical Proposal</h2>
+    <p class="text-sm text-grey-500 mb-4">
       Agree or deny the following incoming change
     </p>
 

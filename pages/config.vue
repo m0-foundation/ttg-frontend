@@ -5,10 +5,9 @@
       <template #bottom-left>
         <UHorizontalNavigation
           :links="configLinks"
-          class="border-b border-gray-200 dark:border-gray-800"
           :ui="{
-            active: 'text-grey-900 after:bg-grey-900 ',
-            base: 'px-4 hover:before:bg-transparent before:rounded-none',
+            active: 'text-grey-900 after:bg-grey-900 mb-0',
+            base: 'hover:before:bg-transparent before:rounded-none',
           }" />
       </template>
     </PageTitle>

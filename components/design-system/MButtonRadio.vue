@@ -28,6 +28,18 @@
   .active {
     @apply text-white bg-alert-success;
   }
+  #button-cast-no.active {
+    @apply bg-alert-error text-white;
+  }
+  #button-cast-yes.active {
+    @apply bg-alert-success text-white;
+  }
+  #button-cast-yes.active .outside-circle {
+    @apply border-white;
+  }
+  #button-cast-no.active .outside-circle {
+    @apply border-white;
+  }
 
   button:disabled {
     @apply border border-none bg-[#C4D9E8] text-grey-500 opacity-75 hover:bg-[#C4D9E8];
