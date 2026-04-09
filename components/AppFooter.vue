@@ -58,13 +58,6 @@
             questions.
           </p>
           <p>
-            Neither the $M token, nor any governance tokens associated with the
-            M0 project, will be offered to US persons (without a valid
-            exemption). Any token described in this document has not been
-            registered or qualified under any state or national securities law
-            or regulation.
-          </p>
-          <p>
             Participation in the purchase, use, or investment in any digital
             assets, tokens, or cryptocurrencies involves inherent risks,
             including but not limited to market volatility, regulatory changes,
