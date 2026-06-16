@@ -23,10 +23,13 @@
         crossorigin="use-credentials" />
     </Head>
 
-    <div v-if="isLoading" class="h-dvh flex items-center justify-center">
-      <CommonLoader />
-    </div>
-    <NuxtLayout v-else />
+    <AppPasswordGate v-if="!isAuthenticated" />
+    <template v-else>
+      <div v-if="isLoading" class="h-dvh flex items-center justify-center">
+        <CommonLoader />
+      </div>
+      <NuxtLayout v-else />
+    </template>
   </div>
 </template>
 
@@ -48,6 +51,9 @@
 
   const { rpc } = storeToRefs(apiStore)
   const isLoading = ref(true)
+
+  /* app-wide password gate */
+  const { isAuthenticated } = useAppPassword()
 
   async function onSetup(rpc: string) {
     /* setup wagmi client as vue plugin */
