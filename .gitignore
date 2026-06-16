@@ -16,3 +16,6 @@ cypress/downloads/
 ./contracts/
 auto-imports.d.ts
 components.d.ts
+
+# Local agent workspace
+.claude/
