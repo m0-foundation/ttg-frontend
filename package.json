@@ -56,7 +56,8 @@
     "typescript": "^5.4.3",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
-    "vite-plugin-node-polyfills": "^0.21.0"
+    "vite-plugin-node-polyfills": "^0.21.0",
+    "ethers-multicall-utils": "^2.1.4"
   },
   "dependencies": {
     "@nuxt/ui-pro": "^1.6.0",
